@@ -1,0 +1,144 @@
+#!/tools/CGBU/contrib/DO/BRM/7.5.0.TP.TOOL.R1/tools_vob/tools/linux/perl_5_18_2/perl/bin/perl
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#/usr/local/bin/perl -w
+#
+#	@(#) % %
+#
+# Copyright (c) 1996, 2009, Oracle and/or its affiliates. All rights reserved. 
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+
+($me = $0) =~ s,.*/,,;
+$DEBUG = $ENV{"DEBUG"} || 0;
+
+$usage = 
+"Usage: $me
+	-h	help
+	-f	generate input flist for PCM_OP_SDK_SET_FLD_SPECS
+	-i	generate insert sql statements (portal internal use only)\n";
+
+#
+# Parse command line flags.
+#
+require "getopts.pl";
+
+#
+# Get the input options
+#
+&Getopts('hiwf') || die $usage;
+
+#
+# Make sure an option is passed in.
+# Also -i and -f are mutually exclusive.
+#
+(($opt_h + $opt_i + $opt_f) == 1) || die $usage;
+
+#
+# Exit if help is expected.
+#
+$opt_h && die $usage;
+
+#
+# Print copyright information if generating the insert sql statements.
+#
+if ($opt_i) {
+print "--
+--
+--	Copyright 1997 Portal Information Network, Inc.
+-- 
+--	This material is the exclusive property and trade secret of
+--	Portal Information Network, Inc. No part may be reproduced,
+--	disclosed, stored in a retrieval system, or otherwise
+--	transmitted in any form or by any means, electronic,
+--	mechanical, photocopying, optical, magnetic, chemical,
+--	biological, or otherwise, without prior written permission
+--	of Portal Information Network, Inc.
+--\n";
+}
+
+if ($opt_f && $opt_w) {
+	print "<PCM_OP $PIN_OPNAME=PCM_OP_SDK_SET_FLD_SPECS $PIN_OPFLAGS=0>\n";
+}
+
+#
+# PIN_TYPE Mapping.
+#
+%PINTYPE = (
+	"PIN_FLDT_UNUSED",         "0",
+	"PIN_FLDT_INT",            "1",
+	"PIN_FLDT_UINT",           "2",
+	"PIN_FLDT_ENUM",           "3",
+	"PIN_FLDT_NUM",            "4",
+	"PIN_FLDT_STR",            "5",
+	"PIN_FLDT_BUF",            "6",
+	"PIN_FLDT_POID",           "7",
+	"PIN_FLDT_TSTAMP",         "8",
+	"PIN_FLDT_ARRAY",          "9",
+	"PIN_FLDT_SUBSTRUCT",      "10",
+	"PIN_FLDT_OBJ",            "11",
+	"PIN_FLDT_BINSTR",         "12",
+	"PIN_FLDT_ERR",            "13",
+);
+
+#
+# Walk through the list of files passed in
+#
+$elemid = 0;
+while (<>) {
+	#
+	# Accept lines matching #define XXX PIN_MAKE_FLD(PIN_FLDT_*, nnn)
+	#
+	if (/^#\s*define\s+(\w+)\s+PIN_MAKE_FLD\s*\(\s*(PIN_FLDT_\w+)\s*,\s*(\d+)\s*\).*$/) {
+		$fldname = $1;
+		if (defined ($PINTYPE{$2})) {
+			$fldtype = $PINTYPE{$2};
+		} else {
+			die "$me: Unknown PIN field type $2 for field $1\n";
+		}
+
+		$fldnum  = $3;
+		$flddescr = "";
+
+		$elemid++;
+
+		# 
+		# Generate insert statements to update the dd table.
+		# (For Portal internal use only).
+		#
+		if ($opt_i) {
+print 
+"insert into dd_fields_t (
+	field_name, field_num, field_type, descr
+) values (
+	'$fldname', $fldnum, $fldtype, '$flddescr');\n\n";
+
+		}
+
+		#
+		# Generate flist suitable for input to 
+		# PCM_OP_SDK_SET_FLD_SPECS.
+		#
+		if ($opt_f) {
+print 
+"0    PIN_FLD_FIELD  ARRAY [$elemid]
+1        PIN_FLD_FIELD_NAME    STR [0] \"$fldname\"
+1        PIN_FLD_FIELD_NUM     ENUM [0] $fldnum
+1        PIN_FLD_FIELD_TYPE    INT [0] $fldtype
+1        PIN_FLD_DESCR         STR [0] \"$flddescr\"\n"
+		}
+	}
+}
+
+#
+# If there were any opcodes, then print the POID information.
+#
+if ($opt_f && $elemid > 0) {
+	print "0    PIN_FLD_POID     POID [0] \$DB_NO /dd/fields 0\n";
+}
+
+if ($opt_f && $opt_w) {
+	print "</PCM_OP>\n";
+}

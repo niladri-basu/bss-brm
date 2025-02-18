@@ -1,0 +1,94 @@
+================================================================================
+FCT_Suspense
+--------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Module Version: 7.3_1 10018  12-Sep-2007  ashishk
+bug6359309    : SEL DOES NOT LOAD THE RECYCLED DATA INFORMATION INTO DB CORRECTLY
+================================================================================
+Module Version: 7.3_Modular 10017  23-Mar-2007  ashishk
+bug5943102    : SUSPENSE CHANGES FOR RA PROPAGATION
+
+================================================================================
+Module Version: 7.3_Patch 10016  20-Dec-2006  ashishk
+PRSF00240534: 7.2.1 -> 7.3(Unix/Ora) Upgrade : Unable to recycle the EDRs in 
+              7.3 which were initially suspended in 7.2.1  
+ 
+================================================================================
+Module Version: 7.3 10015  18-Jul-2006  ashishk
+PRSF00219265: Da Vinci Code Clean Up:--pipeline_mediation & suspense Please set 
+              isValidDetail false when you set error above warning 
+ 
+================================================================================
+Module Version: 7.3 10014  30-Jun-2006  ashishk
+PRSF00213705: Reasoning: R-060323-0090  Null Pointer Dereference 
+================================================================================
+Module Version: 7.3 10013  23-Feb-2006  pkashyap
+PRSF00194379: Suspense Manager displays wrong timestamps values (localization pb)
+(propagation of PRSF00181756 from 7.0_EBF)
+
+================================================================================
+Module Version: 7.3 10012 10-Jan-2006  dbhatt
+PRSF00189682: Batch suspense & pipeline category support in suspense pipeline 
+              plug-ins
+================================================================================
+
+Module Version: 7.0_Patch 10011  03-Aug-2005  pmahishi
+PRSF00178411: FCT_PreSuspense is slow(propagation of PRSF00148592 from 7.0_EBF)
+
+================================================================================
+Module Version: 6.7_FP2 10010 14-Dec-2004  pmahishi
+PRSF00145124: Regression - FCT_Suspense fails to map EDR field to Brand Object
+================================================================================
+Module Version: 6.7_FP2 10009 10-Nov-2004 smvenkat 
+PRSF00138176: QF (Standard Recycling) - SuspenseUpdateOutput is not created when pin_recycle is
+used to 'test recycle' the records.
+================================================================================
+Module Version: 6.7_FP2 10008 30-Oct-2004 Deepak Kapila
+PRSF00138224: QF (Standard Recycling) - FCT_Suspense mandates RecycleLog entry
+to be present when LogTestResults is used. 
+================================================================================
+Module Version: 6.7_FP2 10007 20-Sep-2004 Deepak Kapila
+PRSF00131622: QF: To Modify FCT_Suspense functional plugin for one EDR recycling method.
+
+Implemented the code for the Standard recycling mechanism and the test recycle functionality.
+In test recycle functionality logging of the test results is optional.
+Standard recycling mechanism is identified by checking the entries in the /config/suspense_reason_code table. If 
+there are no entries in this table then we identify it as standard recycling mechanism. 
+
+================================================================================
+Module Version: 6.7_FP2  10006  24-May-2004  Satya Prakash
+PRSF00105998: NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+=============================================================================
+Revision: 6.7_FP2  10005  19-Apr-2004  brajan
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+=============================================================================
+
+Revision: 6.7_FP2  10004  15-Mar-2004  lalita
+PRSF00099753: restore the binary serialized EDR and serialize it with XML format if EDR is suspended
+
+=============================================================================
+
+Revision: 6.7_FP2  10003  13-Mar-2004  lalita
+PRSF00098768: Set the suspense reason and sub reason to Not Suspended after
+successful processing.
+
+==============================================================================
+
+Revision: 6.7_FP2  10002  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+==============================================================================
+
+
+Revision: 6.5_FP3  10001  03-Oct-2003  msung
+PRSF00068493: Supports recycling process
+
+==============================================================================
+
+Revision: 6.5_FP3  10000  21-Aug-2003  msung
+PRSF00056560: Initial version of FCT_Suspense
+
+================================================================================

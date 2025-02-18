@@ -1,0 +1,129 @@
+================================================================================
+IXT_Era
+--------------------------------------------------------------------------------
+Module Release Notes
+--------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.IXT_Era $
+$Revision: /cgbubrm_7.5.0.pipeline/1 $
+$Author: smalviya $
+$Date: 2012/03/12 00:35:58 $
+================================================================================
+Module Version : 7.4 10009
+----------------
+Date : 05-Mar-2012
+----------------
+Change Order :  bug 13806728
+----------------
+Short Description :
+----------------
+Moved functionality from IXT to DAT to minimize the platform library dependency
+causing crash while processing cdr's.
+================================================================================
+Module Version : 7.4 10008
+----------------
+Date : 01-Apr-2011
+----------------
+Change Order :  bug11934078
+----------------
+Short Description :
+----------------
+An additional interface was provided to retrieve the account dom Iscript.
+================================================================================
+Module Version : 7.4 10007
+----------------
+Date : 23-Oct-2008
+----------------
+Change Order :  bug7497473
+----------------
+Short Description :
+----------------
+After configuring wirelss.reg with Twintalk enabler and processing a CDR core 
+is getting generated
+searchdata object creation line added to avoid core
+================================================================================
+Module Version : DaVinci 10006
+----------------
+Date : 28-Aug-2006
+----------------
+Change Order :  PRSF00230157
+----------------
+Short Description :
+-------------------
+Revert back to non-exception based DAT_Account::search() failure.
+This is neccesary for optimal performance when LOGIN_NOT_FOUND error occur.
+
+================================================================================
+Module Version : DaVinci 10005
+----------------
+
+Date : 19-Jan-2006
+----------------
+
+Change Order :  PRSF00187903
+----------------
+
+Short Description :
+-------------------
+Modifications to DAT::Account::search() function parameter list.
+
+================================================================================
+Module Version : Apollo 10004
+----------------
+
+Date : 06-OCT-2004
+----------------
+
+Change Order :  PRSF00133776
+----------------
+
+Short Description :
+-------------------
+Non reentrant Unix function calls should be replaced by corrsponding reentrant versions
+================================================================================
+Module Version : Apollo 10003
+----------------
+
+Date : 27-AUG-2004
+----------------
+
+Change Order :  PRSF00128112
+----------------
+
+Short Description :
+-------------------
+Twin Talk:DAT Account is returning (junk charecter) ^G charecters for ERA fields
+================================================================================
+Module Version : Apollo 10002
+----------------
+
+Date : 15-JUNE-2004
+----------------
+
+Change Order :  PRSF00116512
+----------------
+
+Short Description :
+-------------------
+Twin Talk:IXT/Era code change for HP build breaker
+================================================================================
+
+Module Version : Apollo 10001
+----------------
+
+Date : 09-JUNE-2004
+----------------
+
+Change Order :  PRSF00115637
+----------------
+
+Short Description :
+-------------------
+Build Spec Change:Twin Talk Enabler
+================================================================================ 
+
+Actual Version : 10000 / Date: 03-Mar-2004
+----------------
+
+PRSF00097512:     Initial version of the iScript Era extension.
+--------------------------------------------------------------------------------
+

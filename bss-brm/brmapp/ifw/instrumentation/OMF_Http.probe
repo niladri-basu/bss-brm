@@ -1,0 +1,6 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+http | 1 | httpInfo | Http Information | NotSpecified | Group | 
+httpInfo | 1 | port | Listening Port | ReadOnly | Integer | 
+httpInfo | 2 | styleSheetName | Style Sheet Name | ReadOnly | String | 
+httpInfo | 3 | portalLogoName | Portal Logo Name | ReadOnly | String | 
+httpInfo | 4 | numHttpRequests | Number of Requests Received | ReadOnly | Integer | 

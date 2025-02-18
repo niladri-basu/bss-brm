@@ -1,0 +1,133 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved.
+
+        This material is the confidential property of Oracle Corporation or
+        its licensors and may be used, reproduced, stored or transmitted only
+        in accordance with a valid Oracle license or sublicense agreement.-->
+   <xsd:element name="PCM_OP_BILL_MAKE_BILL_NOW_inputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="ITEMS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="ITEMS_ARRAY_PCM_OP_BILL_MAKE_BILL_NOW_1217">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PROGRAM_NAME" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="60"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="ITEMS_ARRAY_PCM_OP_BILL_MAKE_BILL_NOW_1217">
+      <xsd:sequence>
+         <xsd:element name="ITEM_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(item)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_BILL_MAKE_BILL_NOW_outputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="RESULTS" minOccurs="1" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="RESULTS_ARRAY_PCM_OP_BILL_MAKE_BILL_NOW_1312">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="RESULTS_ARRAY_PCM_OP_BILL_MAKE_BILL_NOW_1312">
+      <xsd:sequence>
+         <xsd:element name="BILLINFO_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="LAST_BILL_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(bill)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PENDING_RECV" type="UNION_PCM_OP_BILL_MAKE_BILL_NOW" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BUFFER_PCM_OP_BILL_MAKE_BILL_NOW">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:hexBinary">
+            <xsd:attribute name="flags" type="xsd:string" use="optional"/>
+            <xsd:attribute name="size" type="xsd:string" use="optional"/>
+            <xsd:attribute name="offset" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:simpleType name="EMPTY_PCM_OP_BILL_MAKE_BILL_NOW">
+      <xsd:restriction base="xsd:string">
+         <xsd:length value="0"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="UNION_PCM_OP_BILL_MAKE_BILL_NOW">
+      <xsd:union memberTypes="xsd:decimal EMPTY_PCM_OP_BILL_MAKE_BILL_NOW"/>
+   </xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,652 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:op="http://www.portal.com/schemas/BusinessOpcodes"
+            xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            elementFormDefault="qualified">
+<xsd:complexType name="serviceExtensionType">
+	<xsd:sequence>
+		<xsd:element name="AAC_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="AAC_PACKAGE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="AAC_PROMO_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="AAC_SERIAL_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="AAC_SOURCE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="AAC_VENDOR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="ALIAS_LIST" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+				</xsd:sequence>
+				<xsd:attribute type="xsd:string" name="elem"/>
+			</xsd:complexType>
+		</xsd:element>
+		<xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="CLOSE_WHEN_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CREATED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ITEM_POID_LIST" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="LASTSTAT_CMNT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="LAST_STATUS_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="LOGIN" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="MOD_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="NEXT_ITEM_POID_LIST" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="OBJECT_CACHE_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PASSWD" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PASSWD_EXPIRATION_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PASSWD_STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="POID" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PROFILE_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="READ_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="SERVICE_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="SUBSCRIPTION_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="TRANSFER_LIST" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+								<xsd:pattern value=""/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+								<xsd:pattern value=""/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+								<xsd:pattern value=""/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="ITEM_POID_LIST" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="NEXT_ITEM_POID_LIST" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+				</xsd:sequence>
+				<xsd:attribute type="xsd:string" name="elem"/>
+			</xsd:complexType>
+		</xsd:element>
+		<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="WRITE_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element ref="serviceExtension" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="serviceExtension" type="serviceExtensionType" abstract="true"/>
+<xsd:element name="service_admin_clientExtension" substitutionGroup="serviceExtension" type="service_admin_clientExtensionType"/>
+<xsd:complexType name="service_admin_clientExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="LOCK_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="LOCK_STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOGIN_ATTEMPTS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="PERMITTEDS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACTION" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAXIMUM" type="UNION_service" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MINIMUM" type="UNION_service" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="ROLE" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="APPLICATION" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PROFILE_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SERVICE_ADMINCLIENT" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PROFILE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USER_PREFS" type="BUFFER_service" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_broadbandExtension" substitutionGroup="serviceExtension" type="service_broadbandExtensionType"/>
+<xsd:complexType name="service_broadbandExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="IP_ADDRESSES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="IP_ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SERVICE_BROADBAND" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EVENT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_emailExtension" substitutionGroup="serviceExtension" type="service_emailExtensionType"/>
+<xsd:complexType name="service_emailExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ALIASES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="ATTRIBUTES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALUE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SERVICE_EMAIL" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="MAIL_SERVER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAX_MBOX_SIZE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAX_MSG_CNT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAX_MSG_SIZE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PATH" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_faxExtension" substitutionGroup="serviceExtension" type="service_faxExtensionType"/>
+<xsd:complexType name="service_faxExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_ipExtension" substitutionGroup="serviceExtension" type="service_ipExtensionType"/>
+<xsd:complexType name="service_ipExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ARGS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALUE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SERVICE_IP" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="COMPRESSION" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="IPADDR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PROTOCOL" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_ldapExtension" substitutionGroup="serviceExtension" type="service_ldapExtensionType"/>
+<xsd:complexType name="service_ldapExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_pcm_clientExtension" substitutionGroup="serviceExtension" type="service_pcm_clientExtensionType"/>
+<xsd:complexType name="service_pcm_clientExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="LOCK_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="LOCK_STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOGIN_ATTEMPTS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_providerExtension" substitutionGroup="serviceExtension" type="service_providerExtensionType"/>
+<xsd:complexType name="service_providerExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PROVIDER_TOPICS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="RATE_PER_AMOUNT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RATE_PER_EVENT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TOPIC_NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_provider_prodExtension" substitutionGroup="serviceExtension" type="service_provider_prodExtensionType"/>
+<xsd:complexType name="service_provider_prodExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PROVIDER_PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="PROD_NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RATE_PER_AMOUNT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RATE_PER_AMOUNT_CYCLE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RATE_PER_EVENT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RATE_PER_EVENT_CYCLE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_settlementExtension" substitutionGroup="serviceExtension" type="service_settlementExtensionType"/>
+<xsd:complexType name="service_settlementExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_settlement_roamingExtension" substitutionGroup="service_settlementExtension" type="service_settlement_roamingExtensionType"/>
+<xsd:complexType name="service_settlement_roamingExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_settlementExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_settlement_roaming_incollectExtension" substitutionGroup="service_settlement_roamingExtension" type="service_settlement_roaming_incollectExtensionType"/>
+<xsd:complexType name="service_settlement_roaming_incollectExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_settlement_roamingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_settlement_roaming_outcollectExtension" substitutionGroup="service_settlement_roamingExtension" type="service_settlement_roaming_outcollectExtensionType"/>
+<xsd:complexType name="service_settlement_roaming_outcollectExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_settlement_roamingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_ssgExtension" substitutionGroup="serviceExtension" type="service_ssgExtensionType"/>
+<xsd:complexType name="service_ssgExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ARGS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALUE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SERVICES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="OBJECT" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_streamExtension" substitutionGroup="serviceExtension" type="service_streamExtensionType"/>
+<xsd:complexType name="service_streamExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telcoExtension" substitutionGroup="serviceExtension" type="service_telcoExtensionType"/>
+<xsd:complexType name="service_telcoExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="TELCO_FEATURES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="TELCO_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="PRIMARY_NUMBER" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telco_gprsExtension" substitutionGroup="service_telcoExtension" type="service_telco_gprsExtensionType"/>
+<xsd:complexType name="service_telco_gprsExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_telcoExtensionType">
+			<xsd:sequence>
+				<xsd:element name="APN_ARRAY" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="APN" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="QOS_PROFILE_NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="GPRS_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BEARER_SERVICE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CELL_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOC_AREA_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ROUTING_AREA" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telco_gprs_roamingExtension" substitutionGroup="service_telco_gprsExtension" type="service_telco_gprs_roamingExtensionType"/>
+<xsd:complexType name="service_telco_gprs_roamingExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_telco_gprsExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telco_gsmExtension" substitutionGroup="service_telcoExtension" type="service_telco_gsmExtensionType"/>
+<xsd:complexType name="service_telco_gsmExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_telcoExtensionType">
+			<xsd:sequence>
+				<xsd:element name="GSM_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BEARER_SERVICE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="IMEI" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telco_gsm_dataExtension" substitutionGroup="service_telco_gsmExtension" type="service_telco_gsm_dataExtensionType"/>
+<xsd:complexType name="service_telco_gsm_dataExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_telco_gsmExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telco_gsm_faxExtension" substitutionGroup="service_telco_gsmExtension" type="service_telco_gsm_faxExtensionType"/>
+<xsd:complexType name="service_telco_gsm_faxExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_telco_gsmExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telco_gsm_roamingExtension" substitutionGroup="service_telco_gsmExtension" type="service_telco_gsm_roamingExtensionType"/>
+<xsd:complexType name="service_telco_gsm_roamingExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_telco_gsmExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telco_gsm_smsExtension" substitutionGroup="service_telco_gsmExtension" type="service_telco_gsm_smsExtensionType"/>
+<xsd:complexType name="service_telco_gsm_smsExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_telco_gsmExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telco_gsm_telephonyExtension" substitutionGroup="service_telco_gsmExtension" type="service_telco_gsm_telephonyExtensionType"/>
+<xsd:complexType name="service_telco_gsm_telephonyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="service_telco_gsmExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_telephonyExtension" substitutionGroup="serviceExtension" type="service_telephonyExtensionType"/>
+<xsd:complexType name="service_telephonyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ARGS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALUE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="FILTER_DETAILS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="FILTER_LIST" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="NUMBER" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+									</xsd:sequence>
+									<xsd:attribute type="xsd:string" name="elem"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="MODE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="REDIRECT_LIST" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NUMBER_IN" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NUMBER_OUT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SERVICE_TELEPHONY" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="COS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAX_ACTIVE_CALLS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NETWORK" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="QOS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SPEED_DIAL_LIST" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NUMBER" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="service_vpdnExtension" substitutionGroup="serviceExtension" type="service_vpdnExtensionType"/>
+<xsd:complexType name="service_vpdnExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="serviceExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ARGS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALUE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="SERVICE_IP" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="COMPRESSION" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="IPADDR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PROTOCOL" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="BUFFER_service">
+	<xsd:simpleContent>
+		<xsd:extension base="xsd:hexBinary">
+			<xsd:attribute name="flags" type="xsd:string" use="optional"/>
+			<xsd:attribute name="size" type="xsd:string" use="optional"/>
+			<xsd:attribute name="offset" type="xsd:string" use="optional"/>
+		</xsd:extension>
+	</xsd:simpleContent>
+</xsd:complexType>
+<xsd:simpleType name="EMPTY_service">
+	<xsd:restriction base="xsd:string">
+		<xsd:length value="0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="UNION_service">
+	<xsd:union memberTypes="xsd:decimal EMPTY_service"/>
+</xsd:simpleType>
+</xsd:schema>

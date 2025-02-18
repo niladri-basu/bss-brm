@@ -1,0 +1,41 @@
+#!/bin/sh
+# continuus file information --- %full_filespec: stop_qm.sh~7:shsrc:1 %
+#
+#  @(#) %full_filespec: stop_qm.sh~7:shsrc:1 %
+#
+#      Copyright (c) 1998 - 2006 Oracle. All rights reserved.
+#
+#      This material is the confidential property of Oracle Corporation or its
+#      licensors and may be used, reproduced, stored or transmitted only in
+#      accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# stop_dm_email
+#
+# run this BEFORE stopping the underlying database (if any)
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+QM=dm_email
+LOGDIR=/brmapp/portal/7.5/var/dm_email
+QMPID=${LOGDIR}/dm_email.pid
+
+me=$0
+
+if [ ! -f ${QMPID} ]; then
+	echo "${me}: ERROR: no pid file: ${QMPID}, cannot kill \"${QM}\""
+        exit 1
+fi       
+
+kill `cat ${QMPID}`
+rc=$?
+if [ ${rc} -ne 0 ]; then
+	echo "${me}: ERROR: kill ${QM} `cat ${QMPID}` FAILED"
+	exit ${rc}
+else
+	rm ${QMPID}
+fi
+
+exit 0

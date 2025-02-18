@@ -1,0 +1,48 @@
+--------------------------------------------------------------------------------
+-- Copyright (c) 2010, 2011, Oracle and/or its affiliates. 
+-- All rights reserved. 
+--
+--      This material is the confidential property of Oracle Corporation or its
+--      licensors and may be used, reproduced, stored or transmitted only in
+--      accordance with a valid Oracle license or sublicense agreement.
+--
+-- Module Description:
+--  SQL script to create the modify aan existing column
+--
+--------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE modify_columns_74 AS
+
+        v_ddl_stmt VARCHAR2(4000);
+	TABLE_NOT_THERE_OR_INVALID CONSTANT NUMBER := -20001;
+	SOME_OTHER_EXCEPTION  CONSTANT NUMBER := -20002;
+        v_errmsg VARCHAR2(200);
+BEGIN
+
+-- Modifying the 'DATA' column of the table 'IFW_DUPLICATECHECK' 
+IF (NOT pin_upg_common.table_exists('IFW_DUPLICATECHECK',v_errmsg)) THEN
+   RAISE_APPLICATION_ERROR(TABLE_NOT_THERE_OR_INVALID, 'TABLE IFW_DUPLICATECHECK DOES NOT EXIST'||SQLERRM, TRUE); 
+END IF;
+
+IF (NOT pin_upg_common.column_exists('IFW_DUPLICATECHECK', 'DATA', v_errmsg)) THEN
+   RAISE_APPLICATION_ERROR(TABLE_NOT_THERE_OR_INVALID, 'COLUMN  ''DATA'' DOES NOT EXIST IN THE TABLE IFW_DUPLICATECHECK'||SQLERRM, TRUE);
+END IF;
+
+v_ddl_stmt := 'ALTER TABLE IFW_DUPLICATECHECK MODIFY DATA VARCHAR2(4000 BYTE) ';
+EXECUTE IMMEDIATE v_ddl_stmt; 
+---------------------------------------------------------------------
+
+
+EXCEPTION
+        WHEN OTHERS THEN
+                 RAISE_APPLICATION_ERROR(SOME_OTHER_EXCEPTION,'SCRIPT FAILED WITH THE ERROR'||SQLERRM, TRUE);
+
+END modify_columns_74;
+/
+
+SET serverout on size 1000000;
+
+PROMPT Starting procedure modify_columns_74 ...
+
+EXEC modify_columns_74;
+

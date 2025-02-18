@@ -1,0 +1,596 @@
+//==============================================================================
+//
+//      Copyright (c) 2003 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_UsageTypeFunctions
+//
+//------------------------------------------------------------------------------
+
+Long   EXACT_MATCH = 0;
+Long   PREFIX_MATCH = 1;
+Long   POSTFIX_MATCH = 2;
+
+String custSegList;
+
+if (edrNumDatablocks( DETAIL.CUST_A) > 0)
+{
+  custSegList = edrString(DETAIL.CUST_A.CUST_SEG_LIST, 0);
+}
+else
+{
+  custSegList = "";
+}
+
+//==============================================================================
+// Function to compare 2 strings
+// Takes 2 strings to compare and the Match Type. 
+// The following match type will be supported
+// 1.Exact  2.Pre-Fix  3.Post Fix
+// Parameters 
+//       keyValue : Value to be compared
+//       compareValue : value to be compared against
+//       matchType      : Exact, Pre-Fix or PostFix match
+//==============================================================================
+
+function Bool strCompare ( String keyValue, String compareValue,
+                             Long matchType)
+{
+
+   switch ( matchType )
+   {
+     case 0:
+     {
+
+       if (keyValue == compareValue)
+       {
+         return true;
+       }
+       else
+       {
+         return false;
+       }
+     }
+     break;
+     case 1:
+     {
+       if (strStartsWith( keyValue, compareValue))
+       {
+         return true;
+       }
+       else
+       {
+         return false;
+       }
+     }
+     break;
+     case 2:
+     {
+       if (strEndsWith(keyValue, compareValue))
+       {
+         return true;
+       }
+       else
+       {
+         return false;
+       }
+     }
+     break;
+     default:
+     {
+       return false;
+     }
+   }
+   return false;
+}
+
+//==============================================================================
+// 
+// This function returns true, if the value to be compared matches for 
+// the given Account ERA and the corresponding profile key Name belonging to Customer A.
+// Parameters
+//       ProfileName : Name of the ERA for Customer A
+//       keyName     : Key Name of the Profile
+//       compareValue: Value to be compared
+//       matchType   : Exact, Pre-Fix or PostFix match
+// Return Value 
+//       String : Returns "T" , if the value to be compared matches for 
+//                the given ERA and Profile Name belonging to Customer A.
+//                else returns "N"
+//============================================================================
+
+function String compareCustERAforProfileAttributes 
+   (String profileName, String keyName, String compareValue, Long matchType )
+{
+
+  Long i_l=0;
+  Long j_l=0;
+  Bool value_l = false;
+  String keyValue;
+
+  if (edrNumDatablocks( DETAIL.CUST_A) > 0 and  
+      edrNumDatablocks( DETAIL.CUST_A.ERA, 0) > 0)
+  {
+    for ( i_l = 0; i_l < edrNumDatablocks(DETAIL.CUST_A.ERA, 0); i_l = i_l + 1 )
+    {
+      if (edrString(DETAIL.CUST_A.ERA.PROFILE, 0, i_l) == profileName)
+      {
+        for ( j_l = 0; j_l < edrNumDatablocks(DETAIL.CUST_A.ERA.PA, 0, i_l); 
+              j_l = j_l + 1 )
+        {
+          if (keyName == "")
+          {
+            keyValue = edrString(DETAIL.CUST_A.ERA.PA.VALUE, 0, i_l, j_l);
+            value_l = strCompare( compareValue, keyValue, matchType );
+            if (value_l == true)
+            {
+               return "Y";
+            }
+            // else return "N";
+          }
+          else
+          {
+            if (edrString(DETAIL.CUST_A.ERA.PA.KEY, 0, i_l, j_l) == keyName)
+            {
+              keyValue = edrString(DETAIL.CUST_A.ERA.PA.VALUE, 0, i_l, j_l);
+              value_l = strCompare( keyValue, compareValue, matchType); 
+              if (value_l == true)
+              {
+                 return "Y";
+               }
+               // else return "N";
+            }
+          }
+        }
+      }
+    }
+  }
+  return "N";
+} // end function compareCustERAforProfileAttributes
+
+//==============================================================================
+//  This function returns True if the value to be compared matches
+//   for the given Service ERA and the corresponding  profile key Name  belonging to 
+//   Customer A
+//  If the service is empty, the service type matching is ignored
+// Parameters
+//       ProfileName : Name of the profile for Customer A
+//       keyName     : Key Name of the attribute
+//       compareValue: Value to be compared
+//       ServiceType : Type of the service
+//       matchType   : Exact, Pre-Fix or PostFix match
+// Return Value 
+//       String : Rteurns "T" if  the value to be compared matches for 
+//                the given service ERA and Profile key Name belonging to Customer A.
+//                else returns "N"
+//==============================================================================
+function String compareProductERAforProfileAttributes
+    (String profileName, String keyName, String compareValue, String serviceType, 
+     Long matchType )
+{
+  Long j_l=0;
+  Long k_l=0;
+  String keyValue;
+  Bool value_l = false;
+
+  Long purchaseProdIndex = edrLong(DETAIL.CUST_A.INTERN_FOUND_PP_INDEX, 0);
+
+  if  (edrNumDatablocks( DETAIL.CUST_A) > 0 and  
+       edrNumDatablocks(DETAIL.CUST_A.PRODUCT, 0) > 0)
+  {
+    if (serviceType == "" or serviceType == 
+         edrString(DETAIL.CUST_A.PRODUCT.SERVICE_TYPE, 0, purchaseProdIndex) )
+    {    
+      if (edrNumDatablocks(DETAIL.CUST_A.PRODUCT.ERA, 0, purchaseProdIndex) > 0)
+      {
+        for ( j_l = 0;
+              j_l < edrNumDatablocks(DETAIL.CUST_A.PRODUCT.ERA, 0, purchaseProdIndex); 
+              j_l = j_l + 1 )
+        {
+          if (edrString(DETAIL.CUST_A.PRODUCT.ERA.PROFILE, 0, purchaseProdIndex, j_l) == 
+              profileName)
+          {
+            for ( k_l = 0; 
+                  k_l < edrNumDatablocks(DETAIL.CUST_A.PRODUCT.ERA.PA, 0, purchaseProdIndex, 
+                        j_l); 
+                  k_l = k_l + 1 )
+            {
+              if (keyName == "")
+              {
+                keyValue = edrString(DETAIL.CUST_A.PRODUCT.ERA.PA.VALUE, 
+                                0, purchaseProdIndex, j_l, k_l);
+
+                value_l = strCompare( keyValue, compareValue, matchType );
+
+                if (value_l == true)
+                {
+                  return "Y";
+                }
+                // else return "N";
+              }
+              else
+              {
+                if (edrString(DETAIL.CUST_A.PRODUCT.ERA.PA.KEY, 0, purchaseProdIndex, j_l, 
+                            k_l) == keyName)
+                {
+                  keyValue = edrString(DETAIL.CUST_A.PRODUCT.ERA.PA.VALUE, 
+                              0, purchaseProdIndex, j_l, k_l);
+
+                  value_l = strCompare(  keyValue, compareValue, matchType );
+
+                  if (value_l == true)
+                  {
+                    return "Y";
+                  }
+                  // else return "N";
+                }
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return "N";
+} // end function compareProductERAforProfileAttributes
+
+//==============================================================================
+//  Function to determine the Account Profile key value for a given ERA name and 
+//  Profile  Key Name
+// Parameters
+//       ProfileName : Name of the ERA 
+//       keyName     : Key Name of the attribute
+//       Cust_A      : True for Customer A and False for Customer B
+// Return Value 
+//       String : returns profile key value, if Account Profile key value 
+//                matches for a given ERA name and Profile Key Name else 
+//                returns an empty string
+//==============================================================================
+function String findAccountERAProfileAttributes (String profileName, 
+     String keyName, Bool cust_A )
+{
+  Long i_l;
+  Long j_l;
+
+  if (cust_A == true)
+  {
+    for (i_l = 0; i_l < edrNumDatablocks(DETAIL.CUST_A.ERA, 0); i_l = i_l + 1 )
+    {
+      if (edrString(DETAIL.CUST_A.ERA.PROFILE,0,i_l) == profileName)
+      {
+        for (j_l = 0; j_l < edrNumDatablocks(DETAIL.CUST_A.ERA.PA, 0, i_l); 
+                j_l = j_l + 1 )
+        {
+          if (keyName != "")
+          {
+            if (edrString(DETAIL.CUST_A.ERA.PA.KEY,0,i_l,j_l) == keyName)
+            {
+              return edrString(DETAIL.CUST_A.ERA.PA.VALUE, 0, i_l, j_l);
+            }
+            // else return "";
+          }
+          return edrString(DETAIL.CUST_A.ERA.PA.VALUE, 0, i_l, j_l);
+        }
+      }
+    }
+  }
+  else if (cust_A == false)
+  {
+    for (i_l = 0; i_l < edrNumDatablocks(DETAIL.CUST_B.ERA, 0); i_l = i_l + 1 )
+    {
+      if (edrString(DETAIL.CUST_B.ERA.PROFILE,0,i_l) == profileName)
+      {
+        for (j_l = 0; j_l < edrNumDatablocks(DETAIL.CUST_B.ERA.PA, 0, i_l); 
+             j_l = j_l + 1 )
+        {
+          if (keyName != "")
+          {
+            if (edrString(DETAIL.CUST_B.ERA.PA.KEY,0,i_l,j_l) == keyName)
+            {
+              return edrString(DETAIL.CUST_B.ERA.PA.VALUE, 0, i_l, j_l);
+            }
+            // else return "";
+          }
+          else 
+          {
+            return edrString(DETAIL.CUST_B.ERA.PA.VALUE, 0, i_l, j_l);
+          }
+        }
+      }
+    }
+  }
+  return "";
+}
+
+//==============================================================================
+//  This function returns true if the value of the Customer profile key value from 
+//    Customer ERA belonging to Customer A matches with the corresponding 
+//    profile key value in customer B
+// Parameters
+//       ProfileName : Name of the ERA
+//       keyName     : Key Name of the Profile.  If the keyName is empty, only
+//                   : the first Key of CUST_A will be compared.
+//       matchType   : Exact, Pre-Fix or PostFix match
+// Return Value 
+//       String : Returns "Y",if the value of the Customer profile key value from 
+//                Customer ERA belonging to Customer A matches with the 
+//                corresponding profile key value in customer B
+// else return "N".
+//============================================================================
+
+function String compareABCustEraPaValues (String profileName, String keyName,
+                    Long matchType)
+{
+   String profileValueCust_A;
+   String profileValueCust_B;
+
+   
+   profileValueCust_A = findAccountERAProfileAttributes (profileName, 
+                         keyName, true);
+  
+   if (profileValueCust_A != "")
+   {
+     profileValueCust_B = findAccountERAProfileAttributes (profileName, 
+                         keyName, false);
+
+     if ( strCompare (profileValueCust_A, profileValueCust_B, matchType) )
+     {
+        return "Y";
+     }
+   }
+   return "N";
+}
+
+//==============================================================================
+//  This function returns true if one of the value of the PROFILE_ATTRIBUTES from 
+//    CLOSEDUSERGROUP profile belonging to Customer A matches with the 
+//    corresponding PROFILE_ATTRIBUTES value in customer B
+// Parameters
+//       ProfileName : Name of the Closed User Group ERA 
+// Return Value 
+//       String : Returns "Y",if the value of the PROFILE_ATTRIBUTES value from 
+//                Closed User Group ERA belonging to Customer A matches with the 
+//                corresponding PROFILE_ATTRIBUTES value in customer B
+//                else return "N".
+//============================================================================
+
+function String compareABClosedUserGroup(String profileName)
+{
+  Long iNumBlocks = 0;
+
+  Long index;
+
+  //Closed User Group index
+  Long iCUG_A = -1;
+  Long iCUG_B = -1;
+ 
+  //PROFILE_ATTRIBUTES index
+  Long iPA_A;
+  Long iPA_B;
+
+  //PROFILE_ATTRIBUTES value
+  String nextValue_A;
+  String nextValue_B;
+
+  //find the Closed User Group index for CUST_B, return "N" if not exist.
+  iNumBlocks = edrNumDatablocks(DETAIL.CUST_B.ERA, 0);
+  for (index = 0; index < iNumBlocks; index = index + 1)
+  {
+    if (edrString(DETAIL.CUST_B.ERA.PROFILE, 0, index) == profileName)
+    {
+      iCUG_B = index;
+    }
+  }
+  if (iCUG_B == -1)
+  {
+    return "N";
+  }
+
+  //find the Closed User Group index for CUST_A, return "N" if not exist.
+  iNumBlocks = edrNumDatablocks(DETAIL.CUST_A.ERA, 0);
+  for (index = 0; index < iNumBlocks; index = index + 1)
+  {
+    if (edrString(DETAIL.CUST_A.ERA.PROFILE, 0, index) == profileName)
+    {
+      //break; doesn't work in for loop
+      iCUG_A = index;
+    }
+  }
+  if (iCUG_A == -1)
+  {
+    return "N";
+  }
+
+  //loop through all values in the DETAIL.CUST_A.ERA.PA
+  for (iPA_A = 0; 
+       iPA_A < edrNumDatablocks(DETAIL.CUST_A.ERA.PA, 0, iCUG_A); 
+       iPA_A = iPA_A + 1)
+  {
+    nextValue_A = edrString(DETAIL.CUST_A.ERA.PA.VALUE, 0, iCUG_A, iPA_A);
+    //loop through all values in the DETAIL.CUST_B.ERA.PA and find a match
+    for (iPA_B = 0;
+         iPA_B < edrNumDatablocks(DETAIL.CUST_B.ERA.PA, 0, iCUG_B); 
+         iPA_B = iPA_B + 1)
+    {
+      nextValue_B = edrString(DETAIL.CUST_B.ERA.PA.VALUE, 0, iCUG_B, iPA_B);
+      if ( strCompare (nextValue_A, nextValue_B, EXACT_MATCH) )
+      {
+        return "Y";
+      }
+    }
+  }
+  // no match
+  return "N";
+}
+
+//==============================================================================
+//  Function to determine the profile key value for a given Service ERA name and 
+//  Profile  Key in the purchase products block
+// Parameters
+//       ProfileName       : Name of the ERA 
+//       keyName           : Key Name of the attribute
+//       purchaseProdIndex : Index of the Rating Product in Cust_A block
+//       ServiceType       : Type of the service
+//       Cust_A            : True for Customer A and False for Customer B
+// Return Value 
+//       String : returns profile key value, if Profile key value 
+//                matches for a given Service ERA name and Profile Key Name 
+//                else 
+//                returns an empty string
+//==============================================================================
+
+function String findPurchasedProductsERAProfileAttributes (String profileName, 
+        String keyName,  Long purchaseProdIndex, String serviceType, Bool cust_A)
+{
+  Long i_l;
+  Long j_l;
+  Long k_l;
+
+
+  if (cust_A == true)
+  {
+    for (i_l = 0; i_l < edrNumDatablocks(DETAIL.CUST_A.PRODUCT.ERA, 0, 
+          purchaseProdIndex); i_l = i_l + 1 )
+    {
+
+      if (edrString(DETAIL.CUST_A.PRODUCT.ERA.PROFILE,0,purchaseProdIndex,i_l) 
+               == profileName)
+      {
+        for (j_l = 0; j_l < edrNumDatablocks(DETAIL.CUST_A.PRODUCT.ERA.PA,0,
+                purchaseProdIndex,i_l); j_l = j_l + 1 )
+        {
+          if (keyName != "")
+          {
+             if (edrString(DETAIL.CUST_A.PRODUCT.ERA.PA.KEY,0,
+                      purchaseProdIndex,i_l,j_l) == keyName)
+             {
+               return edrString(DETAIL.CUST_A.PRODUCT.ERA.PA.VALUE, 0,
+                                      purchaseProdIndex, i_l, j_l);
+             }
+             // else return "";
+           }
+          else 
+          {
+            return edrString(DETAIL.CUST_A.PRODUCT.ERA.PA.VALUE, 0,
+                                      purchaseProdIndex, i_l, j_l); 
+          }
+        }
+      }
+    }
+  }
+  else if (cust_A == false)
+  {
+    for (i_l = 0; i_l < edrNumDatablocks(DETAIL.CUST_B.PRODUCT, 0); 
+          i_l = i_l + 1 )
+    {
+
+      if (serviceType == "" or serviceType == 
+          edrString(DETAIL.CUST_B.PRODUCT.SERVICE_TYPE, 0, i_l))
+      {    
+        for (j_l = 0; 
+             j_l < edrNumDatablocks(DETAIL.CUST_B.PRODUCT.ERA, 0,i_l); 
+             j_l = j_l + 1 )
+        {
+
+          if (edrString(DETAIL.CUST_B.PRODUCT.ERA.PROFILE,0,i_l,j_l) == profileName)
+          {
+            for (k_l = 0; 
+                 k_l < edrNumDatablocks(DETAIL.CUST_B.PRODUCT.ERA.PA, 0, i_l,j_l); 
+                 k_l = k_l + 1 )
+            {
+              if (keyName  != "")
+              {
+                if (edrString(DETAIL.CUST_B.PRODUCT.ERA.PA.KEY,0,i_l,j_l,k_l) == 
+                                   keyName)
+                {
+                   return edrString(DETAIL.CUST_B.PRODUCT.ERA.PA.VALUE, 0,
+                                   i_l, j_l, k_l); 
+                }
+                // else return "";
+              }
+              else 
+              {
+                 return edrString(DETAIL.CUST_B.PRODUCT.ERA.PA.VALUE, 0,
+                                   i_l, j_l, k_l); 
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return "";
+} 
+
+
+//==============================================================================
+//  This function returns true if the value of the profile key value from 
+//    Service ERA's belonging to Customer A matches with the corresponding 
+//    profile key value in customer B
+//  If the service is empty, the service type matching is ignored
+// Parameters
+//       ProfileName       : Name of the ERA
+//       keyName           : Key Name of the Profile
+//       purchaseProdIndex : Index of the Rating Product in Cust_A block
+//       ServiceType       : Type of the service
+//       matchType         : Exact, Pre-Fix or PostFix match
+// Return Value 
+//       String : Returns "T",if the value of the profile key value from 
+//                Service ERA's belonging to Customer A matches with the 
+//                corresponding profile key value in customer B
+//                else return "F".
+//============================================================================
+
+function String compareABProductEraPaValues (String profileName, String keyName, 
+   Long purchaseProdIndex, String serviceType, Long matchType)
+{
+
+  String profileValueCust_A;
+  String profileValueCust_B;
+
+  profileValueCust_A = findPurchasedProductsERAProfileAttributes (profileName, 
+                         keyName, purchaseProdIndex, serviceType, true);
+  
+   if (profileValueCust_A != "")
+   {
+     profileValueCust_B = findPurchasedProductsERAProfileAttributes (profileName, 
+                         keyName, -1, serviceType, false);
+
+     if ( strCompare (profileValueCust_A, profileValueCust_B, matchType) )
+     {
+        return "Y";
+     }
+   }
+   return "N";
+}
+
+// This function returns false if the segment list contains the passed string.
+// Parameters
+//     segment  : market segment value.
+// Return Value
+//     Bool     : Returns true if it finds segment value else false.
+
+function Bool isSegmentContains( String segment )
+{
+  String segmentList[];
+  Long i;
+
+  // Split the custSegList string on the "|"s
+  Long numSegments = strSplit( segmentList, custSegList, "|");
+
+  for( i = 0; i < numSegments; i = i + 1)
+  {
+    if ( segment == segmentList[i] )
+    {
+      // if segment contains in the list then return true;
+      return( true );
+    }
+  }
+  //segment not found in list, return false.
+  return( false );
+}

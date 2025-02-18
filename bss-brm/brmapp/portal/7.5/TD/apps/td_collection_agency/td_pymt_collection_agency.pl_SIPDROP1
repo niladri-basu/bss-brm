@@ -1,0 +1,188 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+
+#use DBI;
+#use DBD::Oracle;
+use Time::Local;
+use File::Copy;
+use lib '.' ;
+use pcmif;
+use Sys::Hostname;
+use File::Basename;
+use File::Path;
+use strict;
+use warnings;
+use Cwd;
+
+
+my $ebufp;
+my $db_no;
+my $script = "TD_COLLECTION_AGENCY";
+my $INPUT_DIR;
+my $ARCHIVE_DIR;
+my $LOG_DIR;
+my $LOG_FILE;
+my $pcm_ctxp;
+#######################################
+# Reading Configaration File
+#######################################
+print  "Reading Configuration File \n\n";
+my %ConfVarTable;
+my $conf = "config.conf";
+#readConfigFile();
+
+if ( -e $conf )
+{
+    $INPUT_DIR = `grep '^-' $conf | grep INPUT_DIR | awk '{print \$NF}'`;
+    $ARCHIVE_DIR = `grep '^-' $conf | grep ARCHIVE_DIR | awk '{print \$NF}'`;
+    $LOG_DIR = `grep '^-' $conf | grep LOG_DIR | awk '{print \$NF}'`;
+    chomp($INPUT_DIR);
+    chomp($ARCHIVE_DIR);
+    chomp($LOG_DIR);
+
+}
+else
+{
+    print "\n$script: $conf configuration file not found!\n\n";
+    exit(1);
+}
+
+
+########################################
+# Create log file
+########################################
+my ($dd, $mm, $yyyy) = (localtime)[3..5];
+$mm=$mm+1;
+$yyyy=$yyyy+1900;
+my $date="$mm/$dd/$yyyy";
+my $file_date="$yyyy$mm$dd";
+
+my $log_file = "collection_agency_$file_date.log";
+$log_file = "$LOG_DIR"."/$log_file";
+open(LOG_FILE,">> $log_file") or die "Could not open log file";
+
+
+######################################
+# Get context and create error buffer
+######################################
+$ebufp = pcmif::pcm_perl_new_ebuf();
+$db_no='0.0.0.1';
+#print $db_no ;
+ $pcm_ctxp = pcmif::pcm_perl_connect($db_no, $ebufp);
+
+if (pcmif::pcm_perl_is_err($ebufp)) {
+        print LOG_FILE "FAILED to Connect to Infranet\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        #display_date("finished");
+        print "\nLog File $log_file\n\n";
+        close(LOG_FILE);
+        exit(1);
+}
+my $DB_NO = $db_no;
+
+###################################
+# Process the files in input folder
+###################################
+opendir(INPUT_DIR, $INPUT_DIR) or die "Could not open the input directory";
+my ($file, $in_file);
+
+my $col_file="collection_agency_$file_date.csv";
+open(COL_FILE,">$col_file") or die "Could not open collcetion agency file";
+close(COL_FILE);
+
+
+while ($file = readdir(INPUT_DIR))
+{
+    my $in_file="$INPUT_DIR/$file";
+
+    # Skip directories and swap files
+    next if(-d $in_file || $in_file =~ /\/\./);
+
+    # Open input file
+    open(IN_FILE,"<$in_file") or die ("Could not open input file");
+    print("\nProcessing $file\n");
+    print LOG_FILE "\nReading the input file $file\n";
+
+    # Read all the records from the input file into array
+    my @all_col_records = <IN_FILE>;
+    foreach my $col_record (@all_col_records)
+    {
+        # Process each record
+        process_records($col_record);
+    }
+
+    # Close input file
+    close(IN_FILE);
+
+    # Archive the input file
+    move("$in_file","$ARCHIVE_DIR") or die ("Could not archive the input file");
+    print("Archived $file\n");
+}
+
+# Close input directory
+closedir(INPUT_DIR);
+
+# Close the context
+#pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+
+sub process_records($)
+{
+
+
+my $adj_record = $_[0];
+
+    if ($adj_record =~ /^([\d\w]+[^, ]*),([^,]*),([+-]?\d+[^, ]*),([^,]*),([^,]*),([^,]*),([^,]*)$/){
+  	my ($account_no,$msisdn,$bill_info_id,$amount,$collection_agency_id,$pymt_trans_id,$payment_date)=($1,$2,$3,$4,$5,$6,$7);
+
+my ($mday,$mon,$year,$hour,$min,$sec) = split(/[\s.:]+/, $payment_date);
+my $time = timelocal($sec,$min,$hour,$mday,$mon-1,$year);
+
+my $col_in_flist=<<"XXX";
+        0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+        0 PIN_FLD_FLAGS         INT [0] 1
+	0 PIN_FLD_MSISDN        STR [0] "$msisdn" 
+        0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+        0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+        0 PIN_FLD_PAY_TYPE      ENUM [0] 10001
+        0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+        0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+	0 PIN_FLD_TRANS_ID	STR [0] "$pymt_trans_id"
+	0 PIN_FLD_CHANNEL_ID	INT [0] 101
+XXX
+	my $in_flistp = pcmif::pin_perl_str_to_flist($col_in_flist,$DB_NO,$ebufp);
+        if( pcmif::pcm_perl_is_err($ebufp) ){
+            pcmif::pcm_perl_print_ebuf($ebufp);
+            pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+           # display_date("finished");
+            print "\nLog File $log_file\n\n";
+            close(LOG_FILE);
+            close(IN_FILE);
+            closedir(INPUT_DIR);
+            exit(1);
+        }
+        print "\nInput flist \n $col_in_flist";
+        my $flags = 0;
+        #my $out_flistp = pcmif::pcm_perl_op($pcm_ctxp,"TD_OP_PYMT_REFUND_REVERSE",$flags, $in_flistp, $ebufp);
+	my $out_flistp = pcmif::pcm_perl_op($pcm_ctxp,"11003",$flags, $in_flistp, $ebufp);
+        if( pcmif::pcm_perl_is_err($ebufp) )
+        {
+            pcmif::pcm_perl_print_ebuf($ebufp);
+            pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+           # display_date("finished");
+            print "\nLog File $log_file\n\n";
+            close(LOG_FILE);
+            close(IN_FILE);
+            closedir(INPUT_DIR);
+            exit(1);
+        }
+
+        my $col_out_flist = pcmif::pin_perl_flist_to_str($out_flistp, $ebufp);
+
+     }
+
+   else
+    {
+        print LOG_FILE "Invalid record --> $adj_record";
+    }
+
+}
+

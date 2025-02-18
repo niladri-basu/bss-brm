@@ -1,0 +1,27 @@
+<Opcode name="PCM_OP_TRANS_ABORT"
+    visibility="public"
+    transaction="required"
+    component="server_platform"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+        opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc> This opcode aborts a currently open transaction. </Doc>
+  <Input>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required"
+        mode="complete">
+      <Doc>Partial Poid. Only the DB piece of the POID is significant. </Doc>
+    </Poid>
+  </Fields>
+  </Input>
+  <Output>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required"
+        mode="complete">
+      <Doc>POID passed in the input flist. Class can be of any type </Doc>
+    </Poid>
+  </Fields>
+  </Output>
+</Opcode>

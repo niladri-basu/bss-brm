@@ -1,0 +1,4 @@
+INSERT INTO IFW_EDRC_DESC ( EDRC_DESC, NAME, ENTRYBY ) VALUES ( 
+'ALL_RATE', 'WIRELESS_SAMPLE container description', 0); 
+commit;
+ 

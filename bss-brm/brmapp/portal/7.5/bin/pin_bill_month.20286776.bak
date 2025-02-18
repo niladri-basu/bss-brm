@@ -1,0 +1,67 @@
+#!/bin/sh
+#!/bin/sh
+# continuus file information --- %full_filespec: pin_bill_month.sh~9:shsrc:1 %
+
+####################################################################
+#-------------------------------------------------------------------
+#
+#  @(#) %full_filespec: pin_bill_month.sh~9:shsrc:1 %
+#
+#      Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+#
+#      This material is the confidential property of Oracle Corporation or its
+#      licensors and may be used, reproduced, stored or transmitted only in
+#      accordance with a valid Oracle license or sublicense agreement.
+# 
+#-------------------------------------------------------------------
+####################################################################
+
+VERSION=7.5
+
+####################################################################
+#-------------------------------------------------------------------
+#
+# Master Monthly Billing Script
+#
+#	Performs the following 'monthly' billing tasks:
+#
+#		- Collection	(pin_collect)
+#
+#	It is assumed that this script is run (in the background)
+#	by cron once a month, via a crontab entry something like the
+#	following (which will run the script on the 1st at 12:05 am):
+#
+#		5 0 1 * * /brmapp/portal/7.5/bin/pin_bill_month &
+#
+#-------------------------------------------------------------------
+####################################################################
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/pin_billd
+
+
+CNFDIR=${PINDIR}/apps/pin_billd
+
+PATH=/usr/bin:/bin:${PINDIR}/bin
+
+cd ${CNFDIR}
+
+#-------------------------------------------------------------------
+# CreditCard Collection		(pin_collect -pay_type 10003 -vendor fusa)
+# Direct Debit Collection	(pin_collect -pay_type 10005 -vendor fusa)
+#
+#	Attempt to (re)collect due balances that are at least
+#	a month old from CLOSED and INACTIVE creditcard accounts.
+#
+#-------------------------------------------------------------------
+pin_collect -inactive -rebill -end 30 -pay_type 10003 -vendor fusa
+pin_collect -close -rebill -end 30 -pay_type 10003 -vendor fusa
+pin_collect -inactive -rebill -end 30 -pay_type 10005 -vendor fusa
+pin_collect -close -rebill -end 30 -pay_type 10005 -vendor fusa
+
+#-------------------------------------------------------------------
+# All done - wait for all to finish up.
+#-------------------------------------------------------------------
+wait
+
+exit 0

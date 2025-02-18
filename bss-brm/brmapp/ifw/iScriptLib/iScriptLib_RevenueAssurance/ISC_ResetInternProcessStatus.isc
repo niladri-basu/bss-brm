@@ -1,0 +1,30 @@
+//==============================================================================
+//
+//      Copyright (c) 2007  Oracle. All rights reserved.
+//
+//     This material is the confidential property of Oracle Corporation
+//     or its subsidiaries or licensors and may be used, reproduced, stored
+//     or transmitted only in accordance with a valid Oracle license or
+//     sublicense agreement.
+//
+//-------------------------------------------------------------------------------
+// Block: ISC_ResetInternProcessStatus
+//-------------------------------------------------------------------------------
+// Module Description:
+//   This script resets the value of DETAIL.INTERN_PROCESS_STATUS to Normal (0)
+//   This IScript can be added as the last function plugin.
+//
+//------------------------------------------------------------------------------
+// Responsible:
+//
+//------------------------------------------------------------------------------
+ 
+function onDetailEdr
+{
+         edrLong(DETAIL.INTERN_PROCESS_STATUS) = 0;
+}
+ 
+function onInvalidDetailEdr
+{
+         edrLong(DETAIL.INTERN_PROCESS_STATUS) = 0;
+}

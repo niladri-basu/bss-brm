@@ -1,0 +1,175 @@
+//==============================================================================
+//
+// Copyright (c) 2009, 2013, Oracle and/or its affiliates. All rights reserved.
+//
+// This material is the confidential property of Oracle Corporation
+// or its licensors and may be used, reproduced, stored or transmitted
+// only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+// Block: ISC_GetResourceBalance.isc
+//-------------------------------------------------------------------------------
+// Module Description:
+//
+// This iScript is used for retrieving the balance of non-currency resource.
+//
+// getResourceBalance functionality is used for retrieving the balance of
+// non-currency resource and it is available in balance batch
+// module (DAT_BalanceBatch).
+//
+
+/* This section should be in wireless.reg for this iScript to get active */
+/*
+GetResourceBalance
+{
+ModuleName = FCT_GetResourceBalance
+Module
+    {
+	Active = True
+	Source = FILE
+	Scripts
+	{
+	    GetResourceBalance
+	    {
+		FileName = ./iScriptLib/iScriptLib_Standard/ISC_GetResourceBalance.isc
+	    }
+	}
+    }
+}
+*/
+ 
+use IXT_PipelineBal;
+Bool debug;
+
+function BEGIN
+{
+   // Make debug = true to enable debugging
+   debug = true;
+
+   if( setDAT_BalanceModule( "ifw.DataPool.BalanceDataModule.Module" ) )
+   {
+     if ( debug )
+       logPipeline( "GetResourceBalance iScript: Balance data Module is set\n" );
+   }
+   else
+   {
+     if ( debug )
+       logPipeline( "ERROR: Could not set Ic Module \n", 4 );
+   }
+}
+
+Decimal transactionID;
+
+function onBeginTransaction
+{
+  transactionID = edrDecimal( INTERNAL.TRANSACTION_ID );
+  if ( debug )
+    logPipeline( "GetResourceBalance iScript: Begin transaction " + decimalToStr( transactionID ) + "\n" );
+}
+
+function onDetailEdr
+{
+    // Proto type of the function
+    //  getResourceBal(const BAS::String pipelineName,
+    //                 const unsigned long dbNo,
+    //                 const unsigned long transId,
+    //                 const unsigned long balGroupId,
+    //                 const unsigned long resourceId,
+    //                 const BAS::DateTime startTime,
+    //                 const BAS::String contrib,
+    //                 const BAS::Decimal result)
+    Long  resourceId = 1000116;	// resourceId can be either hard-coded or fetched from EDR container
+    String contrib = "*";
+    Decimal result = 0.0;
+	Long currResource = 0;
+	String currSVCode = "";
+	String currTier = "";
+	String TierCounter = "";
+	Long DPpacketIndex;
+	Long blockIndex;
+	Long currValue = 0;
+	
+    // Extract Balance Group ID
+    String balGrpIdWithDbNo = edrString( DETAIL.INTERN_BALANCE_GROUP_ID );	// Balance Group Id is fetched from EDR Container
+    Long pos = strSearch(balGrpIdWithDbNo, "_");
+    Long balGrpIdStrLen = strLength(balGrpIdWithDbNo) - (pos + 1); // +1 is for skipping "_"
+    String balGrpIdStr = strSubstr(balGrpIdWithDbNo, (pos + 1), balGrpIdStrLen);
+    Long balGrpId = strToLong(balGrpIdStr);
+
+    // Extract DB No
+    Long dbNoStrLen = strLength(balGrpIdWithDbNo) - balGrpIdStrLen - 1; // -1 is for discarding "_"
+    String dbNoStr = strSubstr(balGrpIdWithDbNo, 0, dbNoStrLen);
+    Long dbNo = strToLong(dbNoStr);
+
+   // if ( debug ) {
+   //   logPipeline( "GetResourceBalance iScript: Trans Id " + decimalToStr(transactionID) + "\n" );
+   //   logPipeline( "GetResourceBalance iScript: Balance Group Id " + balGrpIdStr + "\n" );
+   //   logPipeline( "GetResourceBalance iScript: DB No " + dbNoStr + "\n" );
+   //   logPipeline( "GetResourceBalance iScript: Resource Id " + longToStr(resourceId) + "\n" );
+   // }
+	
+    Bool retStatus = getResourceBal(pipelineName(), dbNo, transactionID, balGrpId, resourceId, edrDate(DETAIL.CHARGING_START_TIMESTAMP), contrib, result);
+
+    if (retStatus == true) {
+        if ( debug )
+          logPipeline("GetResourceBalance iScript: Balance for the resource id is " + decimalToStr(result) + "\n");
+    }
+    else {
+        if ( debug )
+          logPipeline("GetResourceBalance iScript ERROR : Could not retrieve balances\n");
+    }
+	currValue = decimalToLong(result);
+	Long DPpacketEntries=edrNumDatablocks( DETAIL.ASS_CBD.DP,blockIndex); 
+	for(DPpacketIndex=0; DPpacketIndex < DPpacketEntries ; DPpacketIndex = DPpacketIndex +1 )
+	  {
+		// currResource = edrDecimal( DETAIL.ASS_CBD.DP.RESOURCE_ID,blockIndex,DPpacketIndex);
+		currResource = edrLong( DETAIL.ASS_CBD.DP.RESOURCE_ID,blockIndex,DPpacketIndex);
+		 currSVCode = edrString( DETAIL.ASS_CBD.DP.SERVICE_CODE,blockIndex,DPpacketIndex);
+		 //logPipeline("Printing the BP block details BEFORE set :\n");
+		// logPipeline( "BPID " + edrString(DETAIL.ASS_PIN.BP.PIN_RATE_TAG,blockIndex,DPpacketIndex) + "\n" );
+		//logPipeline("Printing the Resource_id and SVC code:\n");
+		// logPipeline( "GetResourceBalance iScript: currResource " + longToStr(currResource) + "\n" );
+//		 logPipeline( "RSID " + currResource + "\n" );
+		// logPipeline( "SVCcode " + currSVCode + "\n" );
+		 if (( strSearch(currSVCode,"BSMS", 0) >= 0 ) and ( currResource == 1000116 ))
+		{
+			logPipeline("Service code is BSMS:\n");
+			if ( (currValue >= 0) and (currValue <= 10))
+			{
+				currTier = "T1";
+			//	logPipeline( "currTier 1 " + currTier + "\n" );
+			}
+			else if ( (currValue >= 11) and (currValue <= 20))
+			{
+				currTier = "T2";
+			//	logPipeline( "currTier 2 " + currTier + "\n" );
+			}
+			else if ( (currValue >= 21) and (currValue <= 30))
+			{
+				currTier = "T3";
+			//	logPipeline( "currTier 3 " + currTier + "\n" );
+			}
+			else 
+			{
+				currTier = "T4";
+			//	logPipeline( "currTier 4 " + currTier + "\n" );
+			}
+			if ( currResource == resourceId )
+			{
+//				//TierCounter=currTier+"-"+currResource;
+		//		TierCounter=currTier;
+			//	logPipeline( "currTier is tier " + TierCounter + "\n" );
+			//	logPipeline( "SVCcode " + currSVCode + "\n" );
+		//		edrString(DETAIL.ASS_PIN.BP.PIN_RATE_TAG,0,1)=TierCounter;
+				edrString(DETAIL.ASS_PIN.BP.PIN_RATE_TAG,0,1)=currTier;
+
+				//	edrString(DETAIL.ASS_PIN.BP.PIN_RATE_TAG,blockIndex,DPpacketIndex)=currTier;
+				
+			}
+		}
+      }  
+	
+	
+		
+}

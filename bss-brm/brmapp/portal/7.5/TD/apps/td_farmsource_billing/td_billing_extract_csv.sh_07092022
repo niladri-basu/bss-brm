@@ -1,0 +1,77 @@
+#! /bin/ksh
+LOGINSQL=`egrep -v "#" login.cfg | grep "DB_LOGIN" |cut -d'=' -f2`
+outfile='/brmapp/portal/7.5/TD/apps/td_farmsource_billing/fs_logs/fs_billing_create.log'
+actg_dom=$1;
+#csvfile='/brmapp/portal/7.5/TD/apps/td_farmsource_billing/farmsource.csv' 
+csvpath='/brmapp/portal/7.5/TD/apps/td_farmsource_billing/csv'
+filename='2DegreesMobileLtd'$actg_dom.csv
+csvfile=$csvpath/$filename
+dbfailure=$log_dir/$dbfailure$now.txt
+sed -i 'd' $csvfile
+#echo $csvfile
+#echo $actg_dom
+#echo $LOGINSQL
+#echo "H,2Degrees Mobile Ltd,$actg_dom,80319754" > $csvfile
+
+$ORACLE_HOME/bin/sqlplus -s $LOGINSQL>>$csvfile<<EOF
+SET WRAP off
+set heading off;
+set feedback off;
+set linesize 350
+set trimout ON
+set trimspool ON
+set serveroutput off
+SET PAGESIZE 50000
+SET COLSEP ","
+
+SELECT 
+		ROW_TYPE || ',' ||
+		FS_ACCOUNT_NO || ',' ||
+       SUBSTR (FS_ACCOUNT_NAME, 0, 20) || ',' ||
+       FS_ACCOUNT_NO || ',' ||
+       INVOICE_NO || ',' ||
+	   ARTICLE_CODE || ',' ||
+       TO_CHAR(TRANSACTION_DATE, 'YYYYMMDD') || ',' ||
+       TAG || ',' ||  
+	   QUANTITY || ',' ||
+       NET_AMOUNT || ',' ||
+	   GST_AMOUNT || ',' ||
+       TOTAL_AMT_INCL_GST 
+FROM   TD_FS_BILLING_FILE_EXT_T
+order by FS_ACCOUNT_NO;
+clear buffer
+EXIT
+EOF
+
+records1=$($ORACLE_HOME/bin/sqlplus -s $LOGINSQL<<EOF
+set heading OFF
+set serveroutput off
+set feedback off
+SET LINESIZE 350
+SET WRAP OFF
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS OFF VERIFY OFF;
+set verify off
+set auto off
+set termout off
+set trimspool OFF
+SET SPACE 0
+select count(1)|| ',' ||round(sum(TOTAL_AMT_INCL_GST),4) as SUM_AMOUNT
+from 
+  PIN.TD_FS_BILLING_FILE_EXT_T;
+clear buffer
+EXIT
+EOF)
+footer="F,"$records1",,,,,,,,"
+#echo $footer | sed  s/\ //g>>$csvfile
+
+sed -i '1s/.*/H,2Degrees Mobile Ltd,'$actg_dom',80319754,,,,,,,,&/' $csvfile
+sed -i -e '$a'$footer $csvfile
+#sed -i '/^$/d' $csvfile
+#sed 's/[[:blank:]]*$//' $csvfile
+#sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' $csvfile
+#sed -i 's/[ ]*,[ ]*/,/' $csvfile
+#sed 's/^ *//; s/ *$//; /^$/d'  $csvfile
+awk 'NF { $1=$1; }' $csvfile
+echo "CSV Generation completed "
+exit;
+EOF

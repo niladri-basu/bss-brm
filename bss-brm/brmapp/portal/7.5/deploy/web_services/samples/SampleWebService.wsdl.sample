@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"  xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="CUSTOM_OP_READ_ACT_PRODUCT.xsd"/>
+			<include schemaLocation="CUSTOM_OP_ACT_INFO.xsd"/>
+        </schema>
+    </types>
+    <message name="CUSTOM_OP_READ_ACT_PRODUCT_inmsg">
+        <part element="brm:customOpReadActProduct" name="CUSTOM_OP_READ_ACT_PRODUCT_inputFlist"/>
+    </message>
+	 <message name="CUSTOM_OP_ACT_INFO_inmsg">
+        <part element="brm:customOpActInfo" name="CUSTOM_OP_ACT_INFO_inputFlist"/>
+    </message>
+    <message name="CUSTOM_OP_ACT_INFO_outmsg">
+        <part element="brm:CUSTOM_OP_ACT_INFO_outputFlist" name="CUSTOM_OP_ACT_INFO_response"/>
+    </message>
+    <portType name="CUSTACTService_ptt">
+        <operation name="customOpReadActProduct">
+            <input message="brm:CUSTOM_OP_READ_ACT_PRODUCT_inmsg" name="CUSTOM_OP_READ_ACT_PRODUCT_inmsg"/>
+            <output message="brm:CUSTOM_OP_READ_ACT_PRODUCT_outmsg" name="CUSTOM_OP_READ_ACT_PRODUCT_outmsg"/>
+        </operation>
+		 <operation name="customOpActInfo">
+            <input message="brm:CUSTOM_OP_ACT_INFO_inmsg" name="CUSTOM_OP_ACT_INFO_inmsg"/>
+            <output message="brm:CUSTOM_OP_ACT_INFO_outmsg" name="CUSTOM_OP_ACT_INFO_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="CUSTACTService_binding" type="brm:CUSTACTService_ptt">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="customOpReadActProduct">
+            <soap:operation SoapAction="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes/customOpReadActProduct"/>
+            <input name="CUSTOM_OP_READ_ACT_PRODUCT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="CUSTOM_OP_READ_ACT_PRODUCT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+		<operation name="customOpActInfo">
+            <soap:operation SoapAction="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes/customOpActInfo"/>
+            <input name="CUSTOM_OP_ACT_INFO_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="CUSTOM_OP_ACT_INFO_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="CUSTACTServices_v2">
+        <port binding="brm:CUSTACTService_binding" name="CUSTACTService_pt">
+            <soap:address location="https://localhost:8080/brm/CUSTACTServices_v2"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="CUSTACTService_plt">
+        <plt:role name="CUSTACTService_role">
+            <plt:portType name="brm:CUSTACTService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

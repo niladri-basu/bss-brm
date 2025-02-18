@@ -1,0 +1,6 @@
+INSERT INTO IFW_TAXGROUP ( TAXGROUP, NAME ) VALUES ( 
+'NORM', 'Normal Inhabitants'); 
+INSERT INTO IFW_TAXGROUP ( TAXGROUP, NAME ) VALUES ( 
+'NATO', 'N.A.T.O. Members'); 
+commit;
+ 

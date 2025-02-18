@@ -1,0 +1,9857 @@
+
+#
+# Framework version     : Infranet Pipeline Server / Version 7.5PS11 10031
+# Copyright information : (c) 1998 - 2009 ORACLE. All rights reserved.
+# File creation time    : 12.09.2019 15:36:36
+# Process ID            : 19294
+#
+
+ifw 
+{ 
+Active = FALSE
+ProcessLoopTimeout = 10
+QueueRequestTimeout = 0
+ParallelLoadManager 
+{ 
+Active = False
+NumberOfThreads = 5
+} 
+
+Instrumentation 
+{ 
+ProbeBroker 
+{ 
+ProbeInfoFilePath = ./instrumentation
+} 
+
+} 
+
+DiagnosticDataHandler 
+{ 
+DiagnosticFilePath = ./log
+DiagnosticFileName = diagnostic.dat
+} 
+
+LogMessageTable 
+{ 
+MessageFilePath = ./etc
+MessageFileSuffix = .msg
+} 
+
+Semaphore 
+{ 
+FilePath = ./semaphore
+FileName = semaphore.reg
+} 
+
+Registry 
+{ 
+FilePath = ./info
+FileName = infoWIRELESS.reg
+NiceFormatFileName = infoNiceWIRELESS.reg
+Buffer 
+{ 
+Size = 100
+} 
+
+} 
+
+ProcessLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/process
+FileName = processWIRELESS
+FileSuffix = .log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+MemoryMonitor 
+{ 
+ScaleUnit = M
+WarningFreeMemLimit = 10
+ShutdownFreeMemLimit = 5
+} 
+
+DataPool 
+{ 
+Login 
+{ 
+ModuleName = DBC
+Module 
+{ 
+UserName = INTEGRATE
+PassWord = &aes|08|0D5E11BFDD97D2769D9B0DBFBD1BBF7E174B446E7DA339AD5BEAFC967ECA419FD3
+DatabaseName = BRMUAT
+AccessLib = oci11g72
+Connections = 5
+} 
+
+} 
+
+LoginInfranet 
+{ 
+ModuleName = DBC
+Module 
+{ 
+UserName = PIN
+PassWord = &aes|10|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC23D94E0FFD3C7A7B1152827133F1C2726
+DatabaseName = BRMUAT
+AccessLib = oci11g72
+Connections = 5
+} 
+
+} 
+
+LoginQueue 
+{ 
+ModuleName = DBC
+Module 
+{ 
+UserName = PIN
+PassWord = &aes|10|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC23D94E0FFD3C7A7B1152827133F1C2726
+DatabaseName = BRMUAT
+AccessLib = oci11g72
+Connections = 5
+} 
+
+} 
+
+PortalConfigDataModule 
+{ 
+ModuleName = DAT_PortalConfig
+Module 
+{ 
+InfranetConnection = ifw.DataPool.LoginInfranet
+} 
+
+} 
+
+Listener 
+{ 
+ModuleName = DAT_Listener
+Module 
+{ 
+InfranetConnection = ifw.DataPool.LoginQueue
+QueueName = IFW_SYNC_QUEUE
+LogEvents = TRUE
+QueueLibrary = OracleQueue
+EventThreadAllocation 
+{ 
+RecycleRequest = 1
+} 
+
+CheckInterval = 60
+} 
+
+} 
+
+CustomerData 
+{ 
+ModuleName = DAT_AccountBatch
+Module 
+{ 
+IntegrateConnection = ifw.DataPool.Login
+InfranetConnection = ifw.DataPool.LoginInfranet
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+LogEvents = False
+LoadLogins = True
+Connections = 5
+InitialLoading = FALSE
+AddAliasList = False
+ReadAccountBalances = False
+Threads = 4
+UseAsRouter = False
+Listener = ifw.DataPool.Listener
+LoadPercentage = 10
+TimesTenEnabled = False
+} 
+
+ModuleName = Dat_AccountRealtime
+} 
+
+ZoneDataModule 
+{ 
+ModuleName = DAT_Zone
+Module 
+{ 
+ReuseOnFailure = FALSE
+Source = DataBase
+MaxAge = 0
+DistCalcMode = DISC
+DataConnection = ifw.DataPool.Login
+LoadZoneDescription = False
+LoadZoneEntryName = False
+CliMode = DEC
+ZoneModels 
+} 
+
+} 
+
+USCDataModule 
+{ 
+ModuleName = DAT_USC_Map
+Module 
+{ 
+Source = DataBase
+DataConnection = ifw.DataPool.Login
+LoadZoneDescription = False
+LoadZoneEntryName = False
+} 
+
+} 
+
+PrefixDescDataModule 
+{ 
+ModuleName = DAT_PrefixDesc
+Module 
+{ 
+Source = Database
+DataConnection = ifw.DataPool.Login
+ReuseOnFailure = false
+CLIBase = 10
+} 
+
+} 
+
+PriceDataModule 
+{ 
+ModuleName = DAT_PriceModel
+Module 
+{ 
+DataConnection = ifw.DataPool.Login
+Listener = ifw.DataPool.Listener
+LogEvents = false
+} 
+
+} 
+
+CalendarDataModule 
+{ 
+ModuleName = DAT_Calendar
+Module 
+{ 
+DataConnection = ifw.DataPool.Login
+} 
+
+} 
+
+RateplanDataModule 
+{ 
+ModuleName = DAT_Rateplan
+Module 
+{ 
+DataConnection = ifw.DataPool.Login
+Listener = ifw.DataPool.Listener
+LogEvents = false
+} 
+
+} 
+
+TimeDataModule 
+{ 
+ModuleName = DAT_TimeModel
+Module 
+{ 
+DataConnection = ifw.DataPool.Login
+} 
+
+} 
+
+DayRateDataModule 
+{ 
+ModuleName = DAT_Dayrate
+Module 
+{ 
+DataConnection = ifw.DataPool.Login
+} 
+
+} 
+
+ExchangeRateDataModule 
+{ 
+ModuleName = DAT_ExchangeRate
+Module 
+{ 
+DataConnection = ifw.DataPool.Login
+ReuseOnFailure = TRUE
+} 
+
+} 
+
+ScenarioReader 
+{ 
+ModuleName = DAT_ScenarioReader
+Module 
+{ 
+DataConnection = ifw.DataPool.Login
+Calendar = 20000
+} 
+
+} 
+
+CurrencyDataModule 
+{ 
+ModuleName = DAT_Currency
+Module 
+{ 
+ReuseOnFailure = TRUE
+InfranetConnection = ifw.DataPool.LoginInfranet
+} 
+
+} 
+
+DiscountModelDataModule 
+{ 
+ModuleName = DAT_Discount
+Module 
+{ 
+InfranetConnection = ifw.DataPool.LoginInfranet
+IntegrateConnection = ifw.DataPool.Login
+AccountDataModule = ifw.DataPool.CustomerData
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+EvalScriptFiles 
+{ 
+scriptFile1 = ./TD/iScript_custom/ISC_CustomBTD.isc
+} 
+
+} 
+
+} 
+
+BalanceDataModule 
+{ 
+ModuleName = DAT_BalanceBatch
+Module 
+{ 
+InfranetConnection = ifw.DataPool.LoginInfranet
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+ListenerDataModule = ifw.DataPool.Listener
+BalanceDirectory = ./data/balance
+UseFlexibleConsumptionRule = True
+LogEvents = False
+LogTransactions = False
+SelectiveSubBalLoad = True
+} 
+
+} 
+
+ModelSelectorDataModule 
+{ 
+ModuleName = DAT_ModelSelector
+Module 
+{ 
+ListenerDataModule = ifw.DataPool.Listener
+IntegrateConnection = ifw.DataPool.Login
+LogEvents = True
+} 
+
+} 
+
+ItemAssignDataModule 
+{ 
+ModuleName = DAT_ItemAssign
+Module 
+{ 
+InfranetConnection = ifw.DataPool.LoginInfranet
+AccountDataModule = ifw.DataPool.CustomerData
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+ItemPoidReservedRangeUnitSize = 10000
+} 
+
+} 
+
+RecyclingData 
+{ 
+ModuleName = DAT_Recycle
+Module 
+{ 
+Listener = ifw.DataPool.Listener
+LogEvents = False
+ControlPath = ./database/Oracle/Scripts/Suspense
+ParameterFile = parameter.isc
+QueueFileName = RecycleJobIds_wireless.dat
+QueueFilePath = ./data
+ProcessCount = 50
+PipelineCategory = RatingPipeline
+} 
+
+} 
+
+} 
+
+TransactionIdController 
+{ 
+Source = File
+Generator 
+{ 
+FileName = ./tam/TransactionIDsWIRELESS.dat
+Increment = 200
+} 
+
+} 
+
+SequencerPool 
+Pipelines 
+{ 
+PRE_PROCESS_PREPAID 
+{ 
+Active = FALSE
+RejectStream = RejectOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFilePRE_PROCESS_PREPAID.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticPRE_PROCESS_PREPAID.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SIMPLESAMPLE = ./TD/formatDesc/Formats/MED_Format/TD_MED_Format.dsc
+SOL42_SUSPENSE = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SIMPLESAMPLE = ./TD/formatDesc/Formats/MED_Format/TD_MED_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EDR_OUTPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_PRE_PROCESS_PREPAID.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = True
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+Buffer 
+{ 
+Size = 500
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+Size = 100
+} 
+
+OutputBuffer 
+{ 
+Size = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 200
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+DefaultOutput = EdrOutput
+Grammar = ./TD/formatDesc/Formats/MED_Format/TD_MED_InGrammar.dsc
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_prepaid/in
+InputPrefix = TD_PRE
+InputSuffix = .cdr
+DonePath = /cdrapp_prepaid/done
+DonePrefix = test_PREPROCESS
+DoneSuffix = .done
+ErrorPath = /cdrapp_prepaid/error
+ErrorPrefix = test_PREPROCESS
+ErrorSuffix = .err
+TempPrefix = tmp_PREPROCESS
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Standard 
+{ 
+FunctionPool 
+{ 
+EdrDump_PreProcess 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/PreProcessMapping.dump
+} 
+
+} 
+
+EdrDump_Fake 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/Fake.dump
+} 
+
+} 
+
+DuplicateCheck 
+{ 
+ModuleName = FCT_DuplicateCheck
+Module 
+{ 
+Active = TRUE
+Path = /cdrapp_prepaid/dup
+FileName = calls.duplicate
+StreamName = DuplicateOutput
+BufferLimit = 20170901
+SearchKey = DETAIL.A_NUMBER
+StoreLimit = 20170901
+DataConnection = ifw.DataPool.Login
+IndexSpaceName = INTEGRATE_TS_1_IDX
+TableSpaceName = INTEGRATE_TS_1_DAT
+Fields 
+{ 
+1 = DETAIL.ASS_CI.SEQUENCE_NUMBER
+2 = DETAIL.ASS_CI.CDR_TYPE
+3 = DETAIL.DESCRIPTION
+4 = DETAIL.ASS_CI.SCP_ID
+} 
+
+} 
+
+} 
+
+ServiceOutputEdrSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingEdr_GSM.irl
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+ChargePrecision = 3
+WriteDefaultEdr = False
+SpecificationVersionNumber = 2
+SequenceGeneration = Transaction
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DuplicateOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = test
+OutputSuffix = .dup
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = dup.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+RejectOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = test_PREPROCESS
+OutputSuffix = .data
+TempPrefix = tmp_PREPROCESS
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = pre.tmp.
+TempDataSuffix = .pre
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+EdrOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = PREPROCESS_PIPELINE
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/edr/others
+OutputPrefix = TD_RATE_PRE
+OutputSuffix = .edr
+TempPrefix = tmp_PREPROCESS
+TempDataPath = /cdrapp_prepaid/edr/others
+TempDataPrefix = new.tmp.
+TempDataSuffix = .edr
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+EdrTELOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = PREPROCESS_PIPELINE
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/edr/telephony
+OutputPrefix = TD_RATE_PRE_TEL
+OutputSuffix = .edr
+TempPrefix = tmp_PREPROCESS_TEL
+TempDataPath = /cdrapp_prepaid/edr/telephony
+TempDataPrefix = new.tmp.
+TempDataSuffix = .edr
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+EdrDATAOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = PREPROCESS_PIPELINE
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/edr/data
+OutputPrefix = TD_RATE_PRE_DAT
+OutputSuffix = .edr
+TempPrefix = tmp_PREPROCESS_DAT
+TempDataPath = /cdrapp_prepaid/edr/data
+TempDataPrefix = new.tmp.
+TempDataSuffix = .edr
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+EdrSMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = PREPROCESS_PIPELINE
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/edr/sms
+OutputPrefix = TD_RATE_PRE_SMS
+OutputSuffix = .edr
+TempPrefix = tmp_PREPROCESS_SMS
+TempDataPath = /cdrapp_prepaid/edr/sms
+TempDataPrefix = new.tmp.
+TempDataSuffix = .edr
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = log_
+FileSuffix = .log
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+PRE_PROCESS_POSTPAID 
+{ 
+Active = FALSE
+RejectStream = RejectOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFilePRE_PROCESS_POSTPAID.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticPRE_PROCESS_POSTPAID.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SIMPLESAMPLE = ./TD/formatDesc/Formats/MED_Format/TD_MED_Format.dsc
+SOL42_SUSPENSE = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SIMPLESAMPLE = ./TD/formatDesc/Formats/MED_Format/TD_MED_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_PRE_PROCESS_POSTPAID.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = True
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+Buffer 
+{ 
+Size = 500
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+Size = 100
+} 
+
+OutputBuffer 
+{ 
+Size = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 200
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+DefaultOutput = EdrOutput
+Grammar = ./TD/formatDesc/Formats/MED_Format/TD_MED_InGrammar.dsc
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_postpaid/in
+InputPrefix = TD_POST
+InputSuffix = .cdr
+DonePath = /cdrapp_postpaid/done
+DonePrefix = test_PREPROCESS
+DoneSuffix = .done
+ErrorPath = /cdrapp_postpaid/error
+ErrorPrefix = test_PREPROCESS
+ErrorSuffix = .err
+TempPrefix = tmp_PREPROCESS
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Standard 
+{ 
+FunctionPool 
+{ 
+EdrDump_PreProcess 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/PreProcessMapping.dump
+} 
+
+} 
+
+EdrDump_Fake 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/Fake.dump
+} 
+
+} 
+
+DuplicateCheck 
+{ 
+ModuleName = FCT_DuplicateCheck
+Module 
+{ 
+Active = TRUE
+Path = /cdrapp_postpaid/dup
+FileName = calls.duplicate
+StreamName = DuplicateOutput
+BufferLimit = 20170901
+SearchKey = DETAIL.A_NUMBER
+StoreLimit = 20170901
+DataConnection = ifw.DataPool.Login
+IndexSpaceName = INTEGRATE_TS_1_IDX
+TableSpaceName = INTEGRATE_TS_1_DAT
+Fields 
+{ 
+1 = DETAIL.ASS_CI.SEQUENCE_NUMBER
+2 = DETAIL.ASS_CI.CDR_TYPE
+3 = DETAIL.DESCRIPTION
+4 = DETAIL.ASS_CI.SCP_ID
+} 
+
+} 
+
+} 
+
+ServiceOutputEdrSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingEdr_GSM.irl
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+ChargePrecision = 3
+WriteDefaultEdr = False
+SpecificationVersionNumber = 2
+SequenceGeneration = Transaction
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DuplicateOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = test
+OutputSuffix = .dup
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = dup.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+RejectOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = test_PREPROCESS
+OutputSuffix = .data
+TempPrefix = tmp_PREPROCESS
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = pre.tmp.
+TempDataSuffix = .pre
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+EdrOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = PREPROCESS_PIPELINE
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/edr/others
+OutputPrefix = TD_RATE_POST
+OutputSuffix = .edr
+TempPrefix = tmp_PREPROCESS
+TempDataPath = /cdrapp_postpaid/edr/others
+TempDataPrefix = new.tmp.
+TempDataSuffix = .edr
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+EdrTELOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = PREPROCESS_PIPELINE
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/edr/telephony
+OutputPrefix = TD_RATE_POST_TEL
+OutputSuffix = .edr
+TempPrefix = tmp_PREPROCESS_TEL
+TempDataPath = /cdrapp_postpaid/edr/telephony
+TempDataPrefix = new.tmp.
+TempDataSuffix = .edr
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+EdrDATAOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = PREPROCESS_PIPELINE
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/edr/data
+OutputPrefix = TD_RATE_POST_DAT
+OutputSuffix = .edr
+TempPrefix = tmp_PREPROCESS_DAT
+TempDataPath = /cdrapp_postpaid/edr/data
+TempDataPrefix = new.tmp.
+TempDataSuffix = .edr
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+EdrSMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = PREPROCESS_PIPELINE
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/edr/sms
+OutputPrefix = TD_RATE_POST_SMS
+OutputSuffix = .edr
+TempPrefix = tmp_PREPROCESS_SMS
+TempDataPath = /cdrapp_postpaid/edr/sms
+TempDataPrefix = new.tmp.
+TempDataSuffix = .edr
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = log_
+FileSuffix = .log
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+PRE_RECYCLE 
+{ 
+Active = FALSE
+MobileCountryCode = 262
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = DevNull
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFilePRE_RECYCLE.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = ./data/log/edrStatisticPRE_RECYCLE.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_SUSPENSE = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE.dsc
+} 
+
+InputMapping 
+OutputMapping 
+{ 
+EDR_OUTPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutMap.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_PRE_RECYCLE.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 500
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 1
+InputModule 
+{ 
+ModuleName = INP_Recycle
+Module 
+{ 
+DefaultOutput = PreRecycleOutputPrepaid
+RecyclingDataModule = ifw.DataPool.RecyclingData
+InfranetConnection = ifw.DataPool.LoginInfranet
+InputStream 
+{ 
+ModuleName = EXT_InEasyDB
+Module 
+{ 
+DataConnection = ifw.DataPool.LoginInfranet
+ControlPath = ./database/Oracle/Scripts/Suspense
+FileName = DB
+FileNameExtension = true
+InputPrefix = sol42_
+InputSuffix = .dat
+FieldDelimiter = \t
+RecordDelimiter = \n
+ParameterFile = parameter.isc
+SqlHeader = RecycleHeader.sql
+SqlDetail = RecycleDetail.sql
+Replace = true
+SynchronizeWithOutput = true
+NumberOfRows = 1000
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+PreProcessing 
+{ 
+FunctionPool 
+{ 
+SubscriptionOutputSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+SubscriptionOutputSplit = ./TD/iScript_custom/IRL_RecordTypeSplitting.irl
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+DeleteEmptyFile = True
+MaxErrorRates 
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+PreRecycleOutputPrepaid 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RECYCLING_PIPELINE
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/edr/others
+OutputPrefix = TD_RATE_PRE
+OutputSuffix = .edr
+TempPrefix = tmp_PRERECYCLE
+TempDataPath = /cdrapp_prepaid/edr/others
+TempDataPrefix = recycle.tmp.
+TempDataSuffix = .edr
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+PreRecycleOutputPrepaidTEL 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RECYCLING_PIPELINE
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/edr/telephony
+OutputPrefix = TD_RATE_PRE
+OutputSuffix = .edr
+TempPrefix = tmp_PRERECYCLE
+TempDataPath = /cdrapp_prepaid/edr/telephony
+TempDataPrefix = recycle.tmp.
+TempDataSuffix = .edr
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+PreRecycleOutputPrepaidSMS 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RECYCLING_PIPELINE
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/edr/sms
+OutputPrefix = TD_RATE_PRE
+OutputSuffix = .edr
+TempPrefix = tmp_PRERECYCLE
+TempDataPath = /cdrapp_prepaid/edr/sms
+TempDataPrefix = recycle.tmp.
+TempDataSuffix = .edr
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+PreRecycleOutputPrepaidDATA 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RECYCLING_PIPELINE
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/edr/data
+OutputPrefix = TD_RATE_PRE
+OutputSuffix = .edr
+TempPrefix = tmp_PRERECYCLE
+TempDataPath = /cdrapp_prepaid/edr/data
+TempDataPrefix = recycle.tmp.
+TempDataSuffix = .edr
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+PreRecycleOutputPostpaid 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RECYCLING_PIPELINE
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/edr/others
+OutputPrefix = TD_RATE_POST
+OutputSuffix = .edr
+TempPrefix = tmp_PRERECYCLE
+TempDataPath = /cdrapp_postpaid/edr/others
+TempDataPrefix = recycle.tmp.
+TempDataSuffix = .edr
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+PreRecycleOutputPostpaidTEL 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RECYCLING_PIPELINE
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/edr/telephony
+OutputPrefix = TD_RATE_POST
+OutputSuffix = .edr
+TempPrefix = tmp_PRERECYCLE
+TempDataPath = /cdrapp_postpaid/edr/telephony
+TempDataPrefix = recycle.tmp.
+TempDataSuffix = .edr
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+PreRecycleOutputPostpaidSMS 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RECYCLING_PIPELINE
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/edr/sms
+OutputPrefix = TD_RATE_POST
+OutputSuffix = .edr
+TempPrefix = tmp_PRERECYCLE
+TempDataPath = /cdrapp_postpaid/edr/sms
+TempDataPrefix = recycle.tmp.
+TempDataSuffix = .edr
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+PreRecycleOutputPostpaidDATA 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RECYCLING_PIPELINE
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_OutGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/edr/data
+OutputPrefix = TD_RATE_POST
+OutputSuffix = .edr
+TempPrefix = tmp_PRERECYCLE
+TempDataPath = /cdrapp_postpaid/edr/data
+TempDataPrefix = recycle.tmp.
+TempDataSuffix = .edr
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Unit
+EdrTraceEnabled = False
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+TD_POSTPAID_RATE 
+{ 
+Active = FALSE
+CountryCode = 974
+MobileCountryCode = 974
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = SuspenseCreateOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFilePostpaidWIRELESS.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticWIRELESS.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_FORINPUT.dsc
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_Format.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_TD_POSTPAID_RATE.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 2
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InGrammar.dsc
+DefaultOutput = TELOutput
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_postpaid/edr/others
+InputPrefix = TD_RATE_POST
+InputSuffix = .edr
+DonePath = /cdrapp_postpaid/done
+DonePrefix = test_ALLRATE
+DoneSuffix = .done
+ErrorPath = /cdrapp_postpaid/error
+ErrorPrefix = test_ALLRATE
+ErrorSuffix = .err
+TempPrefix = tmp_ALLRATE
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Processing 
+{ 
+FunctionPool 
+{ 
+EdrDump_PreSuspenseDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/PreSuspense.dump
+} 
+
+} 
+
+PreSuspense 
+{ 
+ModuleName = FCT_PreSuspense
+Module 
+{ 
+Active = True
+QueryableFields 
+{ 
+SUSP_USAGE_TELCO_INFO_T 
+{ 
+START_TIME = DETAIL.CHARGING_START_TIMESTAMP
+CALL_DURATION = DETAIL.DURATION
+CALLING_FROM = DETAIL.A_NUMBER
+CALLED_TO = DETAIL.B_NUMBER
+SERVICE_TYPE = DETAIL.BASIC_SERVICE
+USAGE_TYPE = DETAIL.USAGE_TYPE
+} 
+
+SUSP_USAGE_TELCO_GSM_INFO_T 
+{ 
+CELL_ID = DETAIL.ASS_GSMW_EXT.CELL_ID
+DESTINATION_SID = DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION
+DIALED_NUMBER = DETAIL.ASS_GSMW_EXT.DIALED_DIGITS
+ORIGIN_SID = DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION
+SECONDARY_MSID = DETAIL.ASS_GSMW_EXT.PORT_NUMBER
+} 
+
+} 
+
+} 
+
+} 
+
+ServiceCodeMap 
+{ 
+ModuleName = FCT_ServiceCodeMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EdrDump_ServiceCodeMapDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/ServiceCodeMap.dump
+} 
+
+} 
+
+UsageClassMap 
+{ 
+ModuleName = FCT_UsageClassMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+OverwriteUsageClass = False
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EdrDump_UsageClassMapDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/UsageClassMap.dump
+} 
+
+} 
+
+EventDiscarding 
+{ 
+ModuleName = FCT_Discard
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+Function = Discard
+StreamName = DevNull
+} 
+
+} 
+
+CallAssembling 
+{ 
+ModuleName = FCT_CallAssembling
+Module 
+{ 
+Active = False
+Path = .
+FileName = calls
+RejectMissingChain = False
+} 
+
+} 
+
+PrefixDesc 
+{ 
+ModuleName = FCT_PrefixDesc
+Module 
+{ 
+Active = False
+PrefixDataModule = ifw.DataPool.PrefixDescDataModule
+} 
+
+} 
+
+CustomerSearch 
+{ 
+ModuleName = FCT_Account
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.CustomerData
+} 
+
+} 
+
+EdrDump_CustomerDataDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/CustomerData.dump
+} 
+
+} 
+
+ItemAssign 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = True
+Source = File
+Scripts 
+{ 
+ItemAssign 
+{ 
+FileName = ./TD/iScript_custom/ISC_TD_ItemTag.isc
+} 
+
+} 
+
+} 
+
+} 
+
+ProfileAnalyzer 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = False
+Source = FILE
+Scripts 
+{ 
+ProfileAnalyzer 
+{ 
+ProfileName = FRIENDS_FAMILY
+LabelSeparator = ,
+FileName = ./iScriptLib/iScriptLib_Standard/ISC_ProfileAnalyzer.isc
+} 
+
+} 
+
+} 
+
+} 
+
+UsageType 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = FALSE
+Source = File
+Descriptions 
+{ 
+UsageTypeDetermination = ./iScriptLib/iScriptLib_Standard/IRL_UsageType.irl
+} 
+
+} 
+
+} 
+
+Filter_Set 
+{ 
+ModuleName = FCT_Filter_Set
+Module 
+{ 
+Active = False
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+InfranetConnection = ifw.DataPool.LoginInfranet
+} 
+
+} 
+
+LeastCostPerEDR 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = False
+Source = File
+Descriptions 
+{ 
+LeastCostCheck = ./iScriptLib/iScriptLib_Standard/IRL_LeastCostPerEDR.irl
+} 
+
+} 
+
+} 
+
+PromotionalSavingPerEDR 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = False
+Source = File
+Descriptions 
+{ 
+PromotionalSaving = ./iScriptLib/iScriptLib_Standard/IRL_PromotionalSavingPerEDR.irl
+} 
+
+} 
+
+} 
+
+EdrDump_CustomerRatingDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/CustomerRating.dump
+} 
+
+} 
+
+CustomerRating 
+{ 
+ModuleName = FCT_CustomerRating
+Module 
+{ 
+Active = TRUE
+Mode = CUSTOMER
+DataConnection = ifw.DataPool.Login
+DefaultRateplan = Standard
+LeastCostRating = False
+PromotionalSaving = False
+} 
+
+} 
+
+PreRatingZone 
+{ 
+ModuleName = FCT_PreRating
+Module 
+{ 
+Active = True
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+ZoneDataModule = ifw.DataPool.ZoneDataModule
+} 
+
+} 
+
+APNMap 
+{ 
+ModuleName = FCT_APN_Map
+Module 
+{ 
+Active = False
+DataConnection = ifw.DataPool.Login
+APNGroup 
+} 
+
+} 
+
+UsageScenarioMap 
+{ 
+ModuleName = FCT_USC_Map
+Module 
+{ 
+Active = FALSE
+DataModule = ifw.DataPool.USCDataModule
+DefaultUSCGroup = ALL_RATE
+} 
+
+} 
+
+RateServiceClassMap 
+{ 
+ModuleName = FCT_RSC_Map
+Module 
+{ 
+Active = FALSE
+DataConnection = ifw.DataPool.Login
+DefaultRscGroup = ALL_RATE
+} 
+
+} 
+
+EdrDump_MainRating_pre 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/MainRating_pre.dump
+} 
+
+} 
+
+MainRating 
+{ 
+ModuleName = FCT_MainRating
+Module 
+{ 
+Active = TRUE
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+CalendarDataModule = ifw.DataPool.CalendarDataModule
+TimeDataModule = ifw.DataPool.TimeDataModule
+PriceDataModule = ifw.DataPool.PriceDataModule
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+EdrDump_MainRating_post 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/MainRating_post.dump
+} 
+
+} 
+
+SpecialDayRate 
+{ 
+ModuleName = FCT_Dayrate
+Module 
+{ 
+Active = FALSE
+DayrateDataModule = ifw.DataPool.DayRateDataModule
+} 
+
+} 
+
+RateAdjustment 
+{ 
+ModuleName = FCT_RateAdjust
+Module 
+{ 
+Active = FALSE
+Source = Database
+DataConnection = ifw.DataPool.Login
+} 
+
+} 
+
+DiscountAnalysisModule 
+{ 
+ModuleName = FCT_DiscountAnalysis
+Module 
+{ 
+Active = TRUE
+DiscountModelDataModule = ifw.DataPool.DiscountModelDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+EdrDump_ApolloDiscountModuleDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/ApolloDiscountModule.dump
+} 
+
+} 
+
+ApolloDiscountModule 
+{ 
+ModuleName = FCT_Discount
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+DiscountMoreThanPossible = False
+BackOut = False
+SupportBundleERA = False
+IgnoreEDROnDeadlock = False
+IgnoreEDROnDiscountError = False
+IgnoreEDROnLock = False
+} 
+
+} 
+
+Round_Discounting 
+{ 
+ModuleName = FCT_Rounding
+Module 
+{ 
+Active = FALSE
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+Mode = Discounting
+} 
+
+} 
+
+ApolloApplyBalanceModule 
+{ 
+ModuleName = FCT_ApplyBalance
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+DiscountFunctionalModule = Functions.Processing.FunctionPool.ApolloDiscountModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+NotificationOutputDirectory = /cdrapp_postpaid/out/notifybalancebreach
+NotificationOutputPrefix = balancebreach_
+} 
+
+} 
+
+FlexibleItemAssignment 
+{ 
+ModuleName = FCT_ItemAssign
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.ItemAssignDataModule
+} 
+
+} 
+
+AddInfranetBillingRecord 
+{ 
+ModuleName = FCT_BillingRecord
+Module 
+{ 
+Active = TRUE
+CurrencyType = R
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ItemAssignDataModule = ifw.DataPool.ItemAssignDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+} 
+
+} 
+
+EdrDump_PreServiceOutput 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/PreServiceOutput.dump
+} 
+
+} 
+
+ServiceOutputPostpaidSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingPostpaid.irl
+} 
+
+} 
+
+} 
+
+ObjectCacheTypeOutputSplit 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = FALSE
+Source = File
+Scripts 
+{ 
+ObjectCacheTypeOutputSplit 
+{ 
+FileName = ./iScriptLib/iScriptLib_Standard/ISC_ObjectCacheTypeOutputSplitter.isc
+} 
+
+} 
+
+} 
+
+} 
+
+Aggregate 
+{ 
+ModuleName = FCT_AggreGate
+Module 
+{ 
+Active = False
+ScenarioReaderDataModule = ifw.DataPool.ScenarioReader
+Scenarios 
+ResultFile 
+{ 
+TempSuffix = .tmp
+DoneSuffix = .dat
+WriteEmptyFile = FALSE
+} 
+
+ControlFile 
+{ 
+Suffix = .ctl
+DataFilePath = TRUE
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+{ 
+INF_IGNORE_ON_DISCOUNTACCOUNT_DEADLOCK = DiscountDeadlockOutput
+INF_IGNORE_ON_DISCOUNT_ERROR = DiscountErrorOutput
+INF_IGNORE_ON_BALANCEGROUP_LOCK = DiscountErrorOutput
+} 
+
+} 
+
+} 
+
+Suspense 
+{ 
+ModuleName = FCT_Suspense
+Module 
+{ 
+Active = True
+SuspenseCreateStream = SuspenseCreateOutput
+SuspenseUpdateStream = SuspenseUpdateOutput
+DataConnection = ifw.DataPool.LoginInfranet
+LogTestResults = False
+PipelineCategory = RatingPipeline
+RecycleLog 
+} 
+
+} 
+
+EdrDump_ALLRATELastDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_postpaid/dump/ALLRATELastDump.dump
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+ERR_CUST_NOT_FOUND = 20
+} 
+
+MultiThreading 
+{ 
+Active = False
+NumberOfThreads = 1
+BatchSize = 0
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DiscountErrorOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/discountError
+OutputPrefix = test
+OutputSuffix = .dsc
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/discountError
+TempDataPrefix = dsc.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DiscountDeadlockOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/discountError
+OutputPrefix = test
+OutputSuffix = .dlk
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/discountError
+TempDataPrefix = dlk.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+TELOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/telephony
+OutputPrefix = test_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/telephony
+TempDataPrefix = tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/sms
+OutputPrefix = test_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/sms
+TempDataPrefix = sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+MMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/mms
+OutputPrefix = test_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/mms
+TempDataPrefix = mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VOMOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/voicemail
+OutputPrefix = test_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/voicemail
+TempDataPrefix = vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DATOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/data
+OutputPrefix = test_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/data
+TempDataPrefix = dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VASOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/vas
+OutputPrefix = test_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/vas
+TempDataPrefix = vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VAPOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/vap
+OutputPrefix = test_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/vap
+TempDataPrefix = vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseCreateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = suspense_create_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = susp.create.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseUpdateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /tmp_suspended_usage
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = suspense_update_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = susp.update.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Transaction
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+TD_POSTPAID_RATE_TEL 
+{ 
+Active = FALSE
+CountryCode = 64
+MobileCountryCode = 64
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = SuspenseCreateOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFileTD_POSTPAID_RATE_TEL.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticTD_POSTPAID_RATE_TEL.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_FORINPUT.dsc
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_Format.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_TD_POSTPAID_RATE_TEL.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 2
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InGrammar.dsc
+DefaultOutput = TELOutput
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_postpaid/edr/telephony
+InputPrefix = TD_RATE_POST
+InputSuffix = .edr
+DonePath = /cdrapp_postpaid/done
+DonePrefix = test_ALLRATE
+DoneSuffix = .done
+ErrorPath = /cdrapp_postpaid/error
+ErrorPrefix = test_ALLRATE
+ErrorSuffix = .err
+TempPrefix = tmp_ALLRATE
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Processing 
+{ 
+FunctionPool 
+{ 
+PreSuspense 
+{ 
+ModuleName = FCT_PreSuspense
+Module 
+{ 
+Active = True
+QueryableFields 
+{ 
+SUSP_USAGE_TELCO_INFO_T 
+{ 
+START_TIME = DETAIL.CHARGING_START_TIMESTAMP
+CALL_DURATION = DETAIL.DURATION
+CALLING_FROM = DETAIL.A_NUMBER
+CALLED_TO = DETAIL.B_NUMBER
+SERVICE_TYPE = DETAIL.BASIC_SERVICE
+USAGE_TYPE = DETAIL.USAGE_TYPE
+} 
+
+SUSP_USAGE_TELCO_GSM_INFO_T 
+{ 
+CELL_ID = DETAIL.ASS_GSMW_EXT.CELL_ID
+DESTINATION_SID = DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION
+DIALED_NUMBER = DETAIL.ASS_GSMW_EXT.DIALED_DIGITS
+ORIGIN_SID = DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION
+SECONDARY_MSID = DETAIL.ASS_GSMW_EXT.PORT_NUMBER
+} 
+
+} 
+
+} 
+
+} 
+
+ServiceCodeMap 
+{ 
+ModuleName = FCT_ServiceCodeMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+MapGroup = ALL_RATE
+} 
+
+} 
+
+UsageClassMap 
+{ 
+ModuleName = FCT_UsageClassMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+OverwriteUsageClass = False
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EventDiscarding 
+{ 
+ModuleName = FCT_Discard
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+Function = Discard
+StreamName = DevNull
+} 
+
+} 
+
+CustomerSearch 
+{ 
+ModuleName = FCT_Account
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.CustomerData
+} 
+
+} 
+
+ItemAssign 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = True
+Source = File
+Scripts 
+{ 
+ItemAssign 
+{ 
+FileName = ./TD/iScript_custom/ISC_TD_ItemTag.isc
+} 
+
+} 
+
+} 
+
+} 
+
+CustomerRating 
+{ 
+ModuleName = FCT_CustomerRating
+Module 
+{ 
+Active = TRUE
+Mode = CUSTOMER
+DataConnection = ifw.DataPool.Login
+DefaultRateplan = Standard
+LeastCostRating = False
+PromotionalSaving = False
+} 
+
+} 
+
+PreRatingZone 
+{ 
+ModuleName = FCT_PreRating
+Module 
+{ 
+Active = True
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+ZoneDataModule = ifw.DataPool.ZoneDataModule
+} 
+
+} 
+
+MainRating 
+{ 
+ModuleName = FCT_MainRating
+Module 
+{ 
+Active = TRUE
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+CalendarDataModule = ifw.DataPool.CalendarDataModule
+TimeDataModule = ifw.DataPool.TimeDataModule
+PriceDataModule = ifw.DataPool.PriceDataModule
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+DiscountAnalysisModule 
+{ 
+ModuleName = FCT_DiscountAnalysis
+Module 
+{ 
+Active = TRUE
+DiscountModelDataModule = ifw.DataPool.DiscountModelDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+ApolloDiscountModule 
+{ 
+ModuleName = FCT_Discount
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+DiscountMoreThanPossible = False
+BackOut = False
+SupportBundleERA = False
+IgnoreEDROnDeadlock = False
+IgnoreEDROnDiscountError = False
+IgnoreEDROnLock = False
+} 
+
+} 
+
+ApolloApplyBalanceModule 
+{ 
+ModuleName = FCT_ApplyBalance
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+DiscountFunctionalModule = Functions.Processing.FunctionPool.ApolloDiscountModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+NotificationOutputDirectory = /cdrapp_postpaid/out/notifybalancebreach
+NotificationOutputPrefix = balancebreach_
+} 
+
+} 
+
+FlexibleItemAssignment 
+{ 
+ModuleName = FCT_ItemAssign
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.ItemAssignDataModule
+} 
+
+} 
+
+AddInfranetBillingRecord 
+{ 
+ModuleName = FCT_BillingRecord
+Module 
+{ 
+Active = TRUE
+CurrencyType = R
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ItemAssignDataModule = ifw.DataPool.ItemAssignDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+} 
+
+} 
+
+ServiceOutputPostpaidSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingPostpaid.irl
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+{ 
+INF_IGNORE_ON_DISCOUNTACCOUNT_DEADLOCK = DiscountDeadlockOutput
+INF_IGNORE_ON_DISCOUNT_ERROR = DiscountErrorOutput
+INF_IGNORE_ON_BALANCEGROUP_LOCK = DiscountErrorOutput
+} 
+
+} 
+
+} 
+
+Suspense 
+{ 
+ModuleName = FCT_Suspense
+Module 
+{ 
+Active = True
+SuspenseCreateStream = SuspenseCreateOutput
+SuspenseUpdateStream = SuspenseUpdateOutput
+DataConnection = ifw.DataPool.LoginInfranet
+LogTestResults = False
+PipelineCategory = RatingPipeline
+RecycleLog 
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+ERR_CUST_NOT_FOUND = 20
+} 
+
+MultiThreading 
+{ 
+Active = False
+NumberOfThreads = 1
+BatchSize = 0
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DiscountErrorOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/discountError
+OutputPrefix = test
+OutputSuffix = .dsc
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/discountError
+TempDataPrefix = dsc.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DiscountDeadlockOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/discountError
+OutputPrefix = test
+OutputSuffix = .dlk
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/discountError
+TempDataPrefix = dlk.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+TELOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/telephony
+OutputPrefix = test_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/telephony
+TempDataPrefix = tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/sms
+OutputPrefix = test_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/sms
+TempDataPrefix = sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+MMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/mms
+OutputPrefix = test_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/mms
+TempDataPrefix = mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VOMOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/voicemail
+OutputPrefix = test_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/voicemail
+TempDataPrefix = vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DATOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/data
+OutputPrefix = test_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/data
+TempDataPrefix = dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VASOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/vas
+OutputPrefix = test_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/vas
+TempDataPrefix = vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VAPOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/vap
+OutputPrefix = test_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/vap
+TempDataPrefix = vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseCreateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = suspense_create_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = susp.create.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseUpdateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /tmp_suspended_usage
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = suspense_update_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = susp.update.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Transaction
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+TD_POSTPAID_RATE_DATA 
+{ 
+Active = FALSE
+CountryCode = 64
+MobileCountryCode = 64
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = SuspenseCreateOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFileTD_POSTPAID_RATE_DAT.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticTD_POSTPAID_RATE_DATA.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_FORINPUT.dsc
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_Format.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_TD_POSTPAID_RATE_DATA.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 2
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InGrammar.dsc
+DefaultOutput = DATOutput
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_postpaid/edr/data
+InputPrefix = TD_RATE_POST
+InputSuffix = .edr
+DonePath = /cdrapp_postpaid/done
+DonePrefix = test_ALLRATE
+DoneSuffix = .done
+ErrorPath = /cdrapp_postpaid/error
+ErrorPrefix = test_ALLRATE
+ErrorSuffix = .err
+TempPrefix = tmp_ALLRATE
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Processing 
+{ 
+FunctionPool 
+{ 
+PreSuspense 
+{ 
+ModuleName = FCT_PreSuspense
+Module 
+{ 
+Active = True
+QueryableFields 
+{ 
+SUSP_USAGE_TELCO_INFO_T 
+{ 
+START_TIME = DETAIL.CHARGING_START_TIMESTAMP
+CALL_DURATION = DETAIL.DURATION
+CALLING_FROM = DETAIL.A_NUMBER
+CALLED_TO = DETAIL.B_NUMBER
+SERVICE_TYPE = DETAIL.BASIC_SERVICE
+USAGE_TYPE = DETAIL.USAGE_TYPE
+} 
+
+SUSP_USAGE_TELCO_GSM_INFO_T 
+{ 
+CELL_ID = DETAIL.ASS_GSMW_EXT.CELL_ID
+DESTINATION_SID = DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION
+DIALED_NUMBER = DETAIL.ASS_GSMW_EXT.DIALED_DIGITS
+ORIGIN_SID = DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION
+SECONDARY_MSID = DETAIL.ASS_GSMW_EXT.PORT_NUMBER
+} 
+
+} 
+
+} 
+
+} 
+
+ServiceCodeMap 
+{ 
+ModuleName = FCT_ServiceCodeMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+MapGroup = ALL_RATE
+} 
+
+} 
+
+UsageClassMap 
+{ 
+ModuleName = FCT_UsageClassMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+OverwriteUsageClass = False
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EventDiscarding 
+{ 
+ModuleName = FCT_Discard
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+Function = Discard
+StreamName = DevNull
+} 
+
+} 
+
+CustomerSearch 
+{ 
+ModuleName = FCT_Account
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.CustomerData
+} 
+
+} 
+
+ItemAssign 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = True
+Source = File
+Scripts 
+{ 
+ItemAssign 
+{ 
+FileName = ./TD/iScript_custom/ISC_TD_ItemTag.isc
+} 
+
+} 
+
+} 
+
+} 
+
+CustomerRating 
+{ 
+ModuleName = FCT_CustomerRating
+Module 
+{ 
+Active = TRUE
+Mode = CUSTOMER
+DataConnection = ifw.DataPool.Login
+DefaultRateplan = Standard
+LeastCostRating = False
+PromotionalSaving = False
+} 
+
+} 
+
+PreRatingZone 
+{ 
+ModuleName = FCT_PreRating
+Module 
+{ 
+Active = True
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+ZoneDataModule = ifw.DataPool.ZoneDataModule
+} 
+
+} 
+
+MainRating 
+{ 
+ModuleName = FCT_MainRating
+Module 
+{ 
+Active = TRUE
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+CalendarDataModule = ifw.DataPool.CalendarDataModule
+TimeDataModule = ifw.DataPool.TimeDataModule
+PriceDataModule = ifw.DataPool.PriceDataModule
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+DiscountAnalysisModule 
+{ 
+ModuleName = FCT_DiscountAnalysis
+Module 
+{ 
+Active = TRUE
+DiscountModelDataModule = ifw.DataPool.DiscountModelDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+ApolloDiscountModule 
+{ 
+ModuleName = FCT_Discount
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+DiscountMoreThanPossible = False
+BackOut = False
+SupportBundleERA = False
+IgnoreEDROnDeadlock = False
+IgnoreEDROnDiscountError = False
+IgnoreEDROnLock = False
+} 
+
+} 
+
+ApolloApplyBalanceModule 
+{ 
+ModuleName = FCT_ApplyBalance
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+DiscountFunctionalModule = Functions.Processing.FunctionPool.ApolloDiscountModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+NotificationOutputDirectory = /cdrapp_postpaid/out/notifybalancebreach
+NotificationOutputPrefix = balancebreach_
+} 
+
+} 
+
+FlexibleItemAssignment 
+{ 
+ModuleName = FCT_ItemAssign
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.ItemAssignDataModule
+} 
+
+} 
+
+AddInfranetBillingRecord 
+{ 
+ModuleName = FCT_BillingRecord
+Module 
+{ 
+Active = TRUE
+CurrencyType = R
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ItemAssignDataModule = ifw.DataPool.ItemAssignDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+} 
+
+} 
+
+ServiceOutputPostpaidSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingPostpaid.irl
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+{ 
+INF_IGNORE_ON_DISCOUNTACCOUNT_DEADLOCK = DiscountDeadlockOutput
+INF_IGNORE_ON_DISCOUNT_ERROR = DiscountErrorOutput
+INF_IGNORE_ON_BALANCEGROUP_LOCK = DiscountErrorOutput
+} 
+
+} 
+
+} 
+
+Suspense 
+{ 
+ModuleName = FCT_Suspense
+Module 
+{ 
+Active = True
+SuspenseCreateStream = SuspenseCreateOutput
+SuspenseUpdateStream = SuspenseUpdateOutput
+DataConnection = ifw.DataPool.LoginInfranet
+LogTestResults = False
+PipelineCategory = RatingPipeline
+RecycleLog 
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+ERR_CUST_NOT_FOUND = 20
+} 
+
+MultiThreading 
+{ 
+Active = False
+NumberOfThreads = 1
+BatchSize = 0
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DiscountErrorOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/discountError
+OutputPrefix = test
+OutputSuffix = .dsc
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/discountError
+TempDataPrefix = dsc.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DiscountDeadlockOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/discountError
+OutputPrefix = test
+OutputSuffix = .dlk
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/discountError
+TempDataPrefix = dlk.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+TELOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/telephony
+OutputPrefix = test_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/telephony
+TempDataPrefix = tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/sms
+OutputPrefix = test_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/sms
+TempDataPrefix = sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+MMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/mms
+OutputPrefix = test_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/mms
+TempDataPrefix = mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VOMOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/voicemail
+OutputPrefix = test_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/voicemail
+TempDataPrefix = vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DATOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/data
+OutputPrefix = test_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/data
+TempDataPrefix = dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VASOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/vas
+OutputPrefix = test_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/vas
+TempDataPrefix = vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VAPOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/vap
+OutputPrefix = test_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/vap
+TempDataPrefix = vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseCreateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = suspense_create_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = susp.create.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseUpdateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /tmp_suspended_usage
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = suspense_update_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = susp.update.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Transaction
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+TD_POSTPAID_RATE_SMS 
+{ 
+Active = FALSE
+CountryCode = 64
+MobileCountryCode = 64
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = SuspenseCreateOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFileTD_POSTPAID_RATE_SMS.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticTD_POSTPAID_RATE_SMS.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_FORINPUT.dsc
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_Format.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_TD_POSTPAID_RATE_SMS.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 2
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InGrammar.dsc
+DefaultOutput = SMSOutput
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_postpaid/edr/sms
+InputPrefix = TD_RATE_POST
+InputSuffix = .edr
+DonePath = /cdrapp_postpaid/done
+DonePrefix = test_ALLRATE
+DoneSuffix = .done
+ErrorPath = /cdrapp_postpaid/error
+ErrorPrefix = test_ALLRATE
+ErrorSuffix = .err
+TempPrefix = tmp_ALLRATE
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Processing 
+{ 
+FunctionPool 
+{ 
+PreSuspense 
+{ 
+ModuleName = FCT_PreSuspense
+Module 
+{ 
+Active = True
+QueryableFields 
+{ 
+SUSP_USAGE_TELCO_INFO_T 
+{ 
+START_TIME = DETAIL.CHARGING_START_TIMESTAMP
+CALL_DURATION = DETAIL.DURATION
+CALLING_FROM = DETAIL.A_NUMBER
+CALLED_TO = DETAIL.B_NUMBER
+SERVICE_TYPE = DETAIL.BASIC_SERVICE
+USAGE_TYPE = DETAIL.USAGE_TYPE
+} 
+
+SUSP_USAGE_TELCO_GSM_INFO_T 
+{ 
+CELL_ID = DETAIL.ASS_GSMW_EXT.CELL_ID
+DESTINATION_SID = DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION
+DIALED_NUMBER = DETAIL.ASS_GSMW_EXT.DIALED_DIGITS
+ORIGIN_SID = DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION
+SECONDARY_MSID = DETAIL.ASS_GSMW_EXT.PORT_NUMBER
+} 
+
+} 
+
+} 
+
+} 
+
+ServiceCodeMap 
+{ 
+ModuleName = FCT_ServiceCodeMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+MapGroup = ALL_RATE
+} 
+
+} 
+
+UsageClassMap 
+{ 
+ModuleName = FCT_UsageClassMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+OverwriteUsageClass = False
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EventDiscarding 
+{ 
+ModuleName = FCT_Discard
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+Function = Discard
+StreamName = DevNull
+} 
+
+} 
+
+CustomerSearch 
+{ 
+ModuleName = FCT_Account
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.CustomerData
+} 
+
+} 
+
+ItemAssign 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = True
+Source = File
+Scripts 
+{ 
+ItemAssign 
+{ 
+FileName = ./TD/iScript_custom/ISC_TD_ItemTag.isc
+} 
+
+} 
+
+} 
+
+} 
+
+CustomerRating 
+{ 
+ModuleName = FCT_CustomerRating
+Module 
+{ 
+Active = TRUE
+Mode = CUSTOMER
+DataConnection = ifw.DataPool.Login
+DefaultRateplan = Standard
+LeastCostRating = False
+PromotionalSaving = False
+} 
+
+} 
+
+PreRatingZone 
+{ 
+ModuleName = FCT_PreRating
+Module 
+{ 
+Active = True
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+ZoneDataModule = ifw.DataPool.ZoneDataModule
+} 
+
+} 
+
+MainRating 
+{ 
+ModuleName = FCT_MainRating
+Module 
+{ 
+Active = TRUE
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+CalendarDataModule = ifw.DataPool.CalendarDataModule
+TimeDataModule = ifw.DataPool.TimeDataModule
+PriceDataModule = ifw.DataPool.PriceDataModule
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+DiscountAnalysisModule 
+{ 
+ModuleName = FCT_DiscountAnalysis
+Module 
+{ 
+Active = TRUE
+DiscountModelDataModule = ifw.DataPool.DiscountModelDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+ApolloDiscountModule 
+{ 
+ModuleName = FCT_Discount
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+DiscountMoreThanPossible = False
+BackOut = False
+SupportBundleERA = False
+IgnoreEDROnDeadlock = False
+IgnoreEDROnDiscountError = False
+IgnoreEDROnLock = False
+} 
+
+} 
+
+ApolloApplyBalanceModule 
+{ 
+ModuleName = FCT_ApplyBalance
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+DiscountFunctionalModule = Functions.Processing.FunctionPool.ApolloDiscountModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+NotificationOutputDirectory = /cdrapp_postpaid/out/notifybalancebreach
+NotificationOutputPrefix = balancebreach_
+} 
+
+} 
+
+FlexibleItemAssignment 
+{ 
+ModuleName = FCT_ItemAssign
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.ItemAssignDataModule
+} 
+
+} 
+
+AddInfranetBillingRecord 
+{ 
+ModuleName = FCT_BillingRecord
+Module 
+{ 
+Active = TRUE
+CurrencyType = R
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ItemAssignDataModule = ifw.DataPool.ItemAssignDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+} 
+
+} 
+
+ServiceOutputPostpaidSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingPostpaid.irl
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+{ 
+INF_IGNORE_ON_DISCOUNTACCOUNT_DEADLOCK = DiscountDeadlockOutput
+INF_IGNORE_ON_DISCOUNT_ERROR = DiscountErrorOutput
+INF_IGNORE_ON_BALANCEGROUP_LOCK = DiscountErrorOutput
+} 
+
+} 
+
+} 
+
+Suspense 
+{ 
+ModuleName = FCT_Suspense
+Module 
+{ 
+Active = True
+SuspenseCreateStream = SuspenseCreateOutput
+SuspenseUpdateStream = SuspenseUpdateOutput
+DataConnection = ifw.DataPool.LoginInfranet
+LogTestResults = False
+PipelineCategory = RatingPipeline
+RecycleLog 
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+ERR_CUST_NOT_FOUND = 20
+} 
+
+MultiThreading 
+{ 
+Active = False
+NumberOfThreads = 1
+BatchSize = 0
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DiscountErrorOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/discountError
+OutputPrefix = test
+OutputSuffix = .dsc
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/discountError
+TempDataPrefix = dsc.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DiscountDeadlockOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/discountError
+OutputPrefix = test
+OutputSuffix = .dlk
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/discountError
+TempDataPrefix = dlk.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+TELOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/telephony
+OutputPrefix = test_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/telephony
+TempDataPrefix = tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/sms
+OutputPrefix = test_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/sms
+TempDataPrefix = sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+MMSOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/mms
+OutputPrefix = test_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/mms
+TempDataPrefix = mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VOMOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/voicemail
+OutputPrefix = test_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/voicemail
+TempDataPrefix = vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DATOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/data
+OutputPrefix = test_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/data
+TempDataPrefix = dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VASOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/vas
+OutputPrefix = test_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/vas
+TempDataPrefix = vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VAPOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/out/vap
+OutputPrefix = test_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_postpaid/out/vap
+TempDataPrefix = vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseCreateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = suspense_create_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = susp.create.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseUpdateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /tmp_suspended_usage
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_postpaid/reject
+OutputPrefix = suspense_update_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_postpaid/reject
+TempDataPrefix = susp.update.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Transaction
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+TD_PREPAID_RATE 
+{ 
+Active = FALSE
+CountryCode = 974
+MobileCountryCode = 974
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = SuspenseCreateOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFilePrepaidWIRELESS.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticTD_PREPAID_RATE.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_FORINPUT.dsc
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_Format.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SOL42 = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_TD_PREPAID_RATE.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 2
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InGrammar.dsc
+DefaultOutput = TELPREOutput
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_prepaid/edr/others
+InputPrefix = TD_RATE_PRE
+InputSuffix = .edr
+DonePath = /cdrapp_prepaid/done
+DonePrefix = test_ALLRATE
+DoneSuffix = .done
+ErrorPath = /cdrapp_prepaid/error
+ErrorPrefix = test_ALLRATE
+ErrorSuffix = .err
+TempPrefix = tmp_ALLRATE
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Processing 
+{ 
+FunctionPool 
+{ 
+EdrDump_PreSuspenseDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/PreSuspense.dump
+} 
+
+} 
+
+PreSuspense 
+{ 
+ModuleName = FCT_PreSuspense
+Module 
+{ 
+Active = True
+QueryableFields 
+{ 
+SUSP_USAGE_TELCO_INFO_T 
+{ 
+START_TIME = DETAIL.CHARGING_START_TIMESTAMP
+CALL_DURATION = DETAIL.DURATION
+CALLING_FROM = DETAIL.A_NUMBER
+CALLED_TO = DETAIL.B_NUMBER
+SERVICE_TYPE = DETAIL.BASIC_SERVICE
+USAGE_TYPE = DETAIL.USAGE_TYPE
+} 
+
+SUSP_USAGE_TELCO_GSM_INFO_T 
+{ 
+CELL_ID = DETAIL.ASS_GSMW_EXT.CELL_ID
+DESTINATION_SID = DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION
+DIALED_NUMBER = DETAIL.ASS_GSMW_EXT.DIALED_DIGITS
+ORIGIN_SID = DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION
+SECONDARY_MSID = DETAIL.ASS_GSMW_EXT.PORT_NUMBER
+} 
+
+} 
+
+} 
+
+} 
+
+ServiceCodeMap 
+{ 
+ModuleName = FCT_ServiceCodeMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EdrDump_ServiceCodeMapDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/ServiceCodeMap.dump
+} 
+
+} 
+
+UsageClassMap 
+{ 
+ModuleName = FCT_UsageClassMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+OverwriteUsageClass = False
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EdrDump_UsageClassMapDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/UsageClassMap.dump
+} 
+
+} 
+
+EventDiscarding 
+{ 
+ModuleName = FCT_Discard
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+Function = Discard
+StreamName = DevNull
+} 
+
+} 
+
+CallAssembling 
+{ 
+ModuleName = FCT_CallAssembling
+Module 
+{ 
+Active = False
+Path = .
+FileName = calls
+RejectMissingChain = False
+} 
+
+} 
+
+PrefixDesc 
+{ 
+ModuleName = FCT_PrefixDesc
+Module 
+{ 
+Active = False
+PrefixDataModule = ifw.DataPool.PrefixDescDataModule
+} 
+
+} 
+
+CustomerSearch 
+{ 
+ModuleName = FCT_Account
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.CustomerData
+} 
+
+} 
+
+EdrDump_CustomerDataDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/CustomerData.dump
+} 
+
+} 
+
+ItemAssign 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = True
+Source = File
+Scripts 
+{ 
+ItemAssign 
+{ 
+FileName = ./TD/iScript_custom/ISC_TD_ItemTag.isc
+} 
+
+} 
+
+} 
+
+} 
+
+ProfileAnalyzer 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = False
+Source = FILE
+Scripts 
+{ 
+ProfileAnalyzer 
+{ 
+ProfileName = FRIENDS_FAMILY
+LabelSeparator = ,
+FileName = ./iScriptLib/iScriptLib_Standard/ISC_ProfileAnalyzer.isc
+} 
+
+} 
+
+} 
+
+} 
+
+UsageType 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = FALSE
+Source = File
+Descriptions 
+{ 
+UsageTypeDetermination = ./iScriptLib/iScriptLib_Standard/IRL_UsageType.irl
+} 
+
+} 
+
+} 
+
+Filter_Set 
+{ 
+ModuleName = FCT_Filter_Set
+Module 
+{ 
+Active = False
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+InfranetConnection = ifw.DataPool.LoginInfranet
+} 
+
+} 
+
+LeastCostPerEDR 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = False
+Source = File
+Descriptions 
+{ 
+LeastCostCheck = ./iScriptLib/iScriptLib_Standard/IRL_LeastCostPerEDR.irl
+} 
+
+} 
+
+} 
+
+PromotionalSavingPerEDR 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = False
+Source = File
+Descriptions 
+{ 
+PromotionalSaving = ./iScriptLib/iScriptLib_Standard/IRL_PromotionalSavingPerEDR.irl
+} 
+
+} 
+
+} 
+
+EdrDump_CustomerRatingDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/CustomerRating.dump
+} 
+
+} 
+
+CustomerRating 
+{ 
+ModuleName = FCT_CustomerRating
+Module 
+{ 
+Active = TRUE
+Mode = CUSTOMER
+DataConnection = ifw.DataPool.Login
+DefaultRateplan = Standard
+LeastCostRating = False
+PromotionalSaving = False
+} 
+
+} 
+
+EdrDump_PostCustomerRatingDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/PostCustomerRating.dump
+} 
+
+} 
+
+PreRatingZone 
+{ 
+ModuleName = FCT_PreRating
+Module 
+{ 
+Active = True
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+ZoneDataModule = ifw.DataPool.ZoneDataModule
+} 
+
+} 
+
+EdrDump_PreRatingZone 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/PreRatingZone.dump
+} 
+
+} 
+
+APNMap 
+{ 
+ModuleName = FCT_APN_Map
+Module 
+{ 
+Active = FALSE
+DataConnection = ifw.DataPool.Login
+APNGroup 
+} 
+
+} 
+
+EdrDump_APNMap 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/APNMap.dump
+} 
+
+} 
+
+UsageScenarioMap 
+{ 
+ModuleName = FCT_USC_Map
+Module 
+{ 
+Active = FALSE
+DataModule = ifw.DataPool.USCDataModule
+DefaultUSCGroup = ALL_RATE
+} 
+
+} 
+
+EdrDump_UsageScenarioMap 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/UsageScenarioMap.dump
+} 
+
+} 
+
+RateServiceClassMap 
+{ 
+ModuleName = FCT_RSC_Map
+Module 
+{ 
+Active = FALSE
+DataConnection = ifw.DataPool.Login
+DefaultRscGroup = ALL_RATE
+} 
+
+} 
+
+EdrDump_MainRating_pre 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/MainRating_pre.dump
+} 
+
+} 
+
+MainRating 
+{ 
+ModuleName = FCT_MainRating
+Module 
+{ 
+Active = TRUE
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+CalendarDataModule = ifw.DataPool.CalendarDataModule
+TimeDataModule = ifw.DataPool.TimeDataModule
+PriceDataModule = ifw.DataPool.PriceDataModule
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+EdrDump_MainRating_post 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/MainRating_post.dump
+} 
+
+} 
+
+SpecialDayRate 
+{ 
+ModuleName = FCT_Dayrate
+Module 
+{ 
+Active = FALSE
+DayrateDataModule = ifw.DataPool.DayRateDataModule
+} 
+
+} 
+
+RateAdjustment 
+{ 
+ModuleName = FCT_RateAdjust
+Module 
+{ 
+Active = FALSE
+Source = Database
+DataConnection = ifw.DataPool.Login
+} 
+
+} 
+
+DiscountAnalysisModule 
+{ 
+ModuleName = FCT_DiscountAnalysis
+Module 
+{ 
+Active = True
+DiscountModelDataModule = ifw.DataPool.DiscountModelDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+EdrDump_ApolloDiscountModuleDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/ApolloDiscountModule.dump
+} 
+
+} 
+
+ApolloDiscountModule 
+{ 
+ModuleName = FCT_Discount
+Module 
+{ 
+Active = True
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+DiscountMoreThanPossible = False
+BackOut = False
+SupportBundleERA = False
+IgnoreEDROnDeadlock = False
+IgnoreEDROnDiscountError = False
+IgnoreEDROnLock = False
+} 
+
+} 
+
+Round_Discounting 
+{ 
+ModuleName = FCT_Rounding
+Module 
+{ 
+Active = TRUE
+Active = FALSE
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+Mode = Discounting
+} 
+
+} 
+
+ApolloApplyBalanceModule 
+{ 
+ModuleName = FCT_ApplyBalance
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+DiscountFunctionalModule = Functions.Processing.FunctionPool.ApolloDiscountModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+NotificationOutputDirectory = /cdrapp_prepaid/out/notifybalancebreach
+NotificationOutputPrefix = balancebreach_
+} 
+
+} 
+
+FlexibleItemAssignment 
+{ 
+ModuleName = FCT_ItemAssign
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.ItemAssignDataModule
+} 
+
+} 
+
+AddInfranetBillingRecord 
+{ 
+ModuleName = FCT_BillingRecord
+Module 
+{ 
+Active = TRUE
+CurrencyType = R
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ItemAssignDataModule = ifw.DataPool.ItemAssignDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+} 
+
+} 
+
+EdrDump_PreServiceOutput 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/PreServiceOutput.dump
+} 
+
+} 
+
+ServiceOutputPrepaidSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPre = ./TD/iScript_custom/IRL_EventTypeSplittingPrepaid.irl
+} 
+
+} 
+
+} 
+
+ObjectCacheTypeOutputSplit 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = FALSE
+Source = File
+Scripts 
+{ 
+ObjectCacheTypeOutputSplit 
+{ 
+FileName = ./iScriptLib/iScriptLib_Standard/ISC_ObjectCacheTypeOutputSplitter.isc
+} 
+
+} 
+
+} 
+
+} 
+
+Aggregate 
+{ 
+ModuleName = FCT_AggreGate
+Module 
+{ 
+Active = False
+ScenarioReaderDataModule = ifw.DataPool.ScenarioReader
+Scenarios 
+ResultFile 
+{ 
+TempSuffix = .tmp
+DoneSuffix = .dat
+WriteEmptyFile = FALSE
+} 
+
+ControlFile 
+{ 
+Suffix = .ctl
+DataFilePath = TRUE
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+{ 
+INF_IGNORE_ON_DISCOUNTACCOUNT_DEADLOCK = DiscountDeadlockOutput
+INF_IGNORE_ON_DISCOUNT_ERROR = DiscountErrorOutput
+INF_IGNORE_ON_BALANCEGROUP_LOCK = DiscountErrorOutput
+} 
+
+} 
+
+} 
+
+Suspense 
+{ 
+ModuleName = FCT_Suspense
+Module 
+{ 
+Active = True
+SuspenseCreateStream = SuspenseCreateOutput
+SuspenseUpdateStream = SuspenseUpdateOutput
+DataConnection = ifw.DataPool.LoginInfranet
+LogTestResults = False
+PipelineCategory = RatingPipeline
+RecycleLog 
+} 
+
+} 
+
+EdrDump_ALLRATELastDump 
+{ 
+ModuleName = FCT_EdrDump
+Module 
+{ 
+Active = FALSE
+FileName = /cdrapp_prepaid/dump/ALLRATELastDump.dump
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+ERR_CUST_NOT_FOUND = 20
+} 
+
+MultiThreading 
+{ 
+Active = False
+NumberOfThreads = 1
+BatchSize = 0
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DiscountErrorOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/discountError
+OutputPrefix = test
+OutputSuffix = .dsc
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/discountError
+TempDataPrefix = dsc.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DiscountDeadlockOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/discountError
+OutputPrefix = test
+OutputSuffix = .dlk
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/discountError
+TempDataPrefix = dlk.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+TELPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/telephony
+OutputPrefix = test_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/telephony
+TempDataPrefix = tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_TELPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/telephony
+OutputPrefix = test_CONV_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/telephony
+TempDataPrefix = CONV_tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/sms
+OutputPrefix = test_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/sms
+TempDataPrefix = sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_SMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/sms
+OutputPrefix = test_CONV_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/sms
+TempDataPrefix = CONV_sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+MMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/mms
+OutputPrefix = test_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/mms
+TempDataPrefix = mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_MMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/mms
+OutputPrefix = test_CONV_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/mms
+TempDataPrefix = CONV_mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VOMPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/voicemail
+OutputPrefix = test_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/voicemail
+TempDataPrefix = vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VOMPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/voicemail
+OutputPrefix = test_CONV_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/voicemail
+TempDataPrefix = CONV_vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DATPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/data
+OutputPrefix = test_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/data
+TempDataPrefix = dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_DATPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/data
+OutputPrefix = test_CONV_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/data
+TempDataPrefix = CONV_dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VASPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vas
+OutputPrefix = test_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vas
+TempDataPrefix = vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VASPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vas
+OutputPrefix = test_CONV_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vas
+TempDataPrefix = CONV_vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VAPPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vap
+OutputPrefix = test_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vap
+TempDataPrefix = vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VAPPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vap
+OutputPrefix = test_CONV_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vap
+TempDataPrefix = CONV_vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseCreateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = suspense_create_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = susp.create.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseUpdateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /tmp_suspended_usage
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = suspense_update_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = susp.update.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Unit
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+TD_PREPAID_RATE_TEL 
+{ 
+Active = FALSE
+CountryCode = 64
+MobileCountryCode = 64
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = SuspenseCreateOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFileTD_PREPAID_RATE_TEL.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticTD_PREPAID_RATE_TEL.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_FORINPUT.dsc
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_Format.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_TD_PREPAID_RATE_TEL.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 2
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InGrammar.dsc
+DefaultOutput = TELPREOutput
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_prepaid/edr/telephony
+InputPrefix = TD_RATE_PRE
+InputSuffix = .edr
+DonePath = /cdrapp_prepaid/done
+DonePrefix = test_ALLRATE
+DoneSuffix = .done
+ErrorPath = /cdrapp_prepaid/error
+ErrorPrefix = test_ALLRATE
+ErrorSuffix = .err
+TempPrefix = tmp_ALLRATE
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Processing 
+{ 
+FunctionPool 
+{ 
+PreSuspense 
+{ 
+ModuleName = FCT_PreSuspense
+Module 
+{ 
+Active = True
+QueryableFields 
+{ 
+SUSP_USAGE_TELCO_INFO_T 
+{ 
+START_TIME = DETAIL.CHARGING_START_TIMESTAMP
+CALL_DURATION = DETAIL.DURATION
+CALLING_FROM = DETAIL.A_NUMBER
+CALLED_TO = DETAIL.B_NUMBER
+SERVICE_TYPE = DETAIL.BASIC_SERVICE
+USAGE_TYPE = DETAIL.USAGE_TYPE
+} 
+
+SUSP_USAGE_TELCO_GSM_INFO_T 
+{ 
+CELL_ID = DETAIL.ASS_GSMW_EXT.CELL_ID
+DESTINATION_SID = DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION
+DIALED_NUMBER = DETAIL.ASS_GSMW_EXT.DIALED_DIGITS
+ORIGIN_SID = DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION
+SECONDARY_MSID = DETAIL.ASS_GSMW_EXT.PORT_NUMBER
+} 
+
+} 
+
+} 
+
+} 
+
+ServiceCodeMap 
+{ 
+ModuleName = FCT_ServiceCodeMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+MapGroup = ALL_RATE
+} 
+
+} 
+
+UsageClassMap 
+{ 
+ModuleName = FCT_UsageClassMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+OverwriteUsageClass = False
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EventDiscarding 
+{ 
+ModuleName = FCT_Discard
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+Function = Discard
+StreamName = DevNull
+} 
+
+} 
+
+CustomerSearch 
+{ 
+ModuleName = FCT_Account
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.CustomerData
+} 
+
+} 
+
+ItemAssign 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = True
+Source = File
+Scripts 
+{ 
+ItemAssign 
+{ 
+FileName = ./TD/iScript_custom/ISC_TD_ItemTag.isc
+} 
+
+} 
+
+} 
+
+} 
+
+CustomerRating 
+{ 
+ModuleName = FCT_CustomerRating
+Module 
+{ 
+Active = TRUE
+Mode = CUSTOMER
+DataConnection = ifw.DataPool.Login
+DefaultRateplan = Standard
+LeastCostRating = False
+PromotionalSaving = False
+} 
+
+} 
+
+PreRatingZone 
+{ 
+ModuleName = FCT_PreRating
+Module 
+{ 
+Active = True
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+ZoneDataModule = ifw.DataPool.ZoneDataModule
+} 
+
+} 
+
+MainRating 
+{ 
+ModuleName = FCT_MainRating
+Module 
+{ 
+Active = TRUE
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+CalendarDataModule = ifw.DataPool.CalendarDataModule
+TimeDataModule = ifw.DataPool.TimeDataModule
+PriceDataModule = ifw.DataPool.PriceDataModule
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+DiscountAnalysisModule 
+{ 
+ModuleName = FCT_DiscountAnalysis
+Module 
+{ 
+Active = TRUE
+DiscountModelDataModule = ifw.DataPool.DiscountModelDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+ApolloDiscountModule 
+{ 
+ModuleName = FCT_Discount
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+DiscountMoreThanPossible = False
+BackOut = False
+SupportBundleERA = False
+IgnoreEDROnDeadlock = False
+IgnoreEDROnDiscountError = False
+IgnoreEDROnLock = False
+} 
+
+} 
+
+ApolloApplyBalanceModule 
+{ 
+ModuleName = FCT_ApplyBalance
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+DiscountFunctionalModule = Functions.Processing.FunctionPool.ApolloDiscountModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+NotificationOutputDirectory = /cdrapp_prepaid/out/notifybalancebreach
+NotificationOutputPrefix = balancebreach_
+} 
+
+} 
+
+FlexibleItemAssignment 
+{ 
+ModuleName = FCT_ItemAssign
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.ItemAssignDataModule
+} 
+
+} 
+
+AddInfranetBillingRecord 
+{ 
+ModuleName = FCT_BillingRecord
+Module 
+{ 
+Active = TRUE
+CurrencyType = R
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ItemAssignDataModule = ifw.DataPool.ItemAssignDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+} 
+
+} 
+
+ServiceOutputPostpaidSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingPrepaid.irl
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+{ 
+INF_IGNORE_ON_DISCOUNTACCOUNT_DEADLOCK = DiscountDeadlockOutput
+INF_IGNORE_ON_DISCOUNT_ERROR = DiscountErrorOutput
+INF_IGNORE_ON_BALANCEGROUP_LOCK = DiscountErrorOutput
+} 
+
+} 
+
+} 
+
+Suspense 
+{ 
+ModuleName = FCT_Suspense
+Module 
+{ 
+Active = True
+SuspenseCreateStream = SuspenseCreateOutput
+SuspenseUpdateStream = SuspenseUpdateOutput
+DataConnection = ifw.DataPool.LoginInfranet
+LogTestResults = False
+PipelineCategory = RatingPipeline
+RecycleLog 
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+ERR_CUST_NOT_FOUND = 20
+} 
+
+MultiThreading 
+{ 
+Active = False
+NumberOfThreads = 1
+BatchSize = 0
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DiscountErrorOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/discountError
+OutputPrefix = test
+OutputSuffix = .dsc
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/discountError
+TempDataPrefix = dsc.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DiscountDeadlockOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/discountError
+OutputPrefix = test
+OutputSuffix = .dlk
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/discountError
+TempDataPrefix = dlk.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+TELPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/telephony
+OutputPrefix = test_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/telephony
+TempDataPrefix = tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_TELPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/telephony
+OutputPrefix = test_CONV_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/telephony
+TempDataPrefix = CONV_tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/sms
+OutputPrefix = test_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/sms
+TempDataPrefix = sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_SMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/sms
+OutputPrefix = test_CONV_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/sms
+TempDataPrefix = CONV_sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+MMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/mms
+OutputPrefix = test_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/mms
+TempDataPrefix = mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_MMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/mms
+OutputPrefix = test_CONV_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/mms
+TempDataPrefix = CONV_mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VOMPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/voicemail
+OutputPrefix = test_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/voicemail
+TempDataPrefix = vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VOMPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/voicemail
+OutputPrefix = test_CONV_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/voicemail
+TempDataPrefix = CONV_vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DATPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/data
+OutputPrefix = test_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/data
+TempDataPrefix = dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_DATPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/data
+OutputPrefix = test_CONV_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/data
+TempDataPrefix = CONV_dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VASPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vas
+OutputPrefix = test_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vas
+TempDataPrefix = vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VASPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vas
+OutputPrefix = test_CONV_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vas
+TempDataPrefix = CONV_vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VAPPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vap
+OutputPrefix = test_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vap
+TempDataPrefix = vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VAPPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vap
+OutputPrefix = test_CONV_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vap
+TempDataPrefix = CONV_vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseCreateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = suspense_create_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = susp.create.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseUpdateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /tmp_suspended_usage
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = suspense_update_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = susp.update.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Transaction
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+TD_PREPAID_RATE_DATA 
+{ 
+Active = FALSE
+CountryCode = 64
+MobileCountryCode = 64
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = SuspenseCreateOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFileTD_PREPAID_RATE_DATA.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticTD_PREPAID_RATE_DATA.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_FORINPUT.dsc
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_Format.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_TD_PREPAID_RATE_DATA.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 2
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InGrammar.dsc
+DefaultOutput = DATPREOutput
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_prepaid/edr/data
+InputPrefix = TD_RATE_PRE
+InputSuffix = .edr
+DonePath = /cdrapp_prepaid/done
+DonePrefix = test_ALLRATE
+DoneSuffix = .done
+ErrorPath = /cdrapp_prepaid/error
+ErrorPrefix = test_ALLRATE
+ErrorSuffix = .err
+TempPrefix = tmp_ALLRATE
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Processing 
+{ 
+FunctionPool 
+{ 
+PreSuspense 
+{ 
+ModuleName = FCT_PreSuspense
+Module 
+{ 
+Active = True
+QueryableFields 
+{ 
+SUSP_USAGE_TELCO_INFO_T 
+{ 
+START_TIME = DETAIL.CHARGING_START_TIMESTAMP
+CALL_DURATION = DETAIL.DURATION
+CALLING_FROM = DETAIL.A_NUMBER
+CALLED_TO = DETAIL.B_NUMBER
+SERVICE_TYPE = DETAIL.BASIC_SERVICE
+USAGE_TYPE = DETAIL.USAGE_TYPE
+} 
+
+SUSP_USAGE_TELCO_GSM_INFO_T 
+{ 
+CELL_ID = DETAIL.ASS_GSMW_EXT.CELL_ID
+DESTINATION_SID = DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION
+DIALED_NUMBER = DETAIL.ASS_GSMW_EXT.DIALED_DIGITS
+ORIGIN_SID = DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION
+SECONDARY_MSID = DETAIL.ASS_GSMW_EXT.PORT_NUMBER
+} 
+
+} 
+
+} 
+
+} 
+
+ServiceCodeMap 
+{ 
+ModuleName = FCT_ServiceCodeMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+MapGroup = ALL_RATE
+} 
+
+} 
+
+UsageClassMap 
+{ 
+ModuleName = FCT_UsageClassMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+OverwriteUsageClass = False
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EventDiscarding 
+{ 
+ModuleName = FCT_Discard
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+Function = Discard
+StreamName = DevNull
+} 
+
+} 
+
+CustomerSearch 
+{ 
+ModuleName = FCT_Account
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.CustomerData
+} 
+
+} 
+
+ItemAssign 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = True
+Source = File
+Scripts 
+{ 
+ItemAssign 
+{ 
+FileName = ./TD/iScript_custom/ISC_TD_ItemTag.isc
+} 
+
+} 
+
+} 
+
+} 
+
+CustomerRating 
+{ 
+ModuleName = FCT_CustomerRating
+Module 
+{ 
+Active = TRUE
+Mode = CUSTOMER
+DataConnection = ifw.DataPool.Login
+DefaultRateplan = Standard
+LeastCostRating = False
+PromotionalSaving = False
+} 
+
+} 
+
+PreRatingZone 
+{ 
+ModuleName = FCT_PreRating
+Module 
+{ 
+Active = True
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+ZoneDataModule = ifw.DataPool.ZoneDataModule
+} 
+
+} 
+
+MainRating 
+{ 
+ModuleName = FCT_MainRating
+Module 
+{ 
+Active = TRUE
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+CalendarDataModule = ifw.DataPool.CalendarDataModule
+TimeDataModule = ifw.DataPool.TimeDataModule
+PriceDataModule = ifw.DataPool.PriceDataModule
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+DiscountAnalysisModule 
+{ 
+ModuleName = FCT_DiscountAnalysis
+Module 
+{ 
+Active = TRUE
+DiscountModelDataModule = ifw.DataPool.DiscountModelDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+ApolloDiscountModule 
+{ 
+ModuleName = FCT_Discount
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+DiscountMoreThanPossible = False
+BackOut = False
+SupportBundleERA = False
+IgnoreEDROnDeadlock = False
+IgnoreEDROnDiscountError = False
+IgnoreEDROnLock = False
+} 
+
+} 
+
+ApolloApplyBalanceModule 
+{ 
+ModuleName = FCT_ApplyBalance
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+DiscountFunctionalModule = Functions.Processing.FunctionPool.ApolloDiscountModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+NotificationOutputDirectory = /cdrapp_prepaid/out/notifybalancebreach
+NotificationOutputPrefix = balancebreach_
+} 
+
+} 
+
+FlexibleItemAssignment 
+{ 
+ModuleName = FCT_ItemAssign
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.ItemAssignDataModule
+} 
+
+} 
+
+AddInfranetBillingRecord 
+{ 
+ModuleName = FCT_BillingRecord
+Module 
+{ 
+Active = TRUE
+CurrencyType = R
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ItemAssignDataModule = ifw.DataPool.ItemAssignDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+} 
+
+} 
+
+ServiceOutputPostpaidSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingPrepaid.irl
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+{ 
+INF_IGNORE_ON_DISCOUNTACCOUNT_DEADLOCK = DiscountDeadlockOutput
+INF_IGNORE_ON_DISCOUNT_ERROR = DiscountErrorOutput
+INF_IGNORE_ON_BALANCEGROUP_LOCK = DiscountErrorOutput
+} 
+
+} 
+
+} 
+
+Suspense 
+{ 
+ModuleName = FCT_Suspense
+Module 
+{ 
+Active = True
+SuspenseCreateStream = SuspenseCreateOutput
+SuspenseUpdateStream = SuspenseUpdateOutput
+DataConnection = ifw.DataPool.LoginInfranet
+LogTestResults = False
+PipelineCategory = RatingPipeline
+RecycleLog 
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+ERR_CUST_NOT_FOUND = 20
+} 
+
+MultiThreading 
+{ 
+Active = False
+NumberOfThreads = 1
+BatchSize = 0
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DiscountErrorOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/discountError
+OutputPrefix = test
+OutputSuffix = .dsc
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/discountError
+TempDataPrefix = dsc.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DiscountDeadlockOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/discountError
+OutputPrefix = test
+OutputSuffix = .dlk
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/discountError
+TempDataPrefix = dlk.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+TELPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/telephony
+OutputPrefix = test_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/telephony
+TempDataPrefix = tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_TELPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/telephony
+OutputPrefix = test_CONV_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/telephony
+TempDataPrefix = CONV_tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/sms
+OutputPrefix = test_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/sms
+TempDataPrefix = sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_SMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/sms
+OutputPrefix = test_CONV_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/sms
+TempDataPrefix = CONV_sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+MMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/mms
+OutputPrefix = test_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/mms
+TempDataPrefix = mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_MMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/mms
+OutputPrefix = test_CONV_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/mms
+TempDataPrefix = CONV_mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VOMPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/voicemail
+OutputPrefix = test_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/voicemail
+TempDataPrefix = vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VOMPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/voicemail
+OutputPrefix = test_CONV_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/voicemail
+TempDataPrefix = CONV_vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DATPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/data
+OutputPrefix = test_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/data
+TempDataPrefix = dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_DATPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/data
+OutputPrefix = test_CONV_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/data
+TempDataPrefix = CONV_dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VASPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vas
+OutputPrefix = test_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vas
+TempDataPrefix = vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VASPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vas
+OutputPrefix = test_CONV_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vas
+TempDataPrefix = CONV_vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VAPPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vap
+OutputPrefix = test_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vap
+TempDataPrefix = vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VAPPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vap
+OutputPrefix = test_CONV_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vap
+TempDataPrefix = CONV_vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseCreateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = suspense_create_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = susp.create.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseUpdateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /tmp_suspended_usage
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = suspense_update_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = susp.update.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Transaction
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+TD_PREPAID_RATE_SMS 
+{ 
+Active = FALSE
+CountryCode = 64
+MobileCountryCode = 64
+NationalAccessCode = 0
+NetworkDestinationCode = 172
+RejectStream = SuspenseCreateOutput
+TransactionManager 
+{ 
+RedoEnabled = True
+SingleTransaction = False
+WriteToLogEnabled = True
+BinaryLogFileName = ./tam/binaryLogFileTD_PREPAID_RATE_SMS.dat
+} 
+
+EdrFactory 
+{ 
+DataConnection = ifw.DataPool.Login
+Description = ./TD/formatDesc/Portal/td_containerDesc.dsc
+UsageStatistic = /var/portal/ifw/log/statistic/edrStatisticTD_PREPAID_RATE_SNS.txt
+EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+} 
+
+DataDescription 
+{ 
+Standard 
+{ 
+ModuleName = Standard
+Module 
+{ 
+StreamFormats 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_FORINPUT.dsc
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_Format.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreation.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdate.dsc
+} 
+
+InputMapping 
+{ 
+SOL42_FORINPUT = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InMap.dsc
+} 
+
+OutputMapping 
+{ 
+EVENT_LOADER = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutMap.dsc
+SUSPENSE_CREATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationMapping.dsc
+SUSPENSE_UPDATE_OUTPUT = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateMapping.dsc
+} 
+
+} 
+
+} 
+
+} 
+
+PipelineLog 
+{ 
+ModuleName = LOG
+Module 
+{ 
+ITO 
+{ 
+WriteMessageKey = True
+FilePath = /var/portal/ifw/log/pipeline
+FileName = pipeline_TD_PREPAID_RATE_SMS.log
+ProcessName = ifw
+MessageGroup = IFW
+ShowOriginator = TRUE
+LogLevel = major
+} 
+
+Buffer 
+{ 
+Size = 1000
+} 
+
+} 
+
+} 
+
+InputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+OutputBuffer 
+{ 
+BlockTransfer = False
+Size = 100
+BlockSize = 100
+} 
+
+Input 
+{ 
+UnitsPerTransaction = 2
+InputModule 
+{ 
+ModuleName = INP_GenericStream
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_RATE_InGrammar.dsc
+DefaultOutput = SMSPREOutput
+InputStream 
+{ 
+ModuleName = EXT_InFileManager
+Module 
+{ 
+InputDirEmptyTimeout = 10
+InputPath = /cdrapp_prepaid/edr/sms
+InputPrefix = TD_RATE_PRE
+InputSuffix = .edr
+DonePath = /cdrapp_prepaid/done
+DonePrefix = test_ALLRATE
+DoneSuffix = .done
+ErrorPath = /cdrapp_prepaid/error
+ErrorPrefix = test_ALLRATE
+ErrorSuffix = .err
+TempPrefix = tmp_ALLRATE
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Functions 
+{ 
+Processing 
+{ 
+FunctionPool 
+{ 
+PreSuspense 
+{ 
+ModuleName = FCT_PreSuspense
+Module 
+{ 
+Active = True
+QueryableFields 
+{ 
+SUSP_USAGE_TELCO_INFO_T 
+{ 
+START_TIME = DETAIL.CHARGING_START_TIMESTAMP
+CALL_DURATION = DETAIL.DURATION
+CALLING_FROM = DETAIL.A_NUMBER
+CALLED_TO = DETAIL.B_NUMBER
+SERVICE_TYPE = DETAIL.BASIC_SERVICE
+USAGE_TYPE = DETAIL.USAGE_TYPE
+} 
+
+SUSP_USAGE_TELCO_GSM_INFO_T 
+{ 
+CELL_ID = DETAIL.ASS_GSMW_EXT.CELL_ID
+DESTINATION_SID = DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION
+DIALED_NUMBER = DETAIL.ASS_GSMW_EXT.DIALED_DIGITS
+ORIGIN_SID = DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION
+SECONDARY_MSID = DETAIL.ASS_GSMW_EXT.PORT_NUMBER
+} 
+
+} 
+
+} 
+
+} 
+
+ServiceCodeMap 
+{ 
+ModuleName = FCT_ServiceCodeMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+MapGroup = ALL_RATE
+} 
+
+} 
+
+UsageClassMap 
+{ 
+ModuleName = FCT_UsageClassMap
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+OverwriteUsageClass = False
+MapGroup = ALL_RATE
+} 
+
+} 
+
+EventDiscarding 
+{ 
+ModuleName = FCT_Discard
+Module 
+{ 
+Active = TRUE
+DataConnection = ifw.DataPool.Login
+Function = Discard
+StreamName = DevNull
+} 
+
+} 
+
+CustomerSearch 
+{ 
+ModuleName = FCT_Account
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.CustomerData
+} 
+
+} 
+
+ItemAssign 
+{ 
+ModuleName = FCT_IScript
+Module 
+{ 
+Active = True
+Source = File
+Scripts 
+{ 
+ItemAssign 
+{ 
+FileName = ./TD/iScript_custom/ISC_TD_ItemTag.isc
+} 
+
+} 
+
+} 
+
+} 
+
+CustomerRating 
+{ 
+ModuleName = FCT_CustomerRating
+Module 
+{ 
+Active = TRUE
+Mode = CUSTOMER
+DataConnection = ifw.DataPool.Login
+DefaultRateplan = Standard
+LeastCostRating = False
+PromotionalSaving = False
+} 
+
+} 
+
+PreRatingZone 
+{ 
+ModuleName = FCT_PreRating
+Module 
+{ 
+Active = True
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+ZoneDataModule = ifw.DataPool.ZoneDataModule
+} 
+
+} 
+
+MainRating 
+{ 
+ModuleName = FCT_MainRating
+Module 
+{ 
+Active = TRUE
+RateplanDataModule = ifw.DataPool.RateplanDataModule
+CalendarDataModule = ifw.DataPool.CalendarDataModule
+TimeDataModule = ifw.DataPool.TimeDataModule
+PriceDataModule = ifw.DataPool.PriceDataModule
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+DiscountAnalysisModule 
+{ 
+ModuleName = FCT_DiscountAnalysis
+Module 
+{ 
+Active = TRUE
+DiscountModelDataModule = ifw.DataPool.DiscountModelDataModule
+ModelSelectorDataModule = ifw.DataPool.ModelSelectorDataModule
+} 
+
+} 
+
+ApolloDiscountModule 
+{ 
+ModuleName = FCT_Discount
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+DiscountMoreThanPossible = False
+BackOut = False
+SupportBundleERA = False
+IgnoreEDROnDeadlock = False
+IgnoreEDROnDiscountError = False
+IgnoreEDROnLock = False
+} 
+
+} 
+
+ApolloApplyBalanceModule 
+{ 
+ModuleName = FCT_ApplyBalance
+Module 
+{ 
+Active = TRUE
+DiscountDataModule = ifw.DataPool.DiscountModelDataModule
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+DiscountFunctionalModule = Functions.Processing.FunctionPool.ApolloDiscountModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+NotificationOutputDirectory = /cdrapp_prepaid/out/notifybalancebreach
+NotificationOutputPrefix = balancebreach_
+} 
+
+} 
+
+FlexibleItemAssignment 
+{ 
+ModuleName = FCT_ItemAssign
+Module 
+{ 
+Active = TRUE
+DataModule = ifw.DataPool.ItemAssignDataModule
+} 
+
+} 
+
+AddInfranetBillingRecord 
+{ 
+ModuleName = FCT_BillingRecord
+Module 
+{ 
+Active = TRUE
+CurrencyType = R
+CurrencyDataModule = ifw.DataPool.CurrencyDataModule
+ItemAssignDataModule = ifw.DataPool.ItemAssignDataModule
+AccountDataModule = ifw.DataPool.CustomerData
+BalanceDataModule = ifw.DataPool.BalanceDataModule
+PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+} 
+
+} 
+
+ServiceOutputPostpaidSplit 
+{ 
+ModuleName = FCT_IRules
+Module 
+{ 
+Active = TRUE
+Source = File
+Rules 
+Descriptions 
+{ 
+ServiceCodeSplitPost = ./TD/iScript_custom/IRL_EventTypeSplittingPrepaid.irl
+} 
+
+} 
+
+} 
+
+Rejection 
+{ 
+ModuleName = FCT_Reject
+Module 
+{ 
+Active = True
+NotifyOnReject = True
+UseRejectStream = True
+StreamMap 
+{ 
+INF_IGNORE_ON_DISCOUNTACCOUNT_DEADLOCK = DiscountDeadlockOutput
+INF_IGNORE_ON_DISCOUNT_ERROR = DiscountErrorOutput
+INF_IGNORE_ON_BALANCEGROUP_LOCK = DiscountErrorOutput
+} 
+
+} 
+
+} 
+
+Suspense 
+{ 
+ModuleName = FCT_Suspense
+Module 
+{ 
+Active = True
+SuspenseCreateStream = SuspenseCreateOutput
+SuspenseUpdateStream = SuspenseUpdateOutput
+DataConnection = ifw.DataPool.LoginInfranet
+LogTestResults = False
+PipelineCategory = RatingPipeline
+RecycleLog 
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+Output 
+{ 
+WriteDefaultEdr = False
+MaxErrorRates 
+{ 
+INF_EDR_REJECTED = 100
+ERR_CUST_NOT_FOUND = 20
+} 
+
+MultiThreading 
+{ 
+Active = False
+NumberOfThreads = 1
+BatchSize = 0
+} 
+
+OutputCollection 
+{ 
+DevNull 
+{ 
+ModuleName = OUT_DevNull
+Module 
+} 
+
+DiscountErrorOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/discountError
+OutputPrefix = test
+OutputSuffix = .dsc
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/discountError
+TempDataPrefix = dsc.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DiscountDeadlockOutput 
+{ 
+ModuleName = OUT_Reject
+Module 
+{ 
+DeleteEmptyStream = TRUE
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/discountError
+OutputPrefix = test
+OutputSuffix = .dlk
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/discountError
+TempDataPrefix = dlk.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+TELPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/telephony
+OutputPrefix = test_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/telephony
+TempDataPrefix = tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_TELPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voice
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/telephony
+OutputPrefix = test_CONV_TEL
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/telephony
+TempDataPrefix = CONV_tel.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/sms
+OutputPrefix = test_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/sms
+TempDataPrefix = sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_SMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/sms
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/sms
+OutputPrefix = test_CONV_SMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/sms
+TempDataPrefix = CONV_sms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+MMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/mms
+OutputPrefix = test_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/mms
+TempDataPrefix = mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_MMSPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/mms
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/mms
+OutputPrefix = test_CONV_MMS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/mms
+TempDataPrefix = CONV_mms.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VOMPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/voicemail
+OutputPrefix = test_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/voicemail
+TempDataPrefix = vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VOMPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/voicemail
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/voicemail
+OutputPrefix = test_CONV_VOM
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/voicemail
+TempDataPrefix = CONV_vom.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+DATPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/data
+OutputPrefix = test_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/data
+TempDataPrefix = dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_DATPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/data
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/data
+OutputPrefix = test_CONV_DAT
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/data
+TempDataPrefix = CONV_dat.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VASPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vas
+OutputPrefix = test_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vas
+TempDataPrefix = vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VASPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/vas
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vas
+OutputPrefix = test_CONV_VAS
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vas
+TempDataPrefix = CONV_vas.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+VAPPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vap
+OutputPrefix = test_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vap
+TempDataPrefix = vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+CONV_VAPPREOutput 
+{ 
+ModuleName = OUT_GenericStream
+ProcessType = RATING_PIPELINE
+EventType = /event/delayed/session/telco/gsm/valuepack
+ObjectCacheType = CONVERGENT
+Module 
+{ 
+Grammar = ./TD/formatDesc/Formats/Solution42/TD_SOL42_V670_REL_OutGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/out/vap
+OutputPrefix = test_CONV_VAP
+OutputSuffix = .out
+TempPrefix = .
+TempDataPath = /cdrapp_prepaid/out/vap
+TempDataPrefix = CONV_vap.tmp.
+TempDataSuffix = .data
+Replace = TRUE
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseCreateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /suspended_usage/telco/gsm
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageCreationGrammar.dsc
+DeleteEmptyStream = True
+AddInvoiceData = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = suspense_create_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = susp.create.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+SuspenseUpdateOutput 
+{ 
+ModuleName = OUT_GenericStream
+EventType = /tmp_suspended_usage
+Module 
+{ 
+Grammar = ./formatDesc/Formats/SuspenseHandling/SuspendedUsageUpdateGrammar.dsc
+DeleteEmptyStream = True
+OutputStream 
+{ 
+ModuleName = EXT_OutFileManager
+Module 
+{ 
+OutputPath = /cdrapp_prepaid/reject
+OutputPrefix = suspense_update_
+OutputSuffix = .out
+TempPrefix = tmp
+TempDataPath = /cdrapp_prepaid/reject
+TempDataPrefix = susp.update.tmp.
+TempDataSuffix = .data
+Replace = True
+AppendSequenceNumber = False
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+
+OutputLog 
+{ 
+FilePath = /var/portal/ifw/log/stream
+FileName = stream
+FilePrefix = Stream_
+FileSuffix = .log
+LogLevel = major
+SuppressErrors 
+{ 
+ERR_SPEC_VERSION_INVALID 
+ERR_RELEASE_VERSION_INVALID 
+WRN_NO_GLID 
+} 
+
+} 
+
+SequenceGeneration = Transaction
+EdrTraceEnabled = FALSE
+EdrTrace 
+{ 
+TraceLog 
+{ 
+FilePath = /var/portal/ifw/log/edrLog
+FileName = edrTraceLog
+FilePrefix = log_
+FileSuffix = .log
+} 
+
+TraceStartPoint = Input
+TraceEndPoint = Output
+} 
+
+} 
+
+} 
+
+} 
+
+} 
+

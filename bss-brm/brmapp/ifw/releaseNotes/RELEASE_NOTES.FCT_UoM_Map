@@ -1,0 +1,123 @@
+================================================================================
+FCT_UoM_Map
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+==============================================================================
+
+Module Version: 10007  6.7_FP2  04-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10006  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Module Version: 10005  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+================================================================================
+
+Module Version: 10004  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10004
+----------------
+
+Date : 05-May-2003
+----------------
+
+Change Order :  PRSF00039740
+----------------
+
+Short Description : Rename plugin class.
+
+================================================================================
+
+Module Version : 6.5 SP2 10003
+----------------
+
+Date : 30-Apr-2003
+----------------
+
+Change Order :  PRSF00039306
+----------------
+
+Short Description : Update to use namespaces
+
+================================================================================
+Module Version : 6.5 SP1 10002
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00037516
+----------------
+
+Short Description : Fixing FCT linking errors on AIX
+-------------------
+================================================================================
+
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+================================================================================
+
+Actual Version : v6.3.2 / Date : 10-Jun-2002
+----------------
+
+Notes:
+------
+
+Move the modules from PBC to this destination.
+They are used only here.
+
+========================================================================================
+Actual Version : v4-30-02 / Date : 01-Feb-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #43183 Inexact result messages on AIX.
+            Add Inexact result handler to module (only for AIX).
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 21-MAY-2001 
+----------------
+
+Notes          :
+----------------
+- PETS #36559 SourcePro AIX port
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 21-MAY-2001 
+----------------
+
+Notes          :
+----------------
+
+- Support for database and Framework version v4-30.
+- Module for the implementation of the unit of measure ( UoM ) mapping. 
+  * The module now performs it's mappings against freely configurable lists
+    of RUM/UOM pairs. The corresponding RUM/UOM edr field indices are freely 
+    configurable.
+
+================================================================================

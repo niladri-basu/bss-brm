@@ -1,0 +1,165 @@
+========================================================================================
+FCT_EnhancedSplitting
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+==============================================================================
+
+Module Version: 10010  7.4 06-Apr-2009
+bug8362474: Mapping of EDR logical field name trunkOutputCM corrected to map to 
+TRUNK_OUTPUT.
+==============================================================================
+
+Module Version: 10009  7.3 18-Jul-2006
+PRSF00219265: Da Vinci Code Clean Up:--pipeline_mediation & suspense Please set 
+              isValidDetail false when you set error above warning 
+
+==============================================================================
+
+Module Version: 10008  DaVinci 31-May-2006
+PRSF00216184: Enhanced Splitting doesn't consider alias mapping
+==============================================================================
+
+Module Version: 10007  Apollo  21-May-2004
+PRSF00105998: NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10006  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+==============================================================================
+
+Module Version: 10005  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+================================================================================
+
+Module Version: 10004  6.5_SP2  05-May-2003
+PRSF00039853:   Fix namespace forward declarations.
+
+================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 01-May-2003
+----------------
+
+Change Order :  PRSF00039309
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+========================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 31-Jan-2002
+----------------
+
+Notes          :
+----------------
+
+- PETS#38593 DB2 Port.
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 17-SEP-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS#39464 PPL_OutputCollection: Resolving stream number
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 23-AUG-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS#38498 fix.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 21-JUN-2001
+----------------
+
+Notes          :
+----------------
+
+- Updated for the v4-30 Framework.
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 16-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+- Uses system brand as the key value for the stream number map.
+
+========================================================================================
+
+Actual Version : v4-03-00 / Date : 10-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+- Updated to use FSM_MultiEngine.
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 17-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+Database version check added.
+
+========================================================================================
+
+Actual Version : v4-01-01 / Date : 21-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+Implementation changed to support the IBM xlC compiler.
+
+========================================================================================
+
+Actual Version : v4-00-01 / Date : 10-Apr-2000
+----------------
+
+Notes          :
+----------------
+
+Initial version of the enhanced splitting plugin.
+
+========================================================================================

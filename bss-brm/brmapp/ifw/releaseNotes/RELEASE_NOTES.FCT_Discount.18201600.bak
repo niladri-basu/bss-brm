@@ -1,0 +1,1997 @@
+================================================================================
+
+ Copyright (c) 2003, 2011, Oracle and/or its affiliates. All rights reserved. 
+This material is the confidential property of Oracle Corporation
+or its licensors and may be used, reproduced, stored or transmitted
+only in accordance with a valid Oracle license or sublicense agreement.
+
+==============================================================================
+FCT_Discount Module Release Notes
+==============================================================================
+Module Version: v10206 / Date : 18-Oct-2011
+Bug 12975076 
+Problem : PARENT GETS CHARGED FOR DISCOUNTED USAGES OF CHILD IN CHARGE SHARING CASE.
+Solution : Modified the code to apply charge share correctly. We filter only charge packets for discount and sponsorship case. For charge share case, we iterate on all the charge packets and discount packets present in the system. 
+==============================================================================
+Module Version: v10205 / Date : 15-Jun-2011
+Bug 12656070 - When we update the values of the Registry Entries through semaphores,
+the changes do not get reflected in the INFO file containing the dynamic registry values.
+
+Modified the code to update the registry values depending on the values passed through semaphore.
+==============================================================================
+Module Version: v10204 / Date : 27-Apr-2011
+bug12398211 - [COTP] AMOUNT_DEFERRED IS NOT FILLED CORRECTLY DURING EVENT DISCOUNTING
+Deferred Amount was not getting set for the the fixed charge case during authorization. Added logic to handle it.
+==============================================================================
+Module Version: v10203 / Date : 23-MAR-2011
+bug11835464: QUANTIFICATION FOR BG LOCK TO USE IGNOREEDRONLOCK
+When IgnoreEdrOnLock is set to false, a message is added to inform that EDR
+would be retried as it is waiting for the BG lock to get released.
+==============================================================================
+Module Version: v10202 / Date : 11-Mar-2011
+bug11854121: NOVA BRM R3 OPT INCORRECT DISCONNECT REFUND AMOUNT FOR RC WITH MULTIPLE DISCOUNT
+Handling of the logic "DiscountNotMoreThanCharge" extended for the Cancellation case.
+==============================================================================
+Module Version: v10201 / Date : 09-MAR-2011
+bug11826661: FCT_DISCOUNT ERRORING OUT WHILE CHECKING RESOURCE BALANCE
+Introduced a flag to begin edr transaction only once for the first valid detail in case there are many details.
+==============================================================================
+Module Version: v10200 / Date : 13-OCT-2010
+bug10187783: SYSTEM DISCOUNT APPLIES AS A DISCOUNT SHARING GROUP
+Code changes made to optimize the code changes made in the bug 9860918.
+The functionality of the new code is the same as in the case of the bug 9860918.
+==============================================================================
+Module Version: v10199 / Date : 04-OCT-2010
+bug10117674: UNABLE TO DISCOUNT THRESHOLDS OR TIERS IN STEPS
+Code changes made to check the Threshold values correctly for the Discount Packets.
+==============================================================================
+FCT_Discount Module Release Notes 
+==============================================================================
+Module Version: v10198 / Date : 02-SEP-2010
+bug9860918: Code changes made to avoid the CS from acting on the discounted amount. 
+==============================================================================
+Module Version: v10197 / Date : 12-AUG-2010
+bug9902678: ENHANCEMENT FOR ADDING FEATURE "IGNOREONLOCK" IN DISCOUNTING 
+==============================================================================
+Module Version: v10196 / Date : 24-May-2010
+bug9728655:  DISCOUNT GPRS CDR WITH VOLUME ABOVE 2GB DOES NOT WORK
+In the calculation of stepC and stepQ divide is given precedence over multiply with these changes.
+==============================================================================
+Module Version: v10195 / Date : 24-May-2010
+bug9724364: Existing intern discount match factor is being overwritten
+==============================================================================
+Module Version: v10194 / Date : 06-April-2010
+bug9493197: If actg_last,actg_next and actg_future period offset is not synced then validity 
+date of relative cycle was setting wrong date.Corrected the garnt period offset handling in
+FCT::Discount. 
+==============================================================================
+Module Version: v10193 / Date : 28-Mar-2010
+bug9509255: INF_ACCOUNT_DEADLOCK ORCCURED WHEN RATING WITH MULTIPLE PIPELINES
+The order of execution is == follows & when both are present. Corrected with parenthesis to control the execution order.
+==============================================================================
+Module Version: v10192 / Date : 25-Jan-2010
+bug9311469: The owner flag is set in all cases preventing it from carrying over the value
+from last account ERA
+==============================================================================
+Module Version: v10191 / Date : 16-Sep-2009
+bug8807278: Corrected grant period for the grants given relative to acoounting cycle
+and event falling in last and next accounting cycle.
+==============================================================================
+Module Version: v10190 / Date : 30-SEP-2009
+bug8902270: If base expression is complex,DBI was not getting evaluated for multiple CP 
+Following issues have been addressed.
+1)Added new registry parameter(EvalMultipleBalImpact)
+2)mIterCP was getting reset during processing of multiple ASS_CBD
+3)Balance should retrieve for all expression used in discount bundle ERA 
+4)Reduce the severity of logged message and it will log into the pipeline & stream log
+5)Discount engine should give +ve grant for zero charge amount
+6)CP should be splited for tiered type rule
+==============================================================================
+Module Version: v10189 / Date : 02-JUL-2009
+bug8651668: Added PIN_PERCENT field in the EDR PACKET and mapped to PIN_PERCENT FIELD of
+Charge Packet and Discount Packet
+==============================================================================
+Module Version: v10188 / Date : 24-APR-2009
+bug8448085: balances initialized with rtp not having proper valid_to
+Convert the times from date to unix time and vice versa based on utc as out realtime treats
+the time as GMT time
+==============================================================================
+Module Version: v10187 / Date : 25-FEB-2009
+bug8278902: QPF 8249174 - CORE IS GETTING GENERATED ON RESTARTING PIPELINE.
+==============================================================================
+Module Version: v10186 / Date : 13-FEB-2009
+bug7717604: DSG OWNER ACCOUNT'S SUB_BALANCE BUCKET IS REFLECTING INCORRECT VALUES
+Member variable initialized in default constructor.
+==============================================================================
+Module Version: v10185 / Date : 05-FEB-2009
+bug7616047: OPCODE PCM_OP_TCF_AAA_UPDATE_AND_REAUTHORIZE IS NOT ALLOCATING QUANTITY PROPERLY
+Charge packet will split on modified Charge/Quantity and also corrected the DP splitting functionality
+==============================================================================
+Module Version: v10184 / Date : 09-JAN-2009
+bug7537434: KILL -USR1 <IFW_PROCESS_PID> -- MISSING DETAILED STATISTICS
+Commented code for PROC TIMER uncommented.
+==============================================================================
+Module Version: v10183 / Date : 27-NOV-2008
+bug7490995: "DOUBLE GRANTED_AMOUNT IN DISCOUNT_PACKET (CAN'T ZERO OUT A NON-CURRENCY RESOURCE"
+Ignore the balance cache update if DISCOUNT_ONLY_FLAG is set.
+==============================================================================
+Module Version: v10182 / Date : 12-NOV-2008
+bug7552778: "AIX BMT: BATCH PIPELINE MEMORY KEEPS GROWING DURING CDR PROCESSING"
+==============================================================================
+Module Version: v10181 / Date : 16-OCT-2008
+bug7450640: "PSEUDO CURRENCY RESOURCE BALANCE THOUGH AVAILABLE, CALL IS NOT AUTHORIZED"
+Split the charge packet based on charge(free monetary resource)
+==============================================================================
+Module Version: v10180 / Date : 30-JUN-2008
+bug7043546: "P-6962659 NO PROVISION TO UPDATE GILD TO NULL IN DISCOUNT BALANCE IMPACT CON..."
+            "NO PROVISION TO UPDATE GILD TO NULL IN DISCOUNT BALANCE IMPACT CONFIGURATION"
+            "Override the GLID in case of not null and non-zero value"
+==============================================================================
+Module Version: v10179 / Date : 28-APR-2008
+bug6955676: "P-6780912 SKIP BILLING CREATING BUCKET WITH INCORRECT VALID FROM AND VALID TO"
+================================================================================
+Module Version: v10178 / Date : 05-FEB-2008
+bug6788160    : "P-6529211 PIPELINE IS HANGING BECAUSE OF A DEADLOCK"
+================================================================================
+Module Version: v10177 / Date : 27-NOV-2007
+bug6618113: "P-6497946 [7.3 OMI] DISCOUNT NOT APPLIED CAUSE OF NULL CHARGE
+             PACKETS AMOUNT... "
+=============================================================================
+Module Version: v10176 / Date : 13-SEP-2007
+bug6271185: "REGRESSION JP1035:  CMFUC NOT GETTING UPDATED CORRECTLY FOR 
+             CHILDS AFTER BILLING"
+==============================================================================
+Module Version: v10175 / Date : 18-JUL-2007
+bug6240721: "P-6083500 DURING PIN_BILL_DAY, DISCOUNTING PIPELINE CORES"
+==============================================================================
+Module Version: v10174 / Date : 15-MAR-2007
+bug5931160: "264871.992|7.3 [OLE] - ISCRIPT CODE INSIDE PIPELINE LOG"
+==============================================================================
+Module Version: v10173 / Date : 16-JAN-2007
+PRSF00243643: "7.3_HA Reverse Rating - eserved quantities do not correspond"
+==============================================================================
+Module Version: v10172 / Date : 14-DEC-2006
+PRSF00240366: "7.3_RTW+4489+Regressions:DroppedCall: Discount aggregation 
+               failed after processing Continuation Call."
+==============================================================================
+Module Version: v10171 / Date : 12-DEC-2006
+PRSF00239715: "Avoid match factor calculation for Parallel and 
+               Sequential discounts"
+==============================================================================
+Module Version: v10170 / Date : 11-DEC-2006
+PRSF00239683: "Realtime mode FCT_Discount: conversion of event time stamp 
+               to/from epoch seconds inconsistent."
+==============================================================================
+Module Version: v10169 / Date : 07-DEC-2006
+PRSF00240339: "adding an e_print message in the discount plugin"
+==============================================================================
+Module Version: v10168 / Date : 29-NOV-2006
+PRSF00237942: "Reverse Rating changes in the discount plugin"
+==============================================================================
+Module Version: v10167 / Date : 23-NOV-2006
+PRSF00234612: "Discounting does not use updated values during processing"
+==============================================================================
+Module Version: v10166 / Date : 06-OCT-2006
+PRSF00234843: "Providing OLD validity info for bk-out/re-rate."
+==============================================================================
+Module Version: v10165 / Date : 01-SEP-2006
+PRSF00231710: "fixing a problem in fct discounting plugin ( description below )"
+==============================================================================
+Module Version: v10164 / Date : 24-AUG-2006
+PRSF00228176: "Removing the tracking of delayedBal."
+==============================================================================
+Module Version: v10163 / Date : 25-AUG-2006
+PRSF00230407: "FCT_Discount plugin caues RTP core dump during shutdown"
+==============================================================================
+Module Version: v10162 / Date : 21-AUG-2006
+PRSF00222169: "Fixing the timezone discrepancy(UTC / Localtime) across
+               discounting components"
+==============================================================================
+Module Version: v10161 / Date : 18-AUG-2006
+PRSF00229405: "Billing time  Discount  -- Real-time pipeline  core dumps"
+==============================================================================
+Module Version: v10160 / Date : 10-AUG-2006
+PRSF00215440: "Performance improvement for FCT_Discount in DaVinci"
+==============================================================================
+Module Version: v10159 / Date : 10-AUG-2006
+PRSF00228267  "Discount CacheBalance was not returning proper amount."
+===============================================================================
+Module Version: v10158 / Date : 03-AUG-2006
+PRSF00186143: "Integrate should validate discountrulecode in DISCOUNTBUNDLE ERA"
+==============================================================================
+Module Version: v10157 / Date : 28-July--2006
+PRSF00224930  : "Need to call PCM_OP_BAL_GET_BALANCES for balance info during RT discount if DETAIL.REFRESH_BALANCE = true."
+==============================================================================
+Module Version: v10156 / Date : 27-Jul-2006
+PRSF00223609: "Upgrade GSM Rating Pipeline hangs"
+==============================================================================
+Module Version: v10155 / Date : 22-Jul-2006
+PRSF00223607: "After installation of new patch for pipeline rating is not correctly applied"
+==============================================================================
+Module Version: v10154 / Date : 19-Jul-2006
+PRSF00224320: "Update signatures of accountCycles() and billingCycle() functions"
+==============================================================================
+Module Version: v10153 / Date : 18-Jul-2006
+PRSF00223001: "Discount mangles poids > 32 bits"
+==============================================================================
+Module Version: v10152 / Date : 14-Jul-2006
+PRSF00219264: "Da Vincii Code Clean Up:--pipeline_discount Please set isValidDetail false when you set error above warning"
+==============================================================================
+Module Version: v10151 / Date : 09-Jun-2006
+PRSF00213814: Resoning fix for Discount Plugin ( 87 - 89 )"
+==============================================================================
+Module Version: v10150 / Date : 24-MAY-2006
+PRSF00214339: "Configurable validty implementation."
+==============================================================================
+Module Version: v10149 / Date : 28-APR-2006
+PRSF00194353: "RUMs with ROUNDED_QUANTITY_VALUE=0 is not discount"
+==============================================================================
+Module Version: v10148 / Date : 31-MAR--2006
+PRSF00186138: "Discount Rule with Base Expression as BAL(1000118)*BAL(1000119)/100"
+==============================================================================
+Module Version: v10147 / Date : 23-FEB-2006
+PRSF00192314: "DCQ - Support EVAL discount expression"
+==============================================================================
+Module Version: v10146 / Date : 14-FEB-2006
+PRSF00193351: "EBal not found error message has to be removed"
+==============================================================================
+Module Version: v10145 / Date : 01-FEB-2006
+PRSF00186136:  "Pipeline hangs in FCT_Discount when processing certain EDRs 
+		emitted by CallAssembling."
+==============================================================================
+Module Version: v10144 / Date : 30-JAN-2006
+PRSF00183961: "ACCOUNT_PROD_SPLIT - Replace NODE_LOCATION with OFFERING_ID in the discount packet"
+==============================================================================
+Module Version: v10143 / Date : 29-SEP-2005
+PRSF00183961: "Final ProductCancel fix in Pipeline/Discount"
+==============================================================================
+Module Version: v10142 / Date : 19-SEP-2005
+PRSF00183242 : Family Discount requirements cannot be met with out of box
+               functionality
+==============================================================================
+Module Version: v10141 / Date : 29-AUG-2005
+PRSF00179707 : Change atoi() and atol() to atoi64() for 64-bit Poid Compatibility.
+==============================================================================
+Module Version: v10140 / Date : 22-AUG-2005
+PRSF00179736 : VFKK-UAT: Not maintaining separate bucket for Aggregation and
+               copying at parent level for each cycle.
+==============================================================================
+Module Version: v10139 / Date : 04-AUG-2005
+PRSF00177445 : Discount history is not handled correctly
+PRSF00178468 : "ifw rejects the whole file even if just one error occurs (propagation of CO 90728)"
+==============================================================================
+Module Version: v10138 / Date : 01-AUG-2005
+PRSF00178154 : Propagation of 176217: Discount model not seen by the pipeline
+               
+==============================================================================
+Module Version: v10137 / Date : 21-JUL-2005
+PRSF00177353 : Discount is not getting Applied Correctly when Discount Model
+               has Cascading and Sequential
+==============================================================================
+Module Version: v10136 / Date : 08-JUL-2005
+PRSF00168825 : discount inaccuracies if using edr field CHARGEABLE_QUANTITY_VALUE
+               as discounting base
+PRSF00171932 : Error with Cascading Discounting
+==============================================================================
+Module Version: v10135 / Date : 30-JUN-2005
+PRSF00174123 : "JP1035(Discount MonthyFees AllChildren):Multiple buckets are
+                displaying for Parent at MFUC and Child does not get CMFUC"
+==============================================================================
+Module Version: v10134 / Date : 22-JUN-2005
+PRSF00170276 : "Tax not appliying on Discounting event as PIN_FLD_DEFERRED_AMOUNT
+                has 0.00 on BAL_IMPACTS array."
+==============================================================================
+Module Version: v10133 / Date : 20-JUN-2005
+PRSF00169966: "Fix warning messages in the Windows 32-bit build displays that really should be treated as errors"
+==============================================================================
+Module Version: v10132 / Date : 15-JUN-2005
+PRSF00171412 : "SMS CDR's processed in single file does not rate successfully"
+==============================================================================
+Module Version: v10131 / Date : 01-JUN-2005
+PRSF00170810 : "Negation of charges should be for charge packet only during Applying Discount from Sponsor."
+
+==============================================================================
+Module Version: v10130 / Date : 26-MAY-2005
+PRSF00168673 : "Discounting Pipeline consumes the complete credit limit even though authorization is done for a lesser quantity"
+==============================================================================
+Module Version: v10129 / Date : 26-May-2005
+PRSF00167998  : "CDS: Member account Balance not updated correctly transition 
+                 from closed -> active -> close"
+==============================================================================
+Module Version: v10128 / Date : 24-May-2005
+PRSF00167265  : Discount granting case should not impact match factor
+==============================================================================
+Module Version: v10127 / Date : 20-May-2005
+PRSF00169289  : START_T and END_T of balance bucket for sponsor aggregation 
+                counter was off by UTC offset.
+==============================================================================
+Module Version: v10126 / Date : 14-May-2005
+PRSF00168500  : CR081/82: Balance updates are wrong after FutureDated Discount 
+                Purchase
+==============================================================================
+Module Version: v10125 / Date : 10-May-2005
+PRSF00167530  :  Use of int64 in FCT_Discount instead of long data type.
+==============================================================================
+Module Version: v10124 / Date : 10-May-2005
+PRSF00167174  : Discount should not call BAL_GET_BALANCES anymore as the CM is
+                providing all balances
+==============================================================================
+Module Version: v10123 / Date : 05-May-2005
+PRSF00162578  :  min of (baseQty, Drum) shouldn't be called
+==============================================================================
+Module Version: v10122 / Date : 25-Apr-2005
+PRSF00164115  : EDR processing failed through Backout pipeline
+==============================================================================
+Module Version: v10121 / Date : 24-Apr-2005
+PRSF00163853  : Discount Objects need to be evaluated before ERAs, such that 
+                aggregation happens before ERAs are processed. 
+==============================================================================
+Module Version: v10120 / Date : 20-Apr-2005
+PRSF00162266  :  Apply tax on discount objects
+==============================================================================
+Module Version: v10119 / Date : 18-Apr-2005
+PRSF00163798  : CR 81/82 : Sequential discounting is not applying properly 
+                during re-rating.
+==============================================================================
+Module Version: v10118 / Date : 19-Apr-2005
+PRSF00163025  : ifw aborts with ERR_THREAD_EXCEPTION, invalid state change when 
+		processing certain fragments of a call. 
+==============================================================================
+Module Version: v10117 / Date : 11-Apr-2005
+PRSF00161677  :  Recyle deadlocked CDR instead of rollback the entire file
+==============================================================================
+Module Version: v10116/ Date : 11-APR-2005
+PRSF00159249  "Regression: Billing time discount is not happening"
+==============================================================================
+Module Version: v10115/ Date : 06-APR-2005
+PRSF00151548 "Semaphore for refreshing Pricing Data related to Discount"
+==============================================================================
+Module Version: v10114 / Date : 01-APR-2005
+PRSF00161625  "To deliver CR 81/82 Discount Changes to 7.2_EA Disc"
+==============================================================================
+Module Version: v10113 / Date : 22-MAR-2005
+PRSF00158925  "libumeme coredumps when using too many threads"
+==============================================================================
+Module Version: v10112 / Date : 14-MAR-2005
+PRSF00158034  "Authorization grants more than available free resources if 
+               Discount Sharing is configured"
+==============================================================================
+Module Version: v10111 / Date : 18-FEB-2005
+PRSF00154600  "Change the iterator logic in initBalances for Realtime discounting"
+==============================================================================
+Module Version: v10110 / Date : 01-FEB-2005
+PRSF00151049 "Need to set workedOn flag to true in registryUpdate()"
+==============================================================================
+Module Version: v10109 / Date : 15-DEC-2004
+PRSF00145441 "System Test: MatchFactor should not base on quantity"
+==============================================================================
+Module Version: v10108 / Date : 14-DEC-2004
+PRSF00144238  "Incorrect GLID for discount balance impact."
+==============================================================================
+Module Version: v10107 / Date : 08-DEC-2004
+PRSF00143476 "System Test: system discount is not granting discount when using /service/telco"
+==============================================================================
+Module Version: v10106 / Date : 01-DEC-2004
+PRSF00142891 "Regression JP1035/36 : pin_bill_day gives core dump"
+==============================================================================
+Module Version: v10105 / Date : 23-NOV-2004
+PRSF00141727 "Discount not applied by pipeline as expected for bundle ERA" 
+==============================================================================
+Module Version: v10104 / Date : 11-NOV-2004
+PRSF00136879 "Changes related to EDR transactions"
+==============================================================================
+Module Version: v10103 / Date : 09-NOV-2004
+PRSF00139336 "SMS discounting is not happening. (propagation)"
+==============================================================================
+Module Version: v10102 / Date : 20-OCT-2004
+PRSF00135776 "Charge Share doesn't take DP into consideration for TOTALC"
+==============================================================================
+Module Version: v10101 / Date : 11-OCT-2004
+PRSF00135008 "Regression:FCT::Discount -- Failing in evalExpression for
+              Bal(resourceId)"
+==============================================================================
+Module Version: v10100 / Date : 05-OCT-2004
+PRSF00132497 "Regression JP4002 - Pipeline server stopped  when submit a cdr
+              for SMS service in a line"
+==============================================================================
+Module Version: v10099 / Date : 04-OCT-2004
+PRSF00123572 "QF: Pipeline Discount: General performance degradation for cdr
+               rating 6.7 FP2 FD3"
+==============================================================================
+Module Version: v10098 / Date : 21-SEP-2004
+PRSF00128718 "Tax code from CP needs to be copied to DP"
+==============================================================================
+Module Version: v10097 / Date : 10-SEP-2004
+PRSF00127042 "JP2005 - Fold is not working During Bill Now after pipeline rating and IREL."
+==============================================================================
+Module Version: v10096 / Date : 08-SEP-2004
+PRSF00127701 "For cascading type of discount, valid base expression is either
+              STEPC or STEPQ."
+==============================================================================
+Module Version: v10095 / Date : 24-AUG-2004
+PRSF00127573 "Performance improvement in FCT/Discount"
+==============================================================================
+Module Version: v10094 / Date : 20-AUG-2004
+PRSF00127318 "6.7_FP2 NT_IA64: integrate_mod breaking (1 unresolved: 
+              DAT::Balance::BalanceSubBalance::~Balance...)"
+==============================================================================
+Module Version: v10093 / Date : 18-AUG-2004
+PRSF00125661 "Refactor DAT_BalanceBatch code in order to remove static link
+              between DAT_BalanceBatch and FCT_Discount."
+==============================================================================
+Module Version: v10092 / Date : 09-AUG-2004
+PRSF00122977 "Aggregation of charges into a counter and Copying of one counter
+              into another is not happening correctly - JP1035/1036."
+==============================================================================
+Module Version: v10091 / Date : 05-AUG-2004
+PRSF00124838 "On sending a semaphore to shutdown pipeline , it core dumps"
+==============================================================================
+Module Version: v10090 / Date : 02-AUG-2004
+PRSF00124374 "product cancellation  and  the discount charge back -  Need this
+              fix from discounting side for  JP1018 feature"
+==============================================================================
+Module Version: v10089 / Date : 30-JUL-2004
+PRSF00120416 "Modify Discounting based on the changes made CO 120407 for Accounting cycles." 
+==============================================================================
+Module Version: v10088 / Date : 29-JUL-2004
+PRSF00122451 "67FP2 Itanium : dynamic_cast fails in FCT::DiscountPlugIn.cpp"
+==============================================================================
+Module Version: v10087 / Date : 26-JUL-2004
+PRSF00120407 "FCT_Account should set the ACTG_LAST, ACTG_NEXT and ACTG_FUTURE
+with the values in Infranet DB"
+==============================================================================
+Module Version: v10086 / Date : 20-JUL-2004
+PRSF00121255 "67FP2 Itanium: DAT_Account and DAT_Balance are un-able to load 
+              the DAT_Listener module."
+==============================================================================
+Module Version: v10085 / Date : 19-JUL-2004
+PRSF00121229 "Discount balance caching problem in REALTIME case"
+==============================================================================
+Module Version: v10084 / Date : 15-JUL-2004
+PRSF00120995 "UTC time conversion for realtime get accounting cycle"
+==============================================================================
+Module Version: v10083 / Date : 07-JUL-2004
+PRSF00118916  "Handle backout during delay period - FCT_Discount changes"
+==============================================================================
+Module Version: v10082 / Date : 06-JUL-2004
+PRSF00109822 "Product Catalogue Rel 3. V-PAC 6.7FP2 -- To support multiple ACB's." 
+==============================================================================
+Module Version: v10081 / Date : 28-JUN-2004
+PRSF00110425  "JP1005 - Delayed CDRs and automatic rollover"
+==============================================================================
+Module Version: v10080 / Date : 28-JUN-2004
+PRSF00118192 "Aggregation counter is not getting updated with prorated monthly
+              fee correctly for longer billing cycle"
+==============================================================================
+Module Version: v10079 / Date : 23-JUN-2004
+PRSF00117649 "VFKK_Rerating: Re-rating is not happening for the event having
+              Discount packet"
+==============================================================================
+Module Version: v10078 / Date : 14-JUN-2004
+PRSF00114189 "Regression: Match Factor for DRUM type = Quantity with cascading
+              not working"
+==============================================================================
+Module Version: v10077 / Date : 08-JUN-2004
+PRSF00114530 "Regression: Record 607 missing with Record 605 on consuming 
+              nonexistence bucket"
+==============================================================================
+Module Version: v10076 / Date : 07-JUN-2004
+PRSF00115144  "Discount NT Porting"
+==============================================================================
+Module Version: v10075 / Date : 31-MAY-2004
+PRSF00114591  "updateBalance problem for consumption case"
+==============================================================================
+Module Version: v10074 / Date : 01-JUN-2004
+PRSF00113954  "Add registry support for tracing discount steps"
+==============================================================================
+Module Version: v10074 / Date : 07-JUN-2004
+:PRSF00115144 "Discounting NT Porting"
+==============================================================================
+Module Version: v10073 / Date : 14-MAY-2004
+PRSF00109008 "Orange 6.7 PoC [P, T] Value bundle problem"
+==============================================================================
+Module Version: v10072 / Date : 12-MAY-2004
+PRSF00110256 "Orange POC - Discount share bal impacts"
+==============================================================================
+Module Version: v10071 / Date : 10-MAY-2004
+PRSF00109916 "Create sub-balance for currency resource in ApplyBalance plugin"
+==============================================================================
+Module Version: v10070 / Date : 07-MAY-2004
+PRSF00108884  "Payment Incentive feature -- Pipeline Discount supports no charge package."
+==============================================================================
+Module Version: v10069 / Date : 01-MAY-2004
+PRSF00106654  "JP2016D: FCT/ApplyBalance plugin to impact the balances in Batch mode"
+==============================================================================
+Module Version: v10068 / Date : 29-Apr-2004
+PRSF00108100 "resolve merging problem"
+==============================================================================
+Module Version: v10067 / Date : 28-Apr-2004
+PRSF00101480 "On rerating the pre-rated events having discount, the balance on customer center shows wrong values"
+
+==============================================================================
+Module Version: v10066 / Date : 26-Apr-2004
+PRSF00107270 "Orange 6.7 POC [P,T] Free seconds and 10% discounting don"t"
+This is propagaton of PRSF00106417 from 6.7_FP1_EBF
+
+==============================================================================
+Module Version: v10065 / Date : 14-APR-2004
+PRSF00103589  "Changes in the String class to improve memory usage"
+
+==============================================================================
+Module Version: v10064 / Date : 13-Apr-2004
+PRSF00104757 "Add SupportBundleERA flag"
+
+==============================================================================
+Module Version: v10063 / Date : 08-Apr-2004
+PRSF00099622 "Discount Trigger or Step Threshold is not working with inclusive 
+              values"
+
+=============================================================================
+Module Version: v10062 / Date : 07-Apr-2004
+PRSF00097844 "OMNI - Apollo - discount balance impacts validity dates don"t work"
+This is propagation of PRSF00097805 from 6.7_EBF 
+
+==============================================================================
+Module Version: v10061 / Date : 05-Apr-2004
+PRSF00099162  "6.7_FP2 Regression : IFW should not log CRITICAL message for 
+              deadlock"
+              This is propagation of PRSF00035013 from 6.5_SP1
+
+==============================================================================
+Module Version: v10060 / Date : 01-Apr-2004
+PRSF00102654  tan   "Performance tweak in FCT/Discount"
+This is propagation of PRSF00102443 from 6.7_FP1_EBF
+
+==============================================================================
+Module Version: v10059 / Date : 31-Mar-2004
+PRSF00102287 "Remaining Discount is incorrect after apply free euro"
+
+==============================================================================
+Module Version: v10058 / Date : 22-Mar-2004
+PRSF00094045 "Pipeline Discount: Sequential Discount (JP1004)"
+
+==============================================================================
+Module Version: v10057 / Date : 09-Mar-2004
+PRSF00098525 "Apollo Regression - integrate has trouble with 3tier discount.."
+This is a propagation of PRSF00088982 from 6.7_EBF
+
+==============================================================================
+Module Version: v10056 / Date 02-Mar-2004
+PRSF00096681 "Prior 6.7 - Multiple rules cascading did not consume all the
+              free min. and charge the customer for the usages."
+Propagation of PRSF00096607
+
+==============================================================================
+Module Version: v10055 / Date 01-Mar-2004
+PRSF00090489 "Tier Discount: Supporting Multiple Discount Steps per Discount Rule"
+
+==============================================================================
+Module Version: v10054 / Date 26-Feb-2004
+PRSF00094145 "Prior 6.7 - Multiple rules cascading is giving free resouce
+              and charge the customer."
+Proporagtion of PRSF00094145 from 6.7_FP1_EBF.
+
+==============================================================================
+Module Version: v10053 / Date 19-Feb-2004
+PRSF00093028 "Memory leak fixes in discount and balances"
+Proporagtion of PRSF00092956 from 6.7_EBF.
+
+==============================================================================
+Module Version: v10052  6.7_FP2  18-Feb-2004
+PRSF00090917 "Discount grants through discount bal impact create a new bucket for each impact."
+
+==============================================================================
+Module Version: v10051  6.7_FP2  02-Feb-2004
+PRSF00090325 "Apollo Regression: prorated discount always apply ..."
+Proporagtion of PRSF00090084 from 6.7_FP1_EBF.
+
+==============================================================================
+Module Version: v10050  6.7_FP2  02-Feb-2004
+PRSF00089378 "OMNI -Apollo discount balance impacts validity dates don"t work"
+Proporagtion of PRSF00089725 from 6.7_EBF.
+
+==============================================================================
+Module Version: v10049 / Date : 23-Jan-2004
+PRSF00088496  "Rounding error on discounting with cascade."
+
+==============================================================================
+Module Version: v10048 / Date : 22-Jan-2004
+PRSF00088468  "Modify discount logic to treat a missing bucket as zero"
+
+==============================================================================
+Module Version: v10047 / Date : 00-Jan-2004
+PRSF00085619 "Default BG should be from the Discount object"
+
+==============================================================================
+Module Version: v10046 / Date : 19-Dec-2003
+PRSF00083741 "Apollo Regression: Discount proration is not working."
+
+==============================================================================
+Module Version: v10045 / Date : 17-Dec-2003
+PRSF00083539 "Memory usage clean up in FCT::Discount"
+
+==============================================================================
+Module Version: v10044 / Date : 15-Dec-2003
+PRSF00083169  "Billing Time discount not evaluated"
+
+==============================================================================
+Module Version: v10043 / Date : 10-Dec-2003
+PRSF00080559  "OMNI - Apollo - When a multi-rum event is rated, and subsequ"
+
+==============================================================================
+Module Version: v10042  Apollo  08-Dec-2003
+PRSF00081290: "Need to read contributor value from EDR in batch mode"
+
+==============================================================================
+Module Version: v10041  Apollo  18-Nov-2003
+PRSF00077978: The balance information is not retrieved correct if the 
+              contributor is defined for the event and resource.
+
+==============================================================================
+Module Version: v10040  Apollo  12-Nov-2003
+PRSF00077615:  Discount Packet has wrong totalQ, for multi CP case.
+
+==============================================================================
+Module Version: v10039  Apollo  11-Nov-2003
+PRSF00077414:  "Discount Mode setting mismatch"
+
+==============================================================================
+Module Version: v10038  Apollo  10-Nov-2003
+PRSF00077189:  Cached balance not set right
+
+- Problem found by Omnitel testing
+- Also fixed CO 77040, EBal return 0 if not found.
+
+==============================================================================
+Module Version: v10037  Apollo  03-Nov-2003
+PRSF00075891:  Support db number other than the primary db (0.0.0.1)
+
+- Changes in DAT::Balance, DAT::Account, FCT::Discount, and OUT::Realtime
+
+==============================================================================
+Module Version: v10036  Apollo  31-Oct-2003
+PRSF00075922:  Support cycle cancel proration in Percentage discount case
+
+==============================================================================
+Module Version: v10035  Apollo  30-Oct-2003
+PRSF00075860: "Discount Filtering not working for resource id"
+
+==============================================================================
+Module Version: v10034  Apollo  29-Oct-2003
+PRSF00070321: Step quantity amounts in correct
+
+- step amount computation did not take into account DRUM amount.
+
+==============================================================================
+Module Version: v10033  Apollo  27-Oct-2003
+PRSF00075124:   Backout pipeline fails for currency type resource
+
+- added check for valid resource list.
+
+==============================================================================
+Module Version: v10032  Apollo  23-Oct-2003
+PRSF00073908:   Backout pipeline fails to backout the events extracted
+
+- EDR iterator referenced not set.
+- Updated some error msgs.
+
+==============================================================================
+Module Version: v10031  Apollo  23-Oct-2003
+PRSF00073856:  Handle commit on restart
+
+- If the Discount plugin gets any commit() call from the TAM before finalInit(), 
+  all finalInit() does is to create a shutdown.
+
+==============================================================================
+Module Version: v10030  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+==============================================================================
+Module Version: v10029  Apollo  15-Oct-2003
+PRSF00071374: Need to filter CP/DP by balance group for sponsorship case
+
+- add filtering for matching BG for sponsorship filtering
+- make object id from 1_xxxx to xxxx format.  BillingRecord does not like the
+  first format.  (CO71408)
+
+==============================================================================
+Module Version: v10028  Apollo  10-Oct-2003
+PRSF00070238: Fix logic bug found during team review
+
+- remove check for cascading in evalExpression() when setting TotalQ/C
+- make invalid number return from evalExpression critical error.
+- updated msg file.
+- add more comments
+
+==============================================================================
+Module Version: v10027  Apollo  07-Oct-2003
+PRSF00069164: Bug fix after code review
+
+- Discount scale not applied in the right section of proration codes
+- Cut and paste error on comments
+- Removed left-over codes in cached balances
+- Added percentage value validation in DAT::Discount
+
+==============================================================================
+Module Version: v10026  Apollo  02-Oct-2003
+PRSF00068275: unit test fixes
+
+- Add subbalance for DP that impact currency
+
+==============================================================================
+Module Version: v10025  Apollo  26-Sep-2003
+PRSF00065450: unit test fixes
+
+- Wrong EDR field used to init cache balances.
+
+==============================================================================
+Module Version: v10024  Apollo  22-Sep-2003
+PRSF00065450: Add 2 fields to Discount Packet
+
+- Add 2 fields to Discount Packet
+- Accept CHAR(2) values for condition operator
+
+==============================================================================
+Module Version: v10023  Apollo  18-Sep-2003
+PRSF00063106: Integration Test Fixes  
+
+- use secondsUnix() instead of secondsGMT on time returned from accountCycle()
+- fixed CO PRSF00065381
+
+==============================================================================
+Module Version: v10022  Apollo  18-Sep-2003
+PRSF00063106: Feature tests  
+
+- support ERA
+- honor registry settings for showZeroDiscount and ServiceLevelBal
+- one time discount for base expresion that is not based on CP amount only.
+- remove obsolete discount related fields in containerDesc.dsc.
+
+
+========================================================================================
+Actual Version : v10021 / Date : 10-SEP-2003
+----------------
+
+Notes          : Test and Integration work.
+---------------- Reverse the order of execution for CP and DBI.  Now for each CP, loop
+                 over all DBI to generate a DP.  The reason is the DBI's are related 
+                 for each CP, eval of DBI could impact some balance that is referenced
+                 in the next CP's discount evaluation.
+		 Also added condition operator.
+
+New Features   : 
+---------------- 
+                
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00061710 : Test and Integration work.
+
+========================================================================================
+Actual Version : v10020 / Date : 05-SEP-2003
+----------------
+
+Notes          : Integration work and fixes.
+---------------- 
+               
+
+New Features   : 
+---------------- 
+                
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00060798 : INtegration and test fixes.
+
+========================================================================================
+Actual Version : v10019 / Date : 07-AUG-2003
+----------------
+
+Notes          : Rearraged balance files.  Now one file per balance class.
+---------------- Added support for expression evaluation with IScript extension.
+               
+
+New Features   : 
+---------------- 
+                
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00055015 : Rearrange balance files.  Add expression evaluation.
+
+========================================================================================
+Actual Version : v10018 / Date : 01-AUG-2003
+----------------
+
+Notes          : Inital check in of FCT::Discount.  Unit tested from Discount Model down
+---------------- based on 6.5 Infranet db and Apollo pipeline db.  Not able to get any 
+                 discount or sponsor objects yet for a full integrated test. 
+
+New Features   : Based on new Apollo discount model.  Support sponsorship. 
+---------------- See http://wiki.portal.com/twiki/bin/view/Development/ProjectApollo
+                 for more detail on Apollo project
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00054094 : Initial check in of Apollo discounting
+----------------
+
+================================================================================
+
+Actual Version : v10017 / Date : 22-MAY-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00041762 : Propagation of issues found in 6.3 EBF
+----------------
+================================================================================
+
+Module Version: 10016  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : v100015 / Date : 11-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00037516 : Fixing FCT linking errors on AIX
+----------------
+========================================================================================
+Actual Version : v100014 / Date : 28-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031816 : Cross-product discounting is broken.
+----------------
+========================================================================================
+Actual Version : v100013 / Date : 26-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00033035 Remove bundleTotalEntitlement
+----------------
+========================================================================================
+Actual Version : v100012 / Date : 25-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00035789 ERR_DLOPEN_FAILED when start pipeline without Infranet
+----------------
+========================================================================================
+Actual Version : v100011 / Date : 18-MAR-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00035013 log deadlock msg as an INFO, with a WARNING level 
+----------------
+========================================================================================
+Actual Version : v10011 / Date : 18-MAR-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  
+----------------
+* PRSF00033036 Remove credit, debit, lostUnit from AccountRollover and merge 
+  granted charge and granted quantity. 
+
+Open PRs/CRs   :
+
+========================================================================================
+
+Actual Version : v100010 / Date : 14-MAR-2003
+----------------
+
+Notes          : This checkin also fixed the linking error for FCT_DiscountCheck.cpp
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00033586 Stepped tiered discounting does not give the correct
+                               amount
+----------------
+
+========================================================================================
+
+Actual Version : v10009 / Date : 07-MAR-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031669 Add deadlock message
+----------------
+
+Open PRs/CRs   :
+
+========================================================================================
+
+Actual Version : v10008 / Date : 05-MAR-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00029537  [DAT_Discount] Fix Problems Found in
+Code Reviews
+
+----------------
+
+Open PRs/CRs   :
+========================================================================================
+
+Actual Version : v100007 / Date : 05-MAR-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031036 Integrate crashes while trying to run CDR for cross product.
+----------------  PRSF00033027 Changes corresponding to unusedUnits
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v100006 / Date : 03-MAR-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031825 TotalEvent counter not incremented
+----------------
+
+Open PRs/CRs   :
+========================================================================================
+Actual Version : v100006 / Date : 27-FEB-2003
+----------------
+
+Notes          : The container description is changed; one field SERVICE_ID is added in the DISCOUNT_PACKET to support Service Level Balances feature.
+----------------
+
+New Features   : Service Level Balances
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00021072 TES RFE: service level balances
+----------------
+
+========================================================================================
+Actual Version : v100005 / Date : 27-FEB-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00032800 Implemented ThreadTrace in FCT_Discount Plugin
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+Actual Version : v100004 / Date : 12-FEB-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031314 Audit Packet enhancement and ShowZeroDiscont flag
+                  (additional req for CO28286)
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+Actual Version : v100003 / Date : 05-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   : Support Discount Granted One-Time 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF28509 : Free Minutes Granted One-Time, good for a Certain Period of time
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v100002 / Date : 29-JAN-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :  Added optional DISCOUNT_AUDIT block to each DISCOUNT_PACKET
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00029117 propogation of TOTAL_QUANTITY from 6.3 (CO28286/CO29852)
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v100001 / Date : 16-JAN-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00029127 Fix problems in integrate with FCT_Discount
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v6.4.15 / Date : 14-OCT-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00020430 adapt 6.3 COs to 6.5(6.4)
+----------------
+
+Open PRs/CRs   :
+----------------
+
+
+Actual Version : v6.3.14 / Date : 16-JUL-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00014150 cascading discount bundle rules are calculated wrong
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v6.3.14 / Date : 16-DEC-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00027222 input files repeatedly reprocessed by
+input when transaction aborted
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v6.3.13 / Date : 15-JUL-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00014146 transaction handling for discounting
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v6.3.12 / Date : 12-JUL-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00013741 Enhance discount detail configuration to filter based on usage-class/-type
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v6.3.10 / Date : 01-JUL-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   :  PRSF00013091 VelaVodafone release features
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00012838  "Discounting cores when booking is Monthly"
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-30-12 / Date : 01-FEB-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PETS #43183 Inexact result messages on AIX
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-30-11 / Date : 21-JAN-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PETS #40023 rollover units are not rolled over
+---------------- 
+                 - new optional registry parameter: 'ConsumeRolloverUnits' default true
+                 
+                 PETS #42457 performance enhancement
+                 
+                 - new optional registry parameter: 'Accounts.ReuseLogMemory' default true
+                 
+                 PETS #42864 symbol 'DAT_InfranetPlugIn' not found in stand alone release 
+                 
+                 new error messages:
+                 
+                 ERR_INFRANETLIB_OPEN
+                 ERR_INFRANETLIB_SYMBOL
+                 ERR_INFRANETLIB_GENERATE
+                 
+                 A new library 'FCT_DiscountInfranet' is added to avoid the conflict 
+                 in the standalone release. 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-30-10 / Date : 15-JAN-2002
+----------------
+
+Notes          : 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PETS #40023 rollover units are not rolled over
+---------------- 
+                 - new registry parameter: 'ConsumeRolloverUnits' (values: true/false)
+                 - discount account file have a new format (old v4-30 format is readable)
+                 
+                 PETS #42457 performance enhancement
+                 
+                 - new registry parameter: 'Accounts.ReuseLogMemory'
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-30-09 / Date : 18-OCT-2001
+----------------
+
+Notes          : 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PETS #42285 Discount PlugIn can run into a dead lock
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-08 / Date : 24-SEP-2001
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+---------------- 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+- PETS #39793 Wrong written granted quantity amount
+ 
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-07 / Date : 21-SEP-2001
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+---------------- 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+- PETS #39659 The time portion of the EDR field ACTG_USED_DATE will be truncated.
+ 
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 20-SEP-2001
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+---------------- 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+- PETS #39278 wrong discount calculation (absolute/ registry flag DiscountMoreThanPossible = TRUE)
+ 
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 05-SEP-2001
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+---------------- 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+- PETS #38897 registryUpdate() return defined bool
+- PETS #38645 update message files
+- PETS #37618 code review (compiler warnings) 
+ 
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 02-AUG-2001
+----------------
+
+Notes          : new registry entries:
+---------------- - Billrun.BillingOffset (0 >= Offset >= -28)
+                 - Billrun.PeriodReference (Customer or Billcycle)
+
+New Features   : 
+---------------- 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : - PETS #36646
+----------------   DETAIL.CUST_A.ACTG_USED_DATE
+                   determines the booking period, if 
+                   registry Billrun.PeriodReference = Customer
+                 
+                 - PETS #37568
+                   INF_ARCHIVING_DEMANDED => INF_FLUSHING_DEMANDED
+                   when registry update 'Flush' occures
+ 
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 20-JUL-2001
+----------------
+
+Notes          :  
+----------------
+
+New Features   : 
+---------------- 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : - PETS #37295 
+----------------   a rollback of a transaction is valid without a previously prepare commit
+ 
+                 - PETS #37290 
+                   INF_TRANSACTION_QUEUE_EMPTY got status 'normal' instead of 'critical'
+
+Open PRs/CRs   : PETS #36646/36657 have to be specified
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 17-JUL-2001
+----------------
+
+Notes          :  
+----------------
+
+New Features   : 
+---------------- 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PETS #37070
+---------------- 
+
+Open PRs/CRs   : PETS #36646/36657 have to be specified
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 12-JUL-2001
+----------------
+
+Notes          :  
+----------------
+
+New Features   : - Source Pro port
+---------------- 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PETS #36559
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 20-Jun-2001
+----------------
+
+Notes          :  
+----------------
+
+New Features   : - works with the new Tranaction Manager
+---------------- - works with the new EDR_Factory
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-10 / Date : 04-Dec-2000
+----------------
+
+Notes          : support int_discountstep.grant_proratedbeat
+----------------
+
+New Features   :
+----------------
+- registry parameter 'UseANumAsContract' is removed
+- new registry parameter 'KeyId' values are:
+ 'ContractId'      # as long the default grouping
+ 'CallingNumber'   # the normalized a-number
+ 'NetworkOperator' # the network operator id (charge packet)
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+- PR2700: Semaphore invokes a complete account flush => INF_ARCHIVING_DEMANDED
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-03-03 / Date : 05-Oct-2000
+----------------
+
+Notes          :
+----------------
+Make some changes for using the new Container functions.
+Has no effect for the user.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-03-02 / Date : 20-Sep-2000
+----------------
+
+Notes          :
+----------------
+Ready to work with the EDR_Recycler.
+No changes for the user.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-03-01 / Date : 31-AUG-2000
+----------------
+
+Notes          :
+----------------
+- bugfix unitialized value fixed
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-03-00 / Date : 31-AUG-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- writing of discount account redo files instead of complete flush of all accounts
+- account swapping removed
+- supports either monthly or billrun related account booking (new account file format)
+- new account registry part:
+
+  Accounts
+  {
+    ArchiveDirectory        = ../output/Discount/archive
+    WorkDirectory           = ../output/Discount/work
+    ChargePrecision         = 6
+    Booking                 = Billrun
+    Monthly
+    {
+      DaysBookingOffset     = -5
+    }
+    Billrun
+    {
+      BillrunModule         = integrate.DataPool.Billrun
+      BillrunExportFile     = ../output/Discount/work/billrun.dat
+    }
+  }
+
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-02-01 / Date : 20-JUL-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- support for Framework v4-04-XX
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-02-00 / Date : 17-JUN-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- Ported to AIX.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================   
+Actual Version : v4-01-06 / Date : 05-JUN-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+#1879# create account work file if not present
+
+Open PRs/CRs   :
+----------------
+#1813# bad performance during recycling test
+
+========================================================================================
+Actual Version : v4-01-05 / Date : 17-MAY-2000
+----------------
+
+Notes          :
+----------------
+- initialize all EDR indices with invalid values
+- write all messages to the format log
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+#1813# bad performance during recycling test
+#1879# create account files if not present
+
+========================================================================================
+
+Actual Version : v4-01-04 / Date : 10-MAY-2000
+----------------
+
+Notes          :
+----------------
+take internal service code from basic detail
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v4-01-03 / Date : 10-MAY-2000
+----------------
+
+Notes          :
+----------------
+avoid core if EDR contains no charge breakdown
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v4-01-02 / Date : 25-APR-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+#1528# additional account charge precision parameter
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v4-01-01 / Date : 24-MAR-2000
+----------------
+
+Notes          :
+----------------
+workout complete EDR list if one EDR cannot be handled
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 16-MAR-2000
+----------------
+
+Notes          :
+----------------
+support sol42 V3_0_0 EDR format
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 08-MAR-2000
+----------------
+
+Notes          :
+----------------
+support of the dynamic EDR container
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-00-04 / Date : 20-JAN-2000
+----------------
+
+Notes          :
+----------------
+performance enhancement for forward discounts
+
+New Features   :
+----------------
+recognize INT_DISCOUNTDETAIL.RECORDTYPE
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-00-03 / Date : 18-JAN-2000
+----------------
+
+Notes          :
+----------------
+performance enhancement for forward discounts
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-00-02 / Date : 12-JAN-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- HP-UX 11.00 port
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-00-01 / Date : 23-DEC-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- use new decimal type instead of double
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-00-00 / Date : 16-DEC-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- measure base 'E'vent
+- discount only if all conditions of a trigger are true
+- hided comission features
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------

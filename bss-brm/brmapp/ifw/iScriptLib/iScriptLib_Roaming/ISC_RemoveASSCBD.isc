@@ -1,0 +1,51 @@
+//==============================================================================
+// @(#)% %
+//      Copyright (c) 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//------------------------------------------------------------------------------
+// Block: ISC_RemoveASSCBD.isc
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module deletes all those ASS_CBD which  are already the rated ones.This 
+//   IScript will be needed in the outcollect pipeline and will come into action
+//   when the rap record will be fed again through suspense for processing
+//------------------------------------------------------------------------------
+// Responsible: Archan Misra
+//
+//------------------------------------------------------------------------------
+//==============================================================================
+const Long   LOG_MAJOR    = 3;
+String Msg;
+//==============================================================================
+function onDetailEdr
+{
+  Long blkIndex = 0; 
+  Long blockIndex = 0;
+
+  //----------------------------------------------------------------------------
+  // check whether any incoming record has already charge packet or not
+  //----------------------------------------------------------------------------
+  Long blockEntries = edrNumDatablocks( DETAIL.ASS_CBD);
+
+  for(blockIndex = 0; blockIndex < blockEntries; blockIndex = blockIndex + 1)
+  {
+    // Following check indicates already rated ones
+    if(edrLong(DETAIL.ASS_CBD.RECORD_NUMBER,blkIndex) > 0)
+    {
+      if (edrDeleteDatablock( DETAIL.ASS_CBD, blkIndex) == false )
+      {
+        Msg = "ERROR:Failed to delete the ASS_CBD block";
+        edrAddError("ERR_DELETION_ASS_CBD_FAILURE", LOG_MAJOR, Msg);
+        edrSetIsValidDetail( false ); 
+        return;
+      }
+    }
+    else
+    {
+      blkIndex = blkIndex + 1;
+    } 
+  }
+} // end onDetailEdr + end iScript

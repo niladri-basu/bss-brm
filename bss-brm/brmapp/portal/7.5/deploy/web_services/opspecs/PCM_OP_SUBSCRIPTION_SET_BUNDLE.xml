@@ -1,0 +1,167 @@
+<Opcode name="PCM_OP_SUBSCRIPTION_SET_BUNDLE" visibility="public" transaction="required" component="fm_subscription"
+   xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+   xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>This opcode creates or modifies /purchased_bundle and its attributes. 
+	Upgrade(adding offerings to the existing /purchased_bundle) and 
+	downgrade(removing offerings from an existing /purchased_bundle) 
+	is also handled by this opcode.</Doc>
+<Input>
+	<Fields>
+		<Poid name="PIN_FLD_POID" use="required" mode="complete">
+			<Doc> Poid of the account owning the Bundle.</Doc>
+			<ClassRef>obj://account</ClassRef>
+		</Poid>
+		<Int name="PIN_FLD_FLAGS" use="optional">
+			<Doc>This flag is used at the time of bundle cancellation. If the value is set to 
+			PIN_SUBS_DELINK_BUNDLE_OFFERINGS(0x1), all offerings associated with the bundle to 
+			be cancelled will have their PIN_FLD_PLAN_OBJ set to NULL. If this flag is set, 
+			offerings associated with the bundle are not required in the opcode input.</Doc>
+		</Int>
+		<String name="PIN_FLD_PROGRAM_NAME" use="required" maxlen="60">
+			<Doc>Program name - identifies calling program.</Doc>
+		</String>
+		<Array name="PIN_FLD_BUNDLE_INFO" use="optional" elemIdMode="index" 
+		iterationOrder="undefined" minElements="0" minElemId="0">
+			<Doc>The promotion being purchased for the given account. 
+			List of purchased bundles that need to be created or modified. 
+			The element-id will be used to identify which offerings array 
+			to use from the input to associate this promotion bundle.
+			In case of bundle creation:
+			<h:ul>
+			  <h:li>When validities are provided, PIN_FLD_VALID_FROM should be less than 
+				PIN_FLD_VALID_TO and PIN_FLD_VALID_FROM cannot be less than the owner 
+				account's minimum effective_t.</h:li>
+			  <h:li>If PIN_FLD_VALID_TO is a backdated date, PIN_FLD_VALID_FROM must be sent 
+				along with it and must be less than PIN_FLD_VALID_TO.</h:li>
+			  <h:li>If PIN_FLD_VALID_TO and PIN_FLD_VALID_FROM are send as NULL or nothing 
+				then default values set are VALID_FROM = immediately (current timestamp) 
+				and VALID_TO = never ends (0).</h:li>
+			  <h:li>If status field is not sent, it will be set to "ACTIVE".</h:li>
+			  <h:li>If PIN_FLD_ACCOUNT_OBJ is not passed, PIN_FLD_POID in the input will 
+				be set as the account obj.</h:li>
+			  <h:li>PIN_FLD_NAME is a mandatory field.</h:li>
+			</h:ul>
+			</Doc>
+			<Fields>
+				<Poid name="PIN_FLD_POID" use="required" mode="typeonly">
+					<Doc> Partial poid of the bundle to be created. 
+					This will be complete in case of modification.</Doc>
+					<ClassRef>obj://purchased_bundle</ClassRef>
+					</Poid>
+				<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+					<Doc> Account object for the bundle. If account obj 
+					is passed other than the current account_obj, the 
+					/purchased_bundle owner will be changed to passed
+					 account object.</Doc>
+					<ClassRef>obj://account</ClassRef>
+				</Poid>
+				<String name="PIN_FLD_NAME" use="optional" maxlen="255">
+					<Doc>Name of the bundle. Mandatory at the time of creation.</Doc>
+				</String>
+				<Enum name="PIN_FLD_STATUS" use="optional">
+					<Doc>Status for the bundle.</Doc>
+					<Values>
+						<Value>1</Value>
+						<Doc>PIN_BUNDLE_STATUS_ACTIVE</Doc>
+					</Values>
+					<Values>
+						<Value>2</Value>
+						<Doc>PIN_BUNDLE_STATUS_INACTIVE</Doc>
+					</Values>
+					<Values>
+						<Value>3</Value>
+						<Doc>PIN_BUNDLE_STATUS_CANCELLED</Doc>
+					</Values>
+				</Enum>
+				<String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+					<Doc>Description of the purchased bundle.</Doc>
+				</String>
+				<Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+					<Doc>The start date of this validity based purchased bundle.</Doc>
+				</Timestamp>
+				<Timestamp name="PIN_FLD_VALID_TO" use="optional">
+					<Doc>The end date of this validity based purchased bundle. </Doc>
+				</Timestamp>
+			</Fields>
+		</Array>
+		<Array name="PIN_FLD_OFFERINGS" use="optional" elemIdMode="ignored" 
+		iterationOrder="undefined">
+			<Doc>Array of products/discounts that are part of the purchased_bunlde </Doc>   
+			<Fields>
+				<Array name="PIN_FLD_BUNDLE_INFO" use="optional" elemIdMode="key" 
+				minElements="0" minElemId="0">
+					<Doc> Promotion Bundle array associated with products. The 
+					element-id is significant not the contents of the array. 
+					The element-id will be used to identify which bundle array 
+					to use from the input to associate with this offering. </Doc>
+					<Fields></Fields>
+				</Array>
+				<Poid name="PIN_FLD_POID" use="required" mode="complete">
+					<Doc> Poid for the /purchased_product or /purchased_discount</Doc>
+					<ClassRef>obj://purchased_product</ClassRef>
+					<ClassRef>obj://purchased_discount</ClassRef>
+				</Poid>
+				<Poid name="PIN_FLD_BUNDLE_OBJ" use="optional" mode="complete">
+					<Doc>Poid for the /purchased_bundle. This is mutually exclusive 
+					with PIN_FLD_BUNDLE_INFO. If present, PIN_FLD_PLAN_OBJ field for 
+					the offering will be updated with this poid. For cancellation
+					and disassociation cases, null poid should be passed for 
+					the field.</Doc>
+					<ClassRef>obj://purchased_bundle</ClassRef>
+				</Poid>
+			</Fields>
+		</Array>
+	</Fields>
+</Input>
+<Output>
+	<Fields>
+		<Poid name="PIN_FLD_POID" use="required" mode="complete">
+			<Doc> Poid of the account owning the Bundle</Doc>
+			<ClassRef>obj://account</ClassRef>
+		</Poid>
+		<Array name="PIN_FLD_BUNDLE_INFO" use="optional" elemIdMode="index" 
+		iterationOrder="undefined" minElements="0" minElemId="0">
+			<Doc>The promotion being purchased for the given account. List of 
+			purchased bundles that need to be created or modified. </Doc>
+			<Fields>
+				<Poid name="PIN_FLD_POID" use="required" mode="complete">
+					<Doc>Complete poid of the bundle</Doc>
+					<ClassRef>obj://purchased_bundle</ClassRef>
+				</Poid>
+				<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+					<Doc> Account object for the bundle.</Doc>
+					<ClassRef>obj://account</ClassRef>
+				</Poid>
+				<String name="PIN_FLD_NAME" use="optional" maxlen="255">
+
+				</String>
+				<Enum name="PIN_FLD_STATUS" use="optional">
+					<Doc>Status for the bundle</Doc>
+					<Values>
+						<Value>1</Value>
+						<Doc>PIN_BUNDLE_STATUS_ACTIVE</Doc>
+					</Values>
+					<Values>
+						<Value>2</Value>
+						<Doc>PIN_BUNDLE_STATUS_INACTIVE</Doc>
+					</Values>
+					<Values>
+						<Value>3</Value>
+						<Doc>PIN_BUNDLE_STATUS_CANCELLED</Doc>
+					</Values>
+				</Enum>
+				<String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+					<Doc>Description of the purchased bundle.</Doc>
+				</String>
+				<Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+					<Doc>The start date of this validity based purchased bundle.</Doc>
+				</Timestamp>
+				<Timestamp name="PIN_FLD_VALID_TO" use="optional">
+					<Doc>The end date of this validity based purchased bundle.</Doc>
+				</Timestamp>
+			</Fields>
+		</Array>
+	</Fields>
+</Output>
+</Opcode>

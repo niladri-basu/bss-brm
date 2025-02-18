@@ -1,0 +1,155 @@
+========================================================================================
+FCT_USC_Map (RateplanServiceClass-Map)
+----------------------------------------------------------------------------------------
+Module Release Notes 
+==============================================================================
+Module Version : 6.7_FP2 10010
+----------------
+
+Date : 10-01-2005
+------
+
+Change Order:  PRSF00149205
+------------
+
+Short Description :
+-------------------
+1) Modified the code to use the EdrContainer Iterator instead of EdrContainer to get the correct
+Impact Category in case of multiple Charge Packets (Issue raised from VF Sweden) .
+2) One new Registry entry "LogZoneModelNotFoundEntries" added . The possible values are TRUE/FALSE.
+If TRUE then all the INF_NO_USC_MAPPING_ENTRY loggings will be logged in the Stream Log . The default
+value is FALSE .
+
+==============================================================================
+Module Version: 10009  6.7_FP2  19-Oct-2004
+PRSF00135575: Changes to selectively log error messages and perform USC Mapping
+
+Short Description :
+-------------------
+In order to perform USC mapping based on whether pipeline is configured for Zoning 
+or Rating, an optional registry entry "Mode" is added (default value is Rating). 
+Based on this entry, USC mapping and error logging (when mapping fails) is done. 
+
+================================================================================
+
+Module Version: 10008  6.7_FP2  21-Sep-2004
+PRSF00131941:  Propagation of changes made for CO 128674 
+
+================================================================================
+
+Module Version : 6.7_FP2 10007
+----------------
+
+Date : 24-May-2004
+------
+
+Change Order :  PRSF00112618 and PRSF00119850
+--------------
+
+Short Description :
+-------------------
+   This CO is primarily for fixing Memory consumption increasing rapidly with large 
+number of USC_MAP entries.For incorporating the fix, the propagation of PRSF00047769
+(moving the USC map storage from the FCT_USC_Map plug-in to DAT) is also done along 
+with its relevant changes(PRSF00085388). 
+   To reduce the memory consumption, some fixes has been provided.An optional registry 
+entry "OptimizeFor"(possible values "Memory"/ "Speed", default is "Speed") has been 
+provided which instructs whether to use the memory optimized functions or to use the 
+default performance optimised functions.
+
+Change Order(Propagation) :  PRSF00113689
+---------------------------
+
+Short Description :
+-------------------
+ DAT USC Data PlugIn was not thread safe because of the FSM MultiVector searchData was
+being parallelly modifiable.So moved the member to FCT and modified the "map" interface
+and also made it constant. 
+
+========================================================================================
+
+Module Version: 10006  6.7_FP2  04-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10005  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+========================================================================================
+
+Module Version : 6.7_FP1 10005
+----------------
+
+Date : 23-Jan-2004
+------
+
+Change Order :  PRSF00079303
+--------------
+
+Short Description :
+-------------------
+Standard Zone & USC Map: Support for a Label/Description for each entry in 
+the zoning and impact category configuration
+
+================================================================================
+
+Module Version: 10004  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+========================================================================================
+
+Module Version: 10003  6.5_SP2  05-May-2003
+PRSF00039729:  FCT_USC_MAP to 6.5_SP2 namespaces.
+ 
+========================================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+
+================================================================================
+Actual Version : v6.4.1 / Date : 15-Aug-2002
+----------------
+
+Notes          :
+----------------
+
+PRSF00015806 DB2 zOS table- and column length adjustments
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 15-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #36559 SourcePro AIX port
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 08-JUN-2001
+----------------
+
+Notes          :
+----------------
+
+- Support for the v4-30 database and Framework. 
+
+========================================================================================

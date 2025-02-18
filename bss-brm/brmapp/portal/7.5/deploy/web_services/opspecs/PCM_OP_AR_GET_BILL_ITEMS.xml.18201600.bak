@@ -1,0 +1,281 @@
+<Opcode name="PCM_OP_AR_GET_BILL_ITEMS"
+		visibility="public"
+		transaction="supports"
+		component="fm_ar"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes" inputSample="1">
+	<Doc>
+            <!--h:p>
+            <h:i> Copyright &#169; 2006 - 2008 Oracle. All rights reserved. This
+                material is the confidential property of Oracle Corporation or
+                its licensors and may be used, reproduced, stored or transmitted
+                only in accordance with a valid Oracle license or sublicense
+                agreement. </h:i>
+            </h:p--> 
+       	    
+            This opcode is used to get the bill items for an BILLINFO or bill.
+	</Doc>
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc> Routing Poid Account Poid or Billinfo Poid </Doc>
+				<ClassRef>obj://account</ClassRef>
+                                <ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_AR_BILLINFO_OBJ" use="required"
+					mode="complete">
+				<Doc> Poid of the ar billinfo object.</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_BILLINFO_OBJ" use="optional"
+					mode="complete">
+				<Doc>  Poid of the billinfo object. Mandatory if PIN_FLD_INCLUDE_CHILDREN is 0.  If this field is not present, but PIN_FLD_ACCOUNT_OBJ is, then the default  billinfo for PIN_FLD_ACCOUNT_OBJ will be fetched and fill in this field</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_BILL_OBJ" use="optional"
+					mode="complete">
+				<Doc> Poid of the BILL object.   If PIN_FLD_INCLUDE_CHILDREN = 1 then the BILL_OBJ is treated as AR_BILL_OBJ.</Doc>
+				<ClassRef>obj://bill</ClassRef>
+			</Poid>
+			<String name="PIN_FLD_BILL_NO" use="optional"
+					maxlen="60">
+				<Doc>Bill Number.</Doc>
+			</String>
+			<Int name="PIN_FLD_INCLUDE_CHILDREN" use="required">
+				<Doc> Indicator as to whether child amounts to be included. Can have values  of 0 - do not include child amounts or 1 - include child amounts.  If a hierarchy has multiple levels of children, and the above billinfo/bill  is both a child billinfo and a parent billinfo, there are two cases:  To get the details as a child billinfo as a part of the current hierarchy  (in this case the value should be 0 ) or  to get the details as a parent billinfo including its children ( in this case  the value must be 1 ) </Doc>
+			</Int>
+			<Int name="PIN_FLD_AMOUNT_INDICATOR" use="optional">
+				<Doc> The Amount indicator - 0 for credit, 1 for debit.The amount from and to  does not have  any sign</Doc>
+			</Int>
+			<Decimal name="PIN_FLD_AMOUNT_FROM" use="optional">
+				<Doc> The Amount from range. If specified then used else not.This is used against PIN_FLD_ITEM_TOTAL</Doc>
+			</Decimal>
+			<Decimal name="PIN_FLD_AMOUNT_TO" use="optional">
+				<Doc> The Amount to range. If specified then used else not. This is used  against PIN_FLD_ITEM_TOTAL. The client tool shall validate that the  range is valid if both are specified</Doc>
+			</Decimal>
+			<Int name="PIN_FLD_THRESHOLD" use="optional">
+				<Doc> Threshold value for the number of action items to be retrieved. If the   number fetched is less or equal to the thhresold then the return flist  shall have the details of the items. If greater the return flist shall  have a field PIN_FLD_THRESHOLD  containing the actual number  of items that acould be retrieved.  </Doc>
+			</Int>
+			<Enum name="PIN_FLD_STATUS" use="required">
+				<Doc>
+					Status of the item.Values are PIN_ITEM_STATUS_PENDING (1), PIN_FLD_ITEMS_STATUS_OPEN (2), PIN_FLD_ITEM_STATUS_CLOSED (4), Union of PIN_ITEMS_STATUS_OPEN and PIN_FLD_ITEM_STATUS_CLOSED (6) gets the bill items for items which are either in PIN_ITEMS_STATUS_OPEN or PIN_ITEMS_STATUS_CLOSED.
+					Note status 8(reversed) cannot be applied to bill_items
+				</Doc>
+				<Values>
+					<Value>1</Value>
+					<Doc> The Value 1 is for pending items i.e PIN_ITEMS_STATUS_PENDING</Doc>
+				</Values>
+				<Values>
+					<Value>2</Value>
+					<Doc> The Value 2 is for open items i.e PIN_ITEMS_STATUS_OPEN</Doc>
+				</Values>
+				<Values>
+					<Value>4</Value>
+					<Doc> The Value 4 is for closed items i.e PIN_ITEMS_STATUS_CLOSED</Doc>
+				</Values>
+                                <Values>
+                                        <Value>6</Value>
+                                        <Doc> The Value 6 is union of PIN_ITEMS_STATUS_OPEN and PIN_ITEMS_STATUS_CLOSED.Gets the bill items for items which are either in PIN_ITEMS_STATUS_OPEN or PIN_ITEMS_STATUS_CLOSED</Doc>
+                                </Values>
+			</Enum>
+			<Timestamp name="PIN_FLD_START_T" use="optional">
+				<Doc> Start time - start of the time range to search for items. This    PIN_FLD_EFFECTIVE_T of the item  object will have to be  the time  specified in this field to satisfy the search.</Doc>
+			</Timestamp>
+			<Timestamp name="PIN_FLD_END_T" use="optional">
+				<Doc> End time - end of the time range to search for bills. The PIN_FLD_EFFECTIVE_T  of the item will have to be  the time specified in this field to satisfy the   search.  </Doc>
+			</Timestamp>
+			<Int
+				name="PIN_FLD_FLAGS"
+				use="optional">
+				<Doc> Flags for calculate the billed/Unbilled amount.
+					<h:ul>
+						<h:li>PIN_AR_BILLED_ITEM : calculate billed amount.</h:li>
+						<h:li>PIN_AR_UNBILLED_ITEM: calculate unbilled amount.</h:li>
+					</h:ul>
+				</Doc>
+			</Int>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>dummy poid. i.e serach poid </Doc>
+				<ClassRef>obj://search</ClassRef>
+                                <ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Int name="PIN_FLD_THRESHOLD" use="optional">
+				<Doc> This is a count of the number of items. This field is in the output only  if the count of items is greater than the threshold specified in the input.</Doc>
+			</Int>
+			<Decimal name="PIN_FLD_BILLED_AMOUNT" use="optional">
+			         <Doc> Total billed amount for all billable items of the bill.</Doc>
+			</Decimal>
+			<Decimal name="PIN_FLD_UNBILLED_AMOUNT" use="optional">
+			         <Doc> Total unbilled amount for all billable items of the bill.</Doc>
+			</Decimal>
+			<Array name="PIN_FLD_RESULTS" use="optional"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="0" 
+					minElemId="0" 
+					isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+					isRecursive="false">
+				<Doc>Any number of elements can be accessed </Doc>
+				<Fields>
+					<Poid name="PIN_FLD_POID" use="required"
+							mode="complete">
+						<Doc> poid for the action item object</Doc>
+						<ClassRef>obj://item</ClassRef>
+					</Poid>
+					<String name="PIN_FLD_ITEM_NO" use="required"
+							maxlen="60">
+						<Doc> Item Number.</Doc>
+					</String>
+					<String name="PIN_FLD_NAME" use="required"
+							maxlen="255">
+						<Doc> Item Name.</Doc>
+					</String>
+					<Decimal name="PIN_FLD_ITEM_TOTAL" use="required">
+						<Doc> The total amount on this item</Doc>
+					</Decimal>
+					<Decimal name="PIN_FLD_DUE" use="required">
+						<Doc> The total amount that is unallocated/due on this item</Doc>
+					</Decimal>
+					<Decimal name="PIN_FLD_AMOUNT" use="required">
+						<Doc> The charged amount on this item</Doc>
+					</Decimal>
+					<Decimal name="PIN_FLD_DISCOUNT" use="required">
+						<Doc> The discounted amount  on this item</Doc>
+					</Decimal>
+					<Decimal name="PIN_FLD_TRANSFERED" use="required">
+						<Doc> The total amount that is transfered from this item.</Doc>
+					</Decimal>
+                                        <Decimal name="PIN_FLD_ADJUSTED" use="optional">
+                                                 <Doc> Total adjustment amount of the bill.</Doc>
+                                        </Decimal>
+                                        <Decimal name="PIN_FLD_DISPUTED" use="optional">
+                                                 <Doc> Disputed amount of the bill.</Doc>
+                                        </Decimal>
+                                        <Decimal name="PIN_FLD_RECVD" use="optional">
+                                                 <Doc> The total payment received on the bill.</Doc>
+                                        </Decimal>
+                                        <Decimal name="PIN_FLD_WRITEOFF" use="optional">
+                                                 <Doc> The total written off amount of the bill.</Doc>
+                                        </Decimal>
+					<Decimal name="PIN_FLD_ALLOCATED" use="optional">
+						<Doc> The total amount that is applied to the bill.</Doc>
+					</Decimal>
+					<Timestamp name="PIN_FLD_EFFECTIVE_T" use="required">
+						<Doc> Item effective time</Doc>
+					</Timestamp>
+					<Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+							mode="complete">
+						<Doc> Billinfo object that owns this item.</Doc>
+						<ClassRef>obj://billinfo</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_AR_BILLINFO_OBJ" use="required"
+							mode="complete">
+						<Doc>
+						      Billinfo object that owns the A/R from this item. 
+						      If billinfo is not subordinate, then A/R billinfo 
+						      is the billinfo that owns the item. 
+						      For a subordinate billinfo, A/R billinfo is the first 
+						      non-subordinate billinfo ancestor of this billinfo. 
+						</Doc>
+						<ClassRef>obj://billinfo</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+							mode="complete">
+						<Doc> Account object that owns this item.</Doc>
+						<ClassRef>obj://account</ClassRef>
+					</Poid>
+					<String name="PIN_FLD_ACCOUNT_NO" use="required"
+							maxlen="60">
+						<Doc> Account number.</Doc>
+					</String>
+					<Poid name="PIN_FLD_SERVICE_OBJ" use="required"
+							mode="complete">
+						<Doc> Service object that owns this item.</Doc>
+						<ClassRef>obj://service</ClassRef>
+					</Poid>
+					<String name="PIN_FLD_LOGIN" use="optional"
+							maxlen="255">
+						<Doc> Service login, only available if service 
+						      for this item is not NULL</Doc>
+					</String>
+					<Poid name="PIN_FLD_BILL_OBJ" use="required"
+							mode="complete">
+						<Doc> Bill object that owns this item.</Doc>
+                                                <ClassRef>obj://bill</ClassRef>
+                                        </Poid>
+					<Poid name="PIN_FLD_AR_BILL_OBJ" use="required"
+							mode="complete">
+						<Doc>
+						      Bill object that owns the A/R for this item. 
+						      If account is not subordinate, A/R bill object is 
+						      identical to bill object. For a subordinate account, 
+						      A/R bill is the bill object that will actually be collected.
+						</Doc>
+						<ClassRef>obj://bill</ClassRef>
+					</Poid>
+                                        <Decimal name="PIN_FLD_BILLED_AMOUNT" use="optional">
+                                                 <Doc> Total billed amount for the item.</Doc>
+                                        </Decimal>
+                                        <Decimal name="PIN_FLD_UNBILLED_AMOUNT" use="optional">
+                                                 <Doc> Total unbilled amount for the item.</Doc>
+                                        </Decimal>
+					<Array name="PIN_FLD_ALIAS_LIST" use="optional"
+							elemIdMode="ignored" iterationOrder="undefined"
+							minElements="0" 
+							minElemId="0" 
+							isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+							isRecursive="false">
+						<Doc> optional array of aliases, only available if service for this item is not NULL  and the alias list for this service exists</Doc>
+						<Fields>
+							<String name="PIN_FLD_NAME" use="optional"
+									maxlen="128">
+								<Doc> alias name</Doc>
+							</String>
+						</Fields>
+					</Array>
+				</Fields>
+			</Array>
+			<Array name="PIN_FLD_BAL_INFO" use="optional"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="0" maxElements="256"
+					minElemId="0" maxElemId="256"
+					isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+					isRecursive="true" allowedElemIds="256">
+				<Doc> array PIN_FLD_BAL_INFO to hold the non-currency details for this bill</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_POID" use="required"
+							mode="complete">
+						<Doc> the balance group poid</Doc>
+						<ClassRef>obj://balance_group</ClassRef>
+					</Poid>
+					<String name="PIN_FLD_NAME" use="required"
+							maxlen="255">
+						<Doc> the balance group name</Doc>
+					</String>
+					<Array name="PIN_FLD_BALANCES" use="optional"
+							elemIdMode="ignored" iterationOrder="undefined"
+							minElements="0" 
+							minElemId="0" 							isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+							isRecursive="false">
+						<Doc> sub array PIN_FLD_BALANCES to hold the non-currency granted and used  the record id will the non-currency resource id</Doc>
+						<Fields>
+							<Decimal name="PIN_FLD_AMOUNT" use="required">
+								<Doc> the used amount</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_DISCOUNT" use="required">
+								<Doc> the granted amount</Doc>
+							</Decimal>
+						</Fields>
+					</Array>
+				</Fields>
+			</Array>
+		</Fields>
+	</Output>
+</Opcode>

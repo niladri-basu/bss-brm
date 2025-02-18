@@ -1,0 +1,106 @@
+<Opcode name="TD_OP_GET_PRODUCT_DETAILS" visibility="public" transaction="required"
+        component="td_get_details" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+     <Doc>The opcode TD_OP_GET_PRODUCT_DETAILS is used to get the purchased_product details</Doc>
+     <Input>
+          <Fields>
+               <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                    <Doc>This is the account POID.</Doc>
+                    <ClassRef>obj://account</ClassRef>
+               </Poid>
+               <Array name="PIN_FLD_PRODUCTS" use="required"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="1">
+                    <Doc>This is the products array. There can be more than one element
+                         in this array. The element-id is significant.</Doc>
+                    <Fields>
+               		<Poid name="PIN_FLD_OFFERING_OBJ" use="required" mode="complete">
+                    		<Doc>This is the purchased_product for which the details need to be retreived</Doc>
+                    		<ClassRef>obj://purchased_product</ClassRef>
+               		</Poid>
+                    </Fields>
+               </Array>
+          </Fields>
+     </Input>
+     <Output>
+          <Fields>
+               <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                    <Doc>This is the account object passed into call.</Doc>
+                    <ClassRef>obj://account</ClassRef>
+               </Poid>
+               <Array name="PIN_FLD_PRODUCTS" use="required"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="1">
+                    <Doc>This is the products array. There can be more than one element
+                         in this array. The element-id is significant.</Doc>
+                    <Fields>
+               		<Poid name="PIN_FLD_OFFERING_OBJ" use="required" mode="complete">
+                    		<Doc>This is the purchased_product for which the details need to be retreived</Doc>
+                    		<ClassRef>obj://purchased_product</ClassRef>
+               		</Poid>
+               		<String name="PIN_FLD_NAME" use="optional" maxlen="60">
+                    		<Doc>This is the name of product.</Doc>
+               		</String>
+               		<String name="PIN_FLD_NODE_LOCATION" use="optional" maxlen="60">
+                    		<Doc>This is the name of product category.</Doc>
+               		</String>
+               		<String name="PIN_FLD_DESCR" use="optional" maxlen="60">
+                    		<Doc>This is the description field of purchased_product.</Doc>
+               		</String>
+               		<String name="PIN_FLD_MSISDN" use="optional" maxlen="60">
+                    		<Doc>This is the MSISDN field of the service associated with purchased_product.</Doc>
+               		</String>
+			<Int name="PIN_FLD_BILL_ACTGCYCLES_LEFT" use="optional">
+      				<Doc>Number of billing cycles left for billing</Doc>
+     			</Int>
+                        <Enum name="PIN_FLD_STATUS" use="optional">
+                        	<Doc> Purchased_product status.</Doc>
+                        </Enum>
+                        <Decimal name="PIN_FLD_UNBILLED_AMOUNT" use="optional">
+                                 <Doc> Total unbilled amount for the purchased_product.</Doc>
+                        </Decimal>
+                        <Decimal name="PIN_FLD_CYCLE_FEE_AMT" use="optional">
+                                 <Doc> Charge per billing cycle purchased_product.</Doc>
+                        </Decimal>
+                        <Enum name="PIN_FLD_RESULT" use="required">
+                              <Doc>Field validation error code. The enumerated
+                                   type is defined in the pin_cust.h header
+                                   file. The values can be: (0)
+                                   PIN_CUST_VAL_ERR_SYSTEM, (1)
+                                   PIN_CUST_VAL_ERR_MISSING, (2)
+                                   PIN_CUST_VAL_ERR_MIN_LEN, (3)</Doc>
+                              <Values>
+                                   <Value>0</Value>
+                                   <Doc>Success.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>1</Value>
+                                   <Doc>Record Not available in
+                                        BRM.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>2</Value>
+                                   <Doc>Data issue
+                                        error.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>3</Value>
+                                   <Doc>System Generic
+                                        error.</Doc>
+                              </Values>
+                         </Enum>
+                         <String name="PIN_FLD_ERROR_DESCR" use="optional"
+                                 maxlen="255">
+                              <Doc>Validation error message.</Doc>
+                         </String>
+       			 <Timestamp name="PIN_FLD_CYCLE_END_T" use="required">
+                         <Doc>Cycle fee end time - duration till which cycle charges are applied</Doc>
+       			 </Timestamp>
+                    </Fields>
+               </Array>
+          </Fields>
+     </Output>
+</Opcode>
+

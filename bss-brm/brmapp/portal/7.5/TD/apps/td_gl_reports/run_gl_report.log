@@ -1,0 +1,986 @@
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211001 20211101
+Starting timestamp for 20211001 is 1632999600
+Ending timestamp for 20211101 is 1635678000
+Starting Unbilled GL report generation starting from 20211001 to 20211101: 
+Fri Oct 29 22:45:09 NZDT 2021
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Oct 29 22:46:09 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Fri Oct 29 22:46:09 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Fri Oct 29 22:46:15 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Fri Oct 29 22:46:15 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Fri Oct 29 22:46:15 NZDT 2021
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211101 20211201
+Starting timestamp for 20211101 is 1635678000
+Ending timestamp for 20211201 is 1638270000
+Starting Unbilled GL report generation starting from 20211101 to 20211201: 
+Mon Nov  1 16:04:12 NZDT 2021
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Mon Nov  1 16:04:59 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Mon Nov  1 16:04:59 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Mon Nov  1 16:05:04 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Mon Nov  1 16:05:04 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Mon Nov  1 16:05:04 NZDT 2021
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211101 20211201
+Starting timestamp for 20211101 is 1635678000
+Ending timestamp for 20211201 is 1638270000
+Starting Unbilled GL report generation starting from 20211101 to 20211201: 
+Mon Nov  1 22:22:27 NZDT 2021
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Mon Nov  1 22:23:13 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Mon Nov  1 22:23:13 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Mon Nov  1 22:23:17 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Mon Nov  1 22:23:17 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Mon Nov  1 22:23:17 NZDT 2021
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211101 20211201
+Starting timestamp for 20211101 is 1635678000
+Ending timestamp for 20211201 is 1638270000
+Starting Unbilled GL report generation starting from 20211101 to 20211201: 
+Fri Nov 12 09:36:56 NZDT 2021
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Nov 12 09:37:37 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Fri Nov 12 09:37:37 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Fri Nov 12 09:37:44 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Fri Nov 12 09:37:44 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Fri Nov 12 09:37:44 NZDT 2021
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211101 20211201
+Starting timestamp for 20211101 is 1635678000
+Ending timestamp for 20211201 is 1638270000
+Starting Unbilled GL report generation starting from 20211101 to 20211201: 
+Fri Nov 12 13:38:57 NZDT 2021
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Nov 12 13:39:43 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Fri Nov 12 13:39:43 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Fri Nov 12 13:39:50 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Fri Nov 12 13:39:50 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Fri Nov 12 13:39:51 NZDT 2021
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211101 20211201
+Starting timestamp for 20211101 is 1635678000
+Ending timestamp for 20211201 is 1638270000
+Starting Unbilled GL report generation starting from 20211101 to 20211201: 
+Fri Nov 19 16:29:45 NZDT 2021
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 11/01/21 -end 12/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Nov 19 16:30:40 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Fri Nov 19 16:30:40 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Fri Nov 19 16:30:46 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Fri Nov 19 16:30:46 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Fri Nov 19 16:30:46 NZDT 2021
+
+Starting execution of td_get_billcycle_report.sh for dom date 20211017 20211117
+Starting timestamp for 20211017 is 1634382000
+Ending timestamp for 20211117 is 1637060400
+Starting GL report generation starting from 20211017: 
+Wed Nov 24 11:20:47 NZDT 2021
+pin_ledger_report -mode run_report -start 10/17/21 -end 11/18/21 -type billed -detail -verbose
+Completed GL report generation at: 
+Wed Nov 24 11:21:34 NZDT 2021
+Starting td_gl_proc.sh with parameters 1634382000 and 1637060400 at: 
+Wed Nov 24 11:21:34 NZDT 2021
+Completed td_gl_proc.sh at: 
+Wed Nov 24 11:21:38 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Wed Nov 24 11:21:38 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Wed Nov 24 11:21:38 NZDT 2021
+
+Starting execution of td_get_billcycle_report.sh for dom date 20211126 20211226
+Starting timestamp for 20211126 is 1637838000
+Ending timestamp for 20211226 is 1640430000
+Starting GL report generation starting from 20211126: 
+Fri Jan 14 14:11:11 NZDT 2022
+pin_ledger_report -mode run_report -start 11/26/21 -end 12/27/21 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jan 14 14:12:06 NZDT 2022
+Starting td_gl_proc.sh with parameters 1637838000 and 1640430000 at: 
+Fri Jan 14 14:12:06 NZDT 2022
+Completed td_gl_proc.sh at: 
+Fri Jan 14 14:12:11 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jan 14 14:12:11 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jan 14 14:12:12 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20211210 20220110
+Starting timestamp for 20211210 is 1639047600
+Ending timestamp for 20220110 is 1641726000
+Starting GL report generation starting from 20211210: 
+Mon Jan 17 11:10:10 NZDT 2022
+pin_ledger_report -mode run_report -start 12/10/21 -end 01/11/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Mon Jan 17 11:11:02 NZDT 2022
+Starting td_gl_proc.sh with parameters 1639047600 and 1641726000 at: 
+Mon Jan 17 11:11:02 NZDT 2022
+Completed td_gl_proc.sh at: 
+Mon Jan 17 11:11:13 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Mon Jan 17 11:11:13 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Mon Jan 17 11:11:13 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220101 20220201
+Starting timestamp for 20220101 is 1640948400
+Ending timestamp for 20220201 is 1643626800
+Starting Unbilled GL report generation starting from 20220101 to 20220201: 
+Tue Jan 18 12:55:03 NZDT 2022
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue Jan 18 12:56:09 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Tue Jan 18 12:56:09 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Tue Jan 18 12:56:20 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Jan 18 12:56:20 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Jan 18 12:56:20 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20211217 20220117
+Starting timestamp for 20211217 is 1639652400
+Ending timestamp for 20220117 is 1642330800
+Starting GL report generation starting from 20211217: 
+Wed Jan 19 09:46:53 NZDT 2022
+pin_ledger_report -mode run_report -start 12/17/21 -end 01/18/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Wed Jan 19 09:47:42 NZDT 2022
+Starting td_gl_proc.sh with parameters 1639652400 and 1642330800 at: 
+Wed Jan 19 09:47:42 NZDT 2022
+Completed td_gl_proc.sh at: 
+Wed Jan 19 09:47:49 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Wed Jan 19 09:47:49 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Wed Jan 19 09:47:49 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20211222 20220122
+Starting timestamp for 20211222 is 1640084400
+Ending timestamp for 20220122 is 1642762800
+Starting GL report generation starting from 20211222: 
+Fri Jan 21 10:14:38 NZDT 2022
+pin_ledger_report -mode run_report -start 12/22/21 -end 01/23/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jan 21 10:15:30 NZDT 2022
+Starting td_gl_proc.sh with parameters 1640084400 and 1642762800 at: 
+Fri Jan 21 10:15:30 NZDT 2022
+Completed td_gl_proc.sh at: 
+Fri Jan 21 10:15:34 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jan 21 10:15:34 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jan 21 10:15:34 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220101 20220201
+Starting timestamp for 20220101 is 1640948400
+Ending timestamp for 20220201 is 1643626800
+Starting GL report generation starting from 20220101: 
+Fri Jan 21 10:25:21 NZDT 2022
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jan 21 10:26:01 NZDT 2022
+Starting td_gl_proc.sh with parameters 1640948400 and 1643626800 at: 
+Fri Jan 21 10:26:01 NZDT 2022
+Completed td_gl_proc.sh at: 
+Fri Jan 21 10:26:05 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jan 21 10:26:05 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jan 21 10:26:05 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220101 20220201
+Starting timestamp for 20220101 is 1640948400
+Ending timestamp for 20220201 is 1643626800
+Starting Unbilled GL report generation starting from 20220101 to 20220201: 
+Mon Jan 24 10:26:33 NZDT 2022
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Mon Jan 24 10:27:33 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Mon Jan 24 10:27:33 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Mon Jan 24 10:27:39 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Mon Jan 24 10:27:39 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Mon Jan 24 10:27:39 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220101 20220201
+Starting timestamp for 20220101 is 1640948400
+Ending timestamp for 20220201 is 1643626800
+Starting Unbilled GL report generation starting from 20220101 to 20220201: 
+Mon Jan 24 11:45:09 NZDT 2022
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Mon Jan 24 11:46:08 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Mon Jan 24 11:46:08 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Mon Jan 24 11:46:15 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Mon Jan 24 11:46:15 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Mon Jan 24 11:46:15 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220101 20220201
+Starting timestamp for 20220101 is 1640948400
+Ending timestamp for 20220201 is 1643626800
+Starting GL report generation starting from 20220101: 
+Thu Jan 27 10:18:10 NZDT 2022
+pin_ledger_report -mode run_report -start 01/01/22 -end 02/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Thu Jan 27 10:18:57 NZDT 2022
+Starting td_gl_proc.sh with parameters 1640948400 and 1643626800 at: 
+Thu Jan 27 10:18:57 NZDT 2022
+Completed td_gl_proc.sh at: 
+Thu Jan 27 10:19:02 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Thu Jan 27 10:19:02 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Thu Jan 27 10:19:03 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220122 20220222
+Starting timestamp for 20220122 is 1642762800
+Ending timestamp for 20220222 is 1645441200
+Starting GL report generation starting from 20220122: 
+Fri Jan 28 14:21:06 NZDT 2022
+pin_ledger_report -mode run_report -start 01/22/22 -end 02/23/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jan 28 14:21:21 NZDT 2022
+Starting td_gl_proc.sh with parameters 1642762800 and 1645441200 at: 
+Fri Jan 28 14:21:21 NZDT 2022
+Completed td_gl_proc.sh at: 
+Fri Jan 28 14:21:24 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jan 28 14:21:24 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jan 28 14:21:24 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220304 20220404
+Starting timestamp for 20220304 is 1646305200
+Ending timestamp for 20220404 is 1648987200
+Starting Unbilled GL report generation starting from 20220304 to 20220404: 
+Fri Feb  4 16:07:19 NZDT 2022
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Feb  4 16:08:01 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Fri Feb  4 16:08:01 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Fri Feb  4 16:08:05 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Feb  4 16:08:05 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Feb  4 16:08:05 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220304 20220404
+Starting timestamp for 20220304 is 1646305200
+Ending timestamp for 20220404 is 1648987200
+Starting Unbilled GL report generation starting from 20220304 to 20220404: 
+Tue Feb  8 09:58:04 NZDT 2022
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue Feb  8 09:58:35 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Tue Feb  8 09:58:35 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Tue Feb  8 09:58:43 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Feb  8 09:58:43 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Feb  8 09:58:43 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220308 20220408
+Starting timestamp for 20220308 is 1646650800
+Ending timestamp for 20220408 is 1649332800
+Starting GL report generation starting from 20220308: 
+Tue Feb  8 09:59:04 NZDT 2022
+pin_ledger_report -mode run_report -start 03/08/22 -end 04/9/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Tue Feb  8 09:59:13 NZDT 2022
+Starting td_gl_proc.sh with parameters 1646650800 and 1649332800 at: 
+Tue Feb  8 09:59:13 NZDT 2022
+Completed td_gl_proc.sh at: 
+Tue Feb  8 09:59:14 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Feb  8 09:59:14 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Feb  8 09:59:14 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220201 20220301
+Starting timestamp for 20220201 is 1643626800
+Ending timestamp for 20220301 is 1646046000
+Starting Unbilled GL report generation starting from 20220201 to 20220301: 
+Fri Feb 18 11:04:55 NZDT 2022
+pin_ledger_report -mode run_report -start 02/01/22 -end 03/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 02/01/22 -end 03/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 02/01/22 -end 03/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Feb 18 11:06:01 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Fri Feb 18 11:06:01 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Fri Feb 18 11:06:09 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Feb 18 11:06:09 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Feb 18 11:06:09 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220201 20220301
+Starting timestamp for 20220201 is 1643626800
+Ending timestamp for 20220301 is 1646046000
+Starting Unbilled GL report generation starting from 20220201 to 20220301: 
+Fri Feb 25 10:16:40 NZDT 2022
+pin_ledger_report -mode run_report -start 02/01/22 -end 03/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 02/01/22 -end 03/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 02/01/22 -end 03/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Feb 25 10:17:36 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Fri Feb 25 10:17:36 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Fri Feb 25 10:21:31 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Feb 25 10:21:31 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Feb 25 10:21:31 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220304 20220404
+Starting timestamp for 20220304 is 1646305200
+Ending timestamp for 20220404 is 1648987200
+Starting GL report generation starting from 20220304: 
+Tue Mar 29 15:21:45 NZDT 2022
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/5/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Tue Mar 29 15:22:18 NZDT 2022
+Starting td_gl_proc.sh with parameters 1646305200 and 1648987200 at: 
+Tue Mar 29 15:22:18 NZDT 2022
+Completed td_gl_proc.sh at: 
+Tue Mar 29 15:22:22 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Mar 29 15:22:22 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Mar 29 15:22:23 NZDT 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220304 20220404
+Starting timestamp for 20220304 is 1646305200
+Ending timestamp for 20220404 is 1648987200
+Starting GL report generation starting from 20220304: 
+Tue Mar 29 16:48:29 NZDT 2022
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/5/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Tue Mar 29 16:48:57 NZDT 2022
+Starting td_gl_proc.sh with parameters 1646305200 and 1648987200 at: 
+Tue Mar 29 16:48:57 NZDT 2022
+Completed td_gl_proc.sh at: 
+Tue Mar 29 16:48:59 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Mar 29 16:48:59 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Mar 29 16:49:00 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220304 20220404
+Starting timestamp for 20220304 is 1646305200
+Ending timestamp for 20220404 is 1648987200
+Starting Unbilled GL report generation starting from 20220304 to 20220404: 
+Tue Mar 29 16:59:05 NZDT 2022
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue Mar 29 16:59:45 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Tue Mar 29 16:59:45 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Tue Mar 29 16:59:51 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Mar 29 16:59:51 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Mar 29 16:59:51 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220317 20220417
+Starting timestamp for 20220317 is 1647428400
+Ending timestamp for 20220417 is 1650110400
+Starting Unbilled GL report generation starting from 20220317 to 20220417: 
+Tue Mar 29 17:36:48 NZDT 2022
+pin_ledger_report -mode run_report -start 03/17/22 -end 04/17/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 03/17/22 -end 04/17/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 03/17/22 -end 04/17/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue Mar 29 17:37:18 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Tue Mar 29 17:37:18 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Tue Mar 29 17:37:23 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Mar 29 17:37:23 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Mar 29 17:37:23 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220304 20220404
+Starting timestamp for 20220304 is 1646305200
+Ending timestamp for 20220404 is 1648987200
+Starting Unbilled GL report generation starting from 20220304 to 20220404: 
+Tue Mar 29 20:04:30 NZDT 2022
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 03/04/22 -end 04/04/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue Mar 29 20:05:01 NZDT 2022
+Starting td_unbilled_gl_proc.sh at: 
+Tue Mar 29 20:05:01 NZDT 2022
+Completed td_unbilled_gl_proc.sh at: 
+Tue Mar 29 20:05:06 NZDT 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Mar 29 20:05:06 NZDT 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Mar 29 20:05:06 NZDT 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220317 20220417
+Starting timestamp for 20220317 is 1647428400
+Ending timestamp for 20220417 is 1650110400
+Starting Unbilled GL report generation starting from 20220317 to 20220417: 
+Wed Apr  6 12:41:50 NZST 2022
+pin_ledger_report -mode run_report -start 03/17/22 -end 04/17/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 03/17/22 -end 04/17/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 03/17/22 -end 04/17/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Wed Apr  6 12:42:39 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Wed Apr  6 12:42:39 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Wed Apr  6 12:42:44 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Wed Apr  6 12:42:44 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Wed Apr  6 12:42:44 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220601 20220701
+Starting timestamp for 20220601 is 1653998400
+Ending timestamp for 20220701 is 1656590400
+Starting Unbilled GL report generation starting from 20220601 to 20220701: 
+Fri May  6 14:57:30 NZST 2022
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri May  6 14:57:48 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Fri May  6 14:57:48 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Fri May  6 14:57:53 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri May  6 14:57:53 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri May  6 14:57:53 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220601 20220701
+Starting timestamp for 20220601 is 1653998400
+Ending timestamp for 20220701 is 1656590400
+Starting GL report generation starting from 20220601: 
+Fri May  6 15:26:21 NZST 2022
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri May  6 15:26:29 NZST 2022
+Starting td_gl_proc.sh with parameters 1653998400 and 1656590400 at: 
+Fri May  6 15:26:29 NZST 2022
+Completed td_gl_proc.sh at: 
+Fri May  6 15:26:34 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri May  6 15:26:34 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri May  6 15:26:34 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220601 20220701
+Starting timestamp for 20220601 is 1653998400
+Ending timestamp for 20220701 is 1656590400
+Starting GL report generation starting from 20220601: 
+Tue May 10 18:10:40 NZST 2022
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Tue May 10 18:10:46 NZST 2022
+Starting td_gl_proc.sh with parameters 1653998400 and 1656590400 at: 
+Tue May 10 18:10:46 NZST 2022
+Completed td_gl_proc.sh at: 
+Tue May 10 18:10:53 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Tue May 10 18:10:53 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Tue May 10 18:10:53 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220601 20220701
+Starting timestamp for 20220601 is 1653998400
+Ending timestamp for 20220701 is 1656590400
+Starting Unbilled GL report generation starting from 20220601 to 20220701: 
+Tue May 10 18:12:38 NZST 2022
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue May 10 18:12:57 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Tue May 10 18:12:57 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Tue May 10 18:13:03 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Tue May 10 18:13:03 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Tue May 10 18:13:03 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220501 20220601
+Starting timestamp for 20220501 is 1651320000
+Ending timestamp for 20220601 is 1653998400
+Starting Unbilled GL report generation starting from 20220501 to 20220601: 
+Wed May 11 14:00:47 NZST 2022
+pin_ledger_report -mode run_report -start 05/01/22 -end 06/01/22 -type billed -detail -verbose
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220501 20220601
+Starting timestamp for 20220501 is 1651320000
+Ending timestamp for 20220601 is 1653998400
+Starting Unbilled GL report generation starting from 20220501 to 20220601: 
+Wed May 11 14:00:49 NZST 2022
+pin_ledger_report -mode run_report -start 05/01/22 -end 06/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 05/01/22 -end 06/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 05/01/22 -end 06/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 05/01/22 -end 06/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Wed May 11 14:01:33 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Wed May 11 14:01:33 NZST 2022
+pin_ledger_report -mode run_report -start 05/01/22 -end 06/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Wed May 11 14:01:37 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Wed May 11 14:01:37 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Wed May 11 14:01:38 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Wed May 11 14:01:38 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Wed May 11 14:01:38 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Wed May 11 14:01:44 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Wed May 11 14:01:44 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Wed May 11 14:01:44 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220601 20220701
+Starting timestamp for 20220601 is 1653998400
+Ending timestamp for 20220701 is 1656590400
+Starting Unbilled GL report generation starting from 20220601 to 20220701: 
+Fri Jun  3 11:05:22 NZST 2022
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Jun  3 11:05:54 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Fri Jun  3 11:05:54 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Fri Jun  3 11:06:00 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jun  3 11:06:00 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jun  3 11:06:01 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220601 20220701
+Starting timestamp for 20220601 is 1653998400
+Ending timestamp for 20220701 is 1656590400
+Starting Unbilled GL report generation starting from 20220601 to 20220701: 
+Fri Jun  3 13:35:47 NZST 2022
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Jun  3 13:36:19 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Fri Jun  3 13:36:19 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Fri Jun  3 13:36:22 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jun  3 13:36:22 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jun  3 13:36:23 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220601 20220701
+Starting timestamp for 20220601 is 1653998400
+Ending timestamp for 20220701 is 1656590400
+Starting GL report generation starting from 20220601: 
+Fri Jun  3 14:25:58 NZST 2022
+pin_ledger_report -mode run_report -start 06/01/22 -end 07/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jun  3 14:26:19 NZST 2022
+Starting td_gl_proc.sh with parameters 1653998400 and 1656590400 at: 
+Fri Jun  3 14:26:19 NZST 2022
+Completed td_gl_proc.sh at: 
+Fri Jun  3 14:26:22 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jun  3 14:26:22 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jun  3 14:26:23 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220501 20220601
+Starting timestamp for 20220501 is 1651320000
+Ending timestamp for 20220601 is 1653998400
+Starting GL report generation starting from 20220501: 
+Fri Jun  3 14:27:28 NZST 2022
+pin_ledger_report -mode run_report -start 05/01/22 -end 06/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jun  3 14:28:31 NZST 2022
+Starting td_gl_proc.sh with parameters 1651320000 and 1653998400 at: 
+Fri Jun  3 14:28:31 NZST 2022
+Completed td_gl_proc.sh at: 
+Fri Jun  3 14:28:35 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jun  3 14:28:35 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jun  3 14:28:35 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 19691201 19700101
+Starting timestamp for 19691201 is   -2725200
+Ending timestamp for 19700101 is     -46800
+Starting GL report generation starting from 19691201: 
+Tue Jun  7 11:48:43 NZST 2022
+pin_ledger_report -mode run_report -start 12/01/69 -end 01/2/70 -type billed -detail -verbose
+Completed GL report generation at: 
+Tue Jun  7 11:48:43 NZST 2022
+Starting td_gl_proc.sh with parameters   -2725200 and     -46800 at: 
+Tue Jun  7 11:48:43 NZST 2022
+ORACLE ERROR
+BEGIN td_gl_report_proc(-2725200,-46800,0); END;
+
+*
+ERROR at line 1:
+ORA-01403: no data found
+ORA-06512: at "PIN.TD_GL_REPORT_PROC", line 169
+ORA-06512: at line 1
+
+
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220510 20220610
+Starting timestamp for 20220510 is 1652097600
+Ending timestamp for 20220610 is 1654776000
+Starting GL report generation starting from 20220510: 
+Fri Jun 10 09:26:00 NZST 2022
+pin_ledger_report -mode run_report -start 05/10/22 -end 06/11/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jun 10 09:27:01 NZST 2022
+Starting td_gl_proc.sh with parameters 1652097600 and 1654776000 at: 
+Fri Jun 10 09:27:01 NZST 2022
+Completed td_gl_proc.sh at: 
+Fri Jun 10 09:27:06 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jun 10 09:27:06 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jun 10 09:27:06 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220501 20220601
+Starting timestamp for 20220501 is 1651320000
+Ending timestamp for 20220601 is 1653998400
+Starting GL report generation starting from 20220501: 
+Fri Jun 10 12:08:02 NZST 2022
+pin_ledger_report -mode run_report -start 05/01/22 -end 06/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jun 10 12:09:06 NZST 2022
+Starting td_gl_proc.sh with parameters 1651320000 and 1653998400 at: 
+Fri Jun 10 12:09:06 NZST 2022
+Completed td_gl_proc.sh at: 
+Fri Jun 10 12:09:12 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jun 10 12:09:12 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jun 10 12:09:12 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220631 20220731
+Starting timestamp for 20220631 is select td_nz_to_unix(to_date('20220631','YYYYMMDD'))-0 td from dual
+                             *
+ERROR at line 1:
+ORA-01839: date not valid for month specified
+Ending timestamp for 20220731 is 1659182400
+Starting GL report generation starting from 20220631: 
+Fri Jun 10 13:14:41 NZST 2022
+pin_ledger_report -mode run_report -start 06/31/22 -end 07/32/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Fri Jun 10 13:14:41 NZST 2022
+Starting td_gl_proc.sh with parameters select td_nz_to_unix(to_date('20220631','YYYYMMDD'))-0 td from dual
+                             *
+ERROR at line 1:
+ORA-01839: date not valid for month specified and 1659182400 at: 
+Fri Jun 10 13:14:41 NZST 2022
+ORACLE ERROR
+BEGIN td_gl_report_proc(select,td_nz_to_unix(to_date('20220631','YYYYMMDD'))-0,td); END;
+
+                        *
+ERROR at line 1:
+ORA-06550: line 1, column 25:
+PLS-00103: Encountered the symbol "SELECT" when expecting one of the following:
+( ) - + case mod new not null <an identifier>
+<a double-quoted delimited-identifier> <a bind variable>
+table continue avg count current exists max min prior sql
+stddev sum variance execute multiset the both leading
+trailing forall merge year month day hour minute second
+timezone_hour timezone_minute timezone_region timezone_abbr
+time timestamp interval date
+<a string literal with character set specifica
+
+
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220530 20220630
+Starting timestamp for 20220530 is 1653825600
+Ending timestamp for 20220630 is 1656504000
+Starting GL report generation starting from 20220530: 
+Mon Jun 13 09:25:29 NZST 2022
+pin_ledger_report -mode run_report -start 05/30/22 -end 06/31/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Mon Jun 13 09:25:29 NZST 2022
+Starting td_gl_proc.sh with parameters 1653825600 and 1656504000 at: 
+Mon Jun 13 09:25:29 NZST 2022
+ORACLE ERROR
+BEGIN td_gl_report_proc(1653825600,1656504000,0); END;
+
+*
+ERROR at line 1:
+ORA-01403: no data found
+ORA-06512: at "PIN.TD_GL_REPORT_PROC", line 169
+ORA-06512: at line 1
+
+
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220630 20220730
+Starting timestamp for 20220630 is 1656504000
+Ending timestamp for 20220730 is 1659096000
+Starting GL report generation starting from 20220630: 
+Mon Jun 13 10:25:28 NZST 2022
+pin_ledger_report -mode run_report -start 06/30/22 -end 07/31/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Mon Jun 13 10:25:35 NZST 2022
+Starting td_gl_proc.sh with parameters 1656504000 and 1659096000 at: 
+Mon Jun 13 10:25:35 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220630 20220730
+Starting timestamp for 20220630 is 1656504000
+Ending timestamp for 20220730 is 1659096000
+Starting Unbilled GL report generation starting from 20220630 to 20220730: 
+Mon Jun 13 10:25:36 NZST 2022
+pin_ledger_report -mode run_report -start 06/30/22 -end 07/30/22 -type billed -detail -verbose
+Completed td_gl_proc.sh at: 
+Mon Jun 13 10:25:38 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Mon Jun 13 10:25:38 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Mon Jun 13 10:25:38 NZST 2022
+pin_ledger_report -mode run_report -start 06/30/22 -end 07/30/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 06/30/22 -end 07/30/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Mon Jun 13 10:25:52 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Mon Jun 13 10:25:52 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Mon Jun 13 10:26:01 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Mon Jun 13 10:26:01 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Mon Jun 13 10:26:01 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220530 20220630
+Starting timestamp for 20220530 is 1653825600
+Ending timestamp for 20220630 is 1656504000
+Starting Unbilled GL report generation starting from 20220530 to 20220630: 
+Tue Jun 14 10:16:16 NZST 2022
+pin_ledger_report -mode run_report -start 05/30/22 -end 06/30/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 05/30/22 -end 06/30/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 05/30/22 -end 06/30/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue Jun 14 10:17:06 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Tue Jun 14 10:17:06 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Tue Jun 14 10:17:11 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Tue Jun 14 10:17:11 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Tue Jun 14 10:17:11 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220701 20220801
+Starting timestamp for 20220701 is 1656590400
+Ending timestamp for 20220801 is 1659268800
+Starting Unbilled GL report generation starting from 20220701 to 20220801: 
+Thu Jun 30 13:01:23 NZST 2022
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Thu Jun 30 13:01:41 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Thu Jun 30 13:01:41 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Thu Jun 30 13:01:45 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Thu Jun 30 13:01:45 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Thu Jun 30 13:01:45 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220701 20220801
+Starting timestamp for 20220701 is 1656590400
+Ending timestamp for 20220801 is 1659268800
+Starting GL report generation starting from 20220701: 
+Thu Jul  7 14:04:15 NZST 2022
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Thu Jul  7 14:04:43 NZST 2022
+Starting td_gl_proc.sh with parameters 1656590400 and 1659268800 at: 
+Thu Jul  7 14:04:43 NZST 2022
+Completed td_gl_proc.sh at: 
+Thu Jul  7 14:04:46 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Thu Jul  7 14:04:46 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Thu Jul  7 14:04:46 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220701 20220801
+Starting timestamp for 20220701 is 1656590400
+Ending timestamp for 20220801 is 1659268800
+Starting Unbilled GL report generation starting from 20220701 to 20220801: 
+Thu Jul  7 15:03:39 NZST 2022
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Thu Jul  7 15:04:23 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Thu Jul  7 15:04:23 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Thu Jul  7 15:04:36 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Thu Jul  7 15:04:36 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Thu Jul  7 15:04:36 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220610 20220710
+Starting timestamp for 20220610 is 1654776000
+Ending timestamp for 20220710 is 1657368000
+Starting Unbilled GL report generation starting from 20220610 to 20220710: 
+Thu Jul  7 15:10:42 NZST 2022
+pin_ledger_report -mode run_report -start 06/10/22 -end 07/10/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 06/10/22 -end 07/10/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 06/10/22 -end 07/10/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Thu Jul  7 15:11:48 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Thu Jul  7 15:11:48 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220610 20220710
+Starting timestamp for 20220610 is 1654776000
+Ending timestamp for 20220710 is 1657368000
+Starting Unbilled GL report generation starting from 20220610 to 20220710: 
+Thu Jul  7 15:11:54 NZST 2022
+pin_ledger_report -mode run_report -start 06/10/22 -end 07/10/22 -type billed -detail -verbose
+Completed td_unbilled_gl_proc.sh at: 
+Thu Jul  7 15:11:59 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Thu Jul  7 15:11:59 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Thu Jul  7 15:11:59 NZST 2022
+pin_ledger_report -mode run_report -start 06/10/22 -end 07/10/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 06/10/22 -end 07/10/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Thu Jul  7 15:13:01 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Thu Jul  7 15:13:01 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Thu Jul  7 15:13:05 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Thu Jul  7 15:13:05 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Thu Jul  7 15:13:05 NZST 2022
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20220701 20220801
+Starting timestamp for 20220701 is 1656590400
+Ending timestamp for 20220801 is 1659268800
+Starting Unbilled GL report generation starting from 20220701 to 20220801: 
+Fri Jul  8 10:07:39 NZST 2022
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 07/01/22 -end 08/01/22 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Fri Jul  8 10:08:26 NZST 2022
+Starting td_unbilled_gl_proc.sh at: 
+Fri Jul  8 10:08:26 NZST 2022
+Completed td_unbilled_gl_proc.sh at: 
+Fri Jul  8 10:08:34 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Fri Jul  8 10:08:34 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Fri Jul  8 10:08:34 NZST 2022
+
+Starting execution of td_get_billcycle_report.sh for dom date 20220801 20220901
+Starting timestamp for 20220801 is 1659268800
+Ending timestamp for 20220901 is 1661947200
+Starting GL report generation starting from 20220801: 
+Mon Jul 25 10:45:44 NZST 2022
+pin_ledger_report -mode run_report -start 08/01/22 -end 09/2/22 -type billed -detail -verbose
+Completed GL report generation at: 
+Mon Jul 25 10:45:51 NZST 2022
+Starting td_gl_proc.sh with parameters 1659268800 and 1661947200 at: 
+Mon Jul 25 10:45:51 NZST 2022
+Completed td_gl_proc.sh at: 
+Mon Jul 25 10:45:55 NZST 2022
+Starting td_trigger_bip_report.sh at: 
+Mon Jul 25 10:45:55 NZST 2022
+Completed td_trigger_bip_report.sh at: 
+Mon Jul 25 10:45:55 NZST 2022

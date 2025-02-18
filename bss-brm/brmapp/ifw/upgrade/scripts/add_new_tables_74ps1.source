@@ -1,0 +1,79 @@
+-- @(#)$Id: add_new_tables_74ps1.source /cgbubrm_main.rwsmod/1 2011/09/16 07:39:54 hsnagpal Exp $
+-- Copyright (c) 2009, 2011, Oracle and/or its affiliates. 
+-- All rights reserved. 
+-- This material is the confidential property of Oracle Corporation or its
+-- licensors and may be used, reproduced, stored or transmitted only in
+-- accordance with a valid Oracle license or sublicense agreement.
+--
+-- SQL script to create the new tables in (7.4).
+--
+
+CREATE OR REPLACE PROCEDURE add_new_tables_74 AS
+ 
+        v_ddl_stmt VARCHAR2(4000);
+        TABLE_NOT_CREATED CONSTANT NUMBER := -20001;
+        SOME_OTHER_EXCEPTION  CONSTANT NUMBER := -20002;
+        v_errmsg VARCHAR2(200);
+BEGIN
+ 
+IF (NOT pin_upg_common.table_exists('nrtrde_files',v_errmsg)) THEN 
+                BEGIN
+                v_ddl_stmt := 'CREATE TABLE nrtrde_files (
+                               filename              VARCHAR2(80) NOT NULL ,
+                               sender                VARCHAR2(80),
+                               recipient             VARCHAR2(80),
+                               seqno                 NUMBER,
+                               fileprocessedtime     DATE DEFAULT SYSDATE            NOT NULL ,
+                               filedeliveryreported  VARCHAR2(1) DEFAULT ''N''    NOT NULL ,
+                               CONSTRAINT nrtrde_files_pk1 PRIMARY KEY (filename)) $PIPELINE_TBLSPACE';
+                EXECUTE IMMEDIATE v_ddl_stmt;
+                EXCEPTION 
+                 WHEN OTHERS THEN 
+                  RAISE_APPLICATION_ERROR(TABLE_NOT_CREATED,'Table creation failed for nrtrde_files due to ||SQLERRM',TRUE);
+                END;
+END IF;
+ 
+IF (NOT pin_upg_common.table_exists('nrtrde_errors',v_errmsg)) THEN 
+                BEGIN 
+                v_ddl_stmt := 'CREATE TABLE nrtrde_errors (
+                               filename              VARCHAR2(80) NOT NULL ,
+                               recordnumber          NUMBER,
+                               recordtype            VARCHAR2(80),
+                               errorcodelist         VARCHAR2(80) NOT NULL ,
+                               errorreported         VARCHAR2(1) DEFAULT ''N'' NOT NULL,
+                               sender                VARCHAR2(80),
+                               CONSTRAINT nrtrde_errors_nrtrde_file_fk1 FOREIGN KEY (filename)
+                               REFERENCES nrtrde_files (filename)) $PIPELINE_TBLSPACE';
+                EXECUTE IMMEDIATE v_ddl_stmt;
+                EXCEPTION 
+                 WHEN OTHERS THEN
+                  RAISE_APPLICATION_ERROR(TABLE_NOT_CREATED,'Table creation failed for nrtrde_errors due to ||SQLERRM',TRUE);
+                END;
+END IF;
+ 
+IF (NOT pin_upg_common.table_exists('nrtrde_sequences',v_errmsg)) THEN
+                BEGIN
+                v_ddl_stmt := 'CREATE TABLE nrtrde_sequences (
+                               seqno                 NUMBER NOT NULL ,
+                               seqtype               VARCHAR2(1) NOT NULL ,
+                               operator              VARCHAR2(80) NOT NULL ,
+                               CONSTRAINT nrtrde_sequences_pk1 PRIMARY KEY (seqno, seqtype, operator)) $PIPELINE_TBLSPACE';
+                EXECUTE IMMEDIATE v_ddl_stmt;
+                EXCEPTION 
+                 WHEN OTHERS THEN 
+                  RAISE_APPLICATION_ERROR(TABLE_NOT_CREATED,'Table creation failed for nrtrde_sequences due to ||SQLERRM',TRUE);
+                END;
+END IF;
+ 
+EXCEPTION
+        WHEN OTHERS THEN
+                 RAISE_APPLICATION_ERROR(SOME_OTHER_EXCEPTION,'SCRIPT FAILED WITH THE ERROR'||SQLERRM, TRUE);
+ 
+END add_new_tables_74;
+/
+ 
+SET serverout on size 1000000;
+ 
+PROMPT Starting procedure add_new_tables_74 ...
+ 
+EXEC add_new_tables_74;

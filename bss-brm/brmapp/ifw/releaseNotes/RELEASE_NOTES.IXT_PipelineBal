@@ -1,0 +1,29 @@
+//==============================================================================
+//
+// Copyright (c) 2008, 2011, Oracle and/or its affiliates. 
+// All rights reserved. 
+//
+//     This material is the confidential property of Oracle Corporation
+//     or licensors and may be used, reproduced, stored or transmitted
+//     only in accordance with a valid Oracle license or sublicense agreement.
+//
+//==============================================================================
+
+================================================================================
+IXT_PipelineBal
+--------------------------------------------------------------------------------
+Module Release Notes
+--------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.IXT_PipelineBal $
+$Revision: /cgbubrm_7.3.2.pipeline/2 $
+$Author: mlling $
+$Date: 2011/01/04 15:51:52 $
+================================================================================
+Module Version : 10001 / Date : 03-JAN-2011
+bug10626939    : "P-10349167 SECOND FOLLOWUP TO BUG 10198420"
+Changed getResourceBalance() to return true/false to indicate if operation succeeded/failed, along with the balances.
+--------------------------------------------------------------------------------
+Module Version : 10000 / Date : 10-SEP-2008
+bug7522509     : "P-PROVIDING AN INTERFACE TO GET IN MEMORY BALANCE OF THE RESOURCE"
+--------------------------------------------------------------------------------
+

@@ -1,0 +1,12 @@
+010	1			1	1	1431946610	1431946610	1431946610		0	0						RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/vas			2
+020	2					2degrees	2degrees	228007080	00	6490292992	Angry Birds	0	17	01	VAS			00	S	+0100	0.0	0.0	1	NORM	Google play content	0	0	1432918885	1432918886	1
+520	3		228007080	0
+900	4	1 /account 1164311 0	1 /service/telco/gsm/vas 1167443 0	1 /item/usage_niltax 291537707129303825 0	0  0 0	;;;;[228007080,2,0]|;;;;[228007080,2,0]|;;;;[228007080,2,0]|;;;;[6490292992,2,0]		1	@INTEGRATE#228007080#6490292992#VAS#1#1#Google play content#0#Angry Birds##<1 /item/usage_niltax 291537707129303825 0#554#1##9#850200010#NILGST|>#<296#52|>#<#>
+600	5	1 /account 1164311 0	1 /balance_group 1169811 0	1 /item/usage_niltax 291537707129303825 0	554	0	ALL	258	1 /product 1089710 0	850200010	0	NILGST			1 /purchased_product 1168723 0	1	9	0.0	9	0.0	0	P
+605	0	1 /balance_group 1169811 0	554
+607	0	9	1431903410	0			0	0
+800	6	1 /account 1164311 0	1 /balance_group/monitor 1166103 0	554	9
+805	0	1 /balance_group/monitor 1166103 0	554
+807	1432857600	9	1432857600	1432944000	
+888	1	ac000146	$49 CARRYOVER PLAN	51	52	OriginatingCountry	OriginatingZone	DestinationCountry	DestinationZone	57	58	RatingGroupCode	RatingGroupType	5	Mfile	InPackageCode	POSTPAY			FALSE	791188	1415140866	906505	906505	64273307239	9970	9632	296
+090	9			1	1	1	1432918885	+0100	1432918885	+0100	0.0	9

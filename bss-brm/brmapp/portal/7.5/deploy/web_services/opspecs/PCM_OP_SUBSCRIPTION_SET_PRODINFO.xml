@@ -1,0 +1,224 @@
+<Opcode name="PCM_OP_SUBSCRIPTION_SET_PRODINFO" visibility="public"
+        transaction="required" component="fm_subscription"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+ <Doc>
+  PCM_OP_SUBSCRIPTION_SET_PRODINFO input and output flist specifications. This
+  opcode is called to modify or set a product's purchase, cycle, or usage date
+  information. If the PCM_OPFLG_CALC_ONLY flag is set, this opcode returns the 
+  entire event flist for the events created as a result of the modification. 
+  If not, it returns the event POIDs of all event objects created as a result 
+  of the modification.
+  <h:p/>
+  <h:p/>
+  When automatic rerating is enabled, this opcode triggers automatic rerating of
+  backdated product status changes when certain conditions are met.
+ </Doc>
+ <!-- INPUT SPEC -->
+ <Input>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>Account object action was applied to.</Doc>
+    <ClassRef>obj://account</ClassRef>
+   </Poid>
+   <Poid name="PIN_FLD_SERVICE_OBJ" use="optional" mode="complete">
+    <Doc>Service object action was applied to.</Doc>
+    <ClassRef>obj://service</ClassRef>
+   </Poid>
+   <Poid name="PIN_FLD_SESSION_OBJ" use="optional" mode="complete">
+    <Doc>Session object - session in which event took place - null means none.</Doc>
+    <ClassRef>obj://event.session</ClassRef>
+   </Poid>
+   <String name="PIN_FLD_PROGRAM_NAME" use="required" maxlen="60">
+    <Doc>Program name - identifies calling program.</Doc>
+   </String>
+   <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+    <Doc>Event description - free text for application to describe event.</Doc>
+   </String>
+   <Timestamp name="PIN_FLD_START_T" use="optional">
+    <Doc>Start time - Timestamp of when event started (Portal Time).</Doc>
+   </Timestamp>
+   <Timestamp name="PIN_FLD_END_T" use="optional">
+    <Doc>End time - Timestamp of when event ended (Portal Time). This field is
+         used to determine which billing cycle the event is part of.</Doc>
+   </Timestamp>
+   <Int name="PIN_FLD_FLAGS" use="optional">
+    <Doc>This flags is used to truncate or extend the sub balance validity of
+         non currency resources during Line Transfer. If the value is passed as
+         PIN_RATE_FLG_CUT then the sub balance validity is truncated to date of
+         transfer and iff the value is passed as PIN_RATE_FLG_MAINTAIN then the
+         sub balance validity period is extended till the source account's
+         current billing cycle end date and if the value is passed as
+         PIN_RATE_FLG_ALIGN then the sub balance bucket is extended till the
+         destination account's billing cycle end date.</Doc>
+   </Int>
+   <Timestamp name="PIN_FLD_ACTG_NEXT_T" use="optional">
+    <Doc>Accounting Next_T of the destination account used in extending the
+         validity period of the sub balance bucket for the products during line
+         transfer in case of business params for sub_bal_validity is configured
+         to Align.</Doc>
+   </Timestamp>
+   <Array name="PIN_FLD_PRODUCTS" use="required" elemIdMode="ignored"
+          iterationOrder="undefined">
+    <Doc>Products array. Only one element can appear in this array. Element-id
+         is not relevant. It uniquely identifies the account product by its
+         offering_obj.</Doc>
+    <Fields>
+     <Poid name="PIN_FLD_PRODUCT_OBJ" use="required" mode="complete">
+      <Doc>Poid of product to purchase.</Doc>
+      <ClassRef>obj://product</ClassRef>
+     </Poid>
+     <Poid name="PIN_FLD_OFFERING_OBJ" use="required" mode="complete">
+      <Doc>Uniquely identifies a product in an account.</Doc>
+      <ClassRef>obj://purchased_product</ClassRef>
+     </Poid>
+     <Timestamp name="PIN_FLD_PURCHASE_START_T" use="optional">
+      <Doc>Purchase start time - timestamp that product activates (Portal Time).</Doc>
+     </Timestamp>
+     <Timestamp name="PIN_FLD_PURCHASE_END_T" use="optional">
+      <Doc>Purchase end time - timestamp that product expires (Portal Time), 0
+           means that product does not expire.</Doc>
+     </Timestamp>
+     <Int name="PIN_FLD_PURCHASE_END_UNIT" use="optional">
+      <Doc>Relative Unit for Purchase Can be Seconds=1,Minutes=2,Hours=3,Days=4,
+           Months=5, Cycles=8 and Event cycles=9. For First Usage unit should be
+	   passed as -1. For unit=0, the purchase end_t would be checked.
+	   If unit is 0 and purchase end_t is 0 then End Never.
+	   If unit is 0 and purchase end_t is greater than 0 then purchase end date 
+	   is an Absolute date. Based on this the purchase end details would be 
+	   calculated.</Doc>
+     </Int>
+     <Int name="PIN_FLD_PURCHASE_END_OFFSET" use="optional">
+      <Doc>Relative offset for Purchase startT to be used in conjunction with
+           unit to calculate Purchase endT on First Usage.</Doc>
+     </Int>
+     <Decimal name="PIN_FLD_PURCHASE_DISCOUNT" use="optional">
+      <Doc>Purchase discount - percent discount applied to purchase/cancel rates
+           of product. Mutually exclusive to PIN_FLD_PURCHASE_DISC_AMT field.</Doc>
+     </Decimal>
+     <Decimal name="PIN_FLD_PURCHASE_DISC_AMT" use="optional">
+      <Doc>Fixed amount discount for purchase fees, amount of discount applied
+           to purchase/cancel rates of product. Mutually exclusive to
+	   PIN_FLD_PURCHASE_DISCOUNT field.</Doc>
+     </Decimal>
+     <Decimal name="PIN_FLD_PURCHASE_FEE_AMT" use="optional">
+      <Doc>Purchase fee to be applied for this product. Amount specified here
+           will override the price specified in the /rate object.</Doc>
+     </Decimal>
+     <Timestamp name="PIN_FLD_CYCLE_START_T" use="optional">
+      <Doc>Cycle fee start time - timestamp that cycle fees begin for this
+           product (Portal Time), 0 means immediately. This field should
+	   not be changed for an existing product.</Doc>
+     </Timestamp>
+     <Timestamp name="PIN_FLD_CYCLE_END_T" use="optional">
+      <Doc>Cycle fee end time - timestamp that cycle fees are no longer applied
+           for this product (Portal Time), 0 means always applied.</Doc>
+     </Timestamp>
+     <Int name="PIN_FLD_CYCLE_END_UNIT" use="optional">
+      <Doc>Relative Unit for Cycle Can be Seconds=1, Minutes=2, Hours=3, Days=4,
+           Months=5, Cycles=8 and Event cycles=9. For First Usage unit should be
+	   passed as -1. For unit=0, the cycle end_t would be checked.
+	   If unit is 0 and cycle end_t is 0 then End Never.
+	   If unit is 0 and cycle end_t is greater than 0 then cycle end date is
+	   an Absolute date. Based on this the cycle end details would be 
+	   calculated.</Doc>
+     </Int>
+     <Int name="PIN_FLD_CYCLE_END_OFFSET" use="optional">
+      <Doc>Relative offset for Cycle to be used in conjunction with unit to
+           calculate Cycle end_t.</Doc>
+     </Int>
+     <Decimal name="PIN_FLD_CYCLE_DISCOUNT" use="optional">
+      <Doc>Cycle fee discount - percent discount applied to cycle rates of
+           product. Mutually exclusive to PIN_FLD_CYCLE_DISC_AMT field.</Doc>
+     </Decimal>
+     <Decimal name="PIN_FLD_CYCLE_DISC_AMT" use="optional">
+      <Doc>Fixed amount discount for cycle_forward fees amount of discount
+           applied to cycle rates of product. Mutually exclusive to
+	   PIN_FLD_CYCLE_DISCOUNT field.</Doc>
+     </Decimal>
+     <Decimal name="PIN_FLD_CYCLE_FEE_AMT" use="optional">
+      <Doc>Cycle fee (both forward and arrears) to be applied for this product.
+           Amount specified here will override the price specified in the /rate
+           object.</Doc>
+     </Decimal>
+     <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+     <Doc> Status flags used in conjunction with the override prices specified in <h:a h:href="#in.PRODUCTS.PURCHASE_FEE_AMT">PURCHASE_FEE_AMT</h:a> and <h:a h:href="#in.PRODUCTS.CYCLE_FEE_AMT">CYCLE_FEE_AMT</h:a>. The possible values are: -
+       <h:ul>
+        <h:li>PIN_PROD_STATUS_FLAGS_OVERRIDE_PURCHASE_FEE(0x01000000) </h:li>
+        <h:li>PIN_PROD_STATUS_FLAGS_OVERRIDE_CYCLE_FEE(0x02000000)</h:li>
+       </h:ul>
+    </Doc>
+    </Int>
+     <Timestamp name="PIN_FLD_USAGE_START_T" use="optional">
+      <Doc>Usage fee start time - timestamp that usage fees begin for this
+           product (Portal Time), 0 means immediately.</Doc>
+     </Timestamp>
+     <Timestamp name="PIN_FLD_USAGE_END_T" use="optional">
+      <Doc>Usage fee end time - timestapm that usage fees are no longer applied
+           for this product (Portal Time), 0 means always applied.</Doc>
+     </Timestamp>
+     <Int name="PIN_FLD_USAGE_END_UNIT" use="optional">
+      <Doc>Relative Unit for Usage Can be Seconds=1, Minutes=2, Hours=3, Days=4,
+           Months=5, Cycles=8 and Event cycles=9. For First Usage unit should be
+	   passed as -1. For unit=0, the usage end_t would be checked.
+	   If unit is 0 and usage end_t is 0 then End Never.
+	   If unit is 0 and usage end_t is greater than 0 then usage end date is
+	   an Absolute date. Based on this the usage end details would be 
+	   calculated.</Doc>
+     </Int>
+     <Int name="PIN_FLD_USAGE_END_OFFSET" use="optional">
+      <Doc>Relative offset for Usage to be used in conjunction with unit to
+           calculate Usage end_t on First Usage.</Doc>
+     </Int>
+     <Decimal name="PIN_FLD_USAGE_DISCOUNT" use="optional">
+      <Doc>Usage fee discount - percent discount applied to usage rates of
+           product.</Doc>
+     </Decimal>
+     <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+      <Doc>Description on a per product basis for CSR to add comments.</Doc>
+     </String>
+     <String name="PIN_FLD_PRICE_LIST_NAME" use="optional" maxlen="255">
+      <Doc>Price list name associated with this offering.</Doc>
+     </String>     
+    </Fields>
+   </Array>
+  </Fields>
+ </Input>
+ <!-- OUTPUT SPEC -->
+ <Output>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>Account object passed into call.</Doc>
+    <ClassRef>obj://account</ClassRef>
+   </Poid>
+   <Array name="PIN_FLD_RESULTS" use="optional" elemIdMode="ignored"
+          iterationOrder="undefined">
+    <Doc>Array of results information. Since only one event object is created by
+         this call, only one element will be returned. The element-id is not
+         significant.</Doc>
+    <Fields>
+     <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+       <Doc>Poid of the account object.</Doc>
+       <ClassRef>obj://account</ClassRef>
+     </Poid>
+     <Poid name="PIN_FLD_POID" use="required" mode="complete">
+      <Doc>Poid of the event object created for event</Doc>
+     </Poid>
+     <Any name="EVT_FLDS" use="optional" mode="other" baseClassName="obj://event"
+      classNameRef="#out.RESULTS.POID">
+      <Doc> Fields of the event object. Additional event object fields are added
+        to the return flist here. If the PCM_OPFLG_READ_RESULT flag is set for 
+        the operation, all the fields in the event object are returned on the 
+        output flist, not just the POID. If the PCM_OPFLG_CALC_ONLY flag is set,
+        no fields in the database are changed and the event object is not actually
+        created, but the fields that would have been used to create the event 
+        object are returned to the caller on the output flist.</Doc>
+     </Any>
+    </Fields>
+   </Array>
+  </Fields>
+ </Output>
+</Opcode>
+

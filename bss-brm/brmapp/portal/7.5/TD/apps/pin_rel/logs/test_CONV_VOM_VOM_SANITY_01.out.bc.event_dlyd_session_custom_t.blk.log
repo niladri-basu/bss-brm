@@ -1,0 +1,83 @@
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Tue Apr 14 21:14:48 2015
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_VOM_VOM_SANITY_01.out.bc.event_dlyd_session_custom_t.ctl
+Character Set UTF8 specified for all input.
+
+Data File:      /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_VOM_VOM_SANITY_01.out.bc.event_dlyd_session_custom_t.blk
+  Bad File:     /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_VOM_VOM_SANITY_01.out.bc.event_dlyd_session_custom_t.blk.bad
+  Discard File: /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_VOM_VOM_SANITY_01.out.bc.event_dlyd_session_custom_t.blk.discard 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Continuation:    none specified
+Path used:      Direct
+
+Load is UNRECOVERABLE; invalidation redo is produced.
+
+Table EVENT_DLYD_SESSION_CUSTOM_T, partition P_D_05012015, loaded from every logical record.
+Insert option in effect for this partition: APPEND
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+RECORD_TYPE                         FIRST     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CDR_TYPE                             NEXT     *  WHT      CHARACTER            
+SEQUENCE_NUMBER                      NEXT     *  WHT      CHARACTER            
+BASE_PLAN_NAME                       NEXT     *  WHT      CHARACTER            
+CASH_AMOUNT_QUANTITY                 NEXT     *  WHT      CHARACTER            
+BUNDLE_AMOUNT_QUANTITY               NEXT     *  WHT      CHARACTER            
+ORIGINATING_COUNTRY                  NEXT     *  WHT      CHARACTER            
+ORIGINATING_ZONE                     NEXT     *  WHT      CHARACTER            
+DESTINATION_COUNTRY                  NEXT     *  WHT      CHARACTER            
+DESTINATION_ZONE                     NEXT     *  WHT      CHARACTER            
+CASCADE_ID                           NEXT     *  WHT      CHARACTER            
+END_CALL_REASON                      NEXT     *  WHT      CHARACTER            
+RATING_GROUP_CODE                    NEXT     *  WHT      CHARACTER            
+RATING_GROUP_TYPE                    NEXT     *  WHT      CHARACTER            
+RATES                                NEXT     *  WHT      CHARACTER            
+MFILE                                NEXT     *  WHT      CHARACTER            
+IN_PACKAGE_CODE                      NEXT     *  WHT      CHARACTER            
+PRODUCT                              NEXT     *  WHT      CHARACTER            
+SHARERS_MSISDN                       NEXT     *  WHT      CHARACTER            
+SHARERS_PRODUCT                      NEXT     *  WHT      CHARACTER            
+SHRD                                 NEXT     *  WHT      CHARACTER            
+SCP_ID                               NEXT     *  WHT      CHARACTER            
+RECORD_DATE                          NEXT     *  WHT      CHARACTER            
+ACCT_ID                              NEXT     *  WHT      CHARACTER            
+ACCT_REF_ID                          NEXT     *  WHT      CHARACTER            
+CLI                                  NEXT     *  WHT      CHARACTER            
+OGEO_ID                              NEXT     *  WHT      CHARACTER            
+TGEO_ID                              NEXT     *  WHT      CHARACTER            
+OVERRIDDEN_TARIFF_PLAN               NEXT     *  WHT      CHARACTER            
+OBJ_ID0                              NEXT     *  WHT      CHARACTER            
+
+
+Table EVENT_DLYD_SESSION_CUSTOM_T, partition P_D_05012015:
+  1 Row successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+Bind array size not used in direct path.
+Column array  rows :    5000
+Stream buffer bytes: 5000000
+Read   buffer bytes:10000000
+
+Total logical records skipped:          0
+Total logical records read:             1
+Total logical records rejected:         0
+Total logical records discarded:        0
+Total stream buffers loaded by SQL*Loader main thread:        1
+Total stream buffers loaded by SQL*Loader load thread:        0
+
+Run began on Tue Apr 14 21:14:48 2015
+Run ended on Tue Apr 14 21:14:48 2015
+
+Elapsed time was:     00:00:00.43
+CPU time was:         00:00:00.02

@@ -1,0 +1,162 @@
+================================================================================
+<Module>
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+==============================================================================
+Module Version: 10006  DaVinci  18-July-2006
+PRSF00219262: Da Vincii Code Clean Up: set isValidDetail false when you set error.
+================================================================================
+Module Version: 10005  6.7_FP2  05-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10004  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 30-Apr-2003
+----------------
+
+Change Order :  PRSF00039305
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+================================================================================
+
+Module Version : 6.5 EBF 10000 
+----------------
+
+Date : 08-Jan-2003
+----------------
+
+Change Order :  PRSF00028180
+----------------
+
+Short Description :
+-------------------
+Changed to use the Acoount id of the parent obj instead of the audit account id
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 15-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #36559 SourcePro AIX port
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 25-JUN-2001
+----------------
+
+Notes          :
+----------------
+
+- Modified for the v4-30 framework. 
+
+================================================================================
+
+Actual Version : v4-10-00 / Date : 22-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+- Unchanged for this version.
+
+================================================================================
+
+=======
+Actual Version : v4-02-01 / Date : 15-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+- Bugfix in function getEDRContainerIndices() (Missing return value).
+
+================================================================================
+
+Actual Version : v4-02-00 / Date : 11-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+- Support for new DAT_Cust v4-01-00 interface added.
+
+================================================================================
+
+Actual Version : v4-01-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+- Implementation changed to support the IBM xlC compiler.
+
+================================================================================
+
+Actual Version : v4-00-00 / Date : 06-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+- The new v4 edr container is supported
+- The interface of function processEdrContainer() changed.
+
+================================================================================
+
+Actual Version : v1-21-00 / Date : 05-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implementation of the isUsable() function.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+

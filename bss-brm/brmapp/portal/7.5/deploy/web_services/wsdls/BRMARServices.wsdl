@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="AR" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="PCM_OP_AR_GET_ACCT_BILLS.xsd"/>
+            <include schemaLocation="PCM_OP_AR_GET_ACCT_BAL_SUMMARY.xsd"/>
+            <include schemaLocation="PCM_OP_AR_BILL_ADJUSTMENT.xsd"/>
+            <include schemaLocation="PCM_OP_AR_GET_ACTION_ITEMS.xsd"/>
+            <include schemaLocation="PCM_OP_AR_ITEM_ADJUSTMENT.xsd"/>
+            <include schemaLocation="PCM_OP_AR_GET_BAL_SUMMARY.xsd"/>
+            <include schemaLocation="PCM_OP_AR_ACCOUNT_ADJUSTMENT.xsd"/>
+            <include schemaLocation="PCM_OP_AR_EVENT_ADJUSTMENT.xsd"/>
+            <include schemaLocation="PCM_OP_AR_RESOURCE_AGGREGATION.xsd"/>
+            <include schemaLocation="PCM_OP_AR_GET_BILLS.xsd"/>
+            <include schemaLocation="PCM_OP_AR_GET_BILL_ITEMS.xsd"/>
+            <include schemaLocation="PCM_OP_AR_GET_ACCT_ACTION_ITEMS.xsd"/>
+        </schema>
+    </types>
+    <message name="PCM_OP_AR_GET_ACCT_BILLS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_GET_ACCT_BILLS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_ACCT_BILLS_outmsg">
+        <part name="PCM_OP_AR_GET_ACCT_BILLS_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY_outmsg">
+        <part name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_BILL_ADJUSTMENT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_BILL_ADJUSTMENT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_BILL_ADJUSTMENT_outmsg">
+        <part name="PCM_OP_AR_BILL_ADJUSTMENT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_ACTION_ITEMS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_GET_ACTION_ITEMS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_ACTION_ITEMS_outmsg">
+        <part name="PCM_OP_AR_GET_ACTION_ITEMS_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_ITEM_ADJUSTMENT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_ITEM_ADJUSTMENT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_ITEM_ADJUSTMENT_outmsg">
+        <part name="PCM_OP_AR_ITEM_ADJUSTMENT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_BAL_SUMMARY_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_GET_BAL_SUMMARY_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_BAL_SUMMARY_outmsg">
+        <part name="PCM_OP_AR_GET_BAL_SUMMARY_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_outmsg">
+        <part name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_EVENT_ADJUSTMENT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_EVENT_ADJUSTMENT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_EVENT_ADJUSTMENT_outmsg">
+        <part name="PCM_OP_AR_EVENT_ADJUSTMENT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_RESOURCE_AGGREGATION_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_RESOURCE_AGGREGATION_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_RESOURCE_AGGREGATION_outmsg">
+        <part name="PCM_OP_AR_RESOURCE_AGGREGATION_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_BILLS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_GET_BILLS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_BILLS_outmsg">
+        <part name="PCM_OP_AR_GET_BILLS_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_BILL_ITEMS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_GET_BILL_ITEMS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_BILL_ITEMS_outmsg">
+        <part name="PCM_OP_AR_GET_BILL_ITEMS_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS_outmsg">
+        <part name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS_response" type="xsd:string"/>
+    </message>
+    <portType name="BRMARService_ptt">
+        <operation name="PcmOpArGetAcctBills">
+            <input message="brm:PCM_OP_AR_GET_ACCT_BILLS_inmsg" name="PCM_OP_AR_GET_ACCT_BILLS_inmsg"/>
+            <output message="brm:PCM_OP_AR_GET_ACCT_BILLS_outmsg" name="PCM_OP_AR_GET_ACCT_BILLS_outmsg"/>
+        </operation>
+        <operation name="PcmOpArGetAcctBalSummary">
+            <input message="brm:PCM_OP_AR_GET_ACCT_BAL_SUMMARY_inmsg" name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY_inmsg"/>
+            <output message="brm:PCM_OP_AR_GET_ACCT_BAL_SUMMARY_outmsg" name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY_outmsg"/>
+        </operation>
+        <operation name="PcmOpArBillAdjustment">
+            <input message="brm:PCM_OP_AR_BILL_ADJUSTMENT_inmsg" name="PCM_OP_AR_BILL_ADJUSTMENT_inmsg"/>
+            <output message="brm:PCM_OP_AR_BILL_ADJUSTMENT_outmsg" name="PCM_OP_AR_BILL_ADJUSTMENT_outmsg"/>
+        </operation>
+        <operation name="PcmOpArGetActionItems">
+            <input message="brm:PCM_OP_AR_GET_ACTION_ITEMS_inmsg" name="PCM_OP_AR_GET_ACTION_ITEMS_inmsg"/>
+            <output message="brm:PCM_OP_AR_GET_ACTION_ITEMS_outmsg" name="PCM_OP_AR_GET_ACTION_ITEMS_outmsg"/>
+        </operation>
+        <operation name="PcmOpArItemAdjustment">
+            <input message="brm:PCM_OP_AR_ITEM_ADJUSTMENT_inmsg" name="PCM_OP_AR_ITEM_ADJUSTMENT_inmsg"/>
+            <output message="brm:PCM_OP_AR_ITEM_ADJUSTMENT_outmsg" name="PCM_OP_AR_ITEM_ADJUSTMENT_outmsg"/>
+        </operation>
+        <operation name="PcmOpArGetBalSummary">
+            <input message="brm:PCM_OP_AR_GET_BAL_SUMMARY_inmsg" name="PCM_OP_AR_GET_BAL_SUMMARY_inmsg"/>
+            <output message="brm:PCM_OP_AR_GET_BAL_SUMMARY_outmsg" name="PCM_OP_AR_GET_BAL_SUMMARY_outmsg"/>
+        </operation>
+        <operation name="PcmOpArAccountAdjustment">
+            <input message="brm:PCM_OP_AR_ACCOUNT_ADJUSTMENT_inmsg" name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_inmsg"/>
+            <output message="brm:PCM_OP_AR_ACCOUNT_ADJUSTMENT_outmsg" name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_outmsg"/>
+        </operation>
+        <operation name="PcmOpArEventAdjustment">
+            <input message="brm:PCM_OP_AR_EVENT_ADJUSTMENT_inmsg" name="PCM_OP_AR_EVENT_ADJUSTMENT_inmsg"/>
+            <output message="brm:PCM_OP_AR_EVENT_ADJUSTMENT_outmsg" name="PCM_OP_AR_EVENT_ADJUSTMENT_outmsg"/>
+        </operation>
+        <operation name="PcmOpArResourceAggregation">
+            <input message="brm:PCM_OP_AR_RESOURCE_AGGREGATION_inmsg" name="PCM_OP_AR_RESOURCE_AGGREGATION_inmsg"/>
+            <output message="brm:PCM_OP_AR_RESOURCE_AGGREGATION_outmsg" name="PCM_OP_AR_RESOURCE_AGGREGATION_outmsg"/>
+        </operation>
+        <operation name="PcmOpArGetBills">
+            <input message="brm:PCM_OP_AR_GET_BILLS_inmsg" name="PCM_OP_AR_GET_BILLS_inmsg"/>
+            <output message="brm:PCM_OP_AR_GET_BILLS_outmsg" name="PCM_OP_AR_GET_BILLS_outmsg"/>
+        </operation>
+        <operation name="PcmOpArGetBillItems">
+            <input message="brm:PCM_OP_AR_GET_BILL_ITEMS_inmsg" name="PCM_OP_AR_GET_BILL_ITEMS_inmsg"/>
+            <output message="brm:PCM_OP_AR_GET_BILL_ITEMS_outmsg" name="PCM_OP_AR_GET_BILL_ITEMS_outmsg"/>
+        </operation>
+        <operation name="PcmOpArGetAcctActionItems">
+            <input message="brm:PCM_OP_AR_GET_ACCT_ACTION_ITEMS_inmsg" name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS_inmsg"/>
+            <output message="brm:PCM_OP_AR_GET_ACCT_ACTION_ITEMS_outmsg" name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="BRMARService_binding" type="brm:BRMARService_ptt">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PcmOpArGetAcctBills">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_GET_ACCT_BILLS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_GET_ACCT_BILLS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArGetAcctBalSummary">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArBillAdjustment">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_BILL_ADJUSTMENT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_BILL_ADJUSTMENT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArGetActionItems">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_GET_ACTION_ITEMS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_GET_ACTION_ITEMS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArItemAdjustment">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_ITEM_ADJUSTMENT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_ITEM_ADJUSTMENT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArGetBalSummary">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_GET_BAL_SUMMARY_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_GET_BAL_SUMMARY_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArAccountAdjustment">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArEventAdjustment">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_EVENT_ADJUSTMENT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_EVENT_ADJUSTMENT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArResourceAggregation">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_RESOURCE_AGGREGATION_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_RESOURCE_AGGREGATION_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArGetBills">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_GET_BILLS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_GET_BILLS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArGetBillItems">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_GET_BILL_ITEMS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_GET_BILL_ITEMS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpArGetAcctActionItems">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="BRMARService">
+        <port binding="brm:BRMARService_binding" name="BRMARService_pt">
+            <soap:address location="http://localhost:8080/brm/BRMWSARServices"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="BRMService_plt">
+        <plt:role name="BRMService_role">
+            <plt:portType name="brm:BRMARService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

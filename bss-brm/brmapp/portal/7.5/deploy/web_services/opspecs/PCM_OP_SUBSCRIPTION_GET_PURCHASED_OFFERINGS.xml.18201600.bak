@@ -1,0 +1,160 @@
+<Opcode name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS" visibility="public" transaction="required" component="fm_subscription"
+xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>
+  This opcode is used to fetch the purchased products and
+  discounts for a given account, service or billinfo.
+</Doc>
+<Input>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required" mode="complete">
+      <Doc> Account object POID. </Doc>
+      <ClassRef>obj://account</ClassRef>
+    </Poid>
+    <Poid name="PIN_FLD_SCOPE_OBJ" use="required" mode="complete">
+      <Doc> Account, Service or Billinfo object that define the scope of the search
+        for products and discounts.
+      </Doc>
+      <ClassRef>obj://account</ClassRef>
+      <ClassRef>obj://billinfo</ClassRef>
+      <ClassRef>obj://service</ClassRef>
+    </Poid>
+    <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+      <Doc> This field specifies the statuses for the offerings.
+        The values of the flags can be:
+	<h:ul>
+          <h:li>PIN_SUBS_FLG_OFFERING_STATUS_ACTIVE - Fetches only active offerings.</h:li>
+          <h:li>PIN_SUBS_FLG_OFFERING_STATUS_INACTIVE - Fetches only inactive offerings.</h:li>
+          <h:li>PIN_SUBS_FLG_OFFERING_STATUS_CLOSED - Fetches only closed offerings.</h:li>
+        </h:ul>
+        Note: Use of multiple values implies the target object should satisfy any 
+        of the above.
+      </Doc>
+    </Int>
+    <Timestamp name="PIN_FLD_END_T" use="optional">
+      <Doc> Specifies the date on which the offering is valid. This field is
+        used in conjunction with the <h:a href="#in.VALIDITY_FLAGS">validity flags</h:a>
+      </Doc>
+    </Timestamp>
+    <Int name="PIN_FLD_VALIDITY_FLAGS" use="optional">
+      <Doc> This field specifies the qualifiers for <h:a href="#in.END_T">END_T.</h:a> 
+        The values of the flags can be:
+	<h:ul>
+          <h:li>PIN_SUBS_FLG_OFFERING_VALIDITY_CYCLE - to compare only the CYCLE start and 
+            end dates.</h:li>
+          <h:li>PIN_SUBS_FLG_OFFERING_VALIDITY_PURCHASE - to compare only the PURCHASE start
+            and end dates.</h:li>
+          <h:li>PIN_SUBS_FLG_OFFERING_VALIDITY_USAGE - to compare only the USAGE start and 
+            end dates.</h:li>
+	</h:ul>
+        Note: Use of multiple flags implies the target object should satisfy all of 
+        the above.
+      </Doc>
+    </Int>
+    <Int name="PIN_FLD_INCLUSION_FLAGS" use="optional">
+      <Doc> This field specifies additional paramenters to expand
+        the search beyond the scope provided. The values of the flags can be:
+	<h:ul>
+           <h:li>PIN_SUBS_FLG_INCLUDE_ALL_ELIGIBLE_PRODS - Fetches the products 
+             from the given service, its subscription service as well as any 
+             account-level products.</h:li>
+           <h:li>PIN_SUBS_FLG_INCLUDE_ALL_ELIGIBLE_DISCS - Fetches the discounts
+             from the given service, its subscription service as well as any 
+             account-level discounts.</h:li> 
+	</h:ul>
+      </Doc>
+    </Int>
+    <Int name="PIN_FLD_OVERRIDE_FLAGS" use="optional">
+      <Doc> This field specifies additional filters to restrict the search.  
+        The values of the flags can be:
+	<h:ul>
+          <h:li>PIN_SUBS_FLG_ACCT_LEVEL_ONLY - only account level offerings are 
+            returned. Valid for Scope = /account only.</h:li>
+          <h:li>PIN_SUBS_FLG_OVERRIDE_PRODS_ONLY - This flag is based on 
+            value of <h:a h:href="#in.OVERRIDDEN_OBJ">PIN_FLD_OVERRIDDEN_OBJ</h:a>.</h:li>
+	    - if the PIN_FLD_OVERRIDDEN_OBJ is NULL, using this flag fetches
+	      only the base products.
+	    - if the PIN_FLD_OVERRIDDEN_OBJ is a valid poid, using this flag fetches
+	      only the overriding products.
+	</h:ul>
+      </Doc>
+    </Int>
+    <Poid name="PIN_FLD_OVERRIDDEN_OBJ" use="optional" mode="complete">
+      <Doc>Offering object POID. Only offerings that are overriding this
+        offering will be returned.
+      </Doc>
+      <ClassRef>obj://purchased_product</ClassRef>
+    </Poid>
+    <Poid name="PIN_FLD_DEAL_OBJ" use="optional" mode="complete">
+      <Doc> Deal object POID. Only offerings that are part of this deal 
+        are returned.
+      </Doc>
+      <ClassRef>obj://deal</ClassRef>
+    </Poid>
+    <Int name="PIN_FLD_PACKAGE_ID" use="optional">
+      <Doc> Only offerings for the given package_id are returned.</Doc>
+    </Int>
+    <Array name="PIN_FLD_PRODUCTS" use="optional" ref="obj://purchased_product" elemIdMode="ignored" iterationOrder="undefined">
+      <Doc> If this array is passed, only the fields passed under this array 
+        would be returned from the <h:a h:href="obj://purchased_product">/purchased_product</h:a>. 
+        If not passed, all the fields for the offering would be returned. 
+      </Doc>
+      <Fields>
+        <Any name="PURCHASED_PRODUCTS_FLDS" use="optional" mode="other"
+            baseClassName="obj://purchased_product" classNameRef="#in.PRODUCTS.OFFERING_OBJ">
+           <Doc>Fields of the purchased_product object.</Doc>
+        </Any>
+      </Fields>
+    </Array>
+    <Array name="PIN_FLD_DISCOUNTS" use="optional" ref="obj://purchased_discount" elemIdMode="ignored" iterationOrder="undefined">
+      <Doc> If this array is passed, only the fields passed under this array 
+        would be returned from the <h:a h:href="obj://purchased_discount">/purchased_discount</h:a>. 
+        If not passed, all the fields for the offering would be returned. 
+      </Doc>
+      <Fields>
+        <Any name="PURCHASED_DISCOUNT_FLDS" use="optional" mode="other"
+            baseClassName="obj://purchased_discount" classNameRef="#in.DISCOUNTS.OFFERING_OBJ">
+          <Doc>Fields of the purchased_discount object.</Doc>
+        </Any>
+      </Fields>
+    </Array>
+  </Fields>
+</Input>
+<Output>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="optional" mode="complete">
+      <Doc> Account object POID. </Doc>
+      <ClassRef>obj://account</ClassRef>
+    </Poid>
+    <Array name="PIN_FLD_PRODUCTS" use="optional" ref="obj://purchased_product" elemIdMode="ignored" iterationOrder="undefined">
+      <Doc> The array of purchased products meeting the input criteria. If specific fields
+        are asked for via the input <h:a h:href="#in.PIN_FLD_PRODUCTS">PIN_FLD_PRODUCTS</h:a> array,
+        then only those fields are returned. Otherwise, poid of 
+        <h:a h:href="obj://purchased_product">/purchased_product</h:a> is returned, with the
+        PIN_FLD_POID field being returned as PIN_FLD_OFFERING_OBJ.
+      </Doc>
+      <Fields>
+        <Any name="PURCHASED_PRODUCT_FLDS" use="optional" mode="other"
+            baseClassName="obj://purchased_product" classNameRef="#out.PRODUCTS.OFFERING_OBJ">
+          <Doc>Fields of the purchased_product object.</Doc>
+        </Any>
+      </Fields>
+    </Array>
+    <Array name="PIN_FLD_DISCOUNTS" use="optional" ref="obj://purchased_discount" elemIdMode="ignored" iterationOrder="undefined">
+      <Doc> The array of purchased discounts meeting the input criteria. If specific fields
+        are asked for via the input <h:a h:href="#in.PIN_FLD_DISCOUNTS">PIN_FLD_DISCOUNTS</h:a> array,
+        then only those fields are returned. Otherwise, poid of
+        <h:a h:href="obj://purchased_discount">/purchased_discount</h:a> is returned, with the
+        PIN_FLD_POID field being returned as PIN_FLD_OFFERING_OBJ.
+      </Doc>
+      <Fields>
+        <Any name="PURCHASED_DISCOUNT_FLDS" use="optional" mode="other"
+            baseClassName="obj://purchased_discount" classNameRef="#out.DISCOUNTS.OFFERING_OBJ">
+          <Doc>Fields of the purchased_discount object.</Doc>
+        </Any>
+      </Fields>
+    </Array>
+  </Fields>
+</Output>
+</Opcode>

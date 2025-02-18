@@ -1,0 +1,410 @@
+========================================================================================
+FCT_PreRating
+----------------------------------------------------------------------------------------
+Module Release Notes 
+========================================================================================
+Module Version: 10014  7.4 13-Jan-2009
+bug7700376: Populate proper message if no ASS_CBD  block is found
+========================================================================================
+Module Version: 10013  DaVinci 20-Jul-2006
+PRSF00213711: Fixed memory leaks and uninitialized variable access.
+==============================================================================
+Module Version : 10012 DaVinci 24-July-2006 
+PRSF225031 IsValidDetail in EDR container is set to true even though there are errors
+Changes made to skip EDR processing if EDR has errors
+========================================================================================
+Module Version : 10011 DaVinci 05-July-2006 
+PRSF00219258: Set isValidDetail false when set an error.
+==============================================================================
+Module Version : 10010 DaVinci 07-Apr-2006
+PRSF00202141: TailormadePlan: MainRating, PreRating and registry changes
+Changes made in PreRating to release the lock after reading rateplan information. 
+==============================================================================
+Module Version: 10009 New_Pipeline_Velocity  11-Apr-2005
+PRSF00163202: W2_PPL_PKH+ Promotional Overlay doesnt work as described in FNS.
+Short Description :
+-------------------
+Modified the code to support the Overlay Promotion for VF-PAC.
+==============================================================================
+Module Version: 10008  6.7_FP2  21-Sep-2004
+PRSF00131990: Propagation of changes made for CO131955 
+
+Short Description :
+-------------------
+Propagation of changes made for CO131955
+
+==============================================================================
+Module Version: 10007  Apollo  15-Jun-2004
+PRSF00115701:   67FP2 regression: Core in DAT::Rating. 
+
+Short Description :
+-------------------
+Modified the processEdrContainer function to check the RatePlanId. 
+Handle differently if the list have the numeric Rate Plan.
+
+==============================================================================
+
+Module Version: 10006  Apollo  14-Apr-2004
+PRSF00097158:   Changes done for Product Catalog PRD REQ#3.1.1 
+                (Overlay Promotion & Least Cost Rating). 
+
+Short Description :
+-------------------
+Modify the processEdrContainer function to check all available purchaced product 
+for the service type starting from highest priority to low priority to dentify 
+the correct rate plan & set the appropriate RatePlan Index.
+
+==============================================================================
+
+Module Version : 6.7_FP1  10005
+----------------
+
+Date : 23-Jan-2004
+------
+
+Change Order :  PRSF00079303
+--------------
+
+Short Description :
+-------------------
+Standard Zone & USC Map: Support for a Label/Description for each entry in 
+the zoning and impact category configuration
+
+================================================================================
+
+==============================================================================
+
+Module Version: 10006  6.7_FP2  17-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10004  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+========================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP1 10002
+----------------
+
+Date : 03-Apr-2003
+----------------
+
+Change Order :  PRSF00036697
+----------------
+
+Short Description :
+-------------------
+  Destination Description for a given Service Code, Impact Cat
+  Zone Entry Name is extracted from the IFW_STANDARD_ZONE [and/or File] by the DAT_Zone
+  Plugin and this Function Plugin uses that value to write into the EDR container.
+  The New field added to the Edr container is:
+     DETAIL.ASS_CBD.CP.ZONE_ENTRY_NAME
+
+========================================================================================
+
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+========================================================================================
+
+Actual Version : v4-30-07 / Date : 15-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42843 Use String references. Use faster split function.
+
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 02-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42574 Added LERG Support. Set new EDR-C fields for GeoModel-Id and RuleSet.
+            Those will be used by following iRules/iScript for LERG zoning.
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 22-Nov-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+PETS #41102 Use modelTypeAsString and ratePlanAsString ... from DAT_Rateplan to
+            avoid temp. BAS_String creation.
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 20-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #38377 Segmentation fault removed that occured under certain
+              circumstances
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 16-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #36559 SourcePro AIX port
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 23-Jul-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #37339 Customer rating bugs.
+Check if rateplan-code/-id is correctly set and add error if not.
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 06-Jul-2001
+----------------
+
+New Features   :
+----------------
+
+PETS #36559 SourcePro Port.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 13-Jun-2001
+----------------
+
+New Features   :
+----------------
+
+- Support of new EDR-C v4-30.
+- Read RATEPLAN_CODE or RATEPLAN and fill corresponding fields.
+- Work on List of RATEPLAN_CODEs supplied by FCT_CustomerRating
+- Calculate IMPACT_CATEGORY only for "default" (last) Rateplan.
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 27-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+This version works only with DAT_Zone v4-10-00 or higher.
+
+========================================================================================
+
+Actual Version : v4-03-03 / Date : 05-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+Modified for new EDR recycler interface.
+
+========================================================================================
+
+Actual Version : v4-03-02 / Date : 22-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+Added recycler support.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Ported to AIX.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-02 / Date : 23-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Fill new ChargePacket fields (Sol42 v3) TARIFF_SERVICE_CODE and 
+TARIFF_SERVICE_CLASS with values.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 29-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Support EDR_Container-vector.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 04-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Support new EDR-C v4.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-03 / Date : 18-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+Conversion of zone-values not necessary due to changes in DAT_Zone plugin.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-02 / Date : 26-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Use EDR_ChargePacket iNumZone fields for calculating zone values. This will be
+usedful for IC-Rating because in-, transit and outroute packets may have 
+differing origin and destination numbers.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-01 / Date : 21-OCT-1999
+----------------
+
+Notes          :
+----------------
+
+21-OCT-1999  Updated isUsable() function with log-messages
+             to fit the requirements.
+
+
+New Features   :
+----------------
+
+14-OCT-1999  Implementation of isUsable() function.
+
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

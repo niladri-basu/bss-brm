@@ -1,0 +1,666 @@
+<Opcode
+		name="PCM_OP_AR_ITEM_ADJUSTMENT"
+		visibility="public"
+		transaction="required"
+		component="fm_ar"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc>
+        <!--h:p>
+            <h:i>      
+           Copyright &#169; 2008,2009, Oracle. All rights reserved.
+           This material is the confidential property of Oracle Corporation or
+           its licensors and may be used, reproduced, stored or transmitted 
+           only in accordance with a valid Oracle license or sublicense agreement.
+        </h:i>
+        </h:p-->
+
+        This opcode makes adjustment against an item's deferred or due amount. <h:p/>
+        Following are the ways that an item will be adjusted:
+        <h:ol>
+            <h:li> The
+                item adjustment amount must be specified. The amount can be a
+                positive or a negative number. A negative amount debits an item
+                while a positive amount credits it. The amount will be converted
+                to the account's primary currency for the adjustment.</h:li>
+			<h:li> If a back date is specified, it must be on or after the
+                account and the general ledger (GL) posting date. </h:li>
+			<h:li> The adjustment process involves closing the bill with the
+                item's bill-info, creating adjustment item per usage amount and
+                taxes, analysis usage (act_usage) for balance impacts, record
+                events, and finally transfer the adjusted amount and taxes.
+                Caller can also explicitly specified an adjustment item to avoid
+                the opcode from creating one.</h:li>
+			<h:li> If item is open or closed, the opcode will process the cycle
+                tax (if any). If the item is depending, the opcode will process
+                the real-time tax (if any) when the PIN_AR_WITH_TAX flag is
+                specified.</h:li>
+		</h:ol>
+		<h:p/> Notes on tax treatment: <h:ol>
+            <h:li> The opcode reads the tax flag from optional field
+                PIN_FLD_FLAGS specified in the input flist. If the value of the
+                flag is PIN_AR_WITH_TAX then tax is calculated on the amount
+                specified in the input flist. If the value of the field is
+                PIN_AR_WITHOUT_TAX then only the amount specified in the input
+                flist is adjusted. </h:li>
+			<h:li> If the PIN_FLD_FLAGS optional field is not specified in the
+                input flist then the system's default tax behavior
+                (PIN_AR_WITH_TAX) is used. This setting is specified in the
+                cm pin.conf as follows: <h:ul>
+                    <h:li> - fm_ar tax_reversal_with_tax 1 #for without tax</h:li>
+					<h:li>- fm_ar tax_reversal_with_tax 2 #for with tax </h:li>
+				</h:ul>
+			</h:li>
+		</h:ol>
+		<h:p/> Notes on the opcode flags: <h:ol>
+            <h:li>When the flags include the PCM_OPFLG_CALC_ONLY flag , the
+                opcode will skip creating an adjustment item, transferring the
+                adjustment amount, and writing the modified item object fields
+                to the database. But the fields that would have been used to
+                create the event object are returned to the caller on the output
+                flist.</h:li>
+			<h:li>When the flags include the PCM_TRANS_OPEN_LOCK_OBJ flag, a
+                transaction will be opened to lock the item object.</h:li>
+			<h:li> When the flags include the PCM_OPFLG_READ_RESULT flag, all
+                the fields in the event object are returned on the output flist,
+                not just the poid.</h:li>
+		</h:ol>
+		<h:p/> Notes on the alternation to the opcode input flist: <h:ol>
+            <h:li>The opcode will add a PIN_FLD_BILLINFO_OBJ field and a
+                PIN_FLD_BAL_GRP_OBJ field.</h:li>
+			<h:li>The opcode will alter the PIN_FLD_AMOUNT and PIN_FLD_CURRENCY
+                fields and backup the values in the IN_FLD_AMOUNT_ORIG and
+                PIN_FLD_RESOURCE_ID_ORIG fields</h:li>
+			<h:li>The opcode will set the PIN_FLD_FLAGS field if it is not
+                provided with the tax_reversal_with_tax pin.conf configuration
+                value. The default value is PIN_AR_WITH_TAX.</h:li>
+		</h:ol>
+		<h:p/> One of the following opcode operation description messages can be returned to the caller: 
+        <h:ul>
+            <h:li>Adjustment not allowed since backdate is before account effective_t.</h:li>
+			<h:li>Adjustment not allowed since backdate is before GL posting date.</h:li>
+			<h:li>Item is tax only item and can't adjust it.</h:li>
+		</h:ul>
+		<h:p/>The PIN_ERRCLASS_SYSTEM_DETERMINATE error buffer returned (if any)  can be one of  the following:
+        <h:ul>
+            <h:li>PIN_ERR_BAD_OPCODE</h:li>
+			<h:li>PIN_ERR_VALIDATE_ADJUSTMENT</h:li>
+			<h:li>PIN_ERR_BAD_VALUE</h:li>
+		</h:ul>
+	</Doc>
+
+	<Policies>
+		<Policy
+				opRef="op://fm_bill_pol/PCM_OP_BILL_POL_VALID_ADJUSTMENT">
+			<Doc>Call the policy to validate the adjustment.</Doc>
+		</Policy>
+	</Policies>
+	<Events>
+		<Event
+				objRef="obj://event.item.adjustment">
+			<Doc>PIN_OBJ_TYPE_EVENT_ITEM_ADJUSTMENT </Doc>
+		</Event>
+		<Event
+				objRef="obj://event.tax.adjustment">
+			<Doc>PIN_OBJ_TYPE_TAX_EVENT_ADJUSTMENT</Doc>
+		</Event>
+	</Events>
+	<SeeAlso>
+		<Item
+				href="obj://item">
+			<Doc>Adjustment Item.</Doc>
+		</Item>
+		<Item
+				href="op://fm_bill/PCM_OP_BILL_TAX_EVENT">
+			<Doc>Use this opcode to compute the taxes.
+                The main opcode flags are passed to this opcode.</Doc>
+		</Item>
+		<Item
+				href="op://fm_act/PCM_OP_ACT_USAGE">
+			<Doc>Use this opcode to create change item events.
+                The main opcode flags are passed to this opcode.</Doc>
+		</Item>
+		<Item
+				href="op://fm_bill_utils/fm_utils_trans_open">
+			<Doc>This opcode opens a transaction with the opcode flags.</Doc>
+		</Item>
+		<Item
+				href="file://pin_flds.h">
+			<Doc>The C Header file contains the PIN_FLD definitions.
+                The C++ Header file is PinFlds.h</Doc>
+		</Item>
+		<Item
+				href="file://pcm_ops.h">
+			<Doc>The Header file contains the PCM_OP definitions.</Doc>
+		</Item>
+		<Item
+				href="file://pcm.h">
+			<Doc>The Header file contains the opcode flags OPFLG definitions.</Doc>
+		</Item>
+		<Item
+				href="file://pin_bill.h">
+			<Doc>The Header file contains PIN_BILL, PIN_EVENT and
+               tax flags definitions.</Doc>
+		</Item>
+		<Item
+				href="http://www.portal.com">
+			<Doc>Visit Portal web site for additional information.</Doc>
+		</Item>
+	</SeeAlso>
+
+
+	<Input>
+		<Fields>
+			<Poid
+					name="PIN_FLD_POID"
+					use="required"
+					mode="complete">
+				<Doc>Poid of the Item object to be adjusted.</Doc>
+				<ClassRef>obj://item</ClassRef>
+			</Poid>
+			<Decimal
+					name="PIN_FLD_AMOUNT"
+					use="required">
+				<Doc> Amount of the adjustment. This amount will be converted
+                    using the primary currency.</Doc>
+			</Decimal>
+			<Int
+					name="PIN_FLD_CURRENCY"
+					use="optional">
+				<Doc> Currency associated with the Amount.</Doc>
+			</Int>
+			<String
+					name="PIN_FLD_DESCR"
+					use="optional"
+					maxlen="255">
+				<Doc> Text from the caller application to describe the
+                    adjustment.</Doc>
+			</String>
+			<String
+					name="PIN_FLD_PROGRAM_NAME"
+					use="required"
+					maxlen="60">
+				<Doc> A name that identifies calling program.</Doc>
+			</String>
+			<Timestamp
+					name="PIN_FLD_START_T"
+					use="optional">
+				<Doc> The start time stamp (in Portal format) of the
+                Event.</Doc>
+			</Timestamp>
+			<Timestamp
+					name="PIN_FLD_END_T"
+					use="optional">
+				<Doc> The Back-dated time stamp (in Portal format) of the Event.
+                    This time stamp must be equal or after the account's
+                    effective time and the GL posting time.</Doc>
+			</Timestamp>
+			<Decimal
+					name="PIN_FLD_AMOUNT_ORIG"
+					use="optional">
+				<Doc> Original Amount of adjustment.</Doc>
+			</Decimal>
+			<Int
+					name="PIN_FLD_RESOURCE_ID_ORIG"
+					use="optional">
+				<Doc> Currency associated with Original Amount.</Doc>
+			</Int>
+			<Int
+					name="PIN_FLD_STR_VERSION"
+					use="optional">
+				<Doc> String version of the Debit or Credit Reason Code.</Doc>
+			</Int>
+			<Int
+					name="PIN_FLD_STRING_ID"
+					use="optional">
+				<Doc> String ID of the Debit or Credit Reason Code.</Doc>
+			</Int>
+			<Poid
+					name="PIN_FLD_ITEM_OBJ"
+					use="optional"
+					mode="complete">
+				<Doc> Optional adjustment Item object. If this object is
+                    provided, the opcode will use this adjustment instead of
+                    creating one.</Doc>
+				<ClassRef>obj://item</ClassRef>
+			</Poid>
+			<Int
+					name="PIN_FLD_FLAGS"
+					use="optional">
+				<Doc> Optional flag for tax treatment. The value can either be
+                    PIN_AR_WITH_TAX or PIN_AR_WITHOUT_TAX. If not provided, it
+                    will be updated with the tax_reversal_with_tax pib.conf
+                    configuration value. The default value is PIN_AR_WITH_TAX.
+                </Doc>
+			</Int>
+		</Fields>
+	</Input>
+
+	<Output>
+		<Fields>
+			<Poid
+					name="PIN_FLD_POID"
+					use="required"
+					mode="complete">
+				<Doc>The item object adjusted.</Doc>
+				<ClassRef>obj://item</ClassRef>
+			</Poid>
+	<Enum name="PIN_FLD_RESULT" use="required">
+		<Doc> Result of the operation.
+			Following are the values: <h:p/>
+			Calculated as a	bitwise	OR operation of	1 with any of the
+			following values:
+			<h:ul>
+				<h:li>PIN_VALID_ITEM_STATUS_PENDING 0x02</h:li>
+				<h:li>PIN_VALID_ITEM_STATUS_CLOSED 0x04</h:li>
+				<h:li>PIN_VALID_ITEM_NO_TOTAL 0x08</h:li>
+				<h:li>PIN_VALID_ITEM_NOT_IN_DISPUTE 0x10</h:li>
+			</h:ul>
+			Considering that a given item can be either pending or closed,
+			we will	arrive at the following	values:
+			<h:ul>
+				<h:li>3	- Item is pending.</h:li>
+				<h:li>5	- Item is closed.</h:li>
+				<h:li>9	- Item has no total.</h:li>
+				<h:li>11 - Item	is pending with	no total.</h:li>
+				<h:li>13 - Item	is closed with no total.</h:li>
+			</h:ul>
+			Given the item is open the value will be:
+			<h:ul>
+				<h:li>1	- Item is open.</h:li>
+			</h:ul>
+			In case	of failure the value will be:
+			<h:ul>
+				<h:li>0	-PIN_RESULT_FAIL .</h:li>
+			</h:ul>
+		</Doc>
+			<Values>
+				<Value>3</Value>
+				<Doc>Item is pending.</Doc>
+			</Values>
+			<Values>
+				<Value>5</Value>
+				<Doc>Item is closed.</Doc>
+			</Values>
+			<Values>
+				<Value>9</Value>
+				<Doc>Item has no total.</Doc>
+			</Values>
+			<Values>
+				<Value>11</Value>
+				<Doc>Item is pending with no total.</Doc>
+			</Values>
+			<Values>
+				<Value>13</Value>
+				<Doc>Item is closed with no total.</Doc>
+			</Values>
+			<Values>
+				<Value>1</Value>
+				<Doc>Item is open.</Doc>
+			</Values>
+			<Values>
+				<Value>0</Value>
+				<Doc>PIN_RESULT_FAIL</Doc>
+			</Values>
+        </Enum>
+			<String
+					name="PIN_FLD_DESCR"
+					use="required"
+					maxlen="255">
+				<Doc> Text to the caller application to describe the opcode
+                    results. It may be sent on success as well as failure.</Doc>
+			</String>
+			<Array name="PIN_FLD_RESULTS" use="optional"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="0"
+					minElemId="0"
+					isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+					isRecursive="false">
+				<Doc> Array of results information.  two elements will be returned,
+ first is the adjustment event, second is   the transfer event
+ Additional event object fields are added to the return flist here. If the
+ PCM_OPFLG_READ_RESULT flag is set for the operation, all the fields in
+ the event object are returned on the output flist, not just the poid.
+ If the PCM_OPFLG_CALC_ONLY flag is set, no fields in the database are
+ changed and the event object is not actually created, but the fields
+ that would have been used to create the event object are returned
+ to the caller on the output flist.
+</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_POID" use="required" mode="complete">
+						<Doc>Poid of the event object created for filing this adjustment or transfer event</Doc>
+
+						<ClassRef>obj://event</ClassRef>
+					</Poid>
+					<Array name="PIN_FLD_BAL_IMPACTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>Event balance impacts</Doc>
+						<Fields>
+							<Enum name="PIN_FLD_IMPACT_TYPE" use="optional">
+								<Doc>Impact type.Indicates the impact type of the event.</Doc>
+								<Values>
+									<Value>1</Value>
+									<Doc>PIN_IMPACT_TYPE_RATED</Doc>
+								</Values>
+								<Values>
+									<Value>2</Value>
+									<Doc>PIN_IMPACT_TYPE_PRERATED</Doc>
+								</Values>
+								<Values>
+									<Value>4</Value>
+									<Doc>PIN_IMPACT_TYPE_TAX</Doc>
+								</Values>
+								<Values>
+									<Value>8</Value>
+									<Doc>PIN_IMPACT_TYPE_PO</Doc>
+								</Values>
+								<Values>
+									<Value>16</Value>
+									<Doc>PIN_IMPACT_TYPE_TOLERANCE</Doc>
+								</Values>
+								<Values>
+									<Value>32</Value>
+									<Doc>PIN_IMPACT_TYPE_RERATED</Doc>
+								</Values>
+								<Values>
+									<Value>64</Value>
+									<Doc>PIN_IMPACT_TYPE_RERATED_TAX</Doc>
+								</Values>
+								<Values>
+									<Value>128</Value>
+									<Doc>PIN_IMPACT_TYPE_DISCOUNT</Doc>
+								</Values>
+								<Values>
+									<Value>256</Value>
+									<Doc>PIN_IMPACT_TYPE_DISCOUNT_RERATED</Doc>
+								</Values>
+								<Values>
+									<Value>258</Value>
+									<Doc>PIN_IMPACT_TYPE_INTEGRATE_PRERATED</Doc>
+								</Values>
+								<Values>
+									<Value>288</Value>
+									<Doc>PIN_IMPACT_TYPE_INTEGRATE_RERATED</Doc>
+								</Values>
+								<Values>
+									<Value>512</Value>
+									<Doc>PIN_IMPACT_TYPE_SHARING</Doc>
+								</Values>
+								<Values>
+									<Value>1024</Value>
+									<Doc>PIN_IMPACT_TYPE_SHARING_RERATED</Doc>
+								</Values>
+							</Enum>
+							<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+								<Doc>Numeric value of the resource that is impacted.</Doc>
+							</Int>
+							<Int name="PIN_FLD_RESOURCE_ID_ORIG" use="optional">
+								<Doc> Currency associated with original amount.</Doc>
+							</Int>
+							<String name="PIN_FLD_TAX_CODE" use="optional"
+									maxlen="255">
+								<Doc>Tax code for this particular rate.</Doc>
+							</String>
+							<String name="PIN_FLD_RATE_TAG" use="optional"
+									maxlen="255">
+								<Doc>Rate Tag.</Doc>
+							</String>
+							<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+									mode="complete">
+								<Doc>Account object we are logging this balance impact against.</Doc>
+								<ClassRef>obj://account</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_ITEM_OBJ" use="optional"
+									mode="complete">
+								<Doc>Item object we are logging this balance impact against.</Doc>
+								<ClassRef>obj://item</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_RATE_OBJ" use="optional"
+									mode="complete">
+								<Doc>Rate object that was used to generate this balance impact for rated events.</Doc>
+								<ClassRef>obj://rate</ClassRef>
+							</Poid>
+							<Decimal name="PIN_FLD_DISCOUNT" use="optional">
+								<Doc>Discount amount applied for this balance impact.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_PERCENT" use="optional">
+								<Doc>Adjustment percent</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_QUANTITY" use="optional">
+								<Doc>Quantity applied - "units" that were actually applied using this rate.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_AMOUNT_DEFERRED" use="optional">
+								<Doc>Tax deffered amount.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_AMOUNT" use="optional">
+								<Doc>Amount of adjustment</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_AMOUNT_ORIG" use="optional">
+								<Doc>Original amount of adjustment</Doc>
+							</Decimal>
+							<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+									mode="complete">
+								<Doc>Balance group poid.</Doc>
+								<ClassRef>obj://balance_group</ClassRef>
+							</Poid>
+							<Int name="PIN_FLD_GL_ID" use="optional">
+								<Doc>General Ledger ID associated with this balance impact</Doc>
+							</Int>
+							<String
+									name="PIN_FLD_IMPACT_CATEGORY"
+									use="optional">
+								<Doc>Impact category.</Doc>
+							</String>
+							<String
+									name="PIN_FLD_LINEAGE"
+									use="optional">
+								<Doc> Lineage of event attributes, will be recordedin the event balance impact array,   can only be specified if PIN_FLD_RATE_PLAN_NAME is specified.</Doc>
+							</String>
+							<Poid
+									name="PIN_FLD_OFFERING_OBJ"
+									use="optional"
+									mode="complete">
+								<Doc>poid of the purchased product</Doc>
+							</Poid>
+							<Poid
+									name="PIN_FLD_PRODUCT_OBJ"
+									use="optional"
+									mode="complete">
+								<Doc>In case of discount balance impact Discount Object</Doc>
+								<ClassRef>obj://product</ClassRef>
+							</Poid>
+							<Int
+									name="PIN_FLD_RUM_ID"
+									use="optional">
+								<Doc>RUM id</Doc>
+							</Int>
+							<String
+									name="PIN_FLD_DISCOUNT_INFO"
+									use="optional">
+								<Doc>Discount information</Doc>
+							</String>
+						</Fields>
+					</Array>
+					<Array name="PIN_FLD_SUB_BAL_IMPACTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>Sub Balance Imapcts</Doc>
+						<Fields>
+							<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+									mode="complete">
+								<Doc>Balance group poid</Doc>
+								<ClassRef>obj://balance_group</ClassRef>
+							</Poid>
+							<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+								<Doc> Currency associated with original amount.</Doc>
+							</Int>
+							<Array name="PIN_FLD_SUB_BALANCES" use="optional"
+									elemIdMode="ignored" iterationOrder="undefined"
+									minElements="0"
+									minElemId="0"
+									isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+									isRecursive="false">
+								<Doc>Sub balance element adjusted.</Doc>
+								<Fields>
+									<Decimal name="PIN_FLD_AMOUNT" use="optional">
+										<Doc> Amount of adjustment.</Doc>
+									</Decimal>
+									<Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+										<Doc>Start date of this validity based balance.</Doc>
+									</Timestamp>
+									<Timestamp name="PIN_FLD_VALID_TO" use="optional">
+										<Doc>The end date of this validity based balance.</Doc>
+									</Timestamp>
+									<String name="PIN_FLD_CONTRIBUTOR_STR" use="optional"
+											maxlen="256">
+										<Doc>The contributor for this sub-balance.</Doc>
+									</String>
+									<Int name="PIN_FLD_ROLLOVER_DATA" use="optional">
+										<Doc>Rollover information for sub-balance.</Doc>
+									</Int>
+									<Int name="PIN_FLD_VALID_FROM_DETAILS" use="optional">
+										<Doc>Detail of field PIN_FLD_VALID_FROM mode, offset and unit.</Doc>
+									</Int>
+									<Int name="PIN_FLD_VALID_TO_DETAILS" use="optional">
+										<Doc>Detail of field PIN_FLD_VALID_TO mode, offset and unit.</Doc>
+									</Int>
+									<Poid name="PIN_FLD_GRANTOR_OBJ" use="optional"
+											mode="complete">
+										<Doc>Poid of the grantor.</Doc>
+										<ClassRef>obj://purchased_product</ClassRef>
+										<ClassRef>obj://purchased_discount</ClassRef>
+										<ClassRef>obj://product</ClassRef>
+									</Poid>
+								</Fields>
+							</Array>
+						</Fields>
+					</Array>
+					<Array name="PIN_FLD_TOTAL" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>Total balance impact per resource</Doc>
+						<Fields>
+							<Decimal name="PIN_FLD_AMOUNT" use="required">
+								<Doc>Amount</Doc>
+							</Decimal>
+						</Fields>
+					</Array>
+					<Array name="PIN_FLD_RUM_MAP" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>RUM MAP - RUM MAPs used for rating the event in multirum rating.</Doc>
+						<Fields>
+							<Decimal name="PIN_FLD_NET_QUANTITY" use="required">
+								<Doc>Net quantity applied for rating</Doc>
+							</Decimal>
+							<String name="PIN_FLD_RUM_NAME" use="required">
+								<Doc>Name of the RUM</Doc>
+							</String>
+							<Decimal name="PIN_FLD_UNRATED_QUANTITY" use="required">
+								<Doc>Quantity which has not been rated, for the RUM</Doc>
+							</Decimal>
+						</Fields>
+					</Array>
+					<Decimal name="PIN_FLD_UNRATED_QUANTITY" use="optional">
+						<Doc>Quantity which has not been rated, in single RUM case</Doc>
+					</Decimal>
+					<Poid name="PIN_FLD_SERVICE_OBJ" use="optional" mode="complete">
+						<Doc> Service object initiating session</Doc>
+						<ClassRef>obj://service</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+						<Doc>Account object for which the session to be created</Doc>
+						<ClassRef>obj://account</ClassRef>
+					</Poid>
+					<Enum name="PIN_FLD_RATING_STATUS" use="optional">
+						<Doc>Status of Rating result. Either success or reason for failure</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>SUCCESSFUL_RATING</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>ZERO_QUANTITY</Doc>
+						</Values>
+						<Values>
+							<Value>10</Value>
+							<Doc>NO_SCALE_TO_RATE</Doc>
+						</Values>
+						<Values>
+							<Value>11</Value>
+							<Doc>NO_CANDIDATE_RUMS</Doc>
+						</Values>
+						<Values>
+							<Value>12</Value>
+							<Doc>NO_INITIAL_PRODUCTS</Doc>
+						</Values>
+						<Values>
+							<Value>13</Value>
+							<Doc>PRIMARY_PRODUCT_NOT_IN_DB</Doc>
+						</Values>
+						<Values>
+							<Value>14</Value>
+							<Doc>NO_PRODUCT_IN_AUDIT_DB</Doc>
+						</Values>
+						<Values>
+							<Value>15</Value>
+							<Doc>CALC_MAX_IN_MULTI_RUM</Doc>
+						</Values>
+						<Values>
+							<Value>16</Value>
+							<Doc>NO_MATCHING_RUM</Doc>
+						</Values>
+						<Values>
+							<Value>17</Value>
+							<Doc>NO_QUALIFIED_PRODUCTS</Doc>
+						</Values>
+						<Values>
+							<Value>18</Value>
+							<Doc>NO_RUM</Doc>
+						</Values>
+						<Values>
+							<Value>19</Value>
+							<Doc>STATUS_MISMATCH</Doc>
+						</Values>
+						<Values>
+							<Value>20</Value>
+							<Doc>NO_RATE_PLAN</Doc>
+						</Values>
+						<Values>
+							<Value>21</Value>
+							<Doc>NO_MATCHING_SELECTOR_DATA</Doc>
+						</Values>
+						<Values>
+							<Value>22</Value>
+							<Doc>NO_MATCHING_IMPACT_CATEGORY</Doc>
+						</Values>
+						<Values>
+							<Value>23</Value>
+							<Doc>NO_RATING_CURRENCY</Doc>
+						</Values>
+						<Values>
+							<Value>24</Value>
+							<Doc>CREDIT_LIMIT_EXCEEDED</Doc>
+						</Values>
+					</Enum>
+					<Substruct name="PIN_FLD_CYCLE_INFO" use="optional" isRecursive="false">
+						<Doc>Cycle Information substruct</Doc>
+						<Fields>
+							<Timestamp name="PIN_FLD_CYCLE_START_T" use="required">
+								<Doc> Indicates the cycle start time if the event is a cycle event. </Doc>
+							</Timestamp>
+							<Timestamp name="PIN_FLD_CYCLE_END_T" use="required">
+								<Doc> Indicates the cycle end time if the event is a cycle event. </Doc>
+							</Timestamp>
+							<Int name="PIN_FLD_FLAGS" use="required">
+								<Doc>Cycle flags</Doc>
+							</Int>
+							<Decimal name="PIN_FLD_SCALE" use="required">
+								<Doc> scale for proration </Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_ORIGINAL_SCALE" use="required">
+								<Doc> Original scale for proration. Relative to PIN_FLD_SCALE </Doc>
+							</Decimal>
+						</Fields>
+					</Substruct>
+				</Fields>
+			</Array>
+		</Fields>
+	</Output>
+</Opcode>
+

@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+#       @(#) % %
+#
+# Copyright (c) 1996, 2011, Oracle and/or its affiliates. All rights reserved. 
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+
+VERSION=7.5
+PATH=/usr/bin:/bin:${PATH}
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/var/portal
+
+START_LIST="dm_oracle dm_oracle_rel dm_aq dm_ifw_sync dm_eai cm cmmp cm_rel_pre cm_rel_post formatter eai_js"
+
+if [ -d ${LOGDIR} ]; then
+        for d in ${START_LIST} ; do
+                if [ -f "${LOGDIR}/${d}/${d}.log" ]; then
+                        any="y"
+                fi
+                if [ -f "${LOGDIR}/${d}/${d}.pinlog" ]; then
+                        any="y"
+                fi
+        done
+fi
+
+
+#if [ "${any}" ]; then
+#        echo "do you wish to remove the log and pinlog files?" | tr '\n' ' '
+#        read ans
+#        case ${ans} in
+#        y|Y)    echo "removing old log files..." | tr '\n' ' '
+#                rm -rf ${LOGDIR}/*/*log*
+#                echo "done"
+#                ;;
+#        n|N)    echo "leaving log files alone"
+#                ;;
+#        q|Q)    exit 0
+#                ;;
+#        *)     echo "eh? [y/n/q]"
+#                exit 0
+#                ;;
+#        esac
+#fi
+
+for d in ${START_LIST} ; do
+	if [ -f "${PINDIR}/bin/start_${d}" ];then
+		( cd ${PINDIR}/bin ; ./start_${d} )
+	fi
+done
+
+# get rc from cm startup
+exit $?

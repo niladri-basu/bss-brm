@@ -1,0 +1,44 @@
+//==============================================================================
+//
+// Copyright (c) 1998, 2011, Oracle and/or its affiliates. 
+// All rights reserved. 
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//
+// Block: IRL_RecordTypeSplitting.irl
+//
+// Module Description:
+//   This module assigns StreamNames to an edr according to the field
+//   DETAIL.ASS_CI.PRODUCT which represents the event-type.
+//
+//   Attention: the rulesets within the ".data"-file
+//   have to be used in a well defined order, to avoid
+//   that one rules overrides another if this is not
+//   wanted!
+//
+//==============================================================================
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+// Responsible: Shinto Thomas
+//
+//==============================================================================
+
+RULE: RecordTypeSplitting
+SOURCE: File
+FILE: ./TD/iScript_custom/IRL_RecordTypeSplitting.data
+
+INIT_SCRIPT:
+
+CONDITION:
+edrString(DETAIL.ASS_CI.PRODUCT) =~ "${1}";
+
+RESULT:
+edrSetStream("${2}");

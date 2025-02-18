@@ -1,0 +1,157 @@
+//==============================================================================
+//
+//      Copyright (c) 2008 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+
+//------------------------------------------------------------------------------
+// Block: ISC_ProfileLabel
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module gets the profile label for the profile mentined in the registry
+//   when the era value of that profile matches the B_Number and is valid for the 
+//   event time. The label is then set into the EDR container in the field 
+//   DETAIL.PROFILE_LABEL_LIST
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible:  Prasad
+//------------------------------------------------------------------------------
+
+
+//==============================================================================
+// include libraries
+//==============================================================================
+
+/* @(#)% % */
+
+// include the Profile Label interface
+use IXT_ProfileLabel;
+
+Bool debug;
+String compProfName;
+String LabelSeparator;
+
+
+
+//==============================================================================
+// Registry Variables
+//==============================================================================
+
+//==============================================================================
+// BEGIN Container
+//==============================================================================
+function BEGIN
+{
+  debug = false;
+
+  compProfName = regString(registryNodeName() + ".ProfileName");
+
+  //Check for all manadatory registry entries and throw a major error if it is not set properly.
+  if(strLength(compProfName)==0)
+  {
+    logPipeline("ERROR: ProfileName is not configured in the registry",3);
+    scriptUsable( false ); 
+  }
+  
+ // Check for the optional registry entries.Use the default value if its not specified.  
+ LabelSeparator = ",";
+ if(strLength(reg.LabelSeparator)!=0)
+ {
+   LabelSeparator = reg.LabelSeparator;
+ }
+
+  //----------------------------------------------------------------------------
+  // Connect the extension with the DAT_Account plugin
+  //----------------------------------------------------------------------------
+  if (setDAT_AccountModule("ifw.DataPool.CustomerData.Module") == true )
+  {
+    logPipeline( "INFO: Account Module set \n" );
+  }
+  else
+  {
+    logPipeline( "ERROR: Could not set Account Module \n" );
+  }
+}
+  
+
+//==============================================================================
+// Function declarations
+//==============================================================================
+
+function onDetailEdr
+{
+ //---------------------------------------------
+ // Retrive the INTERN_FOUND_PP_INDEX
+ //---------------------------------------------
+ Long pIndex = edrLong(DETAIL.CUST_A.INTERN_FOUND_PP_INDEX,0);
+   
+ //-----------------------------------------
+ //Retrieves the account id 
+ //-------------------------------------------
+ String account = edrString(DETAIL.CUST_A.ACCOUNT_PARENT_ID,0);
+ String ListArray[]; 
+ strSplit( ListArray, account, "_" ); 
+ Long accountId = strToLong(ListArray[1]);
+
+ //-----------------------------------------
+ //Retrieves the service id 
+ //-------------------------------------------
+ String service = edrString(DETAIL.CUST_A.PRODUCT.SERVICE_ID,0,pIndex);
+ strSplit( ListArray, service, "_" ); 
+ Long serviceId = strToLong(ListArray[1]);
+
+ //-----------------------------------------
+ //Retrieves the era to match
+ //-------------------------------------------
+ String eraToMatch = edrString(DETAIL.B_NUMBER);
+
+ Long utcOffset = 0;
+ Long tmpOffset = strToLong(edrString(DETAIL.UTC_TIME_OFFSET));
+
+ Long hours = 0;
+ Long minutes = 0;
+
+ if ( tmpOffset >= 0 )
+ {
+   hours  = tmpOffset / 100;
+   minutes = tmpOffset % 100;
+   utcOffset = hours * 3600 + minutes * 60;
+ }
+ else
+ {
+   hours   = (-tmpOffset) / 100;
+   minutes = (-tmpOffset) % 100;
+   utcOffset = -(hours * 3600 + minutes * 60);
+ } 
+   
+ String ProfLabelList;
+
+ //-----------------------------------------
+ //Calling the method to retrive the label list
+ //-------------------------------------------
+ Bool eraFound = getProfileLabel(accountId, serviceId,
+                                 compProfName,eraToMatch,LabelSeparator, 
+                                 edrDate(DETAIL.CHARGING_START_TIMESTAMP), utcOffset, ProfLabelList);
+
+ //-----------------------------------------
+ // Set the EDR container field DETAIL.PROFILE_LABEL_LIST
+ //-------------------------------------------
+  edrString(DETAIL.PROFILE_LABEL_LIST) = ProfLabelList;
+
+
+ // Customized code may be written below for setting for other EDR container fields if needed.
+ // for example for Friends and Family profiles the usage_type can be set to FF.
+ if(compProfName == "FRIENDS_FAMILY" and eraFound == true)
+ {
+   edrString(DETAIL.USAGE_TYPE) = "FF";
+ }
+} // end onDetailEdr + end iScript

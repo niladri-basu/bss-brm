@@ -1,0 +1,14 @@
+select a.ACCOUNT_NO as ACCOUNT_NO,b.BILL_INFO_ID as BILL_INFO_ID,b.ACTG_CYCLE_DOM as BILL_CYCLE,st.NAME as MSISDN,dt.NAME as DISCOUNT_NAME,pd.CYCLE_START_T as PRD_START_DATE,pd.STATUS as pd_STATUS ,pd.CYCLE_END_T as PRODUCT_END,b.LAST_BILL_T as LAST_BILL_DATE,b.NEXT_BILL_T as NEXT_BILL_DATE,a.POID_ID0 as ACCOUNT_POID,b.POID_ID0 as BILL_INFO_POID,pd.POID_ID0 as PURCHASE_PRD_POID,s.POID_ID0 as SERVICE_POID,pd.POID_ID0 as DISCOUNT_POID,pd.NODE_LOCATION as PRD_NODE_LOCATION,du.discount_model as DISCOUNT_MODEL
+from
+ACCOUNT_T a,SERVICE_ALIAS_LIST_T st,PURCHASED_DISCOUNT_T pd,SERVICE_T s,DISCOUNT_T dt,BILLINFO_T b,BAL_GRP_T bg,DISCOUNT_USAGE_MAP_T du
+where
+s.poid_id0=pd.service_obj_id0 
+and s.account_obj_id0=a.poid_id0
+and s.poid_id0=st.obj_id0
+--and a.poid_id0=1684946016
+and pd.discount_obj_id0=dt.poid_id0
+and s.bal_grp_obj_id0=bg.poid_id0
+and bg.billinfo_obj_id0=b.poid_id0
+and dt.poid_id0=du.obj_id0
+and pd.created_t >= td_nz_to_unix(TRUNC(SYSDATE-10)) 
+and pd.created_t < td_nz_to_unix(TRUNC(SYSDATE));

@@ -1,0 +1,167 @@
+========================================================================================
+FCT_IScript
+----------------------------------------------------------------------------------------
+Module Release Notes 
+========================================================================================
+
+Module Version: 10007  7.5      21-Aug-2013
+Bug 16990087:   iscript reload semaphore is not updating ifw process memory
+
+========================================================================================
+
+Module Version: 10005  6.7_FP2  04-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10004  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+========================================================================================
+
+Module Version: 10003  6.5_FP3  12-Oct-2003
+PRSF00039887:  Apollo - iScript edrDemandRollback, edrDemandCancel functions need to work from iRules 
+
+========================================================================================
+
+Module Version: 10002  6.5_SP2  05-May-2003
+PRSF00039887:   edrDelete() causes core dump.
+
+========================================================================================
+
+Module Version: 10001  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : v6.3.2 / Date : 24-Jul-2002
+----------------
+
+Notes          :
+----------------
+
+PRSF00015055 inexact results on AIX
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 03-Sep-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #37618 in consequence of the code review 08.2001 of the PLG_Base/Framework.
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 05-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #36559 SourcePro AIX Port
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 05-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #36560 - Second iScript in Scripts section is not executed
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 14-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+Changes for the v4-30 framework.
+Customer and license key are no longer needed.
+
+========================================================================================
+
+Actual Version : v4-10-01 / Date : 04-Dec-2000
+----------------
+
+Notes          :
+----------------
+
+Support for new EXT_iScript module.
+
+========================================================================================
+
+Actual Version : v4-06-01 / Date : 26-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+Implementation changed to support the new internal iScript interface.
+
+========================================================================================
+
+Actual Version : v4-05-00 / Date : 08-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+The scripts are checked for usability at startup.
+
+========================================================================================
+
+Actual Version : v4-04-00 / Date : 17-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+Database version check added.
+
+========================================================================================
+
+Actual Version : v4-03-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Implementation changed to support the IBM xlC compiler.
+
+========================================================================================
+
+Actual Version : v4-02-02 / Date : 19-Apr-2000
+----------------
+
+Notes          :
+----------------
+
+Scripts now must have a certification to be compiled.
+
+========================================================================================
+
+Actual Version : v4-01-01 / Date : 31-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+Global constants can be passed directly from the registry to the interpreter.
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 08-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+Initial version of the plugin for executing iScript scripts.
+
+========================================================================================

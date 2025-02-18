@@ -1,0 +1,2 @@
+#!/bin/sh
+/brmapp/portal/ThirdParty/jre/1.6.0/bin/java -cp "/brmapp/portal/7.5/jars/sepa.jar:/brmapp/portal/7.5/jars/pcm.jar:/brmapp/portal/7.5/jars/pcmext.jar:/brmapp/portal/7.5/jars/pfc.jar:/brmapp/portal/7.5/jars/oraclepki.jar:/brmapp/portal/7.5/jars/osdt_cert.jar:/brmapp/portal/7.5/jars/osdt_core.jar:/brmapp/portal/7.5/apps/pin_sepa" sepapp.PinSepaProcess "$@"

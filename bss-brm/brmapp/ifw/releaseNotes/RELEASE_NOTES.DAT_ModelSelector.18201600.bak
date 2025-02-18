@@ -1,0 +1,60 @@
+========================================================================================
+DAT_ModelSelector
+----------------------------------------------------------------------------------------
+Module Release Notes
+----------------------------------------------------------------------------------------
+==============================================================================
+Module Version : 7.4 v10013 
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+==============================================================================
+Module Version: v10012 / Date : 05-Jun-2009
+bug8574244    :"MODIFIED THE RELOAD SEMAPHORE ENTRY"
+Change the argument of reload semaphore
+==============================================================================
+Module Version: v10011 / Date : 06-Nov-2007
+bug6488918    :"P-6281605 PIPELINE CORE DUMP (REFER BUG 6112761)"
+==============================================================================
+Module Version: v10010 / Date : 03-Oct-2007
+bug6454770    :"PIPELINE_7.3.1 AIX: PIPELINE_DISCOUNT BREAKING"
+==============================================================================
+Module Version: v10009 / Date : 04-Apr-2007
+bug5943602    : "PRSF00223082:IMPLEMENT THE DUMP SEMEPHOE FOR DAT_MODELSELECTOR PLUGIN"
+==============================================================================
+Module Version: v10008 / Date : 20-Sep-2006
+PRSF00218810  : "Model Selector: Pipeline gives core dump if an invalid FSM expression is used  in Model Selector Rule."
+==============================================================================
+Module Version: v10007 / Date : 19-Sep-2006
+PRSF00233043  : "System Test: DropCall - the disocunt model is blank when 
+                 using Discount Model Selector"
+==============================================================================
+Module Version: v10006 / Date : 05-Jul-2006
+PRSF00222684  : "Logging of events in the process log for Model Selector Plugin"
+==============================================================================
+Module Version: v10005 / Date : 17-Jun-2006
+PRSF00221779  : "fix build breaker in model selector"
+==============================================================================
+Module Version: v10004 / Date : 16-Jun-2006
+PRSF00219430  : "change the locking mechanism in the model selector engine"
+==============================================================================
+Module Version: v10003 / Date : 08-Jun-2006
+PRSF00201296  : "FT - Model  Selector changes for the tailor made plan"
+==============================================================================
+Module Version: v10002 / Date : 05-Apr-2006
+PRSF00201577   "Model Selector: Pipeline doesn't come up after creating a 
+		new Model Selector Rule."
+==============================================================================
+Module Version: v10001 / Date : 14-Dec-2005
+PRSF00188757  : fixing build error
+==============================================================================
+Module Version: v10000 / Date : 17-Nov-2005
+PRSF00187207  : DAT Model Selector Plugin (Propagation to Davinci) 
+		Added a new plugin (DAT_ModelSelector) for the Model selector
+		feature .
+==============================================================================

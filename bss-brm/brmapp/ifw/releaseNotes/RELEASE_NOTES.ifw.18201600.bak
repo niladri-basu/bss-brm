@@ -1,0 +1,767 @@
+========================================================================================
+IntegRate Framework Release Notes
+=======================================================================================
+Actual Version : 7.4 10110
+Date           : 09-Sep-2011
+
+Notes          :
+----------------
+* bug 12951617 : P-12903093 MPS1 REG : ISSUE STARTING BATCH PIPELINE WITH MPS1 
+======================================================================================
+Actual Version : 7.4 10109
+Date           : 22-Aug-2011
+
+Notes          :
+----------------
+* bug 11815646 : 12738401 P-12634803 EDRTRACE NOT WORKING IN PS8  
+=====================================================================================
+Actual Version : 7.4 10108
+Date           : 28-Jul-2011
+
+Notes          :
+----------------
+* bug 11815646 : P-10434779 PHASE II CHANGES FOR PIPELINE PARALLEL LOADING ECR
+======================================================================================
+Actual Version : 7.5 10107
+Date           : 16-May-2011
+
+
+Notes          :
+----------------
+* Bug 11882202 : P-10349440  INCREASE IN PIPELINE STARTUP TIME - NOW TAKING 12+ HOURS 
+========================================================================================
+Actual Version : 7.4 10106
+Date           : 14-Feb-2011
+
+Notes          :
+----------------
+* bug 11744672 : P-11064701 SEQUENCER IS THROWING AN ERR_DOUBLE_SEQ_NUMBER BUT NO DOUBLE SEQUENCE IS FOUND 
+======================================================================================
+Actual Version : 7.4 10105
+Date           : 14-Dec-2010
+
+Notes          :
+----------------
+* bug 10392926 : BRM UPGRADE: PIPELINE STARTUP GOES NORMAL EVEN AFTER A CRITICAL ERROR
+======================================================================================
+Actual Version : 7.4 10104
+Date           : 25-Oct-2010
+
+Notes          :
+----------------
+* bug 10077369 : PARALLEL LOADING OF PIPELINE
+===================================================================================================
+Actual Version : 7.4 10103
+Date           : 28-Sep-2010
+
+Notes          :
+----------------
+* bug 9893112  : RAPOUT NOT GENERATING PROPERLY IN SOME CASES DURING TAPIN VALIDATION
+===================================================================================================
+Actual Version : 7.4 10102
+Date           : 06-Aug-2010
+
+Notes          :
+----------------
+* bug 9133200  : P-9089869 INTERLEAVING APPROACH CAUSE PIPELINE TO BEHAVE UNUSUAL & DON'T PRO
+===================================================================================================
+Actual Version : 7.4 10101
+Date           : 20-Jul-2010
+
+Notes          :
+----------------
+*bug 9915200   :ICB : BAD FILE NUMBER ERROR IN PIPELINE 
+========================================================================================= 
+Actual Version : 7.4 10100
+Date           : 12-Jul-2010
+
+Notes          :
+----------------
+* bug 9826171  : EDR TRACE SHOULD INDICATE THE INVALID SET CALLS ON THE EDR FIELDS
+========================================================================================
+Actual Version : 7.4 10099
+Date           : 06-Jul-2010
+
+Notes          :
+----------------
+* bug9871778: P-8978856 FRAMEWORK'S IMMEDIATE SHUTDOWN SHOULD GRACEFULLY EXIT 
+* bug9740994: P-9399789 EUB : DB ERRORS WHILE PROCESSING DATA IN BULK FOR ROAMING 
+========================================================================================
+Actual Version : 7.4 10098
+Date           : 05-Feb-2010
+
+Notes          :
+----------------
+* bug9165034   : EM : OUTPUT STAT AVG AND TABLE DATA INCORRECT IN METRICS PAGE
+========================================================================================
+Actual Version : 7.4 10097
+Date           : 27-Apr-2009
+
+Notes          :
+----------------
+* bug8361207   : P-8315252 FAILURE OF SEQUENCE CHECK WHEN DISABLING  "REUSEGAP" ENTRY
+========================================================================================
+Actual Version : 7.4 10096
+Date           : 03-Apr-2009
+
+Notes          :
+----------------
+* bug8361207   : MINOR ISSUES FOUND IN TIMOS LOG FILE
+========================================================================================
+Actual Version : 7.4 10095
+Date           : 24-Oct-2008
+
+Notes          :
+----------------
+* bug6778473   : P-6766421 ERRRO WHILE PASSING STANDARD TAP FILE 
+========================================================================================
+Actual Version : 7.3.2 10094
+Date           : 16-Aug-2008
+
+Notes          :
+----------------
+* bug7333167   : P-6665298 FCT_AGGREGATE DOES NOT RETURN ERROR
+========================================================================================
+Actual Version : 7.3 10093
+Date           : 12-Mar-2008
+
+
+Notes          :
+----------------
+* bug6814665   : PIPELINE CAN NOT BE STOPPED GRACEFULLY WHEN HTTP/SNMP MONITORING IS ACTIVATED. 
+========================================================================================
+Actual Version : 7.3 10092
+Date           : 18-Jul-2006
+
+
+Notes          :
+----------------
+* PRSF00222598: W2A - Pipeline entered in a state where it is not picking up any semaphore update request
+========================================================================================
+Actual Version : 7.3 10091
+Date           : 09-Jun-2006
+
+
+Notes          :
+----------------
+* PRSF00187703: Filename generation for Da Vinci Roaming.
+========================================================================================
+Actual Version : 7.3 10090
+Date           : 07-Apr-2006
+
+
+Notes          :
+----------------
+* PRSF00202074: Sequencer Changes for DaVinci Roaming 
+========================================================================================
+Actual Version : 7.3 10089
+Date           : 31-Jan-2006
+
+
+Notes          :
+----------------
+* PRSF00190907: ifw -v -r registry throws error ERR_CANNOT_JOIN_EVENT_HANDLER_PROC
+========================================================================================
+Actual Version : 7.3 10088
+Date           : 25-Jan-2006
+
+
+Notes          :
+----------------
+* PRSF00190901: Fix TAM message logging + MLK in TAM/IRules (propagation of 156575 + 186125)
+========================================================================================
+Actual Version : 7.2_PATCH 10087
+Date           : 19-Sep-05
+
+
+Notes          :
+----------------
+* PRSF00180924 Abort requested due to unability to write binary log file
+========================================================================================
+Actual Version : 7.2_PATCH 10086
+Date           : 03-Sep-05
+
+
+Notes          :
+----------------
+* PRSF00180856 WINIA + SQL Server : Could not process TAP3 input file
+========================================================================================
+Actual Version : 7.2_PATCH 10085
+Date           : 19-Aug-05
+
+
+Notes          :
+----------------
+* PRSF00177605 WIN+Itanium+SQL:  testnap fails if cm is restarted when pipeline is running.
+========================================================================================
+Actual Version : 7.2_PATCH 10084
+Date           : 16-Aug-05
+
+
+Notes          :
+----------------
+* PRSF00178472  OBS performance enhancements.
+========================================================================================
+Actual Version : 7.2_PATCH 10083
+Date	       : 16-Aug-05
+
+Notes	       :
+----------------
+PRSF00172825   : Rename and ignore update registry (aka semaphore) files
+		 that are present during system startup.
+========================================================================================
+Actual Version : 7.2 10082
+Date	       : 10-Jul-05
+
+Notes	       :
+----------------
+PRSF00174567   : WIN+Itanium+SQL: RE_Pipeline_Velocity nt_ia64: pipeline fails to start
+========================================================================================
+Actual Version : 7.2 10081
+Date           : 28-Jun-05
+
+
+Notes          :
+----------------
+* PRSF00173035 : RW7 and compiler upgrade
+========================================================================================
+Actual Version : 7.2 10080
+Date           : 15-Jun-05
+
+
+Notes          :
+----------------
+XML initialization optimized. 
+========================================================================================
+Actual Version : vVelocity 10079
+Date           : 01-Jun-05
+
+
+Notes          :
+----------------
+* PRSF00170844  TLV grammar couldn't parse strings 10 charaters long.
+========================================================================================
+Actual Version : v6.5 SP1 EBF 10078
+Date           : 02-Mar-05
+
+Notes          :
+----------------
+* PRSF00152469 : EDR_AsnIntegerType::getLong() wasn't handling negative input values
+                 correctly if less that sizeof( long ) bytes were sent.
+========================================================================================
+Actual Version : vVelocity 10036
+Date           : 23-Mar-05
+
+
+Notes          :
+----------------
+* PRSF00161973 : Add create() to EDR::AsnLegacyOctetString.
+========================================================================================
+Actual Version : vVelocity 10035
+Date           : 23-Mar-05
+
+
+Notes          :
+----------------
+* PRSF00161971 : EDRs rejected by reject stream were not being released.
+========================================================================================
+Actual Version : vVelocity 10034
+Date           : 22-Mar-05
+
+
+Notes          :
+----------------
+* PRSF00161970 : iScript function "clearErrors()" missing in 6.7FP1
+========================================================================================
+Actual Version : vVelocity 10033
+Date           : 10-Mar-05
+
+
+Notes          :
+----------------
+* PRSF00157748  change the column name from KEY to KEY_ID for table ifw_seqcheck and ifw_alias_map 
+========================================================================================
+Actual Version : vVelocity 10032
+Date           : 15-Mar-05
+
+
+Notes          :
+----------------
+* PRSF00156439  Add iScript function, edrArrayIndex()
+========================================================================================
+Actual Version : vVelocity 10031
+Date           : 14-Mar-05
+
+
+Notes          :
+----------------
+* PRSF00115898  Shutdown of RTP gives error in log files.
+========================================================================================
+Actual Version : vVelocity 10030
+Date           : 02-Mar-05
+
+
+Notes          :
+----------------
+* PRSF00155242  EDR::FlistDecimaType: Offset for isNull flag was wrong.
+		Use BAS::INVALID_DECIMAL and BAS::DECIMAL_REALNULL for errors and nulls.
+========================================================================================
+Actual Version : vVelocity 10029
+Date           : 08-Feb-05
+
+
+Notes          :
+----------------
+* PRSF00136889  Add AscPoid type for grammar.
+========================================================================================
+Actual Version : vVelocity 10028
+Date           : 09-Dec-04
+
+Notes          :
+----------------
+* PRSF00144429 : Error ERR_INPUT_MAPPING_FAILED  
+                 modified InMapSeparated.cpp file to handle when input token contains zero fields instead of one.
+
+
+========================================================================================
+Actual Version : v6.7 FP2 10027
+Date           : 30-Nov-04
+
+
+Notes          :
+----------------
+* PRSF00143062  Check for null value in edrInternalState().
+========================================================================================
+Actual Version : v6.7 FP2 10026
+Date           : 22-Nov-04
+
+
+Notes          :
+----------------
+* PRSF00141584  Set isValidDetail( false ) on edrInputMap() error.
+========================================================================================
+Actual Version : v6.7 FP2 10025
+Date           : 18-Nov-04
+
+
+Notes          :
+----------------
+* PRSF00141383 brajan  HP-Itanium pipeline event handler daemon
+                does not shutdown gracefully due to Socket Error (CONNREFUSED).
+================================================================================
+Actual Version : v6.7 FP2 10019
+Date           : 27-May-04
+
+Notes          :
+----------------
+* PRSF00110938  pramodk   Changed the query for SQL server, Few column's name are
+                          keyword in SQL server.
+================================================================================
+Actual Version : v6.7 FP2 10018
+Date           : 07-May-04
+
+Notes          :
+----------------
+* PRSF00109238  brajan   B_NUMBER field is sometimes populated wrongly
+		(Propagating PRSF00100030 to 6.7_FP2)
+================================================================================
+Actual Version : v6.7 FP2 10017
+Date           : 06-May-04
+
+Notes          :
+----------------       
+* PRSF00109174  mliu - [Windows Port] Change ifw and eventhandler to use Windows
+		Process and Pipe
+================================================================================
+Actual Version : v6.7 FP2 10007
+Date           : 22-Feb-04
+
+Notes          :
+----------------       
+* PRSF00088044  kbref   Implement sleep() in iScript
+================================================================================
+Actual Version : v6.7 FP2 10000
+Date           : 18-Feb-04
+
+Notes          :
+----------------
+* PRSF00055266 Destroy the pipeline dispatcher object when shutting down.
+================================================================================
+Actual Version : v6.7 FP2 10000
+Date           : 02-Feb-04
+
+Notes          :
+----------------
+* PRSF00089764  Propagate PRSF00089722 (Make the pipeline stop when a component
+                fails to handle an update semaphore)
+================================================================================
+Actual Version : v6.7 10008
+Date           : 14-Jan-04
+
+Notes          :
+----------------
+* PRSF00085064	Propagate PRSF00085064 (Pass supplied arguments to the
+				event handler process)
+================================================================================
+Actual Version : v6.7 10007
+Date           : 14-Jan-04
+
+Notes          :
+----------------
+* PRSF00086720  Propagation from CO-85577.
+================================================================================
+Actual Version : v6.7 10006
+Date           : 07-Jan-04
+
+Notes          :
+----------------
+* PRSF00085441  MML changes to compile on HPUX Itanium.
+================================================================================
+Actual Version : v6.7 10005
+Date           : 24-Dec-03
+
+Notes          :
+----------------
+* PRSF00084242  Propagation from CO-81753.
+================================================================================
+Actual Version : v6.7 10004
+Date           : 05-Dec-03
+
+Notes          :
+----------------
+* PRSF00077644  Change error handling for realtime pipeline.
+================================================================================
+Actual Version : v6.7 10003
+Date           : 03-Nov-03
+
+Notes          :
+----------------
+* PRSF00076007  Remove DataValue base class from BAS::String.
+================================================================================
+Actual Version : v6.7 10002
+Date           : 15-Oct-03
+
+Notes          :
+----------------
+* PRSF00069996  Windows port - BAS module
+================================================================================
+Actual Version : v6.7 10000
+Date           : 10-Oct-03
+
+Notes          :
+----------------
+* PRSF00070256  Use template to auto-generate FrameworkVersion.hpp
+* PRSF00066025	Make the event handler daemon available to the sysExecute
+		iScript function.
+================================================================================
+Actual Version : v6.7
+Date           : 09-Oct-03
+
+Notes          :
+----------------
+* PRSF00069225  Change Product Name to "Infranet Pipeline Server / version 6.7"
+================================================================================
+Actual Version : Portal 2004
+Date           : 03-Oct-03
+
+Notes          :
+----------------
+* PRSF00068516  Changed Product name and versioning
+================================================================================
+Actual Version : Apollo TIMOS
+Date           : 19-Sep-03
+
+Notes          :
+----------------
+* PRSF00062647	Propagated changes made to instantiate the memory monitor.
+================================================================================
+Actual Version : v6.5 FP3 10032
+Date           : 1-Dec-03
+
+Notes          :
+----------------
+* PRSF00080114 Update all fields in edr_field_mapping table
+================================================================================
+Actual Version : v6.5 FP3 10031
+Date           : 24-Nov-03
+
+Notes          :
+----------------
+* PRSF00079838 Container version poid was not included in EDR XML
+================================================================================
+Actual Version : v6.5 FP3 10030
+Date           : 25-Nov-03
+
+Notes          :
+----------------
+* PRSF00079752 Refinements to xml/version mapping code
+
+================================================================================
+Actual Version : v6.5 FP3 10029
+Date           : 20-Nov-03
+
+Notes          :
+----------------
+* PRSF00068378 Framework changes for XML de-serialization and IO support for XML
+================================================================================
+Actual Version : v6.5 FP3 10028
+Date           : 20-Nov-03
+
+Notes          :
+----------------
+* PRSF00079208 Fix startup error due to incorrect check for xml entry
+================================================================================
+Actual Version : v6.5 FP3 10027
+Date           : 18-Nov-03
+
+Notes          :
+----------------
+* PRSF00068375 Create/Update XML Field Map/Version  Entry in Suspense Database
+================================================================================
+Actual Version : v6.5 FP3 10026
+Date           : 12-Nov-03
+
+Notes          :
+----------------
+* PRSF00068381 Add fuctions for XML field mapping and serialization.
+================================================================================
+Actual Version : v6.5 FP3 10025
+Date           : 31-Oct-03
+
+Notes          :
+----------------
+* PRSF00075996 Add functions to EDR::Factory to support creating and decoding
+               XML IDs.
+================================================================================
+Actual Version : v6.5 FP3 10024
+Date           : 28-Oct-03
+
+Notes          :
+----------------
+* PRSF00075367 Enahnce EDR Parser to recognize version specification in 
+               EDR Description file
+================================================================================
+Actual Version : v6.5 FP3 10023(b)(both 65fp3 and 67 have 10023! someone messed up, I am just doing a merge)
+Date           : 28-Oct-03
+
+Notes          :
+----------------
+* PRSF00071810	Framework should log the thread name and thread id in the pipeline log.
+================================================================================
+Actual Version : v6.5 FP3 10023(a)
+Date           : 17-Oct-03
+
+Notes          :
+----------------
+* PRSF00072469	To prevent choking the event handler, permit only one
+		thread at a time to access it.
+================================================================================
+Actual Version : v6.5 FP3 10022
+Date           : 02-Oct-03
+
+Notes          :
+----------------
+* PRSF00066025	Make the event handler daemon available to the sysExecute
+		iScript function.
+================================================================================
+Actual Version : v6.5 FP3 10021
+Date           : 19-Sep-03
+
+Notes          :
+----------------
+* PRSF00062056	Fixed side effect from PRSF00061875 when handling duplicate
+                output streams
+================================================================================
+Actual Version : v6.5 FP3 10020
+Date           : 15-Sep-03
+
+Notes          :
+----------------
+* PRSF00062975	[Propagation] Instantiate memory monitor
+================================================================================
+Actual Version : v6.5 FP3 10019
+Date           : 12-Sep-03
+
+Notes          :
+----------------
+* PRSF00062652	This is related to PRSF00044872.  The event handler server
+		will now be shut down if EventHandler entries are not found
+		in the registry.
+================================================================================
+Actual Version : v6.5 FP3 10018
+Date           : 12-Sep-03
+
+Notes          :
+----------------
+* PRSF00062964 (and PRSF00062967 in Plugins project)
+		Fixed errors in message identifiers
+================================================================================
+Actual Version : v6.5 FP3 10017
+Date           : 12-Sep-03
+
+Notes          :
+----------------
+* PRSF00063064  TAM manager needs better debug tracing
+                (propagation of 60693)
+================================================================================
+Actual Version : v6.5 FP3 10016
+Date           : 8-Sep-03
+
+Notes          :
+----------------
+* PRSF00061875  Fixed the problem of duplicated EDRs in Output for reject streams
+================================================================================
+Actual Version : v6.5 FP3 10012
+Date           : 29-Aug-03
+Notes          :
+----------------
+* PRSF00044872  Remodelled the way events are processed by the EVT module.
+		The ifw process now spawns a new small process (event handler
+		server) before it grows to a large size, and then keeps this
+		new server process around to handle events.  When a command
+		now needs to be executed by EVT, ifw (i.e. the event handler
+		client) sends that command over to the new server process.
+		The server then starts up a subprocess to execute the command.
+		This change reduces memory needs considerably - the command
+		processing shell is a copy of the small event handler server
+		instead of the big (possibly massive) ifw process.
+================================================================================
+Actual Version : v6.5 FP3 10011
+Date           : 21-Aug-03
+
+Notes          :
+----------------
+* PRSF00046390  Refactored LOG Message Table to be Reusable (create one instance 
+		of the log message table shared by all logs). Provided explicit 
+		support for log message numbers and getter function for it.
+================================================================================
+Actual Version : v6.5 FP3 10010
+Date           : 19-Jul-03
+
+Notes          :
+----------------
+* PRSF00050152  Set the new input state in EDR_Value when edrConnectToken is called
+================================================================================
+Actual Version : v6.5 FP3 EBF 10009
+Date           : 18-Aug-08
+
+Notes          :
+----------------
+* PRSF00052384  Create default config entry at startup, but return error during
+                 generate for non-configured keys
+================================================================================
+Actual Version : v6.5 FP3 EBF 10008
+Date           : 14-Aug-08
+
+Notes          :
+----------------
+* PRSF00045175  Introduced iScript functions to differentiate between EDR fields
+                (propagation of PRSF00045126)
+================================================================================
+Actual Version : v6.5 FP3 10007
+Date           : 11-Aug-03
+
+Notes          :
+----------------
+* PRSF00046362  Support Output Stream Lists in EDR Container
+================================================================================
+Actual Version : v6.5 SP2 10006
+Date           : 08-Aug-03
+
+Notes          :
+----------------
+* PRSF00054883  IScript pipeline log messages not working
+                (propagation of PRSF00054379)
+================================================================================
+Actual Version : v6.5 FP3 10005
+Date           : 8-Aug-03
+
+Notes          :
+----------------
+* PRSF00050427	Add iScript functions edrDeleteDatablock() and edrDeleteField().
+================================================================================
+Actual Version : v6.5 FP3 10004
+Date           : 7-Aug-03
+
+Notes          :
+----------------
+* PRSF00055139	Provide Module Name w/ Version Info.
+================================================================================
+Actual Version : v6.5 FP3 10003
+Date           : 6-Aug-03
+
+Notes          :
+----------------
+* PRSF00050429  Add iScript functions edrDemandRollback() and edrDemandCancel().
+                (Propogation of 46707)
+================================================================================
+Actual Version : v6.5 FP3 10002
+Date           : 5-Aug-03
+
+Notes          :
+----------------
+* PRSF00053214  Use static const String array for severityNames in BAS::Status to prevent memory corruption.
+================================================================================
+Actual Version : v6.5 FP3 10001
+Date           : 4-Aug-03
+
+Notes          :
+----------------
+* PRSF00052324  Fix core dump in BAS::RegisteredObject::updateObjects()
+================================================================================
+Actual Version : v6.5 SP2 10028
+Date           : 21-Jul-03
+
+Notes          :
+----------------
+* PRSF00051572 Interpret bad_alloc exceptions and log that the framework
+	       encountered an out of memory condition instead of just printing
+	       unknown exception (propogation of PRSF00050570)
+================================================================================
+Actual Version : v6.5 SP2 10027
+Date           : 8-Jul-03
+
+Notes          :
+----------------
+* PRSF00048420  Skip duplicate/gap seqeunce check for recycling case.
+                (Propogation of 48228)
+================================================================================
+Actual Version : v6.5 SP2 10026
+Date           : 1-Jul-03
+
+Notes          :
+----------------
+* PRSF00047865  Re-order/renumber datablocks after removing a datablock
+                (Propogation of 47624)
+================================================================================
+Actual Version : v6.5 SP2 10025
+Date           : 30-Jun-03
+
+Notes          :
+----------------
+* PRSF00047863  Add EDR Interfaces removeDatablock() and clearFieldValue()
+                (Propogation of 46705)
+================================================================================
+Actual Version : v6.5 SP2 10024
+Date           : 18-Jun-03
+
+Notes          :
+----------------
+* PRSF00044935 : Added IScript function onEndTransaction().
+
+================================================================================
+Actual Version : v6.5 SP2 10023
+Date           : 19-Jun-03
+
+Notes          :
+----------------
+* PRSF00043858 : Prevent sharing of sequencers across output devices
+===============================================================================
+Actual Version : v6.5 SP2 10022
+Date           : 16-Jun-03
+
+Notes          :
+----------------
+* PRSF00044680 : Prevent sharing of sequencers across output devices
+
+================================================================================

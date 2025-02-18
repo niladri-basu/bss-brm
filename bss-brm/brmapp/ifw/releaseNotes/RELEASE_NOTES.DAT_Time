@@ -1,0 +1,254 @@
+========================================================================================
+DAT_Time
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+Module Version : 7.4 10007
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+Module Version: 10006  6.7_FP2  28-Apr-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+========================================================================================
+Module Version: 10005  6.7_FP2  19-APR-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+==============================================================================
+
+Module Version: 10004  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : v10003 / Date : 05-Mar-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 33422 Changed to use setStatus for status updated, no other way
+to write to process log
+========================================================================================
+
+
+Actual Version : v10002 / Date : 26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+========================================================================================
+
+
+Actual Version : v10001 / Date : 25-Feb-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00032473 Bug DAT_TimeModelPlugin: use of a "null" RWDBValue 
+possible.
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 29-Jan-2002
+----------------
+
+Notes          :
+----------------
+
+PETS #38593 DB2 Port.
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 10-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro AIX Port.
+
+========================================================================================
+
+Actual Version : CR-08.2001 / Date : 01-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #37618 CodeReview 08.2001
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 Changes for Rogue Wave SourcePro migration.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 09-May-2001
+----------------
+
+Notes          :
+----------------
+
+Table prefix INT renamed to IFW.
+
+========================================================================================
+
+Actual Version : v4-10-01 / Date : 10-Jan-2001
+----------------
+
+Notes          :
+----------------
+
+New FSM library added to Makefile.
+
+========================================================================================
+
+
+Actual Version : v4-01-00 / Date : 25-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+- CodeReview remarks revised.
+
+New Features   :
+----------------
+
+- Database version check added.
+- Fields Day-Code and Time-Interval-Code added to the time zone object.
+- Time model check enhanced.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Support for AIX compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-00 / Date : 11-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+- Modifications for version 4.0 are NOT necessary.
+
+New Features   :
+----------------
+
+- Reload events added.
+
+  After receiving a reload command the module generates one of the
+  following events :
+
+  EVT_RELOAD_SUCCESSFUL : The reload was successful.
+  EVT_RELOAD_FAILED     : The reload failed.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-20-05 / Date : 13-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+  RWTPtrHashMap's replaced by RWTPtrMap's to improve performance.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-20-04 / Date : 21-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+  - Usability check added (method isUsable()).
+
+  - DAT_Database changed to DBC.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

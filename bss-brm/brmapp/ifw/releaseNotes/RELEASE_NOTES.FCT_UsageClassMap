@@ -1,0 +1,144 @@
+========================================================================================
+FCT_UsageClassMap
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+
+Module Version: 10012  7.4 28-Jun-2011
+bug12691674: FCT_USAGECLASSMAP NOT POPULATING USAGECLASS FIELD AFTER CA FLUSH SEMAPHORE
+Plugin was returning after the processing of only first edr of the edr list. 
+Code is modified to handle all the EDR in the Edr list.
+
+================================================================================
+
+Module Version: 10011  7.4  16-Dec-2010
+BUG10373170: While processing CDR, DETAIL.INTERN_USAGE_CLASS would not be overwritten by 
+DETAIL.USAGE_CLASS if the paramter CopyUsageClass is set to false and there is no mapping rule 
+matched. If the paramter CopyUsageClass is not set or is set to true, the field would get 
+overwritten. The parameter is true by default. 
+
+================================================================================
+
+Module Version: 10010  7.4  09-Jun-2009
+BUG8570666:   Implementation changed to support MapGroup semaphore 
+		
+================================================================================
+Module Version: 10009  7.4 18-Nov-2008
+bug7432976: LOADING USAGECLASS_MAP MODULE WHEN STARTING PIPELINE/LOAD SEMAPHORE TAKES 1HR 
+            When the number of entries in UsageClassMap table increases, the time taken 
+	    by the MultiEngine increases exponentially, leading to a longer pipeline startup time
+	    This change provides an option through the registry entry "OptimizeFor" where the user 
+	    can opt for memory optimization or CDR processing optimization. The default behaviour 
+	    would be for CDR processing optimization, where MultiEngine will be used to process the 
+	    rules. If the "OptimizeFor" option is set in registry with value as "Memory", a vector
+	    of FSM Engines will be used so that the memory and initial startup time are improved.
+
+================================================================================
+
+Module Version: 10008  6.7_FP2  04-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version : Apollo 10007
+----------------
+
+Date : 19-APR-2004
+----------------
+
+Change Order :  PRSF00086920
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:  [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Module Version : Apollo 10006
+----------------
+
+Date : 16-OCT-2003
+----------------
+
+Change Order :  PRSF00071706
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Message Numbers for Plugin 
+
+================================================================================
+
+Module Version : 6.5 SP2 10005
+----------------
+
+Date : 13-May-2003
+----------------
+
+Change Order :  PRSF00040681
+----------------
+
+Short Description :
+-------------------
+[SERVERERROR] ORA-00923: FROM keyword not found where expected.
+
+================================================================================
+Module Version : 6.5 SP2 10004
+----------------
+
+Date : 05-May-2003
+----------------
+
+Change Order :  PRSF00039853
+----------------
+
+Short Description :
+-------------------
+Fix namespace forward declarations.
+
+================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 30-Apr-2003
+----------------
+
+Change Order :  PRSF00039306
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+========================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 30-MAY-2001 
+----------------
+
+Notes          :
+----------------
+
+- New usage class mapping for integRate v4-30. 
+
+========================================================================================

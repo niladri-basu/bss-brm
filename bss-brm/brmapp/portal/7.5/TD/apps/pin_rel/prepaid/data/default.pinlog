@@ -1,0 +1,549 @@
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9740  pcpst.c(88):2052 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9740:-143857984:0:1440415133:0
+	(9740): pcp_connect(), connecting - failed
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9740  pcm.c(59):197 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9740:-143857984:0:1440415133:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_PCP:2 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_CM_ADDRESS_LOOKUP_FAILED:57>
+	<field num=0:0,0 recid=0 reserved=2 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9740  pcm_conn.c(7):283 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9740:-143857984:0:1440415133:0
+	pcm_connect: bad pcm_context_open, err 57
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:11959  pcpst.c(88):2052 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:11959:-143325504:0:1440415406:0
+	(11959): pcp_connect(), connecting - failed
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:11959  pcm.c(59):197 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:11959:-143325504:0:1440415406:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_PCP:2 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_CM_ADDRESS_LOOKUP_FAILED:57>
+	<field num=0:0,0 recid=0 reserved=2 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:11959  pcm_conn.c(7):283 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:11959:-143325504:0:1440415406:0
+	pcm_connect: bad pcm_context_open, err 57
+E Tue 02 Feb 2016 08:01:48 PM NZDT  exlhamuatbrm  <no name>:32151  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:32151:-143784256:0:1454396507:0
+	(32151): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:01:48 PM NZDT  exlhamuatbrm  <no name>:32157  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:32157:-143288640:0:1454396507:0
+	(32157): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:01:48 PM NZDT  exlhamuatbrm  <no name>:32151  pcm.c(59):197 1:exlhamuatbrm:<no_name>:32151:-143784256:0:1454396507:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:01:48 PM NZDT  exlhamuatbrm  <no name>:32157  pcm.c(59):197 1:exlhamuatbrm:<no_name>:32157:-143288640:0:1454396507:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:01:48 PM NZDT  exlhamuatbrm  <no name>:32157  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:32157:-143288640:0:1454396507:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:01:48 PM NZDT  exlhamuatbrm  <no name>:32151  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:32151:-143784256:0:1454396507:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:01:53 PM NZDT  exlhamuatbrm  <no name>:32275  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:32275:-143378752:0:1454396512:0
+	(32275): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:01:53 PM NZDT  exlhamuatbrm  <no name>:32275  pcm.c(59):197 1:exlhamuatbrm:<no_name>:32275:-143378752:0:1454396512:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:01:53 PM NZDT  exlhamuatbrm  <no name>:32275  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:32275:-143378752:0:1454396512:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:03:04 PM NZDT  exlhamuatbrm  <no name>:1563  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:1563:-143665472:0:1454396584:0
+	(1563): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:03:04 PM NZDT  exlhamuatbrm  <no name>:1563  pcm.c(59):197 1:exlhamuatbrm:<no_name>:1563:-143665472:0:1454396584:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:03:04 PM NZDT  exlhamuatbrm  <no name>:1563  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:1563:-143665472:0:1454396584:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1579  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:1579:-143464768:0:1454396585:0
+	(1579): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1579  pcm.c(59):197 1:exlhamuatbrm:<no_name>:1579:-143464768:0:1454396585:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1579  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:1579:-143464768:0:1454396585:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1586  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:1586:-143407424:0:1454396585:0
+	(1586): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1586  pcm.c(59):197 1:exlhamuatbrm:<no_name>:1586:-143407424:0:1454396585:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1586  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:1586:-143407424:0:1454396585:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1664  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:1664:-143747392:0:1454396585:0
+	(1664): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1664  pcm.c(59):197 1:exlhamuatbrm:<no_name>:1664:-143747392:0:1454396585:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:03:05 PM NZDT  exlhamuatbrm  <no name>:1664  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:1664:-143747392:0:1454396585:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:03:31 PM NZDT  exlhamuatbrm  <no name>:2733  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:2733:-143989056:0:1454396611:0
+	(2733): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:03:31 PM NZDT  exlhamuatbrm  <no name>:2733  pcm.c(59):197 1:exlhamuatbrm:<no_name>:2733:-143989056:0:1454396611:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:03:31 PM NZDT  exlhamuatbrm  <no name>:2710  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:2710:-143919424:0:1454396611:0
+	(2710): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:03:31 PM NZDT  exlhamuatbrm  <no name>:2733  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:2733:-143989056:0:1454396611:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:03:31 PM NZDT  exlhamuatbrm  <no name>:2710  pcm.c(59):197 1:exlhamuatbrm:<no_name>:2710:-143919424:0:1454396611:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:03:31 PM NZDT  exlhamuatbrm  <no name>:2710  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:2710:-143919424:0:1454396611:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:06:30 PM NZDT  exlhamuatbrm  <no name>:5660  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:5660:-143685952:0:1454396790:0
+	(5660): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:06:30 PM NZDT  exlhamuatbrm  <no name>:5660  pcm.c(59):197 1:exlhamuatbrm:<no_name>:5660:-143685952:0:1454396790:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:06:30 PM NZDT  exlhamuatbrm  <no name>:5660  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:5660:-143685952:0:1454396790:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:08:46 PM NZDT  exlhamuatbrm  <no name>:8192  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:8192:-143882560:0:1454396926:0
+	(8192): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:08:46 PM NZDT  exlhamuatbrm  <no name>:8192  pcm.c(59):197 1:exlhamuatbrm:<no_name>:8192:-143882560:0:1454396926:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:08:46 PM NZDT  exlhamuatbrm  <no name>:8192  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:8192:-143882560:0:1454396926:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:08:48 PM NZDT  exlhamuatbrm  <no name>:8227  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:8227:-142973248:0:1454396928:0
+	(8227): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:08:48 PM NZDT  exlhamuatbrm  <no name>:8227  pcm.c(59):197 1:exlhamuatbrm:<no_name>:8227:-142973248:0:1454396928:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:08:48 PM NZDT  exlhamuatbrm  <no name>:8227  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:8227:-142973248:0:1454396928:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:08:52 PM NZDT  exlhamuatbrm  <no name>:8313  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:8313:-143112512:0:1454396932:0
+	(8313): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:08:52 PM NZDT  exlhamuatbrm  <no name>:8313  pcm.c(59):197 1:exlhamuatbrm:<no_name>:8313:-143112512:0:1454396932:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:08:52 PM NZDT  exlhamuatbrm  <no name>:8313  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:8313:-143112512:0:1454396932:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:10:50 PM NZDT  exlhamuatbrm  <no name>:9666  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:9666:-143350080:0:1454397050:0
+	(9666): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:10:50 PM NZDT  exlhamuatbrm  <no name>:9666  pcm.c(59):197 1:exlhamuatbrm:<no_name>:9666:-143350080:0:1454397050:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:10:50 PM NZDT  exlhamuatbrm  <no name>:9666  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:9666:-143350080:0:1454397050:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:10:51 PM NZDT  exlhamuatbrm  <no name>:9741  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:9741:-143378752:0:1454397051:0
+	(9741): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:10:51 PM NZDT  exlhamuatbrm  <no name>:9741  pcm.c(59):197 1:exlhamuatbrm:<no_name>:9741:-143378752:0:1454397051:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:10:51 PM NZDT  exlhamuatbrm  <no name>:9741  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:9741:-143378752:0:1454397051:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:11:58 PM NZDT  exlhamuatbrm  <no name>:10915  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:10915:-143440192:0:1454397118:0
+	(10915): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:11:58 PM NZDT  exlhamuatbrm  <no name>:10915  pcm.c(59):197 1:exlhamuatbrm:<no_name>:10915:-143440192:0:1454397118:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:11:58 PM NZDT  exlhamuatbrm  <no name>:10915  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:10915:-143440192:0:1454397118:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:11:58 PM NZDT  exlhamuatbrm  <no name>:10910  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:10910:-143325504:0:1454397117:0
+	(10910): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:11:58 PM NZDT  exlhamuatbrm  <no name>:10910  pcm.c(59):197 1:exlhamuatbrm:<no_name>:10910:-143325504:0:1454397117:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:11:58 PM NZDT  exlhamuatbrm  <no name>:10910  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:10910:-143325504:0:1454397117:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:11:59 PM NZDT  exlhamuatbrm  <no name>:10928  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:10928:-143780160:0:1454397119:0
+	(10928): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:11:59 PM NZDT  exlhamuatbrm  <no name>:10928  pcm.c(59):197 1:exlhamuatbrm:<no_name>:10928:-143780160:0:1454397119:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:11:59 PM NZDT  exlhamuatbrm  <no name>:10928  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:10928:-143780160:0:1454397119:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:12:57 PM NZDT  exlhamuatbrm  <no name>:11937  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:11937:-143784256:0:1454397177:0
+	(11937): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:12:57 PM NZDT  exlhamuatbrm  <no name>:11937  pcm.c(59):197 1:exlhamuatbrm:<no_name>:11937:-143784256:0:1454397177:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:12:57 PM NZDT  exlhamuatbrm  <no name>:11937  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:11937:-143784256:0:1454397177:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:00 PM NZDT  exlhamuatbrm  <no name>:11984  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:11984:-143145280:0:1454397180:0
+	(11984): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:00 PM NZDT  exlhamuatbrm  <no name>:11984  pcm.c(59):197 1:exlhamuatbrm:<no_name>:11984:-143145280:0:1454397180:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:00 PM NZDT  exlhamuatbrm  <no name>:11984  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:11984:-143145280:0:1454397180:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12863  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:12863:-143030592:0:1454397217:0
+	(12863): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12863  pcm.c(59):197 1:exlhamuatbrm:<no_name>:12863:-143030592:0:1454397217:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12863  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:12863:-143030592:0:1454397217:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12881  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:12881:-143169856:0:1454397217:0
+	(12881): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12881  pcm.c(59):197 1:exlhamuatbrm:<no_name>:12881:-143169856:0:1454397217:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12881  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:12881:-143169856:0:1454397217:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12887  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:12887:-143653184:0:1454397217:0
+	(12887): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12887  pcm.c(59):197 1:exlhamuatbrm:<no_name>:12887:-143653184:0:1454397217:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12887  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:12887:-143653184:0:1454397217:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12893  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:12893:-143554880:0:1454397217:0
+	(12893): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12893  pcm.c(59):197 1:exlhamuatbrm:<no_name>:12893:-143554880:0:1454397217:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12893  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:12893:-143554880:0:1454397217:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12899  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:12899:-143632704:0:1454397217:0
+	(12899): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12899  pcm.c(59):197 1:exlhamuatbrm:<no_name>:12899:-143632704:0:1454397217:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12899  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:12899:-143632704:0:1454397217:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12904  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:12904:-143714624:0:1454397217:0
+	(12904): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12904  pcm.c(59):197 1:exlhamuatbrm:<no_name>:12904:-143714624:0:1454397217:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:37 PM NZDT  exlhamuatbrm  <no name>:12904  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:12904:-143714624:0:1454397217:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:44 PM NZDT  exlhamuatbrm  <no name>:13133  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13133:-142993728:0:1454397224:0
+	(13133): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:44 PM NZDT  exlhamuatbrm  <no name>:13133  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13133:-142993728:0:1454397224:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:44 PM NZDT  exlhamuatbrm  <no name>:13133  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13133:-142993728:0:1454397224:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:44 PM NZDT  exlhamuatbrm  <no name>:13145  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13145:-143518016:0:1454397224:0
+	(13145): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:44 PM NZDT  exlhamuatbrm  <no name>:13145  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13145:-143518016:0:1454397224:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:44 PM NZDT  exlhamuatbrm  <no name>:13145  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13145:-143518016:0:1454397224:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13152  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13152:-143055168:0:1454397225:0
+	(13152): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13152  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13152:-143055168:0:1454397225:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13152  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13152:-143055168:0:1454397225:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13157  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13157:-143571264:0:1454397225:0
+	(13157): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13157  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13157:-143571264:0:1454397225:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13157  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13157:-143571264:0:1454397225:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13167  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13167:-143976768:0:1454397225:0
+	(13167): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13167  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13167:-143976768:0:1454397225:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13167  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13167:-143976768:0:1454397225:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13173  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13173:-143571264:0:1454397225:0
+	(13173): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13173  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13173:-143571264:0:1454397225:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13173  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13173:-143571264:0:1454397225:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13179  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13179:-143153472:0:1454397225:0
+	(13179): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13179  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13179:-143153472:0:1454397225:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:45 PM NZDT  exlhamuatbrm  <no name>:13179  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13179:-143153472:0:1454397225:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13285  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13285:-143538496:0:1454397232:0
+	(13285): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13285  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13285:-143538496:0:1454397232:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13285  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13285:-143538496:0:1454397232:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13279  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13279:-143759680:0:1454397232:0
+	(13279): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13291  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13291:-143780160:0:1454397232:0
+	(13291): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13279  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13279:-143759680:0:1454397232:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13279  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13279:-143759680:0:1454397232:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13291  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13291:-143780160:0:1454397232:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13291  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13291:-143780160:0:1454397232:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13298  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13298:-143857984:0:1454397232:0
+	(13298): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13298  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13298:-143857984:0:1454397232:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:52 PM NZDT  exlhamuatbrm  <no name>:13298  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13298:-143857984:0:1454397232:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:53 PM NZDT  exlhamuatbrm  <no name>:13304  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13304:-142952768:0:1454397233:0
+	(13304): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:53 PM NZDT  exlhamuatbrm  <no name>:13304  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13304:-142952768:0:1454397233:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:53 PM NZDT  exlhamuatbrm  <no name>:13304  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13304:-142952768:0:1454397233:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:13:53 PM NZDT  exlhamuatbrm  <no name>:13310  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13310:-143178048:0:1454397233:0
+	(13310): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:13:53 PM NZDT  exlhamuatbrm  <no name>:13310  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13310:-143178048:0:1454397233:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:13:53 PM NZDT  exlhamuatbrm  <no name>:13310  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13310:-143178048:0:1454397233:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13444  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13444:-143731008:0:1454397240:0
+	(13444): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13444  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13444:-143731008:0:1454397240:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13444  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13444:-143731008:0:1454397240:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13450  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13450:-143014208:0:1454397240:0
+	(13450): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13450  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13450:-143014208:0:1454397240:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13450  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13450:-143014208:0:1454397240:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13456  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13456:-143128896:0:1454397240:0
+	(13456): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13456  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13456:-143128896:0:1454397240:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13456  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13456:-143128896:0:1454397240:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13461  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13461:-143960384:0:1454397240:0
+	(13461): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13461  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13461:-143960384:0:1454397240:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:00 PM NZDT  exlhamuatbrm  <no name>:13461  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13461:-143960384:0:1454397240:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13468  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13468:-143833408:0:1454397240:0
+	(13468): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13468  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13468:-143833408:0:1454397240:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13468  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13468:-143833408:0:1454397240:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13474  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13474:-143612224:0:1454397241:0
+	(13474): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13474  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13474:-143612224:0:1454397241:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13474  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13474:-143612224:0:1454397241:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13480  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13480:-143567168:0:1454397241:0
+	(13480): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13480  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13480:-143567168:0:1454397241:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:01 PM NZDT  exlhamuatbrm  <no name>:13480  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13480:-143567168:0:1454397241:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:09 PM NZDT  exlhamuatbrm  <no name>:13717  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13717:-143038784:0:1454397249:0
+	(13717): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:09 PM NZDT  exlhamuatbrm  <no name>:13717  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13717:-143038784:0:1454397249:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:09 PM NZDT  exlhamuatbrm  <no name>:13717  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13717:-143038784:0:1454397249:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13724  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13724:-143882560:0:1454397249:0
+	(13724): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13724  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13724:-143882560:0:1454397249:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13724  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13724:-143882560:0:1454397249:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13730  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13730:-143427904:0:1454397250:0
+	(13730): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13730  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13730:-143427904:0:1454397250:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13730  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13730:-143427904:0:1454397250:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13736  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13736:-143120704:0:1454397250:0
+	(13736): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13736  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13736:-143120704:0:1454397250:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13736  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13736:-143120704:0:1454397250:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13742  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13742:-143460672:0:1454397250:0
+	(13742): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13742  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13742:-143460672:0:1454397250:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13742  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13742:-143460672:0:1454397250:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13747  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13747:-143059264:0:1454397250:0
+	(13747): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13747  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13747:-143059264:0:1454397250:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13747  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13747:-143059264:0:1454397250:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13774  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:13774:-143903040:0:1454397250:0
+	(13774): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13774  pcm.c(59):197 1:exlhamuatbrm:<no_name>:13774:-143903040:0:1454397250:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:10 PM NZDT  exlhamuatbrm  <no name>:13774  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:13774:-143903040:0:1454397250:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14490  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:14490:-143874368:0:1454397287:0
+	(14490): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14490  pcm.c(59):197 1:exlhamuatbrm:<no_name>:14490:-143874368:0:1454397287:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14490  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:14490:-143874368:0:1454397287:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14475  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:14475:-143591744:0:1454397286:0
+	(14475): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14482  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:14482:-143534400:0:1454397286:0
+	(14482): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14475  pcm.c(59):197 1:exlhamuatbrm:<no_name>:14475:-143591744:0:1454397286:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14475  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:14475:-143591744:0:1454397286:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14482  pcm.c(59):197 1:exlhamuatbrm:<no_name>:14482:-143534400:0:1454397286:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14482  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:14482:-143534400:0:1454397286:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14495  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:14495:-143890752:0:1454397287:0
+	(14495): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14495  pcm.c(59):197 1:exlhamuatbrm:<no_name>:14495:-143890752:0:1454397287:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14495  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:14495:-143890752:0:1454397287:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14501  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:14501:-143554880:0:1454397287:0
+	(14501): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14501  pcm.c(59):197 1:exlhamuatbrm:<no_name>:14501:-143554880:0:1454397287:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14501  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:14501:-143554880:0:1454397287:0
+	pcm_connect: bad pcm_context_open, err 56
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14508  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:14508:-143518016:0:1454397287:0
+	(14508): pcp_connect(), connecting - failed
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14508  pcm.c(59):197 1:exlhamuatbrm:<no_name>:14508:-143518016:0:1454397287:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_FLIST:6 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_BAD_LOGIN_RESULT:56>
+	<field num=PIN_FLD_REASON:3,5506 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue 02 Feb 2016 08:14:47 PM NZDT  exlhamuatbrm  <no name>:14508  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:14508:-143518016:0:1454397287:0
+	pcm_connect: bad pcm_context_open, err 56

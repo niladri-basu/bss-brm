@@ -1,0 +1,104 @@
+#!/bin/sh
+#!/bin/sh
+
+####################################################################
+#-------------------------------------------------------------------
+#
+#  @(#)$Id: pin_bill_day.sh /cgbubrm_7.5.0.rwsmod/4 2014/06/22 04:25:45 kpramod Exp $
+#
+# Copyright (c) 1996, 2014, Oracle and/or its affiliates. All rights reserved.
+#	
+#	This material is the confidential property of Oracle Corporation
+#	or its licensors and may be used, reproduced, stored or transmitted
+#	only in accordance with a valid Oracle license or sublicense agreement.
+#
+#-------------------------------------------------------------------
+####################################################################
+
+VERSION=$PIN_VERSION
+
+####################################################################
+#-------------------------------------------------------------------
+#
+# Master Daily Billing Script
+#
+#	Performs the following daily billing tasks:
+#
+#		- Deferred Actions  	 	(pin_deferred_act)
+#
+#		- Cycle Fee Cleanup		(pin_cycle_fees)
+#		- Deferred Cancellation 	(pin_cycle_fees)
+#		- Deferred Purchase Fee 	(pin_cycle_fees)
+#
+#		- Bill Generation		(pin_bill_accts)
+#		- Credit Card refunds 		(pin_refund -pay_type 10003 -vendor fusa)
+#		- Direct Debit refunds 		(pin_refund -pay_type 10005 -vendor fusa)
+#		- SEPA Credit Transfer 		(pin_refund -pay_type 10018)
+#		- CreditCard Collect		(pin_collect -pay_type 10003 -vendor fusa)
+#		- DirectDebit Collect		(pin_collect -pay_type 10005 -vendor fusa)
+#		- SEPA DirectDebit Collect	(pin_collect -pay_type 10018)
+#		- Invoice Generation		(pin_inv_accts -pay_type 10001)
+#		- CreditCard Deposits		(pin_deposit -pay_type 10003 -vendor fusa)
+#		- DirectDebit Deposits		(pin_deposit -pay_type 10005 -vendor fusa)
+#
+#	It is assumed that this script is run (in the background)
+#	by cron once a day, via a crontab entry something like the
+#	following (which will run the script at 12:05 am):
+#
+#		5 0 * * * /opt/portal/$PIN_VERSION/bin/pin_bill_day &
+#
+#-------------------------------------------------------------------
+####################################################################
+
+PINDIR=/BRM/portal/7.5
+LOGDIR=/BRM/portal/7.5/var/pin_billd
+
+CNFDIR=${PINDIR}/apps/pin_billd
+INVDIR=${PINDIR}/apps/pin_inv
+ALLOCDIR=${PINDIR}/TD/apps/td_payment_allocate
+SUBSDIR=${PINDIR}/apps/pin_subscription
+
+PATH=/usr/bin:/bin:${PINDIR}/bin
+
+cd ${CNFDIR}
+
+#-------------------------------------------------------------------
+#  Collections                          (pin_collections_process)
+#                                       (pin_collections_send_dunning)
+#
+#     This is an optional process.  It is only valid when you have
+#     the collections module installed.  Please uncomment the following
+#     lines to enable the collections process.
+#
+#     pin_collections_process examines all the accounts that have a
+#     due that cannot be ignored and put them into collections according
+#     to the user-defined criteria.
+#
+#     pin_collections_send_dunning collects all dunning letters
+#     created for today and send them to the customers.
+#-------------------------------------------------------------------
+if [ "$1" != "" ]; then
+
+
+echo "Positional parameter 1 contains something " $1
+echo "test is printing " $1
+echo "test is success " $1
+#-------------------------------------------------------------------
+# Deferred Cycle Fees				(pin_cycle_fees)
+#
+#   Apply deferred cycle fees
+#-------------------------------------------------------------------
+else
+echo "Positional parameter 1 is empty"
+echo "test is printing " $1
+echo "test is fail " $1
+
+fi
+
+# Flexible Cycle rollover			(pin_rollover)
+#	Triggers the Cycle rollover op-code to rollover the old
+#	buckets. It is an MTA app.
+#
+#-------------------------------------------------------------------
+
+

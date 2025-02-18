@@ -1,0 +1,138 @@
+//==============================================================================
+//
+// Copyright (c) 2006, 2009, Oracle and/or its affiliates. 
+// All rights reserved. 
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_ObjectCacheTypeOutputSplitter
+//------------------------------------------------------------------------------
+// Module Description:
+//   According to the DETAIL.OBJECT_CACHE_TYPE, this module pipes the output
+//   to different output stream.
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// $RCSfile: ISC_ObjectCacheTypeOutputSplitter.isc $
+// $Revision: /cgbubrm_7.3.2.pipeline/2 $
+// $Author: moprasa $
+// $Date: 2009/04/29 00:46:18 $
+// $Locker:  $
+//------------------------------------------------------------------------------
+//==============================================================================
+
+use IXT_PortalConfig;
+
+Bool debug;
+Long objectCacheType;
+String currentStream;
+Long configuredCacheTypes[];
+Bool readParams;
+Bool validExtension = true;
+
+//==============================================================================
+// BEGIN Container
+//==============================================================================
+function BEGIN
+{
+  debug = false;
+  readParams = true;
+  //----------------------------------------------------------------------------
+  // Connect the extension with the DAT_PortalConfig plugin
+  //----------------------------------------------------------------------------
+  if (setDAT_PortalConfigModule("ifw.DataPool.PortalConfigDataModule.Module") == true )
+  {
+    logPipeline( "INFO: PortalConfig Module set \n" );
+  }
+  else
+  {
+    logPipeline( "ERROR: Could not set PortalConfig Module \n" );
+    validExtension = false;
+  }
+}
+
+//==============================================================================
+// Function declarations
+//==============================================================================
+//==============================================================================
+// This function diverts the CDR into convergent stream
+//============================================================================
+function putEdrIntoConvStream
+{
+  currentStream = edrGetStream();
+  currentStream = "CONV_" + currentStream;
+  if ( debug ) logStdout( currentStream + "\n" );
+  if ( edrSetStream( currentStream ) == false )
+  {
+    logPipeline( "WARNING: Setting convergent stream failed. Using default stream", 2 );
+  }
+}
+//==============================================================================
+// According to the DETAIL.OBJECT_CACHE_TYPE, pipe the output. 
+//==============================================================================
+function onDetailEdr
+{
+  Long i = 0;
+  Long nbElem = 0;
+
+  if(validExtension == true)
+  {
+    // Reading of business params by PortalConfig may not be complete
+    // by the time this iscript is compiled. So reading the param value 
+    // is placed here instead of BEGIN function
+    if(readParams == true)
+    {
+      String paramGroup= "selective_loading";
+      String paramName= "cache_residencies_for_timos";
+      String paramValue = getBusinessParamStr(paramGroup, paramName);
+      if(strLength(strStrip(paramValue, STRIP_BOTH, " ")) != 0)
+      {
+        logPipeline( "INFO " + paramValue );
+      }
+      else
+      {
+        logPipeline( "INFO: business param not found " + paramName);
+      }
+
+      String ListArray[];
+      nbElem = strSplit( ListArray, paramValue, "," );
+
+      for(i=0 ; i < nbElem ; i=i+1)
+      {
+        configuredCacheTypes[i] = strToLong(ListArray[i]);
+      }
+      readParams = false;
+    }
+  }
+
+  objectCacheType = edrLong(DETAIL.OBJECT_CACHE_TYPE);
+
+  // If Timos loads multiple cache residency types, split the EDRs for all those values
+  if(nbElem != 0)
+  {
+    for(i=0 ; i < nbElem ; i=i+1)
+    {
+      if (objectCacheType == configuredCacheTypes[i])
+      {
+        putEdrIntoConvStream();
+      }
+    }
+  }
+  else  // Default behaviour where timos loads only relatime and convergent data
+  {
+    //if the object is a convergent type
+    if ( objectCacheType == 0)
+    {
+      putEdrIntoConvStream();
+    }
+  }
+}
+

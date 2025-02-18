@@ -1,0 +1,2095 @@
+<Opcode name="PCM_OP_PYMT_COLLECT"
+  visibility="public"
+  transaction="required"
+  component="fm_pymt"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+    opspec.xsd"
+  xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>
+	<!--h:p>
+	  <h:i>Copyright &#169; 2004,2014, Oracle. All rights reserved.
+		This material is the confidential property of Oracle Corporation or
+		its licensors and may be used, reproduced, stored or transmitted
+		only in accordance with a valid Oracle license or sublicense
+		agreement.
+	  </h:i>
+	</h:p--> 
+
+	Performs payment collections and refunds. 
+	This opcode allocates the payment to open items for 
+	each bill unit (/billinfo object) specified for the account. 
+	It calls other standard opcodes to validate payments, and various 
+	policy opcodes that allow you to customize payment collection.
+  </Doc>
+  <Input>
+	<Fields>
+	  <Poid name="PIN_FLD_POID" use="required"
+		mode="complete">
+		<Doc>Account object action was applied to.</Doc>
+		<ClassRef>obj://account</ClassRef>
+	  </Poid>
+	  <Poid name="PIN_FLD_SESSION_OBJ" use="optional"
+		mode="complete">
+		<Doc> Session object - session in which event took place - null means none</Doc>
+		<ClassRef>obj://event.session</ClassRef>
+	  </Poid>
+	  <String name="PIN_FLD_PROGRAM_NAME" use="required"
+		maxlen="60">
+		<Doc> Program name - identifies calling program</Doc>
+	  </String>
+	  <String name="PIN_FLD_DESCR" use="optional"
+		maxlen="255">
+		<Doc> Batch description - free text for application to describe batch</Doc>
+	  </String>
+	  <Timestamp name="PIN_FLD_START_T" use="optional">
+		<Doc> Start time - Timestamp of when event started (Portal Time).</Doc>
+	  </Timestamp>
+	  <Timestamp name="PIN_FLD_END_T" use="optional">
+		<Doc> End time - Timestamp of when event ended (Portal Time).  This field is used to determine which billing cycle 
+			the event is part of.
+		</Doc>
+	  </Timestamp>
+	  <Array name="PIN_FLD_BATCH_INFO" use="optional"
+		elemIdMode="index" iterationOrder="undefined"
+		minElements="0" maxElements="1"
+		minElemId="0" maxElemId="0"
+		isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+		isRecursive="false">
+		<Doc> Element-Id is significant here. Always set the element id to be zero.</Doc>
+		<Fields>
+		  <String name="PIN_FLD_BATCH_ID" use="optional"
+			maxlen="30">
+			<Doc> Batch ID.</Doc>
+		  </String>
+		  <Decimal name="PIN_FLD_BATCH_TOTAL" use="optional">
+			<Doc> Total payment amount in this batch. </Doc>
+		  </Decimal>
+		  <String name="PIN_FLD_SUBMITTER_ID" use="required"
+			maxlen="30">
+			<Doc> Submitter ID</Doc>
+		  </String>
+		  <String name="PIN_FLD_LOCKBOX_ID" use="optional"
+			maxlen="30">
+			<Doc> Lockbox ID.</Doc>
+		  </String>
+		  <Timestamp name="PIN_FLD_LOCKBOX_T" use="optional">
+			<Doc> Lockbox Date</Doc>
+		  </Timestamp>
+		  <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+			<Doc> Batch info flags (mask flags)  PIN_PAYMENT_BATCH_CHKPTS - checkpoints has been searched in apps. </Doc>
+		  </Int>
+		  <String name="PIN_FLD_SEPARATOR" use="optional"
+			maxlen="8">
+			<Doc> Batch ID separator.</Doc>
+		  </String>
+		  <Poid name="PIN_FLD_POID_VAL" use="optional"
+			mode="dbonly">
+			<Doc> Clearing House Routing Poid.  The poid_db will be used to determine which dm to connect to collect the
+			 charges.  if not passed in then the ACH from the payinfo  will be used to determine the Routing Poid.
+			</Doc>
+			<ClassRef>obj://search</ClassRef>
+		  </Poid>
+		  <Int name="PIN_FLD_CHANNEL_ID" use="optional">
+			<Doc> Payment Channel Id for the batch</Doc>
+		  </Int>
+                  <Int name="PIN_FLD_CURRENCY" use="optional">
+                        <Doc>currency</Doc>
+                  </Int> 
+		</Fields>
+	  </Array>
+	  <Array name="PIN_FLD_CHARGES" use="optional"
+		elemIdMode="index" iterationOrder="undefined"
+		minElements="0" 
+		minElemId="0" 
+		isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+		isRecursive="false" >
+		<Doc> Element-id is not significant, except return values use matching element-ids.</Doc>
+		<Fields>
+		  <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+			mode="complete">
+			<Doc> Account object involved. </Doc>
+			<ClassRef>obj://account</ClassRef>
+		  </Poid>
+		       <Enum name="PIN_FLD_COMMAND" use="required">
+			<Doc> Charge Operation performed - Valid values are PIN_CHARGE_CMD_NONE,  PIN_CHARGE_CMD_VERIFY, 
+			PIN_CHARGE_CMD_AUTH_ONLY, PIN_CHARGE_CMD_AUTHORIZE,  PIN_CHARGE_CMD_CONDITION, PIN_CHARGE_CMD_DEPOSIT, 
+			PIN_CHARGE_CMD_REFUND,  PIN_CHARGE_CMD_RFR, PIN_CHARGE_CMD_RESUBMIT. If set to PIN_CHARGE_CMD_NONE, then 
+			the assumption  is that this opcode is called only for receiving payment; if set to other  values, then 
+			the charge process will be executed.
+			The values can be:
+			   <h:ul>
+				<h:li>0:
+					If opcode is called only for receiving payment(value:PIN_CHARGE_CMD_NONE).</h:li>
+				<h:li>2:
+					Authorize a charge. The credit limit is decreased on the credit card, but no charge is posted(value:PIN_CHARGE_CMD_AUTH_ONLY).</h:li>
+				<h:li>4:
+					Authorize and deposit a charge(value:PIN_CHARGE_CMD_CONDITION).</h:li>
+				<h:li>5:
+					Deposit a previously authorized charge(value:PIN_CHARGE_CMD_DEPOSIT).</h:li>
+				<h:li>6:
+					Refund a charge(value:PIN_CHARGE_CMD_REFUND).</h:li>
+				<h:li>7:
+					For transactional payments, requests the RFR file to retrieve payments.For nontransactional payments, reads the RFR file to retrieve payments.(value:PIN_CHARGE_CMD_RFR) </h:li>
+				<h:li>8:
+					Resubmit the batch of charges(value:PIN_CHARGE_CMD_RESUBMIT).</h:li>
+				<h:li>9:
+					Recovers payments by using outstanding checkpoints(value:PIN_CHARGE_CMD_RECOVER_PAYMENT).</h:li>
+			   </h:ul>
+			</Doc>
+			<Values>
+				<Value>0</Value>
+				<Doc>No Command(value:PIN_CHARGE_CMD_NONE).</Doc>
+			</Values>
+			<Values>
+				<Value>2</Value>
+				<Doc>Authorize a charge. The credit limit is decreased on the credit card, but no charge is posted(value:PIN_CHARGE_CMD_AUTH_ONLY).</Doc>
+			</Values>
+			<Values>
+				<Value>4</Value>
+				<Doc>Authorize and deposit a charge(value:PIN_CHARGE_CMD_CONDITION).</Doc>
+			</Values>
+			<Values>
+				<Value>5</Value>
+				<Doc>Deposit a previously authorized charge(value:PIN_CHARGE_CMD_DEPOSIT).</Doc>
+			</Values>
+			<Values>
+				<Value>6</Value>
+				<Doc>Refund a charge(value:PIN_CHARGE_CMD_REFUND).</Doc>
+			</Values>
+			<Values>
+				<Value>7</Value>
+				<Doc>For transactional payments, requests the RFR file to retrieve payments.For nontransactional payments, reads the RFR file to retrieve payments.(value:PIN_CHARGE_CMD_RFR) </Doc>	
+			</Values>
+			<Values>
+				<Value>8</Value>
+				<Doc>Resubmit the batch of charges(value:PIN_CHARGE_CMD_RESUBMIT).</Doc>
+			</Values>
+			<Values>
+				<Value>9</Value>
+				<Doc>Recovers payments by using outstanding checkpoints(value:PIN_CHARGE_CMD_RECOVER_PAYMENT).</Doc>
+			</Values>
+		  </Enum>
+		  <Enum name="PIN_FLD_PAY_TYPE" use="required">
+			<Doc> Pay type.
+			   The values can be:
+			   <h:ul>
+				<h:li>0:
+					invalid - used during acct create(value:PIN_PAY_TYPE_UNDEFINED).</h:li>
+				<h:li>10000:
+					prepaid to keep negative balance(value:PIN_PAY_TYPE_PREPAID).</h:li>
+				<h:li>10001:
+					invoiced monthly(value:PIN_PAY_TYPE_INVOICE).</h:li>
+				<h:li>10002:
+					checking account debit(value:PIN_PAY_TYPE_DEBIT).</h:li>
+				<h:li>10003:
+					Credit Card(value:PIN_PAY_TYPE_CC).</h:li>
+				<h:li>10004:
+					French Direct Debit(value:PIN_PAY_TYPE_DDEBIT).</h:li>
+				<h:li>10005:
+					US/Canadian Direct Debit(value:PIN_PAY_TYPE_DD).</h:li>
+				<h:li>10006:
+					Smartcard(value:PIN_PAY_TYPE_SMARTC).</h:li>
+				<h:li>10007:
+					roll up to parent account(value:PIN_PAY_TYPE_SUBORD).</h:li>
+				<h:li>10011:
+					cash payments for payment tool(value:PIN_PAY_TYPE_CASH).</h:li>
+				<h:li>10012:
+					check payments for payment tool(value:PIN_PAY_TYPE_CHECK).</h:li>
+				<h:li>10013:
+					wire transfer payments for payment tool(value:PIN_PAY_TYPE_WTRANSFER).</h:li>
+				<h:li>10014:
+					Inter bank payment order payments for payment tool(value:PIN_PAY_TYPE_PAYORDER).</h:li>
+				<h:li>10015:
+					Postal order payments for payment tool(value:PIN_PAY_TYPE_POSTALORDER).</h:li>
+				<h:li>10016:
+					Voucher payments(value:PIN_PAY_TYPE_VOUCHER).</h:li>
+				<h:li>10017:
+					Failed payment(value:PIN_PAY_TYPE_FAILED).</h:li>
+				<h:li>10018:
+					Sepa payment(value:PIN_PAY_TYPE_SEPA).</h:li>
+			   </h:ul>
+			</Doc>
+			<Values>
+				<Value>0</Value>
+				<Doc>invalid - used during acct create(value:PIN_PAY_TYPE_UNDEFINED).</Doc>
+			</Values>
+			<Values>
+				<Value>10000</Value>
+				<Doc>prepaid to keep negative balance(value:PIN_PAY_TYPE_PREPAID).</Doc>
+			</Values>
+			<Values>
+				<Value>10001</Value>
+				<Doc>invoiced monthly(value:PIN_PAY_TYPE_INVOICE).</Doc>
+			</Values>
+			<Values>
+				<Value>10002</Value>
+				<Doc>checking account debit(value:PIN_PAY_TYPE_DEBIT).</Doc>
+			</Values>
+			<Values>
+				<Value>10003</Value>
+				<Doc>Credit Card(value:PIN_PAY_TYPE_CC).</Doc>
+			</Values>
+			<Values>
+				<Value>10004</Value>
+				<Doc>French Direct Debit(value:PIN_PAY_TYPE_DDEBIT).</Doc>
+			</Values>
+			<Values>
+				<Value>10005</Value>
+				<Doc>US/Canadian Direct Debit(value:PIN_PAY_TYPE_DD).</Doc>
+			</Values>
+			<Values>
+				<Value>10006</Value>
+				<Doc>Smartcard(value:PIN_PAY_TYPE_SMARTC).</Doc>
+			</Values>
+			<Values>
+				<Value>10007</Value>
+				<Doc>roll up to parent account(value:PIN_PAY_TYPE_SUBORD).</Doc>
+			</Values>
+			<Values>
+				<Value>10011</Value>
+				<Doc>cash payments for payment tool(value:PIN_PAY_TYPE_CASH).</Doc>
+			</Values>
+			<Values>
+				<Value>10012</Value>
+				<Doc>check payments for payment tool(value:PIN_PAY_TYPE_CHECK).</Doc>
+			</Values>
+			<Values>
+				<Value>10013</Value>
+				<Doc>wire transfer payments for payment tool(value:PIN_PAY_TYPE_WTRANSFER).</Doc>
+			</Values>
+			<Values>
+				<Value>10014</Value>
+				<Doc>Inter bank payment order payments for payment tool(value:PIN_PAY_TYPE_PAYORDER).</Doc>
+			</Values>
+			<Values>
+				<Value>10015</Value>
+				<Doc>Postal order payments for payment tool(value:PIN_PAY_TYPE_POSTALORDER).</Doc>
+			</Values>
+			<Values>
+				<Value>10016</Value>
+				<Doc>Voucher payments(value:PIN_PAY_TYPE_VOUCHER).</Doc>
+			</Values>
+			<Values>
+				<Value>10017</Value>
+				<Doc>Failed payment(value:PIN_PAY_TYPE_FAILED).</Doc>
+			</Values>
+			<Values>
+				<Value>10018</Value>
+				<Doc>Sepa payment(value:PIN_PAY_TYPE_SEPA).</Doc>
+			</Values>
+		  </Enum>
+		  <Enum name="PIN_FLD_ACTG_TYPE" use="optional">
+			<Doc> Accounting type.
+			   The values can be:
+			   <h:ul>
+				<h:li>1:
+					Bill only includes charges from the bill items in the current bill(value:PIN_ACTG_TYPE_OPEN_ITEMS).</h:li>
+				<h:li>2:
+					Bill includes all the charges that a customer owes(value:PIN_ACTG_TYPE_BALANCE_FORWARD).</h:li>
+			   </h:ul>
+			</Doc>
+			<Values>
+				<Value>1</Value>
+				<Doc>Bill only includes charges from the bill items in the current bill(value:PIN_ACTG_TYPE_OPEN_ITEMS).</Doc>
+			</Values>
+			<Values>
+				<Value>2</Value>
+				<Doc>Bill includes all the charges that a customer owes(value:PIN_ACTG_TYPE_BALANCE_FORWARD).</Doc>
+			</Values>
+		  </Enum>
+		  <Int name="PIN_FLD_FLAGS" use="optional">
+			<Doc> Flags to indicate speical action for this charge. Currently, it is  being used to pass information for
+			 the PCM_OP_PYMT_SELECT_ITEMS opcode.  For example, payment tool set the flag PCM_BILLFLG_DEFER_ALLOCATION
+			 to indicate unallocated payments.</Doc>
+		  </Int> 
+		  <String name="PIN_FLD_MERCHANT" use="optional"
+			maxlen="60">
+			<Doc> Merchant</Doc>
+		  </String>
+		  <Int name="PIN_FLD_CURRENCY" use="optional">
+			<Doc> Currency</Doc>
+		  </Int>
+		  <Int name="PIN_FLD_ACH" use="optional">
+			<Doc> ACH id in /config/ach object. It is mandatory in case of credit card and direct debit payments.</Doc>
+		  </Int>
+		  <Int name="PIN_FLD_CHANNEL_ID" use="optional">
+			<Doc> Payment Channel Id for the individual charge.</Doc>
+		  </Int>
+		  <String name="PIN_FLD_ACCOUNT_NO" use="optional"
+			maxlen="60">
+			<Doc> Account Number.</Doc>
+		  </String>
+		  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+			mode="complete">
+			<Doc> Balance group object involved, passed from PCM_OP_PYMT_TOPUP</Doc>
+			<ClassRef>obj://balance_group</ClassRef>
+		  </Poid>
+		  <Poid name="PIN_FLD_ITEM_OBJ" use="optional"
+				 mode="complete">
+                        <Doc> Poid of refund item. This is populated only in case of a refund </Doc>
+			<ClassRef>obj://item</ClassRef>
+                  </Poid>
+		  <Array name="PIN_FLD_PAYMENT_REASONS" use="optional"
+			elemIdMode="ignored" iterationOrder="undefined"
+			minElements="0" maxElements="1"
+			minElemId="0" maxElemId="0"
+			isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+			isRecursive="false">
+			<Doc> Array of reasons ID.In the case of account level payment to multiple billinfos, reason id will be used to identify "account level payment to multiple billinfos" while the payment processing.</Doc>
+			<Fields>
+			  <Int name="PIN_FLD_REASON_ID" use="optional">
+				<Doc> It is recorded as property of   /event/billing object. See file reasons.locale</Doc>
+			  </Int>
+			  <Int name="PIN_FLD_REASON_DOMAIN_ID" use="optional">
+				<Doc> Domain ID of Reason Id, which is recorded as property of /event/billing object. See file 
+				reasons.locale
+				</Doc>
+			  </Int>
+			</Fields>
+		  </Array>
+		  <Enum name="PIN_FLD_STATUS" use="optional">
+			<Doc> Payment status. Indicating if the payment was successful, suspended, failed.Succesful Payment:0 to 14,Suspense Payment:15 to 29,and Failed Payment:30 to 44.
+			   The values can be:
+			   <h:ul>
+				<h:li>0:
+					Successful Payment(value:PIN_PYMT_SUCCESS).</h:li>
+				<h:li>10:
+					Successful Payment(value:PIN_PYMT_WRITEOFF_SUCCESS).</h:li>
+				<h:li>15:
+					Suspense Payment(value:PIN_PYMT_SUSPENSE).</h:li>
+				<h:li>16:
+					Suspense Payment(value:PIN_PYMT_FAILED_SUSPENSE).</h:li>
+				<h:li>17:
+					Suspense Payment(value:PIN_PYMT_RECYCLED_SUSPENSE).</h:li>
+				<h:li>18:
+					Suspense Payment(value:PIN_PYMT_FAILED_RECYCLED_SUSPENSE).</h:li>
+				<h:li>19:
+					Suspense Payment(value:PIN_PYMT_RETURNED_SUSPENSE).</h:li>
+				<h:li>30:
+					Failed Payment(value:PIN_PYMT_FAILED).</h:li>
+			   </h:ul>
+			</Doc>
+			<Values>
+				<Value>0</Value>
+				<Doc>Successful Payment(value:PIN_PYMT_SUCCESS).</Doc>
+			</Values>
+			<Values>
+				<Value>10</Value>
+				<Doc>Successful Payment(value:PIN_PYMT_WRITEOFF_SUCCESS).</Doc>
+			</Values>
+			<Values>
+				<Value>15</Value>
+				<Doc>Suspense Payment(value:PIN_PYMT_SUSPENSE).</Doc>
+			</Values>
+			<Values>
+				<Value>16</Value>
+				<Doc>Suspense Payment(value:PIN_PYMT_FAILED_SUSPENSE).</Doc>
+			</Values>
+			<Values>
+				<Value>17</Value>
+				<Doc>Suspense Payment(value:PIN_PYMT_RECYCLED_SUSPENSE).</Doc>
+			</Values>
+			<Values>
+				<Value>18</Value>
+				<Doc>Suspense Payment(value:PIN_PYMT_FAILED_RECYCLED_SUSPENSE).</Doc>
+			</Values>
+			<Values>
+				<Value>19</Value>
+				<Doc>Suspense Payment(value:PIN_PYMT_RETURNED_SUSPENSE).</Doc>
+			</Values>
+			<Values>
+				<Value>30</Value>
+				<Doc>Failed Payment(value:PIN_PYMT_FAILED).</Doc>
+			</Values>
+		  </Enum>
+		  <Poid
+			name="PIN_FLD_BILLINFO_OBJ" use="optional"
+			mode="complete">
+			<Doc> Item's Bill-info object.</Doc>
+			<ClassRef>obj://billinfo</ClassRef>
+		  </Poid>
+		  <Int name="PIN_FLD_SELECT_RESULT" use="optional">
+                        <Doc> Result of select items. Valid values are  PIN_SELECT_RESULT_PASS  PIN_SELECT_RESULT_FAIL</Doc>
+                  </Int>
+                  <Int name="PIN_FLD_SELECT_STATUS" use="optional">
+                        <Doc> Status of select items result. Valid values are PIN_SELECT_STATUS_EXACT_MATCH,PIN_SELECT_STATUS_UNDER_PAYMENT, PIN_SELECT_STATUS_OVER_PAYMENT, PIN_SELECT_STATUS_ALLOCATION_DEFERRED and only in the case if PIN_FLD_SELECT_RESULT is PIN_SELECT_RESULT_FAIL then we can have status as (PIN_SELECT_STATUS_MANUAL_ALLOC || PIN_SELECT_STATUS_UNDER_PAYMENT)  and (PIN_SELECT_STATUS_MANUAL_ALLOC || PIN_SELECT_STATUS_OVER_PAYMENT).
+                        </Doc>
+                  </Int>
+                   
+		  <Poid
+                        name="PIN_FLD_POID" use="optional"
+                        mode="complete">
+                        <Doc> Poid of the account object.</Doc>
+                        <ClassRef>obj://account</ClassRef>
+                  </Poid>
+                    
+		  <Array name="PIN_FLD_BILLINFO" use="optional"
+			elemIdMode="ignored" iterationOrder="undefined"
+			minElements="0" maxElements="1"
+			minElemId="0" maxElemId="0"
+			isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+			isRecursive="false">
+			<Doc> Array of billinfos</Doc>
+			<Fields>
+			    <Enum name="PIN_FLD_ACTG_TYPE" use="optional">
+                            	<Doc> Accounting type.
+                             	The values can be:
+                             		<h:ul>
+                                		<h:li>1:
+                                        		Bill only includes charges from the bill items in the current bill(value:PIN_ACTG_TYPE_OPEN_ITEMS).</h:li>
+                                		<h:li>2:
+                                        		Bill includes all the charges that a customer owes(value:PIN_ACTG_TYPE_BALANCE_FORWARD).</h:li>
+                              		</h:ul>
+                            	</Doc>
+                            	<Values>
+                                	<Value>1</Value>
+                                	<Doc>Bill only includes charges from the bill items in the current bill(value:PIN_ACTG_TYPE_OPEN_ITEMS).</Doc>
+                            	</Values>
+                            	<Values>
+                                	<Value>2</Value>
+                                	<Doc>Bill includes all the charges that a customer owes(value:PIN_ACTG_TYPE_BALANCE_FORWARD).</Doc>
+                            	</Values>
+                  	  </Enum>
+			  <String name="PIN_FLD_TRANS_ID" use="optional"
+				maxlen="35">
+				<Doc> Transaction ID. If the command is PIN_CHARGE_CMD_RESUBMIT, this field is the Batch ID. 
+				The maximum length of a payment transaction ID is 30 characters for externally-initiated payments 
+				and 16 characters for Portal-initiated payments. </Doc>
+			  </String>
+			  <String name="PIN_FLD_AUTH_CODE" use="optional"
+				maxlen="30">
+				<Doc> Authorization code.</Doc>
+			  </String>
+			  <String name="PIN_FLD_AUTH_DATE" use="optional"
+				maxlen="30">
+				<Doc> Authorization date.</Doc>
+			  </String>
+			  <String name="PIN_FLD_VENDOR_RESULTS" use="optional"
+				maxlen="60">
+				<Doc> Vendor Results in the format   "VC=vendor-code SR=cvv-result AVS=avs-result"</Doc>
+			  </String>
+			  <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional"
+				mode="complete">
+				<Doc> Billinfo object. Optional for externally initiated payments. Mandatory for Portal 
+				initiated Payments. 
+				</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional"
+				mode="complete">
+				<Doc> Payinfo object correspondent to billinfo object if the poid is passed then the system will 
+				query  for the payinfo details.
+				</Doc>
+				<ClassRef>obj://payinfo</ClassRef>
+			  </Poid>
+			  <Array name="PIN_FLD_PAYINFO" use="optional"
+				elemIdMode="ignored" iterationOrder="undefined"
+				minElements="0" maxElements="1"
+				minElemId="0" maxElemId="0"
+				isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+				isRecursive="false">
+				<Doc> Payinfo object - information for immediate payment.  The  entire object including inherited 
+				fields should be included.  This will bypass database lookup.
+				</Doc>
+				<Fields>
+                                       <Array name="PIN_FLD_CC_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="undefined"
+                                                minElements="0" maxElements="1"
+                                                minElemId="0"
+                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                isRecursive="false">
+                                                <Doc> Credit card info.
+                                                </Doc>
+                                                <Fields>
+                                                        <String name="PIN_FLD_ADDRESS" use="required"
+                                                                maxlen="255">
+                                                                <Doc> Street Address.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_CITY" use="required"
+                                                                maxlen="90">
+                                                                <Doc> City.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_COUNTRY" use="required"
+                                                                maxlen="60">
+                                                                <Doc> Country.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_DEBIT_EXP" use="required"
+                                                                maxlen="128">
+                                                                <Doc> Credit card expiration date (mmyy).
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_DEBIT_NUM" use="required"
+                                                                maxlen="255">
+                                                                <Doc> Credit card number.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_NAME" use="required"
+                                                                maxlen="255">
+                                                                <Doc> Name as it appears on the credit card.
+                                                                </Doc>
+</String>
+                                                        <String name="PIN_FLD_SECURITY_ID" use="optional"
+                                                                maxlen="30">
+                                                                <Doc>
+                                                                Security ID. Used for credit card fraud prevention.
+                                                                This field  stores the 3 digit CVV2 for Visa and 4 digit
+ CID for amex.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_STATE" use="required"
+                                                                maxlen="90">
+                                                                <Doc> State or province.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_ZIP" use="required"
+                                                                maxlen="60">
+                                                                <Doc> Zipcode.
+                                                                </Doc>
+                                                        </String>
+                                                </Fields>
+                                        </Array>
+                                        <Array name="PIN_FLD_DD_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="undefined"
+                                                minElements="0" maxElements="1"
+                                                minElemId="0"
+                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                isRecursive="false">
+                                                <Doc> Direct Debit info.
+                                                </Doc>
+                                                <Fields>
+                                                        <String name="PIN_FLD_ADDRESS" use="required"
+                                                                maxlen="255">
+                                                                <Doc> Street Address.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_BANK_NO" use="required"
+                                                                maxlen="30">
+                                                                <Doc> RDFI/Bank ID used for routing transactions.
+                                                                </Doc>
+</String>
+                                                        <String name="PIN_FLD_CITY" use="required"
+                                                                maxlen="90">
+                                                                <Doc> City.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_COUNTRY" use="required"
+                                                                maxlen="60">
+                                                                <Doc> Country.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_DEBIT_NUM" use="required"
+                                                                maxlen="255">
+                                                                <Doc> Customer's bank account number.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_NAME" use="required"
+                                                                maxlen="255">
+                                                                <Doc> Name as it appears on the credit card.
+                                                                </Doc>
+                                                        </String>
+                                                        <String name="PIN_FLD_STATE" use="required"
+                                                                maxlen="90">
+                                                                <Doc> State or province.
+                                                                </Doc>
+                                                        </String>
+                                                        <Enum name="PIN_FLD_TYPE" use="required">
+                                                                <Doc> Bank account type. Checking, savings or corporate.
+                                                                </Doc>
+								<Values>
+									<Value>1</Value>
+									<Doc>PIN_ACCOUNT_TYPE_CHECKING</Doc>
+								</Values>
+								<Values>
+									<Value>2</Value>
+									<Doc>PIN_ACCOUNT_TYPE_SAVINGS</Doc>
+								</Values>
+								<Values>
+									<Value>3</Value>
+									<Doc>PIN_ACCOUNT_TYPE_CORPORATE</Doc>
+								</Values>
+                                                        </Enum>
+                                                        <String name="PIN_FLD_ZIP" use="required"
+                                                                maxlen="60">
+                                                                <Doc> Zipcode.
+                                                                </Doc>
+                                                        </String>
+                                                </Fields>
+                                        </Array> 
+				</Fields>
+			  </Array>
+                          </Fields>
+                          </Array> 
+			  <Decimal name="PIN_FLD_AMOUNT" use="optional">
+				<Doc> Amount to be collected (for real time) or amount received (for non-real time).
+				 If the amount field is missing, then this opcode will specify in the return flist 
+				 how much money to collect. If amount field is specified, then account will be charged
+				 for the specified amount.
+				</Doc>
+			  </Decimal>
+			  <Array name="PIN_FLD_BILLS" use="optional"
+				elemIdMode="ignored" iterationOrder="undefined"
+				minElements="0" 
+				minElemId="0" 
+				isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+				isRecursive="false">
+				<Doc> Array Of Bills </Doc>
+				<Fields>
+				  <Poid name="PIN_FLD_BILL_OBJ" use="optional"
+					mode="complete">
+					<Doc> bill object - money to be collected for</Doc>
+					<ClassRef>obj://bill</ClassRef>
+				  </Poid>
+				  <Decimal name="PIN_FLD_AMOUNT" use="optional">
+					<Doc> Amount to applied to this bill.</Doc>
+				  </Decimal>
+				  <String name="PIN_FLD_BILL_NO" use="optional"
+					maxlen="60">
+					<Doc> Bill number.</Doc>
+				  </String>
+				</Fields>
+			  </Array>
+			  <Array name="PIN_FLD_ITEMS" use="optional"
+				elemIdMode="ignored" iterationOrder="insertionOrder"
+				minElements="0" 
+				minElemId="0" 
+				isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+				isRecursive="false" >
+				<Doc> The ITEMs array is passed in optionally to pay off specific items.  If the PIN_FLD_ITEMS array
+				 is passed in, the PIN_FLD_BILLS array is ignored.
+				</Doc>
+				<Fields>
+				  <Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+					<Doc> Item object selected.</Doc>
+					<ClassRef>obj://item</ClassRef>
+				  </Poid>
+				  <Poid name="PIN_FLD_BILL_OBJ" use="optional"
+					mode="complete">
+					<Doc> Bill this item belongs to.</Doc>
+					<ClassRef>obj://bill</ClassRef>
+				  </Poid>
+				  <Decimal name="PIN_FLD_DUE" use="required">
+					<Doc> Amount due on this item</Doc>
+				  </Decimal>
+				  <Decimal name="PIN_FLD_AMOUNT" use="optional">
+					<Doc> If this amount is not specified, 100% of the due will be payed off. If the item is to paid off for 10$ then the value in this field should be -10.
+					</Doc>
+				  </Decimal>
+                                  <Poid name="PIN_FLD_AR_BILL_OBJ" use="optional"
+                                        mode="complete">
+                                        <Doc> Bill this item belongs to.</Doc>
+                                        <ClassRef>obj://bill</ClassRef>
+                                  </Poid>
+                                   <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+                                        mode="complete">
+                                        <Doc> Account this item belongs to.</Doc>
+                                        <ClassRef>obj://account</ClassRef>
+                                  </Poid> 
+                                  <Timestamp
+					name="PIN_FLD_EFFECTIVE_T" use="optional">
+					<Doc> Item Effective Time.</Doc>
+				  </Timestamp>
+                                  <Decimal
+					name="PIN_FLD_ITEM_TOTAL"
+					use="optional">
+					<Doc> Total AR Amount  for this Item.</Doc>
+				  </Decimal> 
+                                  <Decimal
+					name="PIN_FLD_DISPUTED"
+					use="optional">
+					<Doc>  Total Dispute Amount of  this Item.</Doc>
+				  </Decimal>  
+				  <Decimal
+					name="PIN_FLD_RECVD"
+					use="optional">
+					<Doc>  Total Payment Amount received on this Item.</Doc>
+				  </Decimal>
+				  <Decimal
+					name="PIN_FLD_ADJUSTED"
+					use="optional">
+					<Doc>  Total Adjustment Amount made on this Item.</Doc>
+			          </Decimal>
+			          <Decimal
+					name="PIN_FLD_TRANSFERED"
+					use="optional">
+					<Doc>  Total Amount that was  Transferred Out of this Item.</Doc>
+			          </Decimal>
+                                  <Int
+					name="PIN_FLD_CURRENCY"
+					use="optional">
+					<Doc>  Primary Currency.</Doc>
+				  </Int>
+                                  <Enum
+                                        name="PIN_FLD_STATUS"
+                                        use="optional">
+                                        <Doc> Item Status. 
+                                            <h:ul>
+                                                <h:li>PIN_ITEM_STATUS_OPEN (2)</h:li>
+                                            </h:ul>
+                                        </Doc>
+                                        <Values>
+					    <Value>2</Value>
+					    <Doc> PIN_ITEM_STATUS_OPEN</Doc>
+					</Values> 
+                                  </Enum> 
+                                  <String
+					name="PIN_FLD_ITEM_NO" use="optional"
+					maxlen="60">
+					<Doc> Item Number.</Doc>
+				  </String>
+                                  <Poid
+					name="PIN_FLD_BILLINFO_OBJ" use="optional"
+					mode="complete">
+					<Doc> Item's Bill-info object.</Doc>
+					<ClassRef>obj://billinfo</ClassRef>
+				  </Poid> 
+                                  <Poid
+					name="PIN_FLD_AR_BILLINFO_OBJ" use="optional"
+					mode="complete">
+					<Doc> Poid of the Bill-info object that is responsible for the A/R.</Doc>
+					<ClassRef>obj://billinfo</ClassRef>
+			          </Poid>
+                                  <Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+						mode="complete">
+						<Doc> Service object poid product belongs to</Doc>
+						<ClassRef>obj://service</ClassRef>
+				  </Poid>  
+                                  <String name="PIN_FLD_EVENT_POID_LIST" use="optional"
+                                                        maxlen="256">
+                                                <Doc> Event poid list.</Doc>
+				  </String>  
+   
+				</Fields>
+			  </Array>
+			  <Substruct name="PIN_FLD_PAYMENT" use="optional"
+				isRecursive="false">
+				<Doc> Payment substructure - container for payment fields.  The contents will be used in 
+				PCM_OP_BILL_RCV_PAYMENT.
+				</Doc>
+				<Fields>
+				  <String name="PIN_FLD_DESCR" use="optional"
+					maxlen="255">
+					<Doc> Payment description - free text for describing payment.</Doc>
+				  </String>
+				  <Substruct name="PIN_FLD_TOPUP_RESOURCE_INFO" use="optional"
+					isRecursive="false">
+					<Doc> This substruct contains the balance  impacts of resources topped up by the voucher
+					</Doc>
+					<Fields>
+					  <Array name="PIN_FLD_BAL_IMPACTS" use="required"
+						elemIdMode="ignored" iterationOrder="undefined"
+						minElements="1" 
+						minElemId="1" 
+						isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+						isRecursive="false" allowedElemIds="1">
+						<Doc> For each balance impacts.</Doc>
+						<Fields>
+						  <Int name="PIN_FLD_RESOURCE_ID" use="required">
+							<Doc> Resource id</Doc>
+						  </Int>
+						  <Decimal name="PIN_FLD_AMOUNT" use="required">
+							<Doc> Balance impact amount.</Doc>
+						  </Decimal>
+						  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="required"
+							    mode="complete">
+							<Doc> Balance group poid</Doc>
+							<ClassRef>obj://balance_group</ClassRef>
+						  </Poid>
+						  <Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+							<Doc> Validity period start</Doc>
+						  </Timestamp>
+						  <Timestamp name="PIN_FLD_VALID_TO" use="optional">
+							<Doc> Validity period end</Doc>
+						  </Timestamp>
+						</Fields>
+					  </Array>
+					</Fields>
+				  </Substruct>
+				  <Substruct name="PIN_FLD_INHERITED_INFO" use="optional"
+					isRecursive="false">
+					<Doc> Inherited info - container for payment specific fields.</Doc>
+					<Fields>
+                                               <Array name="PIN_FLD_CHECK_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="insertionOrder"
+						minElements="0"
+						minElemId="0"
+						isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+						isRecursive="false" >
+                                                <Doc> check information.</Doc>
+                                                <Fields>
+                                                       <Timestamp
+								name="PIN_FLD_EFFECTIVE_T" use="optional">
+								<Doc> Payment Effective Time.</Doc>
+						       </Timestamp>
+                                                       <String
+								name="PIN_FLD_CHECK_NO" use="optional"
+								maxlen="60">
+								<Doc> Check Number.</Doc> 
+						       </String>
+						       <String
+                                                                name="PIN_FLD_BANK_CODE" use="optional"
+                                                                maxlen="60">
+                                                                <Doc> Bank code.</Doc> 
+                                                       </String>
+						       <String
+                                                                name="PIN_FLD_BANK_ACCOUNT_NO" use="optional"
+                                                                maxlen="60">
+                                                                <Doc> Bank account number.</Doc>    
+                                                       </String>
+						</Fields> 
+						</Array>
+                                                <Array name="PIN_FLD_CASH_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="insertionOrder"
+                                                minElements="0"
+                                                minElemId="0"
+                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                isRecursive="false" >
+                                                <Doc> cash information.</Doc>
+                                                <Fields>
+                                                       <Timestamp
+                                                                name="PIN_FLD_EFFECTIVE_T" use="optional">
+                                                                <Doc>Payment Effective Time.</Doc>
+                                                       </Timestamp>
+                                                        <String
+                                                                name="PIN_FLD_RECEIPT_NO" use="optional"
+                                                                maxlen="60">
+                                                                <Doc> Receipt Number.</Doc>
+                                                       </String>
+                                                </Fields>
+                                                </Array> 
+						<Array name="PIN_FLD_POSTAL_ORDER_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="insertionOrder"
+                                                minElements="0"
+                                                minElemId="0"
+                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                isRecursive="false" >
+                                                <Doc> Postal order information.</Doc>
+                                                <Fields>
+                                                       <Timestamp
+                                                                name="PIN_FLD_EFFECTIVE_T" use="optional">
+                                                                <Doc>Payment Effective Time.</Doc>
+                                                       </Timestamp>
+                                                        <String
+                                                                name="PIN_FLD_ORDER_ID" use="optional"
+                                                                maxlen="60">
+                                                                <Doc>Order id.</Doc>
+                                                       </String>
+                                                </Fields>
+                                                </Array> 
+						<Array name="PIN_FLD_WIRE_TRANSFER_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="insertionOrder"
+                                                minElements="0"
+                                                minElemId="0"
+                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                isRecursive="false" >
+                                                <Doc>Wire transfer information.</Doc>
+                                                <Fields>
+                                                       <Timestamp
+                                                                name="PIN_FLD_EFFECTIVE_T" use="optional">
+                                                                <Doc>Payment Effective Time.</Doc>
+                                                       </Timestamp>
+                                                        <String
+                                                                name="PIN_FLD_WIRE_TRANSFER_ID" use="optional"
+                                                                maxlen="60">
+                                                                <Doc>Wire transfer id.</Doc>
+                                                       </String>
+						       <String
+                                                                name="PIN_FLD_BANK_CODE" use="optional"
+                                                                maxlen="60">
+                                                                <Doc> Bank code.</Doc> 
+                                                       </String>
+						       <String
+                                                                name="PIN_FLD_BANK_ACCOUNT_NO" use="optional"
+                                                                maxlen="60">
+                                                                <Doc> Bank account number.</Doc>    
+                                                       </String>
+                                                </Fields>
+                                                </Array> 
+					        <Array name="PIN_FLD_PAY_ORDER_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="insertionOrder"
+                                                minElements="0"
+                                                minElemId="0"
+                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                isRecursive="false" >
+                                                <Doc>Wire transfer information.</Doc>
+                                                <Fields>
+                                                       <Timestamp
+                                                                name="PIN_FLD_EFFECTIVE_T" use="optional">
+                                                                <Doc>Payment Effective Time.</Doc>
+                                                       </Timestamp>
+                                                        <String
+                                                                name="PIN_FLD_ORDER_ID" use="optional"
+                                                                maxlen="60">
+                                                                <Doc>order id.</Doc>
+                                                       </String>
+                                                       <String
+                                                                name="PIN_FLD_BANK_CODE" use="optional"
+                                                                maxlen="60">
+                                                                <Doc> Bank code.</Doc>
+                                                       </String>
+                                                       <String
+                                                                name="PIN_FLD_BANK_ACCOUNT_NO" use="optional"
+                                                                maxlen="60">
+                                                                <Doc> Bank account number.</Doc>
+                                                       </String>
+                                                </Fields>
+                                                </Array>
+                                                <Array name="PIN_FLD_PAYMENT_FAILED_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="insertionOrder"    
+                                                minElements="0" 
+                                                minElemId="0"   
+                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"        
+                                                isRecursive="false" >   
+                                                <Doc>Payment failed information.</Doc>   
+                                                <Fields>        
+                                                       <String  
+                                                                name="PIN_FLD_PAYMENT_TRANS_ID" use="optional" 
+                                                                maxlen="60">    
+                                                                <Doc>Payment transaction id.</Doc>  
+                                                       </String>         
+                                                </Fields>
+                                                </Array> 
+                                                <Array name="PIN_FLD_SEPA_INFO" use="optional"
+                                                elemIdMode="ignored" iterationOrder="insertionOrder"
+                                                minElements="0"
+                                                minElemId="0"
+                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                isRecursive="false" >
+                                                <Doc>Sepa information.</Doc>
+                                                <Fields>
+                                                       <String
+                                                                name="PIN_FLD_IBAN" use="optional"
+                                                                maxlen="34">
+                                                                <Doc>International Bank Account Number.</Doc>
+                                                       </String>
+                                                       <String
+                                                                name="PIN_FLD_BIC" use="optional"
+                                                                maxlen="11">
+                                                                <Doc>Business Identifier Code which is a unique identifier 
+                                                                     for the bank related to the account.</Doc>
+                                                       </String>
+                                                       <Enum
+                                                                name="PIN_FLD_MANDATE_TYPE" use="optional">
+                                                                <Doc>This field specifies whether the collection covered by 
+                                                                     the mandate is a single one-off collection or a series 
+                                                                     of recurrent collection.</Doc>
+                                                       </Enum>
+                                                       <String
+                                                                name="PIN_FLD_MANDATE_UNIQUE_REFERENCE" use="optional"
+                                                                maxlen="35">
+                                                                <Doc>Mandate unique reference number of the debtor.</Doc>
+                                                       </String>
+                                                </Fields>
+                                                </Array> 
+					</Fields>
+				  </Substruct>
+				</Fields>
+			  </Substruct>
+                     </Fields>
+		  </Array>
+	    </Fields>
+           </Input>
+  <Output>
+	<Fields>
+	  <Poid name="PIN_FLD_POID" use="required"
+		mode="complete">
+		<Doc>Account object passed into call.</Doc>
+		<ClassRef>obj://account</ClassRef>
+	  </Poid>
+	  <Array name="PIN_FLD_RESULTS" use="required"
+		elemIdMode="index" iterationOrder="undefined"
+		minElements="1"
+		minElemId="0"
+		isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+		isRecursive="false">
+		<Doc> One element is returned for each element of the charges array that was  passed in on the input flist. The 
+		element-id of the result element matches  the corresponding element of the charges array.
+		</Doc>
+		<Fields>
+		  <Poid name="PIN_FLD_POID" use="optional"
+			mode="complete">
+			<Doc> Poid of the event object created for event (only if an event is created)</Doc>
+			<ClassRef>obj://event.billing.payment</ClassRef>
+		  </Poid>
+		  <Enum name="PIN_FLD_RESULT" use="required">
+			<Doc> Result of the operation (pass or fail).
+			   The values can be:
+			   <h:ul>
+				<h:li>1:
+					Pass(value:PIN_RESULT_PASS).</h:li>
+				<h:li>0:
+					Failed(value:PIN_RESULT_FAIL).</h:li>
+			   </h:ul>
+			</Doc>
+			<Values>
+				<Value>1</Value>
+				<Doc>Pass(value:PIN_RESULT_PASS).</Doc>
+			</Values>
+			<Values>
+				<Value>0</Value>
+				<Doc>Failed(value:PIN_RESULT_FAIL).</Doc>
+			</Values>
+		  </Enum>
+		  <Enum name="PIN_FLD_TYPE" use="optional">
+			<Doc> Type of failure (Portal defined value)
+			   The values can be:
+			   <h:ul>
+				<h:li>0:Pass.</h:li>
+				<h:li>1:Fail.</h:li>
+			   </h:ul>
+			</Doc>
+			<Values>
+				<Value>0</Value>
+				<Doc>Pass.</Doc>
+			</Values>
+			<Values>
+				<Value>1</Value>
+				<Doc>Fail.</Doc>
+			</Values>
+		  </Enum>
+		<Array name="PIN_FLD_RESULTS" use="optional"
+			elemIdMode="index" iterationOrder="undefined"
+			minElements="0" minElemId="0"
+			isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+			isRecursive="false">
+			<Doc> This result array will be returned in the case of account level payment to multiple billinfos. There will be one result array
+				for each billinfo array element in the return flist of PCM_OP_PYMT_SELECT_ITEMS return flist.
+			</Doc>
+			<Fields>
+				<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+					<Doc> Poid of the event object created for event (only if an event is created)</Doc>
+					<ClassRef>obj://event.billing.payment</ClassRef>
+				</Poid>
+				<Enum name="PIN_FLD_RESULT" use="required">
+					<Doc> Result of the operation (pass or fail).
+					The values can be:
+					<h:ul>
+					<h:li>1:Pass(value:PIN_RESULT_PASS).</h:li>
+					<h:li>0:Failed(value:PIN_RESULT_FAIL).</h:li>
+					</h:ul>
+					</Doc>
+					<Values>
+						<Value>1</Value>
+						<Doc>Pass(value:PIN_RESULT_PASS).</Doc>
+					</Values>
+					<Values>
+						<Value>0</Value>
+						<Doc>Failed(value:PIN_RESULT_FAIL).</Doc>
+					</Values>
+				</Enum>
+				<Int name="PIN_FLD_SELECT_RESULT" use="optional">
+					<Doc> Result of select items. Valid values are 	PIN_SELECT_RESULT_PASS and PIN_SELECT_RESULT_FAIL</Doc>
+				</Int>
+			</Fields>
+		</Array>
+		  <String name="PIN_FLD_DESCR" use="optional"
+			maxlen="255">
+			<Doc> Descriptive message - may be sent on success as well as failure</Doc>
+		  </String>
+		  <String name="PIN_FLD_ITEM_NO" use="optional"
+			maxlen="60">
+			<Doc> A unique number is generated for each payment. This number can be 
+				      used as a confirmation number to identify a payment.</Doc>
+		  </String>
+		  <Substruct name="PIN_FLD_INHERITED_INFO" use="optional"
+			isRecursive="false">
+			<Doc> Inherited Info.  If there is an inherited info returned by the policy (pcm_op_bill_pol_collect) 
+			 then op_bill_collect appends it to the output flist. 
+			</Doc>
+			<Fields>
+				<Any name="PIN_FLD_ANY" use="optional" mode="subclassFields"
+					baseClassName="obj://event.billing">
+					<Doc> Set of fields that are from /event/billing/payment/xx.</Doc>
+				</Any>
+			</Fields>
+		  </Substruct>
+		  <Int name="PIN_FLD_SELECT_RESULT" use="optional">
+			<Doc> Result of select items. Valid values are 	PIN_SELECT_RESULT_PASS 	PIN_SELECT_RESULT_FAIL</Doc>
+		  </Int>
+		  <Int name="PIN_FLD_SELECT_STATUS" use="optional">
+			<Doc> Status of select items result. Valid values are 	PIN_SELECT_STATUS_EXACT_MATCH, 
+			PIN_SELECT_STATUS_UNDER_PAYMENT, PIN_SELECT_STATUS_OVER_PAYMENT, PIN_SELECT_STATUS_MANUAL_ALLOC
+			</Doc>
+		  </Int>
+		  <Array name="PIN_FLD_EVENTS" use="optional"
+			elemIdMode="ignored" iterationOrder="undefined"
+			minElements="0" 
+			minElemId="0" 
+			isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+			isRecursive="false">
+			<Doc> Array of events. </Doc>
+			<Fields>
+			  <Poid name="PIN_FLD_POID" use="optional"
+                                mode="complete">
+                                <Doc> Poid of event object  </Doc>
+                                <ClassRef>obj://event</ClassRef>
+                          </Poid>
+			  <Poid name="PIN_FLD_EVENT_OBJ" use="optional"
+				mode="complete">
+				<Doc> Poid of taxation event object  </Doc>
+				<ClassRef>obj://event</ClassRef>
+			  </Poid>
+			  <Enum name="PIN_FLD_RESULT" use="required">
+				<Doc> Result of the operation (pass or fail)  Used to store the Writeoff reversal pass/fail 
+				status:	PIN_REVERSE_RES_PASS, PIN_REVERSE_RES_FAIL.
+				   The values can be:
+				   <h:ul>
+					<h:li>0:
+						Pass(value:PIN_REVERSE_RES_PASS).</h:li>
+					<h:li>1:
+						Fail(value:PIN_REVERSE_RES_FAIL).</h:li>
+				   </h:ul>
+				</Doc>
+				<Values>
+					<Value>0</Value>
+					<Doc>Pass(value:PIN_REVERSE_RES_PASS).</Doc>
+				</Values>
+				<Values>
+					<Value>1</Value>
+					<Doc>Fail(value:PIN_REVERSE_RES_FAIL).</Doc>
+				</Values>
+			  </Enum>
+			</Fields>
+		  </Array>
+<Timestamp name="PIN_FLD_CREATED_T" use="optional">
+<Doc> Time the object was created.</Doc>
+</Timestamp>
+<Timestamp name="PIN_FLD_MOD_T" use="optional">
+<Doc> Time object  was last modified.</Doc>
+</Timestamp>
+<String name="PIN_FLD_READ_ACCESS" use="optional"
+maxlen="60">
+<Doc>Read Access level for object. Valid values are S(Self), G(Global), L(BrandLineage), B(BrandGroup), A(Ancestral).</Doc>
+</String>
+<String name="PIN_FLD_WRITE_ACCESS" use="optional"
+maxlen="60">
+<Doc>Write Access level for object. Valid values are S(Self), G(Global), L(BrandLineage), B(BrandGroup), A(Ancestral).</Doc>
+</String>
+<Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+mode="complete">
+<Doc> Link to account object that owns this item .</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+ <Enum name="PIN_FLD_ARCHIVE_STATUS" use="optional">
+ <Doc>Archiving status for this event instance.</Doc>
+ <Values>
+<Value>0</Value>
+<Doc>PIN_ARCHIVE_OBJSTATE_NULL</Doc>
+</Values>
+ </Enum>
+<String name="PIN_FLD_BATCH_ID" use="optional"
+maxlen="30">
+<Doc>Batch Id this event belongs to.</Doc>
+</String>
+<Int name="PIN_FLD_CURRENCY" use="optional">
+<Doc>Same as the currency of the account to which this event applies to.</Doc>
+</Int>
+<Timestamp name="PIN_FLD_EARNED_END_T" use="optional">
+<Doc>Timestamp, when the event is earned completely. Value of Zero (default) indicate that the event is earned immediately.</Doc>
+</Timestamp>
+<Timestamp name="PIN_FLD_EARNED_START_T" use="optional">
+<Doc> Timestamp, when the event start earning. Value of Zero (default) indicate that the event start earning immediately.</Doc>
+</Timestamp>
+<Int name="PIN_FLD_EARNED_TYPE" use="optional">
+<Doc>Indicator for earnings type. Value of zero (default) indicates that the event is earned immediately. Value of 1 indicate that the event is earned over a period of time specified by PIN_FLD_EARNED_START_T and PIN_FLD_EARNED_END_T.</Doc>
+</Int>
+<Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+<Doc>Effective time of the event.</Doc>
+</Timestamp>
+<Timestamp name="PIN_FLD_END_T" use="optional">
+<Doc>
+End time - Timestamp of when event ended
+(Portal Time).  This field is used to determine
+which billing cycle the event is part of.
+</Doc>
+</Timestamp>
+<String name="PIN_FLD_EVENT_NO" use="optional"
+maxlen="30">
+<Doc>Event number.</Doc>
+</String>
+<Int name="PIN_FLD_FLAGS" use="optional">
+<Doc>Flags to indicate speical action for this charge. Currently, it is  being used to pass information for  the PCM_OP_PYMT_SELECT_ITEMS opcode.  For example, payment tool set the flag PCM_BILLFLG_DEFER_ALLOCATION  to indicate unallocated payments.</Doc>
+</Int>
+<Poid name="PIN_FLD_GROUP_OBJ" use="optional"
+mode="complete">
+<Doc>Link to the group object to which this event object is related to. Typically set when creating /event/group class events.</Doc>
+<ClassRef>obj://event</ClassRef>
+</Poid>
+<Decimal name="PIN_FLD_INCR_QUANTITY" use="optional">
+<Doc> Incremental value to round RUM Quantity to. RUM Quantity is always rounded to an integral multiple of the Incr Quantity</Doc>
+</Decimal>
+<Enum name="PIN_FLD_INCR_UNIT" use="optional">
+ <Doc>Units that INCR_QUANTITY is specified in. The values could be 0(None), 1(Minute), 2(Second), 3(Hour), 4(Day), 11(Byte), 12(Kilobyte), 13(Megabyte), 14(Gigabyte).</Doc>
+ <Values>
+ <Value>0</Value>
+ <Doc>NONE</Doc>
+ </Values>
+ <Values>
+ <Value>1</Value>
+ <Doc>MINUTE</Doc>
+ </Values>
+ <Values>
+ <Value>2</Value>
+ <Doc>SECOND</Doc>
+ </Values>
+ <Values>
+ <Value>3</Value>
+ <Doc>HOUR</Doc>
+ </Values>
+ <Values>
+ <Value>4</Value>
+ <Doc>DAY</Doc>
+ </Values>
+ <Values>
+ <Value>11</Value>
+ <Doc>BYTE</Doc>
+ </Values>
+ <Values>
+ <Value>12</Value>
+ <Doc>KILOBYTE</Doc>
+ </Values>
+ <Values>
+ <Value>13</Value>
+ <Doc>MEGABYTE</Doc>
+ </Values>
+ <Values>
+ <Value>14</Value>
+ <Doc>GIGABYTE</Doc>
+ </Values>
+ </Enum>
+ <String name="PIN_FLD_INVOICE_DATA" use="optional"
+maxlen="30">
+<Doc>Invoice data.Cache the fields in /event that need to be handled in invoicing.</Doc>
+</String>
+<Poid name="PIN_FLD_ITEM_OBJ" use="optional"
+mode="complete">
+<Doc> Item object</Doc>
+<ClassRef>obj://item</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_LOADER_BATCH_OBJ" use="optional"
+mode="complete">
+<Doc>The poid of the session which inserted this event.</Doc>
+<ClassRef>obj://event</ClassRef>
+</Poid>
+<Decimal name="PIN_FLD_MIN_QUANTITY" use="optional">
+<Doc>Minimum value that the RUM quantity is rounded to. Value smaller than min_quantity is rounded to min_quantity..</Doc>
+</Decimal>
+<Enum name="PIN_FLD_MIN_UNIT" use="optional">
+ <Doc>Unit min_quantity is expressed in. Value can be NONE(0), SECOND(1), MINUTE(2), HOUR(3), or DAY(4).</Doc>
+ <Values>
+ <Value>0</Value>
+ <Doc>NONE</Doc>
+ </Values>
+ <Values>
+ <Value>1</Value>
+ <Doc>SECOND</Doc>
+ </Values>
+ <Values>
+ <Value>2</Value>
+ <Doc>MINUTE</Doc>
+ </Values>
+ <Values>
+ <Value>3</Value>
+ <Doc>HOUR</Doc>
+ </Values>
+ <Values>
+ <Value>4</Value>
+ <Doc>DAY</Doc>
+ </Values>
+ </Enum>
+ <String name="PIN_FLD_NAME" use="optional"
+maxlen="30">
+<Doc>User-defined name of the event.</Doc>
+</String>
+<Decimal name="PIN_FLD_NET_QUANTITY" use="optional">
+<Doc>Net quantity calculated after performing the rounding. </Doc>
+</Decimal>
+ <String name="PIN_FLD_ORIGINAL_BATCH_ID" use="optional"
+maxlen="30">
+<Doc>Mediation batch id this event belongs to.</Doc>
+</String>
+ <String name="PIN_FLD_PROFILE_LABEL_LIST" use="optional"
+maxlen="30">
+<Doc>Specifies differant label names.</Doc>
+</String>
+ <String name="PIN_FLD_PROGRAM_NAME" use="optional"
+maxlen="30">
+<Doc>Identifies the calling program.</Doc>
+</String>
+ <String name="PIN_FLD_PROVIDER_DESCR" use="optional"
+maxlen="30">
+<Doc>When a part of the charges associated with this event needs to be remittted to another vendor, this field identifies the topic to which it relates to.</Doc>
+</String>
+<Poid name="PIN_FLD_PROVIDER_ID" use="optional"
+mode="complete">
+<Doc> When a part of the charges associated with this event need to be remittted to another vendor, this field provides a link to the service provider object that represents the provider account.</Doc>
+<ClassRef>obj://event</ClassRef>
+</Poid>
+<Binstr name="PIN_FLD_PROVIDER_IPADDR" use="optional"
+maxlen="30">
+<Doc>IP address of the service provider.</Doc>
+</Binstr>
+<String name="PIN_FLD_RATED_TIMEZONE_ID" use="optional"
+maxlen="30">
+<Doc>TimeZone ID actually used for rating.</Doc>
+</String>
+<Poid name="PIN_FLD_RERATE_OBJ" use="optional"
+mode="complete">
+<Doc>Link to the event object if this event is re-rated.</Doc>
+<ClassRef>obj://event</ClassRef>
+</Poid>
+<Enum name="PIN_FLD_ROUNDING_MODE" use="optional">
+ <Doc>Specifies how RUM quantity is rounded.</Doc>
+ <Values>
+ <Value>0</Value>
+ <Doc>PIN_BEID_ROUND_NEAREST</Doc>
+ </Values>
+ <Values>
+ <Value>1</Value>
+ <Doc>PIN_BEID_ROUND_UP</Doc>
+ </Values>
+ <Values>
+ <Value>2</Value>
+ <Doc>PIN_BEID_ROUND_DOWN</Doc>
+ </Values>
+ <Values>
+ <Value>3</Value>
+ <Doc>PIN_BEID_ROUND_EVEN</Doc>
+ </Values>
+ <Values>
+ <Value>4</Value>
+ <Doc>PIN_BEID_ROUND_FLOOR</Doc>
+ </Values>
+ <Values>
+ <Value>5</Value>
+ <Doc>PIN_BEID_ROUND_FLOOR_ALT</Doc>
+ </Values>
+ <Values>
+ <Value>6</Value>
+ <Doc> PIN_BEID_ROUND_DOWN_ALT</Doc>
+ </Values>
+  </Enum>
+ <String name="PIN_FLD_RUM_NAME" use="optional"
+maxlen="30">
+<Doc>Specifies which RUM was used to rate this event.</Doc>
+</String>
+<Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+mode="complete">
+<Doc>Link to the service object for which the event is being logged.</Doc>
+<ClassRef>obj://service</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_SESSION_OBJ" use="optional"
+mode="complete">
+<Doc>Link to the event object (/event/session) that represents the session within which this event occurred.</Doc>
+<ClassRef>obj://event</ClassRef>
+</Poid>
+<Timestamp
+name="PIN_FLD_START_T" use="optional">
+<Doc> Start_time of event.</Doc>
+</Timestamp>
+<String name="PIN_FLD_SYS_DESCR" use="optional"
+maxlen="30">
+<Doc>System generated description - describes event programmatically.</Doc>
+</String>
+<String name="PIN_FLD_TAX_LOCALES" use="optional"
+maxlen="30">
+<Doc>Tax locales -- order origin;order accept;ship from;ship to.</Doc>
+</String>
+<Int name="PIN_FLD_TAX_SUPPLIER" use="optional">
+<Doc>Link to the /profile/tax_supplier object that is used to tax this event.</Doc>
+</Int>
+<Timestamp
+name="PIN_FLD_TIMEZONE_ADJ_END_T" use="optional">
+<Doc>This timestamp is PIN_FLD_END_T value adjusted bythe offset for PIN_FLD_RATED_TIMEZONE_ID.</Doc>
+</Timestamp>
+<Timestamp
+name="PIN_FLD_TIMEZONE_ADJ_START_T" use="optional">
+<Doc>This timestamp is PIN_FLD_START_T value adjusted bythe offset for PIN_FLD_RATED_TIMEZONE_ID.</Doc>
+</Timestamp>
+<String name="PIN_FLD_TIMEZONE_ID" use="optional"
+maxlen="30">
+<Doc>TimeZone ID of the event as String.</Doc>
+</String>
+<Enum name="PIN_FLD_TIMEZONE_MODE" use="optional">
+ <Doc>Timezone mode defines which timezone to use when apply TOD rates. Value can be EVENT(0), SERVER(1), or ACCOUNT(2).</Doc>
+ <Values>
+ <Value>0</Value>
+ <Doc>EVENT</Doc>
+ </Values>
+ <Values>
+ <Value>1</Value>
+ <Doc>SERVER</Doc>
+ </Values>
+ <Values>
+ <Value>2</Value>
+ <Doc>ACCOUNT</Doc>
+ </Values>
+ </Enum>
+ <Enum name="PIN_FLD_TOD_MODE" use="optional">
+ <Doc>TOD mode defines how TOD rates are applied to the event. Value can be START_TIME(0), END_TIME(1), or TIMED(2)</Doc>
+  <Values>
+ <Value>0</Value>
+ <Doc>START_TIME</Doc>
+ </Values>
+ <Values>
+ <Value>1</Value>
+ <Doc>END_TIME</Doc>
+ </Values>
+ <Values>
+ <Value>2</Value>
+ <Doc>TIMED</Doc>
+ </Values>
+ </Enum>
+ <Enum name="PIN_FLD_UNIT" use="optional">
+ <Doc>Unit of the quantity applied.The values could be NONE(0), SECOND(1), MINUTE(2), HOUR(3), DAY(4).</Doc>
+  <Values>
+ <Value>0</Value>
+ <Doc>NONE</Doc>
+ </Values>
+ <Values>
+ <Value>1</Value>
+ <Doc>SECOND</Doc>
+ </Values>
+ <Values>
+ <Value>2</Value>
+ <Doc>MINUTE</Doc>
+ </Values>
+ <Values>
+ <Value>3</Value>
+ <Doc>HOUR</Doc>
+ </Values>
+ <Values>
+ <Value>4</Value>
+ <Doc>DAY</Doc>
+ </Values>
+ </Enum>
+ <Decimal name="PIN_FLD_UNRATED_QUANTITY" use="optional">
+<Doc>Quantity which has not been rated.</Doc>
+</Decimal>
+<String name="PIN_FLD_USAGE_TYPE" use="optional"
+maxlen="30">
+<Doc>Type describes the specific customer related call scenario. </Doc>
+</String>
+<Poid name="PIN_FLD_USERID" use="optional"
+mode="complete">
+<Doc>The unique ID of the user who is running program that started the event.</Doc>
+<ClassRef>obj://event</ClassRef>
+</Poid>
+<Array name="PIN_FLD_SUB_BAL_IMPACTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+<Doc>Sub Balance Imapcts</Doc>
+<Fields>
+<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+mode="complete">
+<Doc>Balance group poid</Doc>
+<ClassRef>obj://balance_group</ClassRef>
+</Poid>
+<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+<Doc> Currency associated with original amount.</Doc>
+</Int>
+<Array name="PIN_FLD_SUB_BALANCES" use="optional"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="0"
+minElemId="0"
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="false">
+<Doc>Sub balance element adjusted.</Doc>
+<Fields>
+<Decimal name="PIN_FLD_AMOUNT" use="optional">
+<Doc> Amount of adjustment.</Doc>
+</Decimal>
+<Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+<Doc>Start date of this validity based balance.</Doc>
+</Timestamp>
+<Timestamp name="PIN_FLD_VALID_TO" use="optional">
+<Doc>The end date of this validity based balance.</Doc>
+</Timestamp>
+<String name="PIN_FLD_CONTRIBUTOR_STR" use="optional"
+maxlen="256">
+<Doc>The contributor for this sub-balance.</Doc>
+</String>
+<Int name="PIN_FLD_ROLLOVER_DATA" use="optional">
+<Doc>Rollover information for sub-balance.</Doc>
+</Int>
+<Int name="PIN_FLD_VALID_FROM_DETAILS" use="optional">
+ <Doc>Detail of field PIN_FLD_VALID_FROM mode, offset
+ and unit.</Doc>
+</Int>
+<Int name="PIN_FLD_VALID_TO_DETAILS" use="optional">
+<Doc>Detail of field PIN_FLD_VALID_TO mode, offset and unit.</Doc>
+</Int>
+<Poid name="PIN_FLD_GRANTOR_OBJ" use="optional"
+mode="complete">
+<Doc>Poid of the grantor.</Doc>
+<ClassRef>obj://purchased_product</ClassRef>
+<ClassRef>obj://purchased_discount</ClassRef>
+<ClassRef>obj://product</ClassRef>
+</Poid>
+</Fields>
+</Array>
+</Fields>
+</Array>
+<Array name="PIN_FLD_BAL_IMPACTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+<Doc>Event balance impacts</Doc>
+<Fields>
+<Enum name="PIN_FLD_IMPACT_TYPE" use="optional">
+<Doc>Impact type.Indicates the impact type of the event.</Doc>
+
+<Values>
+<Value>1</Value>
+<Doc>PIN_IMPACT_TYPE_RATED </Doc>
+</Values>
+<Values>
+<Value>2</Value>
+<Doc>PIN_IMPACT_TYPE_PRERATED</Doc>
+</Values>
+<Values>
+<Value>4</Value>
+<Doc>PIN_IMPACT_TYPE_TAX </Doc>
+</Values>
+<Values>
+<Value>8</Value>
+<Doc>PIN_IMPACT_TYPE_PO </Doc>
+</Values>
+<Values>
+<Value>16</Value>
+<Doc>PIN_IMPACT_TYPE_TOLERANCE</Doc>
+</Values>
+<Values>
+<Value>32</Value>
+<Doc>PIN_IMPACT_TYPE_RERATED</Doc>
+</Values>
+<Values>
+<Value>64</Value>
+<Doc>PIN_IMPACT_TYPE_RERATED_TAX</Doc>
+</Values>
+<Values>
+<Value>128</Value>
+<Doc>PIN_IMPACT_TYPE_DISCOUNT</Doc>
+</Values>
+<Values>
+<Value>256</Value>
+<Doc>PIN_IMPACT_TYPE_DISCOUNT_RERATED</Doc>
+</Values>
+<Values>
+<Value>258</Value>
+<Doc>PIN_IMPACT_TYPE_INTEGRATE_PRERATED</Doc>
+</Values>
+<Values>
+<Value>288</Value>
+<Doc>PIN_IMPACT_TYPE_INTEGRATE_RERATED</Doc>
+</Values>
+<Values>
+<Value>512</Value>
+<Doc>PIN_IMPACT_TYPE_SHARING</Doc>
+</Values>
+<Values>
+<Value>1024</Value>
+<Doc>PIN_IMPACT_TYPE_SHARING_RERATED</Doc>
+</Values>
+
+</Enum>
+<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+<Doc>Numeric value of the resource that is impacted.</Doc>
+</Int>
+<Int name="PIN_FLD_RESOURCE_ID_ORIG" use="optional">
+<Doc> Currency associated with original amount.</Doc>
+</Int>
+<String name="PIN_FLD_TAX_CODE" use="optional"
+maxlen="255">
+<Doc>Tax code for this particular rate.</Doc>
+</String>
+<String name="PIN_FLD_RATE_TAG" use="optional"
+maxlen="255">
+<Doc>Rate Tag.</Doc>
+</String>
+<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+mode="complete">
+<Doc>Account object we are logging this balance impact against.</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_ITEM_OBJ" use="optional"
+mode="complete">
+<Doc>Item object we are logging this balance impact against.</Doc>
+<ClassRef>obj://item</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_RATE_OBJ" use="optional"
+mode="complete">
+<Doc>Rate object that was used to generate this balance impact for rated events.</Doc>
+<ClassRef>obj://rate</ClassRef>
+</Poid>
+<Decimal name="PIN_FLD_DISCOUNT" use="optional">
+<Doc>Discount amount applied for this balance impact.</Doc>
+</Decimal>
+<Decimal name="PIN_FLD_PERCENT" use="optional">
+<Doc>Adjustment percent</Doc>
+</Decimal>
+<Decimal name="PIN_FLD_QUANTITY" use="optional">
+<Doc>Quantity applied - "units" that were actually applied using this rate.</Doc>
+</Decimal>
+<Decimal name="PIN_FLD_AMOUNT_DEFERRED" use="optional">
+<Doc>Tax deffered amount.</Doc>
+</Decimal>
+<Decimal name="PIN_FLD_AMOUNT" use="optional">
+<Doc>Amount of adjustment</Doc>
+</Decimal>
+<Decimal name="PIN_FLD_AMOUNT_ORIG" use="optional">
+<Doc>Original amount of adjustment</Doc>
+</Decimal>
+<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+mode="complete">
+<Doc>Balance group poid.</Doc>
+<ClassRef>obj://balance_group</ClassRef>
+</Poid>
+<Int name="PIN_FLD_GL_ID" use="optional">
+<Doc>General Ledger ID associated with this balance impact.</Doc>
+</Int>
+<String
+name="PIN_FLD_IMPACT_CATEGORY"
+use="optional">
+<Doc>Impact category.</Doc>
+</String>
+<String
+name="PIN_FLD_LINEAGE"
+use="optional">
+<Doc> Lineage of event attributes, will be recordedin the event balance impact array,   can only be specified if PIN_FLD_RATE_PLAN_NAME is specified.</Doc>
+</String>
+<Poid
+name="PIN_FLD_OFFERING_OBJ"
+use="optional"
+mode="complete">
+<Doc>poid of the purchased product</Doc>
+</Poid>
+<Poid
+name="PIN_FLD_PRODUCT_OBJ"
+use="optional"
+mode="complete">
+<Doc>In case of discount balance impact Discount Object</Doc>
+<ClassRef>obj://product</ClassRef>
+</Poid>
+<Int
+name="PIN_FLD_RUM_ID"
+use="optional">
+<Doc>RUM id</Doc>
+</Int>
+<String
+name="PIN_FLD_DISCOUNT_INFO"
+use="optional">
+<Doc>Discount information</Doc>
+</String>
+</Fields>
+</Array>
+<Array name="PIN_FLD_EVENT_MISC_DETAILS" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+<Doc>Event  miscellaneous details.</Doc>
+<Fields>
+<Int  name="PIN_FLD_REASON_DOMAIN_ID" use="optional">
+<Doc>Domain ID of Reason Id, which is recorded as property of /event/billing object.See file reasons.locale</Doc>
+</Int>
+<Int  name="PIN_FLD_REASON_ID" use="optional">
+<Doc>Payment Failure Reason Id or user action id, which is recorded as property of /event/billing object. See file reasons.locale</Doc>
+</Int>
+</Fields>
+</Array>
+<Substruct name="PIN_FLD_PAYMENT" use="optional"
+isRecursive="false">
+<Doc> Payment substructure </Doc>
+<Fields>
+<String name="PIN_FLD_ACCOUNT_NO" use="optional"
+maxlen="60">
+<Doc> Account Number.</Doc>
+</String>
+<Int name="PIN_FLD_ACH" use="optional">
+<Doc> ACH id in /config/ach object</Doc>
+</Int>
+<Decimal name="PIN_FLD_AMOUNT" use="optional">
+<Doc> Amount .</Doc>
+</Decimal>
+<Decimal name="PIN_FLD_AMOUNT_ORIGINAL_PAYMENT" use="optional">
+<Doc> Original payment amount .</Doc>
+</Decimal>
+<String name="PIN_FLD_BILL_NO" use="optional"
+maxlen="60">
+<Doc> Bill number.</Doc>
+</String>
+<Int name="PIN_FLD_CHANNEL_ID" use="optional">
+<Doc> Payment Channel Id for the batch</Doc>
+</Int>
+<Enum name="PIN_FLD_COMMAND" use="optional">
+<Doc> Charge Operation performed - Valid values are PIN_CHARGE_CMD_NONE,  PIN_CHARGE_CMD_VERIFY,
+PIN_CHARGE_CMD_AUTH_ONLY, PIN_CHARGE_CMD_AUTHORIZE,  PIN_CHARGE_CMD_CONDITION, PIN_CHARGE_CMD_DEPOSIT,
+PIN_CHARGE_CMD_REFUND,  PIN_CHARGE_CMD_RFR, PIN_CHARGE_CMD_RESUBMIT. If set to PIN_CHARGE_CMD_NONE, then
+the assumption  is that this opcode is called only for receiving payment; if set to other  values, then
+the charge process will be executed.
+The values can be:
+<h:ul>
+<h:li>0:
+If opcode is called only for receiving payment(value:PIN_CHARGE_CMD_NONE).</h:li>
+<h:li>2:
+Authorize a charge. The credit limit is decreased on the credit card, but no charge is poste
+d(value:PIN_CHARGE_CMD_AUTH_ONLY).</h:li>
+<h:li>4:
+Authorize and deposit a charge(value:PIN_CHARGE_CMD_CONDITION).</h:li>
+<h:li>5:
+Deposit a previously authorized charge(value:PIN_CHARGE_CMD_DEPOSIT).</h:li>
+<h:li>6:
+Refund a charge(value:PIN_CHARGE_CMD_REFUND).</h:li>
+<h:li>7:
+For transactional payments, requests the RFR file to retrieve payments.For nontransactional
+payments, reads the RFR file to retrieve payments.(value:PIN_CHARGE_CMD_RFR) </h:li>
+<h:li>8:
+Resubmit the batch of charges(value:PIN_CHARGE_CMD_RESUBMIT).</h:li>
+<h:li>9:
+Recovers payments by using outstanding checkpoints(value:PIN_CHARGE_CMD_RECOVER_PAYMENT).</h:li>
+</h:ul>
+</Doc>
+<Values>
+<Value>0</Value>
+<Doc>No Command(value:PIN_CHARGE_CMD_NONE).</Doc>
+</Values>
+<Values>
+<Value>2</Value>
+<Doc>Authorize a charge. The credit limit is decreased on the credit card, but no charge is posted(value:PIN_CHARGE_CMD_AUTH_ONLY).</Doc>
+</Values>
+<Values>
+<Value>4</Value>
+<Doc>Authorize and deposit a charge(value:PIN_CHARGE_CMD_CONDITION).</Doc>
+</Values>
+<Values>
+<Value>5</Value>
+<Doc>Deposit a previously authorized charge(value:PIN_CHARGE_CMD_DEPOSIT).</Doc>
+</Values>
+<Values>
+<Value>6</Value>
+<Doc>Refund a charge(value:PIN_CHARGE_CMD_REFUND).</Doc>
+</Values>
+<Values>
+<Value>7</Value>
+<Doc>For transactional payments, requests the RFR file to retrieve payments.For nontransactional payments, reads the RFR file to retrieve payments.(value:PIN_CHARGE_CMD_RFR) </Doc>
+</Values>
+<Values>
+<Value>8</Value>
+<Doc>Resubmit the batch of charges(value:PIN_CHARGE_CMD_RESUBMIT).</Doc>
+</Values>
+<Values>
+<Value>9</Value>
+<Doc>Recovers payments by using outstanding checkpoints(value:PIN_CHARGE_CMD_RECOVER_PAYMENT).</Doc>
+</Values>
+</Enum>
+<Int name="PIN_FLD_CURRENCY" use="optional">
+<Doc> Currency</Doc>
+</Int>
+<String name="PIN_FLD_MERCHANT" use="optional"
+maxlen="60">
+<Doc> Merchant</Doc>
+</String>
+<Enum name="PIN_FLD_PAY_TYPE" use="optional">
+<Doc> Pay type.
+The values can be:
+<h:ul>
+<h:li>0:
+invalid - used during acct create(value:PIN_PAY_TYPE_UNDEFINED).</h:li>
+<h:li>10000:
+prepaid to keep negative balance(value:PIN_PAY_TYPE_PREPAID).</h:li>
+<h:li>10001:
+invoiced monthly(value:PIN_PAY_TYPE_INVOICE).</h:li>
+<h:li>10002:
+checking account debit(value:PIN_PAY_TYPE_DEBIT).</h:li>
+<h:li>10003:
+Credit Card(value:PIN_PAY_TYPE_CC).</h:li>
+<h:li>10004:
+French Direct Debit(value:PIN_PAY_TYPE_DDEBIT).</h:li>
+<h:li>10005:
+US/Canadian Direct Debit(value:PIN_PAY_TYPE_DD).</h:li>
+<h:li>10006:
+Smartcard(value:PIN_PAY_TYPE_SMARTC).</h:li>
+<h:li>10007:
+roll up to parent account(value:PIN_PAY_TYPE_SUBORD).</h:li>
+<h:li>10011:
+cash payments for payment tool(value:PIN_PAY_TYPE_CASH).</h:li>
+<h:li>10012:
+check payments for payment tool(value:PIN_PAY_TYPE_CHECK).</h:li>
+<h:li>10013:
+wire transfer payments for payment tool(value:PIN_PAY_TYPE_WTRANSFER).</h:li>
+<h:li>10014:
+Inter bank payment order payments for payment tool(value:PIN_PAY_TYPE_PAYORDER).</h:li>
+<h:li>10015:
+Postal order payments for payment tool(value:PIN_PAY_TYPE_POSTALORDER).</h:li>
+<h:li>10016:
+Voucher payments(value:PIN_PAY_TYPE_VOUCHER).</h:li>
+<h:li>10017:
+Failed payment(value:PIN_PAY_TYPE_FAILED).</h:li>
+</h:ul>
+</Doc>
+<Values>
+<Value>0</Value>
+<Doc>invalid - used during acct create(value:PIN_PAY_TYPE_UNDEFINED).</Doc>
+</Values>
+<Values>
+<Value>10000</Value>
+<Doc>prepaid to keep negative balance(value:PIN_PAY_TYPE_PREPAID).</Doc>
+</Values>
+<Values>
+<Value>10001</Value>
+<Doc>invoiced monthly(value:PIN_PAY_TYPE_INVOICE).</Doc>
+</Values>
+<Values>
+<Value>10002</Value>
+<Doc>checking account debit(value:PIN_PAY_TYPE_DEBIT).</Doc>
+</Values>
+<Values>
+<Value>10003</Value>
+<Doc>Credit Card(value:PIN_PAY_TYPE_CC).</Doc>
+</Values>
+<Values>
+<Value>10004</Value>
+<Doc>French Direct Debit(value:PIN_PAY_TYPE_DDEBIT).</Doc>
+</Values>
+<Values>
+<Value>10005</Value>
+<Doc>US/Canadian Direct Debit(value:PIN_PAY_TYPE_DD).</Doc>
+</Values>
+<Values>
+<Value>10006</Value>
+<Doc>Smartcard(value:PIN_PAY_TYPE_SMARTC).</Doc>
+</Values>
+<Values>
+<Value>10007</Value>
+<Doc>roll up to parent account(value:PIN_PAY_TYPE_SUBORD).</Doc>
+</Values>
+<Values>
+<Value>10011</Value>
+<Doc>cash payments for payment tool(value:PIN_PAY_TYPE_CASH).</Doc>
+</Values>
+<Values>
+<Value>10012</Value>
+<Doc>check payments for payment tool(value:PIN_PAY_TYPE_CHECK).</Doc>
+</Values>
+<Values>
+<Value>10013</Value>
+<Doc>wire transfer payments for payment tool(value:PIN_PAY_TYPE_WTRANSFER).</Doc>
+</Values>
+<Values>
+<Value>10014</Value>
+<Doc>Inter bank payment order payments for payment tool(value:PIN_PAY_TYPE_PAYORDER).</Doc>
+</Values>
+<Values>
+<Value>10015</Value>
+<Doc>Postal order payments for payment tool(value:PIN_PAY_TYPE_POSTALORDER).</Doc>
+</Values>
+<Values>
+<Value>10016</Value>
+<Doc>Voucher payments(value:PIN_PAY_TYPE_VOUCHER).</Doc>
+</Values>
+<Values>
+<Value>10017</Value>
+<Doc>Failed payment(value:PIN_PAY_TYPE_FAILED).</Doc>
+</Values>
+</Enum>
+<Enum name="PIN_FLD_STATUS" use="optional">
+<Doc> Payment status. Indicating if the payment was successful, suspended, failed.Succesful Payment:0 to 14,
+Suspense Payment:15 to 29,and Failed Payment:30 to 44.
+The values can be:
+<h:ul>
+<h:li>0:
+Successful Payment(value:PIN_PYMT_SUCCESS).</h:li>
+<h:li>10:
+Successful Payment(value:PIN_PYMT_WRITEOFF_SUCCESS).</h:li>
+<h:li>15:
+Suspense Payment(value:PIN_PYMT_SUSPENSE).</h:li>
+<h:li>16:
+Suspense Payment(value:PIN_PYMT_FAILED_SUSPENSE).</h:li>
+<h:li>17:
+Suspense Payment(value:PIN_PYMT_RECYCLED_SUSPENSE).</h:li>
+<h:li>18:
+Suspense Payment(value:PIN_PYMT_FAILED_RECYCLED_SUSPENSE).</h:li>
+<h:li>19:
+Suspense Payment(value:PIN_PYMT_RETURNED_SUSPENSE).</h:li>
+<h:li>30:
+Failed Payment(value:PIN_PYMT_FAILED).</h:li>
+</h:ul>
+</Doc>
+<Values>
+<Value>0</Value>
+<Doc>Successful Payment(value:PIN_PYMT_SUCCESS).</Doc>
+</Values>
+<Values>
+<Value>10</Value>
+<Doc>Successful Payment(value:PIN_PYMT_WRITEOFF_SUCCESS).</Doc>
+</Values>
+<Values>
+<Value>15</Value>
+<Doc>Suspense Payment(value:PIN_PYMT_SUSPENSE).</Doc>
+</Values>
+<Values>
+<Value>16</Value>
+<Doc>Suspense Payment(value:PIN_PYMT_FAILED_SUSPENSE).</Doc>
+</Values>
+<Values>
+<Value>17</Value>
+<Doc>Suspense Payment(value:PIN_PYMT_RECYCLED_SUSPENSE).</Doc>
+</Values>
+<Values>
+<Value>18</Value>
+<Doc>Suspense Payment(value:PIN_PYMT_FAILED_RECYCLED_SUSPENSE).</Doc>
+</Values>
+<Values>
+<Value>19</Value>
+<Doc>Suspense Payment(value:PIN_PYMT_RETURNED_SUSPENSE).</Doc>
+</Values>
+<Values>
+<Value>30</Value>
+<Doc>Failed Payment(value:PIN_PYMT_FAILED).</Doc>
+</Values>
+</Enum>
+<String name="PIN_FLD_TRANS_ID" use="optional"
+maxlen="35">
+<Doc> Transaction ID. If the command is PIN_CHARGE_CMD_RESUBMIT, this field is the Batch ID.
+The maximum length of a payment transaction ID is 30 characters for externally-initiated payments
+and 16 characters for Portal-initiated payments. </Doc>
+</String>
+<String name="PIN_FLD_SUB_TRANS_ID" use="required"
+maxlen="35">
+<Doc> Transaction Id of the original payment.</Doc>
+</String>
+</Fields>
+</Substruct>
+<Array name="PIN_FLD_CASH_INFO" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+<Doc>Cash information.</Doc>
+<Fields>
+<String name="PIN_FLD_BILL_NO" use="optional"
+maxlen="60">
+<Doc> Bill number.</Doc>
+</String>
+<Timestamp
+name="PIN_FLD_EFFECTIVE_T" use="optional">
+<Doc> Item Effective Time.</Doc>
+</Timestamp>
+<String name="PIN_FLD_RECEIPT_NO" use="optional"
+maxlen="60">
+<Doc> Receipt number.</Doc>
+</String>
+</Fields>
+</Array>
+<Array name="PIN_FLD_CHECK_INFO" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+<Doc>Cash information.</Doc>
+<Fields>
+<String name="PIN_FLD_BANK_ACCOUNT_NO" use="optional"
+maxlen="60">
+<Doc> Bank account number.</Doc>
+</String>
+<String name="PIN_FLD_BILL_NO" use="optional"
+maxlen="60">
+<Doc> Bill number.</Doc>
+</String>
+<String name="PIN_FLD_CHECK_NO" use="optional"
+maxlen="60">
+<Doc> Check number.</Doc>
+</String>
+<Timestamp
+name="PIN_FLD_EFFECTIVE_T" use="optional">
+<Doc> Item Effective Time.</Doc>
+</Timestamp>
+</Fields>
+</Array>
+<Array name="PIN_FLD_POSTAL_ORDER_INFO" use="optional"
+elemIdMode="ignored" iterationOrder="insertionOrder"
+minElements="0"
+minElemId="0"
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="false" >
+<Doc> cash information.</Doc>
+<Fields>
+<Timestamp
+name="PIN_FLD_EFFECTIVE_T" use="optional">
+<Doc> Item Effective Time.</Doc>
+</Timestamp>
+<String
+name="PIN_FLD_ORDER_ID" use="optional"
+maxlen="60">
+<Doc>Order id.</Doc>
+</String>
+</Fields>
+</Array> 
+<Array name="PIN_FLD_WIRE_TRANSFER_INFO" use="optional"
+elemIdMode="ignored" iterationOrder="insertionOrder"
+minElements="0"
+minElemId="0"
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="false" >
+<Doc>Wire transfer information.</Doc>
+<Fields>
+<Timestamp
+name="PIN_FLD_EFFECTIVE_T" use="optional">
+<Doc>Payment Effective Time.</Doc>
+</Timestamp>
+<String
+name="PIN_FLD_WIRE_TRANSFER_ID" use="optional"
+maxlen="60">
+<Doc>Wire transfer id.</Doc>
+</String>
+<String
+name="PIN_FLD_BANK_CODE" use="optional"
+maxlen="60">
+<Doc> Bank code.</Doc>
+</String>
+<String
+name="PIN_FLD_BANK_ACCOUNT_NO" use="optional"
+maxlen="60">
+<Doc> Bank account number.</Doc>
+</String>
+</Fields>
+</Array>
+<Array name="PIN_FLD_PAY_ORDER_INFO" use="optional"
+elemIdMode="ignored" iterationOrder="insertionOrder"
+minElements="0"
+minElemId="0"
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="false" >
+<Doc>Payment order information.</Doc>
+<Fields>
+<Timestamp
+name="PIN_FLD_EFFECTIVE_T" use="optional">
+<Doc>Payment Effective Time.</Doc>
+</Timestamp>
+<String
+name="PIN_FLD_ORDER_ID" use="optional"
+maxlen="60">
+<Doc>order id.</Doc>
+</String>
+<String
+name="PIN_FLD_BANK_CODE" use="optional"
+maxlen="60">
+<Doc> Bank code.</Doc>
+</String>
+<String
+name="PIN_FLD_BANK_ACCOUNT_NO" use="optional"
+maxlen="60">
+<Doc> Bank account number.</Doc>
+</String>
+</Fields>
+</Array>
+<Array name="PIN_FLD_PAYMENT_FAILED_INFO" use="optional"
+elemIdMode="ignored" iterationOrder="insertionOrder"
+minElements="0"
+minElemId="0"
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="false" >
+<Doc>Payment failed information.</Doc>
+<Fields>
+<String
+name="PIN_FLD_PAYMENT_TRANS_ID" use="optional"
+maxlen="60">
+<Doc>Payment transaction id.</Doc>
+</String>
+</Fields>
+</Array>
+</Fields>
+</Array>
+</Fields>
+</Output>
+</Opcode>

@@ -1,0 +1,364 @@
+<Opcode name="PCM_OP_CUST_UPDATE_SERVICES" visibility="public"
+        transaction="required" component="fm_cust"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>The opcode PCM_OP_CUST_UPDATE_SERVICES is a wrapper that allows to update
+       multiple service instances of an account in one call. The updates can be
+       done to login information, password, status, devices, and extended
+       service information for each service that is passed in to this opcode.</Doc>
+  <Input>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required" mode="complete">
+        <Doc>This is the poid of the account, the services of which need to be
+             updated.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Poid name="PIN_FLD_SESSION_OBJ" use="optional" mode="complete">
+        <Doc>This is the session in which this update is taking place. A value
+             of NULL means no session information is available.</Doc>
+        <ClassRef>obj://event.session</ClassRef>
+      </Poid>
+      <Int name="PIN_FLD_FLAGS" use="optional">
+      <Doc>This is a required flag if we want to change the status of
+           required service.If the value is set to 0x01 (PIN_BILL_CHANGE_ALL_SERVICES),
+           changing the status of required service will change status of all
+           the optional services accordingly.</Doc>
+      </Int>
+      <String name="PIN_FLD_PROGRAM_NAME" use="required" maxlen="60">
+        <Doc>This indicates the calling program.</Doc>
+      </String>
+      <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+        <Doc>This description is a free text to allow the calling program to
+             describe this update operation.</Doc>
+      </String>
+      <Timestamp name="PIN_FLD_START_T" use="optional">
+        <Doc>The start time is the timestamp of when this update starts. If
+             start time is not passed in, the current time on the BRM system
+             will be considered as start time.</Doc>
+      </Timestamp>
+      <Timestamp name="PIN_FLD_END_T" use="optional">
+        <Doc>The end time is the timestamp of when this update happens. If the
+             end time is not passed in, the current time on the BRM system will
+             be considered as end time. The end time is also considered to be
+             the effective timestamp of when this update happens on an external
+             system.</Doc>
+      </Timestamp>
+      <Array name="PIN_FLD_SERVICES" use="required" elemIdMode="ignored"
+             iterationOrder="sortedById" minElements="1">
+        <Doc>This represents services array. There should be one for each
+             service being updated. The elements are sorted by element-id before
+             the services are processed for update operation.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>This represents the service poid of the service instance being
+                 updated.</Doc>
+            <ClassRef>obj://service</ClassRef>
+          </Poid>
+          <String name="PIN_FLD_LOGIN" use="optional" maxlen="255">
+            <Doc>New login for the service</Doc>
+          </String>
+          <Array name="PIN_FLD_ALIAS_LIST" use="optional" elemIdMode="index"
+                 iterationOrder="undefined" minElements="0">
+            <Doc>The alias list is the array of new or to be deleted aliases.
+                 The element-id is significant to identify for update or
+                 deletion. To delete an alias list element, pass in a value of
+                 NULL for the alias list.</Doc>
+            <Fields>
+              <String name="PIN_FLD_NAME" use="required" maxlen="128">
+                <Doc>The alias</Doc>
+              </String>
+            </Fields>
+          </Array>
+          <String name="PIN_FLD_PASSWD_CLEAR" use="optional" maxlen="255">
+            <Doc>New password for the service</Doc>
+          </String>
+          <Enum name="PIN_FLD_PASSWD_STATUS" use="optional">
+            <Doc>This is the desired password status. The possible values are
+                 NORMAL(0), TEMP(1), EXPIRES(2) and INVALID(3).</Doc>
+            <Values>
+              <Value>0</Value>
+              <Doc>The password status is valid and normal
+			(PIN_SERV_PASSWDSTATUS_NORMAL).</Doc>
+            </Values>
+            <Values>
+              <Value>1</Value>
+              <Doc>The password status is valid and is temporary
+			(PIN_SERV_PASSWDSTATUS_TEMPORARY).</Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>The password status is "expires"
+			(PIN_SERV_PASSWDSTATUS_EXPIRES).</Doc>
+            </Values>
+            <Values>
+              <Value>3</Value>
+              <Doc>The password status is invalid
+			(PIN_SERV_PASSWDSTATUS_INVALID).</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_LIFECYCLE_STATE" use="optional">
+            <Doc>New lifecycle state for the service.</Doc>
+          </Int>
+          <Timestamp name="PIN_FLD_SERVICE_STATE_EXPIRATION_T" use="optional">
+            <Doc>Time after which the new lifecycle state has to expire.</Doc>
+          </Timestamp>
+          <Enum name="PIN_FLD_STATUS" use="optional">
+            <Doc>New status for the service.</Doc>
+            <Values>
+              <Value>10100</Value>
+              <Doc>Indicates an active status(PIN_STATUS_ACTIVE).</Doc>
+            </Values>
+            <Values>
+              <Value>10102</Value>
+              <Doc>Indicates an inactive status(PIN_STATUS_INACTIVE).</Doc>
+            </Values>
+            <Values>
+              <Value>10103</Value>
+              <Doc>Indicates a closed status(PIN_STATUS_CLOSED).</Doc>
+            </Values>
+          </Enum>
+          <Enum name="PIN_FLD_COMMAND" use="optional">
+            <Doc>The field to indicate an update to accounting cycle if the
+                 status is changed to inactive. This way it helps not to bill an
+                 inactive service/account.</Doc>
+          </Enum>
+          <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+            <Doc>This represents new status flags. This field is mandatory if
+                 you have PIN_FLD_STATUS.</Doc>
+          </Int>
+          <Poid name="PIN_FLD_SPONSOR_PARENT" use="optional" mode="complete">
+            <Doc>The sponsor parent field is used to specify the account object
+                 of the new parent that is chosen by the user.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Timestamp name="PIN_FLD_CLOSE_WHEN_T" use="optional">
+            <Doc>The time stamp of when to close the service. This is no longer
+                 officially supported, but it is included for compatibility.</Doc>
+          </Timestamp>
+          <Timestamp name="PIN_FLD_WHEN_T" use="optional">
+            <Doc>Time - Timestamp of when the action 'Change Status' should be
+                 started. If this field is present then the schedule object for
+                 this deferred action will be created.</Doc>
+          </Timestamp>
+          <Substruct name="PIN_FLD_INHERITED_INFO" use="optional"
+                     isRecursive="false">
+            <Doc>This represents the extended service information. Inside this
+                 should be your substruct and/or array elements that contains
+                 the extended service information. If the value of array element
+                 under this inherited info is NULL (no subflist), the specified
+                 extended service element in the service object is deleted.</Doc>
+            <Fields>
+              <Any name="PIN_FLD_INHERITED" use="optional" mode="subclassFields"
+                   baseClassName="obj://service"
+                   classNameRef="#in.SERVICES.POID">
+                <Doc>This container is used to specify any fields for a /service
+                     subclass.</Doc>
+              </Any>
+            </Fields>
+          </Substruct>
+          <Array name="PIN_FLD_DEVICES" use="optional" elemIdMode="ignored"
+                 iterationOrder="undefined" minElements="0">
+            <Doc>There should be one array element for each device being
+                 associated/ disassociated. The opcode guarantees that it will
+                 call disassociations before associations, even if they are out
+                 of order in the array.</Doc>
+            <Fields>
+              <Poid name="PIN_FLD_DEVICE_OBJ" use="required" mode="complete">
+                <Doc>Device poid</Doc>
+                <ClassRef>obj://device</ClassRef>
+              </Poid>
+              <Int name="PIN_FLD_FLAGS" use="required">
+                <Doc>This is device state flag. A value of PIN_DEVICE_ASSOCIATE
+                     means associate, otherwise, disassociate.</Doc>
+              </Int>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>
+    </Fields>
+  </Input>
+  <Output>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required" mode="complete">
+        <Doc>This is the account poid passed into this operation.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Array name="PIN_FLD_SERVICES" use="required" elemIdMode="ignored"
+             iterationOrder="sortedById" minElements="1">
+        <Doc>This is the array of service information processed.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>This is the poid of the service object that was modified.</Doc>
+            <ClassRef>obj://service</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_RESULTS" use="optional" elemIdMode="ignored"
+                 iterationOrder="undefined" minElements="1">
+            <Doc>Additional event object fields are added to the return flist
+                 here. If the PCM_OPFLG_READ_RESULT flag is set for the
+                 operation, all the fields in the event object are returned on
+                 the output flist, not just the poid. If the PCM_OPFLG_CALC_ONLY
+                 flag is set, no fields in the database are changed and the
+                 event object is not actually created, but the fields that would
+                 have been used to create the event object are returned to the
+                 caller on the output flist. This is the array of results. One
+                 entry per update.</Doc>
+            <Fields>
+              <Poid name="PIN_FLD_POID" use="optional" mode="complete">
+                <Doc>For the error cases it can return null, hence optional, for working use cases it would be poid of the event created to represent the
+                     service update.</Doc>
+                <ClassRef>obj://event</ClassRef>
+              </Poid>
+              <Poid name="PIN_FLD_SERVICE_OBJ" use="optional" mode="complete">
+                <Doc>This is the poid of the service that was updated.</Doc>
+                <ClassRef>obj://service</ClassRef>
+              </Poid>
+              <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+                <Doc>This is the poid of the account to which the updated
+                     service is associated.</Doc>
+                <ClassRef>obj://account</ClassRef>
+              </Poid>
+              <Array name="PIN_FLD_LOGINS" use="optional" elemIdMode="ignored"
+                     iterationOrder="undefined" minElements="0">
+                <Doc>If you have set a login for this service, the logins array
+                     is returned.</Doc>
+                <Fields>
+                  <String name="PIN_FLD_LOGIN" use="optional" maxlen="255">
+                    <Doc>The login for the service.</Doc>
+                  </String>
+                  <Array name="PIN_FLD_ALIAS_LIST" use="optional"
+                         elemIdMode="index" iterationOrder="undefined"
+                         minElements="0">
+                    <Doc>This represents the array of alias lists updated in
+                         this operation.</Doc>
+                    <Fields>
+                      <String name="PIN_FLD_NAME" use="optional" maxlen="128">
+                        <Doc>An alias entry.</Doc>
+                      </String>
+                    </Fields>
+                  </Array>
+                </Fields>
+              </Array>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_FIELD" use="optional" elemIdMode="ignored"
+             iterationOrder="undefined" minElements="0">
+        <Doc>This is the validation error fields array. Each element in this
+             array describes a field that failed validation. The element-id is
+             not significant.</Doc>
+        <Fields>
+          <Enum name="PIN_FLD_FIELD_NUM" use="required">
+            <Doc>The field that failed.</Doc>
+          </Enum>
+          <Int name="PIN_FLD_ELEMENT_ID" use="optional">
+            <Doc>Element-id of field that failed (if an array element).</Doc>
+          </Int>
+          <Enum name="PIN_FLD_RESULT" use="required">
+            <Doc>Field validation error code. The enumerated type is defined in
+                 the pin_cust.h header file. The values can be: (0)
+                 PIN_CUST_VAL_ERR_SYSTEM, (1) PIN_CUST_VAL_ERR_MISSING, (2)
+                 PIN_CUST_VAL_ERR_MIN_LEN, (3) PIN_CUST_VAL_ERR_MAX_LEN, (4)
+                 PIN_CUST_VAL_ERR_TYPE, (5) PIN_CUST_VAL_ERR_DUPE, (6)
+                 PIN_CUST_VAL_ERR_INVALID, (7) PIN_CUST_VAL_ERR_REJECT, (8)
+                 PIN_CUST_VAL_ERR_MAX, (9) PIN_CUST_VAL_ERR_MIN, (10)
+                 PIN_CUST_VAL_ERR_INCL, (11) PIN_CUST_VAL_ERR_EXCL, and (12)
+                 PIN_CUST_VAL_ERR_FORMAT.</Doc>
+            <Values>
+              <Value>0</Value>
+              <Doc>PIN_CUST_VAL_ERR_SYSTEM. System error.</Doc>
+            </Values>
+            <Values>
+              <Value>1</Value>
+              <Doc>PIN_CUST_VAL_ERR_MISSING. Field is missing.</Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>PIN_CUST_VAL_ERR_MIN_LEN. Minimum length error.</Doc>
+            </Values>
+            <Values>
+              <Value>3</Value>
+              <Doc>PIN_CUST_VAL_ERR_MAX_LEN. Maximum length error.</Doc>
+            </Values>
+            <Values>
+              <Value>4</Value>
+              <Doc>PIN_CUST_VAL_ERR_TYPE. Invalid type.</Doc>
+            </Values>
+            <Values>
+              <Value>5</Value>
+              <Doc>PIN_CUST_VAL_ERR_DUPE. Duplicate field.</Doc>
+            </Values>
+            <Values>
+              <Value>6</Value>
+              <Doc>PIN_CUST_VAL_ERR_INVALID. Invalid value.</Doc>
+            </Values>
+            <Values>
+              <Value>7</Value>
+              <Doc>PIN_CUST_VAL_ERR_REJECT. Field was rejected.</Doc>
+            </Values>
+            <Values>
+              <Value>8</Value>
+              <Doc>PIN_CUST_VAL_ERR_MAX. Maximum value error.</Doc>
+            </Values>
+            <Values>
+              <Value>9</Value>
+              <Doc>PIN_CUST_VAL_ERR_MIN. Minimum value error.</Doc>
+            </Values>
+            <Values>
+              <Value>10</Value>
+              <Doc>PIN_CUST_VAL_ERR_INCL. Value should be inclusive.</Doc>
+            </Values>
+            <Values>
+              <Value>11</Value>
+              <Doc>PIN_CUST_VAL_ERR_EXCL. Value should be exclusive.</Doc>
+            </Values>
+            <Values>
+              <Value>12</Value>
+              <Doc>PIN_CUST_VAL_ERR_FORMAT. Format error in regular expression.</Doc>
+            </Values>
+          </Enum>
+          <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+            <Doc>Validation error message.</Doc>
+          </String>
+          <Array name="PIN_FLD_FIELD" use="optional" elemIdMode="ignored"
+                 iterationOrder="undefined" minElements="0" isRecursive="true">
+            <Doc>For FIELDS array elements that do *not* contain a nested FIELDS
+                 array, the field that failed (as defined by PIN_FLD_FIELD_NUM)
+                 is included here on the flist. This field is MANDATORY in this
+                 case and its value represents either the bad value specified or
+                 a suggested replacement value for the field. In cases where
+                 this FIELDS element does contain a nested FIELDS array, the
+                 field defined by PIN_FLD_FIELD_NUM is *not* included in the
+                 output flist. For the following values of PIN_FLD_RESULT, the
+                 field value will be NULL: PIN_CUST_VAL_ERR_MISSING. For the
+                 following values of PIN_FLD_RESULT, the field value contains
+                 the bad value that was specified: PIN_CUST_VAL_ERR_MIN_LEN,
+                 PIN_CUST_VAL_ERR_MAX_LEN, PIN_CUST_VAL_ERR_FORMAT,
+                 PIN_CUST_VAL_ERR_INVALID. For the following values of
+                 PIN_FLD_RESULT, the field value contains a suggested
+                 replacement value for the field: PIN_CUST_VAL_ERR_DUPE. If
+                 field that failed was in a sub-flist, the fields arrays are
+                 nested to provide an absolute path to the exact field that
+                 failed. This nesting can be to any depth to reflect multi-level
+                 sub-flists. NOTE: if more than one field on the same sub-flist
+                 failed validation, then more than one element of the FIELDS
+                 array will be included within the nesting to reflect the fields
+                 that failed. Nested Fields arrays have the same fields in each
+                 element as the main array.</Doc>
+            <Fields></Fields>
+          </Array>
+        </Fields>
+      </Array>
+    </Fields>
+  </Output>
+</Opcode>
+
+
+
+
+
+
+
+

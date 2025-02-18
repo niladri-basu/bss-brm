@@ -1,0 +1,12 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+snmp | 1 | snmpInfo | Snmp Information | NotSpecified | Group | 
+snmpInfo | 1 | port | AgentX Port | ReadOnly | Integer | 
+snmpInfo | 2 | numSnmpRequests | Number of Requests Received | ReadOnly | Integer | 
+snmp | 2 | snmpTable | Snmp Mib Table Info | NotSpecified | Table |
+snmpTable | 1 | snmpTableEntry | Snmp Mib Table Entry | NotSpecified | Group |
+snmpTableEntry | 1 | snmpTableIndex | Snmp Mib Table Index | ReadOnly | Integer |
+snmpTableEntry | 2 | snmpTableOid | Snmp Mib Table Oid | ReadOnly | String |
+snmpTableEntry | 3 | snmpTableName | Mib Table Name | ReadOnly | String |
+snmpTableEntry | 4 | numSnmpGetRequests | Number of 'GET' Requests | ReadOnly | Integer |
+snmpTableEntry | 5 | numSnmpGetNextRequests | Number of 'GETNEXT' Requests | ReadOnly | Integer |
+snmpTableEntry | 6 | numSnmpSetRequests | Number of 'SET' Requests | ReadOnly | Integer |

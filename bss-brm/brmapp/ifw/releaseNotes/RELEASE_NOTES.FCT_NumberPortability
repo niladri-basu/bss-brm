@@ -1,0 +1,233 @@
+========================================================================================
+FCT_NumberPortability
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+
+Module Version: 7.4  10005  01-Sept-2008  Sudip Bhowmik
+BUG7248741: ENHANCEMENTS FOR REALTIME NUMBERPORTABILITY
+
+----------------------------------------------------------------------------------------
+
+Module Version : 7.4  10005
+----------------
+
+Date : 02-MAY-2003
+----------------
+
+Change Order :  BUG7248741
+
+----------------
+
+Short Description : 
+-------------------
+                 FCT_NumberPortability has been enhanced to support realtime numberportability.
+================================================================================
+
+Module Version: 6.7_FP2  10004  24-May-2004  Satya Prakash
+PRSF00105998: NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+----------------------------------------------------------------------------------------
+
+Module Version : 6.5 SP2 10003
+----------------
+
+Date : 02-MAY-2003
+----------------
+
+Change Order :  PRSF00039740
+
+----------------
+
+Short Description : 
+-------------------
+                 Update to use namespaces.
+		 
+================================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 02-MAY-2003
+----------------
+
+Change Order :  PRSF00039639
+
+----------------
+
+Short Description : 
+-------------------
+                 Changes to number portability
+                 to both reduce runtime memory requirements, as well as fixing
+                 a memory leak on reload.
+                 Fixed Number Portabilty to  traverse the complete tree before returning the value
+
+========================================================================================
+
+Actual Version : 6.5 SP1 10001 / Date : 28-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+Solved PRs/CRs : 1. PRSF00033250 Make thread trace changes
+----------------
+
+========================================================================================
+
+Actual Version : v6.5.0 / Date : 06-JAN-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   : 1. Number Portability Timestamp. Portation Date of N-Port Data is stored
+----------------    in DateTime format [instead of just the Date]
+
+Known Problems : 
+----------------
+
+Solved PRs/CRs : 1. PRSF00024956 Fix for Number Portability Timestamp
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 13.08.2001
+----------------
+
+Notes          : Code review marks reworked.
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 26.06.2001
+----------------
+
+Notes          : Initial Version for v4-30-00.
+---------------- Runbale
+
+New Features   : Support the new EDR-Container getIndices.
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+----------------
+
+Open PRs/CRs   :
+----------------         
+
+========================================================================================
+Actual Version : v4-10-00 / Date : 17.04.2001
+----------------
+
+Notes          : THIS VERSION IS CURRENTLY NOT USEABLE.
+---------------- Please wait for the patch.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+----------------
+
+Open PRs/CRs   : PR 3202.
+----------------         
+
+========================================================================================
+
+Actual Version : v4-02-01 / Date : 29.09.2000
+----------------
+
+Notes          : Code-Review-Remarks remedied.
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 17.06.2000
+----------------
+
+Notes          :
+----------------
+
+New Features   : Support for IBM xlC compiler on AIX.
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-01 / Date : 11.04.2000
+----------------
+
+Notes          :
+----------------
+
+New Features   : Support for HP-UX.
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 04.04.2000
+----------------
+
+Notes          : UpdateRegistry implemented.
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

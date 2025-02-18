@@ -1,0 +1,118 @@
+<Opcode name="PCM_OP_COLLECTIONS_INVOKE_PROMISE_TO_PAY"
+                visibility="public"
+                transaction="required"
+                component="fm_collections"
+                xmlns:h="http://www.w3.org/1999/xhtml"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+                xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+        <Doc>Invokes promise to pay for a billinfo which is already in collections.</Doc>
+        <Input>
+                <Fields>
+                        <Poid name="PIN_FLD_POID" use="required"
+                                        mode="complete">
+                                <Doc>The account poid</Doc>
+                                <ClassRef>obj://account</ClassRef>
+                        </Poid>
+                        <String name="PIN_FLD_PROGRAM_NAME" use="required">
+                                <Doc>Name of the program calling this opcode</Doc>
+                        </String>
+                        <Poid name="PIN_FLD_SCENARIO_OBJ" use="required"
+                                        mode="complete">
+                                <Doc> The collections scenario poid for which promise to pay is invoked </Doc>
+                                <ClassRef>obj://collections_scenario</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+                                        mode="complete">
+                                <Doc> The billinfo poid</Doc>
+                                <ClassRef>obj://billinfo</ClassRef>
+                        </Poid>
+                        <Substruct name="PIN_FLD_PROMISE_TO_PAY_INFO" use="required"
+                                        isRecursive="false">
+                                <Doc> Promise to pay info substructure </Doc>
+                                <Fields>
+					<Decimal name="PIN_FLD_AMOUNT" use="optional">
+						<Doc> Total Promise Amount </Doc>
+					</Decimal>
+                                        <Int name="PIN_FLD_NUM_MILESTONES" use="optional">
+                                                <Doc> Number of payment milestones </Doc>
+                                        </Int>
+                                        <Decimal name="PIN_FLD_MILESTONE_AMOUNT" use="optional">
+                                                <Doc> Amount per milestone </Doc>
+                                        </Decimal>
+                                        <Int name="PIN_FLD_DAYS" use="optional">
+                                                <Doc> Number of days within which outstanding amount will be paid off </Doc>
+                                        </Int>
+                                        <Int name="PIN_FLD_MILESTONE_INTERVAL" use="optional">
+                                                <Doc> Interval between each payment milestone </Doc>
+                                        </Int>
+                                        <Timestamp name="PIN_FLD_INVOKE_T" use="required">
+                                                <Doc> Date from which promise to pay is effective (first installment date) </Doc>
+                                        </Timestamp>
+		                        <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional"
+                                        		mode="complete">
+                                		<Doc> The payinfo poid. </Doc>
+                                		<ClassRef>obj://payinfo</ClassRef>
+                        		</Poid>
+                                        <Array name="PIN_FLD_PAYINFO" use="optional"
+                                                        elemIdMode="ignored" iterationOrder="undefined"
+                                                        minElements="0" maxElements="1"
+                                                        minElemId="0"
+                                                        isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                        isRecursive="false">
+                                                <Doc> Payinfo object - information for immediate payment </Doc>
+                                                <Fields>	
+                                                        <Array name="PIN_FLD_CC_INFO" use="optional"
+                                                                        elemIdMode="ignored" iterationOrder="undefined"
+                                                                        minElements="0" maxElements="1"
+                                                                        minElemId="0"
+                                                                        isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                                        isRecursive="false">
+                                                                <Doc> Credit Card info - Refer to the /payinfo/cc object spec for details.
+                                        			      Only the cc subtype is returned [e.g. PIN_FLD_CC_INFO and all its fields].
+                                        			      Note - only 1 element used.</Doc>
+								<Fields> </Fields>	
+                                                        </Array>
+                                                        <Array name="PIN_FLD_DD_INFO" use="optional"
+                                                                        elemIdMode="ignored" iterationOrder="undefined"
+                                                                        minElements="0" maxElements="1"
+                                                                        minElemId="0"
+                                                                        isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                                                                        isRecursive="false">
+                                                                <Doc> Direct debit info - Refer to the /payinfo/dd object spec for details. 
+								      Only the dd subtype is returned (e.g. PIN_FLD_DD_INFO and all its fields). 
+								      Note - only 1 element used. </Doc>
+                                                                <Fields> </Fields>
+                                                        </Array>
+                                                </Fields>
+                                        </Array>
+                                </Fields>
+                        </Substruct>
+                </Fields>
+        </Input>
+        <Output>
+               <Fields>
+                        <Poid name="PIN_FLD_POID" use="required"
+                                        mode="complete">
+                                <Doc>The new activity event poid that holds promise to pay information </Doc>
+                                <ClassRef>obj://event.activity.collections.promise_to_pay</ClassRef>
+                        </Poid>
+	        	<Substruct name="PIN_FLD_PROMISE_TO_PAY_INFO" use="optional"
+                                        isRecursive="false">
+                                <Doc> Promise to pay information </Doc>
+                                <Fields>
+                                        <Decimal name="PIN_FLD_MILESTONE_AMOUNT" use="required">
+                                                <Doc> Amount per milestone </Doc>
+                                        </Decimal>
+                                        <Timestamp name="PIN_FLD_INVOKE_T" use="required">
+                                                <Doc> First milestone date </Doc>
+                                        </Timestamp>
+                                        <Timestamp name="PIN_FLD_END_T" use="required">
+                                                <Doc> Last milestone date </Doc>
+                                        </Timestamp>
+                                </Fields>
+                        </Substruct>
+                </Fields>
+        </Output>
+</Opcode>
+

@@ -1,0 +1,227 @@
+//==============================================================================
+//
+//      Copyright (c) 2004 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+
+//------------------------------------------------------------------------------
+// Block: ISC_TwinTalkEnabler
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module looks at the EDR and detects if TwinTalk service if required.
+//   If required it gets the TwinTalk ERAs using the Era extension library.
+//   Depending on what kind of ERAs are configured it derives an alternative
+//   TwinTalk account. If required it then substitute the account and service 
+//   details in the EDR such that the derived TwinTalk account is billed for 
+//   the call instead of the real account for the calling number.
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible: Amit Goel
+//------------------------------------------------------------------------------
+
+
+//==============================================================================
+// include libraries
+//==============================================================================
+
+/* @(#)% % */
+
+// include the Era Extension interface
+use IXT_Era;
+
+
+//==============================================================================
+// Registry Variables
+//==============================================================================
+
+//==============================================================================
+// BEGIN Container
+//==============================================================================
+function BEGIN
+{
+  //----------------------------------------------------------------------------
+  // Connect the extension with the DAT_Account plugin
+  //----------------------------------------------------------------------------
+  if (setDAT_AccountModule("ifw.DataPool.CustomerData.Module") == true )
+  {
+    logPipeline( "INFO: TwinTalk: Account Module set \n" );
+  }
+  else
+  {
+    logPipeline( "ERROR: TwinTalk: Could not set Account Module \n" );
+  }
+  
+}
+
+//==============================================================================
+// Function declarations
+//==============================================================================
+
+function onDetailEdr
+{
+  // get the TwinTalk ERA for the account
+  // note: service level ERA is assumed in this example
+  // getAcctExtRating() can be used for account level ERA in the same fashion
+  
+  //  String result = getAcctExtRating(edrString(DETAIL.A_NUMBER),
+  //                                   edrString(DETAIL.INTERN_SERVICE_CODE),
+  //                                   "TWINTALK",
+  //                                  edrDate(DETAIL.CHARGING_START_TIMESTAMP));
+  
+  
+  String result = getServExtRating(edrString(DETAIL.A_NUMBER), 
+                                   edrString(DETAIL.INTERN_SERVICE_CODE), 
+                                   "TWINTALK",
+                                   edrDate(DETAIL.CHARGING_START_TIMESTAMP));
+  
+  String eraList[];
+  Long nbElem = strSplit(eraList, result, "\n");
+  
+  if (nbElem > 0)
+  {
+    
+    String nameValue[];
+    Long nvElem ;
+    Long i ;
+    Bool overRideAct = false;
+    String bNumber[];
+    
+    //check if there is an over ride instruction (takes precedence)
+    // This sample script expects"##" at the end of B Number for override account.
+    if( strSearch( edrString( DETAIL.B_NUMBER ), "##", 0 ) >= 0 ) 
+    {
+     
+      // Remove "##" from B_NUMBER.
+      strSplit(bNumber, edrString( DETAIL.B_NUMBER ), "#");
+      edrString( DETAIL.B_NUMBER ) = bNumber[0];
+ 
+      for ( i=0 ; i<nbElem ; i=i+1)
+      {
+        nvElem = strSplit(nameValue, eraList[i], ",");
+        
+        if ( strSearch(nameValue[0], "OVERRIDE_ACCT", 0) >= 0 ) 
+        {
+          //derive TwinTalk number (here original number + number from ERA)
+          edrString(DETAIL.INTERN_A_NUMBER_ZONE) = edrString( DETAIL.A_NUMBER) + nameValue[1];
+        
+          //e.g. if TwinTalk Service code is configured as TTK
+          edrString(DETAIL.INTERN_SERVICE_CODE) = "TTK";
+          overRideAct = true;
+        }
+      }
+    }
+    //
+    //Sample Logic to handle AM_ACCT and PM_ACCT ERA if no OVERRIDE_ACCT
+    //
+    if ( overRideAct != true )
+    {  
+      String amAccount; 
+      String pmAccount;
+      String timeList[];
+      String minList[];
+      Long todAmBeginTotMin = 0;
+      Long todAmEndTotMin = 0;
+      Long todPmBeginTotMin = 0;
+      Long todPmEndTotMin = 0;
+      Long eraHour;
+      Long eraMin;
+      Bool amAccountExist = false;
+      Bool pmAccountExist = false; 
+
+      for ( i=0 ; i<nbElem ; i=i+1)
+      {  
+        nvElem = strSplit(nameValue, eraList[i], ",");
+        //-------------------------------------- 
+        // Get AM_ACCT parameters if it present.
+        //----------------------------------------
+        if ( strSearch(nameValue[0], "AM_ACCT", 0) >= 0 )
+        {
+          amAccount = nameValue[1];
+          amAccountExist = true;
+        }
+        else if (strSearch(nameValue[0], "TOD_AM_BEGIN",0) >=0)
+        {
+          strSplit(timeList,nameValue[1], ":");
+          eraHour = strToLong(timeList[0]);
+          strSplit(minList,timeList[1], " ");
+          eraMin = strToLong(minList[0]); 
+          todAmBeginTotMin = (eraHour * 60) + eraMin; 
+        }
+        else if (strSearch(nameValue[0], "TOD_AM_END",0) >=0)
+        {
+          strSplit(timeList,nameValue[1], ":");
+          eraHour = strToLong(timeList[0]);
+          strSplit(minList,timeList[1], " ");
+          eraMin = strToLong(minList[0]);
+          todAmEndTotMin = (eraHour * 60) + eraMin; 
+        }
+        //---------------------------------------- 
+        // Get PM_ACCT parameters if it present.
+        //----------------------------------------
+        else if (strSearch(nameValue[0], "PM_ACCT", 0) >= 0 ) 
+        {
+          pmAccount = nameValue[1];
+          pmAccountExist = true;
+        }
+        else if (strSearch(nameValue[0], "TOD_PM_BEGIN",0) >=0)
+        {
+          strSplit(timeList,nameValue[1], ":");
+          eraHour = strToLong(timeList[0]);
+          strSplit(minList,timeList[1], " ");
+          eraMin = strToLong(minList[0]);
+          todPmBeginTotMin = (eraHour * 60) + eraMin; 
+        }
+        else if (strSearch(nameValue[0], "TOD_PM_END",0) >=0) 
+        {
+          strSplit(timeList,nameValue[1], ":");
+          eraHour = strToLong(timeList[0]);
+          strSplit(minList,timeList[1], " ");
+          eraMin = strToLong(minList[0]);
+          todPmEndTotMin = (eraHour * 60) + eraMin; 
+        }      
+      } // End for
+      
+      //-----------------------------------------
+      // Get Hour and Minits fo the usage from EDR
+      //-------------------------------------------
+      Long hour = strToLong(dateToStr(edrDate(DETAIL.CHARGING_START_TIMESTAMP), "%H"));
+      Long min = strToLong(dateToStr(edrDate(DETAIL.CHARGING_START_TIMESTAMP), "%M"));
+      Long edrTimeInMin = 0;
+      
+      if ((hour >= 12) and (pmAccountExist == true))
+      {
+        edrTimeInMin = (hour - 12) * 60 + min;
+        if((todPmBeginTotMin >= 0) and (todPmBeginTotMin <= edrTimeInMin) and (todPmEndTotMin >= edrTimeInMin))
+        {
+          //derive TwinTalk number (here original number + number from ERA)
+          edrString(DETAIL.INTERN_A_NUMBER_ZONE) = edrString( DETAIL.A_NUMBER) + pmAccount;
+      
+          //e.g. if TwinTalk Service code is configured as TTK
+          edrString(DETAIL.INTERN_SERVICE_CODE) = "TTK";
+        }
+      }
+      else if (amAccountExist == true)
+      {
+        edrTimeInMin =( hour * 60 ) + min;
+        if((todAmBeginTotMin >= 0) and (todAmBeginTotMin <= edrTimeInMin) and (todAmEndTotMin >= edrTimeInMin))
+        {
+          //derive TwinTalk number (here original number + number from ERA)
+          edrString(DETAIL.INTERN_A_NUMBER_ZONE) = edrString( DETAIL.A_NUMBER) + amAccount;
+      
+          //e.g. if TwinTalk Service code is configured as TTK
+          edrString(DETAIL.INTERN_SERVICE_CODE) = "TTK";
+        }
+      }
+    }
+    // Add Logic to handle other ERA's
+  }
+} // end onDetailEdr + end iScript

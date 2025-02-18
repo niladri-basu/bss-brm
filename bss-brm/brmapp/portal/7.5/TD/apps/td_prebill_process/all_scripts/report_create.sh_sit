@@ -1,0 +1,96 @@
+#!/usr/bin/ksh
+LOGINSQL=`egrep -v "#" login.cfg | grep "DB_LOGIN" |cut -d'=' -f2`
+outfile=`egrep -v "#" login.cfg | grep "OUTFILE_DIR" |cut -d'=' -f2 |sed -e 's/$/\/report_create.log/'`
+
+dom=$1
+
+$ORACLE_HOME/bin/sqlplus -s $LOGINSQL>$outfile<<EOF
+SET WRAP ON
+--
+set heading off;
+set feedback off;
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS ON VERIFY OFF;
+--
+set linesize 200
+set serveroutput on size 2000
+
+
+DECLARE
+
+        v_ddl_stmt VARCHAR2(4000);
+        v_dml_stmt VARCHAR2(4000);
+        v_errmsg VARCHAR2(200);
+        v_count number(5) := 0;
+
+BEGIN
+
+        select count(1) into v_count from user_tables where table_name='TD_PREBILL_REPORT_T';
+
+        if v_count <> 0
+        then
+	v_dml_stmt := 'insert /*+ APPEND */ into TD_PREBILL_REPORT_HIST_T 
+select /*+ full(a) */  sysdate,
+a.ACTG_DOM, a.LAST_BILL_T, a.NEXT_BILL_T, a.ACCOUNT_NO, a.CUST_SEG_DESC, 
+a.BILL_INFO_ID, a.NAME, a.TAX_CODE, a.CHARGE_FROM, a.CHARGE_TO, a.OVERRIDE_FLAG, 
+a.OVERRIDE_AMT, a.FIX_AMOUNT, a.SCALED_AMOUNT, a.PRORATE_FIRST, 
+a.CYCLE_FEE_FLAGS, a.MSISDN, a.P_FLAGS, a.ANTICIPATED_AMOUNT
+from TD_PREBILL_REPORT_T a';
+
+        EXECUTE IMMEDIATE v_dml_stmt;
+        COMMIT;
+        v_ddl_stmt := 'DROP TABLE TD_PREBILL_REPORT_T';
+        EXECUTE IMMEDIATE v_ddl_stmt;
+        end if;
+
+
+ v_ddl_stmt :=  'create table td_prebill_report_t as
+                 select td.ACTG_DOM, td.LAST_BILL_T, td.NEXT_BILL_T, td.ACCOUNT_NO, td.CUST_SEG_DESC, td.BILL_INFO_ID, td.NAME, td.TAX_CODE, td.CHARGE_FROM, td.CHARGE_TO, td.OVERRIDE_FLAG, td.OVERRIDE_AMT, td.FIX_AMOUNT, td.SCALED_AMOUNT, td.PRORATE_FIRST, td.CYCLE_FEE_FLAGS, td.MSISDN, td.P_FLAGS,td.node_location,
+                 case
+                 when override_flag in (33554432,33554433,33554440) and prorate_first=702 and p_flags in (2,3,6,10,7,11,14,15)
+                 then round((((td_unix_to_nz(charge_to)-td_unix_to_nz(charge_from))/EXTRACT(DAY FROM LAST_DAY(td_unix_to_nz(charge_from)))) * (override_amt+fix_amount)),6)
+                 when override_flag in (33554432,33554433,33554440) and prorate_first=702 and p_flags not in (2,3,6,10,7,11,14,15)
+                 then round(override_amt+fix_amount,6)
+                 when override_flag in (33554432,33554433,33554440) and prorate_first=701
+                 then round(override_amt+fix_amount,6)
+                 when override_flag in (33554432,33554433,33554440) and prorate_first=0
+                 then round(override_amt+fix_amount,6)
+                 when override_flag in (33554432,33554433,33554440) and prorate_first=703
+                 then
+                         case
+                         when (td_unix_to_nz(charge_to)-td_unix_to_nz(charge_from))/EXTRACT(DAY FROM LAST_DAY(td_unix_to_nz(charge_from)))=1
+                         then round(override_amt+fix_amount,6)
+                         else
+                         0
+                         end
+                 when override_flag in (0,1,8,9) and prorate_first=702 and p_flags in (2,3,6,10,7,11,14,15)
+                 then round(((td_unix_to_nz(charge_to)-td_unix_to_nz(charge_from))/EXTRACT(DAY FROM LAST_DAY(td_unix_to_nz(charge_from))) * (scaled_amount+fix_amount)),6)
+                 when override_flag in (0,1,8,9) and prorate_first=702 and p_flags not in (2,3,6,10,7,11,14,15)
+                 then round(scaled_amount+fix_amount,6)
+                 when override_flag in (0,1,8,9) and prorate_first=701
+                 then round(scaled_amount+fix_amount,6)
+                 when override_flag in (0,1,8,9) and prorate_first=0
+                 then round(scaled_amount+fix_amount,6)
+                 when override_flag in (0,1,8,9) and prorate_first=703
+                 then
+                    case
+                         when (td_unix_to_nz(charge_to)-td_unix_to_nz(charge_from))/EXTRACT(DAY FROM LAST_DAY(td_unix_to_nz(charge_from)))=1
+                         then round(scaled_amount+fix_amount,6)
+                         else
+                         0
+                         end
+                 else NULL
+                 end as anticipated_amount
+                 from td_prebill_staging_t td';
+
+
+        EXECUTE IMMEDIATE v_ddl_stmt;
+
+
+
+
+END;
+/
+
+exit;
+EOF
+

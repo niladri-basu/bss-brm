@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<price_list version="7.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="price_list.xsd">
+<product partial="no" type="subscription">
+<product_name>Pool Plan Data</product_name>
+<product_code>$20 Carryover Plan Data</product_code>
+<priority>0.0</priority>
+<description>Offers Shared Data</description>
+<permitted>/service/telco/gsm/data</permitted>
+<event_rating_map flag="rate_inactive" incr_unit="none" min_unit="none" rounding_rule="nearest" timezone_mode="event" tod_mode="start_time">
+<event_type>/event/delayed/session/telco/gsm/data</event_type>
+<rum_name>Occurrence</rum_name>
+<min_quantity>1.0</min_quantity>
+<incr_quantity>1.0</incr_quantity>
+<rate_plan_name>Passthru</rate_plan_name>
+<rate_plan_code>Passthru</rate_plan_code>
+<rate_plan advance_billing_unit="day" tax_when="never">
+<rate_plan_name>Passthru</rate_plan_name>
+<rate_plan_code>Passthru</rate_plan_code>
+<currency_id>554</currency_id>
+<event_type>/event/delayed/session/telco/gsm/data</event_type>
+<advance_billing_offset>0</advance_billing_offset>
+<cycle_fee_flags>1</cycle_fee_flags>
+</rate_plan>
+</event_rating_map>
+</product>
+</price_list>

@@ -1,0 +1,218 @@
+========================================================================================
+OUT_Realtime
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+Actual Version : v10043 / Date : 27-Apr-2011
+bug12398214    : [COTP] RERATING - INVALID AMOUNT_DEFERRED AFTER RERATING
+                 Corrected  mapping of offering poid and deferred amount for the rerated events
+                 from the realtime plugin.
+==============================================================================
+Actual Version : v10042 / Date : 02-JUL-2009
+bug8651668     : Added PIN_PERCENT to the BAL_IMPACT Flist.
+==============================================================================
+Actual Version : v10041 / Date : 21-MAY-2009
+bug8411701     : PIN_FLD_FIRST_USAGE Flag added and set in the OUT_Realtime output flist in case 
+                 of first usage when DoRating is enabled.This flag is being used by act_usage
+                 to refresh the balance cache when applying balance impacts.
+==============================================================================
+Actual Version : v10040 / Date : 9-APR-2009
+bug8362355     : Authorize fails with null /product poid, which is caused when 
+		 Reverse Rating is triggered by the credit limit check exceeded.
+==============================================================================
+Actual Version : v10039 / Date : 27-Feb-2009
+bug8286530     : "PIPELINE INCORRECTLY MODIFIES UNRATED QUANTITY VALUE"
+                 UNRATED QUANTITY populated by rating is mapped to DURATION and 
+		 while mapping back to flist this value was ignored. As fix this value 
+		 is added to the UNRATED QUANTITIY calculated by CLC plugin.
+==============================================================================
+Actual Version : v10038 / Date : 15-JAN-2009
+bug7706152     : Offering poid was set to null value by OUT_RealtimePlugIn
+==============================================================================
+Actual Version : v10037 / Date : 28-May-2008
+bug7047645     : P-7045666 IMPACT TYPE 288(PIN_IMPACT_TYPE_INTEGRATE_RERATED) FOR EVENTS
+==============================================================================
+Actual Version : v10036 / Date : 11-Apr-2008
+bug6950463     : "P-6936256 DEFERRED TAX CALCULATION WHEN USING DETAIL.CREDIT_LIMIT_CHECK=1 IN"
+==============================================================================
+Actual Version : v10035 / Date : 26-Dec-2007
+bug6682018     : OUT REALTIME FIXES for assignment of netQuantity and creating and using another counter for PIN_FLD_RUM_MAP 
+==============================================================================
+Actual Version : v10034 / Date : 31-Aug-2007
+bug6240916:  RUM_MAP quantities should not be overridden in case of discounting
+==============================================================================
+Actual Version : v10033 / Date : 28-Aug-2007
+bug6340087: P-6279718 MEMORY LEAK IDENTIFIED IN RTP  PLUGINS FOR 7.3_PATCH
+==============================================================================
+Actual Version : v10032 / Date : 17-Jul-2007
+bug6161411: Tax on Real-time Discount deferring to Billing time.
+==============================================================================
+Actual Version : v10031 / Date : 04-Jun-2007
+bug6115647: out realtimeplugin dumps core in setofferingpoidfromstring.
+==============================================================================
+Actual Version : v10030 / Date : 22-May-2007
+bug6064295: out realtimeplugin dumps core in setofferingpoidfromstring.
+==============================================================================
+Actual Version : v10029 / Date : 04-Jan-2007
+PRSF00238871: Incorrect Amounts displayed in pin_rerate reports for events which have a discount associated with it
+==============================================================================
+Actual Version : v10028 / Date : 28-Nov-2006
+PRSF00239536: Reverse Rating feature enhancements. Modified plugin to populate 
+output flist with: 
+PIN_FLD_RUM_MAP array (from RUM_MAP block if multi RUM case) or, 
+PIN_FLD_UNRATED_QUANTITY (from DETAIL.UNRATED_QUANTITY if simgle RUM case),
+as well as charge/discount packets etc. incase of Credit Limit  Check failure.
+==============================================================================
+Actual Version : v10027 / Date : 28-Aug-2006
+PRSF00230839:Deferred amount should not be populated for non currency resource
+==============================================================================
+Actual Version : v10026 / Date : 18-Aug-2006
+PRSF00229149: Fixed, EDR errors were not propagated to the cm.pinlog
+==============================================================================
+Actual Version : v10025 / Date : 20-Jul-2006
+PRSF00213711: Fixed memory leaks and uninitialized variable access.
+==============================================================================
+Actual Version : v10024 / Date : 24-MAY-2006
+PRSF00214339 : "Configurable validty implementation"
+==============================================================================
+Actual Version : v10023 / Date : 17-Jan-2006
+PRSF00190736 : Change NODE_LOCATION to OFFERING_POID
+==============================================================================
+Actual Version : v10022 / Date : 23-Aug-2005
+PRSF00180703 : Discount consumption validity information
+==============================================================================
+Actual Version : v10021 / Date : 19-Aug-2005
+PRSF00179872 : AMOUNT_DEFERRED not set for some bal_impacts during pipeline rerating 
+Changes OUT/RealtimePlugIn.cpp to populate the AMOUNT_DEFERRED for discount packets.
+==============================================================================
+Actual Version : v10020 / Date : 29-Apr-2005
+PRSF00165749 : VALID_TO/VALID_FROM timestamps are coming wrong from discounting.
+VALID_TO and VALID_FROM are in UTC time stamp.  The problem was due to the 
+output mapping convert VALID_TO and VALID_FROM as the local time stamp.
+==============================================================================
+Actual Version : v10019 / Date : 19-Apr-2005
+PRSF00162203 : DEFERED_AMOUNT is not passed in to the pipeline and passed out from pipeline.
+==============================================================================
+Actual Version : v10018 / Date : 08-Apr-2005
+PRSF00163079  Regression: System Test: discount granted from RTP is not 
+setting the dates correctly.
+BAS::DateTime::secondsUnix() returns u_int64, which is incompatible with 
+PCM API PIN_FLIST_FLD_SET() where time_t is defined as int32. 
+This is a hidden issue discovered recently. The workaround is to assign 
+lTemp to a PinTstamp variable (defined in PcmCpp.h), and pass the new value 
+to PCM call.
+==============================================================================
+Actual Version : v10017 / Date : 18-Mar-2005
+PRSF00158700  System Test: commit price plan with RTP zoning cause thread exception
+
+Add code to handle the Zoning fields:
+DETAIL.WHOLESALE_IMPACT_CATEGORY, DETAIL.RETAIL_IMPACT_CATEGORY,
+DETAIL.INTERN_APN_GROUP and DETAIL.ZONE_ENTRY_NAME.
+==============================================================================
+Actual Version : v10016 / Date : 23-Feb-2005
+PRSF00155775  OUT::Realtime should not use DETAIL.CUST_A.ACCOUNT_NO to create 
+              the PIN_FLD_ACCOUNT_OBJ that is returned in the BALANCE_IMPACTS 
+	      struct. Use DETAIL.CUST_A.ACCOUNT_PARENT_ID instead.
+==============================================================================
+Actual Version : v10015 / Date : 07-Jan-2005
+PRSF00148435  Combine OUT_Realtime to handle both rerating and discounting
+==============================================================================
+Actual Version : v10014 / Date : 09-Dec-2004
+PRSF00138465  Velocity Prepaid: Changes to output mapping
+==============================================================================
+Actual Version : v10013 / Date : 02-Oct-2004
+PRSF00133776  Non reentrant Unix function calls should be replaced by corrsponding reentrant versions
+==============================================================================
+Actual Version : v10012 / Date : 18-May-2004
+PRSF00111652  "RTP memory leak (big) during account creation and billing for 6.7FP2"
+==============================================================================
+Actual Version : v10011 / Date : 26-Apr-2004
+PRSF00107268 - Regression: ifw realtime cores at billing 6.7FP2
+==============================================================================
+Actual Version : v10010 / Date : 06-Apr-2004
+PRSF00103152 - Returning Ebuf to CM from RTP
+==============================================================================
+Actual Version : v10009 / Date : 09-Feb-2004
+PRSF00091286  "Zone Model Validation (fix in 6.7FP2)"
+==============================================================================
+Actual Version : v10009 / Date : 05-Feb-2004
+PRSF00090725  "Incorporate Realtime Pipeline code review comments"
+==============================================================================
+Actual Version : v10008 / Date : 26-Jan-2004
+PRSF00089221  "Memory leak in RT pipeline (fix in 6.7FP1)"
+==============================================================================
+Actual Version : v10007 / Date : 10-Dec-2003
+PRSF00080559  "OMNI - Apollo - When a multi-rum event is rated, and subsequ"
+================================================================================
+Actual Version : v10006 / Date : 21-Nov-2003
+PRSF00078036  "OMNI - Apollo - The discounted event recorded in the infrane"
+================================================================================
+Actual Version : v10005 / Date : 14-Nov-2003
+PRSF00078267  "Putting the IScript Support in INP and OUT plugins back"
+================================================================================
+================================================================================
+Actual Version : v10004 / Date : 06-Nov-2003
+
+PRSF00076792 "Post RTW Realtime pipeline core at 2nd event"
+
+================================================================================
+Actual Version : v10003 / Date : 24-Oct-2003
+
+Solved PRs/CRs : PRSF00074192  Add Impact type mapping
+
+- also fixed CO 73360.  Wrong mapping of event balance group poid
+
+================================================================================
+Actual Version : v10002 / Date : 10-Oct-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :PRSF00068058  "Adding Granted_Amount anSF00065811
+jyadav   "Performance evaluation for Realtime Pipeline"
+
+================================================================================
+Actual Version : v10000 / Date : 05-Sep-2003
+----------------
+
+================================================================================
+Actual Version : v10001 / Date : 01-Oct-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00068058  "Adding Granted_Amount and
+Granted_Quantity in Output Mapping for Realtime Plugin"
+
+
+================================================================================
+Actual Version : v10000 / Date : 05-Sep-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00061274  jyadav   "Add some more mapping in Input and Output Realtime"
+
+
+================================================================================

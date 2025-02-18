@@ -1,0 +1,18 @@
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9750  pcpst.c(88):2052 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9750:-143460672:0:1440415133:0
+	(9750): pcp_connect(), connecting - failed
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9750  pcm.c(59):197 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9750:-143460672:0:1440415133:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_PCP:2 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_CM_ADDRESS_LOOKUP_FAILED:57>
+	<field num=0:0,0 recid=0 reserved=2 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9750  pcm_conn.c(7):283 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9750:-143460672:0:1440415133:0
+	pcm_connect: bad pcm_context_open, err 57
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:11997  pcpst.c(88):2052 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:11997:-143100224:0:1440415406:0
+	(11997): pcp_connect(), connecting - failed
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:11997  pcm.c(59):197 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:11997:-143100224:0:1440415406:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_PCP:2 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_CM_ADDRESS_LOOKUP_FAILED:57>
+	<field num=0:0,0 recid=0 reserved=2 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:11997  pcm_conn.c(7):283 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:11997:-143100224:0:1440415406:0
+	pcm_connect: bad pcm_context_open, err 57

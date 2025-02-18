@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<price_list version="7.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="price_list.xsd">
+<discount mode="sequential" type="subscription">
+<discount_name>$20 Broadband Discount</discount_name>
+<discount_code>$20 Broadband Discount</discount_code>
+<priority>500.0</priority>
+<description>$20 Broadband Discount</description>
+<permitted>/service/telco/gsm</permitted>
+<discount_usage_validity discount_from_validity_flags="prorate" discount_partial_validity_flags="prorate" discount_to_validity_flags="prorate"></discount_usage_validity>
+<discount_cycle_validity discount_from_validity_flags="prorate" discount_partial_validity_flags="prorate" discount_to_validity_flags="prorate"></discount_cycle_validity>
+<discount_usage_map discount_flags="discount_inactivated" snowball_flag="no">
+<event_type>/event/billing/product/fee/cycle/cycle_forward_monthly</event_type>
+<discount_model>WBB_A_20_20220630</discount_model>
+</discount_usage_map>
+</discount>
+</price_list>

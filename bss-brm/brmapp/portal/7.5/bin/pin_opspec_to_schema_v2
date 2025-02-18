@@ -1,0 +1,100 @@
+#!/bin/env groovy
+//# This is a groovy script to create xsd for version 2 webServices; it takes input file as XML and output can be redirected to any outputfile or std out.
+//# TODO: Need to add usage hint as verbose.
+import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.MarkupBuilder
+import groovy.util.XmlSlurper
+import groovy.lang.*
+//Usage: groovy pin_opspec_to_schema_v2 - i inputfileName > outputFileName
+//update pin_home before running 
+def fileName = args[1];
+assert fileName.size() > 0 :  "Usage:groovy pin_opspec_to_schema_v2 -i inputxmlfile > outfileName"
+def inputFile = new File(fileName);
+def out = "tmp.xsd";
+def perlScript = "$PIN_HOME/bin/pin_opspec_to_schema";
+def command = "perl -w $perlScript  -i $inputFile -o $out ";
+command.execute().text; 
+
+def text = new File(out).text;
+def rootNode = new XmlParser().parseText(text);
+
+rootNode.'@xmlns' = "http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes";
+rootNode.'@xmlns:op' = "http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes";
+
+def inputFlistRecord = rootNode."xsd:element"[0]
+def name = inputFlistRecord.'@name'
+def m = (name =~ /^(PCM_OP.*)_inputFlist$/);
+//def m = (name =~ /^(CU.*)_inputFlist$/);
+assert m.size() > 0 : "ERROR: Invalid input";
+def opcode = m[0][1];
+def op = opcode.split("_");
+def op2 = op[1..-1].collect{it[0].toUpperCase() + it[1..-1].toLowerCase()};
+def newName = op[0].toLowerCase() + op2.join("");
+def newFirstChild = new XmlParser().parseText(
+""" <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:element name="$newName" >
+   <xsd:complexType>
+       <xsd:sequence>
+           <xsd:element name="${opcode}_Request" type="${opcode}_RequestType"/>
+       </xsd:sequence>
+   </xsd:complexType>     
+</xsd:element>
+</xsd:schema>""" )."xsd:element"[0]
+
+def newSecondChild = new XmlParser().parseText(
+""" <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:complexType name="${opcode}_RequestType">
+   <xsd:sequence>
+               <xsd:element name="flags" type="xsd:int"/>
+               <xsd:element name="${opcode}_inputFlist">
+               </xsd:element>
+   </xsd:sequence>
+</xsd:complexType>
+</xsd:schema>""")."xsd:complexType"[0]
+
+def inputFlistNode = newSecondChild.depthFirst().findAll{it.@name=="${opcode}_inputFlist"}[0];
+inputFlistRecord.children().each { it -> inputFlistNode.append(it);}
+
+rootNode.children().remove(0);
+rootNode.children().add(0, newSecondChild);
+rootNode.children().add(0, newFirstChild);
+
+// add new complexType:context_info and add an element of context_type to input and output Flist 
+def context_info = new XmlParser().parseText(
+""" <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:complexType name="CONTEXT_INFO_TYPE">
+   <xsd:sequence>
+               <xsd:element name="CORRELATION_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+               <xsd:element name="EXTERNAL_USER" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+
+   </xsd:sequence>
+</xsd:complexType>
+</xsd:schema>""")."xsd:complexType"[0]
+
+rootNode.children().add(3, context_info);
+
+// add an element ( context info) to the inputFlist
+def inputFlistChild= rootNode.depthFirst().findAll{it.@name=="${opcode}_inputFlist"};
+
+def inflistComplexType = inputFlistChild[0]?.'xsd:complexType';
+inflistComplexType[0]?.'xsd:sequence'[0]?.appendNode('xsd:element',[name:'CONTEXT_INFO', type:'CONTEXT_INFO_TYPE', minOccurs:'0']);
+
+// add an element ( context info) to the outputFlist
+def outFlistChild= rootNode.depthFirst().findAll{it.@name=="${opcode}_outputFlist"};
+
+def outflistComplexType = outFlistChild[0]?.'xsd:complexType';
+outflistComplexType[0]?.'xsd:sequence'[0]?.appendNode('xsd:element',[name:'CONTEXT_INFO', type:'CONTEXT_INFO_TYPE', minOccurs:'0']);
+
+
+
+def pw = new PrintWriter(System.out);
+def xp = new XmlNodePrinter(pw, "   ");
+xp.setPreserveWhitespace(true);
+// xp.printLineEnd("This is a comment");
+println("<?xml version = '1.0' encoding = 'UTF-8'?>");
+println(
+"""<!--Copyright (c) 2014 Oracle. All rights reserved.
+This material is the confidential property of Oracle Corporation or its licensors and may be used, reproduced, stored or transmitted only in accordance with a valid Oracle license or sublicense agreement.-->""");
+xp.print(rootNode);
+def cmd = "rm -rf tmp.xsd";
+cmd.execute();

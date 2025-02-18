@@ -1,0 +1,62 @@
+010	1			4720	4720	1449671682	1449671682	1449671682		0	0				00	974	RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/sms			2
+020	2					USA	Egypt	228011670	00	201	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449624852	1449624853	1
+520	3		228011670	0
+900	4	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[201,2,0]		1	@INTEGRATE#228011670#201#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.0#400201615#NILGST|>#<613#0.00###|>#<General Cash#0.00#0.00|>
+600	5	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.0	0.0	0.0	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.0	1449624883	0			0	0
+800	6	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.0
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.0	1449619200	1449705600	
+888	5	10854577	C01303	1.00	0.00	USA	International Zone 6	Egypt	International Zone 4							C01303	POSTPAY				202117799	20151209013412	57005	57350				613
+890	General Cash	0.00	0.00
+892	SMPP VPLMN MO	Premium SMS Zero	0	0.00	0	0	241	62
+020	10					Australia	Benin	228011670	00	229	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449624854	1449624855	1
+520	11		228011670	0
+900	12	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[229,2,0]		1	@INTEGRATE#228011670#229#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.0#400201615#NILGST|>#<613#0.00###|>#<General Cash#0.00#0.00|>
+600	13	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.0	0.0	0.0	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.0	1449624883	0			0	0
+800	14	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.0
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.0	1449619200	1449705600	
+888	5	10854584	C01303	1.00	0.00	Australia	International Zone 1	Benin	International Zone 4							C01303	POSTPAY				202117799	20151209013414	57005	57350				613
+890	General Cash	0.00	0.00
+892	SMPP VPLMN MO	Premium SMS Zero	0	0.00	0	0	241	62
+020	18					USA	Benin	228011670	00	229	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449624856	1449624857	1
+520	19		228011670	0
+900	20	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[229,2,0]		1	@INTEGRATE#228011670#229#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.0#400201615#NILGST|>#<613#0.00###|>#<General Cash#0.00#0.00|>
+600	21	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.0	0.0	0.0	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.0	1449624883	0			0	0
+800	22	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.0
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.0	1449619200	1449705600	
+888	5	10854588	C01303	1.00	0.00	USA	International Zone 6	Benin	International Zone 4							C01303	POSTPAY				202117799	20151209013416	57005	57350				613
+890	General Cash	0.00	0.00
+892	SMPP VPLMN MO	Premium SMS Zero	0	0.00	0	0	241	62
+020	26					Australia	Ghana	228011670	00	233	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449624858	1449624859	1
+520	27		228011670	0
+900	28	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[233,2,0]		1	@INTEGRATE#228011670#233#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.0#400201615#NILGST|>#<613#0.00###|>#<General Cash#0.00#0.00|>
+600	29	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.0	0.0	0.0	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.0	1449624883	0			0	0
+800	30	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.0
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.0	1449619200	1449705600	
+888	5	10854595	C01303	1.00	0.00	Australia	International Zone 1	Ghana	International Zone 4							C01303	POSTPAY				202117799	20151209013418	57005	57350				613
+890	General Cash	0.00	0.00
+892	SMPP VPLMN MO	Premium SMS Zero	0	0.00	0	0	241	62
+020	34					USA	Ghana	228011670	00	233	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449624860	1449624861	1
+520	35		228011670	0
+900	36	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[233,2,0]		1	@INTEGRATE#228011670#233#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.0#400201615#NILGST|>#<613#0.00###|>#<General Cash#0.00#0.00|>
+600	37	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.0	0.0	0.0	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.0	1449624883	0			0	0
+800	38	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.0
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.0	1449619200	1449705600	
+888	5	10854599	C01303	1.00	0.00	USA	International Zone 6	Ghana	International Zone 4							C01303	POSTPAY				202117799	20151209013420	57005	57350				613
+890	General Cash	0.00	0.00
+892	SMPP VPLMN MO	Premium SMS Zero	0	0.00	0	0	241	62
+090	42			4720	4720	5	1449624852	+1300	1449624860	+1300	0.0	0.00

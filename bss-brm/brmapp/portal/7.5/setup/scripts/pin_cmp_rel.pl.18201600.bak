@@ -1,0 +1,556 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#=============================================================
+#  @(#)%Portal Version: pin_cmp_rel.pl:PortalBase7.2PatchInt:4:2005-Nov-09 03:21:31 %
+# 
+# Copyright (c) 2001, 2011, Oracle and/or its affiliates. All rights reserved. 
+#
+#    This material is the confidential property of Oracle Corporation 
+#    or its licensors and may be used, reproduced, stored
+#    or transmitted only in accordance with a valid Oracle license or
+#    sublicense agreement.
+#
+# Portal installation for the Rated Event Loader Component
+#
+#=============================================================
+
+use Cwd;
+
+
+# If running stand alone, without pin_setup
+if ( ! ( $RUNNING_IN_PIN_SETUP eq TRUE ) )
+{
+   require "pin_res.pl";
+   require "pin_functions.pl";
+   require "../pin_setup.values";
+
+   &ConfigureComponentCalledSeparately ( $0 );
+}
+
+
+#########################################
+# Configure pin.conf and Infranet.properties files
+#########################################
+sub configure_rel_config_files {
+
+  local ( %CM ) = %MAIN_CM;
+  local ( %DM ) = %MAIN_DM;
+
+  &ReadIn_PinCnf( "pin_cnf_connect.pl" );
+  &ReadIn_PinCnf( "pin_cnf_rel.pl" );
+
+  # Configure Sample_hander pin.conf
+  &AddArrays( \%CONNECT_PINCONF_ENTRIES, \%SAMPLE_HANDLER_PINCONF_ENTRIES );  
+  &Configure_PinCnf( $RATED_EVENT_LOADER{'sample_handler_pin_cnf_location'}."/".$PINCONF, 
+                     $REL_PINCONF_HEADER, 
+                     %SAMPLE_HANDLER_PINCONF_ENTRIES );
+
+  # Configure pin_rel pin.conf
+  &AddArrays( \%CONNECT_PINCONF_ENTRIES, \%PIN_REL_PINCONF_ENTRIES );  
+  &Configure_PinCnf( $RATED_EVENT_LOADER{'pin_cnf_location'}."/".$PINCONF, 
+                     $REL_PINCONF_HEADER, 
+                     %PIN_REL_PINCONF_ENTRIES );
+
+
+  #
+  #  Configure CLASSPATH in pin_rel file.
+  if ( $^O =~ /win/i )
+  {
+    &configure_classpath("$RATED_EVENT_LOADER{'pin_cnf_location'}/pin_rel.bat" );
+  }
+  else
+  {
+    &configure_classpath("$RATED_EVENT_LOADER{'pin_cnf_location'}/pin_rel" );
+  }
+
+
+  #
+  # Configure Infranet.properties with current values and uncomment out lines based on db type
+  #
+  &configure_prop_file("$RATED_EVENT_LOADER{'pin_cnf_location'}" );
+
+  #
+  # Configure apps/batch_controller/Infranet.properties with values for RatedEventLoader ...
+  #
+  # If the file exists, add the entries to it.
+  # If not, add the entries to a temporary file.
+  #
+
+  $PROP_full_pathname = "$BATCH_CONTROLLER{'location'}/Infranet.properties";
+
+  # The *.pl entries are named *.bat in Infranet.properties, for NT installs.
+  if ( $^O =~ /win/i )
+  {
+    $PERL_EXTENSION = "";
+  }
+  else
+  {
+    $PERL_EXTENSION = ".pl";
+  }
+
+  # Create temporary file, if it does not exist.
+  if ( -f $PROP_full_pathname )
+  {
+    $PROP_pathname = $PROP_full_pathname;
+  }
+  else
+  {
+    $PROP_pathname = "$PIN_HOME/append_to_Infranet_properties";
+    $PROP_short_pathname = "Infranet.properties";
+    open( PROPFILE, ">> $PROP_pathname" );
+    close( PROPFILE );
+  }
+
+  open( PROPFILE, "+< $PROP_pathname" ) || die( "Can't open $PROP_pathname" );
+
+  @Array_PROP = <PROPFILE>;
+  seek( PROPFILE, 0, 0 );
+
+  $DoUpdate = TRUE;
+  if ( -f $PROP_pathname )
+  {
+    while ( <PROPFILE> )
+    {
+      if ( $_ =~ /^relHandler/ )
+      {
+        $DoUpdate = FALSE;
+      }
+    }
+  }
+
+  if ( $DoUpdate eq TRUE )
+  {
+
+    #
+    # Append the RatedEventLoader events to the existing entries.
+    #
+    $i = 0;
+    seek( PROPFILE, 0, 0 );
+    push( @Array_PROP, <<END
+
+relHandler.name                   relHandler
+relHandler.max.at.highload.time   1
+relHandler.max.at.lowload.time    1
+relHandler.start.string           $RATED_EVENT_LOADER{'pin_cnf_location'}/RelHandler$PERL_EXTENSION 
+END
+    );
+
+    seek( PROPFILE, 0, 0 );
+    print PROPFILE @Array_PROP;
+    print PROPFILE "\n";
+    truncate( PROPFILE, tell( PROPFILE ) );
+    close( PROPFILE );
+
+    if ( ! -f $PROP_full_pathname )
+    {
+      # Display a message saying to append this file to apps/batch_controller/Infranet.properties file.
+      &Output( STDOUT, $IDS_APPEND_TO_FILE_MESSAGE,
+                        $PROP_full_pathname,
+                        $CurrentComponent,
+                        $PROP_short_pathname,
+                        $PROP_pathname );
+    };
+
+  }
+
+}
+
+################################################
+# Suspense Event Loader
+################################################
+#
+  # Configure apps/pin_rel/suspense_Infranet.properties with values for Suspense Event Loader...
+  #
+  # If the file exists, add the entries to it.
+  # If not, add the entries to a temporary file.
+  #
+
+  $PROP_susp_pathname = "$RATED_EVENT_LOADER{'pin_cnf_location'}/suspense_Infranet.properties";
+
+  # The *.pl entries are named *.bat in Infranet.properties, for NT installs.
+  if ( $^O =~ /win/i )
+  {
+    $PERL_EXTENSION = "";
+  }
+  else
+  {
+    $PERL_EXTENSION = ".pl";
+  }
+
+  # Create temporary file, if it does not exist.
+  if ( -f $PROP_susp_pathname )
+  {
+    $PROP_path = $PROP_susp_pathname;
+  }
+  else
+  {
+    $PROP_path = "$PIN_HOME/append_to_Infranet_properties";
+    $PROP_susp_short_pathname = "suspense_Infranet.properties";
+    open( PROSUSPEN, ">> $PROP_path" );
+    close( PROSUSPEN );
+  }
+
+  open( PROSUSPEN, "+< $PROP_path" ) || die( "Can't open $PROP_path" );
+
+  @Array_PROP = <PROSUSPEN>;
+  seek( PROSUSPEN, 0, 0 );
+
+  $DoUpdateSuspense = TRUE;
+  
+  if ( $DoUpdateSuspense eq TRUE )
+  {
+
+    #
+    # Append the SuspenseEventLoader events to the existing entries.
+    #
+    $i = 0;
+    seek( PROSUSPEN, 0, 0 );
+    push( @Array_PROP, <<END
+
+infranet.rel.default.load_util = sqlldr direct=true streamsize=5000000 readsize=10000000 unrecoverable
+infranet.rel.storable_class.recycle_suspended_usage.table.1.control_file   rollback_suspended_usage_t.ctl
+END
+    );
+
+    seek( PROSUSPEN, 0, 0 );
+    print PROSUSPEN @Array_PROP;
+    print PROSUSPEN "\n";
+    truncate( PROSUSPEN, tell( PROSUSPEN ) );
+    close( PROSUSPEN );
+
+    if ( ! -f $PROP_susp_pathname )
+    {
+      # Display a message saying to append this file to apps/pin_rel/suspense_Infranet.properties file.
+      &Output( STDOUT, $IDS_APPEND_TO_FILE_MESSAGE,
+                        $PROP_susp_pathname,
+                        $CurrentComponent,
+                        $PROP_susp_short_pathname,
+                        $PROP_path );
+    };
+
+  }
+
+
+#########################################
+# Configure database for the Rated Event Loader
+#########################################
+sub configure_rel_database {
+
+  require "pin_".$MAIN_DM{'db'}->{'vendor'}."_functions.pl";
+  require "pin_cmp_dm_db.pl";
+  local ( $TMP ) = $SKIP_INIT_OBJECTS;
+  local ( %CM ) = %MAIN_CM;
+  local ( %DM ) = %MAIN_DM;
+  local $Logfile = "$PIN_TEMP_DIR/tmp.out";
+  local $bErrors = FALSE;
+
+  # Call the routine which generates a "classid_values.txt" file containing the storable class names along with their classid
+  # values required by the REL pre-processing script.
+  #
+  &GenerateClassIdValues(%{%DM->{"db"}});
+
+  #
+  # If this is an fresh install the BATCH_REL_T table will not be present.
+  # Hence call the full dd_objects script to initialize the schema.
+  #
+  if ( VerifyPresenceOfTable( "BATCH_REL_T", %{%DM->{"db"}} ) == 0 ) {
+
+    &PreModularConfigureDatabase( %CM, %DM );
+
+    $SKIP_INIT_OBJECTS = "NO";
+    $USE_SPECIAL_DD_FILE = "YES";
+    #
+    # If this is an fresh install the EVENT_BATCH_REL_INFO_T table will not be present.
+    # else call the upgrade script to create the new field and table.
+    #
+    if ( VerifyPresenceOfTable( "EVENT_BATCH_REL_INFO_T", %{%DM->{"db"}} ) == 0 ) {
+       $SPECIAL_DD_FILE = "$DD{'location'}/dd_objects_rel.source";
+    }
+    else {
+       $SPECIAL_DD_FILE = "$DD{'location'}/dd_objects_rel_65sp1RTW_70.source";
+    }
+
+    $SPECIAL_DD_INIT_FILE = "$DD{'location'}/init_objects_rel.source";
+    $SPECIAL_DD_DROP_FILE = "$DD{'location'}/drop_tables_rel_".$MAIN_DM{'db'}->{'vendor'}.".source";
+    $SPECIAL_DD_CREATE_INDEXES_FILE = "$DD{'location'}/create_indexes_rel_".$MAIN_DM{'db'}->{'vendor'}.".source";
+
+    if ( $SETUP_DROP_ALL_TABLES =~ m/^YES$/i ) {
+      &DropTables( %{MAIN_DM->{"db"}} );
+    }
+
+    &pin_pre_modular( %{%DM->{"db"}} );
+    &pin_init( %DM );
+    &pin_post_modular( %DM );
+
+    $USE_SPECIAL_DD_FILE = "NO";
+    $SKIP_INIT_OBJECTS = $TMP;
+
+    &ExecuteSQL_Statement_From_File( $SPECIAL_DD_CREATE_INDEXES_FILE, TRUE, TRUE, %{%DM->{'db'}} );
+
+    &PostModularConfigureDatabase( %CM, %DM );
+ }
+ 
+ #
+  # If this is an upgrade install from Version 7.2 to 7.3
+  # the TMP_PROFILE_EVENT_ORDERING_T or BATCH_REL_T table will not be present.
+  # Hence call the upgrade script to create the new field and table.
+  #
+  
+  if ( VerifyPresenceOfTable( "TMP_PROFILE_EVENT_ORDERING_T", %{%DM->{"db"}} ) == 0 || VerifyPresenceOfTable( "BATCH_REL_T", %{%DM->{"db"}} ) == 0 )
+  {
+
+  	&PreModularConfigureDatabase( %CM, %DM );
+
+	print "Updating Rated Event Loader DB Schema\n";
+  	$SKIP_INIT_OBJECTS = "YES";
+  	$USE_SPECIAL_DD_FILE = "YES";
+  	$SPECIAL_DD_FILE = "$DD{'location'}/7.2_7.3_dd_objects_rel.source";
+  		 
+  	&pin_pre_modular( %{%DM->{"db"}} );
+  	&pin_init( %DM );
+  	&pin_post_modular( %DM );
+
+  	$USE_SPECIAL_DD_FILE = "NO";
+  	$SKIP_INIT_OBJECTS = $TMP;
+
+  	&PostModularConfigureDatabase( %CM, %DM );
+  }  
+
+  #
+  # If this is an upgrade install from Version 6.5 to 6.7 
+  # the REL_SUB_PROCESSES_T table will not be present.
+  # Hence call the upgrade script to create the new field and table.
+  #
+  if ( VerifyPresenceOfTable( "REL_SUB_PROCESSES_T", %{%DM->{"db"}} ) == 0 )
+  {
+
+  	&PreModularConfigureDatabase( %CM, %DM );
+
+	print "Updating Rated Event Loader DB Schema\n";
+  	$SKIP_INIT_OBJECTS = "YES";
+  	$USE_SPECIAL_DD_FILE = "YES";
+  	$SPECIAL_DD_FILE = "$DD{'location'}/dd_objects_rel_65_70.source";
+  		 
+  	&pin_pre_modular( %{%DM->{"db"}} );
+  	&pin_init( %DM );
+  	&pin_post_modular( %DM );
+
+  	$USE_SPECIAL_DD_FILE = "NO";
+  	$SKIP_INIT_OBJECTS = $TMP;
+
+  	&PostModularConfigureDatabase( %CM, %DM );
+  }  
+
+  #
+  #  ExecuteSQL script to create or upgrade rel_update_status_t and rerel_acct_item_map_t tables in the database
+  #
+  &ExecuteSQL_Statement_From_File( "$RATED_EVENT_LOADER{'pin_cnf_location'}/create_rel_tables_".$MAIN_DM{'db'}->{'vendor'}.".sql", 
+                                   TRUE, 
+                                   TRUE, 
+                                   %{%DM->{'db'}} );
+  #
+  # Create REL and Suspense stored procedures
+  #
+  if ( $MAIN_DM{'db'}->{'vendor'} =~ /oracle/i ) {
+	  @plb = (
+		"$RATED_EVENT_LOADER{'pin_cnf_location'}/pin_rel_updater_sp_".$MAIN_DM{'db'}->{'vendor'}.".plb",
+		"IREL stored procedures",
+		"$RATED_EVENT_LOADER{'pin_cnf_location'}/suspense_updater_sp_".$MAIN_DM{'db'}->{'vendor'}.".plb",
+		"SEL stored procedures"
+	          );
+
+	for ($i= 0; $i <= $#plb ; $i = $i + 2) {
+	  if ( -f $plb[$i] ) {
+	    &ExecutePLB_file ($plb[$i],
+		$plb[$i+ 1],
+		%DM_ORACLE );
+	  } else {
+	    &Output( STDERR, "ERROR: Could not find file %s\n", $plb[i]); 
+	    &Output( fpLogFile, "ERROR: Could not find file %s\n", $plb[i]); 
+	  }
+	}
+  }
+  elsif ( $MAIN_DM{'db'}->{'vendor'} =~ /odbc/i ) {
+        &ExecuteSQL_Statement_From_File( "$RATED_EVENT_LOADER{'pin_cnf_location'}/pin_rel_updater_sp_sql.sql", 
+                                   TRUE, 
+                                   TRUE, 
+                                   %{%DM_ODBC->{'db'}} );
+
+	&ExecuteSQL_Statement_From_File( "$RATED_EVENT_LOADER{'pin_cnf_location'}/suspense_updater_sp_sql.sql", 
+                                  TRUE, 
+                                  TRUE, 
+                                  %{%DM_ODBC->{'db'}} );
+  
+  }
+}
+
+###########################################################
+#
+#  Configure CLASSPATH in pin_rel files. 
+#  If db is oracle, remove $INSTHOME/... from the classpath.
+#
+#  Arguments:
+#    $File - File to be processed
+#
+############################################################
+sub configure_classpath {
+  local ($REL_FILE) = @_;
+  $i = 0;
+  open( INFILE, "+<$REL_FILE" ) || die ("Can't open the $REL_FILE $!\n");
+
+  @Array_INFILE = <INFILE>;
+  seek( INFILE, 0, 0 );
+  while ( <INFILE> )
+  {
+    if ( $MAIN_DM{'db'}->{'vendor'} =~ /oracle/i )
+    {
+	$_ =~ s/\$INSTHOME\/sqllib\/java\/sqlj.zip:\$INSTHOME\/sqllib\/java\/db2java.zip:\$INSTHOME\/sqllib\/java\/runtime.zip://i;
+    }
+    
+    if ( $^O =~ /aix/i)	
+    {
+       $_ =~ s/__USE_COMPILER_SAFEPOINTS__//i;
+    }
+    elsif  ( $^O =~ /hpux/i ||  $^O =~ /solaris/i ||  $^O =~ /linux/i ) 
+    {
+       $_ =~ s/__USE_COMPILER_SAFEPOINTS__/-XX:+UseCompilerSafepoints/i;
+    }
+    elsif ( $^O =~ /win/i) 
+    {
+       if ( $MAIN_DM{'db'}->{'vendor'} =~ /oracle/i ) 
+       {
+           $_ =~ s/[^\;]*\\msbase.jar\;//i;
+     	   $_ =~ s/[^\;]*\\mssqlserver.jar\;//i;
+      	   $_ =~ s/[^\;]*\\msutil.jar\;//i;
+       }
+       elsif ( $MAIN_DM{'db'}->{'vendor'} =~ /odbc/i ) 
+       {
+           $_ =~ s/\%ORACLE_HOME\%\\jdbc\\lib\\classes12.zip\;//i;
+       }
+    }
+
+   $Array_INFILE[$i++] = $_; 
+
+  }
+  
+  seek( INFILE, 0, 0 );
+  print INFILE @Array_INFILE;
+  print INFILE "\n";
+  truncate( INFILE, tell( INFILE ) );
+  close( INFILE );
+}
+
+#########################################################################
+# Configure Infranet.properties based on db type and service type.
+# The default service type is set to gprs.
+# 
+# If main db is oracle, the function comments out db2 specfic lines and 
+# uncomments oracle specific lines. 
+# Otherwise, it comments out oracle specific lines and uncomments db2 specific 
+# lines.
+#  Arguments:
+#    $PropFile - Properties file to be processed
+#
+############################################################################
+sub configure_prop_file {  
+  local ($PROPFILE) = @_;
+  $infranet_db_type =  $MAIN_DM{'db'}->{'vendor'};
+  
+  #
+  #  Configure Infranet.properties with current values ...
+  #
+  open(INFILE,"+<$PROPFILE/Infranet.properties") || die ("Can't open the $PROPFILE/Infranet.properties $!\n");
+  $i = 0;
+  @Array_INFILE = <INFILE>;
+  seek( INFILE, 0, 0 );
+  while ( <INFILE> )
+  {
+    $_ =~ s/^\s*infranet\.rel\.default.interim_directory.*/infranet\.rel\.default.interim_directory = $PROPFILE\//i;
+    $_ =~ s/^\s*infranet\.rel\.dbnumber.*/infranet\.rel\.dbnumber = $MAIN_DM{'db_num'}/i;
+    $_ =~ s/^\s*infranet\.rel\.dbname.*/infranet\.rel\.dbname = $MAIN_DM{'db'}->{'alias'}/i;
+    $_ =~ s/^\s*infranet\.rel\.userid.*/infranet\.rel\.userid = $MAIN_DM{'db'}->{'user'}/i;
+    $_ =~ s/^\s*infranet\.rel\.password.*/infranet\.rel\.password = $MAIN_DM{'db'}->{'password'}/i;
+
+
+    if ( $MAIN_DM{'db'}->{'vendor'} =~ /odbc/i )  {
+	$_ =~ s/^\s*infranet\.rel\.dbtype.*/infranet\.rel\.dbtype = SQLSERVER/i;
+	$_ =~ s/^\s*infranet\.rel\.default\.load_util.*/infranet\.rel\.default\.load_util = bcp/i;
+	$_ =~ s/^\s*infranet\.rel\.default\.preupdater_sproc.*/infranet\.rel\.default\.preupdater_sproc = pin_rel_pre_updater_sp/i;
+	$_ =~ s/^\s*infranet\.rel\.default\.updater_sproc.*/infranet\.rel\.default\.updater_sproc = pin_rel_updater_sp/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.1\.name.*/infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.1\.name = d_event_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.2\.name.*/infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.2\.name = d_event_bal_impacts_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.3\.name.*/infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.3\.name = d_event_essentials_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.5\.name.*/infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.5\.name = d_event_tax_jurisdictions_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.6\.name.*/infranet\.rel\.storable_class\.event_delayed_session_gprs\.table\.6\.name = d_event_rum_map_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.1\.name.*/infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.1\.name = d_event_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.2\.name.*/infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.2\.name = d_event_bal_impacts_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.3\.name.*/infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.3\.name = d_event_essentials_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.8\.name.*/infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.8\.name = d_event_rum_map_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.7\.name.*/infranet\.rel\.storable_class\.event_delayed_session_telco_gsm\.table\.7\.name = d_event_tax_jurisdictions_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.1\.name.*/infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.1\.name = d_event_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.2\.name.*/infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.2\.name = d_event_bal_impacts_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.3\.name.*/infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.3\.name = d_event_essentials_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.5\.name.*/infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.5\.name = d_event_tax_jurisdictions_t/i;
+	$_ =~ s/^\s*infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.6\.name.*/infranet\.rel\.storable_class\.event_delayed_activity_wap_interactive\.table\.6\.name = d_event_rum_map_t/i;
+    }
+
+    $Array_INFILE[$i++] = $_;
+  }
+  seek( INFILE, 0, 0 );
+  print INFILE @Array_INFILE;
+  print INFILE "\n";
+  truncate( INFILE, tell( INFILE ) );
+  close( INFILE );
+  
+}
+
+#The routine generates a file containing the storable class names and their classid values in the form of an associative array
+#required by the REL preprocess script.This script was needed to ensure that the preprocessor script always received
+#the latest classid values from the db.
+
+sub GenerateClassIdValues {
+
+  local( %DB ) = @_;
+  #the file will contain the result set of our query.
+  local( $tmpFile ) = $PIN_TEMP_DIR."/tmp.out";
+  local( $ReadString );
+  local( %classIds); #associative array used to hold storable class names and their values.
+  local( $storable_class_name);
+  local( $storable_class_value);
+
+  &ExecuteSQL_Statement(
+    "select name,obj_id0 from dd_objects_t where name in ('/account','/balance_group','/balance_group/monitor','/product','/purchased_discount','/purchased_product') order by name asc;",
+     TRUE, TRUE, %DB);
+
+
+  open( TMPFILE, $tmpFile ) || die "$ME: cannot read $tmpFile\n";
+
+  while ($ReadString = <TMPFILE>){
+        chomp($ReadString);
+        #trim white spaces.
+        $ReadString =~ s/^\s+//;
+        $ReadString =~ s/\s+$//;
+
+        #get the storable class name.
+        if  ($ReadString =~ /^\//) {
+                $storable_class_name= $ReadString;
+        }
+	#get the corresponding storable class id value
+        elsif  ($ReadString =~ /^[0-9]+$/){
+                $classIds{$storable_class_name} = $ReadString;
+        }
+  }
+  close(TMPFILE);
+
+  #Create file "classid_values.txt" containing an associative array with storable class name as the key and
+  #classid as the value.
+
+  $tmpFile = $RATED_EVENT_LOADER{'pin_cnf_location'} . "/classid_values.txt";
+
+  open(TMPFILE, ">$tmpFile") || die "$ME: cannot open $tmpFile\n"; ;
+  print TMPFILE "%classIds = (";
+  while (($storable_class_name, $storable_class_value) = each(%classIds)){
+        print TMPFILE "\"". $storable_class_name."\",".$storable_class_value.",\n";
+  }
+  print TMPFILE ");"."\n";
+  close(TMPFILE);
+}

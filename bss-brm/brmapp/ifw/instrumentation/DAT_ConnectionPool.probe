@@ -1,0 +1,3 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+connectionPool | 1 | connectionPoolGroup | ConnectionPool Plugin | NotSpecified | Group |
+connectionPoolGroup | 1 | rebalanceConnection | Re-balance Connection | WriteOnly | String | 

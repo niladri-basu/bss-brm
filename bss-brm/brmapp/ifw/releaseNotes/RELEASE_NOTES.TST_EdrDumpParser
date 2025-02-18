@@ -1,0 +1,72 @@
+========================================================================================
+TST_EdrDumpParser
+----------------------------------------------------------------------------------------
+Module Release Notes
+
+===============================================================================
+Actual Version :10007 Date: 14-Sep-2006
+----------------
+
+PRSF00229263:Modify the EdrDumpParser to 
+             * use the Environment variables in the Edr dump
+             * compare the Edr dump with the ERROR codes
+===============================================================================
+Actual Version :10006 Date: 19-Apr-2005
+----------------
+
+PRSF00163921:Modify the EdrDumpParser to use the STATE specified in the EDR Dump to set the edr field state.
+===============================================================================
+Actual Version :10005 Date: 11-Apr-2005
+----------------
+
+PRSF00163253:change long to int64 in case of EDrDumpParser which is causing build break currently
+
+===============================================================================
+Actual Version :10004 Date: 25-Mar-2005
+----------------
+
+PRSF00160453: Modified the lexer file to return state value correctly. 
+
+===============================================================================
+Actual Version :10003 Date: 18-Mar-2005
+----------------
+
+PRSF00158936: Build optimized lib for INP_EdrDump and TFWEdrDumpParser (CPPTFW enhancement) - donein the build_all
+
+===============================================================================
+
+Actual Version :10002 Date: 11-Mar-2005
+----------------
+
+PRSF00156800: Modify the EdrDumpParser to use the STATE specified in the EDR Dump to set
+              the edr field state.
+
+===============================================================================
+
+Actual Version :10001 Date: 15-Dec-2004
+----------------
+
+PRSF00145603: Pass an explicit device handle to parser function to push the Edr to EdrContainer.
+
+================================================================================
+
+Actual Version : Date : 15-Dec-2004
+----------------
+
+Notes          :
+----------------
+                 - Just new
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+---------------
+
+~

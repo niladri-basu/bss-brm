@@ -1,0 +1,420 @@
+//==============================================================================
+//
+// Copyright (c) 2003, 2009, Oracle and/or its affiliates. 
+// All rights reserved. 
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: Tax_Calc.isc
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module calculates the pipeline level taxation
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//                                                                               
+//------------------------------------------------------------------------------
+//Responsible - Billing Team
+
+//----------------------------------------------------------
+// This  array is used to store the taxcodemap file entries.
+//----------------------------------------------------------
+  
+String taxCodeMapFileList[][];
+
+//----------------------------------------------------------
+//This array is used to store the edr level tax data.
+//----------------------------------------------------------
+
+String tempEdrTaxDataList[];
+
+
+//----------------------------------------------------------
+//This hash array is used to store the tax types
+//----------------------------------------------------------
+String taxTypeHash{};
+
+//-----------------------------------------------------------------------------------
+//This function is used to calculate tax it takes taxrate and pretax amount as inputs.
+//-----------------------------------------------------------------------------------
+
+function Decimal calcTax(Decimal taxRate,Decimal taxPreValue)
+{
+	return ((taxRate*taxPreValue)/100);
+}
+
+//---------------------------------------------------------------------------------------
+//This function performs the validation of Charge time stamp with respect to tax code map
+//file entries from date and to date. 
+//---------------------------------------------------------------------------------------
+
+function Bool validateDate(Date CTStamp,String validFromDate,String validToDate)
+{
+	String fromDate[];
+	String toDate[];
+	String localValidFromDate=" ";
+	String localValidToDate=" ";
+	String localCTStamp=" ";
+
+	strSplit(fromDate,validFromDate,"/");
+	strSplit(toDate,validToDate,"/");
+
+	//-----------------------------------------------------------------
+	//From date in taxcode map file is converted to correct date format
+	//------------------------------------------------------------------
+
+	localValidFromDate = strSubstr(dateToStr(sysdate()),0,2)+strStrip(fromDate[2],STRIP_TRAILING," ") +
+				strStrip(fromDate[0],STRIP_LEADING," ")+fromDate[1]+"000000";
+
+	//----------------------------------------------------------------
+	//To date in taxcode map file is converted to correct date format
+	//-----------------------------------------------------------------
+
+	localValidToDate = strSubstr(dateToStr(sysdate()),0,2)+strStrip(toDate[2],STRIP_TRAILING," ") +
+				strStrip(toDate[0],STRIP_LEADING," ")+toDate[1]+"000000";
+
+	//-------------------
+	//Current date format
+	//--------------------
+
+	localCTStamp = strSubstr(dateToStr(CTStamp),0,8)+"000000";
+
+	//-----------------------------------------------------
+	//Comparing the from data and to date with current date
+	//------------------------------------------------------
+
+	if(dateDiff(strToDate(localValidFromDate),strToDate(localCTStamp))<=0)
+	{
+		if(dateDiff(strToDate(localValidToDate),strToDate(localCTStamp))>=0)
+		return true;
+	}
+ 
+
+	arrayClear(fromDate);
+	arrayClear(toDate);
+	return false;	
+}
+
+
+//----------------------------------------------------------------- 
+//This function is used to read tax code map file entries 
+//-----------------------------------------------------------------
+
+function  readTaxCodeMap
+{
+	File In;
+	String line=" ";
+	Long j=0;
+	String temp[];
+
+	if ( fileOpen(In,reg.TaxCodeMapFilePath,"r") == false)
+	{
+		logPipeline("Error in opening the file"+reg.TaxCodeMapFilePath,4);
+		return;
+	}
+
+	// Sample taxcode map file entry
+	//----------------------------------------               
+	// Taxcode     Pkg  Rate   Start      End        Lvl   List     Descr      Rule
+	// ----------  ---  -----  --------   --------   ----  ------   --------   ----
+	// usage      : U : 4.0  : 02/01/01 : 01/31/10 : Fed : US     : USF      : Std               
+
+	while (fileEof(In)==false)
+	{
+		fileReadLine(In,line,100);
+		strSplit(temp,line,":");
+		if (strSearch(line,"#",0)<0)		
+		{
+			if(strSearch(temp[1],"U",0)>=0)
+			{
+				if (strSearch(line,":",0)>=0)
+				{
+					strSplit(taxCodeMapFileList[j],line,":");
+				}
+		 		j=j+1;
+			}
+		}
+	  arrayClear(temp);
+	  line=" ";
+	}
+
+	fileClose(In);
+}
+
+//--------------------------------------------------------------
+//This function is used to return the  tax type value
+//--------------------------------------------------------------
+
+function String readTaxType(String taxTypeString)
+{
+
+	String taxTypeValue;
+
+	if(strLength(taxTypeString)==0)
+	{
+		taxTypeValue = taxTypeHash{"Fed"};
+	}
+	else
+	if (strSearch("Federal", taxTypeString)>=0) 
+	{
+		taxTypeValue = taxTypeHash{taxTypeString};	
+	} 
+	else 
+	if (strSearch("State", taxTypeString)>=0) 
+	{
+		taxTypeValue = taxTypeHash{taxTypeString};
+	} 
+	else 
+	if (strSearch("County", taxTypeString)>=0) 
+	{
+		taxTypeValue = taxTypeHash{taxTypeString};
+	} 
+	else 
+	if (strSearch("City", taxTypeString)>=0) 
+	{
+		taxTypeValue = taxTypeHash{taxTypeString};
+	}
+	else 
+	{	
+		taxTypeValue = taxTypeHash{"Fed"};
+	}
+
+	return taxTypeValue;
+} 
+
+//------------------------------------------------------------
+//This function is used to prepare tax data string
+//------------------------------------------------------------ 
+
+function Long readTaxData(String taxCode1,Date ctSCharge)
+{
+	Long numEntries=0;
+	Long loopCounter=0;
+	Long taxCodeCounter=0;
+	numEntries = arraySize(taxCodeMapFileList);
+	String defTaxString = reg.TaxType+":"+reg.FlatTaxRate+":"+reg.TaxCode;
+  	
+	while(loopCounter < numEntries)
+	{
+		//--------------------------------------------------
+		// tax code comparision with taxcode map file values
+		//----------------------------------------------------
+
+		if( (strSearch(taxCodeMapFileList[loopCounter][0],taxCode1,0)>=0) and 
+			(strLength(strStrip(taxCodeMapFileList[loopCounter][0],STRIP_BOTH," "))==strLength(taxCode1)) )
+		{
+			//validate whether charge stamp value is valid or not
+
+			if(validateDate(ctSCharge,taxCodeMapFileList[loopCounter][3],taxCodeMapFileList[loopCounter][4])==true)
+			{
+				tempEdrTaxDataList[taxCodeCounter]=readTaxType( strStrip(taxCodeMapFileList[loopCounter][5],STRIP_BOTH," ") ) +
+								":"+taxCodeMapFileList[loopCounter][2]+":"+taxCodeMapFileList[loopCounter][0];	
+			}
+			else
+			{
+				tempEdrTaxDataList[taxCodeCounter] = defTaxString;	
+			}
+			taxCodeCounter=taxCodeCounter+1;
+		 }
+	
+		 loopCounter=loopCounter+1;
+	}
+	
+	if(taxCodeCounter==0)
+	{
+		tempEdrTaxDataList[taxCodeCounter] = defTaxString;
+	}
+
+	return taxCodeCounter;
+}
+
+function BEGIN
+{
+
+	//Initialize global variable tax type hash
+	taxTypeHash{"Fed"}="01";
+	taxTypeHash{"Sta"}="04";
+	taxTypeHash{"Cou"}="03";
+	taxTypeHash{"Cit"}="02";
+
+	readTaxCodeMap();
+ 
+	//----------------------------------------
+	//check for All mandatory registry entries.
+	//-----------------------------------------
+
+	if(strLength(reg.FlatTaxRate)==0 or strLength(reg.TaxCode)==0 or strLength(reg.TaxType)==0)
+	{
+		logPipeline("Flat Tax Rate / TaxCode / TaxType /  is not configured properly",4);
+		return; 
+	}
+}
+
+
+function onDetailEdr
+{
+	Long cbdIndex; 
+	Long cpIndex; 
+	Long dpIndex; 
+	Long tpIndex; 
+	Long dpresId; 
+	Long cbdCounter; 
+	Long cpCounter; 
+	Long dpCounter; 
+	Long tpCounter; 
+	Long noTaxEntries;
+	Long loopTaxCounter;
+	Long count;
+	Long dpPacId=0;
+	Long cpPacId=0;
+	Long    packetId;
+	
+	Decimal cpAmt; 
+	Decimal dpAmt; 
+	Decimal taxValue; 
+	Decimal taxRate;
+	Decimal preTaxValue;
+	
+	String dpImpCt=" ";
+	String cpImpCt=" ";
+	String taxCode; 
+	String taxType;
+	String localString[];
+	
+	Date ctStampValue;
+	
+
+	//-----------------------------------------
+	//Retrieves the number of ASS_CBD datablocks
+	//-------------------------------------------
+	cbdIndex = edrNumDatablocks(DETAIL.ASS_CBD);
+	ctStampValue = edrDate(DETAIL.CHARGING_START_TIMESTAMP);
+
+	//-------------------------------
+	//Loop for ASS_CBD datablocks
+	//--------------------------------
+
+	for(cbdCounter=0;cbdCounter<cbdIndex;cbdCounter=cbdCounter+1)
+	{
+	
+		//------------------------------------
+		//Retrieves the number of CP datablocks
+		//--------------------------------------
+
+		cpIndex = edrNumDatablocks(DETAIL.ASS_CBD.CP,cbdCounter);
+		
+		//------------------------
+		//Loop for CP datablocks
+		//------------------------
+
+		for(cpCounter=0;cpCounter<cpIndex;cpCounter=cpCounter+1)
+		{
+			//----------------------------------------------------------
+			//Checks the whether the CHARGED_TAX_TREATMENT is set N or Y
+			//----------------------------------------------------------
+
+			if(edrString(DETAIL.ASS_CBD.CP.CHARGED_TAX_TREATMENT,cbdCounter,cpCounter)=="Y")
+			{
+				taxCode = edrString(DETAIL.ASS_CBD.CP.CHARGED_TAX_CODE,cbdCounter,cpCounter);
+				packetId = cpCounter; //edrLong(DETAIL.ASS_CBD.CP.INTERN_PACKET_INDEX,cbdCounter,cpCounter);
+			   
+				if(strLength(taxCode)==0)
+				{
+					logPipeline("Flat tax rate is used for tax calculation",0);
+					tempEdrTaxDataList[0] = reg.TaxType+":"+reg.FlatTaxRate+":"+reg.TaxCode;
+				}
+				else
+				{
+					noTaxEntries = readTaxData(taxCode,ctStampValue);
+				}
+				
+				//-----------------------------------------------------------
+				// Retrieves the CHARGED_AMOUNT_VALUE from the CP datablock	
+				//-----------------------------------------------------------
+
+				cpAmt = edrDecimal(DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE,cbdCounter,cpCounter);
+			}
+			else
+			{
+				logPipeline("Tax Treatment Flag is not found",0);
+				return;
+			}
+				
+			//------------------------------------------------------------
+			//Retrieves the number of DP datablocks
+			//------------------------------------------------------------
+
+			dpIndex = edrNumDatablocks(DETAIL.ASS_CBD.DP,cbdCounter);
+			cpPacId = edrLong(DETAIL.ASS_CBD.CP.INTERN_PACKET_INDEX,cbdCounter,cpCounter);
+			cpImpCt = edrString(DETAIL.ASS_CBD.CP.IMPACT_CATEGORY,cbdCounter,cpCounter);
+			
+			//-------------------------------------------------------------
+			//Loop for DP datablocks
+			//-------------------------------------------------------------
+			dpAmt = 0;
+			preTaxValue = 0;
+
+			for(dpCounter=0;dpCounter<dpIndex;dpCounter=dpCounter+1)
+			{
+				dpresId = edrLong(DETAIL.ASS_CBD.DP.RESOURCE_ID,cbdCounter,dpCounter);
+
+				//---------------------------------------------------------------
+				//discount resource is between 0 to 1000 then it is assumed that
+				//it is currency type of discount.
+				//---------------------------------------------------------------
+				
+				dpPacId = edrLong(DETAIL.ASS_CBD.DP.INTERN_SRC_PACKET_INDEX,cbdCounter,dpCounter);
+				dpImpCt = edrString(DETAIL.ASS_CBD.DP.IMPACT_CATEGORY,cbdCounter,dpCounter);
+				
+				if ( (dpresId>=0) and (dpresId<=1000)  and ( cpPacId == dpPacId) and (strSearch(cpImpCt,dpImpCt,0)>=0))
+				{
+					dpAmt = dpAmt+edrDecimal(DETAIL.ASS_CBD.DP.AMOUNT,cbdCounter,dpCounter);
+				}
+				else
+				{
+					logPipeline("Discount is not of Currency type",0);
+				}
+			} 
+			
+			
+			//--------------------------------------------------------------
+			// Pre Tax Amount calculation
+			//--------------------------------------------------------------
+
+			 preTaxValue=cpAmt+dpAmt;
+	
+			//-------------------------------------------------------------
+			//Adding Tax Packet to datablock
+			//-------------------------------------------------------------
+				
+			noTaxEntries = arraySize(tempEdrTaxDataList);
+
+			for(loopTaxCounter=0;loopTaxCounter<noTaxEntries;loopTaxCounter=loopTaxCounter+1)
+			{
+				if(edrAddDatablock(DETAIL.ASS_CBD.TP,cbdCounter)==false)
+				{
+					logPipeline("Failed to add taxpacket to the datablock.",4);
+					return;
+				}
+				strSplit(localString,tempEdrTaxDataList[loopTaxCounter],":");
+				taxValue = calcTax(strToDecimal(localString[1]),preTaxValue);
+				edrDecimal(DETAIL.ASS_CBD.TP.TAX_VALUE,cbdCounter,count)=taxValue;
+				edrString(DETAIL.ASS_CBD.TP.TAX_RATE,cbdCounter,count)=strStrip(localString[1],STRIP_BOTH," ");
+				edrDecimal(DETAIL.ASS_CBD.TP.TAXABLE_AMOUNT,cbdCounter,count)=preTaxValue;
+				edrString(DETAIL.ASS_CBD.TP.TAX_CODE,cbdCounter,count)=strStrip(localString[2],STRIP_BOTH," ");
+				edrString(DETAIL.ASS_CBD.TP.TAX_TYPE,cbdCounter,count)=localString[0];
+				edrLong(DETAIL.ASS_CBD.TP.RELATED_CHARGE_INFO_ID,cbdCounter,count)=packetId;
+				count=count+1;
+			}		
+		}
+	}
+	count=0;
+	arrayClear(tempEdrTaxDataList);
+}
+

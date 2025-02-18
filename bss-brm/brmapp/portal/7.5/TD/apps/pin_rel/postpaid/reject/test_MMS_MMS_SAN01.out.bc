@@ -1,0 +1,12 @@
+010	1			7	7	1428966257	1428966257	1428966257		0	0						RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/mms			2
+020	2					SN	DN	1001	00	006490292992	Texts to 2degrees	0	17	01	MMS			00	S	+0100	0.0	0.0	20	NORM	Texts	0	0	1429117274	1429117275	1
+520	3		1001	0
+900	4	1 /account 112940 0	1 /service/telco/gsm/mms 110798 0	1 /item/usage 290939572802866644 0	0  0 0	;;;;[1001,2,0]|;;;;[1001,2,0]|;;;;[1001,2,0]|;;;;[0064902929,2,0]		1	@INTEGRATE#1001#006490292992#MMS#1#20#Texts#0#Texts to 2degrees##<1 /item/usage 290939572802866644 0#554#1##50.00#320#GST|>#<77#52|>#<Carryover Minutes#60#5100|Me2U#30#0.44|>
+600	5	1 /account 112940 0	1 /balance_group 114510 0	1 /item/usage 290939572802866644 0	554	0	ALL	258	1 /product 109679 0	320	0	GST			1 /purchased_product 112334 0	1	50.00	0.0	50.00	0.0	0	P
+605	0	1 /balance_group 114510 0	554
+607	0	50.00	1428923057	0			0	0
+888	1	SAN51	$29 Plan	51	52	OriginatingCountry	OriginatingZone	DestinationCountry	DestinationZone	57	58	RatingGroupCode	RatingGroupType	4.55	Mfile	InPackageCode	Product	SharersMSISDN	SharersProduct	SHRD	70	1416593474	72	73	CLI	74	76	77
+890	Carryover Minutes	60	5100
+890	Me2U	30	0.44
+892	EventClass	EventName	86	87	EventDataCost	EventUnitCost	93	ProdCatID
+090	10			7	7	1	1429117274	+0100	1429117274	+0100	0.0	50.00

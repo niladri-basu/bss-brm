@@ -1,0 +1,2454 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:op="http://www.portal.com/schemas/BusinessOpcodes"
+            xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            elementFormDefault="qualified">
+<xsd:complexType name="event_billingExtensionType">
+	<xsd:sequence>
+		<xsd:element name="EVENT_MISC_DETAILS" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="REASON_DOMAIN_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="REASON_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+				</xsd:sequence>
+				<xsd:attribute type="xsd:string" name="elem"/>
+			</xsd:complexType>
+		</xsd:element>
+		<xsd:element ref="event_billingExtension" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="event_billingExtension" type="event_billingExtensionType" abstract="true"/>
+<xsd:element name="event_billing_adjustmentExtension" substitutionGroup="event_billingExtension" type="event_billing_adjustmentExtensionType"/>
+<xsd:complexType name="event_billing_adjustmentExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_adjustment_accountExtension" substitutionGroup="event_billing_adjustmentExtension" type="event_billing_adjustment_accountExtensionType"/>
+<xsd:complexType name="event_billing_adjustment_accountExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_adjustmentExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_adjustment_eventExtension" substitutionGroup="event_billing_adjustmentExtension" type="event_billing_adjustment_eventExtensionType"/>
+<xsd:complexType name="event_billing_adjustment_eventExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_adjustmentExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_adjustment_event_deferredExtension" substitutionGroup="event_billing_adjustment_eventExtension" type="event_billing_adjustment_event_deferredExtensionType"/>
+<xsd:complexType name="event_billing_adjustment_event_deferredExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_adjustment_eventExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_adjustment_itemExtension" substitutionGroup="event_billing_adjustmentExtension" type="event_billing_adjustment_itemExtensionType"/>
+<xsd:complexType name="event_billing_adjustment_itemExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_adjustmentExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_adjustment_tax_eventExtension" substitutionGroup="event_billing_adjustmentExtension" type="event_billing_adjustment_tax_eventExtensionType"/>
+<xsd:complexType name="event_billing_adjustment_tax_eventExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_adjustmentExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_batchExtension" substitutionGroup="event_billingExtension" type="event_billing_batchExtensionType"/>
+<xsd:complexType name="event_billing_batchExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_batch_paymentExtension" substitutionGroup="event_billing_batchExtension" type="event_billing_batch_paymentExtensionType"/>
+<xsd:complexType name="event_billing_batch_paymentExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_batchExtensionType">
+			<xsd:sequence>
+				<xsd:element name="BATCH_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACH" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BATCH_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BATCH_TOTAL" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CHANNEL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOCKBOX_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOCKBOX_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SUBMITTER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_batch_provisionExtension" substitutionGroup="event_billing_batchExtension" type="event_billing_batch_provisionExtensionType"/>
+<xsd:complexType name="event_billing_batch_provisionExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_batchExtensionType">
+			<xsd:sequence>
+				<xsd:element name="BATCH_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACH" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BATCH_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_batch_refundExtension" substitutionGroup="event_billing_batchExtension" type="event_billing_batch_refundExtensionType"/>
+<xsd:complexType name="event_billing_batch_refundExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_batchExtensionType">
+			<xsd:sequence>
+				<xsd:element name="BATCH_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BATCH_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BATCH_TOTAL" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOCKBOX_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LOCKBOX_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SUBMITTER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_batch_reversalExtension" substitutionGroup="event_billing_batchExtension" type="event_billing_batch_reversalExtensionType"/>
+<xsd:complexType name="event_billing_batch_reversalExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_batchExtensionType">
+			<xsd:sequence>
+				<xsd:element name="BATCH_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BATCH_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BATCH_TOTAL" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SUBMITTER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_best_pricingExtension" substitutionGroup="event_billingExtension" type="event_billing_best_pricingExtensionType"/>
+<xsd:complexType name="event_billing_best_pricingExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="BASE_DEALINFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BAL_IMPACTS" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+											<xsd:simpleType>
+												<xsd:restriction base="xsd:string">
+													<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+													<xsd:pattern value=""/>
+												</xsd:restriction>
+											</xsd:simpleType>
+										</xsd:element>
+										<xsd:element name="GL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="TAX_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+									</xsd:sequence>
+									<xsd:attribute type="xsd:string" name="elem"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="BEST_DEALINFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BAL_IMPACTS" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+											<xsd:simpleType>
+												<xsd:restriction base="xsd:string">
+													<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+													<xsd:pattern value=""/>
+												</xsd:restriction>
+											</xsd:simpleType>
+										</xsd:element>
+										<xsd:element name="GL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="TAX_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+									</xsd:sequence>
+									<xsd:attribute type="xsd:string" name="elem"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="INHERITED_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="MODE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PROCESS_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PROCESS_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_bundleExtension" substitutionGroup="event_billingExtension" type="event_billing_bundleExtensionType"/>
+<xsd:complexType name="event_billing_bundleExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="BUNDLE_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="POID" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_FROM" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_TO" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_bundle_createExtension" substitutionGroup="event_billing_bundleExtension" type="event_billing_bundle_createExtensionType"/>
+<xsd:complexType name="event_billing_bundle_createExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_bundleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_bundle_modifyExtension" substitutionGroup="event_billing_bundleExtension" type="event_billing_bundle_modifyExtensionType"/>
+<xsd:complexType name="event_billing_bundle_modifyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_bundleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cdc_updateExtension" substitutionGroup="event_billingExtension" type="event_billing_cdc_updateExtensionType"/>
+<xsd:complexType name="event_billing_cdc_updateExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cdcd_updateExtension" substitutionGroup="event_billingExtension" type="event_billing_cdcd_updateExtensionType"/>
+<xsd:complexType name="event_billing_cdcd_updateExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_chargeExtension" substitutionGroup="event_billingExtension" type="event_billing_chargeExtensionType"/>
+<xsd:complexType name="event_billing_chargeExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CHARGE" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACH" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="BILL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="CHANNEL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COMMAND" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MERCHANT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PAY_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_charge_ccExtension" substitutionGroup="event_billing_chargeExtension" type="event_billing_charge_ccExtensionType"/>
+<xsd:complexType name="event_billing_charge_ccExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_chargeExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CC_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_EXP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_charge_ddExtension" substitutionGroup="event_billing_chargeExtension" type="event_billing_charge_ddExtensionType"/>
+<xsd:complexType name="event_billing_charge_ddExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_chargeExtensionType">
+			<xsd:sequence>
+				<xsd:element name="DD_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DD_ACTIVATION_DATE" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FIAS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MANDATE_STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAN_RECEIVED_DATE" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_charge_invoiceExtension" substitutionGroup="event_billing_chargeExtension" type="event_billing_charge_invoiceExtensionType"/>
+<xsd:complexType name="event_billing_charge_invoiceExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_chargeExtensionType">
+			<xsd:sequence>
+				<xsd:element name="INV_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DELIVERY_DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DELIVERY_PREFER" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INV_INSTR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INV_TERMS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATUSES" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="FILENAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="SENT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+										<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+									</xsd:sequence>
+									<xsd:attribute type="xsd:string" name="elem"/>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_consumption_ruleExtension" substitutionGroup="event_billingExtension" type="event_billing_consumption_ruleExtensionType"/>
+<xsd:complexType name="event_billing_consumption_ruleExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="RULES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CONSUMPTION_RULE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ELEMENT_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycleExtension" substitutionGroup="event_billingExtension" type="event_billing_cycleExtensionType"/>
+<xsd:complexType name="event_billing_cycleExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CYCLE" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CYCLE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycle_discountExtension" substitutionGroup="event_billing_cycleExtension" type="event_billing_cycle_discountExtensionType"/>
+<xsd:complexType name="event_billing_cycle_discountExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycle_discount_mostcalledExtension" substitutionGroup="event_billing_cycle_discountExtension" type="event_billing_cycle_discount_mostcalledExtensionType"/>
+<xsd:complexType name="event_billing_cycle_discount_mostcalledExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_cycle_discountExtensionType">
+			<xsd:sequence>
+				<xsd:element name="MOST_CALLED_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MOST_CALLED_LIST" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="QUANTITY" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycle_foldExtension" substitutionGroup="event_billing_cycleExtension" type="event_billing_cycle_foldExtensionType"/>
+<xsd:complexType name="event_billing_cycle_foldExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_cycleExtensionType">
+			<xsd:sequence>
+				<xsd:element name="FOLD" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="QUANTITY" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycle_rolloverExtension" substitutionGroup="event_billing_cycleExtension" type="event_billing_cycle_rolloverExtensionType"/>
+<xsd:complexType name="event_billing_cycle_rolloverExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycle_rollover_monthlyExtension" substitutionGroup="event_billing_cycle_rolloverExtension" type="event_billing_cycle_rollover_monthlyExtensionType"/>
+<xsd:complexType name="event_billing_cycle_rollover_monthlyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_cycle_rolloverExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycle_rollover_correctionExtension" substitutionGroup="event_billing_cycleExtension" type="event_billing_cycle_rollover_correctionExtensionType"/>
+<xsd:complexType name="event_billing_cycle_rollover_correctionExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_cycleExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ROLLOVERS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AMOUNT_ORIG" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PARENT" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycle_rollover_transferExtension" substitutionGroup="event_billing_cycleExtension" type="event_billing_cycle_rollover_transferExtensionType"/>
+<xsd:complexType name="event_billing_cycle_rollover_transferExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_cycle_taxExtension" substitutionGroup="event_billing_cycleExtension" type="event_billing_cycle_taxExtensionType"/>
+<xsd:complexType name="event_billing_cycle_taxExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_cycleExtensionType">
+			<xsd:sequence>
+				<xsd:element name="TAXES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="GEOCODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TAXPKG_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TAX_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TAX_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TAX_LOCALES" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="TAX_CYCLES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BILL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="BILL_VAT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_dealExtension" substitutionGroup="event_billingExtension" type="event_billing_dealExtensionType"/>
+<xsd:complexType name="event_billing_dealExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="DEAL_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_deal_cancelExtension" substitutionGroup="event_billing_dealExtension" type="event_billing_deal_cancelExtensionType"/>
+<xsd:complexType name="event_billing_deal_cancelExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_dealExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_deal_purchaseExtension" substitutionGroup="event_billing_dealExtension" type="event_billing_deal_purchaseExtensionType"/>
+<xsd:complexType name="event_billing_deal_purchaseExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_dealExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_debitExtension" substitutionGroup="event_billingExtension" type="event_billing_debitExtensionType"/>
+<xsd:complexType name="event_billing_debitExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_discountExtension" substitutionGroup="event_billingExtension" type="event_billing_discountExtensionType"/>
+<xsd:complexType name="event_billing_discountExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="AC_DISCOUNT" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="DISCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_discount_actionExtension" substitutionGroup="event_billing_discountExtension" type="event_billing_discount_actionExtensionType"/>
+<xsd:complexType name="event_billing_discount_actionExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_discountExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ACTION_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CREATED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DISCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="PLAN_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="PURCHASE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="QUANTITY" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_discount_action_cancelExtension" substitutionGroup="event_billing_discount_actionExtension" type="event_billing_discount_action_cancelExtensionType"/>
+<xsd:complexType name="event_billing_discount_action_cancelExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_discount_actionExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_discount_action_modifyExtension" substitutionGroup="event_billing_discount_actionExtension" type="event_billing_discount_action_modifyExtensionType"/>
+<xsd:complexType name="event_billing_discount_action_modifyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_discount_actionExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_discount_action_modify_statusExtension" substitutionGroup="event_billing_discount_action_modifyExtension" type="event_billing_discount_action_modify_statusExtensionType"/>
+<xsd:complexType name="event_billing_discount_action_modify_statusExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_discount_action_modifyExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_discount_action_purchaseExtension" substitutionGroup="event_billing_discount_actionExtension" type="event_billing_discount_action_purchaseExtensionType"/>
+<xsd:complexType name="event_billing_discount_action_purchaseExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_discount_actionExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_discount_action_set_validityExtension" substitutionGroup="event_billing_discount_actionExtension" type="event_billing_discount_action_set_validityExtensionType"/>
+<xsd:complexType name="event_billing_discount_action_set_validityExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_discount_actionExtensionType">
+			<xsd:sequence>
+				<xsd:element name="EVENTS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EVENT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_disputeExtension" substitutionGroup="event_billingExtension" type="event_billing_disputeExtensionType"/>
+<xsd:complexType name="event_billing_disputeExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_dispute_eventExtension" substitutionGroup="event_billing_disputeExtension" type="event_billing_dispute_eventExtensionType"/>
+<xsd:complexType name="event_billing_dispute_eventExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_disputeExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_dispute_itemExtension" substitutionGroup="event_billing_disputeExtension" type="event_billing_dispute_itemExtensionType"/>
+<xsd:complexType name="event_billing_dispute_itemExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_disputeExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_dispute_tax_eventExtension" substitutionGroup="event_billing_disputeExtension" type="event_billing_dispute_tax_eventExtensionType"/>
+<xsd:complexType name="event_billing_dispute_tax_eventExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_disputeExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_feeExtension" substitutionGroup="event_billingExtension" type="event_billing_feeExtensionType"/>
+<xsd:complexType name="event_billing_feeExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_fee_failed_paymentExtension" substitutionGroup="event_billing_feeExtension" type="event_billing_fee_failed_paymentExtensionType"/>
+<xsd:complexType name="event_billing_fee_failed_paymentExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_feeExtensionType">
+			<xsd:sequence>
+				<xsd:element name="FAILED_PAYMENT_FEE" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AMOUNT_ORIGINAL_PAYMENT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CHANNEL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CUSTOMER_SEGMENT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PAY_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_incentiveExtension" substitutionGroup="event_billingExtension" type="event_billing_incentiveExtensionType"/>
+<xsd:complexType name="event_billing_incentiveExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="INCENTIVE" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BILL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="CHANNEL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CURRENT_TOTAL" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CUSTOMER_SEGMENT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PAY_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PREVIOUS_TOTAL" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_invoiceExtension" substitutionGroup="event_billingExtension" type="event_billing_invoiceExtensionType"/>
+<xsd:complexType name="event_billing_invoiceExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ACTIVITIES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EVENT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="ITEM_LEVEL" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="QUANTITY" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="INVOICE_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACCOUNT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ACTG_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BILL_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BILL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CURRENT_TOTAL" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INV_FORMAT" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="INV_INSTR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INV_PO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INV_TERMS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PREVIOUS_TOTAL" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SUBORDS_TOTAL" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TOTAL_DUE" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="NAMEINFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COMPANY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EMAIL_ADDR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FIRST_NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="LAST_NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MIDDLE_NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SALUTATION" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TITLE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_itemExtension" substitutionGroup="event_billingExtension" type="event_billing_itemExtensionType"/>
+<xsd:complexType name="event_billing_itemExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_item_transferExtension" substitutionGroup="event_billing_itemExtension" type="event_billing_item_transferExtensionType"/>
+<xsd:complexType name="event_billing_item_transferExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_itemExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ACTION_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AR_BILL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="BUFFER" type="BUFFER_event_billing" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_lcupdateExtension" substitutionGroup="event_billingExtension" type="event_billing_lcupdateExtensionType"/>
+<xsd:complexType name="event_billing_lcupdateExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_limitExtension" substitutionGroup="event_billingExtension" type="event_billing_limitExtensionType"/>
+<xsd:complexType name="event_billing_limitExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="LIMIT" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="CREDIT_FLOOR" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CREDIT_LIMIT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CREDIT_THRESHOLDS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CREDIT_THRESHOLDS_FIXED" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ELEMENT_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_mfuc_updateExtension" substitutionGroup="event_billingExtension" type="event_billing_mfuc_updateExtensionType"/>
+<xsd:complexType name="event_billing_mfuc_updateExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_monitorExtension" substitutionGroup="event_billingExtension" type="event_billing_monitorExtensionType"/>
+<xsd:complexType name="event_billing_monitorExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_monitor_deleteExtension" substitutionGroup="event_billing_monitorExtension" type="event_billing_monitor_deleteExtensionType"/>
+<xsd:complexType name="event_billing_monitor_deleteExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_monitorExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_monitor_updateExtension" substitutionGroup="event_billing_monitorExtension" type="event_billing_monitor_updateExtensionType"/>
+<xsd:complexType name="event_billing_monitor_updateExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_monitorExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_ordered_balgrpExtension" substitutionGroup="event_billingExtension" type="event_billing_ordered_balgrpExtensionType"/>
+<xsd:complexType name="event_billing_ordered_balgrpExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ORDERED_BALGROUPS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="GROUP_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_ordered_balgrp_createExtension" substitutionGroup="event_billing_ordered_balgrpExtension" type="event_billing_ordered_balgrp_createExtensionType"/>
+<xsd:complexType name="event_billing_ordered_balgrp_createExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_ordered_balgrpExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_ordered_balgrp_deleteExtension" substitutionGroup="event_billing_ordered_balgrpExtension" type="event_billing_ordered_balgrp_deleteExtensionType"/>
+<xsd:complexType name="event_billing_ordered_balgrp_deleteExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_ordered_balgrpExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_ordered_balgrp_modifyExtension" substitutionGroup="event_billing_ordered_balgrpExtension" type="event_billing_ordered_balgrp_modifyExtensionType"/>
+<xsd:complexType name="event_billing_ordered_balgrp_modifyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_ordered_balgrpExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_paymentExtension" substitutionGroup="event_billingExtension" type="event_billing_paymentExtensionType"/>
+<xsd:complexType name="event_billing_paymentExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PAYMENT" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACCOUNT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ACH" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AMOUNT_ORIGINAL_PAYMENT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BILL_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CHANNEL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COMMAND" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MERCHANT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PAY_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SUB_TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_cashExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_cashExtensionType"/>
+<xsd:complexType name="event_billing_payment_cashExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CASH_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BILL_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RECEIPT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_ccExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_ccExtensionType"/>
+<xsd:complexType name="event_billing_payment_ccExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CC_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AUTH_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AUTH_DATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VENDOR_RESULTS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_checkExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_checkExtensionType"/>
+<xsd:complexType name="event_billing_payment_checkExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CHECK_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BANK_ACCOUNT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BILL_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CHECK_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_ddExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_ddExtensionType"/>
+<xsd:complexType name="event_billing_payment_ddExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="DD_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AUTH_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AUTH_DATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VENDOR_RESULTS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_failedExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_failedExtensionType"/>
+<xsd:complexType name="event_billing_payment_failedExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PAYMENT_FAILED_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="PAYMENT_TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_payorderExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_payorderExtensionType"/>
+<xsd:complexType name="event_billing_payment_payorderExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PAY_ORDER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BANK_ACCOUNT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORDER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_postalorderExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_postalorderExtensionType"/>
+<xsd:complexType name="event_billing_payment_postalorderExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="POSTAL_ORDER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORDER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_voucherExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_voucherExtensionType"/>
+<xsd:complexType name="event_billing_payment_voucherExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="VOUCHERS_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CARD_EXPIRATION" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEVICE_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_FROM" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_TO" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VOUCHER_PIN" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_payment_wtransferExtension" substitutionGroup="event_billing_paymentExtension" type="event_billing_payment_wtransferExtensionType"/>
+<xsd:complexType name="event_billing_payment_wtransferExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_paymentExtensionType">
+			<xsd:sequence>
+				<xsd:element name="WIRE_TRANSFER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BANK_ACCOUNT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="WIRE_TRANSFER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_productExtension" substitutionGroup="event_billingExtension" type="event_billing_productExtensionType"/>
+<xsd:complexType name="event_billing_productExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PRODUCT" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="PRODUCT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_actionExtension" substitutionGroup="event_billing_productExtension" type="event_billing_product_actionExtensionType"/>
+<xsd:complexType name="event_billing_product_actionExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_productExtensionType">
+			<xsd:sequence>
+				<xsd:element name="ACTION_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CREATED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_DISCOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_DISC_AMT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_FEE_AMT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_FEE_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PLAN_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="PURCHASE_DISCOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_DISC_AMT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_FEE_AMT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PURCHASE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="QUANTITY" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SPONSOR_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_DISCOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="USAGE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_action_cancelExtension" substitutionGroup="event_billing_product_actionExtension" type="event_billing_product_action_cancelExtensionType"/>
+<xsd:complexType name="event_billing_product_action_cancelExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_actionExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_action_modifyExtension" substitutionGroup="event_billing_product_actionExtension" type="event_billing_product_action_modifyExtensionType"/>
+<xsd:complexType name="event_billing_product_action_modifyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_actionExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_action_modify_statusExtension" substitutionGroup="event_billing_product_action_modifyExtension" type="event_billing_product_action_modify_statusExtensionType"/>
+<xsd:complexType name="event_billing_product_action_modify_statusExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_action_modifyExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_action_purchaseExtension" substitutionGroup="event_billing_product_actionExtension" type="event_billing_product_action_purchaseExtensionType"/>
+<xsd:complexType name="event_billing_product_action_purchaseExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_actionExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_action_set_validityExtension" substitutionGroup="event_billing_product_actionExtension" type="event_billing_product_action_set_validityExtensionType"/>
+<xsd:complexType name="event_billing_product_action_set_validityExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_actionExtensionType">
+			<xsd:sequence>
+				<xsd:element name="EVENTS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EVENT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_feeExtension" substitutionGroup="event_billing_productExtension" type="event_billing_product_feeExtensionType"/>
+<xsd:complexType name="event_billing_product_feeExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_productExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cancelExtension" substitutionGroup="event_billing_product_feeExtension" type="event_billing_product_fee_cancelExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cancelExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_feeExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cycleExtension" substitutionGroup="event_billing_product_feeExtension" type="event_billing_product_fee_cycleExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cycleExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_feeExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CYCLE_DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CYCLE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DISCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="SCALE" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="CYCLE_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CYCLE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CYCLE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORIGINAL_SCALE" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SCALE" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cycle_cycle_arrearExtension" substitutionGroup="event_billing_product_fee_cycleExtension" type="event_billing_product_fee_cycle_cycle_arrearExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cycle_cycle_arrearExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_fee_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cycle_cycle_forward_annualExtension" substitutionGroup="event_billing_product_fee_cycleExtension" type="event_billing_product_fee_cycle_cycle_forward_annualExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cycle_cycle_forward_annualExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_fee_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cycle_cycle_forward_arrearExtension" substitutionGroup="event_billing_product_fee_cycleExtension" type="event_billing_product_fee_cycle_cycle_forward_arrearExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cycle_cycle_forward_arrearExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_fee_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cycle_cycle_forward_bimonthlyExtension" substitutionGroup="event_billing_product_fee_cycleExtension" type="event_billing_product_fee_cycle_cycle_forward_bimonthlyExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cycle_cycle_forward_bimonthlyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_fee_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cycle_cycle_forward_monthlyExtension" substitutionGroup="event_billing_product_fee_cycleExtension" type="event_billing_product_fee_cycle_cycle_forward_monthlyExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cycle_cycle_forward_monthlyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_fee_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cycle_cycle_forward_quarterlyExtension" substitutionGroup="event_billing_product_fee_cycleExtension" type="event_billing_product_fee_cycle_cycle_forward_quarterlyExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cycle_cycle_forward_quarterlyExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_fee_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_cycle_cycle_forward_semiannualExtension" substitutionGroup="event_billing_product_fee_cycleExtension" type="event_billing_product_fee_cycle_cycle_forward_semiannualExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_cycle_cycle_forward_semiannualExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_fee_cycleExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_product_fee_purchaseExtension" substitutionGroup="event_billing_product_feeExtension" type="event_billing_product_fee_purchaseExtensionType"/>
+<xsd:complexType name="event_billing_product_fee_purchaseExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_product_feeExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_provisionExtension" substitutionGroup="event_billingExtension" type="event_billing_provisionExtensionType"/>
+<xsd:complexType name="event_billing_provisionExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_provision_ddExtension" substitutionGroup="event_billing_provisionExtension" type="event_billing_provision_ddExtensionType"/>
+<xsd:complexType name="event_billing_provision_ddExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_provisionExtensionType">
+			<xsd:sequence>
+				<xsd:element name="BATCH_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BATCH_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="CHARGES" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BATCH_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BATCH_OCCURRENCE_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="CANON_NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COMMAND" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FIAS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MANDATE_STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MERCHANT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_purchase_feeExtension" substitutionGroup="event_billingExtension" type="event_billing_purchase_feeExtensionType"/>
+<xsd:complexType name="event_billing_purchase_feeExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refundExtension" substitutionGroup="event_billingExtension" type="event_billing_refundExtensionType"/>
+<xsd:complexType name="event_billing_refundExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="REFUND" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CHANNEL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COMMAND" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MERCHANT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PAY_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refund_cashExtension" substitutionGroup="event_billing_refundExtension" type="event_billing_refund_cashExtensionType"/>
+<xsd:complexType name="event_billing_refund_cashExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_refundExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CASH_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BILL_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RECEIPT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refund_ccExtension" substitutionGroup="event_billing_refundExtension" type="event_billing_refund_ccExtensionType"/>
+<xsd:complexType name="event_billing_refund_ccExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_refundExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CC_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AUTH_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AUTH_DATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VENDOR_RESULTS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refund_checkExtension" substitutionGroup="event_billing_refundExtension" type="event_billing_refund_checkExtensionType"/>
+<xsd:complexType name="event_billing_refund_checkExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_refundExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CHECK_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BANK_ACCOUNT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BILL_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CHECK_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refund_ddExtension" substitutionGroup="event_billing_refundExtension" type="event_billing_refund_ddExtensionType"/>
+<xsd:complexType name="event_billing_refund_ddExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_refundExtensionType">
+			<xsd:sequence>
+				<xsd:element name="DD_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AUTH_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AUTH_DATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VENDOR_RESULTS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refund_payorderExtension" substitutionGroup="event_billing_refundExtension" type="event_billing_refund_payorderExtensionType"/>
+<xsd:complexType name="event_billing_refund_payorderExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_refundExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PAY_ORDER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BANK_ACCOUNT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORDER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refund_postalorderExtension" substitutionGroup="event_billing_refundExtension" type="event_billing_refund_postalorderExtensionType"/>
+<xsd:complexType name="event_billing_refund_postalorderExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_refundExtensionType">
+			<xsd:sequence>
+				<xsd:element name="POSTAL_ORDER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ORDER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refund_voucherExtension" substitutionGroup="event_billing_refundExtension" type="event_billing_refund_voucherExtensionType"/>
+<xsd:complexType name="event_billing_refund_voucherExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_refundExtensionType">
+			<xsd:sequence>
+				<xsd:element name="VOUCHERS_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CARD_EXPIRATION" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEVICE_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_FROM" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_TO" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VOUCHER_PIN" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_refund_wtransferExtension" substitutionGroup="event_billing_refundExtension" type="event_billing_refund_wtransferExtensionType"/>
+<xsd:complexType name="event_billing_refund_wtransferExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_refundExtensionType">
+			<xsd:sequence>
+				<xsd:element name="WIRE_TRANSFER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BANK_ACCOUNT_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="WIRE_TRANSFER_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_remittanceExtension" substitutionGroup="event_billingExtension" type="event_billing_remittanceExtensionType"/>
+<xsd:complexType name="event_billing_remittanceExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversalExtension" substitutionGroup="event_billingExtension" type="event_billing_reversalExtensionType"/>
+<xsd:complexType name="event_billing_reversalExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PAYMENT" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="PAYMENT_TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="SUB_TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_cashExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_cashExtensionType"/>
+<xsd:complexType name="event_billing_reversal_cashExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CASH_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_ccExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_ccExtensionType"/>
+<xsd:complexType name="event_billing_reversal_ccExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CC_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_checkExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_checkExtensionType"/>
+<xsd:complexType name="event_billing_reversal_checkExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CHECK_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_ddExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_ddExtensionType"/>
+<xsd:complexType name="event_billing_reversal_ddExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+				<xsd:element name="DD_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_failedExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_failedExtensionType"/>
+<xsd:complexType name="event_billing_reversal_failedExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_payorderExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_payorderExtensionType"/>
+<xsd:complexType name="event_billing_reversal_payorderExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+				<xsd:element name="PAY_ORDER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_postalorderExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_postalorderExtensionType"/>
+<xsd:complexType name="event_billing_reversal_postalorderExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+				<xsd:element name="POSTAL_ORDER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_voucherExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_voucherExtensionType"/>
+<xsd:complexType name="event_billing_reversal_voucherExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+				<xsd:element name="VOUCHERS_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_reversal_wtransferExtension" substitutionGroup="event_billing_reversalExtension" type="event_billing_reversal_wtransferExtensionType"/>
+<xsd:complexType name="event_billing_reversal_wtransferExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_reversalExtensionType">
+			<xsd:sequence>
+				<xsd:element name="WIRE_TRANSFER_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON_CODE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_settlementExtension" substitutionGroup="event_billingExtension" type="event_billing_settlementExtensionType"/>
+<xsd:complexType name="event_billing_settlementExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_settlement_eventExtension" substitutionGroup="event_billing_settlementExtension" type="event_billing_settlement_eventExtensionType"/>
+<xsd:complexType name="event_billing_settlement_eventExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_settlementExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_settlement_itemExtension" substitutionGroup="event_billing_settlementExtension" type="event_billing_settlement_itemExtensionType"/>
+<xsd:complexType name="event_billing_settlement_itemExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_settlementExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_settlement_tax_eventExtension" substitutionGroup="event_billing_settlementExtension" type="event_billing_settlement_tax_eventExtensionType"/>
+<xsd:complexType name="event_billing_settlement_tax_eventExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_settlementExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_sub_bal_validityExtension" substitutionGroup="event_billingExtension" type="event_billing_sub_bal_validityExtensionType"/>
+<xsd:complexType name="event_billing_sub_bal_validityExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="SUB_BAL_AUDIT" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+										<xsd:pattern value=""/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="ELEMENT_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_FROM" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_FROM_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_TO" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_TO_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_suppressionExtension" substitutionGroup="event_billingExtension" type="event_billing_suppressionExtensionType"/>
+<xsd:complexType name="event_billing_suppressionExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="SUPPRESSION_INFO" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="EXCEPTION" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="REASON" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_suppression_exceptionExtension" substitutionGroup="event_billing_suppressionExtension" type="event_billing_suppression_exceptionExtensionType"/>
+<xsd:complexType name="event_billing_suppression_exceptionExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_suppressionExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_validateExtension" substitutionGroup="event_billingExtension" type="event_billing_validateExtensionType"/>
+<xsd:complexType name="event_billing_validateExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="VALIDATION" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ACH" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="AMOUNT" type="UNION_event_billing" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COMMAND" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MERCHANT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="PAY_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="RESULT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TRANS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VENDOR_RESULTS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_validate_ccExtension" substitutionGroup="event_billing_validateExtension" type="event_billing_validate_ccExtensionType"/>
+<xsd:complexType name="event_billing_validate_ccExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_validateExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CC_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_EXP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_validate_ddExtension" substitutionGroup="event_billing_validateExtension" type="event_billing_validate_ddExtensionType"/>
+<xsd:complexType name="event_billing_validate_ddExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_validateExtensionType">
+			<xsd:sequence>
+				<xsd:element name="DD_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DD_ACTIVATION_DATE" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FIAS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MANDATE_STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAN_RECEIVED_DATE" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_vouchertopupExtension" substitutionGroup="event_billingExtension" type="event_billing_vouchertopupExtensionType"/>
+<xsd:complexType name="event_billing_vouchertopupExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+				<xsd:element name="VOUCHERS_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="CARD_EXPIRATION" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEVICE_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_FROM" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VALID_TO" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="VOUCHER_PIN" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoffExtension" substitutionGroup="event_billingExtension" type="event_billing_writeoffExtensionType"/>
+<xsd:complexType name="event_billing_writeoffExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_accountExtension" substitutionGroup="event_billing_writeoffExtension" type="event_billing_writeoff_accountExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_accountExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoffExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_billExtension" substitutionGroup="event_billing_writeoffExtension" type="event_billing_writeoff_billExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_billExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoffExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_billinfoExtension" substitutionGroup="event_billing_writeoffExtension" type="event_billing_writeoff_billinfoExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_billinfoExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoffExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_itemExtension" substitutionGroup="event_billing_writeoffExtension" type="event_billing_writeoff_itemExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_itemExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoffExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_tax_accountExtension" substitutionGroup="event_billing_writeoffExtension" type="event_billing_writeoff_tax_accountExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_tax_accountExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoffExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_tax_billExtension" substitutionGroup="event_billing_writeoffExtension" type="event_billing_writeoff_tax_billExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_tax_billExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoffExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_tax_billinfoExtension" substitutionGroup="event_billing_writeoffExtension" type="event_billing_writeoff_tax_billinfoExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_tax_billinfoExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoffExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_tax_itemExtension" substitutionGroup="event_billing_writeoffExtension" type="event_billing_writeoff_tax_itemExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_tax_itemExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoffExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_reversalExtension" substitutionGroup="event_billingExtension" type="event_billing_writeoff_reversalExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_reversalExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billingExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="event_billing_writeoff_reversal_taxExtension" substitutionGroup="event_billing_writeoff_reversalExtension" type="event_billing_writeoff_reversal_taxExtensionType"/>
+<xsd:complexType name="event_billing_writeoff_reversal_taxExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="event_billing_writeoff_reversalExtensionType">
+			<xsd:sequence>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="BUFFER_event_billing">
+	<xsd:simpleContent>
+		<xsd:extension base="xsd:hexBinary">
+			<xsd:attribute name="flags" type="xsd:string" use="optional"/>
+			<xsd:attribute name="size" type="xsd:string" use="optional"/>
+			<xsd:attribute name="offset" type="xsd:string" use="optional"/>
+		</xsd:extension>
+	</xsd:simpleContent>
+</xsd:complexType>
+<xsd:simpleType name="EMPTY_event_billing">
+	<xsd:restriction base="xsd:string">
+		<xsd:length value="0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="UNION_event_billing">
+	<xsd:union memberTypes="xsd:decimal EMPTY_event_billing"/>
+</xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,35 @@
+#! /bin/ksh
+LOGINSQL=`egrep -v "#" login.cfg | grep "DB_LOGIN" |cut -d'=' -f2`
+outfile=`egrep -v "#" login.cfg | grep "INFILE_DIR_INPUT" |cut -d'=' -f2 |sed -e 's/$/\/input_file/'`
+sqlplus -s $LOGINSQL <<EOF > $outfile
+set heading off
+set serveroutput off
+set feedback 0
+SET WRAP ON
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS ON VERIFY OFF;
+set verify off
+set auto off
+set termout off
+
+select 
+pur_prod.account_obj_id0||'|'||
+rate_plan.currency||'|'||
+(cycle_fee.charged_to_t-1) ||'|'||
+(cycle_fee.charged_to_t-1) ||'|'||
+pur_prod.poid_id0||'|' ||
+service.bal_grp_obj_id0 value
+from 
+purchased_product_t pur_prod, product_t prod, rate_plan_t rate_plan, purchased_product_cycle_fees_t cycle_fee, service_t service
+where pur_prod.product_obj_id0=prod.poid_id0
+and rate_plan.product_obj_id0=prod.poid_id0
+and rate_plan.event_type='/event/billing/product/fee/cycle/cycle_arrear'
+and rate_plan.currency = 554
+and pur_prod.status=1
+and cycle_fee.obj_id0=pur_prod.poid_id0 
+and service.poid_id0=pur_prod.service_obj_id0
+--and pur_prod.account_obj_id0 in (1172418856, 1160170594);
+clear buffer
+EXIT
+EOF
+
+

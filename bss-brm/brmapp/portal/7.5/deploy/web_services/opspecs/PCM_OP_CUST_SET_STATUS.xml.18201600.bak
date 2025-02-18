@@ -1,0 +1,313 @@
+<Opcode name="PCM_OP_CUST_SET_STATUS" visibility="public" transaction="required"
+        component="fm_cust" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+     <Doc>The opcode PCM_OP_CUST_SET_STATUS is used to set the status of
+          account, bill unit and/or services.</Doc>
+     <Input>
+          <Fields>
+               <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                    <Doc>This is the account POID.</Doc>
+                    <ClassRef>obj://account</ClassRef>
+               </Poid>
+               <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+                    <Doc>This is the billinfo object. If bill unit status is 
+			 changed, only this billinfo and associated services 
+			 will be affected.</Doc>
+                    <ClassRef>obj://billinfo</ClassRef>
+               </Poid>
+               <Poid name="PIN_FLD_SERVICE_OBJ" use="optional" mode="complete">
+                    <Doc>This is the service object. If service object is
+                         passed, only the status of this service is affected. 
+			 If both billinfo and service objects are passed, then
+			 billinfo object is ignored and the status of the 
+			 service is changed.</Doc>
+                    <ClassRef>obj://service</ClassRef>
+               </Poid>
+               <Poid name="PIN_FLD_SESSION_OBJ" use="optional" mode="complete">
+                    <Doc>This is the session in which the event takes place. The
+                         value of null means no session.</Doc>
+                    <ClassRef>obj://event.session</ClassRef>
+               </Poid>
+               <String name="PIN_FLD_PROGRAM_NAME" use="required" maxlen="60">
+                    <Doc>This is the name of calling program.</Doc>
+               </String>
+               <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+                    <Doc>This field describes the event of status change. The
+                         description will be in free text and will be described
+                         by the calling program.</Doc>
+               </String>
+               <Timestamp name="PIN_FLD_WHEN_T" use="optional">
+                    <Doc>This field indicates the timestamp of when the action
+                         'Change Status' should be started. If this field is
+                         present then the schedule object for this deferred
+                         action will be created.</Doc>
+               </Timestamp>
+               <Timestamp name="PIN_FLD_END_T" use="optional">
+                    <Doc>This field indicates the timestamp of when the event of
+                         status update ends. This field is used to determine
+                         which billing cycle the event is part of. This also
+                         indicates the effective time of the status update on an
+                         external system.</Doc>
+               </Timestamp>
+               <Timestamp name="PIN_FLD_START_T" use="optional">
+                    <Doc>This field indicates the timestamp of when the status
+                         update event starts.</Doc>
+               </Timestamp>
+               <Enum name="PIN_FLD_STATUS_PROPOGATE" use="optional">
+                    <Doc>This field indicates the propagation flag. If this is
+                         set to 1 then, the status update will be propagated to
+                         subordinate services. This happen to the services only,
+                         and not the account.</Doc>
+                    <Values>
+                         <Value>0</Value>
+                         <Doc>A value of 0 indicates that the status must not be
+                              propagated to subordinate services.</Doc>
+                    </Values>
+                    <Values>
+                         <Value>1</Value>
+                         <Doc>A value of 1 indicates that the status needs to be
+                              propagated to subordinate services.</Doc>
+                    </Values>
+               </Enum>
+               <Int name="PIN_FLD_FLAGS" use="optional">
+                    <Doc>If this field if set to 0x01
+                         (PIN_BILL_CHANGE_ALL_SERVICES), if the required service
+                         status is changed to closed or inactive, then all the
+                         services in the Plan will be made closed/inactive.</Doc>
+               </Int>
+               <Array name="PIN_FLD_STATUSES" use="required"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="1">
+                    <Doc>This is the status array. There can only be one element
+                         in this array. The element-id is not significant.</Doc>
+                    <Fields>
+                         <Enum name="PIN_FLD_STATUS" use="required">
+                              <Doc>This field represents the new status.</Doc>
+                              <Values>
+                                   <Value>10100</Value>
+                                   <Doc>Indicates an active status(PIN_STATUS_ACTIVE).</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>10102</Value>
+                                   <Doc>Indicates an inactive status(PIN_STATUS_INACTIVE).</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>10103</Value>
+                                   <Doc>Indicates a closed status(PIN_STATUS_CLOSED).</Doc>
+                              </Values>
+                         </Enum>
+                         <Int name="PIN_FLD_STATUS_FLAGS" use="required">
+                              <Doc>This field indicates the new status flags
+                                   This must be set to the resultant OR'd value
+                                   of the already set status flags for the
+                                   account/service and the new status flags
+                                   desired. If no status-flags are passed, the
+                                   status will not change and appropriate error
+                                   is logged.</Doc>
+                         </Int>
+                         <Timestamp name="PIN_FLD_PURCHASE_END_T"
+                                    use="optional">
+                              <Doc>This is purchase end time which is the number
+                                   of seconds into the future relative to the
+                                   purchase time that the product expires. (A
+                                   value of 0 means that the product does not
+                                   expire.)</Doc>
+                         </Timestamp>
+                    </Fields>
+               </Array>
+          </Fields>
+     </Input>
+     <Output>
+          <Fields>
+               <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                    <Doc>This is the account object passed into call.</Doc>
+                    <ClassRef>obj://account</ClassRef>
+               </Poid>
+               <Poid name="PIN_FLD_OBJECT" use="optional" mode="complete">
+                    <Doc>Schedule object created for deferred status change.</Doc>
+                    <ClassRef>obj://schedule</ClassRef>
+               </Poid>
+               <Array name="PIN_FLD_RESULTS" use="optional" elemIdMode="ignored"
+                      iterationOrder="undefined" minElements="0"
+                      minElemId="0" >
+                    <Doc>This is the array of results information. There may be
+                         more than one result returned, if the opcode is called
+                         at the account level; one for each service owned by
+                         this account and one or more for each sub-ordinate
+                         account. The additional event object fields are added
+                         to the return flist here. If the PCM_OPFLG_READ_RESULT
+                         flag is set for the operation, all the fields in the
+                         event object are returned on the output flist, not just
+                         the poid. If PCM_OPFLG_CALC_ONLY flag is set, no fields
+                         in the database are changed and the event object is not
+                         actually created, but the fields that would have been
+                         used to create the event object are returned to the
+                         caller on the output flist.</Doc>
+                    <Fields>
+                         <Poid name="PIN_FLD_POID" use="required"
+                               mode="complete">
+                              <Doc>This is the poid of the event object created
+                                   for event.</Doc>
+                              <ClassRef>obj://event</ClassRef>
+                         </Poid>
+                         <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+                               mode="complete">
+                              <Doc>This is the poid of the account
+				   that was modified.</Doc>
+                              <ClassRef>obj://account</ClassRef>
+                         </Poid>
+                         <Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+                               mode="complete">
+                              <Doc>This is the poid of the service
+				   that was modified.</Doc>
+                              <ClassRef>obj://service</ClassRef>
+                         </Poid>
+                    </Fields>
+               </Array>
+               <Array name="PIN_FLD_FIELD" use="optional" elemIdMode="ignored"
+                      iterationOrder="undefined" minElements="0"
+                      isRecursive="true">
+                    <Doc>This is the validation error fields array. Each element
+                         describes a field that failed the validation. The
+                         element-id is not significant.</Doc>
+                    <Fields>
+                         <Enum name="PIN_FLD_FIELD_NUM" use="required">
+                              <Doc>Field that failed.</Doc>
+                         </Enum>
+                         <Int name="PIN_FLD_ELEMENT_ID" use="optional">
+                              <Doc>Element-id of field that failed (if an array
+                                   element).</Doc>
+                         </Int>
+                         <Enum name="PIN_FLD_RESULT" use="required">
+                              <Doc>Field validation error code. The enumerated
+                                   type is defined in the pin_cust.h header
+                                   file. The values can be: (0)
+                                   PIN_CUST_VAL_ERR_SYSTEM, (1)
+                                   PIN_CUST_VAL_ERR_MISSING, (2)
+                                   PIN_CUST_VAL_ERR_MIN_LEN, (3)
+                                   PIN_CUST_VAL_ERR_MAX_LEN, (4)
+                                   PIN_CUST_VAL_ERR_TYPE, (5)
+                                   PIN_CUST_VAL_ERR_DUPE, (6)
+                                   PIN_CUST_VAL_ERR_INVALID, (7)
+                                   PIN_CUST_VAL_ERR_REJECT, (8)
+                                   PIN_CUST_VAL_ERR_MAX, (9)
+                                   PIN_CUST_VAL_ERR_MIN, (10)
+                                   PIN_CUST_VAL_ERR_INCL, (11)
+                                   PIN_CUST_VAL_ERR_EXCL, and (12)
+                                   PIN_CUST_VAL_ERR_FORMAT.</Doc>
+                              <Values>
+                                   <Value>0</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_SYSTEM. System error.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>1</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_MISSING. Field is
+                                        missing.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>2</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_MIN_LEN. Minimum length
+                                        error.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>3</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_MAX_LEN. Maximum length
+                                        error.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>4</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_TYPE. Invalid type.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>5</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_DUPE. Duplicate field.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>6</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_INVALID. Invalid value.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>7</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_REJECT. Field was
+                                        rejected.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>8</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_MAX. Maximum value
+                                        error.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>9</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_MIN. Minimum value
+                                        error.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>10</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_INCL. Value should be
+                                        inclusive.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>11</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_EXCL. Value should be
+                                        exclusive.</Doc>
+                              </Values>
+                              <Values>
+                                   <Value>12</Value>
+                                   <Doc>PIN_CUST_VAL_ERR_FORMAT. Format error in
+                                        regular expression.</Doc>
+                              </Values>
+                         </Enum>
+                         <String name="PIN_FLD_DESCR" use="optional"
+                                 maxlen="255">
+                              <Doc>Validation error message.</Doc>
+                         </String>
+                         <Array name="PIN_FLD_FIELD" use="optional"
+                                elemIdMode="ignored" isRecursive="true">
+                              <Doc>For FIELDS array elements that do *not*
+                                   contain a nested FIELDS array, the field that
+                                   failed (as defined by PIN_FLD_FIELD_NUM) is
+                                   included here on the flist. This field is
+                                   MANDATORY in this case and its value
+                                   represents either the bad value specified or
+                                   a suggested replacement value for the field.
+                                   In cases where this FIELDS element does
+                                   contain a nested FIELDS array, the field
+                                   defined by PIN_FLD_FIELD_NUM is *not*
+                                   included in the output flist. For the
+                                   following values of PIN_FLD_RESULT, the field
+                                   value will be NULL: PIN_CUST_VAL_ERR_MISSING.
+                                   For the following values of PIN_FLD_RESULT,
+                                   the field value contains the bad value that
+                                   was specified: PIN_CUST_VAL_ERR_MIN_LEN,
+                                   PIN_CUST_VAL_ERR_MAX_LEN,
+                                   PIN_CUST_VAL_ERR_FORMAT,
+                                   PIN_CUST_VAL_ERR_INVALID. For the following
+                                   values of PIN_FLD_RESULT, the field value
+                                   contains a suggested replacement value for
+                                   the field: PIN_CUST_VAL_ERR_DUPE. If field
+                                   that failed was in a sub-flist, the fields
+                                   arrays are nested to provide an absolute path
+                                   to the exact field that failed. This nesting
+                                   can be to any depth to reflect multi-level
+                                   sub-flists. NOTE: if more than one field on
+                                   the same sub-flist failed validation, then
+                                   more than one element of the FIELDS array
+                                   will be included within the nesting to
+                                   reflect the fields that failed. Nested Fields
+                                   arrays have the same fields in each element
+                                   as the main array.</Doc>
+                              <Fields></Fields>
+                         </Array>
+                    </Fields>
+               </Array>
+          </Fields>
+     </Output>
+</Opcode>
+
+
+
+
+
+

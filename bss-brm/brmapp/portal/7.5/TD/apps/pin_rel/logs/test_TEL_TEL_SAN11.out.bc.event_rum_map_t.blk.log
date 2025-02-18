@@ -1,0 +1,60 @@
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Tue Apr 14 20:05:17 2015
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_TEL_TEL_SAN11.out.bc.event_rum_map_t.ctl
+Character Set UTF8 specified for all input.
+
+Data File:      /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_TEL_TEL_SAN11.out.bc.event_rum_map_t.blk
+  Bad File:     /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_TEL_TEL_SAN11.out.bc.event_rum_map_t.blk.bad
+  Discard File: /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_TEL_TEL_SAN11.out.bc.event_rum_map_t.blk.discard 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Continuation:    none specified
+Path used:      Direct
+
+Load is UNRECOVERABLE; invalidation redo is produced.
+
+Table EVENT_RUM_MAP_T, partition P_D_05012015, loaded from every logical record.
+Insert option in effect for this partition: APPEND
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+RECORD_TYPE                         FIRST     *  WHT      CHARACTER            
+  (FILLER FIELD)
+RECORD_NUMBER                        NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+RUM_NAME                             NEXT     *  WHT      CHARACTER            
+NET_QUANTITY                         NEXT     *  WHT      CHARACTER            
+UNRATED_QUANTITY                     NEXT     *  WHT      CHARACTER            
+OBJ_ID0                              NEXT     *  WHT      CHARACTER            
+REC_ID                               NEXT     *  WHT      CHARACTER            
+
+
+Table EVENT_RUM_MAP_T, partition P_D_05012015:
+  0 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+Bind array size not used in direct path.
+Column array  rows :    5000
+Stream buffer bytes: 5000000
+Read   buffer bytes:10000000
+
+Total logical records skipped:          0
+Total logical records read:             0
+Total logical records rejected:         0
+Total logical records discarded:        0
+Total stream buffers loaded by SQL*Loader main thread:        0
+Total stream buffers loaded by SQL*Loader load thread:        0
+
+Run began on Tue Apr 14 20:05:17 2015
+Run ended on Tue Apr 14 20:05:17 2015
+
+Elapsed time was:     00:00:00.18
+CPU time was:         00:00:00.02

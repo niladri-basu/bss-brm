@@ -1,0 +1,3 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+diagnosticDataHandler | 1 | diagnosticDataHandlerGroup | Diagnostic Data Handler | NotSpecified | Group |
+diagnosticDataHandlerGroup | 1 | createSnapshot | Create Snapshot | WriteOnly | String | 

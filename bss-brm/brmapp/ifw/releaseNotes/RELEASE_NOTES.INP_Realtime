@@ -1,0 +1,175 @@
+========================================================================================
+INP_Realtime
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+================================================================================
+Module Version : 10036 7.5  15-Sep-13
+Bug 17305660 - P-17237105 REAL-TIME RERATING MAPING TO BE CHANGED TO USE SYSTEM PRODUCT
+================================================================================
+Module Version : 10035 7.3  15-Jul-10
+Bug 9174709    : P-8835374:"lazyCreate" option was not working correctly due to incorrect setting of variable "limitToSingle".
+================================================================================
+Module Version : 10034 7.3  04-Jan-07
+PRSF00238871   : Incorrect Amounts displayed in pin_rerate reports for events which have a discount associated with it
+================================================================================
+Module Version : 10033 7.3_Patch  21-Nov-06
+PRSF00237047   : Set PIN_FLD_BAL_IMPACTS.QUANTITY_FROM and 
+PIN_FLD_BAL_IMPACTS.QUANTITY_TO fields as mandatory fields. 
+================================================================================
+Module Version : 10032 7.3_Patch  28-Nov-06
+PRSF00239536   : Reverse Rating feature enhancements. Added RUM_MAP array and 
+QUANTITY_TO and QUANTITY_FROM under PIN_FLD_BALANCE_IMPACTS array. 
+================================================================================
+Module Version : 10031 DaVinci  04-Aug-06
+PRSF00227059   : Billing fails when there is account level product and discount and 
+                 no service ( follow up of CO 207747 )
+================================================================================
+Module Version : 10030 DaVinci  03-Aug-06
+PRSF00226834   : Changing mapping for fields related to DROPPED_CALLS
+================================================================================
+Module Version : 10029 DaVinci  25-July-06
+PRSF225031     : IsValidDetail in EDR container is set to true even though there are errors
+================================================================================
+Module Version : 10028 DaVinci  29-Jun-06
+PRSF00218581   : Added FIRST_USAGE_INDICATOR to rate_event.xml.
+================================================================================
+Module Version : 10028 DaVinci  30-May-06
+PRSF00216009   : Made FIRST_USAGE_INDICATOR optional.
+================================================================================
+Module Version : 10028 DaVinci  25-May-06
+PRSF00214036   : Added FIRST_USAGE_INDICATOR to discount_event.xml.
+================================================================================
+Module Version : 10028 DaVinci  28-Apr-06
+PRSF00199009   : FT_DroppedCalls : Realtime pipeline changes to support dropped call
+================================================================================
+Module Version : 10027 DaVinci 05-Apr-06
+PRSF00201550   : DCQ - Add iScript to get the EDR field values for Dynamic Friends & Family Feature
+================================================================================
+Module Version : 10026 Momentum 30-May-05
+PRSF00170086   : 7.2 CR58 : Unable to create account with the plan described in detail section
+================================================================================
+Module Version : 10025 Momentum 16-May-2005
+PRSF00167485 : System Test -  Rating reatime events failed with zonemap error
+================================================================================
+Module Version : 10025 Momentum 26-MAY-2005
+PRSF00169242:  SiFac: RTP's timestamp is offset by PST-GMT when sent by OP_RATE_DISCOUNT_EVENT 
+Use the new fields PIN_FLD_TIME_OFFSET instead of PIN_FLD_TIMEZONE_ID as the offset.
+================================================================================
+Module Version : 10024 Momentum 05-May-2005
+PRSF00166953:  Compile Error because of static long casts.
+================================================================================
+Module Version : 10023 Velocity 25-Apr-2005
+PRSF00165138:  Make timezone id under the event subsctruct optional in discount_event.xml 
+and rate_event.xml, and remove it from inheritedinfo substruct.
+Also make PIN_FLD_ACTUAL_LAST_BILL_T as mandatory field. 
+================================================================================
+Module Version : 10022 Velocity 19-Apr-2005
+PRSF00162203 : DEFERED_AMOUNT is not passed in to the pipeline and passed out from pipeline.
+================================================================================
+Module Version : 10021 Velocity 21-Mar-2005
+PRSF00158700:    System Test: commit price plan with RTP zoning cause thread exception 
+Added the zoning input mapping file: zonemap_event.xml.
+
+================================================================================
+Module Version : 10020 Velocity 10-Mar-2005
+PRSF00156635:    Add PIN_FLD_PERIOD (optional) in the discount.xml and 
+                 rate_event.xml files for period based discounting feature.
+		 
+================================================================================
+Module Version : 10019 Velocity 08-Mar-2005
+PRSF00157027:    Added Sponsorship mappings to rate_event.xml and 
+                 discount_event.xml.
+		 
+================================================================================
+Module Version : 10018 Velocity 26-Feb-2005
+PRSF00155435:    Make PIN_FLD_PRODUCT optional in the discount.xml file.
+                 Also add construct to lazyCreate EdrBlocks.
+		 
+================================================================================
+Module Version : 10017 Velocity 24-Feb-2005
+PRSF00154460: INP/Realtime changes to map the Plan poid IDs to plan_list 
+              block in EDR container (CR59)
+
+================================================================================
+Module Version : 10016 Velocity 02-Feb-2005
+PRSF00148435:    Merge INP::Rerating into INP::Realtime
+
+================================================================================
+Actual Version : v10015 / Date : 09-Dec-2004
+PRSF00138463 "Velocity Prepaid: Changes to Input Mapping"
+
+================================================================================
+Actual Version : v10014 / Date : 15-Dec-2004
+PRSF00143523 "Add ERA attributes to the EDR container.
+
+================================================================================
+Actual Version : v10013 / Date : 10-Sep-2004
+PRSF00130911 "Add the AssoChargeBreakdownBlock in case of no Bal Impact"
+
+================================================================================
+Actual Version : v10012 / Date : 28-Jul-2004
+PRSF00123547 "Populate the new field ACTG_FUTURE_DATE in CUSTA block with ACTG_FUTURE_T"
+
+================================================================================
+Actual Version : v10011 / Date : 10-Jul-2004
+PRSF00120552  "Correct timezone convertion factor"
+
+================================================================================
+Actual Version : v10011 / Date : 30-Jun-2004
+PRSF00116847  "actg_cycle not mapped in billing time discount"
+
+================================================================================
+Actual Version : v10010 / Date : 26-Jan-2004
+PRSF00086760  "Set pcm context in edr"
+
+================================================================================
+Actual Version : v10009 / Date : 19-Feb-2004
+PRSF00090725  "Incorporate Realtime Pipeline code review comments"
+
+================================================================================
+Actual Version : v10008 / Date : 03-Feb-2004
+PRSF00090493  "Fixing memory leaks in RT Pipeline Framework ( 6.7_FP2)
+
+================================================================================
+Actual Version : v10007 / Date : 19-Dec-2003
+PRSF00083741  "Apollo Regression: Discount proration is not working."
+
+================================================================================
+Actual Version : v10006 / Date : 11-Dec-2003
+PRSF00082973  "Realtime pipeline input mapping fix for multiple discounts"
+
+================================================================================
+Actual Version : v10005 / Date : 10-Dec-2003
+PRSF00080559  "OMNI - Apollo - When a multi-rum event is rated, and subsequ"
+-also added mapping of GLID
+
+================================================================================
+Actual Version : v10004 / Date : 11-Nov-2003
+
+PRSF00078267  "Putting the IScript Support in INP and OUT plugins back"
+
+================================================================================
+Actual Version : v10003 / Date : 24-Oct-2003
+
+Solved PRs/CRs : PRSF00074192  Add Impact type mapping
+
+- also fixed CO 73360.  Wrong mapping of event balance group poid
+  
+================================================================================
+Actual Version : v10002 / Date : 15-Oct-2003
+
+Solved PRs/CRs : PRSF00070681  "Modify INP/Realtime for multiple thread access"
+  
+================================================================================
+Actual Version : v10001 / Date : 10-Oct-2003
+
+Solved PRs/CRs :  PRSF00065811  "Performance evaluation for Realtime Pipeline"
+
+================================================================================
+Actual Version : v10000 / Date : 05-Sep-2003
+----------------
+
+Solved PRs/CRs :  PRSF00061274  "Add some more mapping in Input and Output Realtime"
+
+================================================================================

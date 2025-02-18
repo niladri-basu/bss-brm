@@ -1,0 +1,221 @@
+================================================================================
+DAT_Calendar
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+================================================================================
+Module Version : 7.4 10005
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+
+Module Version: 10004  6.7_FP2  28-Apr-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+Module Version: 10003  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+==============================================================================
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+- PETS # 28863 Added Thread trace info for rating modules
+================================================================================
+
+Actual Version : v6.5 / Date : 26-Feb-2002
+----------------
+
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+=========================================================
+
+
+Actual Version : v4-30-02 / Date : 28-Jan-2002
+----------------
+
+Notes		:
+----------------
+
+PETS #38593 DB2 Port
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 05-Jul-2001
+----------------
+
+Notes		:
+----------------
+
+- PETS #36559 SourcePro Port
+
+================================================================================
+
+Actual Version : v4-10-00 / Date : 01-Nov-2000
+----------------
+
+Notes		:
+----------------
+
+ - Support for database v4-10-00.
+
+================================================================================
+
+Actual Version : v4-01-03 / Date : 18-Sep-2000
+----------------
+
+Notes		:
+----------------
+
+ - Memory management changed.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-01-00 / Date : 27-Jul-2000
+----------------
+
+Notes		:
+----------------
+
+New Features   :
+----------------
+
+  - Support database version check added.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================
+
+Actual Version : v4-00-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Support for AIX compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================
+
+Actual Version : v1-24-00 / Date : 12-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Performance improvements.
+
+- Reload events added.
+
+  After receiving a reload command the module generates one of the 
+  following events :
+
+  EVT_RELOAD_SUCCESSFUL : The reload was successful.
+  EVT_RELOAD_FAILED     : The reload failed.
+
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-23-00 / Date : 09-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+check all code reviews marks and correct them.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-21-00 / Date : 07-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+  
+   - New function isUsable() added.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+

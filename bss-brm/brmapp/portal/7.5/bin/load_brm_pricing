@@ -1,0 +1,364 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#
+# Copyright (c) 2009, Oracle and/or its affiliates. All rights reserved. 
+#
+#  This material is the confidential property of Oracle Corporation
+#  or its subsidiaries or licensors and may be used, reproduced, stored
+#  or transmitted only in accordance with a valid Oracle license or
+#  sublicense agreement.
+#
+# @(#)% %
+#
+
+use Switch;
+use strict; 
+
+my $ppid = getppid();
+#read parameters and execute tools 
+readParamsAndExecute(@ARGV);
+
+#----------------------------------------------------------------------------
+# check_loadpricelist
+#
+# Function to check if the utility load_price_list is present.
+#----------------------------------------------------------------------------
+sub check_loadpricelist
+{
+
+  if (!(-e "$ENV{PIN_HOME}/bin/loadpricelist" && -e "$ENV{PIN_HOME}/setup/scripts/price_list.xsd"))
+  {
+     print "loadpricelist utility is not present exiting ..";
+     exit();
+  } 
+}
+
+#----------------------------------------------------------------------------
+# check_loadIfwConfig
+#
+# Function to check if the utility LoadIfwConfig is present.
+#----------------------------------------------------------------------------
+sub check_loadIfwConfig
+{
+  if (!(-e "$ENV{IFW_HOME}/bin/LoadIfwConfig" && -e "$ENV{IFW_HOME}/tools/XmlLoader/LoadIfwConfig.xsd"))
+  {
+     print "LoadIfwConfig utility is not present exiting ..\n";
+     exit();
+  }  
+}
+
+#----------------------------------------------------------------------------
+# readParamsAndExecute
+#
+# Function to read and check the parameters passed 
+# And call retrieve_pricelist or commit_pricelist
+# based on the inputs provided.
+#----------------------------------------------------------------------------
+sub readParamsAndExecute
+{
+  # Parameters  supported...
+  # -F -h, -d, -v, -c, -r, -f, -P, -D, -S, -N, -s, -t 
+  my @argvi = @_;
+  my $i    = 0; # Declare and set a loop index
+  my $paramSupported =0;	
+  my $displayHelp = 0;	
+  my $serviceType = 0;	
+  my $modified_time = 0;	
+  my $logDebug = 0;	
+  my $verbose_on = 0;	
+  my $commit = 0;	
+  my $retrieve = 0;	
+  my $confirm_off = 0;	
+  my $RetrieveProduct = 0;	
+  my $PipeData = 0;	
+  my $RetrieveDiscount = 0;	
+  my $RetrieveSponsorship = 0;	
+  my $RetrieveName = 0;
+  my $inputFile = "";	
+  my $outFile = "";	
+  my $stype ="";
+  my $mtime = "";
+  my $objName = "";
+  my $pipelineFile = "";
+  foreach my $parm (@argvi)
+  {
+    my $value = $argvi[$i];
+    if( !$value) {last;}
+    switch ($value) 
+    {
+  	case "-h"		{ $paramSupported =1; displayHelp();}
+	case "-d"		{ $paramSupported =1; $logDebug = 1}
+	case "-v"		{ $paramSupported =1; $verbose_on = 1}
+	case "-c"		{ $paramSupported =1; $commit = 1;
+  				  $i++;
+				  $inputFile = $argvi[$i];
+				}
+				 
+	case "-F"		{ $paramSupported =1; 
+  				  $i++;
+				  $PipeData =1;
+				  $pipelineFile = $argvi[$i];
+				}
+	case "-r"		{ $paramSupported =1; $retrieve = 1;
+  				  $i++;
+				  $outFile = $argvi[$i];
+				}
+	case "-f"		{ $paramSupported =1; $confirm_off = 1}
+	case "-P"		{ $paramSupported =1; $RetrieveProduct = 1}
+	case "-D"		{ $paramSupported =1; $RetrieveDiscount = 1}
+	case "-S"		{ $paramSupported =1; $RetrieveSponsorship = 1}
+	case "-N"		{ $paramSupported =1; $RetrieveName = 1;
+  				  $i++;
+				  $objName = $argvi[$i];
+				}
+	case "-s"		{ $paramSupported =1; $serviceType = 1;
+  				  $i++;
+				  $stype = $argvi[$i];
+				}
+	case "-t"		{ $paramSupported =1; $modified_time = 1;
+  				  $i++;
+				  $mtime = $argvi[$i];
+				}
+	else		        { $paramSupported =0}
+    }
+    if(!$paramSupported)
+    {
+  	print " Parameter $value is not supported  exiting .. \n";
+	exit();	
+    }
+    $i++;
+    $value = $argvi[$i];
+  }
+  # Checking if the utility loadpricelist and loadIfwConfig are present.
+  check_loadIfwConfig();
+  check_loadpricelist();
+  if ($commit)
+  { 
+    commit_pricelist($inputFile,  $verbose_on, $logDebug, $confirm_off, $PipeData,  $pipelineFile);
+  }
+  elsif ($retrieve) 
+  {
+    retrieve_pricelist($outFile, $PipeData, $pipelineFile, $verbose_on, $logDebug, $confirm_off, $RetrieveName, $objName, $RetrieveProduct, $RetrieveDiscount,$RetrieveSponsorship, $serviceType, $stype, $modified_time, $mtime );
+  }
+  else 
+  { 
+    print " Invalid option specified exiting ... \n"; 
+    exit();
+  }
+}
+
+#----------------------------------------------------------------------------
+# displayHelp
+#
+# Function to displayHelp for the utility
+#----------------------------------------------------------------------------
+sub displayHelp
+{
+  print "Displaying Help for Utility load_brm_pricing \n";
+  print "usage: load_brm_pricing [-h] \n";
+  print "usage: load_brm_pricing [-v] [-d] [-f] -c <Real time data filename>  -F <Pipeline data filename> \n";
+  print "usage: load_brm_pricing [-v] [-d] [-f] -r <Real time data filename>  -F <Pipeline data filename> [-P] [-D] [-S] [-s <service type>] [-t <modified time>] [-N <name>]\n";
+  print " -h    display help information \n";
+  print " -d    set log level to debug \n";
+  print " -v    turn on verbose \n";
+  print " -c    read price list info from <filename> and commit it to a database \n";
+  print " -r    retrieve the price list info from a database and write it to <filename> \n";
+  print " -f    Turn user confirmation off for a specified action \n";
+  print " -P    Retrieve only /product objects \n";
+  print " -D    Retrieve only /discount objects \n";
+  print " -S    Retrieve only /sponsorship objects \n";
+  print " -F    read/write pipeline data from <pipeline data filename> \n";
+  print " -s    <service type>    ->    Service type. Retrieves all products and discounts based
+                                   on the given service type. Multiple service types can be passed
+                                 with comma(,) separated. \n";
+  print " -t    <modified time>   ->    Created/Modified time. Retrieves products, discounts and
+                                 sponsorships which are modified after the give time. The time
+                                 will be given in the ISO-8601 format YYYY-MM-DDThh:mm:ssTZD
+                                 and with the Server local time zone as the default (i.e.
+                                 1999-03-11T19:20:30+01:00). \n";
+  print " -N    <name>   -> Name of product/discount/sponsorship. The name can contain '*' to
+                     match any character zero or more times anywhere in the name.  This
+                     option will be used along with [-P] and/or [-D] and/or [-S] to
+                     indicate the type of the object being retrieved (i.e. -N '*GSM*'). \n";
+  exit();
+}
+
+#----------------------------------------------------------------------------
+# commit_pricelist
+#
+#Function to export the input XML data to 
+#Real time and pipeline database
+#----------------------------------------------------------------------------
+sub commit_pricelist
+{
+  my $cmd ="";
+  my $pcmd ="";
+  my $pcmd_out =0;
+  my $workingDir ="$ENV{PIN_HOME}/setup/scripts";
+  my $pipeWorkingDir ="$ENV{IFW_HOME}/tools/XmlLoader";
+  my $times = time(); # Storing timestamp to create unique files
+  # Check if filename is passed and if file is present	
+  my ($in_file, $verb_on, $log_debug, $confirm_off, $PipeData, $pipelineFile) = @_;
+  my $temp_in_file = "$ppid"."_"."$times"."$in_file";
+  my $temp_pipeline_file = "$ppid"."_"."$times"."$pipelineFile";
+  if( !$PipeData){ ; exit();}
+  my @infile = split(//, $in_file);		
+  my @pFile = split(//, $pipelineFile);		
+  if ( $infile[0] eq "-" || !$in_file || $PipeData &&($pFile[0] eq "-" || !$pipelineFile)) 
+  { 
+     print" Invalid file name exiting.. \n"; exit()
+  }   	
+  if ( -e "$in_file" && (!$PipeData || -e "$pipelineFile") ) 
+  { 
+     if($PipeData)
+     {
+       system ("cp $ENV{PWD}/$pipelineFile $pipeWorkingDir/$temp_pipeline_file");
+       chdir($pipeWorkingDir) or die "Cant change directory  to $pipeWorkingDir $!";
+       $pcmd = "LoadIfwConfig -v -i $temp_pipeline_file -u -c  "; 
+       $pcmd_out = system ("$pcmd ");
+       system ("rm $temp_pipeline_file");
+     }
+     if ($pcmd_out == 0)
+     {
+       system ("cp $ENV{PWD}/$in_file $workingDir/$temp_in_file");
+       chdir($workingDir) or die "Cant change directory to $workingDir $!";
+       $cmd = "loadpricelist "; 
+       if($verb_on){ $cmd = "$cmd -v" }
+       if($log_debug){ $cmd = "$cmd -d" }
+       if($confirm_off){ $cmd = "$cmd -f" }
+       $cmd = "$cmd -c $temp_in_file";
+       $pcmd_out = system ("$cmd ");
+       system ("rm $temp_in_file");
+       if ($pcmd_out != 0){print " Real time data update failed exiting ..\n"; exit();}
+     }
+     else {print " Pipeline data update failed exiting ..\n"; exit();} 
+  }
+  else 
+  { 
+    print "File $in_file is not present exiting \n"; exit() 
+  }
+}
+
+#----------------------------------------------------------------------------
+# retrieve_pricelist
+#
+#Function to extract the data from Infranet 
+# and Pipeline to the XML files
+#----------------------------------------------------------------------------
+sub retrieve_pricelist
+{
+  # Check if filename is passed and if file is present	
+  my ($in_file, $PipeData, $pipeline_file, $verb_on, $log_debug, $confirm_off, $RetrieveName, $objName, $RetrieveProduct, $RetrieveDiscount,$RetrieveSponsorship, $serviceType, $stype, $modified_time, $mtime) = @_;
+  my $cmd ="";
+  my $cmd_out = 0;
+  my $pcmd ="";
+  my $pcmd_out ="";
+  my $times = time(); # Storing timestamp to create unique files
+  my @infile = split(//, $in_file);		
+  my @pipelineFile = split(//, $pipeline_file);		
+  my @oName = split(//, $objName);		
+  my $pipeWorkingDir ="$ENV{IFW_HOME}/tools/XmlLoader";
+  my $temp_pipe_file = "$ppid"."_"."$times"."temp_pipe_data.xml";
+  my $temp_pipeline_file = "$ppid"."_"."$times"."$pipeline_file";
+  system ('rm -f $temp_pipe_file');
+  if ( $infile[0] eq '-' || !$in_file) 
+  { 
+     print"Invalid Real time data file name  exiting ..\n"; 
+     exit();
+  }
+  if ($RetrieveName && ($oName[0] eq '-' || !$objName)) 
+  { 
+     print" Invalid object name specified with -N option  exiting.. \n"; 
+     exit();
+  }
+  if ($PipeData && ($pipelineFile[0] eq '-' || !$pipeline_file)) 
+  { 
+     print"Invalid pipeline data file name exiting .. \n"; 
+     exit();
+  }   	
+  else 
+  { 
+     $cmd = "loadpricelist "; 
+     if($verb_on){ $cmd = "$cmd -v" }
+     if($log_debug){ $cmd = "$cmd -d" }
+     if($confirm_off){ $cmd = "$cmd -f" }
+     $cmd = "$cmd -r $in_file";
+     $cmd = "$cmd -F $temp_pipe_file";
+     if($RetrieveName){ $cmd = "$cmd -N \"$objName\"" }
+     if($RetrieveProduct){ $cmd = "$cmd -P" }
+     if($RetrieveDiscount){ $cmd = "$cmd -D" }
+     if($RetrieveSponsorship){ $cmd = "$cmd -S" }
+     if($serviceType){ $cmd = "$cmd -s $stype" }
+     if($modified_time){ $cmd = "$cmd -t $mtime" }
+     $cmd_out = system ("$cmd ");
+  }
+  if (-e "$temp_pipe_file" && $PipeData && $cmd_out == 0)
+  {
+     system ("mv $temp_pipe_file $pipeWorkingDir");
+     chdir($pipeWorkingDir) or die "Cant change directory  to $pipeWorkingDir $!";
+     if(-e "$temp_pipeline_file")
+     {
+       system (" rm $temp_pipeline_file");
+     }
+     $pcmd = "LoadIfwConfig "; 
+     if($log_debug){ $pcmd = "$pcmd -d" }
+     if($verb_on){ $pcmd = "$pcmd -v" }
+     $pcmd = "$pcmd -i $temp_pipe_file -r -o $temp_pipeline_file"; 
+     if($modified_time){ $mtime = modify_time_format($mtime); $pcmd = "$pcmd -t $mtime" }
+     $pcmd_out = system ( "$pcmd");
+     if ($pcmd_out ==0)
+     {
+        system ("mv $temp_pipeline_file $ENV{PWD}/$pipeline_file");
+     }   
+     else 
+     {
+        if (-e "$temp_pipeline_file"){system ("rm $temp_pipeline_file ");}
+     }
+     if (-e "$temp_pipe_file"){system ("rm $temp_pipe_file");}
+
+
+  }
+  else 
+  { 
+     if($PipeData)
+     {
+       print " Input file for LoadIfwConfig not generated exiting... \n"; 
+     }
+     exit();
+  }
+}
+
+#----------------------------------------------------------------------------
+# modify_time_format
+#
+#Function to modify the time format to be passed to the LoadIfwConfigt 
+# Formats supported at LoadIfwConfig is YYYY-MM-DD
+#----------------------------------------------------------------------------
+sub modify_time_format
+{
+  my ($time) = @_;
+  my @timeArr = split(//,$time);
+  my $timeLength = @timeArr;
+  my $returnTime = "";
+  my $MM ="01";
+  my $DD ="01";
+  if ($timeLength > 10)
+  {
+    @timeArr = split(/T/,$time); 
+    $returnTime = $timeArr[0];
+  }
+  elsif ($timeLength == 10) 
+  {
+    $returnTime = $time; 
+  }
+  elsif ($timeLength == 7) 
+  {
+    $returnTime = "$time"."-$DD"; 
+  }
+  elsif ($timeLength == 4) 
+  {
+    $returnTime = "$time"."-$MM"."-$DD"; 
+  }
+  return $returnTime;
+}
+
+

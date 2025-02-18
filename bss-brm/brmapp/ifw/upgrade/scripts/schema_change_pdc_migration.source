@@ -1,0 +1,23 @@
+-------------------------------------------------------------------------------
+--
+-- Copyright (c) 2011, 2012, Oracle and/or its affiliates. 
+-- All rights reserved. 
+--
+-- This material is the confidential property of Oracle Corporation
+-- or its licensors and may be used, reproduced, stored or transmitted
+-- only in accordance with a valid Oracle license or sublicense agreement.
+--
+--------------------------------------------------------------------------------
+-- Block: Database
+--------------------------------------------------------------------------------
+-- Module Description:
+-- Update script for DB version
+--------------------------------------------------------------------------------
+-- Responsible: Saurabh Jain
+--------------------------------------------------------------------------------
+alter table IFW_RUMGROUP modify (RUMGROUP varchar2(255));
+alter table IFW_RUMGROUP_LNK modify (RUMGROUP varchar2(255));
+alter table IFW_SERVICE modify (RUMGROUP varchar2(255));
+alter table IFW_RESOURCE modify(SYMBOL varchar2(255));
+alter table IFW_NOPRODUCT modify (TAXCODE varchar2(255));
+commit;

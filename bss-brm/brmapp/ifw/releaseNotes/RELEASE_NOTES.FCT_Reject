@@ -1,0 +1,385 @@
+===============================================================================
+FCT_Reject
+-------------------------------------------------------------------------------
+Module Release Notes 
+-------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.FCT_Reject $
+
+==============================================================================
+Module Version: 10022 7.4.0 14-Apr-2009 Ashish Wani
+bug8311363    : EUB:PARTIALTYPE INDICATOR IS NOT POPULATED PROPERLY IN
+                CASE OF ASSEMBLED CALLS
+
+==============================================================================
+
+Module Version: 10021  18-July-2006 ashishk
+PRSF00219265: Da Vinci Code Clean Up:--pipeline_mediation & suspense Please set 
+              isValidDetail false when you set error above warning 
+
+==============================================================================
+
+Module Version: 10020  11-April-2006 Ashwani
+PRSF00202268 : rejection condition has been moved to a seperate public function 
+               satisfyRejectCondition() so that it can be invoked from other 
+               plugins.
+	       
+==============================================================================
+Module Version: 10019  08-July-2005 Louis Piro 
+PRSF00176958 : Reverse the "counter" iterator one spot because subsequent
+	       edr was being skipped.
+	       
+==============================================================================
+
+Module Version: 10018  07-July-2005 Louis Piro 
+PRSF00174599 : Modifications to remove rejected edrs produced by the 
+               CallAssembling ActualLogic.
+	       
+==============================================================================
+
+Module Version: 10017  17-May-2005 Louis Piro 
+PRSF00169028 : Call assembly Re-design for Momentum
+
+==============================================================================
+
+Module Version: 10016 Velocity  07-Feb-2005 pmahishi
+PRSF00151949 : Velocity - Confusing and frequeuent message in process log from FCT_Reject
+
+==============================================================================
+
+Module Version: 10015  6.7_FP2  17-Dec-2004
+PRSF00144177 : 6.7_FP2 - CallAssembling Reject fails when FCT_Reject and
+               FCT_CallAssembling reside in different FunctionPools.
+		
+==============================================================================
+Module Version: 10014  6.7_FP2  03-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10013 Apollo 05-Dec-2003  luigi
+PRSF00053917: -Dependent Call Assembling changes for VK Greece.
+	       Add edr start time as message argument.
+	       
+========================================================================================
+
+Module Version: 10012  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+========================================================================================
+
+Module Version: 10011  Apollo  22-Sep-2003
+PRSF00065303: PreRecycle and Reject plugins do not call isValidDetail() during 
+              EDR processing. 
+
+==============================================================================
+
+Module Version: 10010  6.5_SP2  05-May-2003
+PRSF00039929:  More changes are needed to support Name Space 
+
+==============================================================================
+Module Version: 10009  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Revision: 6.5_SP2 10008 1-MAY-2003 
+PRSF00039657: Fix small bug with the rejected message name 
+	      
+===============================================================================
+
+Revision: 6.5_SP2 10007 30-APR-2003 
+PRSF00039436: Fix the name space for FCT Reject 
+	      
+===============================================================================
+Revision: 6.5_EBF 10001 26-Mar-2003 keshav
+PRSF00033809: Enhancements to allow call assembly and recycling to operate
+	      together correctly.
+	      
+	      When a partially or fully assembled call is being rejected,
+	      FCT_Reject now offers to send a message to FCT_CallAssembling.
+	      The user has to configure the 'CallAssemblingModule' registry
+	      entry to enable these inter-module messages.
+
+===============================================================================
+
+Actual Version : 6.5 10005 / Date : 27-MAR-2003
+----------------
+
+PRSF00035963: Fix up the streammap feature and put it back to the FCT_Reject module
+===============================================================================
+
+===============================================================================
+
+Actual Version : 6.5 10004 / Date : 27-FEB-2003
+----------------
+
+PRSF00034037: Static strings to avoid extra constructions
+
+===============================================================================
+
+Actual Version : 6.5 10003 / Date : 27-FEB-2003
+----------------
+
+PRSF00033000: Added fixes for thread tracing.
+
+===============================================================================
+
+Actual Version : v10002 / Date : 26-FEB-2003 / gdouglas
+----------------
+
+Solved PRs/CRs : PRSF00027351 Integrate core dumps during on EDR get
+---------------- index for field not defined in EDR
+		 container. Corrected catch clause to catch correct
+		 exception 
+
+===============================================================================
+
+Actual Version : v10001 / Date : 24-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00031101 [Pipeline] Error unknown on process log from reject module
+----------------
+
+==============================================================================
+
+Actual Version : v6.3.2 / Date : 06-Jun-2001 /cdiab
+----------------
+
+Solved PRs/CRs :
+----------------
+modifications_for_Batch_Reject
+- kabicht added the new registry entry block StreamMap to enable multiple reject streams
+- added a new registry string MinErrorSeverity (defaulted to -1 ie. BAS_Status::undef)
+  to only reject EDRs with: hasError() AND (maxSeverity()>=MinErrorSeverity)
+This allows us to add warning or normal error messages without rejecting the EDR (if the
+MinErrorSeverity is set to 3 in the registry)
+
+===============================================================================
+
+Actual Version : v4-30-03 / Date : 28-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #37618 CodeReview
+
+===============================================================================
+
+Actual Version : v4-30-02 / Date : 15-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #36559 SourcePro AIX port
+
+===============================================================================
+
+Actual Version : v4-30-01 / Date : 14-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #36562 status generation added, when an error occours in the return value of the 
+              reject-stream-number request
+
+===============================================================================
+
+Actual Version : v4-30-00 / Date : 06-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+- Migration to v4-30 version.
+  * New EDR-Container interface
+  * Support for alias mapping of field names
+  * No functional changes.
+
+===============================================================================
+
+Actual Version : v4-10-00 / Date : 01-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+- Support for database v4-10-00
+
+===============================================================================
+
+Actual Version : v4-03-01 / Date : 9-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Internal change of some variables.
+No effect for the user.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================
+Actual Version : v4-03-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Support for AIX compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================
+
+Actual Version : v4-02-00 / Date : 12-Mai-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- New registry parameter UseRejectStream added.
+
+  This parameter controls the redirection of rejected edr's.
+  If the parameter is set to true the rejected edr's are redirected
+  into the reject stream. If the parameter is set to false the stream
+  is not changed. The parameter is optional with the default value "true".
+  
+- DETAIL.DISCARD
+
+  The container field DETAIL.DISCARD is set to 1 if the edr is rejected and
+  the original value of the field was 0.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================
+
+Actual Version : v4-01-00 / Date : 28-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Implementation changed to support the edr container list.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================
+
+Actual Version : v4-00-00 / Date : 10-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Implementation changed to support the new edr container (Framwork version 4.x)
+
+- New optional registry parameter NotifyOnReject. The default value for the parameter is TRUE.
+  
+  The reject module now supports the observer pattern. When NofifyOnReject is TRUE
+  all connected observers are informed if an edr is rejected.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================
+
+Actual Version : v1-21-00 / Date : 09-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+check all code reviews marks and correct them.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================
+
+Actual Version : v1-20-02 / Date : 07-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Reject now all detail and unknown EDR-Container.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+===============================================================================

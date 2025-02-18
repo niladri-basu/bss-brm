@@ -1,0 +1,99 @@
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Tue Apr 14 21:14:42 2015
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_TEL_TEL_SAN11.out.bc.event_bal_impacts_t.ctl
+Character Set UTF8 specified for all input.
+
+Data File:      /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_TEL_TEL_SAN11.out.bc.event_bal_impacts_t.blk
+  Bad File:     /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_TEL_TEL_SAN11.out.bc.event_bal_impacts_t.blk.bad
+  Discard File: /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_TEL_TEL_SAN11.out.bc.event_bal_impacts_t.blk.discard 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Continuation:    none specified
+Path used:      Direct
+
+Load is UNRECOVERABLE; invalidation redo is produced.
+
+Table EVENT_BAL_IMPACTS_T, partition P_D_05012015, loaded from every logical record.
+Insert option in effect for this partition: APPEND
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+RECORD_TYPE2                        FIRST     *  WHT      CHARACTER            
+  (FILLER FIELD)
+RECORD_NUMBER2                       NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+ACCOUNT_OBJ_DB                       NEXT     *  WHT      CHARACTER            
+ACCOUNT_OBJ_TYPE                     NEXT     *  WHT      CHARACTER            
+ACCOUNT_OBJ_ID0                      NEXT     *  WHT      CHARACTER            
+ACCOUNT_OBJ_REV                      NEXT     *  WHT      CHARACTER            
+BAL_GRP_OBJ_DB                       NEXT     *  WHT      CHARACTER            
+BAL_GRP_OBJ_TYPE                     NEXT     *  WHT      CHARACTER            
+BAL_GRP_OBJ_ID0                      NEXT     *  WHT      CHARACTER            
+BAL_GRP_OBJ_REV                      NEXT     *  WHT      CHARACTER            
+ITEM_OBJ_DB                          NEXT     *  WHT      CHARACTER            
+ITEM_OBJ_TYPE                        NEXT     *  WHT      CHARACTER            
+ITEM_OBJ_ID0                         NEXT     *  WHT      CHARACTER            
+ITEM_OBJ_REV                         NEXT     *  WHT      CHARACTER            
+RESOURCE_ID                          NEXT     *  WHT      CHARACTER            
+RESOURCE_ID_ORIG                     NEXT     *  WHT      CHARACTER            
+IMPACT_CATEGORY                      NEXT     *  WHT      CHARACTER            
+IMPACT_TYPE                          NEXT     *  WHT      CHARACTER            
+PRODUCT_OBJ_DB                       NEXT     *  WHT      CHARACTER            
+PRODUCT_OBJ_TYPE                     NEXT     *  WHT      CHARACTER            
+PRODUCT_OBJ_ID0                      NEXT     *  WHT      CHARACTER            
+PRODUCT_OBJ_REV                      NEXT     *  WHT      CHARACTER            
+GL_ID                                NEXT     *  WHT      CHARACTER            
+RUM_ID                               NEXT     *  WHT      CHARACTER            
+TAX_CODE                             NEXT     *  WHT      CHARACTER            
+RATE_TAG                             NEXT     *  WHT      CHARACTER            
+LINEAGE                              NEXT     *  WHT      CHARACTER            
+OFFERING_OBJ_DB                      NEXT     *  WHT      CHARACTER            
+OFFERING_OBJ_TYPE                    NEXT     *  WHT      CHARACTER            
+OFFERING_OBJ_ID0                     NEXT     *  WHT      CHARACTER            
+OFFERING_OBJ_REV                     NEXT     *  WHT      CHARACTER            
+QUANTITY                             NEXT     *  WHT      CHARACTER            
+AMOUNT                               NEXT     *  WHT      CHARACTER            
+AMOUNT_ORIG                          NEXT     *  WHT      CHARACTER            
+AMOUNT_DEFERRED                      NEXT     *  WHT      CHARACTER            
+DISCOUNT                             NEXT     *  WHT      CHARACTER            
+PERCENT                              NEXT     *  WHT      CHARACTER            
+DISCOUNT_INFO                        NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+OBJ_ID0                              NEXT     *  WHT      CHARACTER            
+REC_ID                               NEXT     *  WHT      CHARACTER            
+
+The following index(es) on table EVENT_BAL_IMPACTS_T were processed:
+index PIN.I_EVENT_BAL_IMPACTS__ID partition P_D_05012015 loaded successfully with 1 keys
+index PIN.I_EVENT_BI_ACCOUNT_OBJ__ID partition P_D_05012015 loaded successfully with 1 keys
+index PIN.I_EVENT_BI_BAL_GRP__ID partition P_D_05012015 loaded successfully with 1 keys
+index PIN.I_EVENT_BI_ITEM_OBJ__ID partition P_D_05012015 loaded successfully with 1 keys
+
+Table EVENT_BAL_IMPACTS_T, partition P_D_05012015:
+  1 Row successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+Bind array size not used in direct path.
+Column array  rows :    5000
+Stream buffer bytes: 5000000
+Read   buffer bytes:10000000
+
+Total logical records skipped:          0
+Total logical records read:             1
+Total logical records rejected:         0
+Total logical records discarded:        0
+Total stream buffers loaded by SQL*Loader main thread:        1
+Total stream buffers loaded by SQL*Loader load thread:        0
+
+Run began on Tue Apr 14 21:14:42 2015
+Run ended on Tue Apr 14 21:14:42 2015
+
+Elapsed time was:     00:00:00.41
+CPU time was:         00:00:00.02

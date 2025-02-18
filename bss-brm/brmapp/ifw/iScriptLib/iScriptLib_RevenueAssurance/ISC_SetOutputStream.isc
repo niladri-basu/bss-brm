@@ -1,0 +1,42 @@
+//==============================================================================
+//
+//      Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+//      
+//      This material is the confidential property of Oracle Corporation or its
+//      licensors and may be used, reproduced, stored or transmitted only in
+//      accordance with a valid Oracle license or sublicense agreement.
+//
+//-------------------------------------------------------------------------------
+// Block: ISC_SetOutputStream
+//-------------------------------------------------------------------------------
+// Module Description:
+//   This script sets the Output Stream. (TelOut, SMSOut, GPRSOut, RejectOut, DuplicateOut)
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible: 
+//
+//------------------------------------------------------------------------------
+
+function onDetailEdr
+{
+	// Adding the ARA block
+	if ( edrNumDatablocks( DETAIL.ASS_ARA_EXT ) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+
+	edrString(DETAIL.ASS_ARA_EXT.OUTPUT_STREAM, 0) = edrGetStream();
+}
+
+function onInvalidDetailEdr
+{
+	// Adding the ARA block
+	if ( edrNumDatablocks( DETAIL.ASS_ARA_EXT ) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+
+	edrString(DETAIL.ASS_ARA_EXT.OUTPUT_STREAM, 0) = edrGetStream();
+}

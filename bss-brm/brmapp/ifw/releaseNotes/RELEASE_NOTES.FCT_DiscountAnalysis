@@ -1,0 +1,188 @@
+========================================================================================
+FCT_DiscountAnalysis
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+==============================================================================
+Module Version: 10040 7.5 23-Aug-2013
+bug 17352544
+To facilitate obtaining the information by an IScript about the discount being
+processed, the code has been enhanced to introduce a new EDR field
+CURRENT_DISC_INDEX in the DISCOUNT_LIST block which is initialized to its default
+value of -1 in FCT_DiscountAnalysis Module for System Discounts and then populated
+appropriately in the Discount PLugIn.
+==============================================================================
+Module Version: 10039 7.5 20-June-2013
+bug16885166
+Problem : Purchased Discount Block has wrong ntry for "FLAGS" field.
+Solution : Code changes made to populate correct data in the block.
+=======================================================================================
+Module Version: 10038 7.5 17-May-2012
+bug14058425
+Problem : System discount not getting associated with correct service in case discount
+sharing group is configured within the same account.
+Solution : Rather than checking for customer accout ID, changed the code to check for
+balance group to associate the system discount with correct service.
+=======================================================================================
+Module Version: 10037 7.4 01-Nov-2010
+bug10229664 - 74PS7: PCM_OP_GSM_AUTHORIZE FAILING AND GENERATING CORE 
+Modified the code to avoid it from dumping the core. 
+Handled the special case when there is a separate Discount List containing only System Discount(s).
+==============================================================================
+Module Version: 10036 7.4 11-Oct-2010
+bug10187783   : System discount applies as a discount sharing group
+basebug       : 10039459 
+Code Changes made to avoid System Discount from being applied as a sharing group discount.  
+==============================================================================
+Module Version: 10035 7.4 22-Sep-2010
+bug9888656  : "ORACLE BRM (PIPELINE) ISSUE:  filterSetEnabledM is not initialized in the c'tor"
+Initialized the paramterized constructor properly.
+==============================================================================
+Module Version: 10034 7.4 10-Sep-2009
+bug8807278 : "QPF 8766352 : DISCOUNTS ARE NOT GETTING APPLIED PROPERLY FOR MULTIPLE DISCOUNTS"
+Added handling for the decimal value of the qunatity field in the purchased discount block.
+==============================================================================
+Module Version: 10033 7.4 22-May-2009
+bug8540540 : "DISCOUNTS NOT GETTING APPLIED ON THE NONCURRENCY USAGE"
+Reverted back changes done for version 10032 as is causing failure in the usage case.
+==============================================================================
+Module Version: 10032 7.4 14-May-2009
+bug8323608 : "TOTALQ DISCOUNT PRORATE ON PURCHASE BUT FULL CHARGE BACK UPON SUSPENSION OF PROD"
+Removed code overriding Discount scale passed in value.
+==============================================================================
+Module Version: 10031 7.4 10-Apr-2009
+bug8361544   : "PIPELINE NOT PROCESSING CDR AFTER CONFIGURING SPECIAL DAY PROMOTION"
+Modified discount analysis to initialize discount model to null string to handle model selector cases
+where a discount model could not be returned
+==============================================================================
+Module Version: 10030 7.4 19-Nov-2008
+bug7558580   : "NO DISCOUNTS ARE APPLIED IF CDR USAGE HAS A CROSSOVER WITH SUBSCRIPTION CLOSURE"
+Modified discount analysis to use event start time for validating discounts since all the modules use
+event start time
+==============================================================================
+Module Version: 10029 7.3_Patch 30-Apr-2007
+bug6016489   : "DAT_DISCOUNT ENHANCEMENT TO READ BUSINESS CONFIG PARAM VALUE FROM DAT_PORTALCONF"
+==============================================================================
+Module Version: 10028 Davinci 25-Sep-2006
+bug5976402   : "PIPELINE_7.3_MODULAR HPUX: PIPELINE_DISCOUNT BREAKING"
+==============================================================================
+Module Version: 10027 Davinci 25-Sep-2006
+PRSF00234197 : validFromDetail & validToDetail not mapped in out realtime Plg fro FU grant case.
+==============================================================================
+Module Version: 10026 7.2  17-Feb-2006
+PRSF00193082 : ACCOUNT_PROD_SPLIT - Discount Analysis Changes
+==============================================================================
+Module Version: 10025 7.2  16-Dec-2005
+PRSF00188936 : Model Selector : build breaker on da vinci ..
+==============================================================================
+Module Version: 10024 7.2  21-Nov-2005
+PRSF00187289 : Model Selector : Pipeline Rating,Discounting and 
+               Registry Changes(propagation to Davinci)
+	       Made changes to FCT_DiscountAnalysis to support model selector 
+               feature.	
+========================================================================================
+Module Version: 10023 7.2  04-Oct-2005
+PRSF00183100:   Memory Leak in win ia64 pipeline
+========================================================================================
+Module Version: 10022 7.2  29-Aug-2005
+PRSF00179707:   Change atoi() and atol() to atoi64() for 64-bit Poid Compatibility.
+========================================================================================
+Module Version: 10021 7.2  20-Jun-2005
+PRSF00169966:   Fix warning messages in the Windows 32-bit build displays that really should be treated as errors
+
+========================================================================================
+Module Version: 10020 7.2  16-Jun-2005
+PRSF00168469: VALID_FLAG is not updated correctly after Discount Cancellation in the middle
+              of the month
+
+========================================================================================
+Module Version: 10019 7.2  09-Jun-2005
+PRSF00171908:   put back:Usability issue with DiscountAnalysisModule.Module.Filter_SetIsActive
+
+========================================================================================
+Module Version: 10018 7.2  08-Jun-2005
+PRSF00171750:   backout:Usability issue with DiscountAnalysisModule.Module.Filter_SetIsActive
+
+========================================================================================
+Module Version: 10017 7.2  31-May-2005
+PRSF00151085:   Usability issue with DiscountAnalysisModule.Module.Filter_SetIsActive
+
+========================================================================================
+Module Version: 10016 7.2  13-May-2005
+PRSF00168419:   System Test: ifw cores when discount object not found in RTP
+
+========================================================================================
+Module Version: 10015 7.2  25-Apr-2005
+PRSF00165204: future dated discount will be used for Edrs valid before discount is valid.
+
+========================================================================================
+Module Version: 10014 7.2  19-Apr-2005
+PRSF00164064	CR59: Pipeline gives core dump, when a CDR is processed after purchasing
+                a cycle fee discount.
+
+========================================================================================
+Module Version: 10013 7.2  12-Apr-2005
+PRSF00163396	CR59 Changes - New_Pipeline_Velocity build failed (+)
+
+========================================================================================
+Module Version: 10012 7.2  04-Apr-2005
+PRSF00154163   "CR59: Changes to FCT::Discount Analysis"
+
+========================================================================================
+Module Version: 10011 7.2_EA  01-Apr-2005
+PRSF00161625   "To deliver CR 81/82 Discount Changes to 7.2_EA
+
+========================================================================================
+Module Version: 10010 6.7_FP2  08-Dec-2004
+PRSF00143476   "System Test: system discount is not granting discount when using /service/telco"
+
+========================================================================================
+Module Version: 10009 6.7_FP2  15-Oct-2004
+PRSF00133692   "Quality Fest: Enhancement to  Discount Analysis"
+
+========================================================================================
+Module Version: 10008 6.7_FP2  03-Aug-2004
+PRSF00124515:   "Fix a bug in FCT_DiscountAnalysis wrt to Fliter Set and setting qty index"
+
+========================================================================================
+
+Module Version: 10007 6.7_FP2  14-Jul-2004
+PRSF00113704:   FCT_DiscountAnalysis changes for filter_set plugin.
+
+========================================================================================
+
+Module Version: 10006 6.7_FP2  7-Jun-2004
+PRSF00115144:   Discount NT Porting
+
+========================================================================================
+
+Module Version: 10005 6.7_FP2  2-Jun-2004
+PRSF00114511:   Do not add system discounts in discount analysis for cycle and billing time discount events
+
+========================================================================================
+
+Module Version: 10004  6.7_FP2  03-Mar-2004
+PRSF00097500: OMNI-Apollo : Discount Analysis seems to filter discounts on inactive services even when Stop Discounting flag
+set to
+
+========================================================================================
+
+Module Version: 10003  6.7_FP2  24-Feb-2004
+PRSF00093828:   Purchased discounts need not be processed if ERAs are found. 
+
+========================================================================================
+
+Module Version: 10002  6.7_FP2  11-Feb-2004
+PRSF00091842:   Fix memory leak in discount analysis 
+
+========================================================================================
+
+Module Version: 10001  6.7_FP2  10-Feb-2004
+PRSF00091957:   Discount Analysis Plugin should validate based on permitted type for system discounts 
+
+========================================================================================
+
+Module Version: 10000  Apollo  02-Jun-2003
+PRSF00043000:   Initial implementation of discount analysis 
+
+==============================================================================

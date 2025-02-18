@@ -1,0 +1,341 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#===============================================================================
+# @(#)%Portal Version: supportInformer.pl:PlatformR2Int:2:2006-Jul-24 22:37:53 %
+#
+# Copyright (c) 1996, 2009, Oracle and/or its affiliates. All rights reserved. 
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+#-------------------------------------------------------------------------------
+# Block: TLS
+#-------------------------------------------------------------------------------
+# Module Description:
+#   Perl-Script to collect informations for the support.
+#
+# Open Points:
+#   none
+#
+# Review Status:
+#   <in-work>
+#
+#-------------------------------------------------------------------------------
+# Responsible: Mike Gresens
+# Backup Responsible: Netaji Goud
+#
+# $RCSfile: supportInformer.pl $
+# $Revision: /cgbubrm_7.3.2.portalbase/1 $
+# $Author: cprabhak $
+# $Date: 2009/04/08 21:46:00 $
+# $Locker:  $
+#-------------------------------------------------------------------------------
+#
+# Revision 1.16  2002/07/04  Netaji
+# PRSF00206385: Enhanced to support Portalbase
+#
+# Revision 1.15  2002/11/20  pinto
+# PRSF00025054: change copyright, tech support and help information
+#
+# Revision 1.14  2001/11/14 07:04:22  jkeckst
+# PETS 41529: change all copyright informations from Solution42 to portal
+#
+# Revision 1.13  2001/09/04 11:28:24  mgresens
+# PETS #37341
+# Registry reader changed to parse v4-30 registries.
+#
+# Revision 1.12  2001/06/27 13:30:10  mgresens
+# PT 36476.
+# 'integrate' -> 'ifw'.
+# 'sol42' -> 'Portal'.
+#
+# Revision 1.11  2000/08/18 09:15:41  mgresens
+# Checking the right return-code (=0) of 'integRate -v'.
+# bzip2-compression supported.
+# Redundance of format-descs removed.
+# Collecting only 10 newest stream-logs.
+# -> SOLUTION42 AG
+#
+# Revision 1.10  2000/08/08 07:12:53  mgresens
+# Added: Collecting Alias/Format-Descriptions.
+#
+# Revision 1.9  2000/07/28 11:09:13  mgresens
+# No shell-scripts needed.
+# sh removed.
+# pm removed.
+#
+# Revision 1.8  2000/07/25 13:51:40  mgresens
+# First release version.
+#
+# Revision 1.6  2000/07/25 07:07:02  mgresens
+# Good work, mike!
+#
+# Revision 1.5  2000/07/21 14:24:05  mgresens
+# Collecting the system-environment added.
+# Compression added.
+#
+# Revision 1.3  2000/07/19 14:24:21  mgresens
+# Using new PerlLib.
+#
+# Revision 1.2  2000/07/18 13:34:00  mgresens
+# RegistryReader implemented.
+#
+# Revision 1.1  2000/07/17 15:25:33  mgresens
+# Reading registry, collecting log-names, compressing.
+#
+#===============================================================================
+
+#-------------------------------------------------------------------------------
+# DEFINITION - Variables
+#-------------------------------------------------------------------------------
+my $programName;
+my $iterator = 0;
+my $path = "supportInfos" . dateAsStr();
+
+#-------------------------------------------------------------------------------
+# DEFINITION - Packages
+#-------------------------------------------------------------------------------
+
+use strict;
+use RegistryReader;
+use LogCollector;
+use FileSystem;
+use SystemInfo;
+use InfoCompressor;
+use PinconfReader;
+
+#-------------------------------------------------------------------------------
+# START - Handle arguments
+#-------------------------------------------------------------------------------
+
+printCopyright();
+
+#
+# Get the input options
+#
+my $arg = shift(@ARGV);
+if (!defined($arg)) {
+	print "Missing argument.\n\n";
+	printUsage();
+	exit(1);
+}
+while (defined($arg)) {
+	if ($arg eq "-h") {
+		printHelp();
+		exit(0);
+	} elsif ($arg eq "-r") {
+		$arg = shift(@ARGV);
+		if (defined($arg)) {
+			$iterator++;
+			runProgram($arg);
+		} else {
+			print "Missing registry.\n\n";
+			printUsage();
+			exit(1);
+		}
+	} elsif ($arg eq "-i") {
+		$iterator++;
+		runPortal();
+	} else {
+		print "Unknown argument.\n\n";
+		printUsage();
+		exit(1);
+	}
+	$arg = shift(@ARGV);
+}
+#Compress Infos
+InfoCompressor::compressInfos($path);
+close(LOGFILE);
+system("rm", "-r", $path);
+
+#-------------------------------------------------------------------------------
+# PRINT - Usage
+#-------------------------------------------------------------------------------
+sub printUsage
+{
+	print "usage: supportInformer.pl [ -h | -r <registry> | -i ]\n\n";
+	print "-h  print help and exit\n";
+	print "-r  create the support-informations using the <registry>\n";
+	print "-i  create the support-informations for portalbase\n\n";
+}
+
+#-------------------------------------------------------------------------------
+# PRINT - Help
+#-------------------------------------------------------------------------------
+sub printHelp
+{
+	print "supportInformer collects information needed when reporting an incident\n";
+	print "with a integRate-pipeline-based or Portalbase system.\n\n";
+	print "It reads the registry and collects informations such as log files.\n";
+	print "A temporary directory-structure is created and populated with the registry\n";
+	print "log-files, trace-files and system informations (e.g. free disk space or user limits).\n";
+	print "supportInformer also tries to start integRate to collect additional information.\n\n";
+	print "It collect all log and pinlog files in case of Portalbase system.\n";
+	print "Lasty it compresses and removes the temporary directories.\n\n";
+	print "After running supportInformer there is one file (supportInfos<dateTimeStamp>.*)\n\n";
+	printUsage();
+}
+
+#-------------------------------------------------------------------------------
+# PRINT - Copyright
+#-------------------------------------------------------------------------------
+sub printCopyright
+{
+	my $version = '$Name:  $';
+	my $length = length($version);
+	$version = substr($version, 6, $length - 7);
+	print("\nsupportInformer ", $version, "\n");
+        print("Copyright (c) 1996 - 2009 Oracle. All rights reserved.\n\n");
+        print("This material is the confidential property of Oracle Corporation or\nits licensors and may be used, reproduced, stored or transmitted only\nin accordance with a valid Oracle license or sublicense agreement.\n\n");
+}
+
+#-------------------------------------------------------------------------------
+# RUN - Program
+#-------------------------------------------------------------------------------
+sub runProgram
+{
+	$programName = "ifw";
+	my $registry = shift(@_);
+	my $logPath = $path . "/log";
+	my $regPath = $path . "/registry";
+	my $intPath = $path . "/" . $programName;
+	my $trcPath = $path . "/trace";
+	my $dscPath = $path . "/desc";
+
+	if ($iterator == 1) {
+		getStart();
+	}
+	FileSystem::createDir($regPath);
+	FileSystem::createDir($logPath);
+	FileSystem::createDir($intPath);
+	FileSystem::createDir($trcPath);
+	FileSystem::createDir($dscPath);
+
+	#Read the registry
+	printLog("Reading registry '" . $registry . "' ...\n");
+	my $regInfo = RegistryReader::readRegistry($registry);
+	printLog("Reading registry done ...\n");
+
+	#Collect LogFileNames
+	printLog("\nCollecting Log-Files (only 10 newest Stream-Logs/Format) ...\n");
+	my @list = LogCollector::getLogFileNames($regInfo);
+	printLog("Collecting Logfiles done ...\n");
+
+	#Copy Registries
+	printLog("\nCopying registries ...\n");
+	FileSystem::copy($regPath, $registry);
+	FileSystem::copy($regPath, LogCollector::info2Str($regInfo->{Info}));
+	printLog("Copying Registries done ...\n");
+
+	#Copy Descriptions
+	printLog("\nCopying descriptions ...\n");
+	FileSystem::copy($dscPath, $regInfo->{Alias});
+	foreach my $filename (keys %{$regInfo->{FormatDescs}})
+	{
+		FileSystem::copy($dscPath, $filename);
+	}
+	printLog("Copying Description files done ...\n");
+
+	#Copy Log-Files
+	printLog("\nCopying log-files (only newest 5000 Entries/Log) ...\n");
+	foreach my $filename (@list)
+	{
+		FileSystem::tail($logPath, $filename);
+	}
+	printLog("Copying Logfiles done ...\n");
+
+	#Copy Trace-Files
+	FileSystem::copyTraceFiles($trcPath);
+
+	#Get Integrate-Infos
+	getIntegrateInfos($intPath, $registry);
+
+}
+
+sub dateAsStr
+{
+	my ($sec, $min, $hour, $day, $month, $year) = localtime();
+	$year += 1900;
+	$month += 1;
+	if ($month < 10) { $month = "0" . $month; }
+	if ($day < 10) { $day = "0" . $day; }
+	if ($hour < 10) { $hour = "0" . $hour; }
+	if ($min < 10) { $min = "0" . $min;}
+	if ($sec < 10) { $sec = "0" . $sec;}
+	return $year . $month . $day . $hour . $min . $sec;
+}
+
+sub getIntegrateInfos
+{
+	my $intPath = shift(@_);
+	my $registry = shift(@_);
+	my $file1 = $intPath . "/" . $programName . "_v.log";
+	my $file2 = $intPath . "/" . $programName . "_v_r.log";
+
+	printLog("\nCollecting integRate informations ...\n");
+
+	printLog("  '" . $programName . " -v' -> ");
+	open(CMD, "/export/home1/pin301/ifw/bin/".$programName . " -v 2> " . $file1 . "|");
+	close(CMD);
+	if (($? >> 8) == 0)
+	{
+		printLog($file1 . "\n");
+	}
+	else
+	{
+		printLog("failed" . "\n");
+	}
+
+	printLog("  '" . $programName . " -v -r " . $registry . "' -> ");
+	open(CMD, $programName . " -v -r " . $registry . " 2> " . $file2 . "|");
+	close(CMD);
+	if (($? >> 8) == 0)
+	{
+		printLog($file2 . "\n");
+	}
+	else
+	{
+		printLog("failed" . "\n");
+	}
+
+	printLog("Collecting done ...\n");
+}
+
+
+#-------------------------------------------------------------------------------
+# Run Portal
+#-------------------------------------------------------------------------------
+sub runPortal
+{
+	PinconfReader::check_portal_env_variables($path);
+	if ($iterator == 1) {
+		getStart();
+	}
+	# Now process all components
+	PinconfReader::process_all_components();
+	# Now process all applications
+	PinconfReader::process_all_applications();
+}
+#-------------------------------------------------------------------------------
+# logging
+#-------------------------------------------------------------------------------
+sub printLog
+{
+	my $logEntry = shift(@_);
+	print($logEntry);
+	print LOGFILE $logEntry;
+}
+
+sub getStart
+{
+	my $sysPath = $path . "/system";
+	FileSystem::createDir($path);
+	# Open supportInfos.log file
+	open(LOGFILE, ">" . $path . "/supportInfos.log");
+	printLog("Started: " . scalar localtime() . " by: " . getlogin() . "\n\n");
+	FileSystem::createDir($sysPath);
+	#Get System-Infos
+	SystemInfo::getSystemInfos($sysPath);
+
+}
+

@@ -1,0 +1,219 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#
+# "@(#)$Id: pin_bus_params.pl /cgbubrm_main.rwsmod/1 2011/06/29 07:02:11 sksikdar Exp $"
+#
+# Copyright (c) 2004, 2011, Oracle and/or its affiliates. All rights reserved. 
+#
+#      This material is the confidential property of Oracle Corporation or its
+#      licensors and may be used, reproduced, stored or transmitted only in
+#      accordance with a valid Oracle license or sublicense agreement.
+#
+
+use File::Basename;
+
+my $version = "2006.05.10";
+(my $ME = $0) =~ s,.*/,,;
+my $DEBUG = $ENV{"DEBUG"} || 0;
+
+my $JAVA='$BRM_JRE';
+my $BASE=$ENV{"PIN_HOME"};
+$BASE =~ s/\\/\//;
+my $JAVA_3P="$BASE/jars";
+
+# Indicate where this all lives relative to PINBUILD_VIEW_DIR
+my $TRANS_HOME="$BASE/jars";
+
+my $USAGE =<<END
+ Usage: $ME [-htsgcv[r <parameter class>]] <xml file>
+     -h: help
+     -t: Trace the templates as they are being called
+     -s: Trace each generation event
+     -g: Trace each selection event
+     -c: Trace the template children
+     -v: Allows the html to be generated even if schema validation fails
+     -r: Get the current configuration for this parameter class
+END
+;
+
+# Deal with the command line args - need to transform the perl script options
+# to the expected options for our Java utility.
+require "getopts.pl";
+
+my $pc;
+
+&Getopts("htsgcvr:") || die $USAGE;
+my $opt_h && die $USAGE;
+
+my ($tt, $ts, $tg, $tc, $tv, $tr);
+($opt_t) && ($tt = "-TT");
+($opt_s) && ($ts = "-TS");
+($opt_g) && ($tg = "-TG");
+($opt_c) && ($tc = "-TTC");
+($opt_v) && ($tv = "-TV");
+($opt_r) && ($tr = "-TR") && ($pc = $opt_r);
+
+
+if ($#ARGV < 0) {
+	die $USAGE;
+}
+
+my $input_filename;
+my $output_filename;
+my $pclass;
+
+# Validate that the file passed in actually exists. 
+$input_filename = ($#ARGV >= 0) ? shift : "unknown";
+$output_filename = $input_filename;
+$output_filename =~ s/\.xml/\.trxml/;
+(-e "$input_filename") or die "[Error] Unable to locate $input_filename\n";
+
+my $xslFileName = basename($input_filename);
+$xslFileName =~ s/\.xml/\.xsl/;
+
+
+if ("$tr" eq "-TR") {
+
+	# XSL file for reverse transformation
+	$beg = "bus_params_";
+	($temp, $pclass) = split($beg, $xslFileName);
+
+	$xslFileName = join("to_", $beg, $pclass);
+
+	# For the time being
+	if ($pc eq "BusParamsAR") { 
+		$pclass = "ar";
+	}
+	elsif ($pc eq "BusParamsBilling") { 
+		$pclass = "billing";
+	}
+	elsif ($pc eq "BusParamsMultiBal") { 
+		$pclass = "multi-bal";
+	}
+	elsif ($pc eq "BusParamsBillingFlow") { 
+		$pclass = "billing_flow";
+	} 
+        elsif ($pc eq "BusParamsRerate") {
+                $pclass = "rerate";
+        } 
+	elsif ($pc eq "BusParamsRating") {
+                $pclass = "rating";
+        }
+	elsif ($pc eq "BusParamsPricing") {
+                $pclass = "pricing";
+        }
+	elsif ($pc eq "BusParamsSubscription") {
+                $pclass = "subscription";
+        }
+	elsif ($pc eq "BusParamsActivity") {
+                $pclass = "activity";
+        }
+	elsif ($pc eq "BusParamsSelectiveLoading") {
+                $pclass = "selective_loading";
+        }
+	elsif ($pc eq "BusParamsInvoicing") {
+                $pclass = "Invoicing";
+        }
+	else {
+		print("[Error] invalid name $pc \n");
+		exit(1);
+	}
+
+} else {
+
+	# If not -retrieve mode, test the input file for validity
+	# Validate the input XML file using app
+	my $status = system("load_pin_bus_params -d -v -t $input_filename");
+
+	if ($status != 0) {
+		print("[Error] Unable to validate $input_filename\n");
+		print("See logfile for error messages\n\n");
+		exit(1);
+	}
+}
+
+
+# Generate ptransformer.config file for this input
+my $fileName = "ptransformer.config";
+
+open(TMPFILE, ">$fileName") || die "Cannot create ptransformer.config\n";
+
+my $config_filename = "/$fileName";
+
+print TMPFILE "stylesheet.list=st\n";
+print TMPFILE "stylesheet.name.st=$BASE/xsd/$xslFileName\n";
+print TMPFILE "stylesheet.outputformat.st=xml\n";
+
+close(TMPFILE);
+
+
+
+# If -retrieve mode, get the parameters for this group in tmp.out
+if ("$tr" eq "-TR") {
+
+	# Validate the input XML file using app
+	my $status = system("load_pin_bus_params -d -v -r -c $pclass tmp");
+
+	if ($status != 0) {
+		print("[Error] Unable to retrieve configuration\n");
+		print("See logfile for error messages\n\n");
+		exit(1);
+	}
+
+	$output_filename = $input_filename;
+	$input_filename = "tmp.out";	
+	$output_filename =~ s/\.xml/\.xml\.out/;
+}	
+
+
+
+# Determine if we're on UNIX
+use POSIX qw(uname);
+my ($uname_s, $uname_r) = (POSIX::uname())[0,2];
+my $platform = substr($uname_s, 0, 7);
+
+my $CLASSPATH = '';
+if ("$platform" eq "Windows") {
+	$CLASSPATH="\".;$JAVA_3P/xalan.jar;$JAVA_3P/serializer.jar;$TRANS_HOME/PortalTransform.jar;$TRANS_HOME\"";
+}
+else {
+	$CLASSPATH="\".:$JAVA_3P/xalan.jar:$JAVA_3P/serializer.jar:$JAVA_3P/xercesImpl.jar:$JAVA_3P/xmlParserAPIs.jar:$TRANS_HOME/PortalTransform.jar:$TRANS_HOME\"";
+}
+
+
+print "$JAVA/bin/java -classpath $CLASSPATH com.portal.transform.PTransformer $input_filename $output_filename $config_filename $tt $ts $tg $tc $tv >logfile.err 2>&1\n";
+my $status=system("$JAVA/bin/java -classpath $CLASSPATH com.portal.transform.PTransformer $input_filename $output_filename $config_filename $tt $ts $tg $tc $tv >logfile.err 2>&1");
+
+if ($status != 0) {
+	print("[Error] Unable to transform $input_filename\n");
+	print("See 'logfile.err' for error messages\n\n");
+	exit(1);
+}
+
+if ("$tv" eq "-TV") {
+	(-e "logfile.err") and (-s "logfile.err") and print "Success, but validation errors may exist in 'logfile.err'\n\n";
+}
+
+# remove log file if of zero size
+if (-z "logfile.err") {
+	unlink "logfile.err";
+}
+
+if ("$tr" eq "-TR") {
+
+	if (-e "tmp.out") {
+		unlink "tmp.out";
+	}
+
+} else {
+	#If not Retrieve mode, load the transformed file. 
+	# Load the output file
+	my $status = system("load_pin_bus_params -d -v $output_filename");
+
+	if ($status != 0) {
+		print("[Error] Unable to validate/load $output_filename\n");
+		print("See logfile for error messages\n\n");
+		exit(1);
+	}
+}
+
+exit(0);

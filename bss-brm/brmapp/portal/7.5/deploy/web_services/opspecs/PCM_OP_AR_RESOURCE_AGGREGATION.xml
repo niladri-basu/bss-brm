@@ -1,0 +1,249 @@
+<Opcode
+    name="PCM_OP_AR_RESOURCE_AGGREGATION"
+    visibility="public"
+    transaction="required"
+    component="fm_ar"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+    <Doc>
+        <!--h:p>
+            <h:i>      
+            Copyright &#169; 2006 Oracle. All rights reserved.
+            This material is the confidential property of Oracle Corporation or
+            its licensors and may be used, reproduced, stored or transmitted 
+            only in accordance with a valid Oracle license or sublicense agreement.
+        </h:i>
+        </h:p-->
+        The opcode searches event balance impact details and aggregates total per resource. 
+        
+        <h:p/> Notes on discount balance impacts: <h:ul>
+            <h:li> This opcode supports Pipeline PIN_IMPACT_TYPE_DISCOUNT and 
+                PIN_IMPACT_TYPE_DISCOUNT_RERATED discount balance impacts.
+                The amount and discount will be properly populated. </h:li>
+        </h:ul>
+        <h:p/> Notes on the opcode flags: <h:ul>
+            <h:li>When the flags include the PCM_OPFLG_LOCK_OBJ or the
+                PCM_OPFLG_LOCK_DEFAULT flag, they will pass to all
+                PCM_OP_READ_FLDS and PIN_OP_SEARCH operations to lock 
+                Event objects.</h:li>
+        </h:ul>
+        <h:p/>The PIN_ERRCLASS_SYSTEM_DETERMINATE error buffer returned can be one of the following:
+        <h:ul>
+                <h:li>PIN_ERR_BAD_OPCODE</h:li>
+                <h:li>PIN_ERR_MISSING_ARG</h:li>
+        </h:ul>
+            
+    </Doc>
+
+
+    <SeeAlso>
+        <Item
+            href="obj://event.billing.dispute.item">
+            <Doc>PIN_OBJ_TYPE_EVENT_ITEM_DISPUTE</Doc>
+        </Item>
+        <Item
+            href="obj://event.billing.settlement.item">
+            <Doc>PIN_OBJ_TYPE_EVENT_ITEM_SETTLEMENT</Doc>
+        </Item>
+        <Item
+            href="obj://event.billing.adjustment.item">
+            <Doc>PIN_OBJ_TYPE_EVENT_ITEM_ADJUSTMENT</Doc>
+        </Item>
+        <Item
+            href="obj://event.billing.dispute.event">
+            <Doc>PIN_OBJ_TYPE_EVENT_DISPUTE</Doc>
+        </Item>
+        <Item
+            href="obj://event.billing.settlement.event">
+            <Doc>PIN_OBJ_TYPE_EVENT_SETTLEMENT</Doc>
+        </Item>
+        <Item
+            href="obj://event.billing.adjustment.event">
+            <Doc>PIN_OBJ_TYPE_EVENT_ADJUSTMENT</Doc>
+        </Item>
+        <Item
+            href="obj://item">
+            <Doc>Adjustment Item.</Doc>
+        </Item>
+        <Item
+            href="obj://account">
+            <Doc>Account Object</Doc>
+        </Item>
+        <Item
+            href="obj://event">
+            <Doc>Event Object</Doc>
+        </Item>
+        <Item
+            href="op://PCM_OP_SEARCH">
+            <Doc>Use this opcode to search Events.</Doc>
+        </Item>
+        <Item
+            href="file://pin_flds.h">
+            <Doc>The C Header file contains the PIN_FLD definitions. The C++
+                Header file is PinFlds.h</Doc>
+        </Item>
+        <Item
+            href="file://pcm_ops.h">
+            <Doc>The Header file contains the PCM_OP definitions.</Doc>
+        </Item>
+        <Item
+            href="file://pcm.h">
+            <Doc>The Header file contains the opcode flags OPFLG
+                definitions.</Doc>
+        </Item>
+        <Item
+            href="file://pin_bill.h">
+            <Doc>The Header file contains PIN_IMPACT definitions.</Doc>
+        </Item>
+        <Item
+            href="http://www.portal.com">
+            <Doc>Visit Portal web site for additional information.</Doc>
+        </Item>
+    </SeeAlso>
+
+
+    <Input>
+        <Fields>
+            <Poid
+                name="PIN_FLD_POID"
+                use="required"
+                mode="dbonly">
+                <Doc>Dummy poid of an Account that is used just for the database id.</Doc>
+                <ClassRef>obj://account</ClassRef>
+            </Poid>
+            <Array
+                name="PIN_FLD_EVENTS"
+                use="required"
+                elemIdMode="ignored"
+                iterationOrder="undefined"
+                minElements="1"
+                minElemId="0"
+                isElemIdAssignAllowed="false"
+                isElemIdAnyAllowed="false"
+                isRecursive="false">
+                <Doc> Event object array.</Doc>
+                <Fields>
+                    <Poid
+                        name="PIN_FLD_POID"
+                        use="required"
+                        mode="complete">
+                        <Doc> Poid of an Event object. The poid type is used to sort the balance impacts,
+                        </Doc>
+                        <ClassRef>obj://event</ClassRef>
+                    </Poid>
+                </Fields>
+            </Array>
+        </Fields>
+    </Input>
+
+
+
+    <Output>
+        <Fields>
+            <Poid
+                name="PIN_FLD_POID"
+                use="required"
+                mode="complete">
+                <Doc> Poid of an Account object as given in the input flist.</Doc>
+                <ClassRef>obj://account</ClassRef>
+            </Poid>
+            <Array
+                name="PIN_FLD_EVENTS"
+                use="required"
+                elemIdMode="ignored"
+                iterationOrder="undefined"
+                minElements="0"
+                minElemId="0"
+                isElemIdAssignAllowed="false"
+                isElemIdAnyAllowed="false"
+                isRecursive="false">
+                <Doc> Event object array with event details. All time stamps are in Portal format.</Doc>
+                <Fields>
+                    <Poid
+                        name="PIN_FLD_POID"
+                        use="required"
+                        mode="complete">
+                        <Doc> Poid of an Event object as given in the input flist.</Doc>
+                        <ClassRef>obj://event</ClassRef>
+                    </Poid>
+                    <Timestamp
+                        name="PIN_FLD_START_T"
+                        use="optional">
+                        <Doc>Event Start time.</Doc>
+                    </Timestamp>
+                    <Timestamp
+                        name="PIN_FLD_END_T"
+                        use="optional">
+                        <Doc> Event End time.</Doc>
+                    </Timestamp>
+                    <Decimal
+                        name="PIN_FLD_AMOUNT"
+                        use="required">
+                        <Doc> Event Charge Amount.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_DISCOUNT"
+                        use="optional">
+                        <Doc> Event Discount if any.</Doc>
+                    </Decimal>
+                </Fields>
+            </Array>
+            <Array
+                name="PIN_FLD_RESULTS"
+                use="required"
+                elemIdMode="ignored"
+                iterationOrder="undefined"
+                minElements="1"
+                minElemId="1"
+                isElemIdAssignAllowed="false"
+                isElemIdAnyAllowed="false"
+                isRecursive="false">
+                <Doc> Results array containing the aggregated amounts per resource id.</Doc>
+                <Fields>
+                    <Int
+                        name="PIN_FLD_RESOURCE_ID"
+                        use="required">
+                        <Doc> Resource Id.</Doc>
+                    </Int>
+                    <Decimal
+                        name="PIN_FLD_AMOUNT"
+                        use="required">
+                        <Doc> Charge Amount.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_DISCOUNT"
+                        use="optional">
+                        <Doc> Discount Amount</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_ADJUSTED"
+                        use="optional">
+                        <Doc> Adjusted Amount.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_DISPUTED"
+                        use="optional">
+                        <Doc> Disputed Amount.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_ORIG_DISPUTE_AMOUNT"
+                        use="optional">
+                        <Doc> Original Disputed Amount. </Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_AMOUNT_ADJUSTED"
+                        use="optional">
+                        <Doc> Dispute Settlement Amount.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_ALLOCATED"
+                        use="optional">
+                        <Doc> Amount available for Allocation.</Doc>
+                    </Decimal>
+                </Fields>
+            </Array>
+        </Fields>
+    </Output>
+</Opcode>

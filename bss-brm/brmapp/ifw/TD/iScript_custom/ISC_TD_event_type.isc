@@ -1,0 +1,61 @@
+//==============================================================================
+//
+// Copyright (c) 2009, Oracle and/or its affiliates. All rights reserved. 
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// 
+//------------------------------------------------------------------------------
+// Module Description:
+//   
+//------------------------------------------------------------------------------
+//
+// @(#)% %
+
+// for each detail EDR
+//===============================
+function onDetailEdr
+{
+
+// String edrServicecode = edrString(DETAIL.BASIC_SERVICE);
+	String edrServicecode = edrString(DETAIL.INTERN_SERVICE_CODE);
+
+	if(edrServicecode == "nDAT")
+    {
+		edrString(DETAIL.EVENT_TYPE) = "/event/delayed/session/telco/gsm/data";
+	}
+	 if(edrServicecode == "nSMS")
+    {
+                edrString(DETAIL.EVENT_TYPE) = "/event/delayed/session/telco/gsm/sms";
+        }
+	if(edrServicecode == "nVOM")
+    {
+                edrString(DETAIL.EVENT_TYPE) = "/event/delayed/session/telco/gsm/voicemail";
+        }
+	 if(edrServicecode == "nVAS")
+    {
+                edrString(DETAIL.EVENT_TYPE) = "/event/delayed/session/telco/gsm/vas";
+        }
+	 if(edrServicecode == "VAP")
+    {
+                edrString(DETAIL.EVENT_TYPE) = "/event/delayed/session/telco/gsm/valuepack";
+        }
+	 if(edrServicecode == "nTEL")
+    {
+                edrString(DETAIL.EVENT_TYPE) = "/event/delayed/session/telco/gsm/voice";
+        }
+      if(edrServicecode == "nMMS")
+    {
+                edrString(DETAIL.EVENT_TYPE) = "/event/delayed/session/telco/gsm/mms";
+        }
+     if(edrServicecode == "BSMS")
+    {
+                edrString(DETAIL.EVENT_TYPE) = "/event/delayed/session/telco/gsm/sms";
+        }
+
+
+
+}

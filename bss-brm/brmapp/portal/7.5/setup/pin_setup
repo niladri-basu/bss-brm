@@ -1,0 +1,153 @@
+#!/bin/sh
+###########################################################################
+#  @(#)%Oracle Version: pin_setup_template.sh:PortalBase7.3.1Int:2:2007-Oct-03 10:15:35 %
+# 
+# Copyright (c) 1997, 2009, Oracle and/or its affiliates. All rights reserved. 
+#
+#    This material is the confidential property of Oracle Corporation
+#    or its licensors and may be used, reproduced, stored
+#    or transmitted only in accordance with a valid Oracle license or
+#    sublicense agreement.
+#########################################################################
+
+#================================================
+# This env variable will spew out a lot of verbose
+# logging info into the log file.  To turn it off,
+# comment out this line
+#================================================
+
+DEBUG=1
+
+
+PLATFORM=`uname`
+VERSION=7.5
+PINHOME=/brmapp/portal/7.5
+PERL_PROGRAM=/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+PERL_DIRECTORY=`echo $PERL_PROGRAM | sed 's/\/perl$//'`
+PINUSER=pin
+
+echo " "
+
+# Check to see if <Infanet dir>/bin is in the PATH
+
+MYPATH=`echo $PATH | grep $PINHOME/bin`
+
+if [ "$MYPATH" = "" ]; then
+   echo "The PATH variable does not contain $PINHOME/bin ." |tee -a $LOG
+   echo "Please update your PATH variable." |tee -a $LOG
+   echo "Exiting this script.\n" | tee -a $LOG
+   exit 1
+fi
+
+echo "PATH variable IS O.K..."
+
+# Check to see if <Infanet dir>/lib is in the LD_LIBRARY_PATH
+
+if [ "$PLATFORM" = "HP-UX" ]
+then
+	VARNAME="SHLIB_PATH"
+	MYLDPATH=`echo $SHLIB_PATH | grep $PINHOME/lib`
+elif [ "$PLATFORM" = "AIX" ]
+then
+        VARNAME="LIBPATH"
+        MYLDPATH=`echo $LIBPATH | grep $PINHOME/lib`
+else
+	VARNAME="LD_LIBRARY_PATH"
+	MYLDPATH=`echo $LD_LIBRARY_PATH | grep $PINHOME/lib`
+fi
+
+if [ "$MYLDPATH" = "" ]; then
+   echo "The $VARNAME variable does not contain $PINHOME/lib ." |tee -a $LOG
+   echo "Please update your $VARNAME variable." |tee -a $LOG
+   echo "Exiting this script.\n" | tee -a $LOG
+   exit 1
+fi
+
+# check for some more paths in LIBPATH on AIX
+# it may not be a good idea to have this coded
+if [ "$PLATFORM" = "AIX" ]
+then
+        MYLDPATH=`echo $LIBPATH | grep $PINHOME/bin`
+        if [ "$MYLDPATH" = "" ]; then
+                echo "The $VARNAME variable does not contain $PINHOME/bin ." |tee -a $LOG
+                echo "Please update your $VARNAME variable." |tee -a $LOG
+                echo "Exiting this script.\n" | tee -a $LOG
+                exit 1
+        fi
+        MYLDPATH=`echo $LIBPATH | grep $PERL_DIRECTORY`
+        if [ "$MYLDPATH" = "" ]; then
+                echo "The $VARNAME variable does not contain $PERL_DIRECTORY ." |tee -a $LOG
+                echo "Please update your $VARNAME variable." |tee -a $LOG
+                echo "Exiting this script.\n" | tee -a $LOG
+        exit 1
+        fi
+# just for security in case MYLDPATH is used anywhere
+        MYLDPATH=`echo $LD_LIBRARY_PATH | grep $PINHOME/lib`
+
+        MYPERL5LIB_AIX=`echo $PERL5LIB | grep $PIN_HOME/lib`
+        if [ "$MYPERL5LIB_AIX" = "" ]; then
+                echo "The PERL5LIB variable is not defined or is not complete." |tee -a $LOG
+                echo "Please update your PERL5LIB variable to include $PIN_HOME/lib." |tee -a $LOG
+                echo "Exiting this script.\n" | tee -a $LOG
+                exit 1
+        fi
+
+fi
+
+echo "$VARNAME variable IS O.K...\n"
+
+if [ "$PLATFORM" = "HP-UX" ]
+then
+	USER=`/usr/bin/whoami`
+	GROUP=`groups -p -g -l $USER | grep pin`
+elif [ "$PLATFORM" = "AIX" ]
+then
+	USER=`/usr/bin/whoami`
+	GROUP=`groups | grep pin`
+elif [ "$PLATFORM" = "Linux" ]
+then
+	USER=`/usr/bin/whoami`
+	GROUP=`groups | grep pin`
+else
+	USER=`/usr/ucb/whoami`
+	GROUP=`groups | grep pin`
+fi
+
+if [ "$USER" != "$PINUSER" ]; then
+   echo "Change your username to $PINUSER and restart the script.\n" | tee -a $LOG
+   echo "currently, you are $USER.\n" | tee -a $LOG
+   exit 1 
+fi
+
+echo "You are the $PINUSER user" | tee -a $LOG 
+
+if [ "$GROUP" = "" ]; then
+   echo "Your user has to belong to the pin group." |tee -a $LOG
+   echo "Exiting this script.\n" | tee -a $LOG
+   exit 1
+fi
+
+echo "You are in the pin group\n" | tee -a  $LOG 
+
+echo "Starting setup.\n"
+
+# Modify the needed configuration files.
+
+#../bin/perl create_confs.pl
+
+# Call the perl script for configuring portal
+# cd to the scripts directory.  Assume that this script is in 
+# $PIN_CONF_INFRANET_BASE/setup and being run from there.
+
+cd ./scripts
+
+$PERL_PROGRAM pin_setup.pl $1 $2 $3 $4 $5 $6 $7 $8 $9
+
+status=$?
+
+if [ $status -ne 0 ]
+then
+	# Portal install was not successful
+	echo
+	echo "You may view errors in pin_setup.log"
+fi

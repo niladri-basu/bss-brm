@@ -1,0 +1,11 @@
+pin_rel test_SMS_030160_20150930092820.out.bc
+pin_rel test_SMS_030162_20150930092842.out.bc
+pin_rel test_SMS_030164_20150930092911.out.bc
+pin_rel test_SMS_030165_20150930092921.out.bc
+pin_rel test_SMS_030179_20150930093213.out.bc
+pin_rel test_TEL_030156_20150930092740.out.bc
+pin_rel test_TEL_030157_20150930092750.out.bc
+pin_rel test_TEL_030159_20150930092811.out.bc
+pin_rel test_TEL_030161_20150930092842.out.bc
+pin_rel test_TEL_030162_20150930092842.out.bc
+pin_rel test_TEL_030178_20150930093153.out.bc

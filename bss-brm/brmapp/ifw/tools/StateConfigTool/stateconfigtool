@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+#	Copyright (c) 2000 - 2003 Portal Software, Inc. All rights reserved.
+# 
+#	This material is the confidential property of Portal Software, Inc.
+#	or its subsidiaries or licensors and may be used, reproduced, stored
+#	or transmitted only in accordance with a valid Portal license or
+#	sublicense agreement.
+#
+
+
+#PKG_HOME is root directory of PIPELINE install.
+
+JAVA=$PKG_HOME/jre/bin/java
+
+
+JARS=""
+for i in $PKG_HOME/tools/StateConfigTool/*.jar
+do
+	JARS="$JARS:$i"
+done
+
+for i in $PKG_HOME/tools/StateConfigTool/*.zip
+do
+	JARS="$JARS:$i"
+done
+
+
+$JAVA -cp "$JARS" com.solution42.intsmacc.db.datamigration.stateconfig.StateConfigTool $*

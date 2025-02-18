@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IFW xsi:noNamespaceSchemaLocation="LoadIfwConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<RecordSet>
+<IFW_PIPELINE EDRC_DESC ="ALL_RATE" NAME ="pre process prepaid rating pipeline" PIPELINE ="PRE_PROCESS_PREPAID" />
+</RecordSet>
+<RecordSet>
+<IFW_PIPELINE EDRC_DESC ="ALL_RATE" NAME ="pre process postpaid rating pipeline" PIPELINE ="PRE_PROCESS_POSTPAID" />
+</RecordSet>
+</IFW>

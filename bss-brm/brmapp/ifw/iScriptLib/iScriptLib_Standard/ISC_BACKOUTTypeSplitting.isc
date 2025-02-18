@@ -1,0 +1,108 @@
+//==============================================================================
+//
+//      Copyright (c) 2004 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_BACKOUTTypeSplitting
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module set the output stream in case CREATION_PROCESS is BACKOUT_WITHOUT_RERATING.
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//                                                                               
+//------------------------------------------------------------------------------
+// Responsible: Archan Misra
+//
+// $RCSfile: ISC_BACKOUTTypeSplitting.isc,v $
+// $Revision: 1.0 $
+// $Author: Archan Misra $
+// $Date: 2004/06/05 13:25:51 $
+// $Locker:  $
+//------------------------------------------------------------------------------
+//==============================================================================
+
+String creationProcess;
+String servicecode;
+Bool debug;
+
+//==============================================================================
+// BEGIN Container
+//==============================================================================
+function BEGIN
+{
+  debug = false;
+}
+ 
+//==============================================================================
+// Function declarations
+//==============================================================================
+
+//==============================================================================
+// onHeaderEdr()
+//==============================================================================
+function onHeaderEdr
+{
+  if ( debug ) logStdout(edrString( HEADER.CREATION_PROCESS ) + "\n" );
+  creationProcess = edrString(HEADER.CREATION_PROCESS);
+  
+} 
+//==============================================================================
+// Setting the edr stream
+//==============================================================================
+function onDetailEdr
+{
+  servicecode = edrString(DETAIL.INTERN_SERVICE_CODE);
+  if ( debug ) logStdout(edrString(DETAIL.INTERN_SERVICE_CODE) + "\n" );
+  
+  if ( creationProcess == "BACKOUT_WITHOUT_RERATING")
+  {
+    if(servicecode == "TEL")
+    {
+      if ( debug ) logStdout( "BackOutOnlyTELOutput\n" );
+      edrSetStream( "BackOutOnlyTELOutput" );
+    }
+    else if(servicecode == "GPRT")
+    {
+      if ( debug ) logStdout( "BackOutOnlyGPRSTELCOOutput\n" );
+      edrSetStream( "BackOutOnlyGPRSTELCOOutput" );
+    }
+    else if(servicecode == "GPR")
+    {
+      if ( debug ) logStdout( "BackOutOnlyGPRSIPOutput\n" );
+      edrSetStream( "BackOutOnlyGPRSIPOutput" );
+    }
+    else if(servicecode == "FAX")
+    {
+      if ( debug ) logStdout( "BackOutOnlyFAXOutput\n" );
+      edrSetStream( "BackOutOnlyFAXOutput" );
+    }
+    else if(servicecode == "SMS")
+    {
+      if ( debug ) logStdout( "BackOutOnlySMSOutput\n" );
+      edrSetStream( "BackOutOnlySMSOutput" );
+    }
+    else if(servicecode == "WAP")
+    {
+      if ( debug ) logStdout( "BackOutOnlyWAPOutput\n" );
+      edrSetStream( "BackOutOnlyWAPOutput" );
+    }
+    else
+    {
+      if ( debug ) logStdout( "BackOutOnlyTELOutput\n" );
+      edrSetStream( "BackOutOnlyTELOutput" );
+    }
+  }
+  else
+  {
+    if ( debug ) logStdout( "RerateOutput\n" );
+    edrSetStream( "RerateOutput" );
+  }
+}// end onDetailEdr + end iScript

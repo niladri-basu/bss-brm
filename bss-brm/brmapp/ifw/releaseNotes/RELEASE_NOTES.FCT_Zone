@@ -1,0 +1,244 @@
+========================================================================================
+FCT_Zone
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+================================================================================
+Module Version: 10007  7.4 28-Dec-2010 Ashish Ranjan
+BUG10350345: Refreshing zone model to avoid pipeline crash during edr processing
+after zone entries are reloaded. 
+==============================================================================
+Module Version: 10006  DaVinci  18-July-2006
+PRSF00219262: Da Vincii Code Clean Up: set isValidDetail false when you set error. 
+==============================================================================
+Module Version: 6.7_FP2  10005  24-May-2004  Satya Prakash
+PRSF00105998: NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+Actual Version : v6.7FP2 / Date : 09-Feb-2004
+----------------
+
+Notes           :
+----------------
+
+Change Order # PRSF00091286  Common Zoning : Changes for 6.7 FP2 Zone Model Validation
+
+Module Version :  6.7_FP1 10004 
+----------------
+
+Date : 23-Jan-2004
+------
+
+Change Order :  PRSF00079303
+--------------
+
+Short Description :
+-------------------
+Standard Zone & USC Map: Support for a Label/Description for each entry in 
+the zoning and impact category configuration
+
+================================================================================
+Actual Version : v6.7FP1 / Date : 13-Jan-2004
+----------------
+
+Notes           :
+----------------
+
+Change Order # PRSF0008742 Common Zoning : FCT changes for 6.7 FP1 common zone feature
+==============================================================================
+Actual Version : 10003 / Date : 02-May-2003
+----------------
+
+Notes           :
+----------------
+
+Change Order # PRSF00039714 FCT_Zone to 6.5_SP2 namespaces.
+========================================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+=======================================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+=======================================================================================
+
+Actual Version : v4-30-02 / Date : 02-Jan-2002
+----------------
+
+Notes          :
+----------------
+
+PETS #42574 Modified for LERG updated DAT_Zone.
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 19-Jun-2001
+----------------
+
+New features   :
+----------------
+
+Migration to new EDR-C v4-30.
+
+========================================================================================
+
+Actual Version : v4-10-02 / Date : 07-Feb-2001
+----------------
+
+Notes          :
+----------------
+
+Init internal zoneModel pointer during call of virtual method init().
+This avoids core dump if EdrZoneModel cannot be found!
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 25-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+This version works only with DAT_Zone v4-10-00 or higher.
+
+Solved PRs/CRs :
+----------------
+
+#2381# EdrZoneModel has to be defined as INT_ZONEMODEL.CODE!
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Port to AIX.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 29-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Support EDR_Container-vector.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 08-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implemented new EDR-C v4 features.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-02 / Date : 18-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+Conversion of zone-values not necessary due to changes in DAT_Zone plugin.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-01 / Date : 21-OCT-1999
+----------------
+
+Notes          :
+----------------
+
+21-OCT-1999  Updated isUsable() function with log-messages
+             to fit the requirements.
+
+
+New Features   :
+----------------
+
+14-OCT-1999  Implementation of isUsable() function.
+
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

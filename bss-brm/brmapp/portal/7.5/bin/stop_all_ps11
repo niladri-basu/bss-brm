@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+#       @(#) $Id: stop_all.sh /cgbubrm_7.5.0.rwsmod/2 2012/06/14 02:25:14 ssajjans Exp $
+#
+# Copyright (c) 1996, 2012, Oracle and/or its affiliates. All rights reserved. 
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+PINDIR=/brmapp/portal/7.5
+
+( cd ${PINDIR}/bin ;
+  if [ -f "./stop_cm" ]; then ./stop_cm;fi
+  if [ -f "./stop_dm_email" ]; then ./stop_dm_email;fi
+  if [ -f "./stop_dm_oracle" ]; then ./stop_dm_oracle;fi
+  if [ -f "./stop_cmmp" ]; then ./stop_cmmp;fi
+  if [ -f "./stop_formatter" ]; then ./stop_formatter;fi )
+
+# get rc from cm stopup
+exit $?

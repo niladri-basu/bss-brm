@@ -1,0 +1,14 @@
+010	1			2625	2625	1498038612	1498038612	1498038612		0	0				00	974	RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/valuepack			2
+020	2							228921661	00		$30 Globetrotter Data Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Roaming value packs	0	0	1497995307	1497995308	1
+520	3		228921661	0
+900	4	1 /account 1276563532 0	1 /service/telco/gsm 1276592381 0	1 /item/usage_niltax 304995730728680767 0	0  0 0	;;;;[228921661,2,0]|;;;;[228921661,2,0]|;;;;[228921661,2,0]|;;;;[,2,0]		1	@INTEGRATE#228921661##VAP#1#1#Roaming value packs#0#$30 Globetrotter Data Pack#Roaming Pack##<1 /item/usage_niltax 304995730728680767 0#554#1##30.00#100200664#NILGST|>#<#0###|>#<Postpay Cash#30.00#-96.00|>
+600	5	1 /account 1276563532 0	1 /balance_group 1276594557 0	1 /item/usage_niltax 304995730728680767 0	554	0	ALL	258	1 /product 1090734 0	100200664	0	NILGST			1 /purchased_product 1276593923 0	1	30.00	0.0	30.00	0.0	0	P
+605	0	1 /balance_group 1276594557 0	554
+607	0	30.00	1497995424	0			0	0
+800	6	1 /account 1276563532 0	1 /balance_group/monitor 1276566860 0	554	30.00
+805	0	1 /balance_group/monitor 1276566860 0	554
+807	1497916800	30.00	1497916800	1498003200	
+888	5	545702		0	0																202117799	20170620214827	90509	90915				
+890	Postpay Cash	30.00	-96.00
+894	BUY	Roam Zone 3 Combo 1	TRUE																Roaming Pack
+090	10			2625	2625	1	1497995307	+1200	1497995307	+1200	0.0	30.00

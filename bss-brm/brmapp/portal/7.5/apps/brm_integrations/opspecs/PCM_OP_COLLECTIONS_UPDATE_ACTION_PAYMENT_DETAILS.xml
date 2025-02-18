@@ -1,0 +1,87 @@
+<Opcode name="PCM_OP_COLLECTIONS_UPDATE_ACTION_PAYMENT_DETAILS"
+                visibility="public"
+                transaction="required"
+                component="fm_collections"
+                xmlns:h="http://www.w3.org/1999/xhtml"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+                xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+        <Doc> Updates amount and payment mode details for promise_to_pay and collect_payment actions.</Doc>
+        <Input>
+                <Fields>
+                        <Poid name="PIN_FLD_POID" use="required"
+                                        mode="complete">
+                                <Doc>Collections action poid. This can be either promise_to_pay or collect_payment action</Doc>
+                                <ClassRef>obj://collections_action</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+                                        mode="complete">
+                                <Doc> The account poid</Doc>
+                                <ClassRef>obj://account</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_USERID" use="required"
+                                        mode="complete">
+                                <Doc> The account poid (i.e. The login account poid)</Doc>
+                                <ClassRef>obj://account</ClassRef>
+                        </Poid>
+                        <Decimal name="PIN_FLD_AMOUNT" use="optional">
+                                <Doc> Amount to pay in the current milestone. Pass this field only if amount needs to be updated.</Doc>
+                        </Decimal>
+                        <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional"
+                                        mode="complete">
+                                <Doc> The payinfo poid. Pass this field only if payinfo needs to be updated.</Doc>
+                                <ClassRef>obj://payinfo</ClassRef>
+                        </Poid>
+        		<Array name="PIN_FLD_PAYINFO" use="optional"
+				elemIdMode="ignored" iterationOrder="undefined"
+				minElements="0" maxElements="1"
+				minElemId="0"
+				isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+				isRecursive="false">
+				<Doc> Payinfo object - information for payment </Doc>
+				<Fields>	
+                               		<Array name="PIN_FLD_CC_INFO" use="optional"
+						elemIdMode="ignored" iterationOrder="undefined"
+						minElements="0" maxElements="1"
+						minElemId="0"
+						isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+						isRecursive="false">
+						<Doc> Credit card info </Doc>
+				      			<Fields> </Fields>                                                     
+					</Array>
+					<Array name="PIN_FLD_DD_INFO" use="optional"
+						elemIdMode="ignored" iterationOrder="undefined"
+						minElements="0" maxElements="1"
+						minElemId="0"
+						isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+						isRecursive="false">
+						<Doc> Direct debit info </Doc>
+							<Fields> </Fields>
+					</Array>
+				</Fields>
+                         </Array>
+			<Int name="PIN_FLD_FLAGS" use="optional">
+				<Doc> Specifies if payment details need to be updated for the following 
+				promise to pay actions as well or not. This field is applicable only if 
+				PAYINFO_OBJ or PAYINFO details are specified in the input flist. Otherwise 
+				it is ignored.
+				Values: 0 - Update payinfo only for the current action. Don.t touch following actions
+             				1- Update payinfo for the following promise to pay actions as well.
+				</Doc>
+                        </Int>
+                        <String name="PIN_FLD_PROGRAM_NAME" use="optional"
+                                 maxlen="255">
+                        <Doc> The program name</Doc>
+                        </String>
+                </Fields>
+        </Input>
+        <Output>
+                <Fields>
+                        <Poid name="PIN_FLD_POID" use="required"
+                                        mode="complete">
+                                <Doc>Collections action poid</Doc>
+                                <ClassRef>obj://collections_action</ClassRef>
+                        </Poid>
+                </Fields>
+        </Output>
+</Opcode>

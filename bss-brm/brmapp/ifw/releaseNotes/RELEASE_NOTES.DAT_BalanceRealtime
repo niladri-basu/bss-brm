@@ -1,0 +1,83 @@
+================================================================================
+
+Copyright (c) 2003-2007 Oracle. All rights reserved.
+This material is the confidential property of Oracle Corporation
+or its licensors and may be used, reproduced, stored or transmitted
+only in accordance with a valid Oracle license or sublicense agreement.
+
+================================================================================
+Module Release Notes : DAT_BalanceRealtime
+--------------------------------------------------------------------------------
+File: RELEASE_NOTES.DAT_BalanceRealtime
+================================================================================
+Module Version : v10017 / Date : 16-MAR-2007
+bug5904765     : "INTERFACE IMPLEMENTATION FOR IN-MEMEORY DATADUMP"
+================================================================================
+Module Version : v10016 / Date : 06-OCT-2006
+PRSF00234843   : "Providing OLD validity info for bk-out/re-rate."
+================================================================================
+Module Version : v10015 / Date : 24-MAY-2005
+PRSF00214339: "Configurable validty implementation."
+================================================================================
+Module Version : v10014 / Date : 20-JUN-2005
+PRSF00169966: "Fix warning messages in the Windows 32-bit build displays that really should be treated as errors"
+              New_Pipeline_Velocity
+================================================================================
+Module Version : v10013 / Date : 15-JUN-2005
+PRSF00171412   : "SMS CDR's processed in single file does not rate successfully"
+================================================================================
+Module Version : v10012 / Date : 14-MAR-2004
+PRSF00158034   : "Authorization grants more than available free resources if Discount Sharing is configured"
+================================================================================
+Module Version : v10011 / Date : 11-NOV-2004
+PRSF00136879   : Changes related to EDR transactions
+
+================================================================================
+Module Version : v10010 / Date : 23-AUG-2004
+PRSF00127476   : start_ifw_realtime does not start.
+
+================================================================================
+Module Version : v10009 / Date : 18-AUG-2004
+PRSF00125661   : Refactor DAT_BalanceBatch code in order to remove static link
+                 between DAT_BalanceBatch and FCT_Discount."
+
+===============================================================================
+Actual Version : v10008 / Date : 29-JUN-2004
+PRSF00110424   : JP1005 - Delayed CDRs and automatic rollover : DAT_Balance
+                 implementation (Part 1)"
+
+===============================================================================
+Actual Version : v10007 / Date : 07-Jun-2004
+PRSF00115144   : "Discounting NT Porting"
+
+================================================================================
+Actual Version : v10006 / Date : 26-Apr-2004
+PRSF00106654   : "JP2016D: Added EDR level transactions"
+
+================================================================================
+Actual Version : v10005 / Date : 26-Jan-2004
+PRSF00086760   : Change getBalance() to use ctxp from edr.
+
+================================================================================
+
+Module Version: v10004 / Date 27-Feb-2004
+PRSF00093689  : "PIN_FLD_BAL_INFO missing just created PIN_FLD_BALANCES"
+                Propagation of PRSF00093689
+
+===============================================================================
+Actual Version : v10003 / Date : 12-Jan-2004
+PRSF00085881   : Change order of includes to fix ACE compile problem.
+
+================================================================================
+Actual Version : v10002 / Date : 21-Oct-2003
+PRSF00073227   : Add messages to the message file.
+
+================================================================================
+Actual Version : v10001 / Date : 16-Oct-2003
+PRSF00071706   : Message Number for Plugin
+
+================================================================================
+Actual Version : v10000 / Date : 01-AUG-2003
+New Features   : Initial code for supporting Balance Realtime PlugIn module.
+
+================================================================================

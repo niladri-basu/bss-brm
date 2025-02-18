@@ -1,0 +1,59 @@
+#!/bin/sh
+# continuus file information --- %full_filespec: start_qm.sh~6:shsrc:1 %
+#
+#  @(#) %full_filespec: start_qm.sh~6:shsrc:1 %
+#
+#      Copyright (c) 1998 - 2006 Oracle. All rights reserved.
+#
+#      This material is the confidential property of Oracle Corporation or its
+#      licensors and may be used, reproduced, stored or transmitted only in
+#      accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# start_cm_proxy
+#
+# The underlying database (if any) must already be started
+# when this script runs.
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/cm_proxy
+
+QM=${PINDIR}/bin/cm_proxy
+
+QMDIR=${PINDIR}/sys/cm_proxy
+QMLOG=${LOGDIR}/cm_proxy.log
+QMPID=${LOGDIR}/cm_proxy.pid
+
+if [ ! -x ${QM} ]; then
+        echo "HELP: executable \"${QM}\" not found!"
+        exit 1
+fi       
+
+if [ ! -d ${QMDIR} ]; then
+        echo "HELP: ${QM} dir \"${QMDIR}\" not found!"
+        exit 1
+fi
+
+if [ ! -d ${LOGDIR} ]; then
+	mkdir -p ${LOGDIR}
+	if [ $? -ne 0 ]; then
+		echo "HELP: problems making QM LOGDIR \"${LOGDIR}\"!"
+		exit 1
+	fi
+fi       
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${QMDIR} ;
+  echo "started ${QM} at..." >> ${QMLOG}
+  date >> ${QMLOG}
+  ${QM} >> ${QMLOG} 2>&1 &
+  echo $! > ${QMPID} ;
+  chmod 664 ${QMLOG} ;
+  chmod 664 ${QMPID} )
+
+# use rc from qm startup
+exit $?

@@ -1,0 +1,675 @@
+========================================================================================
+Portal
+----------------------------------------------------------------------------------------
+Module Release Notes
+
+=======================================================================================
+Release        : 7.5      10001
+Date           : 8-APR-2011
+ChangeOrder    : bug11906420
+Title          : Added field 'DETAIL.LOGICAL_PARTITIOTN_ID' for TimesTen specific Installations
+=======================================================================================
+Release        : 7.4.0.5  10052
+Date           : 18-Aug-2010
+ChangeOrder    : bug9657672 
+Title          : PROPAGATION 9264825 CORRECT VALUE FOR EDR FIELD 'DETAIL.ASS_GSMW_EXT.SS_PACKET
+=======================================================================================
+Release        : 7.4.0.5  10051
+Date           : 12-Jul-2010
+ChangeOrder    : bug9831530
+Title          : PROPAGATION OF FIXES IN 7.3.1 TO 7.4 AS UNINOR IS UPGRADING TO 7.4
+=======================================================================================
+Release        : 7.4.0  10050
+Date           : 10-Sep-2009
+ChangeOrder    : bug8807278 
+Title          : Changed type of Quantity in PURCHASED_DISCOUNT block to Decimal 
+=======================================================================================
+Release        : 7.4.0  10049
+Date           : 02-Jul-2009
+ChangeOrder    : bug8651668 
+Title          : Added PIN_PERCENT field in the BALANCE_PACKET, DISCOUNT_PACKET and CHARGE_PACKET.
+                 And added TAX_PERCENT and TAX_QUANTITY to the TAX_PACKET.
+=======================================================================================
+Release        : 7.4.0  10048
+Date           : 08-May-2009
+ChangeOrder    : bug8358801 
+Title          : Modified PURCHASED_PRODUCT QUANTITY field to Decimal from Integer.
+=======================================================================================
+Release        : 7.4.0  10047
+Date           : 09-Apr-2009
+ChangeOrder    : bug8362355
+Title          : Added a new field CHARGE_INDEX in the CHARGE_PACKET block
+=======================================================================================
+Release        : 7.4.0  10046
+Date           : 04-Nov-2008
+ChangeOrder    : bug7490996
+Title          : Added a new field DISCOUNT_ONLY_FLAG in the DETAIL block
+=======================================================================================
+Actual Version : 7.4.0  10045
+Date           : 23 Oct 2008
+bug7506034     : ADD A FIELD IN THE CONTAINERDESC FILE FOR NUMBERPORTABILITY 
+=======================================================================================
+Actual Version : 7.3.1  10044
+Date           : 04 Oct 2007
+bug6401060     : P-6369437 TAP3.11 INGRAMMAR ISSUES WITH MAPPING IN HEADER AND DETAIL
+=======================================================================================
+Actual Version : 7.3.1  10043
+Date           : 13 Sep 2007
+bug6401060     : Propagation of all VF Greece found issues.
+=======================================================================================
+Actual Version : 7.3.1  10042
+Date           : 12 Sep 2007
+bug6359309     : SEL DOES NOT LOAD THE RECYCLED DATA INFORMATION INTO DB CORRECTLY 
+=======================================================================================
+Actual Version : 7.3.1  10041
+Date           : 06 Jun 2007
+bug6115647     : Added a new field NET_QUANTITY in the DETAIL block
+========================================================================================
+Actual Version : 7.3  10040
+Date           : 04 Jan 2007
+PRSF00238871   : Incorrect Amounts displayed in pin_rerate reports for events which have a discount associated with it
+========================================================================================
+Actual Version : 7.3  10039
+Date           : 27 Nov 2006
+PRSF00239375   : Reverse Rating: EDR Container description changes
+========================================================================================
+Actual Version : DaVinci 10038
+Date           : 22 Sep 2006
+PRSF00233363   : Problem coordinating UEL and IREL when setting validity dates of 
+                 first usage resources.
+Added GRANT_VALID_FROM and GRANT_VALID_TO to the blocks ASS_CBD.UBP and 
+ASS_CBD.DP.SUB_BALANCE. Also added GRANTOR and CONTRIBUTOR to ASS_CBD.UBP.
+========================================================================================
+Actual Version : DaVinci 10037
+Date           : 22 Aug 2006
+PRSF00229454   : SCM TAP3-Ph2: Validation of totalChargeRefund for TAP3.11 files incorrect
+========================================================================================
+Actual Version : DaVinci 10036
+Date           : 09 Aug 2006
+PRSF00165666   : QF::TAP3.10-validation of TD57 -specifications( TAP input grammar)
+========================================================================================
+Actual Version : DaVinci 10034
+Date           : 26 JUL 2006
+PRSF00206921   : Patch Failure: TAP3.11 Upgrade: recEntityCode field in a TAP3.11 file in the out file generated has a wrong value.
+========================================================================================
+Actual Version : DaVinci 10033
+Date           : 23 JUN 2006
+Notes          :
+----------------
+PRSF00220121   : Provide an iScript that split the CDR to 2 different ouput streams 
+in case of convergent system
+Added the fields: HEADER.OBJECT_CACHE_TYPE, DETAIL.OBJECT_CACHE_TYPE 
+========================================================================================
+Actual Version : 7.3 10031
+Date           : 06 JUN 2006
+Notes          :
+----------------
+PRSF00207922   : TailorMade Plan Feature
+Added the field OVERRIDDEN_OFFERING_POID in the PURCHASED_PRODUCTS block
+========================================================================================
+Actual Version : 7.3 10031
+Date           : 05 June 2006
+Notes          :
+----------------
+PRSF00217790   : RAP Severe Issue: Persisting Lookup Information
+========================================================================================
+Actual Version : 7.3 10030
+Date           : 04 June 2006
+Notes          :
+----------------
+PRSF00204391   : FCT::DroppedCall PlugIn changes
+Added the fields DETAIL.DROPPED_CALL_QUANTITY and DETAIL.DROPPED_CALL_STATUS
+========================================================================================
+Actual Version : 7.3 10029
+Date           : 08 May 2006
+Notes          :
+----------------
+PRSF00210010: Rerating Triggers : 7.3 EA : pin_rel is throwing error while loading
+out_file if Even_Ordering_Criteria is Configured
+Add following fields under the block PROFILE_EVENT_ORDERING:
+  BAL_GRP_POID
+
+Also change:
+  PROFILE_ID
+to:
+  PROFILE_POID
+========================================================================================
+Actual Version : 7.3 10028
+Date           : 28 Feb 2006
+Notes          :
+----------------
+PRSF00206977   : Configurable Validity feature changes
+Added the fields GRANTOR,VALID_FROM_DETAILS, VALID_TO_DETAILS to ASS_PIN.SBI.SB and
+ ASS_CBD.DP.SUB_BALANCE.
+Added a field FIRST_USAGE_INDICATOR to PURCHASED_PRODUCT and PURCHASED_DISCOUNT blocks.
+Added a new DETAIL.REFRESH_BALANCE field and a new block FIRST_USAGE_SET_VALIDITY.
+
+========================================================================================
+Actual Version : 7.3 10027
+Date           : 21 APR 2006
+Notes          :
+----------------
+* PRSF00194075 : DAT::AccountBatch changes for Friends and Family Shared List. 
+LABEL field is added in the ERA block.
+DETAIL.PROFILE_LABLE_LIST is added.
+SHARED_PROFILE_LIST block is added.
+========================================================================================
+Actual Version : 7.3 10026
+Date           : 17 APR 2006
+Notes          :
+----------------
+PRSF00204223  : Adding new Fields to conainter description for Roaming
+Added ASSOCIATED_ROAMING_EXTENSION block.
+
+========================================================================================
+Actual Version : 7.3 10025
+Date           : 05 APR 2006
+Notes          :
+----------------
+* PRSF00201550 : DCQ - Add iScript to get the EDR field values for Dynamic Friends & Family Feature
+Added MOSTCALLED field to the Details block.
+========================================================================================
+Actual Version : 7.3 10024
+Date           : 02-Apr-2006  pzhou
+Notes          :
+----------------
+* PRSF00193571: Rerating Triggers: new plugin FCT_EventOrder related changes
+Add a new block PROFILE_EVENT_ORDERING under DETAIL
+========================================================================================
+Actual Version : 7.3 10023
+Date           : 31 MAR 2006
+Notes          :
+----------------
+* PRSF00191243 : DAT::AccountBatch changes for Billing changes of Best Pricing. 
+Added new field BILL_LAST_DATE, BILL_NEXT_DATE, BILL_FUTURE_DATE in CUSTOMER_DATA
+block
+========================================================================================
+Actual Version : 7.3 10022
+Date           : 23 FEB 2006
+Notes          :
+----------------
+* PRSF00194379 : Suspense Manager displays wrong timestamps values (localization pb)
+Added new field UTC_OFFSET_SECONDS in ASSOCIATED_SUSPENSE_EXTESNSION block
+========================================================================================
+Actual Version : 7.3 10021
+Date           : 10 Jan 2006
+Notes          :
+----------------
+* PRSF00189682 : Batch suspense & pipeline category support in suspense pipeline plug-ins
+Added HEADER.OVERRIDE_REASONS and HEADER.TAP_PROCESSING_INFO to the container description
+Added DETAIL.ASSOCIATED_SUSPENSE_EXTENSION.PIPELINE_CATEGORY
+========================================================================================
+Actual Version : DaVinci  10020
+Date           : 05 JAN 2006
+Notes          :
+----------------
+* PRSF00189977 : Add OFFERING_POID to ContainerDesc
+========================================================================================
+Actual Version : Pipeline_7.2 Patch  10019
+Date           : 14 SEP 2005
+Notes          :
+----------------
+* PRSF00181931 : Supporting optional field CallReference
+Added a new String field CALL_REFERENCE in DETAIL.ASS_GSMW_EXT block.
+========================================================================================
+Actual Version : Pipeline_7.2_PATCH 10018
+Date           : 23 AUG 2005
+Notes          :
+----------------
+* PRSF00180703 : Discount consumption validity information, added VALID_FROM. 
+VALID_TO and CYCLE_OFFSET into CHARGE_PACKET. Add CYCLE_OFFSET into 
+DISCOUNT_PACKET
+========================================================================================
+Actual Version : New_Pipeline_Velocity 10017
+Date           : 30 JUN 2005
+Notes          :
+----------------
+* PRSF00174977 : INVOICE_DATA not populated for GPRS
+Add INTERN_TERMINATING_SWITCH_IDENTIFICATION to the container.
+========================================================================================
+Actual Version : New_Pipeline_Velocity 10016
+Date           : 24 JUNE 2005
+Notes          :
+----------------
+* PRSF00173920 : 7.2  : Added the SGSN_INFO, SGSN_ADDRESS_LIST  block to 
+                        ASSOCIATED_GPRS_EXTENSION
+========================================================================================
+Actual Version : New_Pipeline_Velocity 10015
+Date           : 31 MAY 2005
+Notes          :
+----------------
+* PRSF00167358 : 7.2  :  Billing is not getting Triggered When New Cycle EDR comes Before Billing
+Add ACCOUNT_ID and TB_RECORD_NUMBER to the container.
+========================================================================================
+Actual Version : New_Pipeline_Velocity 10014
+Date           : 18 MAY 2005
+Notes          :
+----------------
+* PRSF00168776 : BalancePackets_Sums_2ChargePackets_InCaseofDifferentRums
+Add RUM_ID and RUM_MAP to the container.
+Add DETAIL.ASS_PIN.RUM_NAME to the ASS_PIN (900) record in case of single RUM.
+========================================================================================
+Actual Version : New_Pipeline_Velocity 10013
+Date           : 19 Apr 2005
+Notes          :
+----------------
+* PRSF00162203 : DEFERED_AMOUNT is not passed in to the pipeline and passed out from pipeline. 
+========================================================================================
+Actual Version : New_Pipeline_Velocity 10012
+Date           : 12 Apr 2005
+Notes          :
+----------------
+* PRSF00163560 : Move '{' to new line and remove spaces from VERSION line so that 
+containerDescLoader.pl (tool to load containerDesc data to Infranet DB) can work properly.
+========================================================================================
+Actual Version : New_Pipeline_Velocity 10011
+Date           : 11 Apr 2005
+Notes          :
+----------------
+* PRSF00163202 : W2_PPL_PKH+ Promotional Overlay doesnt work as described in FNS.
+========================================================================================
+Actual Version : Velocity 10010
+Date           : 10 Mar 2005
+Notes          :
+----------------
+* PRSF00156635 : CR81/82:changes to the containerDesc.dsc to add Sub Cycle periods.
+========================================================================================
+Actual Version : Pipeline Velocity
+Date           : 09 Mar 2005
+Notes          :
+----------------
+* PRSF00142908 : QF::TAP3.10-validation of TD60 -specifications( TAP OUT grammar)
+========================================================================================
+Actual Version : 6.7_FP2 10009
+Date           : 13 Jan 2005
+Notes          :
+----------------
+* PRSF00149962 : BMON:changes to the containerDesc.dsc to add no. of monitor packates.
+========================================================================================
+Actual Version : 6.7_FP2 10008
+Date           : 05 Jan 2005
+Notes          :
+----------------
+* PRSF00148403   : BMON:BM changes to the containerDesc.dsc to support the Balance Monitor.
+========================================================================================
+Actual Version : 6.7_FP2 10007
+Date           : 05 Oct 2004
+Notes          :
+----------------
+* PRSF00125403   : FCT_DIscard does not enrich the EDR with info about discarding rule applied
+		   Added DETAIL.DISCARD_REASON to check which discarding rule has been applied.
+========================================================================================
+Actual Version : 6.7_FP2 10007
+Date           : 07 Aug 2004
+Notes          :
+----------------
+* PRSF00123232 : Added PROMOTIONAL_SAVING under the CUST_A block for calculation of 
+                 promotional saving.
+========================================================================================
+Actual Version : 6.7_FP2 10006
+Date           : 26 June 2004
+Notes          :
+----------------
+* PRSF00117622 : FCT_Account should set the ACTG_LAST, ACTG_NEXT and ACTG_FUTURE  with 
+                 the values in Infranet DB 
+========================================================================================
+Actual Version : 6.7_FP2 10005
+Date           : 22 June 2004
+Notes          :
+----------------
+* PRSF00117622 : Changes to the Revenue Assurance IScripts for Rel 3
+               : Added new fields under Revenue Assurance Ext. Block - OLD_DISCOUNT_AMOUNT, CHARGED_AMOUNT, OLD_CHARGED_AMOUNT
+========================================================================================
+Actual Version : 6.7_FP2 10005
+Date           : 11 June 04
+Notes          :
+----------------
+* PRSF00115893 : Removed PREEMPTED_BAL field from SUB_BAL and DISCOUNT_SUBBALANCE
+               : and added NEXT_BAL and DELAYED_BAL
+	       : and removed INTERN_DELAY_PERIOD and INTERN_LATE_EDR fields from the DETAIL block.
+========================================================================================
+Actual Version : 6.7_FP2 10004
+Date : 28 May 04
+Notes :
+----------------
+* PRSF00109228 : New field RECYCLE_KEY in containerDesc and SuspenseUsageCreate description file, dependency CO-104801
+
+========================================================================================
+Actual Version : 6.7_FP2 10004
+Date           : 26-May-04
+Notes          :
+----------------
+* PRSF00097158 : Added new field LEAST_COST in CUSTOMER_DATA to rate the EDRs using least 
+                 charge rate plan.
+========================================================================================
+Actual Version : 6.7_FP2
+Date           : 24-May-04
+Notes          :
+----------------
+* PRSF00103037 : Need to store original batch id as well as suspended (rerating) batch id in /suspended_usage object in Suspense Handling.
+========================================================================================
+Actual Version : 6.7_FP2 10003
+Date           : 17 May 04
+Notes          :
+----------------
+* PRSF00106366 : Added PREEMPTED_BAL field to SUB_BAL and DISCOUNT_SUBBALANCE blocks
+	       : and INTERN_DELAY_PERIOD and INTERN_LATE_EDR fields to the DETAIL block.
+========================================================================================
+Actual Version : 6.7_FP2 10003
+Date           : 06 May 04
+Notes          :
+----------------
+* PRSF00106678 : BillingRecord PlugIn, Added TAX_JURISDICTION block.
+========================================================================================
+Actual Version : 6.7_FP2 10003
+Date           : 29-Apr-04
+Notes          :
+----------------
+* PRSF00107203 : TAX_CODE change for taxation plugin
+========================================================================================
+Actual Version : 6.7_FP2 10002 
+Date           : 26-Apr-04
+Notes          :
+----------------
+* PRSF00104840 : Added new field RECYCLE_KEY in ASSOCIATED_SUSPENSE_EXTENSION for AccountRouter Functional Plugin & Trigger Billing 
+========================================================================================
+Actual Version : 6.7_FP2 10002 
+Date           : 26-Apr-04
+Notes          :
+----------------
+* PRSF00098733 : Added new field BILL_STATE for TriggerBilling Functional Plugin 
+========================================================================================
+Actual Version : 6.7_FP2 10002 
+Date           : 07-Jan-04
+Notes          :
+----------------
+* PRSF00083299 : Changes for Line Management in DAT_Account.
+========================================================================================
+Actual Version : v6.7 FP2 
+Date           : 04-Feb-04
+Notes          :
+----------------
+* PRSF00090375  Added new fields for Revenue Assurance. (Propagation of PRSF00084137)
+========================================================================================
+Release        : v6.7 FP2
+Date           : 04-Feb-04
+ChangeOrder    : PRSF00090375
+Title          : Changes to Solution42 Stream Description/Mapping Files for Revenue Assurance Rel 2
+Description    : Added the following blocks, related sub-blocks and fields:
+                 - ASSOCIATED_REVENUE_ASSURANCE_EXTENSION
+                 - HEADER.BATCH_ID
+                 - DETAIL.EVENT_ID
+                 - DETAIL.BATCH_ID
+                 - DETAIL.ORIGINAL_BATCH_ID
+
+========================================================================================
+Actual Version : Apollo 10001 
+Date           : 30-Dec-03
+Notes          :
+----------------
+* PRSF00084323 : Propagation of CO-77662 from FP3 to Apollo.
+========================================================================================
+Actual Version : Apollo 10001 
+Date           : 30-Dec-03
+Notes          :
+----------------
+* PRSF00084323 : Propagation of CO-77662 from FP3 to Apollo.
+========================================================================================
+
+Actual Version : Apollo 10001
+
+Date: 03-Dec-03
+----------------
+
+Notes          :
+----------------
+		PRSF00079869 Suspense handling rel-2 support
+		added BATCH_ID field in the HEADER and DETAIL,ORIGINAL_BATCH_ID field in the DETAIL
+		added OVERRIDE_REASONS and ACCOUNT_POID in ASSOCIATED_SUSPENSE_EXTENSION block
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : Apollo 10001
+
+Date: 27-Nov-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Description    : PRSF00077887:Propagated TAP changes from 6.5 FP3 
+                 Added the following blocks, related sub-blocks and fields:
+                 - ASSOCIATED_CONTENT_EXTENSION
+                 - ASSOCIATED_LOCATION_EXTENSION
+                 - ASSOCIATED_VAS_EXTENSION
+                 - BASIC_SERVICE_PACKET
+                 - GPRS_SERVICE_USAGE_PACKET
+                 - HSCSD_INFORMATION_PACKET
+                 - TAP_TOTAL_CHARGE_VALUE_LIST
+                 - TAX_PACKET
+
+
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+========================================================================================
+
+Actual Version : Apollo 10001
+
+Date: 26-Aug-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : Add balance group owner id and owner type to discount list block   
+and sponsor list block. Added mapping for node location for purchased product. Added
+a flag to the purchased discount block.
+----------------
+
+Known Problems :
+----------------
+
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v6.5 FP3 / 19-Aug-2003
+----------------
+
+Notes          :
+----------------
+(PRSF00079869 PROPAGATION FROM 6.5FP3)
+PRSF00056410 - Suspense handling support
+               added QUERYABLE_FIELDS_MAPPING field in the HEADER and
+               ASSOCIATED_SUSPENSE_EXTENSION block in the DETAIL.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : Apollo 10001
+
+Date: 1-Aug-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : new FCT_BillingRecord for Multiple balances strucutre
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00053541: enhanced the SUB_BAL structure to take VALIDITY and contributor; also enhance the charge packe to take an optional resource_id field
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v6.7  25-Jun-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : Multiple balances
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00047236: enhance EDR with SUB_BAL_IMPACT structure
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+----------------------------------------------------------------------------------------
+========================================================================================
+Actual Version : Apollo/ 11-Jun-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00042447 Added new blocks for discount instance and
+		 sponsorship into customert data block
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v6.5 SP1.2 / 26-Mar-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00035949 containerDesc.dsc is broken
+                 PRSF00033035 Remove bundleTotalEntitlement
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v6.5 SP1.1 / 15-Mar-2003
+----------------
+
+Notes          : 3 fields are added to the output mapping for REL 6.5_SP1 related ouput
+                 files.
+
+                 CREATION_PROCESS - A label for the process that created the output file.
+
+                 SCHEMA_VERSION - The version of the schema used in creating the output
+                                  file.
+
+                 EVENT_TYPE - The infranet event type the the output file is related to.
+
+                 CREATION_PROCESS and EVENT_TYPE values are taken from the registry entries
+                 specified in the Output sections.
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00032903 "Pipelines - Support extended header record (SCHEMA_VERSION 1)"
+                               
+----------------
+
+Open PRs/CRs   :
+----------------
+========================================================================================
+
+Actual Version : v6.5 SP1.1 / 15-Mar-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00034018 "provide solution for the invoiceing enrichment performance issue in output 
+                               grammar/mapping/format desciption"
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+========================================================================================
+
+Actual Version : v6.5 SP1 / 14-Mar-2003
+----------------
+
+Notes          :
+----------------
+ - PRSF00034538 added ASSOCIATED_CIBER_EXTENSION.NO_OCC field for OCC record creation;
+                change SETTLEMENT_PERIOD datatype from Date to String;
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================

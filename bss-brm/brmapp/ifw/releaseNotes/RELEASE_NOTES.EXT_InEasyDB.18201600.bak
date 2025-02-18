@@ -1,0 +1,179 @@
+========================================================================================
+EXT_InEasyDB
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+========================================================================================
+
+Module Version: 10012  7.5  16-May-2011
+bug11882202 : P-10349440 SPB: INCREASE IN PIPELINE STARTUP TIME - NOW TAKING 12+ HOURS
+
+========================================================================================
+
+Module Version: 10011  7.3  16-Aug-2006
+PRSF00218398: PipelineCategory doesn't work on larger scale tests 
+
+========================================================================================
+
+Module Version: 10010  7.3  20-Jan-2006
+PRSF00188403: Problem in Processing the suspended CDR's in 6.5 after upgrading to 7.0 
+
+========================================================================================
+
+Module Version: 10009  7.2_PATCH  16-Aug-2005
+PRSF00179181:   Making IN_EasyDB resistent to db-disconnects
+                Implemented the update method which will be called by the DBC plugin when it receives the Reconnect semaphore.
+
+========================================================================================
+========================================================================================
+
+Module Version: 10008  7.2_PATCH 16-Aug-2005
+PRSF00179170: Rating pipeline goes down with an unknown exception when suspense EDRs are recycled
+
+========================================================================================
+Module Version: 10007  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+========================================================================================
+
+
+Module Version: 10006  6.5_FP3  06-Nov-2003
+PRSF00075360:   EXT::InEasyDB causes ifw process terminated abnormally if sql script 
+		is invalid
+
+========================================================================================
+
+Module Version: 10005  6.5_FP3  03-Nov-2003
+PRSF00075417:   [VF Greece] EXT::InEasyDB - make SqlOnSuccess and SqlOnFailure as 
+                optional registry entries
+
+========================================================================================
+
+Module Version: 10004  6.5_FP3  08-Sep-2003
+PRSF00055778:   support of BLOB type fields in extraction select list, addition of 
+		new, optional registry parameter 'RecordDelimiter'
+
+==============================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10002 / Date : 10-Mar-2003
+----------------
+
+Notes          :
+----------------
+* PRSF00034368: TAM_Transaction not completely thread-safe
+                (propagation of 32552)
+
+========================================================================================
+
+
+Actual Version : 10001 / Date : 21-Feb-2003
+----------------
+
+Notes          :
+----------------
+
+- PRSF00032419: Implement a thread trace.
+
+========================================================================================
+
+Actual Version : v4-30-07 / Date : 05-Okt-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #40186 onSuccess and onFailure statement execute fixed.
+
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 03-Sep-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #39003 onSuccess and onFailure statement execute fixed
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 03-Sep-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #37618 in consequence of the code review 08.2001 of the PLG_Base/Framework.
+
+================================================================================
+
+Actual Version : v4-30-04 / Date : 28-Aug-2001
+----------------
+
+Solved PRs/CRs : 
+----------------
+- PETS #38645 error messages updated
+- PETS #37618 code review changes implemented
+
+================================================================================
+
+Actual Version : v4-30-03 / Date : 15-Aug-2001
+----------------
+
+Solved PRs/CRs : 
+----------------
+- PETS #38202 default registry value added for InputDirEmptyTime
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 14-Aug-2001
+----------------
+
+Solved PRs/CRs : 
+----------------
+- PETS #38160 isUsable call to base class fixed
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 10-Aug-2001
+----------------
+
+Solved PRs/CRs : 
+----------------
+- PETS #36559 SourcePro AIX Port
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 08-Jun-2001
+----------------
+
+Notes          :
+----------------
+                 - Just new
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+

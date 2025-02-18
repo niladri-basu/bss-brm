@@ -1,0 +1,431 @@
+===============================================================================
+FCT_AggreGate
+-------------------------------------------------------------------------------
+Module Release Notes
+-------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.FCT_AggreGate $
+$Revision: integrate_mod_vob/pipeline_aggregation/FCT/AggreGate/RELEASE_NOTES.FCT_AggreGate#0 $
+$Author: awani $
+$Date: 16-aug-2008.05:15:45 $
+===============================================================================
+Actual Version : 7.3.2 / Date : 16-Aug-2008 
+----------------
+Revision: 10021 7.3.2 16-Aug-2008 awani
+bug7333167     : FCT_AGGREGATE DOES NOT RETURN ERROR
+
+==============================================================================
+Actual Version : 7.3 / Date : 18-Jul-2006
+----------------
+Revision: 10020 7.3 18-Jul-2006 ashishk
+PRSF00219265: Da Vinci Code Clean Up:--pipeline_mediation & suspense Please set 
+              isValidDetail false when you set error above warning 
+
+==============================================================================
+Actual Version : 7.3 / Date : 20-Jun-2006
+----------------
+Revision: 10019 7.3 20-Jun-2006 ashishk
+PRSF00213705: Reasoning: R-060323-0090  Null Pointer Dereference 
+
+==============================================================================
+Actual Version : 7.2_PATCH / Date : 01-SEP-2005
+----------------
+Revision: 10018 7.2_PATCH 01-SEP-2005 pmahishi
+PRSF00181400:  "Cannot remove aggregate files after rollback during recycling"
+
+===============================================================================
+Actual Version : 6.7_FP2 10017  / Date : 26-Oct-2004
+----------------
+Revision: 10017 6.7_FP2 26-Oct-2004 dkapila
+PRSF00137876 : Propagate the changes of CO PRSF00129386 to 6.7 FP2. 
+Files modified: Results.cpp, Results.hpp
+
+==============================================================================
+Actual Version : 6.7_FP2 10016  / Date : 14-OCT-2004
+----------------
+PRSF00133835:  RAR3: /process_audit/batchstat/xxx object is not getting created if the edr contains invalid timestamp.
+File Modified: Aggregations.cpp
+Changes done in function flush for writing a null string instread of "0" for invalid timestamp field.
+
+===============================================================================
+Actual Version : 6.7_FP2 10015  / Date : 23-August-2004
+----------------
+
+Revision: 10015 6.7_FP2 23-August-2004 dkapila
+PRSF00125411 : FCT_Aggregate is not checking whether it is already registered with the specified name.  
+
+===============================================================================
+Actual Version : 6.7_FP2 10015  / Date : 22-Sep-2004
+----------------
+PRSF00124134: "RAR3: Earliest and Latest Call timestamp are not correct in the Audit Result file for suspense type of status."
+File Modified: Aggregations.cpp
+Changes done for not considering value of 0 in computation of minimum and maximum values.
+
+===============================================================================
+Actual Version : 6.7_FP2 10014  / Date : 08-June-2004
+----------------
+
+Revision: 10014  6.7_FP2  08-June-2004  knijhawa
+PRSF00115396 : Changes to FCT_AggreGate and DAT_ScenarioReader For RA Rel 3
+
+===============================================================================
+Actual Version : 6.7_FP2 10013  / Date : 24-May-2004
+----------------
+
+PRSF00105998: NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+              and added _MAX_PATH and _getcwd for windows compatibility
+
+===============================================================================
+Actual Version : 6.7_FP2 10012  / Date : 05-May-2004
+----------------
+
+PRSF00108640   : EDR DataBlock not found
+
+===============================================================================
+Actual Version : 6.7_FP2 10011  / Date : 13-Apr-2004
+----------------
+
+PRSF00104704: wrong placement of findKeyAndValue() in FCT::AggreGate::Scenario::aggregate function
+===============================================================================
+Actual Version : 6.7_FP2 10010  / Date : 16-Mar-2004
+----------------
+
+PRSF00099948: FCT_AggreGate fails if scenario includes fields in different branches
+              of EDR structure
+
+===============================================================================
+Actual Version : 6.7_FP2 10009  / Date : 15-Mar-2004
+----------------
+
+PRSF00099266: Marking HEADER and TRAILER records error in FCT_AggreGate
+
+===============================================================================
+Actual Version : 6.7_FP2 10008  / Date : 05-Feb-2004
+----------------
+
+PRSF00090566: Changes to FCT_AggreGate for ControlPointId - RA Changes
+	      Propagation of PRSF00078611 from FP3 to 6.7_FP2 
+
+===============================================================================
+
+Actual Version : Apollo 10007 / Date : 20-Oct-2003
+----------------
+
+PRSF00072991: FCT_Aggregate does not rollback previous processed data
+
+===============================================================================
+
+Actual Version : Apollo 10006 / Date : 20-Oct-2003
+----------------
+
+PRSF00072764: Precision of Aggregation in Aggregate module
+
+===============================================================================
+
+Actual Version : Apollo 10005 / Date : 16-Oct-2003
+----------------
+
+PRSF00071706: Message Number for Plugin
+
+===============================================================================
+
+Actual Version : 6.5_SP2 10004 / Date : 06-MAY-2003
+----------------
+
+PRSF00039936: Name space changes for FCT Aggregate
+
+===============================================================================
+Actual Version : 6.5_SP2 10003 / Date : 01-MAY-2003
+----------------
+
+PRSF00039518: Implement name space for FCT Aggregate
+
+===============================================================================
+Actual Version : 6.5_SP1 10002 / Date : 03-APR-2003
+----------------
+
+PRSF00036229: FCT_Aggregate ignores all EDRs with IsValidDetail=FALSE
+
+===============================================================================
+
+Actual Version : 6.5 10001 / Date : 27-FEB-2003
+----------------
+
+PRSF00033000: Added fixes for thread tracing.
+
+===============================================================================
+ 
+Actual Version : v6.3.3 / Date : 23-JUL-2002
+----------------
+
+PRSF00013526: Reaction on transaction commit while restarting
+
+===============================================================================
+ 
+Actual Version : v6.3.2 / Date : 29-MAY-2002
+----------------
+
+PRSF00012005: ECR 020123_1: Re-rating Integ'Rate Events
+
+===============================================================================
+ 
+Actual Version : v4-30-05 / Date : 01-FEB-2002
+----------------
+
+PETS #43183: Ignoring inexact messages on AIX
+
+===============================================================================
+ 
+Actual Version : v4-30-05 / Date : 01-FEB-2002
+----------------
+
+PETS #43183: Ignoring inexact messages on AIX
+
+===============================================================================
+ 
+Actual Version : v4-30-04 / Date : 22-NOV-2001
+----------------
+
+PETS #41741: Ignoring recycle test
+
+===============================================================================
+ 
+Actual Version : v4-30-03 / Date : 26-SEP-2001
+----------------
+
+PETS #39871: Performance of FCT_HashString improved
+
+===============================================================================
+
+Actual Version : v4-30-02 / Date : 29-AUG-2001
+----------------
+
+PETS #38767: EDR iteration corrected
+PETS #38645: update of messages
+
+===============================================================================
+
+Actual Version : v4-30-01 / Date : 10-AUG-2001
+----------------
+
+PETS #36559 SourcePro AIX Port
+
+===============================================================================
+
+Actual Version : v4-30-00 / Date : 20-JUN-2001
+----------------
+
+Changes for zaphod/v4-30:
+
+- no more use of the reference reader
+- only support for flush mode 0
+- use of the transaction manager (and therefore use of the transaction id
+  instead of the file sequence)
+- removal of the registry parameter 'IncludeFormat'
+
+===============================================================================
+
+Actual Version : v4-10-00 / Date : 27-NOV-2000
+----------------
+
+===============================================================================
+
+Actual Version : v4-02-08 / Date : 13-NOV-2000
+----------------
+
+Events now generated from scenario.
+
+===============================================================================
+
+Actual Version : v4-02-07 / Date : 05-OCT-2000
+----------------
+
+Prepared for new EDR container interface.
+
+===============================================================================
+
+Actual Version : v4-02-06 / Date : 22-SEP-2000
+----------------
+
+Prepared for recycler.
+
+===============================================================================
+
+Actual Version : v4-02-05 / Date : 13-SEP-2000
+----------------
+
+#2512# Removed bug if no associated charge but charge packet values are needed.
+
+===============================================================================
+
+Actual Version : v4-02-04 / Date : 07-SEP-2000
+----------------
+
+Closing of control files added.
+
+===============================================================================
+
+Actual Version : v4-02-03 / Date : 25-AUG-2000
+----------------
+
+Warning in case of inactive scenarios.
+
+===============================================================================
+
+Actual Version : v4-02-02 / Date : 25-AUG-2000
+----------------
+
+Support Framework v4-07-XX.
+
+===============================================================================
+
+Actual Version : v4-02-01 / Date : 20-JUL-2000
+----------------
+
+Support for new EDR-Container.
+
+===============================================================================
+
+Actual Version : v4-02-00 / Date : 23-JUN-2000
+----------------
+
+New registry format to configure the scenarios:
+
+  Scenarios
+  {
+    PURCHASE_RESULT      (scenario code)
+    {
+      TableName
+      Threshold
+      TempDir
+      DoneDir
+      CtlDir
+      FieldDelimiter
+      FlushMode
+    }
+    DAY_RESULT
+    {
+      ...
+    }
+  }
+  
+The default configuration is done in AGG_SCENARIO but can be changed as shown.
+Every scenario which shall be processed must be specified.
+
+===============================================================================
+
+Actual Version : v4-01-00 / Date : 17-JUN-2000
+----------------
+
+Implementation changed to support the IBM xlC compiler on AIX.
+
+===============================================================================
+
+Actual Version : v4-00-04 / Date : 12-MAI-2000
+----------------
+
+No abort in case of missing reference data.
+
+===============================================================================
+
+Actual Version : v4-00-03 / Date : 11-MAI-2000
+----------------
+
+No abort in case of missing header.
+
+===============================================================================
+
+Actual Version : v4-00-02 / Date : 10-MAI-2000
+----------------
+
+===============================================================================
+
+Actual Version : v4-00-01 / Date : 06-APR-2000
+----------------
+
+New flush mode 3 (expanded multiple fields).
+
+===============================================================================
+
+Actual Version : v4-00-00 / Date : 22-MAR-2000
+----------------
+
+Support for Framework v4.
+
+===============================================================================
+
+Actual Version : v2-01-00 / Date : 13-MAR-2000
+----------------
+
+New registry structure:
+
+  ScenarioReaderDataModule
+  ReferenceReaderDataModule
+
+  ResultFile
+  {
+    IncludeFormat       (includes format name in file)
+    TempSuffix          (temp file suffix)
+    DoneSuffix          (done file suffix)
+    WriteEmptyFile      (replaces entry WriteZeroFiles)
+  }
+
+  ControlFile
+  {
+    IncludeFormat       (includes format name in file)
+    Suffix              (file suffix)
+    DataFilePath        (includes path in entry DATAFILE)
+  }
+
+
+New flush modes (defined in tables AGG_SCENARIO / AGG_EDRFORMAT_SCN):
+
+  0 - For every input file a result file is created and the results are destroyed.
+      The threshold defines after how many entries the results are flushed (previous
+      behaviour).
+
+  1 - All results are kept in memory for the entire processing. After every input file
+      the whole aggregated results are written and the previous result file is
+      removed. The threshold defines after how many files the results are kept (not
+      removed) and the values are reset to 0.
+
+  2 - Like 1, but the results are only flushed if the threshold has reached. This mode
+      is unsafe because after a crash all processed input files after the last flush
+      have to be redone.
+
+===============================================================================
+
+Actual Version : v2-00-06 / Date : 25-FEB-2000
+----------------
+
+Full path names in events and control files.
+
+===============================================================================
+
+Actual Version : v2-00-04 / Date : 31-JAN-2000
+----------------
+
+Changed log messages.
+
+===============================================================================
+
+Actual Version : v2-00-03 / Date : 19-JAN-2000
+----------------
+
+Better performance.
+
+New Event: EVT_CTL_FILE_CREATED.
+
+===============================================================================
+
+Actual Version : v2-00-01 / Date : 23-DEC-1999
+----------------
+
+New registry entry 'WriteZeroFiles' to suppress empty result files.
+Use of BAS_Decimal.
+
+===============================================================================
+
+Actual Version : v2-00-00 / Date : 02-DEC-1999
+----------------
+
+Initial version 2.

@@ -1,0 +1,1215 @@
+//==============================================================================
+//
+// Copyright (c) 1998, 2012, Oracle and/or its affiliates. 
+// All rights reserved. 
+//
+//       This material is the confidential property of Oracle Corporation
+//       or its licensors and may be used, reproduced, stored or transmitted
+//       only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: FMD
+//------------------------------------------------------------------------------
+// Module Description:
+//   Output mapping for the Solution42 V6.70 REL CDR format with Unix timestamps
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible: Peter Engelbrecht
+//
+// $RCSfile: SOL42_V670_REL_OutMap.dsc $
+// $Revision: /cgbubrm_7.5.0.pipeline/1 $
+// $Author: sknanda $
+// $Date: 2012/08/30 23:26:41 $
+// $Locker:  $
+//------------------------------------------------------------------------------
+// $Log: SOL42_V670_REL_OutMap.dsc,v $
+//==============================================================================
+
+SOL42_V670_REL
+{     
+  //----------------------------------------------------------------------------
+  // Header record
+  //----------------------------------------------------------------------------
+  HEADER 
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                  <- "010";
+      RECORD_NUMBER                <- HEADER.RECORD_NUMBER;
+      SENDER                       <- HEADER.SENDER;
+      RECIPIENT                    <- HEADER.RECIPIENT;
+      SEQUENCE_NUMBER              <- HEADER.SEQUENCE_NUMBER;
+      ORIGIN_SEQUENCE_NUMBER       <- HEADER.ORIGIN_SEQUENCE_NUMBER;
+      CREATION_TIMESTAMP           <- HEADER.CREATION_TIMESTAMP;
+      TRANSMISSION_DATE            <- HEADER.TRANSMISSION_DATE;
+      TRANSFER_CUTOFF_TIMESTAMP    <- HEADER.TRANSFER_CUTOFF_TIMESTAMP;
+      UTC_TIME_OFFSET              <- HEADER.UTC_TIME_OFFSET;
+      SPECIFICATION_VERSION_NUMBER <- HEADER.SPECIFICATION_VERSION_NUMBER;
+      RELEASE_VERSION              <- HEADER.RELEASE_VERSION;
+      ORIGIN_COUNTRY_CODE          <- HEADER.ORIGIN_COUNTRY_CODE;   
+      SENDER_COUNTRY_CODE          <- HEADER.SENDER_COUNTRY_CODE;
+      DATA_TYPE_INDICATOR          <- HEADER.DATA_TYPE_INDICATOR;
+      IAC_LIST                     <- HEADER.IAC_LIST;
+      CC_LIST                      <- HEADER.CC_LIST;
+      CREATION_PROCESS             <- HEADER.CREATION_PROCESS;
+      SCHEMA_VERSION               <- "10000";
+      EVENT_TYPE                   <- HEADER.EVENT_TYPE;
+      UTC_END_TIME_OFFSET	   <- HEADER.UTC_END_TIME_OFFSET;
+      BATCH_ID                     <- HEADER.BATCH_ID;
+      OBJECT_CACHE_TYPE            <- HEADER.OBJECT_CACHE_TYPE;
+    }
+  }
+    
+  //----------------------------------------------------------------------------
+  // Detail record
+  //----------------------------------------------------------------------------
+  DETAIL
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                       <- DETAIL.RECORD_TYPE;        
+      RECORD_NUMBER                     <- DETAIL.RECORD_NUMBER;        
+
+// RA Changes - Start
+
+      EVENT_ID                          <- DETAIL.EVENT_ID;
+      BATCH_ID                          <- DETAIL.BATCH_ID;
+      ORIGINAL_BATCH_ID                 <- DETAIL.ORIGINAL_BATCH_ID;
+
+// RA Changes - End
+
+      DISCARDING                        <- DETAIL.DISCARDING;        
+      CHAIN_REFERENCE                   <- DETAIL.CHAIN_REFERENCE;        
+      SOURCE_NETWORK_TYPE               <- DETAIL.SOURCE_NETWORK_TYPE;        
+      SOURCE_NETWORK                    <- DETAIL.SOURCE_NETWORK;        
+      DESTINATION_NETWORK_TYPE          <- DETAIL.DESTINATION_NETWORK_TYPE;        
+      DESTINATION_NETWORK               <- DETAIL.DESTINATION_NETWORK;        
+      TYPE_OF_A_IDENTIFICATION          <- DETAIL.TYPE_OF_A_IDENTIFICATION;        
+      A_MODIFICATION_INDICATOR          <- DETAIL.A_MODIFICATION_INDICATOR;        
+      A_TYPE_OF_NUMBER                  <- DETAIL.A_TYPE_OF_NUMBER;        
+      A_NUMBERING_PLAN                  <- DETAIL.A_NUMBERING_PLAN;        
+      A_NUMBER                          <- DETAIL.A_NUMBER;        
+      B_MODIFICATION_INDICATOR          <- DETAIL.B_MODIFICATION_INDICATOR;        
+      B_TYPE_OF_NUMBER                  <- DETAIL.B_TYPE_OF_NUMBER;        
+      B_NUMBERING_PLAN                  <- DETAIL.B_NUMBERING_PLAN;        
+      B_NUMBER                          <- DETAIL.B_NUMBER;        
+      DESCRIPTION                       <- DETAIL.DESCRIPTION;        
+      C_MODIFICATION_INDICATOR          <- DETAIL.C_MODIFICATION_INDICATOR;        
+      C_TYPE_OF_NUMBER                  <- DETAIL.C_TYPE_OF_NUMBER;        
+      C_NUMBERING_PLAN                  <- DETAIL.C_NUMBERING_PLAN;        
+      C_NUMBER                          <- DETAIL.C_NUMBER;        
+      USAGE_DIRECTION                   <- DETAIL.USAGE_DIRECTION;        
+      CONNECT_TYPE                      <- DETAIL.CONNECT_TYPE;        
+      CONNECT_SUB_TYPE                  <- DETAIL.CONNECT_SUB_TYPE;        
+      BASIC_SERVICE                     <- DETAIL.BASIC_SERVICE;        
+      QOS_REQUESTED                     <- DETAIL.QOS_REQUESTED;        
+      QOS_USED                          <- DETAIL.QOS_USED;        
+      CALL_COMPLETION_INDICATOR         <- DETAIL.CALL_COMPLETION_INDICATOR;        
+      LONG_DURATION_INDICATOR           <- DETAIL.LONG_DURATION_INDICATOR;        
+      CHARGING_START_TIMESTAMP          <- DETAIL.CHARGING_START_TIMESTAMP;        
+      CHARGING_END_TIMESTAMP            <- DETAIL.CHARGING_END_TIMESTAMP;        
+      CREATED_TIMESTAMP                 <- DETAIL.CREATED_TIMESTAMP;
+      UTC_TIME_OFFSET                   <- DETAIL.UTC_TIME_OFFSET;        
+      DURATION                          <- DETAIL.DURATION;        
+      DURATION_UOM                      <- DETAIL.DURATION_UOM;        
+      VOLUME_SENT                       <- DETAIL.VOLUME_SENT;        
+      VOLUME_SENT_UOM                   <- DETAIL.VOLUME_SENT_UOM;        
+      VOLUME_RECEIVED                   <- DETAIL.VOLUME_RECEIVED;        
+      VOLUME_RECEIVED_UOM               <- DETAIL.VOLUME_RECEIVED_UOM;        
+      NUMBER_OF_UNITS                   <- DETAIL.NUMBER_OF_UNITS;        
+      NUMBER_OF_UNITS_UOM               <- DETAIL.NUMBER_OF_UNITS_UOM;        
+      RETAIL_IMPACT_CATEGORY            <- DETAIL.RETAIL_IMPACT_CATEGORY;        
+      RETAIL_CHARGED_AMOUNT_VALUE       <- DETAIL.RETAIL_CHARGED_AMOUNT_VALUE;        
+      RETAIL_CHARGED_AMOUNT_CURRENCY    <- DETAIL.RETAIL_CHARGED_AMOUNT_CURRENCY;
+      RETAIL_CHARGED_TAX_TREATMENT      <- DETAIL.RETAIL_CHARGED_TAX_TREATMENT;
+      RETAIL_CHARGED_TAX_RATE           <- DETAIL.RETAIL_CHARGED_TAX_RATE;        
+      WHOLESALE_IMPACT_CATEGORY         <- DETAIL.WHOLESALE_IMPACT_CATEGORY;        
+      WHOLESALE_CHARGED_AMOUNT_VALUE    <- DETAIL.WHOLESALE_CHARGED_AMOUNT_VALUE; 
+      WHOLESALE_CHARGED_AMOUNT_CURRENCY <- DETAIL.WHOLESALE_CHARGED_AMOUNT_CURRENCY;
+      WHOLESALE_CHARGED_TAX_TREATMENT   <- DETAIL.WHOLESALE_CHARGED_TAX_TREATMENT;
+      WHOLESALE_CHARGED_TAX_RATE        <- DETAIL.WHOLESALE_CHARGED_TAX_RATE;
+      ZONE_DESCRIPTION                  <- DETAIL.ZONE_DESCRIPTION;
+      IC_DESCRIPTION                    <- DETAIL.IC_DESCRIPTION;
+      ZONE_ENTRY_NAME                   <- DETAIL.ZONE_ENTRY_NAME;
+      TARIFF_CLASS                      <- DETAIL.TARIFF_CLASS;        
+      TARIFF_SUB_CLASS                  <- DETAIL.TARIFF_SUB_CLASS;        
+      USAGE_CLASS                       <- DETAIL.USAGE_CLASS;        
+      USAGE_TYPE                        <- DETAIL.USAGE_TYPE;        
+      BILLCYCLE_PERIOD                  <- DETAIL.BILLCYCLE_PERIOD;
+      PREPAID_INDICATOR                 <- DETAIL.PREPAID_INDICATOR;
+      NUMBER_ASSOCIATED_RECORDS         <- DETAIL.NUMBER_ASSOCIATED_RECORDS;        
+      UTC_END_TIME_OFFSET               <- DETAIL.UTC_END_TIME_OFFSET;
+      NE_CHARGING_START_TIMESTAMP       <- DETAIL.NE_CHARGING_START_TIMESTAMP;
+      UTC_NE_START_TIME_OFFSET          <- DETAIL.UTC_NE_START_TIME_OFFSET;
+      NE_CHARGING_END_TIMESTAMP         <- DETAIL.NE_CHARGING_END_TIMESTAMP;
+      UTC_NE_END_TIME_OFFSET            <- DETAIL.UTC_NE_END_TIME_OFFSET;
+      INCOMING_ROUTE                    <- DETAIL.INCOMING_ROUTE;
+      ROUTING_CATEGORY                  <- DETAIL.ROUTING_CATEGORY;
+      INTERN_PROCESS_STATUS             <- DETAIL.INTERN_PROCESS_STATUS;
+      DROPPED_CALL_QUANTITY             <- DETAIL.DROPPED_CALL_QUANTITY;
+      DROPPED_CALL_STATUS               <- DETAIL.DROPPED_CALL_STATUS;
+      NET_QUANTITY			<- DETAIL.NET_QUANTITY;
+      ACTUAL_QUANTITY                   <- DETAIL.ACTUAL_QUANTITY;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated GPRS
+  //----------------------------------------------------------------------------
+  ASSOCIATED_GPRS
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                       <- DETAIL.ASS_GPRS_EXT.RECORD_TYPE;
+      RECORD_NUMBER                     <- DETAIL.ASS_GPRS_EXT.RECORD_NUMBER;
+      PORT_NUMBER                       <- DETAIL.ASS_GPRS_EXT.PORT_NUMBER;
+      DEVICE_NUMBER                     <- DETAIL.ASS_GPRS_EXT.DEVICE_NUMBER;
+      A_NUMBER_USER                     <- DETAIL.ASS_GPRS_EXT.A_NUMBER_USER;
+      DIALED_DIGITS                     <- DETAIL.ASS_GPRS_EXT.DIALED_DIGITS;
+      PRODUCT_CODE                      <- DETAIL.ASS_GPRS_EXT.VAS_PRODUCT_CODE;
+      ORIGINATING_SWITCH_IDENTIFICATION <- DETAIL.ASS_GPRS_EXT.ORIGINATING_SWITCH_IDENTIFICATION;
+      TERMINATING_SWITCH_IDENTIFICATION <- DETAIL.ASS_GPRS_EXT.TERMINATING_SWITCH_IDENTIFICATION;
+      MS_CLASS_MARK                     <- DETAIL.ASS_GPRS_EXT.MS_CLASS_MARK;
+      ROUTING_AREA                      <- DETAIL.ASS_GPRS_EXT.ROUTING_AREA;
+      LOCATION_AREA_INDICATOR           <- DETAIL.ASS_GPRS_EXT.LOCATION_AREA_INDICATOR;
+      CHARGING_ID                       <- DETAIL.ASS_GPRS_EXT.CHARGING_ID;
+      SGSN_ADDRESS                      <- DETAIL.ASS_GPRS_EXT.SGSN_ADDRESS;
+      GGSN_ADDRESS                      <- DETAIL.ASS_GPRS_EXT.GGSN_ADDRESS;
+      APN_ADDRESS                       <- DETAIL.ASS_GPRS_EXT.APN_ADDRESS;
+      NODE_ID                           <- DETAIL.ASS_GPRS_EXT.NODE_ID;
+      TRANS_ID                          <- DETAIL.ASS_GPRS_EXT.TRANS_ID;
+      SUB_TRANS_ID                      <- DETAIL.ASS_GPRS_EXT.SUB_TRANS_ID;
+      NETWORK_INITIATED_PDP             <- DETAIL.ASS_GPRS_EXT.NETWORK_INITIATED_PDP;
+      PDP_TYPE                          <- DETAIL.ASS_GPRS_EXT.PDP_TYPE;
+      PDP_ADDRESS                       <- DETAIL.ASS_GPRS_EXT.PDP_ADDRESS;
+      PDP_REMOTE_ADDRESS                <- DETAIL.ASS_GPRS_EXT.PDP_REMOTE_ADDRESS;
+      PDP_DYNAMIC_ADDRESS               <- DETAIL.ASS_GPRS_EXT.PDP_DYNAMIC_ADDRESS;
+      DIAGNOSTICS                       <- DETAIL.ASS_GPRS_EXT.DIAGNOSTICS;
+      CELL_ID                           <- DETAIL.ASS_GPRS_EXT.CELL_ID;
+      CHANGE_CONDITION                  <- DETAIL.ASS_GPRS_EXT.CHANGE_CONDITION;
+      QOS_REQUESTED_PRECEDENCE          <- DETAIL.ASS_GPRS_EXT.QOS_REQUESTED_PRECEDENCE;
+      QOS_REQUESTED_DELAY               <- DETAIL.ASS_GPRS_EXT.QOS_REQUESTED_DELAY;
+      QOS_REQUESTED_RELIABILITY         <- DETAIL.ASS_GPRS_EXT.QOS_REQUESTED_RELIABILITY;
+      QOS_REQUESTED_PEAK_THROUGHPUT     <- DETAIL.ASS_GPRS_EXT.QOS_REQUESTED_PEAK_THROUGHPUT;
+      QOS_REQUESTED_MEAN_THROUGHPUT     <- DETAIL.ASS_GPRS_EXT.QOS_REQUESTED_MEAN_THROUGHPUT;
+      QOS_USED_PRECEDENCE               <- DETAIL.ASS_GPRS_EXT.QOS_USED_PRECEDENCE;
+      QOS_USED_DELAY                    <- DETAIL.ASS_GPRS_EXT.QOS_USED_DELAY;
+      QOS_USED_RELIABILITY              <- DETAIL.ASS_GPRS_EXT.QOS_USED_RELIABILITY;
+      QOS_USED_PEAK_THROUGHPUT          <- DETAIL.ASS_GPRS_EXT.QOS_USED_PEAK_THROUGHPUT;
+      QOS_USED_MEAN_THROUGHPUT          <- DETAIL.ASS_GPRS_EXT.QOS_USED_MEAN_THROUGHPUT;
+      NETWORK_CAPABILITY                <- DETAIL.ASS_GPRS_EXT.NETWORK_CAPABILITY;
+      SGSN_CHANGE                       <- DETAIL.ASS_GPRS_EXT.SGSN_CHANGE;
+      START_SEQUENCE_NO                 <- DETAIL.ASS_GPRS_EXT.START_SEQUENCE_NO;
+      END_SEQUENCE_NO                   <- DETAIL.ASS_GPRS_EXT.END_SEQUENCE_NO;
+      B_CELL_ID                         <- DETAIL.ASS_GPRS_EXT.B_CELL_ID;
+      A_TERM_CELL_ID                    <- DETAIL.ASS_GPRS_EXT.A_TERM_CELL_ID;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated GSMW record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_GSMW
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                       <- "520";
+      RECORD_NUMBER                     <- DETAIL.ASS_GSMW_EXT.RECORD_NUMBER;
+      PORT_NUMBER                       <- DETAIL.ASS_GSMW_EXT.PORT_NUMBER;
+      DEVICE_NUMBER                     <- DETAIL.ASS_GSMW_EXT.DEVICE_NUMBER;
+      A_NUMBER_USER                     <- DETAIL.ASS_GSMW_EXT.A_NUMBER_USER;
+      DIALED_DIGITS                     <- DETAIL.ASS_GSMW_EXT.DIALED_DIGITS;
+      BASIC_DUAL_SERVICE                <- DETAIL.ASS_GSMW_EXT.BASIC_DUAL_SERVICE;
+      PRODUCT_CODE                      <- DETAIL.ASS_GSMW_EXT.VAS_PRODUCT_CODE;
+      ORIGINATING_SWITCH_IDENTIFICATION <- DETAIL.ASS_GSMW_EXT.ORIGINATING_SWITCH_IDENTIFICATION;
+      TERMINATING_SWITCH_IDENTIFICATION <- DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION;
+      TRUNK_INPUT                       <- DETAIL.ASS_GSMW_EXT.TRUNK_INPUT;
+      TRUNK_OUTPUT                      <- DETAIL.ASS_GSMW_EXT.TRUNK_OUTPUT;
+      LOCATION_AREA_INDICATOR           <- DETAIL.ASS_GSMW_EXT.LOCATION_AREA_INDICATOR;
+      CELL_ID                           <- DETAIL.ASS_GSMW_EXT.CELL_ID;
+      MS_CLASS_MARK                     <- DETAIL.ASS_GSMW_EXT.MS_CLASS_MARK;
+      TIME_BEFORE_ANSWER                <- DETAIL.ASS_GSMW_EXT.TIME_BEFORE_ANSWER;
+      BASIC_AOC_AMOUNT_VALUE            <- DETAIL.ASS_GSMW_EXT.BASIC_AOC_AMOUNT_VALUE;
+      BASIC_AOC_AMOUNT_CURRENCY         <- DETAIL.ASS_GSMW_EXT.BASIC_AOC_AMOUNT_CURRENCY;
+      ROAMER_AOC_AMOUNT_VALUE           <- DETAIL.ASS_GSMW_EXT.ROAMER_AOC_AMOUNT_VALUE;
+      ROAMER_AOC_AMOUNT_CURRENCY        <- DETAIL.ASS_GSMW_EXT.ROAMER_AOC_AMOUNT_CURRENCY;
+      NUMBER_OF_SS_EVENT_PACKETS        <- DETAIL.ASS_GSMW_EXT.NUMBER_OF_SS_PACKETS;
+      B_CELL_ID                         <- DETAIL.ASS_GSMW_EXT.B_CELL_ID;
+      A_TERM_CELL_ID                    <- DETAIL.ASS_GSMW_EXT.A_TERM_CELL_ID;
+      SMSC_ADDRESS                      <- DETAIL.ASS_GSMW_EXT.SMSC_ADDRESS;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Supplementary Service Event record
+  //----------------------------------------------------------------------------
+  SS_EVENT_PACKET
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                <- "620";
+      RECORD_NUMBER              <- DETAIL.ASS_GSMW_EXT.SS_PACKET.RECORD_NUMBER;
+      ACTION_CODE                <- DETAIL.ASS_GSMW_EXT.SS_PACKET.ACTION_CODE;
+      SS_CODE                    <- DETAIL.ASS_GSMW_EXT.SS_PACKET.SS_EVENT;
+      CLIR_INDICATOR             <- DETAIL.ASS_GSMW_EXT.SS_PACKET.CLIR_INDICATOR; 
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated WAP record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_WAP
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                <- "570";
+      RECORD_NUMBER              <- DETAIL.ASS_WAP_EXT.RECORD_NUMBER;
+      PORT_NUMBER                <- DETAIL.ASS_WAP_EXT.PORT_NUMBER;
+      DEVICE_NUMBER              <- DETAIL.ASS_WAP_EXT.DEVICE_NUMBER;
+      SESSION_ID                 <- DETAIL.ASS_WAP_EXT.SESSION_ID;
+      RECORDING_ENTITY           <- DETAIL.ASS_WAP_EXT.RECORDING_ENTITY;
+      TERMINAL_CLIENT_ID         <- DETAIL.ASS_WAP_EXT.TERMINAL_CLIENT_ID;
+      TERMINAL_IP_ADDRESS        <- DETAIL.ASS_WAP_EXT.TERMINAL_IP_ADDRESS;
+      DOMAIN_URL                 <- DETAIL.ASS_WAP_EXT.DOMAIN_URL;
+      BEARER_SERVICE             <- DETAIL.ASS_WAP_EXT.BEARER_SERVICE;
+      HTTP_STATUS                <- DETAIL.ASS_WAP_EXT.HTTP_STATUS;
+      WAP_STATUS                 <- DETAIL.ASS_WAP_EXT.WAP_STATUS;
+      ACKNOWLEDGE_STATUS         <- DETAIL.ASS_WAP_EXT.ACKNOWLEDGE_STATUS;
+      ACKNOWLEDGE_TIME           <- DETAIL.ASS_WAP_EXT.ACKNOWLEDGE_TIME;
+      EVENT_NUMBER               <- DETAIL.ASS_WAP_EXT.EVENT_NUMBER;
+      GGSN_ADDRESS               <- DETAIL.ASS_WAP_EXT.GGSN_ADDRESS;
+      SERVER_TYPE                <- DETAIL.ASS_WAP_EXT.SERVER_TYPE;
+      CHARGING_ID                <- DETAIL.ASS_WAP_EXT.CHARGING_ID;
+      WAP_LOGIN                  <- DETAIL.ASS_WAP_EXT.WAP_LOGIN;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated CAMEL record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_CAMEL
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                     <- DETAIL.ASS_CAMEL_EXT.RECORD_TYPE;
+      RECORD_NUMBER                   <- DETAIL.ASS_CAMEL_EXT.RECORD_NUMBER;
+      SERVER_TYPE_OF_NUMBER           <- DETAIL.ASS_CAMEL_EXT.SERVER_TYPE_OF_NUMBER;
+      SERVER_NUMBERING_PLAN           <- DETAIL.ASS_CAMEL_EXT.SERVER_NUMBERING_PLAN;
+      SERVER_ADDRESS                  <- DETAIL.ASS_CAMEL_EXT.SERVER_ADDRESS;
+      SERVICE_LEVEL                   <- DETAIL.ASS_CAMEL_EXT.SERVICE_LEVEL;
+      SERVICE_KEY                     <- DETAIL.ASS_CAMEL_EXT.SERVICE_KEY;
+      DEFAULT_CALL_HANDLING_INDICATOR <- DETAIL.ASS_CAMEL_EXT.DEFAULT_CALL_HANDLING_INDICATOR;
+      MSC_TYPE_OF_NUMBER              <- DETAIL.ASS_CAMEL_EXT.MSC_TYPE_OF_NUMBER;
+      MSC_NUMBERING_PLAN              <- DETAIL.ASS_CAMEL_EXT.MSC_NUMBERING_PLAN;
+      MSC_ADDRESS                     <- DETAIL.ASS_CAMEL_EXT.MSC_ADDRESS;
+      CAMEL_REFERENCE_NUMBER          <- DETAIL.ASS_CAMEL_EXT.CAMEL_REFERENCE_NUMBER;
+      CAMEL_INITIATED_CF_INDICATOR    <- DETAIL.ASS_CAMEL_EXT.CAMEL_INITIATED_CF_INDICATOR;
+      CAMEL_MODIFICATION_LIST         <- DETAIL.ASS_CAMEL_EXT.CAMEL_MODIFICATION_LIST;
+      DEST_GSMW_TYPE_OF_NUMBER        <- DETAIL.ASS_CAMEL_EXT.DEST_GSMW_TYPE_OF_NUMBER;
+      DEST_GSMW_NUMBERING_PLAN        <- DETAIL.ASS_CAMEL_EXT.DEST_GSMW_NUMBERING_PLAN;
+      DEST_GSMW_NUMBER                <- DETAIL.ASS_CAMEL_EXT.DEST_GSMW_NUMBER;
+      DEST_GSMW_NUMBER_ORIGINAL       <- DETAIL.ASS_CAMEL_EXT.DEST_GSMW_NUMBER_ORIGINAL;
+      DEST_GPRS_APN_ADDRESS           <- DETAIL.ASS_CAMEL_EXT.DEST_GPRS_APN_ADDRESS;
+      DEST_GPRS_PDP_REMOTE_ADDRESS    <- DETAIL.ASS_CAMEL_EXT.DEST_GPRS_PDP_REMOTE_ADDRESS;
+      CSE_INFORMATION                 <- DETAIL.ASS_CAMEL_EXT.CSE_INFORMATION;
+      GSM_CALL_REFERENCE_NUMBER       <- DETAIL.ASS_CAMEL_EXT.GSM_CALL_REFERENCE_NUMBER;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated LTE record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_LTE
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                       <- "530";
+      RECORD_NUMBER                     <- DETAIL.ASS_LTE_EXT.RECORD_NUMBER;
+      PORT_NUMBER                       <- DETAIL.ASS_LTE_EXT.PORT_NUMBER;
+      DEVICE_NUMBER                     <- DETAIL.ASS_LTE_EXT.DEVICE_NUMBER;
+      LOCATION_AREA_INDICATOR           <- DETAIL.ASS_LTE_EXT.LOCATION_AREA_INDICATOR;
+      PCSCF_ADDRESS                     <- DETAIL.ASS_LTE_EXT.PCSCF_ADDRESS;
+      SERVING_GATEWAY_ADDRESS           <- DETAIL.ASS_LTE_EXT.SERVING_GATEWAY_ADDRESS;	
+      PDN_GATEWAY_ADDRESS               <- DETAIL.ASS_LTE_EXT.PDN_GATEWAY_ADDRESS;
+      CELL_ID                           <- DETAIL.ASS_LTE_EXT.CELL_ID;
+      EVENT_REFERENCE                   <- DETAIL.ASS_LTE_EXT.EVENT_REFERENCE;
+      MESSAGING_EVENT_SERVICE           <- DETAIL.ASS_LTE_EXT.MESSAGING_EVENT_SERVICE;	
+      MOBILE_SESSION_SERVICE            <- DETAIL.ASS_LTE_EXT.MOBILE_SESSION_SERVICE;	
+      PUBLIC_USER_ID                    <- DETAIL.ASS_LTE_EXT.PUBLIC_USER_ID; 
+      NON_CHARGED_PUBLIC_USERID         <- DETAIL.ASS_LTE_EXT.NON_CHARGED_PUBLIC_USERID; 
+      NON_CHARGED_PARTY_NUMBER          <- DETAIL.ASS_LTE_EXT.NON_CHARGED_PARTY_NUMBER;
+    }
+  }
+  
+  //----------------------------------------------------------------------------
+  // Associated Infranet Billing record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_INFRANET
+  {     
+    STD_MAPPING
+    {
+      RECORD_TYPE               <- "900";
+      RECORD_NUMBER             <- DETAIL.ASS_PIN.RECORD_NUMBER;
+      ACCOUNT_POID              <- DETAIL.ASS_PIN.ACCOUNT_POID;
+      SERVICE_POID              <- DETAIL.ASS_PIN.SERVICE_POID;
+      ITEM_POID                 <- DETAIL.ASS_PIN.ITEM_POID;
+      ORIGINAL_EVENT_POID       <- DETAIL.ASS_PIN.ORIGINAL_EVENT_POID;
+      PIN_TAX_LOCALES           <- DETAIL.ASS_PIN.PIN_TAX_LOCALES; 
+      PIN_TAX_SUPPLIER_ID       <- DETAIL.ASS_PIN.PIN_TAX_SUPPLIER_ID; 
+      PIN_PROVIDER_ID           <- DETAIL.ASS_PIN.PIN_PROVIDER_ID; 
+      NUMBER_OF_BALANCE_PACKETS <- DETAIL.ASS_PIN.NUMBER_OF_BALANCE_PACKETS;
+      NUMBER_OF_MONITOR_PACKETS <- DETAIL.ASS_PIN.NUMBER_OF_MONITOR_PACKETS;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated Infranet Invoice record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_INVOICE_DATA
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE               <- "@INTEGRATE";
+      A_NUMBER                  <- DETAIL.A_NUMBER;
+      B_NUMBER                  <- DETAIL.B_NUMBER;
+      BASIC_SERVICE             <- DETAIL.BASIC_SERVICE;
+      NUMBER_OF_UNITS           <- DETAIL.NUMBER_OF_UNITS;
+      USAGE_CLASS               <- DETAIL.USAGE_CLASS;
+      TERMINATING_SWITCH_IDENTIFICATION           <- DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION;
+      DELIMITATION              <- "";
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Infranet Balance Impact packet inside the Invoice record
+  //----------------------------------------------------------------------------
+  BALANCE_IMPACT
+  {
+    STD_MAPPING
+    {
+        ITEM_POID                <- DETAIL.ASS_PIN.ITEM_POID;
+        PIN_RESOURCE_ID          <- DETAIL.ASS_PIN.BP.PIN_RESOURCE_ID;
+        PIN_QUANTITY             <- DETAIL.ASS_PIN.BP.PIN_QUANTITY;
+        PIN_RATE_TAG             <- DETAIL.ASS_PIN.BP.PIN_RATE_TAG;
+        PIN_AMOUNT               <- DETAIL.ASS_PIN.BP.PIN_AMOUNT;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Infranet Invoice record terminator
+  //----------------------------------------------------------------------------
+  INVOICE_DATA_TERMINATOR
+  {
+    STD_MAPPING
+    {
+        TERMINATOR              <- DETAIL.ASS_INVOICE_DATA.INVOICE_DATA_TERMINATOR.TERMINATOR;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Infranet Balance Impact packet
+  //----------------------------------------------------------------------------
+  BALANCE_PACKET
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                 <- "600";
+      RECORD_NUMBER               <- DETAIL.ASS_PIN.BP.RECORD_NUMBER;
+      ACCOUNT_POID                <- DETAIL.ASS_PIN.BP.ACCOUNT_POID;
+      BAL_GRP_POID                <- DETAIL.ASS_PIN.BP.BAL_GRP_POID;
+      ITEM_POID                	  <- DETAIL.ASS_PIN.BP.ITEM_POID;
+      PIN_RESOURCE_ID             <- DETAIL.ASS_PIN.BP.PIN_RESOURCE_ID;
+      PIN_RESOURCE_ID_ORIG        <- DETAIL.ASS_PIN.BP.PIN_RESOURCE_ID_ORIG;
+      PIN_IMPACT_CATEGORY         <- DETAIL.ASS_PIN.BP.PIN_IMPACT_CATEGORY;
+      PIN_IMPACT_TYPE         	  <- DETAIL.ASS_PIN.BP.PIN_IMPACT_TYPE;
+      PIN_PRODUCT_POID            <- DETAIL.ASS_PIN.BP.PIN_PRODUCT_POID;
+      PIN_GL_ID                   <- DETAIL.ASS_PIN.BP.PIN_GL_ID;
+      RUM_ID                      <- DETAIL.ASS_PIN.BP.RUM_ID;
+      PIN_TAX_CODE                <- DETAIL.ASS_PIN.BP.PIN_TAX_CODE;
+      PIN_RATE_TAG                <- DETAIL.ASS_PIN.BP.PIN_RATE_TAG;                        
+      PIN_LINEAGE                 <- DETAIL.ASS_PIN.BP.PIN_LINEAGE;
+      PIN_OFFERING_POID           <- DETAIL.ASS_PIN.BP.PIN_OFFERING_POID;
+      PIN_QUANTITY                <- DETAIL.ASS_PIN.BP.PIN_QUANTITY;
+      PIN_AMOUNT                  <- DETAIL.ASS_PIN.BP.PIN_AMOUNT;
+      PIN_AMOUNT_ORIG             <- DETAIL.ASS_PIN.BP.PIN_AMOUNT_ORIG;
+      PIN_AMOUNT_DEFERRED         <- DETAIL.ASS_PIN.BP.PIN_AMOUNT_DEFERRED;
+      PIN_DISCOUNT                <- DETAIL.ASS_PIN.BP.PIN_DISCOUNT;
+      PIN_PERCENT                 <- DETAIL.ASS_PIN.BP.PIN_PERCENT;
+      PIN_INFO_STRING             <- DETAIL.ASS_PIN.BP.PIN_INFO_STRING;
+    }
+  }
+  SUB_BAL_IMPACT
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                 <- "605";
+      RECORD_NUMBER               <- DETAIL.ASS_PIN.SBI.RECORD_NUMBER;
+      BAL_GRP_POID                <- DETAIL.ASS_PIN.SBI.BAL_GRP_POID;
+      PIN_RESOURCE_ID             <- DETAIL.ASS_PIN.SBI.PIN_RESOURCE_ID;
+	}
+  }
+  SUB_BAL
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                 <- "607";
+      RECORD_NUMBER               <- DETAIL.ASS_PIN.SBI.SB.RECORD_NUMBER;
+      PIN_AMOUNT                  <- DETAIL.ASS_PIN.SBI.SB.PIN_AMOUNT;
+      VALID_FROM                  <- DETAIL.ASS_PIN.SBI.SB.VALID_FROM;
+      VALID_TO                    <- DETAIL.ASS_PIN.SBI.SB.VALID_TO;
+      CONTRIBUTOR                 <- DETAIL.ASS_PIN.SBI.SB.CONTRIBUTOR;
+
+	}
+  }
+  TAX_JURISDICTION
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                 <- "615";
+      RECORD_NUMBER               <- DETAIL.ASS_PIN.BP.TJ.RECORD_NUMBER;
+      PIN_TAX_TYPE                <- DETAIL.ASS_PIN.BP.TJ.PIN_TAX_TYPE;
+      PIN_TAX_VALUE               <- DETAIL.ASS_PIN.BP.TJ.PIN_TAX_VALUE;
+      PIN_AMOUNT                  <- DETAIL.ASS_PIN.BP.TJ.PIN_AMOUNT;
+      PIN_TAX_RATE                <- DETAIL.ASS_PIN.BP.TJ.PIN_TAX_RATE;
+      PIN_AMOUNT_GROSS            <- DETAIL.ASS_PIN.BP.TJ.PIN_AMOUNT;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Infranet Monitor Impact packet
+  //----------------------------------------------------------------------------
+  MONITOR_PACKET
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                 <- "800";
+      RECORD_NUMBER               <- DETAIL.ASS_PIN.MP.RECORD_NUMBER;
+      ACCOUNT_POID                <- DETAIL.ASS_PIN.MP.ACCOUNT_POID;
+      BAL_GRP_POID                <- DETAIL.ASS_PIN.MP.BAL_GRP_POID;
+      PIN_RESOURCE_ID             <- DETAIL.ASS_PIN.MP.PIN_RESOURCE_ID;
+      PIN_AMOUNT                  <- DETAIL.ASS_PIN.MP.PIN_AMOUNT;
+    }
+  }
+  MONITOR_SUB_BAL_IMPACT
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                 <- "805";
+      RECORD_NUMBER               <- DETAIL.ASS_PIN.MSBI.RECORD_NUMBER;
+      BAL_GRP_POID                <- DETAIL.ASS_PIN.MSBI.BAL_GRP_POID;
+      PIN_RESOURCE_ID             <- DETAIL.ASS_PIN.MSBI.PIN_RESOURCE_ID;
+    }
+  }
+  MONITOR_SUB_BAL
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                 <- "807";
+      RECORD_NUMBER               <- DETAIL.ASS_PIN.MSBI.MSB.RECORD_NUMBER;
+      PIN_AMOUNT                  <- DETAIL.ASS_PIN.MSBI.MSB.PIN_AMOUNT;
+      VALID_FROM                  <- DETAIL.ASS_PIN.MSBI.MSB.VALID_FROM;
+      VALID_TO                    <- DETAIL.ASS_PIN.MSBI.MSB.VALID_TO;
+      CONTRIBUTOR                 <- DETAIL.ASS_PIN.MSBI.MSB.CONTRIBUTOR;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  //  Associated Zone Breakdown record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_ZONE
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                  <- DETAIL.ASS_ZBD.RECORD_TYPE;
+      RECORD_NUMBER                <- DETAIL.ASS_ZBD.RECORD_NUMBER;
+      CONTRACT_CODE                <- DETAIL.ASS_ZBD.CONTRACT_CODE;
+      SEGMENT_CODE                 <- DETAIL.ASS_ZBD.SEGMENT_CODE;
+      CUSTOMER_CODE                <- DETAIL.ASS_ZBD.CUSTOMER_CODE;
+      ACCOUNT_CODE                 <- DETAIL.ASS_ZBD.ACCOUNT_CODE;
+      SYSTEM_BRAND_CODE            <- DETAIL.ASS_ZBD.SYSTEM_BRAND_CODE;
+      SERVICE_CODE                 <- DETAIL.ASS_ZBD.SERVICE_CODE;
+      CUSTOMER_RATEPLAN_CODE       <- DETAIL.ASS_ZBD.CUSTOMER_RATEPLAN_CODE;
+      SERVICE_LEVEL_AGREEMENT_CODE <- DETAIL.ASS_ZBD.SLA_CODE;
+      CUSTOMER_BILLCYCLE           <- DETAIL.ASS_ZBD.CUSTOMER_BILLCYCLE;
+      CUSTOMER_CURRENCY            <- DETAIL.ASS_ZBD.CUSTOMER_CURRENCY;
+      CUSTOMER_TAXGROUP            <- DETAIL.ASS_ZBD.CUSTOMER_TAXGROUP;
+      NUMBER_OF_ZONE_PACKETS       <- DETAIL.ASS_ZBD.NUMBER_OF_ZONE_PACKETS;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Zone packet record
+  //----------------------------------------------------------------------------
+  ZONE_PACKET
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                  <- "660";
+      RECORD_NUMBER                <- DETAIL.ASS_ZBD.ZP.RECORD_NUMBER;
+      ZONEMODEL_CODE               <- DETAIL.ASS_ZBD.ZP.ZONEMODEL_CODE;
+      ZONE_RESULT_VALUE_WHOLESALE  <- DETAIL.ASS_ZBD.ZP.ZONE_RESULT_VALUE_WS;
+      ZONE_RESULT_VALUE_RETAIL     <- DETAIL.ASS_ZBD.ZP.ZONE_RESULT_VALUE_RT;
+      ZONE_DESCRIPTION             <- DETAIL.ASS_ZBD.ZP.ZONE_DESCRIPTION;
+      ZONE_ENTRY_NAME              <- DETAIL.ASS_ZBD.ZP.ZONE_ENTRY_NAME;
+      DISTANCE                     <- DETAIL.ASS_ZBD.ZP.DISTANCE;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  //  Associated Charge Breakdown record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_CHARGE
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                   <- DETAIL.ASS_CBD.RECORD_TYPE;
+      RECORD_NUMBER                 <- DETAIL.ASS_CBD.RECORD_NUMBER;
+      CONTRACT_CODE                 <- DETAIL.ASS_CBD.CONTRACT_CODE;
+      SEGMENT_CODE                  <- DETAIL.ASS_CBD.SEGMENT_CODE;
+      CUSTOMER_CODE                 <- DETAIL.ASS_CBD.CUSTOMER_CODE;
+      ACCOUNT_CODE                  <- DETAIL.ASS_CBD.ACCOUNT_CODE;
+      SYSTEM_BRAND_CODE             <- DETAIL.ASS_CBD.SYSTEM_BRAND_CODE;
+      SERVICE_CODE                  <- DETAIL.ASS_CBD.SERVICE_CODE;
+      CUSTOMER_RATEPLAN_CODE        <- DETAIL.ASS_CBD.CUSTOMER_RATEPLAN_CODE;
+      SERVICE_LEVEL_AGRREEMENT_CODE <- DETAIL.ASS_CBD.SLA_CODE;
+      CUSTOMER_BILLCYCLE            <- DETAIL.ASS_CBD.CUSTOMER_BILLCYCLE;
+      CUSTOMER_CURRENCY             <- DETAIL.ASS_CBD.CUSTOMER_CURRENCY;
+      CUSTOMER_TAXGROUP             <- DETAIL.ASS_CBD.CUSTOMER_TAXGROUP;
+      NUMBER_OF_CHARGE_PACKETS      <- DETAIL.ASS_CBD.NUMBER_OF_CHARGE_PACKETS;
+      OPENING_BALANCE               <- DETAIL.ASS_CBD.CUSTOMER_OPENING_BALANCE;
+      CLOSING_BALANCE               <- DETAIL.ASS_CBD.CUSTOMER_CLOSING_BALANCE;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // RUM Map 
+  //----------------------------------------------------------------------------
+  RUM_MAP 
+  { 
+    STD_MAPPING
+    {
+      RECORD_TYPE                      <- "400";
+      RECORD_NUMBER                    <- DETAIL.ASS_CBD.RM.RECORD_NUMBER;
+      RUM_NAME                         <- DETAIL.ASS_CBD.RM.RUM_NAME;
+      NET_QUANTITY                     <- DETAIL.ASS_CBD.RM.NET_QUANTITY;
+      UNRATED_QUANTITY                 <- DETAIL.ASS_CBD.RM.UNRATED_QUANTITY;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // PROFILE_EVENT_ORDERING
+  //----------------------------------------------------------------------------
+  PROFILE_EVENT_ORDERING
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                       <- "850";
+      RECORD_NUMBER                     <- DETAIL.EVT_ORDER.RECORD_NUMBER;
+      BALANCE_GROUP_POID                <- DETAIL.EVT_ORDER.BAL_GRP_POID;
+      CRITERIA_NAME                     <- DETAIL.EVT_ORDER.CRITERIA_NAME;
+      LAST_EVENT_PROCESS_TIMESTAMP      <- DETAIL.CHARGING_END_TIMESTAMP;
+      BILL_CYCLE_TIMESTAMP              <- DETAIL.EVT_ORDER.BILLING_CYCLE_TIMESTAMP;
+      PROFILE_POID                      <- DETAIL.EVT_ORDER.PROFILE_POID;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Charge packet
+  //----------------------------------------------------------------------------
+  CHARGE_PACKET
+  { 
+    STD_MAPPING
+    {
+      RECORD_TYPE                      <- "680";
+      RECORD_NUMBER                    <- DETAIL.ASS_CBD.CP.RECORD_NUMBER;
+      RATEPLAN_CODE                    <- DETAIL.ASS_CBD.CP.RATEPLAN_CODE;   
+      RATEPLAN_TYPE                    <- DETAIL.ASS_CBD.CP.RATEPLAN_TYPE;   
+      ZONEMODEL_CODE                   <- DETAIL.ASS_CBD.CP.ZONEMODEL_CODE;   
+      SERVICE_CODE_USED                <- DETAIL.ASS_CBD.CP.SERVICE_CODE_USED;   
+      SERVICE_CLASS_USED               <- DETAIL.ASS_CBD.CP.SERVICE_CLASS_USED;   
+      IMPACT_CATEGORY                  <- DETAIL.ASS_CBD.CP.IMPACT_CATEGORY;   
+      ZONE_DESCRIPTION                 <- DETAIL.ASS_CBD.CP.ZONE_DESCRIPTION;
+      IC_DESCRIPTION                   <- DETAIL.ASS_CBD.CP.IC_DESCRIPTION;
+      ZONE_ENTRY_NAME                  <- DETAIL.ASS_CBD.CP.ZONE_ENTRY_NAME;
+      DISTANCE                         <- DETAIL.ASS_CBD.CP.DISTANCE;   
+      TIMEMODEL_CODE                   <- DETAIL.ASS_CBD.CP.TIMEMODEL_CODE;   
+      TIMEZONE_CODE                    <- DETAIL.ASS_CBD.CP.TIMEZONE_CODE;   
+      DAY_CODE                         <- DETAIL.ASS_CBD.CP.DAY_CODE;   
+      TIME_INTERVAL_CODE               <- DETAIL.ASS_CBD.CP.TIME_INTERVAL_CODE;   
+      PRICEMODEL_CODE                  <- DETAIL.ASS_CBD.CP.PRICEMODEL_CODE;   
+      PRICEMODEL_TYPE                  <- DETAIL.ASS_CBD.CP.PRICEMODEL_TYPE;   
+      RESOURCE                         <- DETAIL.ASS_CBD.CP.RESOURCE;   
+      RESOURCE_ID                      <- DETAIL.ASS_CBD.CP.RESOURCE_ID;   
+      RESOURCE_ID_ORIG                 <- DETAIL.ASS_CBD.CP.RESOURCE_ID_ORIG;   
+      RUMGROUP                         <- DETAIL.ASS_CBD.CP.RUMGROUP;   
+      RUM                              <- DETAIL.ASS_CBD.CP.RUM;   
+      RUM_ID                           <- DETAIL.ASS_CBD.CP.RUM_ID;   
+      NETWORK_OPERATOR_CODE            <- DETAIL.ASS_CBD.CP.NETWORK_OPERATOR_CODE;   
+      NETWORK_OPERATOR_BILLINGTYPE     <- DETAIL.ASS_CBD.CP.NETWORK_OPERATOR_BILLINGTYPE;   
+      CHARGE_TYPE                      <- DETAIL.ASS_CBD.CP.CHARGE_TYPE;   
+      TRUNK_USED                       <- DETAIL.ASS_CBD.CP.TRUNK_USED;   
+      POI_USED                         <- DETAIL.ASS_CBD.CP.POI_USED;   
+      PRODUCTCODE_USED                 <- DETAIL.ASS_CBD.CP.PRODUCTCODE_USED;   
+      CHARGING_START_TIMESTAMP         <- DETAIL.ASS_CBD.CP.CHARGING_START_TIMESTAMP;   
+      CHARGEABLE_QUANTITY_VALUE        <- DETAIL.ASS_CBD.CP.CHARGEABLE_QUANTITY_VALUE;   
+      ROUNDED_QUANTITY_VALUE           <- DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_VALUE;   
+      ROUNDED_QUANTITY_UOM             <- DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_UOM;   
+      EXCHANGE_RATE                    <- DETAIL.ASS_CBD.CP.EXCHANGE_RATE;
+      EXCHANGE_CURRENCY                <- DETAIL.ASS_CBD.CP.EXCHANGE_CURRENCY;
+      CHARGED_CURRENCY_TYPE            <- DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE;   
+      CHARGED_AMOUNT_VALUE             <- DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE;   
+      CHARGED_AMOUNT_VALUE_ORIG        <- DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE_ORIG;   
+      CHARGED_AMOUNT_CURRENCY          <- DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_CURRENCY;   
+      CHARGED_TAX_TREATMENT            <- DETAIL.ASS_CBD.CP.CHARGED_TAX_TREATMENT;   
+      CHARGED_TAX_RATE                 <- DETAIL.ASS_CBD.CP.CHARGED_TAX_RATE;   
+      CHARGED_TAX_CODE                 <- DETAIL.ASS_CBD.CP.CHARGED_TAX_CODE;   
+      GL_ACCOUNT                       <- DETAIL.ASS_CBD.CP.USAGE_GL_ACCOUNT_CODE;   
+      REVENUE_GROUP_CODE               <- DETAIL.ASS_CBD.CP.REVENUE_GROUP_CODE;   
+      DISCOUNTMODEL_CODE               <- DETAIL.ASS_CBD.CP.DISCOUNTMODEL_CODE;   
+      GRANTED_DISCOUNT_AMOUNT_VALUE    <- DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_AMOUNT_VALUE;   
+      GRANTED_DISCOUNT_QUANTITY_VALUE  <- DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_QUANTITY_VALUE;   
+      GRANTED_DISCOUNT_QUANTITY_UOM    <- DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_QUANTITY_UOM;   
+      PIN_PERCENT		       <- DETAIL.ASS_CBD.CP.PIN_PERCENT;
+      NUMBER_OF_DISCOUNT_PACKETS       <- DETAIL.ASS_CBD.CP.NUMBER_OF_DISCOUNT_PACKETS;
+    }
+  }
+
+  DISCOUNT_PACKET
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                      	<- "690";
+      CREATED                     	<- DETAIL.ASS_CBD.DP.CREATED;
+      OBJECT_ID                     	<- DETAIL.ASS_CBD.DP.OBJECT_ID;
+      OBJECT_TYPE                 	<- DETAIL.ASS_CBD.DP.OBJECT_TYPE;
+      OBJECT_ACCOUNT                	<- DETAIL.ASS_CBD.DP.OBJECT_ACCOUNT;
+      OBJECT_OWNER_ID                	<- DETAIL.ASS_CBD.DP.OBJECT_OWNER_ID;
+      OBJECT_OWNER_TYPE                	<- DETAIL.ASS_CBD.DP.OBJECT_OWNER_TYPE;
+      DISCOUNTMODEL                 	<- DETAIL.ASS_CBD.DP.DISCOUNTMODEL;
+      DISCOUNTRULE                 	<- DETAIL.ASS_CBD.DP.DISCOUNTRULE;
+      DISCOUNTSTEPID                	<- DETAIL.ASS_CBD.DP.DISCOUNTSTEPID;
+      DISCOUNTBALIMPACTID        	<- DETAIL.ASS_CBD.DP.DISCOUNTBALIMPACTID;
+      TAX_CODE                     	<- DETAIL.ASS_CBD.DP.TAX_CODE;
+      AMOUNT                        	<- DETAIL.ASS_CBD.DP.AMOUNT;
+      PIN_PERCENT                      	<- DETAIL.ASS_CBD.DP.PIN_PERCENT;
+      QUANTITY                    	<- DETAIL.ASS_CBD.DP.QUANTITY;
+      GRANTED_AMOUNT                    <- DETAIL.ASS_CBD.DP.GRANTED_AMOUNT;
+      GRANTED_AMOUNT_ORIG               <- DETAIL.ASS_CBD.DP.GRANTED_AMOUNT_ORIG;
+      GRANTED_QUANTITY                  <- DETAIL.ASS_CBD.DP.GRANTED_QUANTITY;
+      QUANTITY_FROM                	<- DETAIL.ASS_CBD.DP.QUANTITY_FROM;
+      QUANTITY_TO                	<- DETAIL.ASS_CBD.DP.QUANTITY_TO;
+      VALID_FROM                   	<- DETAIL.ASS_CBD.DP.VALID_FROM;
+      VALID_TO                   	<- DETAIL.ASS_CBD.DP.VALID_TO;
+      BALANCE_GROUP_ID             	<- DETAIL.ASS_CBD.DP.BALANCE_GROUP_ID;
+      RESOURCE_ID                	<- DETAIL.ASS_CBD.DP.RESOURCE_ID;
+      RESOURCE_ID_ORIG                	<- DETAIL.ASS_CBD.DP.RESOURCE_ID_ORIG;
+      ZONEMODEL_CODE             	<- DETAIL.ASS_CBD.DP.ZONEMODEL_CODE;
+      IMPACT_CATEGORY             	<- DETAIL.ASS_CBD.DP.IMPACT_CATEGORY;
+      SERVICE_CODE                 	<- DETAIL.ASS_CBD.DP.SERVICE_CODE;
+      TIMEZONE_CODE                 	<- DETAIL.ASS_CBD.DP.TIMEZONE_CODE;
+      TIMEMODEL_CODE             	<- DETAIL.ASS_CBD.DP.TIMEMODEL_CODE;
+      SERVICE_CLASS                 	<- DETAIL.ASS_CBD.DP.SERVICE_CLASS;
+      PRICEMODEL_CODE             	<- DETAIL.ASS_CBD.DP.PRICEMODEL_CODE;
+      RUM                         	<- DETAIL.ASS_CBD.DP.RUM;
+      RATETAG                     	<- DETAIL.ASS_CBD.DP.RATETAG;
+      RATEPLAN                     	<- DETAIL.ASS_CBD.DP.RATEPLAN;
+      GLID                         	<- DETAIL.ASS_CBD.DP.GLID;
+    }
+  }
+  TAX_PACKET
+  {
+	STD_MAPPING
+	{
+	RECORD_TYPE                      <- "695";
+	RECORD_NUMBER                    <- DETAIL.ASS_CBD.TP.RECORD_NUMBER;
+	TAX_CODE                         <- DETAIL.ASS_CBD.TP.TAX_CODE;
+	TAX_RATE                         <- DETAIL.ASS_CBD.TP.TAX_RATE;
+	TAX_VALUE			 <- DETAIL.ASS_CBD.TP.TAX_VALUE;
+	TAX_PERCENT			 <- DETAIL.ASS_CBD.TP.TAX_PERCENT;
+	TAX_VALUE_ORIG			 <- DETAIL.ASS_CBD.TP.TAX_VALUE_ORIG;
+	TAX_TYPE		  	 <- DETAIL.ASS_CBD.TP.TAX_TYPE;
+	CHARGE_TYPE			 <- DETAIL.ASS_CBD.TP.CHARGE_TYPE;
+	TAXABLE_AMOUNT			 <- DETAIL.ASS_CBD.TP.TAXABLE_AMOUNT;
+	TAX_QUANTITY			 <- DETAIL.ASS_CBD.TP.TAX_QUANTITY;
+	RELATED_RECORD_NUMBER		 <- DETAIL.ASS_CBD.TP.RELATED_RECORD_NUMBER;
+	RELATED_CHARGE_INFO_ID		 <- DETAIL.ASS_CBD.TP.RELATED_CHARGE_INFO_ID;
+
+	}
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated Message Description record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_MESSAGE
+  {     
+    STD_MAPPING
+    {
+      RECORD_TYPE               <- DETAIL.ASS_MSG_DES.RECORD_TYPE;
+      RECORD_NUMBER             <- DETAIL.ASS_MSG_DES.RECORD_NUMBER;
+      SYSTEM                    <- DETAIL.ASS_MSG_DES.SYSTEM;
+      MESSAGE_SEVERITY          <- DETAIL.ASS_MSG_DES.MESSAGE_SEVERITY;
+      MESSAGE_ID                <- DETAIL.ASS_MSG_DES.MESSAGE_ID;
+      MESSAGE_DESCRIPTION       <- DETAIL.ASS_MSG_DES.MESSAGE_DESCRIPTION;
+    }
+  }
+
+
+   //----------------------------------------------------------------------------
+  // Associated SMS record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_SMS
+  {
+    STD_MAPPING
+    {
+        RECORD_TYPE                             <- DETAIL.ASS_SMS_EXT.RECORD_TYPE;
+        RECORD_NUMBER                           <- DETAIL.ASS_SMS_EXT.RECORD_NUMBER;
+        CONTENT_INDICATOR                       <- DETAIL.ASS_SMS_EXT.CONTENT_INDICATOR;
+        ORIGINATING_SWITCH_IDENTIFICATION       <- DETAIL.ASS_SMS_EXT.ORIGINATING_SWITCH_IDENTIFICATION;
+        DESTINATION_SWITCH_IDENTIFICATION       <- DETAIL.ASS_SMS_EXT.DESTINATION_SWITCH_IDENTIFICATION;
+        PROVIDER_ID                             <- DETAIL.ASS_SMS_EXT.PROVIDER_ID;
+        SERVICE_ID                              <- DETAIL.ASS_SMS_EXT.SERVICE_ID;
+	DEVICE_NUMBER                           <- DETAIL.ASS_SMS_EXT.DEVICE_NUMBER;
+	PORT_NUMBER				<- DETAIL.ASS_SMS_EXT.PORT_NUMBER;
+	DIALED_DIGITS                           <- DETAIL.ASS_SMS_EXT.DIALED_DIGITS;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated MMS record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_MMS
+  {
+    STD_MAPPING
+    {
+        RECORD_TYPE                             <- DETAIL.ASS_MMS_EXT.RECORD_TYPE;
+        RECORD_NUMBER                           <- DETAIL.ASS_MMS_EXT.RECORD_NUMBER;
+        ACCOUNT_STATUS_TYPE                     <- DETAIL.ASS_MMS_EXT.ACCOUNT_STATUS_TYPE;
+	PRIORITY                                <- DETAIL.ASS_MMS_EXT.PRIORITY;
+        MESSAGE_CONTENT                         <- DETAIL.ASS_MMS_EXT.MESSAGE_CONTENT;
+        MESSAGE_ID                              <- DETAIL.ASS_MMS_EXT.MESSAGE_ID;
+        STATION_IDENTIFIER                      <- DETAIL.ASS_MMS_EXT.STATION_IDENTIFIER;
+        FC_INDICATOR                            <- DETAIL.ASS_MMS_EXT.FC_INDICATOR;
+        CORRELATION_ID                          <- DETAIL.ASS_MMS_EXT.CORRELATION_ID;
+        DEVICE_NUMBER                           <- DETAIL.ASS_MMS_EXT.DEVICE_NUMBER;
+	PORT_NUMBER				<- DETAIL.ASS_MMS_EXT.PORT_NUMBER;
+        DIALED_DIGITS                           <- DETAIL.ASS_MMS_EXT.DIALED_DIGITS;
+        CELL_ID                                 <- DETAIL.ASS_MMS_EXT.CELL_ID;
+        B_CELL_ID                               <- DETAIL.ASS_MMS_EXT.B_CELL_ID;
+        A_TERM_CELL_ID                          <- DETAIL.ASS_MMS_EXT.A_TERM_CELL_ID;
+    } 
+  }
+
+
+  //----------------------------------------------------------------------------
+  // Associated Suspense Record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_SUSPENSE
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE               <- "720";
+      RECORD_NUMBER             <- DETAIL.ASS_SUSPENSE_EXT.RECORD_NUMBER;
+      SUSPENSE_ID               <- DETAIL.ASS_SUSPENSE_EXT.SUSPENSE_ID;
+      PIPELINE_NAME             <- DETAIL.ASS_SUSPENSE_EXT.PIPELINE_NAME;
+      SOURCE_FILENAME           <- DETAIL.ASS_SUSPENSE_EXT.SOURCE_FILENAME;
+      SERVICE_CODE              <- DETAIL.ASS_SUSPENSE_EXT.SERVICE_CODE;
+      EDR_RECORD_TYPE           <- DETAIL.ASS_SUSPENSE_EXT.EDR_RECORD_TYPE;
+      ACCOUNT_POID              <- DETAIL.ASS_SUSPENSE_EXT.ACCOUNT_POID;
+      OVERRIDE_REASONS          <- DETAIL.ASS_SUSPENSE_EXT.OVERRIDE_REASONS;
+      SUSPENDED_FROM_BATCH_ID   <- DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID;
+      RECYCLE_KEY               <- DETAIL.ASS_SUSPENSE_EXT.RECYCLE_KEY;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated Roaming Record
+  //----------------------------------------------------------------------------
+  ASSOCIATED_ROAMING
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE               <- "721";
+      RECORD_NUMBER             <- DETAIL.ASS_ROAMING_EXT.RECORD_NUMBER;
+      TAP_FILE_SEQ_NO           <- DETAIL.ASS_ROAMING_EXT.TAP_FILE_SEQ_NO;
+      RAP_FILE_SEQ_NO           <- DETAIL.ASS_ROAMING_EXT.RAP_FILE_SEQ_NO;
+      SENDER                    <- DETAIL.ASS_ROAMING_EXT.SENDER;
+      RECIPIENT                 <- DETAIL.ASS_ROAMING_EXT.RECIPIENT;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Trailer record
+  //----------------------------------------------------------------------------
+  TRAILER
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                    <- "090";
+      RECORD_NUMBER                  <- TRAILER.RECORD_NUMBER;
+      SENDER                         <- TRAILER.SENDER;
+      RECIPIENT                      <- TRAILER.RECIPIENT;
+      SEQUENCE_NUMBER                <- TRAILER.SEQUENCE_NUMBER;
+      ORIGIN_SEQUENCE_NUMBER         <- TRAILER.ORIGIN_SEQUENCE_NUMBER;
+      TOTAL_NUMBER_OF_RECORDS        <- TRAILER.TOTAL_NUMBER_OF_RECORDS;
+      FIRST_CHARGING_START_TIMESTAMP <- TRAILER.FIRST_START_TIMESTAMP;
+      FIRST_CHARGING_UTC_TIME_OFFSET <- TRAILER.FIRST_CHARGING_UTC_TIME_OFFSET;
+      LAST_CHARGING_START_TIMESTAMP  <- TRAILER.LAST_START_TIMESTAMP;
+      LAST_CHARGING_UTC_TIME_OFFSET  <- TRAILER.LAST_CHARGING_UTC_TIME_OFFSET;
+      TOTAL_RETAIL_CHARGED_VALUE     <- TRAILER.TOTAL_RETAIL_CHARGED_VALUE;
+      TOTAL_WHOLESALE_CHARGED_VALUE  <- TRAILER.TOTAL_WHOLESALE_CHARGED_VALUE;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Associated CIBER records
+  //----------------------------------------------------------------------------
+  ASSOCIATED_CIBER
+  {
+    STD_MAPPING
+    {
+      RECORD_TYPE                           <- "702";
+      RECORD_NUMBER                         <- DETAIL.ASS_CIBER_EXT.RECORD_NUMBER;
+      NO_OCC                                <- DETAIL.ASS_CIBER_EXT.NO_OCC;
+      INTERN_MOBILE_ID_NO                   <- DETAIL.ASS_CIBER_EXT.INTERN_MOBILE_ID_NO;
+      INTERN_CALLED_NO                      <- DETAIL.ASS_CIBER_EXT.INTERN_CALLED_NO;
+      INTERN_MSISDN_MDN                     <- DETAIL.ASS_CIBER_EXT.INTERN_MSISDN_MDN;
+      INTERN_CALLER_ID                      <- DETAIL.ASS_CIBER_EXT.INTERN_CALLER_ID;
+      INTERN_ROUTING_NO                     <- DETAIL.ASS_CIBER_EXT.INTERN_ROUTING_NO;
+      INTERN_TLDN_NO                        <- DETAIL.ASS_CIBER_EXT.INTERN_TLDN_NO;
+      CIBER_RECORD_TYPE                     <- DETAIL.ASS_CIBER_EXT.CIBER_RECORD_TYPE;
+      RETURN_CODE                           <- DETAIL.ASS_CIBER_EXT.RETURN_CODE;
+      RETURN_REASON_CODE                    <- DETAIL.ASS_CIBER_EXT.RETURN_REASON_CODE;
+      INVALID_FIELD_ID                      <- DETAIL.ASS_CIBER_EXT.INVALID_FIELD_ID;
+      HOME_CARRIER_SID                      <- DETAIL.ASS_CIBER_EXT.HOME_CARRIER_SID;
+      MOBILE_ID_NO_LENGTH                   <- DETAIL.ASS_CIBER_EXT.MOBILE_ID_NO_LENGTH;
+      MOBILE_ID_NO                          <- DETAIL.ASS_CIBER_EXT.MOBILE_ID_NO;
+      MOBILE_ID_NO_OVERFLOW                 <- DETAIL.ASS_CIBER_EXT.MOBILE_ID_NO_OVERFLOW;
+      ELECTRONIC_SERIAL_NO                  <- DETAIL.ASS_CIBER_EXT.ELECTRONIC_SERIAL_NO;
+      CALL_DATE                             <- DETAIL.ASS_CIBER_EXT.CALL_DATE;
+      SERVING_CARRIER_SID                   <- DETAIL.ASS_CIBER_EXT.SERVING_CARRIER_SID;
+      TOTAL_CHARGE_AND_TAX                  <- DETAIL.ASS_CIBER_EXT.TOTAL_CHARGE_AND_TAX;
+      TOTAL_STATE_TAX                       <- DETAIL.ASS_CIBER_EXT.TOTAL_STATE_TAX;
+      TOTAL_LOCAL_TAX                       <- DETAIL.ASS_CIBER_EXT.TOTAL_LOCAL_TAX;
+      CALL_DIRECTION                        <- DETAIL.ASS_CIBER_EXT.CALL_DIRECTION;
+      CALL_COMPLETION_INDICATOR             <- DETAIL.ASS_CIBER_EXT.CALL_COMPLETION_INDICATOR;
+      CALL_TERMINATION_INDICATOR            <- DETAIL.ASS_CIBER_EXT.CALL_TERMINATION_INDICATOR;
+      CALLED_NO_LENGTH                      <- DETAIL.ASS_CIBER_EXT.CALLED_NO_LENGTH;
+      CALLED_NO                             <- DETAIL.ASS_CIBER_EXT.CALLED_NO;
+      CALLED_NO_OVERFLOW                    <- DETAIL.ASS_CIBER_EXT.CALLED_NO_OVERFLOW;
+      TEMP_LOCAL_DIRECTORY_NO               <- DETAIL.ASS_CIBER_EXT.TEMP_LOCAL_DIRECTORY_NO;
+      CURRENCY_TYPE                         <- DETAIL.ASS_CIBER_EXT.CURRENCY_TYPE;
+      ORIG_BATCH_SEQ_NO                     <- DETAIL.ASS_CIBER_EXT.ORIG_BATCH_SEQ_NO;
+      INITIAL_CELL_SITE                     <- DETAIL.ASS_CIBER_EXT.INITIAL_CELL_SITE;
+      TIME_ZONE_INDICATOR                   <- DETAIL.ASS_CIBER_EXT.TIME_ZONE_INDICATOR;
+      DAYLIGHT_SAVINGS_INDICATOR            <- DETAIL.ASS_CIBER_EXT.DAYLIGHT_SAVINGS_INDICATOR;
+      MSG_ACCOUNTING_DIGITS                 <- DETAIL.ASS_CIBER_EXT.MSG_ACCOUNTING_DIGITS;
+      SSU_CONNECT_TIME                      <- DETAIL.ASS_CIBER_EXT.SSU_CONNECT_TIME;
+      SSU_CHARGEABLE_TIME                   <- DETAIL.ASS_CIBER_EXT.SSU_CHARGEABLE_TIME;
+      SSU_ELAPSED_TIME                      <- DETAIL.ASS_CIBER_EXT.SSU_ELAPSED_TIME;
+      SSU_RATE_PERIOD                       <- DETAIL.ASS_CIBER_EXT.SSU_RATE_PERIOD;
+      SSU_MULTIRATE_PERIOD                  <- DETAIL.ASS_CIBER_EXT.SSU_MULTIRATE_PERIOD;
+      SSU_CHARGE                            <- DETAIL.ASS_CIBER_EXT.SSU_CHARGE;
+      MISC_SURCHARGE                        <- DETAIL.ASS_CIBER_EXT.MISC_SURCHARGE;
+      MISC_SURCHARGE_DESC                   <- DETAIL.ASS_CIBER_EXT.MISC_SURCHARGE_DESC;
+      PRINTED_CALL                          <- DETAIL.ASS_CIBER_EXT.PRINTED_CALL;
+      FRAUD_INDICATOR                       <- DETAIL.ASS_CIBER_EXT.FRAUD_INDICATOR;
+      FRAUD_SUB_INDICATOR                   <- DETAIL.ASS_CIBER_EXT.FRAUD_SUB_INDICATOR;
+      LOCAL_CARRIER_RESERVED                <- DETAIL.ASS_CIBER_EXT.LOCAL_CARRIER_RESERVED;
+      SPECIAL_FEATURES_USED                 <- DETAIL.ASS_CIBER_EXT.SPECIAL_FEATURES_USED;
+      CALLED_PLACE                          <- DETAIL.ASS_CIBER_EXT.CALLED_PLACE;
+      CALLED_STATE                          <- DETAIL.ASS_CIBER_EXT.CALLED_STATE;
+      SERVING_PLACE                         <- DETAIL.ASS_CIBER_EXT.SERVING_PLACE;
+      SERVING_STATE                         <- DETAIL.ASS_CIBER_EXT.SERVING_STATE;
+      RECV_CARRIER_SID                      <- DETAIL.ASS_CIBER_EXT.RECV_CARRIER_SID;
+      TRANS_CODE1                           <- DETAIL.ASS_CIBER_EXT.TRANS_CODE1;
+      TRANS_CODE2                           <- DETAIL.ASS_CIBER_EXT.TRANS_CODE2;
+      SENDING_CARRIER_SID                   <- DETAIL.ASS_CIBER_EXT.SENDING_CARRIER_SID;
+      CHARGE_NO_1_IND                       <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_1_IND;
+      CHARGE_NO_1_CONNECT_TIME              <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_1_CONNECT_TIME;
+      CHARGE_NO_1_CHARGEABLE_TIME           <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_1_CHARGEABLE_TIME;
+      CHARGE_NO_1_ELAPSED_TIME              <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_1_ELAPSED_TIME;
+      CHARGE_NO_1_RATE_PERIOD               <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_1_RATE_PERIOD;
+      CHARGE_NO_1_MULTIRATE_PERIOD          <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_1_MULTIRATE_PERIOD;
+      CHARGE_NO_1                           <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_1;
+      CHARGE_NO_2_IND                       <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_2_IND;
+      CHARGE_NO_2_CONNECT_TIME              <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_2_CONNECT_TIME;
+      CHARGE_NO_2_CHARGEABLE_TIME           <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_2_CHARGEABLE_TIME;
+      CHARGE_NO_2_ELAPSED_TIME              <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_2_ELAPSED_TIME;
+      CHARGE_NO_2_RATE_PERIOD               <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_2_RATE_PERIOD;
+      CHARGE_NO_2_MULTIRATE_PERIOD          <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_2_MULTIRATE_PERIOD;
+      CHARGE_NO_2                           <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_2;
+      CHARGE_NO_3_IND                       <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_3_IND;
+      CHARGE_NO_3_CONNECT_TIME              <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_3_CONNECT_TIME;
+      CHARGE_NO_3_CHARGEABLE_TIME           <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_3_CHARGEABLE_TIME;
+      CHARGE_NO_3_ELAPSED_TIME              <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_3_ELAPSED_TIME;
+      CHARGE_NO_3_RATE_PERIOD               <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_3_RATE_PERIOD;
+      CHARGE_NO_3_MULTIRATE_PERIOD          <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_3_MULTIRATE_PERIOD;
+      CHARGE_NO_3                           <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_3;
+      CHARGE_NO_4_IND                       <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_4_IND;
+      CHARGE_NO_4_CONNECT_TIME              <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_4_CONNECT_TIME;
+      CHARGE_NO_4_CHARGEABLE_TIME           <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_4_CHARGEABLE_TIME;
+      CHARGE_NO_4_ELAPSED_TIME              <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_4_ELAPSED_TIME;
+      CHARGE_NO_4_RATE_PERIOD               <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_4_RATE_PERIOD;
+      CHARGE_NO_4_MULTIRATE_PERIOD          <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_4_MULTIRATE_PERIOD;
+      CHARGE_NO_4                           <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_4;
+      CHARGE_NO_1_SURCHARGE_IND             <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_1_SURCHARGE_IND;
+      CHARGE_NO_2_SURCHARGE_IND             <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_2_SURCHARGE_IND;
+      CHARGE_NO_3_SURCHARGE_IND             <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_3_SURCHARGE_IND;
+      CHARGE_NO_4_SURCHARGE_IND             <- DETAIL.ASS_CIBER_EXT.CHARGE_NO_4_SURCHARGE_IND;
+      TOLL_CONNECT_TIME                     <- DETAIL.ASS_CIBER_EXT.TOLL_CONNECT_TIME;
+      TOLL_CHARGEABLE_TIME                  <- DETAIL.ASS_CIBER_EXT.TOLL_CHARGEABLE_TIME;
+      TOLL_ELAPSED_TIME                     <- DETAIL.ASS_CIBER_EXT.TOLL_ELAPSED_TIME;
+      TOLL_TARIFF_DESC                      <- DETAIL.ASS_CIBER_EXT.TOLL_TARIFF_DESC;
+      TOLL_RATE_PERIOD                      <- DETAIL.ASS_CIBER_EXT.TOLL_RATE_PERIOD;
+      TOLL_MULTIRATE_PERIOD                 <- DETAIL.ASS_CIBER_EXT.TOLL_MULTIRATE_PERIOD;
+      TOLL_RATE_CLASS                       <- DETAIL.ASS_CIBER_EXT.TOLL_RATE_CLASS;
+      TOLL_FROM_RATING_NPA_NXX              <- DETAIL.ASS_CIBER_EXT.TOLL_FROM_RATING_NPA_NXX;
+      TOLL_CHARGE                           <- DETAIL.ASS_CIBER_EXT.TOLL_CHARGE;
+      TOLL_STATE_TAX                        <- DETAIL.ASS_CIBER_EXT.TOLL_STATE_TAX;
+      TOLL_LOCAL_TAX                        <- DETAIL.ASS_CIBER_EXT.TOLL_LOCAL_TAX;
+      TOLL_NETWORK_CARRIER_ID               <- DETAIL.ASS_CIBER_EXT.TOLL_NETWORK_CARRIER_ID;
+      MSID_INDICATOR                        <- DETAIL.ASS_CIBER_EXT.MSID_INDICATOR;
+      MSID                                  <- DETAIL.ASS_CIBER_EXT.MSID;
+      MSISDN_MDN_LENGTH                     <- DETAIL.ASS_CIBER_EXT.MSISDN_MDN_LENGTH;
+      MSISDN_MDN                            <- DETAIL.ASS_CIBER_EXT.MSISDN_MDN;
+      ESN_IMEI_INDICATOR                    <- DETAIL.ASS_CIBER_EXT.ESN_IMEI_INDICATOR;
+      ESN_IMEI                              <- DETAIL.ASS_CIBER_EXT.ESN_IMEI;
+      CALLER_ID_LENGTH                      <- DETAIL.ASS_CIBER_EXT.CALLER_ID_LENGTH;
+      CALLER_ID                             <- DETAIL.ASS_CIBER_EXT.CALLER_ID;
+      ROUTING_NO_LENGTH                     <- DETAIL.ASS_CIBER_EXT.ROUTING_NO_LENGTH;
+      ROUTING_NO                            <- DETAIL.ASS_CIBER_EXT.ROUTING_NO;
+      TLDN_NO_LENGTH                        <- DETAIL.ASS_CIBER_EXT.TLDN_NO_LENGTH;
+      TLDN_NO                               <- DETAIL.ASS_CIBER_EXT.TLDN_NO;
+      AIR_CONNECT_TIME                      <- DETAIL.ASS_CIBER_EXT.AIR_CONNECT_TIME;
+      AIR_CHARGEABLE_TIME                   <- DETAIL.ASS_CIBER_EXT.AIR_CHARGEABLE_TIME;
+      AIR_ELAPSED_TIME                      <- DETAIL.ASS_CIBER_EXT.AIR_ELAPSED_TIME;
+      AIR_RATE_PERIOD                       <- DETAIL.ASS_CIBER_EXT.AIR_RATE_PERIOD;
+      AIR_MULTIRATE_PERIOD                  <- DETAIL.ASS_CIBER_EXT.AIR_MULTIRATE_PERIOD;
+      AIR_CHARGE                            <- DETAIL.ASS_CIBER_EXT.AIR_CHARGE;
+      OTHER_CHARGE_1_INDICATOR              <- DETAIL.ASS_CIBER_EXT.OTHER_CHARGE_1_INDICATOR;
+      OTHER_CHARGE_1                        <- DETAIL.ASS_CIBER_EXT.OTHER_CHARGE_1;
+      CALLED_COUNTRY                        <- DETAIL.ASS_CIBER_EXT.CALLED_COUNTRY;
+      SERVING_COUNTRY                       <- DETAIL.ASS_CIBER_EXT.SERVING_COUNTRY;
+      TOLL_RATING_POINT_LENGTH              <- DETAIL.ASS_CIBER_EXT.TOLL_RATING_POINT_LENGTH;
+      TOLL_RATING_POINT                     <- DETAIL.ASS_CIBER_EXT.TOLL_RATING_POINT;
+      FEATURE_USED_AFTER_HO_IND             <- DETAIL.ASS_CIBER_EXT.FEATURE_USED_AFTER_HO_IND;
+      OCC_START_DATE                        <- DETAIL.ASS_CIBER_EXT.OCC_START_DATE;
+      OCC_CHARGE                            <- DETAIL.ASS_CIBER_EXT.OCC_CHARGE;
+      FET_EXEMPT_INDICATOR                  <- DETAIL.ASS_CIBER_EXT.FET_EXEMPT_INDICATOR;
+      PASS_THROUGH_CHARGE_IND               <- DETAIL.ASS_CIBER_EXT.PASS_THROUGH_CHARGE_IND;
+      CONNECT_TIME                          <- DETAIL.ASS_CIBER_EXT.CONNECT_TIME;
+      RECORD_USE_INDICATOR                  <- DETAIL.ASS_CIBER_EXT.RECORD_USE_INDICATOR;
+      OCC_DESCRIPTION                       <- DETAIL.ASS_CIBER_EXT.OCC_DESCRIPTION;
+      OCC_END_DATE                          <- DETAIL.ASS_CIBER_EXT.OCC_END_DATE;
+      RECORD_CREATE_DATE                    <- DETAIL.ASS_CIBER_EXT.RECORD_CREATE_DATE;
+      SEQ_INDICATOR                         <- DETAIL.ASS_CIBER_EXT.SEQ_INDICATOR;
+      OCC_INTERVAL_INDICATOR                <- DETAIL.ASS_CIBER_EXT.OCC_INTERVAL_INDICATOR;
+      EVENT_DATE                            <- DETAIL.ASS_CIBER_EXT.EVENT_DATE;
+      MIN_ESN_APP_INDICATOR                 <- DETAIL.ASS_CIBER_EXT.MIN_ESN_APP_INDICATOR;
+      R70_RECORD_USE_INDICATOR              <- DETAIL.ASS_CIBER_EXT.R70_RECORD_USE_INDICATOR;
+      EVENT_TIME                            <- DETAIL.ASS_CIBER_EXT.EVENT_TIME;
+    }
+  }
+
+	ASS_CI_MAPPING
+	{
+		STD_MAPPING
+		{
+			RECORD_TYPE                       	<- "888";                      // default CI
+                        GLId                                    <- DETAIL.ASS_CI.GL_ID;
+                        GSTflag                                 <- DETAIL.ASS_CI.GST;
+			CDRType					<- DETAIL.ASS_CI.CDR_TYPE;
+			Sequence_Number				<- DETAIL.ASS_CI.SEQUENCE_NUMBER;
+			AccountType				<- DETAIL.ASS_CI.ACCOUNT_TYPE;
+			CashAmountQuantity			<- DETAIL.ASS_CI.CASH_AMOUNT_QUANTITY;
+			BundleAmountQuantity			<- DETAIL.ASS_CI.BUNDLE_AMOUNT_QUANTITY;
+			OriginatingCountry              	<- DETAIL.ASS_CI.ORIGINATING_COUNTRY;
+			OriginatingZone                    	<- DETAIL.ASS_CI.ORIGINATING_ZONE;
+			DestinationCountry			<- DETAIL.ASS_CI.DESTINATION_COUNTRY;
+			DestinationZone				<- DETAIL.ASS_CI.DESTINATION_ZONE;
+			CascadeId				<- DETAIL.ASS_CI.CASCADE_ID;
+			EndCallReason				<- DETAIL.ASS_CI.END_CALL_REASON;
+			RatingGroupCode				<- DETAIL.ASS_CI.RATING_GROUP_CODE;
+			RatingGroupType				<- DETAIL.ASS_CI.RATING_GROUP_TYPE;
+			Rates					<- DETAIL.ASS_CI.RATES;
+			Mfile					<- DETAIL.ASS_CI.MFILE;
+			InPackageCode				<- DETAIL.ASS_CI.IN_PACKAGE_CODE;
+			Product					<- DETAIL.ASS_CI.PRODUCT;
+			SharersMSISDN				<- DETAIL.ASS_CI.SHARERS_MSISDN;
+			SharersProduct				<- DETAIL.ASS_CI.SHARERS_PRODUCT;
+			SHRD					<- DETAIL.ASS_CI.SHRD;
+			SCPId					<- DETAIL.ASS_CI.SCP_ID;
+			RecordDate				<- DETAIL.ASS_CI.RECORD_DATE;
+			AcctId					<- DETAIL.ASS_CI.ACCT_ID;
+			AcctRefId				<- DETAIL.ASS_CI.ACCT_REF_ID;
+			CLI					<- DETAIL.ASS_CI.CLI;
+			OGEOId					<- DETAIL.ASS_CI.OGEO_ID;
+			TGEOId					<- DETAIL.ASS_CI.TGEO_ID;
+			OverriddenTariffPlan			<- DETAIL.ASS_CI.OVERRIDDEN_TARIFF_PLAN;
+		}
+    }
+
+    ASS_BRI_MAPPING
+    {
+       STD_MAPPING
+      {
+         RECORD_TYPE                       <- "890";
+         RESOURCE_NAME                     <- DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME;
+         CONSUMED_QUANTITY                     <- DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY;
+         BALANCE_QUANTITY                     <- DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY;
+      }
+
+  }
+
+
+    ASS_TEL_MAPPING
+    {
+       STD_MAPPING
+	{
+		RECORD_TYPE   <- "891";                          // default TEL
+		CellId        <- DETAIL.ASS_CI.ASS_TEL.CELL_ID;
+		SK            <- DETAIL.ASS_CI.ASS_TEL.SK;
+		IMSI          <- DETAIL.ASS_CI.ASS_TEL.IMSI;
+		LocNum        <- DETAIL.ASS_CI.ASS_TEL.LOC_NUM;
+		CallId        <- DETAIL.ASS_CI.ASS_TEL.CALL_ID;
+		RDPN          <- DETAIL.ASS_CI.ASS_TEL.RDPN;
+		TN            <- DETAIL.ASS_CI.ASS_TEL.TN;
+	}
+    }
+
+    ASS_SMS_MAPPING
+    {
+       STD_MAPPING
+	{
+	   RECORD_TYPE   		<- "892";                         // default SMS
+	   EventClass	     		<- DETAIL.ASS_CI.ASS_SMS.EVENT_CLASS;
+	   EventName	     		<- DETAIL.ASS_CI.ASS_SMS.EVENT_NAME;
+	   EventCost	     		<- DETAIL.ASS_CI.ASS_SMS.EVENT_COST;
+	   EventTimeCost	     	<- DETAIL.ASS_CI.ASS_SMS.EVENT_TIME_COST;
+	   EventDataCost	     	<- DETAIL.ASS_CI.ASS_SMS.EVENT_DATA_COST;
+	   EventUnitCost	     	<- DETAIL.ASS_CI.ASS_SMS.EVENT_UNIT_COST;
+	   Cascade	    		<- DETAIL.ASS_CI.ASS_SMS.CASCADE;
+	   ProdCatID	     		<- DETAIL.ASS_CI.ASS_SMS.PROD_CAT_ID;
+ 	}
+    }
+
+
+    ASS_DAT_MAPPING
+    {
+       STD_MAPPING
+	{
+	 RECORD_TYPE   				<- "893";                       // default DAT
+	 CS	     				<- DETAIL.ASS_CI.ASS_DAT.CS;
+	 DiscountType	     			<- DETAIL.ASS_CI.ASS_DAT.DISCOUNT_TYPE;
+	 Multiplier	     			<- DETAIL.ASS_CI.ASS_DAT.MULTIPLIER;
+	 Oprod	     				<- DETAIL.ASS_CI.ASS_DAT.OPROD;
+	 UMS	     				<- DETAIL.ASS_CI.ASS_DAT.UMS;
+	 UProd	     				<- DETAIL.ASS_CI.ASS_DAT.UPROD;
+	}
+    }
+
+    ASS_VV_MAPPING
+    {
+       STD_MAPPING
+	{
+	   RECORD_TYPE   				<- "894";                        // default VV
+	   EXT1	     					<- DETAIL.ASS_CI.ASS_VV.EXT1;
+	   EXT2	     					<- DETAIL.ASS_CI.ASS_VV.EXT2;
+	   EXT4	     					<- DETAIL.ASS_CI.ASS_VV.EXT4;
+	   ChargeExpiry	     				<- DETAIL.ASS_CI.ASS_VV.CHARGE_EXPIRY;
+	   ChargeName	     				<- DETAIL.ASS_CI.ASS_VV.CHARGE_NAME;
+	   NewAcctExpiry	     			<- DETAIL.ASS_CI.ASS_VV.NEW_ACCT_EXPIRY;
+	   NewBalanceExpires	   			<- DETAIL.ASS_CI.ASS_VV.NEW_BALANCE_EXPIRIES;
+	   NewChargeState	     			<- DETAIL.ASS_CI.ASS_VV.NEW_CHARGE_STATE;
+	   OldAcctExpiry	     			<- DETAIL.ASS_CI.ASS_VV.OLD_ACCT_EXPIRY;
+	   OldBalanceExpires	   			<- DETAIL.ASS_CI.ASS_VV.OLD_BALANCE_EXPIRIES;
+	   OldChargeExpiry	     			<- DETAIL.ASS_CI.ASS_VV.OLD_CHARGE_EXPIRY;
+	   OldChargeState	     			<- DETAIL.ASS_CI.ASS_VV.OLD_CHARGE_STATE;
+	   Partner	     				<- DETAIL.ASS_CI.ASS_VV.PARTNER;
+	   Payment	     				<- DETAIL.ASS_CI.ASS_VV.PAYMENT;
+	   Reference	     				<- DETAIL.ASS_CI.ASS_VV.REFERENCE;
+	   Result	     				<- DETAIL.ASS_CI.ASS_VV.RESULT;
+	   TxID	     					<- DETAIL.ASS_CI.ASS_VV.TX_ID;
+	   VoucherType	     				<- DETAIL.ASS_CI.ASS_VV.VOUCHER_TYPE;
+	   ValuepackType	   			<- DETAIL.ASS_CI.ASS_VV.VP_TYPE;
+	   EXT3		  				<- DETAIL.ASS_CI.ASS_VV.EXT3;
+	   Description2					<- DETAIL.ASS_CI.ASS_VV.DESCRIPTION2;
+	   Description3					<- DETAIL.ASS_CI.ASS_VV.DESCRIPTION3;
+	   Volume					<- DETAIL.ASS_CI.ASS_VV.VOLUME;
+	   Unit						<- DETAIL.ASS_CI.ASS_VV.UNIT;
+	   PackGroupDisplay				<- DETAIL.ASS_CI.ASS_VV.PK_GROUP_DISPLAY;
+	 }
+    }
+
+    ASS_VOM_MAPPING
+    {
+       STD_MAPPING
+	{
+		RECORD_TYPE   <- "895";                          // default VOM
+		CellId        <- DETAIL.ASS_CI.ASS_VOM.CELL_ID;
+		SK            <- DETAIL.ASS_CI.ASS_VOM.SK;
+		IMSI          <- DETAIL.ASS_CI.ASS_VOM.IMSI;
+		LocNum        <- DETAIL.ASS_CI.ASS_VOM.LOC_NUM;
+		CallId        <- DETAIL.ASS_CI.ASS_VOM.CALL_ID;
+		RDPN          <- DETAIL.ASS_CI.ASS_VOM.RDPN;
+		TN            <- DETAIL.ASS_CI.ASS_VOM.TN;
+	}
+    }
+
+    ASS_MMS_MAPPING
+    {
+       STD_MAPPING
+	{
+	   RECORD_TYPE   		<- "896";                         // default MMS
+	   EventClass	     		<- DETAIL.ASS_CI.ASS_MMS.EVENT_CLASS;
+	   EventName	     		<- DETAIL.ASS_CI.ASS_MMS.EVENT_NAME;
+	   EventCost	     		<- DETAIL.ASS_CI.ASS_MMS.EVENT_COST;
+	   EventTimeCost	     	<- DETAIL.ASS_CI.ASS_MMS.EVENT_TIME_COST;
+	   EventDataCost	     	<- DETAIL.ASS_CI.ASS_MMS.EVENT_DATA_COST;
+	   EventUnitCost	     	<- DETAIL.ASS_CI.ASS_MMS.EVENT_UNIT_COST;
+	   Cascade	    		<- DETAIL.ASS_CI.ASS_MMS.CASCADE;
+	   ProdCatID	     		<- DETAIL.ASS_CI.ASS_MMS.PROD_CAT_ID;
+ 	}
+    }
+
+
+    ASS_VAS_MAPPING
+    {
+       STD_MAPPING
+	{
+	   RECORD_TYPE   				<- "897";                        // default VAS
+	   EXT1	     					<- DETAIL.ASS_CI.ASS_VAS.EXT1;
+	   EXT2	     					<- DETAIL.ASS_CI.ASS_VAS.EXT2;
+	   EXT4	     					<- DETAIL.ASS_CI.ASS_VAS.EXT4;
+	   ChargeExpiry	     				<- DETAIL.ASS_CI.ASS_VAS.CHARGE_EXPIRY;
+	   ChargeName	     				<- DETAIL.ASS_CI.ASS_VAS.CHARGE_NAME;
+	   NewAcctExpiry	     			<- DETAIL.ASS_CI.ASS_VAS.NEW_ACCT_EXPIRY;
+	   NewBalanceExpires	   			<- DETAIL.ASS_CI.ASS_VAS.NEW_BALANCE_EXPIRIES;
+	   NewChargeState	     			<- DETAIL.ASS_CI.ASS_VAS.NEW_CHARGE_STATE;
+	   OldAcctExpiry	     			<- DETAIL.ASS_CI.ASS_VAS.OLD_ACCT_EXPIRY;
+	   OldBalanceExpires	   			<- DETAIL.ASS_CI.ASS_VAS.OLD_BALANCE_EXPIRIES;
+	   OldChargeExpiry	     			<- DETAIL.ASS_CI.ASS_VAS.OLD_CHARGE_EXPIRY;
+	   OldChargeState	     			<- DETAIL.ASS_CI.ASS_VAS.OLD_CHARGE_STATE;
+	   Partner	     				<- DETAIL.ASS_CI.ASS_VAS.PARTNER;
+	   Payment	     				<- DETAIL.ASS_CI.ASS_VAS.PAYMENT;
+	   Reference	     				<- DETAIL.ASS_CI.ASS_VAS.REFERENCE;
+	   Result	     				<- DETAIL.ASS_CI.ASS_VAS.RESULT;
+	   TxID	     					<- DETAIL.ASS_CI.ASS_VAS.TX_ID;
+	   VoucherType	     				<- DETAIL.ASS_CI.ASS_VAS.VOUCHER_TYPE;
+	   ValuepackType	     			<- DETAIL.ASS_CI.ASS_VAS.VP_TYPE;
+	   EXT3						<- DETAIL.ASS_CI.ASS_VAS.EXT3;
+	   Description2					<- DETAIL.ASS_CI.ASS_VAS.DESCRIPTION2;
+	   Description3					<- DETAIL.ASS_CI.ASS_VAS.DESCRIPTION3;
+	   Volume					<- DETAIL.ASS_CI.ASS_VAS.VOLUME;
+	   Unit						<- DETAIL.ASS_CI.ASS_VAS.UNIT;
+	   PackGroupDisplay				<- DETAIL.ASS_CI.ASS_VAS.PK_GROUP_DISPLAY;
+	 }
+    }
+
+}

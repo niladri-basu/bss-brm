@@ -1,0 +1,55 @@
+PriceValidator
+{
+  LogFileName = pricevalidator.log
+
+  DataPool
+  {
+    LoginPipeline
+    {
+      Module
+      {
+        UserName           = PIN109
+        PassWord           = &aes|06|0D5E11BFDD97D2769D9B0DBFBD1BBF7E1930C6DBA53915A57800082E75FA2144D9
+        DatabaseName       = infdb.portal.com
+        AccessLib          = oci61
+      }
+    }
+
+    LoginInfranet
+    {
+      Module
+      {
+        UserName           = PIN109
+        PassWord           = &aes|06|0D5E11BFDD97D2769D9B0DBFBD1BBF7E1930C6DBA53915A57800082E75FA2144D9
+        DatabaseName       = infdb.portal.com
+        AccessLib          = oci61
+      }
+    }
+  }# end of data pool
+
+  ValidationsList
+  {
+     RatePlanValidation
+     {
+     }
+     DiscountAndSponsorValidation 
+     {
+     }
+     GLIDPriceValidation 
+     {
+     }
+     ResourcePriceValidation 
+     {
+     }
+     FilterSetPriceValidation 
+     {
+     } 
+     RTPXmlValidation
+     {
+        xmlFile1 = ./zonemap_event.xml
+        xmlFile2 = ./rate_event.xml
+        xmlFile3 = ./discount_event.xml
+     } 
+  }
+
+}#End of Registry

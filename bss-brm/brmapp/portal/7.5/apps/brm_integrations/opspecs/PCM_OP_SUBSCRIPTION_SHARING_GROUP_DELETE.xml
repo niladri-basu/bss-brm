@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Opcode component="fm_subscription"
+        name="PCM_OP_SUBSCRIPTION_SHARING_GROUP_DELETE" transaction="required"
+        visibility="public"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd">
+  <Doc>PCM_OP_SUBSCRIPTION_SHARING_GROUP_DELTE input and output flist
+       specifications. This opcode deletes either: 1) the sharing group object,
+       if no MEMBERS/DISCOUNTS/SPONSORS/PROFILES array is passed, or 2) the
+       input MEMBERS/DISCOUNT/SPONSORS/PROFILES array.</Doc>
+  <!-- INPUT SPEC  -->
+  <Input>
+    <Fields>
+      <Poid mode="complete" name="PIN_FLD_POID" use="required">
+        <Doc>Account owner of the sharing group object to be deleted.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Poid mode="complete" name="PIN_FLD_GROUP_OBJ" use="required">
+        <Doc>The sharing group object to be deleted, or a type only poid of a
+             sharing group. Type is either /group/sharing/discounts,
+             /group/sharing/charges, /group/sharing/monitor or
+             /group/sharing/profiles object.</Doc>
+        <ClassRef>obj://group</ClassRef>
+      </Poid>
+      <String maxlen="255" name="PIN_FLD_PROGRAM_NAME" use="optional">
+        <Doc>Name of program invoking this opcode, to be recorded in /event.</Doc>
+      </String>
+      <String maxlen="255" name="PIN_FLD_DESCR" use="optional">
+        <Doc>Description text to be recorded in /event</Doc>
+      </String>
+      <Timestamp name="PIN_FLD_END_T" use="optional">
+        <Doc>End time - Timestamp of when event ended (Portal Time). Referenced
+             when updating discount sharing relationship</Doc>
+      </Timestamp>
+      <Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+        <Doc>Effective time - Used by rating engine in the audit table (Portal
+             Time)</Doc>
+      </Timestamp>
+      <Array elemIdMode="index" iterationOrder="undefined"
+             name="PIN_FLD_MEMBERS" use="optional">
+        <Doc>If no members/discounts/sponsors/profiles array is passed, then the
+             request is to delete the Group sharing object and the Group object
+             gets deleted. Member details array (list of member account/service
+             instance). The list of members in the input will be deleted from
+             the group object.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_ACCOUNT_OBJ" use="required">
+            <Doc>Member account object. The ordered balance group for this
+                 member updated to remove an reference to this sharing group.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Poid mode="complete" name="PIN_FLD_SERVICE_OBJ" use="optional">
+            <Doc>Member service object. The ordered balance group for this
+                 member updated to remove an reference to this sharing group.</Doc>
+            <ClassRef>obj://service</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+      <Array elemIdMode="index" iterationOrder="undefined"
+             name="PIN_FLD_DISCOUNTS" use="optional">
+        <Doc>List of discount instances (only if the group_obj poid-type is a
+             /group/sharing/discounts) to be deleted. Array attributes are
+             optional.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_DISCOUNT_OBJ" use="optional">
+            <Doc>Discount object reference.</Doc>
+            <ClassRef>obj://discount</ClassRef>
+          </Poid>
+          <Poid mode="complete" name="PIN_FLD_OFFERING_OBJ" use="optional">
+            <Doc>Uniquely identifies a discount in an account.</Doc>
+            <ClassRef>obj://purchased_discount</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+      <Array elemIdMode="index" iterationOrder="undefined"
+             name="PIN_FLD_SPONSORS" use="optional">
+        <Doc>List of sponsorship entires (only if the group_obj poid-type is a
+             /group/sharing/charges) to be deleted. Array attributes are
+             optional.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_SPONSOR_OBJ" use="optional">
+            <Doc>Sponsor object reference.</Doc>
+            <ClassRef>obj://sponsorship</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+      <Array elemIdMode="index" iterationOrder="undefined"
+             name="PIN_FLD_PROFILES" use="optional">
+        <Doc>List of profile entires (only if the group_obj poid-type is a
+             /group/sharing/profiles) to be deleted. Array attributes are
+             optional.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_PROFILE_OBJ" use="optional">
+            <Doc>Profile object reference.</Doc>
+            <ClassRef>obj://profile</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+    </Fields>
+  </Input>
+  <!-- OUTPUT SPEC  -->
+  <Output>
+    <Fields>
+      <Poid mode="complete" name="PIN_FLD_POID" use="required">
+        <Doc>Poid of the group sharing object modified.</Doc>
+        <ClassRef>obj://group</ClassRef>
+      </Poid>
+      <Array elemIdMode="ignored" iterationOrder="undefined"
+             name="PIN_FLD_RESULTS" use="optional">
+        <Doc>Array of results information.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_POID" use="required">
+            <Doc>Poid of the event object created</Doc>
+            <ClassRef>obj://event</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+    </Fields>
+  </Output>
+</Opcode>

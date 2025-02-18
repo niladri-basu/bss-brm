@@ -1,0 +1,36 @@
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9760  pcpst.c(88):2052 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9760:-143337792:0:1440415133:0
+	(9760): pcp_connect(), connecting - failed
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9760  pcm.c(59):197 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9760:-143337792:0:1440415133:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_PCP:2 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_CM_ADDRESS_LOOKUP_FAILED:57>
+	<field num=0:0,0 recid=0 reserved=2 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon 24 Aug 2015 11:18:53 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:9760  pcm_conn.c(7):283 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:9760:-143337792:0:1440415133:0
+	pcm_connect: bad pcm_context_open, err 57
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:12016  pcpst.c(88):2052 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:12016:-143124800:0:1440415406:0
+	(12016): pcp_connect(), connecting - failed
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:12016  pcm.c(59):197 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:12016:-143124800:0:1440415406:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_PCP:2 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_CM_ADDRESS_LOOKUP_FAILED:57>
+	<field num=0:0,0 recid=0 reserved=2 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon 24 Aug 2015 11:23:26 PM NZST  exlaklprdcdm2.2degreesmobile.co.nz  <no name>:12016  pcm_conn.c(7):283 1:exlaklprdcdm2.2degreesmobile.co.nz:<no_name>:12016:-143124800:0:1440415406:0
+	pcm_connect: bad pcm_context_open, err 57
+E Sat 12 Dec 2015 02:01:30 AM NZDT  exlhamuatbrm  <no name>:23895  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:23895:-143522112:0:1449838890:0
+	(23895): pcp_connect(), connecting - failed
+E Sat 12 Dec 2015 02:01:30 AM NZDT  exlhamuatbrm  <no name>:23895  pcm.c(59):197 1:exlhamuatbrm:<no_name>:23895:-143522112:0:1449838890:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_PCP:2 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_NAP_CONNECT_FAILED:27>
+	<field num=0:0,0 recid=0 reserved=111 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Sat 12 Dec 2015 02:01:30 AM NZDT  exlhamuatbrm  <no name>:23895  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:23895:-143522112:0:1449838890:0
+	pcm_connect: bad pcm_context_open, err 27
+E Sat 12 Dec 2015 02:03:02 AM NZDT  exlhamuatbrm  <no name>:24923  pcpst.c(88):2052 1:exlhamuatbrm:<no_name>:24923:-143280448:0:1449838982:0
+	(24923): pcp_connect(), connecting - failed
+E Sat 12 Dec 2015 02:03:02 AM NZDT  exlhamuatbrm  <no name>:24923  pcm.c(59):197 1:exlhamuatbrm:<no_name>:24923:-143280448:0:1449838982:0
+	Connect open failed in pcm_context_open
+	<location=PIN_ERRLOC_PCP:2 class=PIN_ERRCLASS_SYSTEM_DETERMINATE:1 errno=PIN_ERR_NAP_CONNECT_FAILED:27>
+	<field num=0:0,0 recid=0 reserved=111 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Sat 12 Dec 2015 02:03:02 AM NZDT  exlhamuatbrm  <no name>:24923  pcm_conn.c(7):283 1:exlhamuatbrm:<no_name>:24923:-143280448:0:1449838982:0
+	pcm_connect: bad pcm_context_open, err 27

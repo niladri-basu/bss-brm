@@ -1,0 +1,1023 @@
+========================================================================================
+FCT_MainRating
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+Module Version: 10042  7.5 29-Aug-2013
+bug17353851 : PRODUCT SELECTION ISSUE WHILE PIPELINE RATING
+Issue Description:
+------------------
+When there are two or more purchased products of same rateplan with different priorities owned 
+by an account, even though rating is done using highest priority product lower priority product 
+of same rateplan is termed to be used for rating.
+Solution:
+---------
+Established a link (by having purchased product index in associated charge breakdown record) 
+between purchased product and corresponding charge packet so that after successful rating there 
+will be no confusion as to decide which product (or rateplan) is used for rating even though
+there are multiple products with different priorities.
+========================================================================================
+Module Version: 10041  7.5 21-Dec-2012
+bug16029370 : P-15981579 PIPELINE FREEZE WITH MORE THAN ONE EVENT TO RATE
+Problem : Acquire lock and Release lock of price model object was not happening in sync.
+Release lock was called even though price model object lock was not acquired.
+Solution : Price model cache was not cleared before next iteration of processing is
+started. Modified the code so that price model cache is cleared before start of next
+iteration of edr processing.
+========================================================================================
+Module Version: 10040  7.5 29-Apr-2012
+bug14001600 : Rateplan with a lower priority is picked when a higher priority rateplan
+was eligible to picked for rating.
+Solution:
+Model selector was not able to return the Price Model for the rateplan as the model selector
+engine was considering the edr field from the first ASS_CBD always. Changed the code to
+pick the edr field from the current ASS_CBD instead of the first one while getting the 
+Price-model from the model selector.
+========================================================================================
+Module Version : 10039 7.5 26-Dec-2011
+bug13529012 :
+Problem : CERTAIN IMPACT CATEGORIES WERE INCORRECTLY RATED BY PIPELINE
+Solution : Changed the code to call a different rounding method than what was being
+called earlier during MainRating.
+----------------------------------------------------------------------------------------
+Module Version : 10038 7.4 27-Sept-2010
+bug10145783 :  CDR PROCESSING PERFORMANCE DECREASED BY 50% IN BUILD PIPELINE.7.3.2 100921_1305 
+		Fix  variable initialisation for tracing (bug9974185)
+----------------------------------------------------------------------------------------
+Module Version : 10037 7.4 08-aug-2010
+bug9974185 : TRACING CABILITY TO BE ADDED INTO FCT_MAINRATING FOR DEBUGING PURPOSE
+Adding trace in both registry and in semaphore file.
+Also take are of BUG 9916866, by adding error messages if ROM or UOM quantities cannot
+be found.
+========================================================================================
+Module Version : 10036 7.4 22-dec-2008
+bug7657431 : P-7540654 RATING PIPELINE CORE DUMPS
+Check if rpOrigM is NULL before dereferencing it
+========================================================================================
+Module Version : 10035 7.3.2 12-sept-2008
+bug7296327 : RUM_NAME NOT POPULATED IN ASSOCIATED_CHARGE_BREAKDOWN
+Passing the edrCurrentVector value to set functions so that setting is done properly.
+========================================================================================
+Module Version : 10034 7.3.1 19-sept-2007
+bug6429214 : "NAN" CREATED FOR RATED AMOUNT VALUE WITH >2 IMPACTS PER PRICE MODEL
+========================================================================================
+Module Version: 10033  7.3.1 21-Aug-2007
+bug6350762: 1. In case total charge amount is zero and the minimum charge comes into play
+               first CP will be get updated with the minimum charge rather than last CP
+            2. RATING PROBLEM LAST_BEAT_CHARGE = NAN
+========================================================================================
+Module Version: 10032  DaVinci 08-May-2007
+bug6012439: The ROUNDED_QUANTITY_VALUE in CP should indicate the actual rounded value instead of 0.
+	    Populating the INTERN_RUM_ID in the CP as discounting copies this value to DP.
+========================================================================================
+Module Version: 10031  DaVinci 02-Oct-2006
+PRSF00234629: Locking Issue in MainRating
+Fixes release lock of Rateplan object and release lock of price model in error condition
+========================================================================================
+Module Version: 10030  DaVinci 03-Aug-2006
+PRSF00227031: Changed err msg ERR_PRICEMODEL_RUM_NOT_FOUND to warning msg
+              WRN_PRICEMODEL_RUM_NOT_FOUND
+========================================================================================
+Module Version: 10029  DaVinci 20-Jul-2006
+PRSF00213711: Fixed memory leaks and uninitialized variable access.
+========================================================================================
+Module Version : 10028 DaVinci 05-July-2006
+PRSF00219258: Set isValidDetail false when set an error.
+========================================================================================
+Module Version : 10027 DaVinci 04-May-2006
+PRSF00202141: TailormadePlan: MainRating, PreRating and registry changes
+Changes made in MainRating to release the lock after reading rateplan and price model
+information.
+========================================================================================
+Module Version: 10026  DaVinci 05-Apr-2006
+PRSF00199240: CHARGEABLE_QUANTITY_VALUE is rounded up for split calls if it contains decimal value.
+Problem:CHARGEABLE_QUANTITY_VALUE value comes wrong in case split calls
+Fix: correct the chargeable quantity of the last CP  in case of split
+========================================================================================
+
+Module Version : 10025 DaVinci 22-Mar-2006
+PRSF00188628:    Propagation of PRSF00188165 from 7.2 Patch
+========================================================================================
+
+Module Version : 10024 DaVinci 13-Jan-2006
+PRSF00190306:    Time stamp not correct when spliiting occurs at midnight if the duration
+                 beat value is decimal
+==============================================================================
+Module Version: 10023  7.2_Patch  21-Nov-2005
+PRSF00187289 : Model Selector : Pipeline Rating,Discounting and 
+               Registry Changes(propagation to Davinci)
+	       Made changes to FCT::MainRating::Plugin for the model selector 
+	       feature .	
+==============================================================================
+Module Version: 10022  7.2_Patch  25-Oct-2005
+PRSF00185723:Rating Error when the Charging End date is midnight
+Problem: It creates an extra charge packet and chargingtimestamp of that CP is previous date
+Fix: One check is introduced so that it stops creating extra CP in case call ends at midnight.
+==============================================================================
+Module Version: 10021  7.2_Patch  23-Sep-2005
+PRSF00183490:LAST_BEAT_CHARGE is coming as wrong in case of zero duration call
+             if it comes after a non-zero duration call
+Problem: lastbeatcharge and lastbeatquantity is not initialized for each call
+Fix:lastbeatcharge and lastbeatquantity are initialized to 0 after setting the
+    value in edr container 
+==============================================================================
+Module Version: 10020  7.2_PATCH  02-Sep-2005
+PRSF00181578:Performance issue in MainRating module compared to 67FP1
+Problem: 1. The MainRating module is slower than previous release
+         2. LAST_BEAT_CHARGE is getting <NAN> value in case of zero duration call 
+         3. The MainRating is currently deleting all ASS_CBD
+            blocks except the first successful one in promotional mode and the first and last
+            successful one in promotional saving module.Ideally this logic should be applied
+            only on those ASS_CBD which is created by CustomerRating
+Fix: 1.some string operation has been changed.Some function calls have been avoided
+       in case of single rating product
+     2.Add the additional check of units at the time of calculate LAST_BEAT_CHARGE
+     3.MainRating will delete only those blocks which are produced by CustomerRating by checking
+        the record type of ASS_CBD(981)
+     4.In case of Passthrough , chrged_amount_currency is populated with value of 
+        wholesale_charged_amount_currency
+==============================================================================
+Module Version: 10019  New_Pipeline_Velocity  18-MAY-2005 
+PRSF00168776: BalancePackets_Sums_2ChargePackets_InCaseofDifferentRums 
+Problem: The MainRating didn't produce the RUM_ID in CPs.  The BillingRecord
+         couldn't distinquish between different RUMs.
+Fix: Add the RUM_ID field to the CP and produce the RUM_MAP Edr blocks.
+==============================================================================
+Module Version: 10018 New_Pipeline_Velocity  11-APR-2005
+PRSF00163202: W2_PPL_PKH+ Promotional Overlay doesnt work as described in FNS.
+Short Description :
+-------------------
+Modified the code to support the Overlay Promotion for VF-PAC.
+==============================================================================
+Module Version: 10017  Velocity  14-Feb-2005
+PRSF00153603:  Missing BALANCE_PACKET sub-block in ASSOCIATED_INFRANET_BILLING
+Problem:  Did not populate the resource id for non-currency resource in the
+          CHARGE_PACKET.
+Fix:  Search the non-currency resource id from Infranet.
+
+================================================================================
+Module Version: 10016  6.7_FP2  11-January-2005
+PRSF00149179:  Passthrough rating feature causes ifw process to hang. Added the check
+               for passthrough to avoid the crash.
+
+================================================================================
+Module Version: 10015  6.7_FP2  07-July-2004
+PRSF00119924:  Update unix and nt build.spec to link with DAT_Currency module.
+               This will allow the optional use of the DAT_Currency module in
+               FCT_MainRating.
+
+================================================================================
+Module Version: 10014  6.7_FP2  24-June-2004
+PRSF00117736:  Multiple MINIMUM_CHARGE blocks not showing up when configure with multi-resources 
+               and Minimum Charge is configured.
+
+================================================================================
+
+Module Version : 10014 6.7_FP2 30-Jun-2004
+PRSF00118960:    Make DAT::Currency::CurrencyPlugIn optional to MainRating. 
+                 This will allow for stand-alone IFW installations.
+==============================================================================
+Module Version : 10013 6.7_FP2 21-Jun-2004
+PRSF00117576:    Add DAT::Currency::CurrencyPlugIn to MainRating and populate
+		 the DETAIL.ASS_CBD.CP.RESOURCE_ID field.
+==============================================================================
+Module Version : 10012 6.7_FP2 08-Jun-2004
+PRSF00114642:    Time stamp not correct when spliiting occurs at midnight
+		 and charge time is less than beat time.
+==============================================================================
+
+Module Version: 10011  6.7_FP2  03-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10010  6.7_FP2  13-May-2004
+PRSF00110096:   Wrong Calculation for Charge Packets when a call falls in Two pricemodels
+                and Minimum Charge is configured.
+
+==============================================================================
+
+Module Version: 10009  6.7_FP2  22-Apr-2004
+PRSF00103451:   A new functional plugin to perform the rounding based 
+		on the /config/beid configuration object.Rounding commented inside
+		the calcRate() method.  
+==============================================================================
+
+Module Version: 10008  6.7_FP1  03-Feb-2004
+PRSF00076111:   Replace RWTPtrHashMap with RWTPtrMap to improve CDR processing
+                performance.
+                (http://wiki.portal.com/twiki/bin/view/Development/PipelineRatingPerf)
+
+==============================================================================
+
+Module Version: 10007  6.7_FP1  09-Jan-2004
+PRSF00085356:   Minimum Charge for alt price model
+	 	Send the correct index to calcRate when alt price model is specified	
+
+==============================================================================
+
+Module Version: 10006  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+========================================================================================
+
+Module Version: 10005  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10004 / Date :	02-Apr-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 36434 allow zero duration calls to pass through at least once to populate needed flds. 
+
+========================================================================================
+
+
+Actual Version : 10003 / Date :	18-Mar-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 35032 Changed int cast to calling a BAS_Decimal method to prevent overflow
+
+=========================================================================================
+
+
+
+Actual Version : 10002 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+=========================================================================================
+
+Module Version : 6.5 EBF 10001 
+----------------
+
+Date : 21-Jan-2003
+------
+
+Responsible Engineer: Usha Rajgopal
+---------------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00027488  Capturing base per unit rate(s) applied by FCT_MainRating 
+	      The FCT_MainRating code has been enhanced to enriching the EDR container with 
+	      price model step information used by FCT_MainRating to compute the charge 
+	      amount in the chage packet. The field containing this information is a 
+	      new EDR Container field INTERN_PRICE_MDL_STEP_INFO that was added to the
+	      containerDesc.dsc file.
+========================================================================================
+Actual Version : v6.4.3 / Date : 09-Sep-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00017981 "Revenue Group" not available in 6.3 which was part of the 
+             Rate Plan configuration.
+
+========================================================================================
+
+Actual Version : v6.4.2 / Date : 06-Aug-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00016445 Decimal beats for rating
+
+========================================================================================
+
+Actual Version : v6.4.1 / Date : 06-Aug-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00015805 core-dump with passthrough on Solaris
+
+========================================================================================
+
+Actual Version : v6.3.4 / Date : 17-Jul-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00014374 Minimum Charge in IFW_PRICEMODEL required
+
+========================================================================================
+
+Actual Version : v6.3.3 / Date : 10-Jul-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00013831 FCT_MainRating: quantity fields filled w/ inv. values 
+             in case of passthrough.
+
+========================================================================================
+
+Actual Version : v6.3.2 / Date : 01-Jul-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00013393 Rating of fractional quantities erroneous.
+
+========================================================================================
+
+Actual Version : v4-31-01 / Date : 13-Feb-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #43373 EDS rejects CDRs with the message 'The Total Call Event Duration is greater
+            than the sum of the duration-based Chargeable Units'.
+            Add "missing" quantity always to initial CP so that the sum of
+            DETAIL.ASS_CBD.CP.CHARGEABLE_QUANTITY_VALUE equals DETAIL.DURATION!
+PETS #43396 Wrong timestamp for a call in the output TAP3 file.
+            Fixed invalid loop exit criteria for multi-day cdrs.
+
+========================================================================================
+
+Actual Version : v4-30-18 / Date : 05-Feb-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #40834 TimeZone Splitting doesn't support ISOLATED and CONSECUTIVE modes.
+
+========================================================================================
+
+Actual Version : v4-30-17 / Date : 01-Feb-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #43183 Inexact result messages on AIX.
+            Add Inexact result handler to module (only for AIX).
+
+========================================================================================
+
+Actual Version : v4-30-16 / Date : 28-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #43105 Problem with timezone splitting if new timezone is assigned 
+            at 00:00:00 of new day.
+
+========================================================================================
+
+Actual Version : v4-30-15 / Date : 21-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42865 Mainrating does not fill in CHARGEABLE_QUANTITY_VALUE
+            in a splitted call.
+            Now it does fill in always.
+
+========================================================================================
+
+Actual Version : v4-30-14 / Date : 15-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42843 Use string references. Use faster split method. Use new rateplan
+            interface.
+
+========================================================================================
+
+Actual Version : v4-30-13 / Date : 21-Dec-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #41122 Add rounding capabilities to be applied during rating.
+
+========================================================================================
+
+Actual Version : v4-30-12 / Date : 21-Dec-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42572 endless loop while rating general cdr file
+            Invalid loop-exit criteria while processing time-zone splitting fixed.
+
+========================================================================================
+
+Actual Version : v4-30-11 / Date : 22-Nov-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #41929 Splitting uses always the same pricemodel for different timezones.
+PETS #41102 Avoid temp. BAS_String creation for DAT_Rateplan char flags.
+
+========================================================================================
+
+Actual Version : v4-30-10 / Date : 09-Nov-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #41102 Avoid temp. String creation for char literals.
+
+========================================================================================
+
+Actual Version : v4-30-09 / Date : 06-Nov-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #41296 Rewrite price-calculation function to perform devision as latest
+            operation to avoid problems.
+
+========================================================================================
+
+Actual Version : v4-30-08 / Date : 23-Oct-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #40836 Add additional check for invalid rum groups.
+            New error message: ERR_RUM_GROUP_NOT_FOUND
+
+========================================================================================
+
+Actual Version : v4-30-07 / Date : 22-Oct-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #40394 Init all decimal values to 0 (zero) to get the right
+            result when add two values.
+
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 12-Sep-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #39274 FCT_MainRating: wrong charge calculation with event charge and
+            splitting turned on.
+            Added additional checks to avoid same event charges be applied
+            multiple times.
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 28-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38645 Fixed erroneous error messages.
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 22-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+- PETS #37618 Changes due to side-effects of DAT_Rateplan CodeReview.
+- PETS #38435 FCT_MainRating: wrong message ERR_PRICEMODEL_NOT_FOUND 
+              if pricemodel step not available
+              Modify above message with hint to look into process-log-file.
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 16-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #36559 SourcePro AIX Port
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 17-Jul-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #36932 integrate core dumped while trying to process a sms file
+            the core dump occurs if no valid configuration entry in 
+            IFW_PRICEMODEL_STEP can be found for a ressource, rum and step.
+            => added an additional check and error message.
+
+PETS #36997 while trying to start integrate with a new rum not defined in 
+            ifw_alias_map the system core dumped.
+            - Core dump cannot be reproduced with IntegRate v4-30-02.
+            - No module status has been set if dynamic index creation for 
+              RUM and UOM failed in FCT_MainRating::init().
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 13-Jun-2001
+----------------
+
+New Features   :
+----------------
+
+- Support for new EDR-C v4-30.
+- Create separate ChargePackets per RESOURCE, RUM and Timezone.
+- Get field values for RUMs dynamically.
+
+========================================================================================
+
+Actual Version : v4-10-01 / Date : 15-Mar-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#3204# Not filled field ASSOCIATED_CHARGE.MF.CHARGE_ITEM now filled.
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 27-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Modified to support new Sol42 v4 fields.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-06-02 / Date : 05-Oct-2000
+----------------
+
+New Features   :
+----------------
+
+Remove call to EDR_Container::isValidDataBlock().
+
+========================================================================================
+
+Actual Version : v4-06-01 / Date : 22-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Added recycler support.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-06-00 / Date : 30-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- New ChargePackets will be written depending on Registry setting
+  WriteRateSteps = True|False if Splitting is on and TimeInterval
+  Borders are crossed or different Pricemodel Items are used.
+- TRACE option writes more detailed information on the rating process.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-05-02 / Date : 19-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#2245# Update "DETAIL.NUMBER_ASSOCIATED_RECORDS" and
+       "ASSOCIATED_CHARGE.NUMBER_OF_CHARGE_PACKETS".
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-04-03 / Date : 11-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+Copy missing fields for altPricemodel.
+
+========================================================================================
+
+Actual Version : v4-04-02 / Date : 29-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Initialize BAS_Decimals with DECIMAL_NULL instead of INVALID_DECIMAL.
+
+========================================================================================
+
+Actual Version : v4-04-01 / Date : 23-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Added explicit type-cast to avoid abort on AIX.
+
+========================================================================================
+
+Actual Version : v4-04-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Port to AIX.
+
+========================================================================================
+
+Actual Version : v4-03-01 / Date : 13-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Now the beats etc. will be initialized for every edr to process and only stored in
+the edr fields if the passthrough feature has not been used.
+
+Solved PRs/CRs :
+----------------
+
+#2113# The original 'starting' tariffmodel was not stored for filling the edr-fields.
+
+========================================================================================
+
+Actual Version : v4-03-00 / Date : 24-May-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implements new DAT_Price interface. Requires DAT_Price v4-01-00 or higher.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-02-02 / Date : 12-May-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Store pricemodel only in edr if it was used for price calculation.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 23-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Support for combined quantity and volume sent/received rating
+  (INT_SERVICE.CHARGE_ITEM will define the rating rule)
+- new ServiceClass support
+- altPricemodel != 0 creates new ChargePacket instead of 
+  new ChargeBreakdown (only supported with SOL42 EDR-Format v3-xx-xx).
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 29-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Support EDR_Container-vector.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 07-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Support new EDR-C v4.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-23-01 / Date : 03-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#1520# To remind the original tariffmodel-version id and version will be checked.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-23-00 / Date : 23-DEC-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Use BAS_Decimal instead of double to avoid rounding problems during rating.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-05 / Date : 15-DEC-1999
+----------------
+
+Notes          :
+----------------
+
+Remove endless loop while searching basic tariffmodel.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-04 / Date : 26-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+Do not set EDR_ChargePacket.chargeType. This must be done by the PlugIns
+that create the ChargePackets.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-02 / Date : 12-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+Implemented CodeReview recommendations.
+
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#1130# Fixed error that caused a core dump in calcFlatRate() if TimeZone not found.
+
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-01 / Date : 08-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+Fixed a small rating-problem.
+While splitting the first rate-step of the new timezone has been used
+for one beat even if it should not.
+
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-01 / Date : 21-OCT-1999
+----------------
+
+Notes          :
+----------------
+
+21-OCT-1999  Updated isUsable() function with log-messages
+             to fit the requirements.
+
+
+New Features   :
+----------------
+
+14-OCT-1999  Implementation of isUsable() function.
+
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

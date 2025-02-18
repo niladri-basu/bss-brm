@@ -1,0 +1,111 @@
+<Opcode name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS"
+visibility="public"
+transaction="required"
+component="fm_subscription"
+xmlns:h="http://www.w3.org/1999/xhtml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>
+</Doc>
+<Input>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Account object action was applied to</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+mode="complete">
+<Doc> Service object action was applied to</Doc>
+<ClassRef>obj://service</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_SESSION_OBJ" use="optional"
+mode="complete">
+<Doc> Session object - session in which event took place - null means none</Doc>
+<ClassRef>obj://event.session</ClassRef>
+</Poid>
+<String name="PIN_FLD_PROGRAM_NAME" use="required"
+maxlen="60">
+<Doc> Program name - identifies calling program</Doc>
+</String>
+<String name="PIN_FLD_DESCR" use="optional"
+maxlen="255">
+<Doc> Event description - free text for application to describe event</Doc>
+</String>
+<Timestamp name="PIN_FLD_START_T" use="optional">
+<Doc> Start time - Timestamp of when event started (Portal Time).</Doc>
+</Timestamp>
+<Timestamp name="PIN_FLD_END_T" use="optional">
+<Doc> End time - Timestamp of when event ended (Portal Time).  This field is used to determine which billing cycle the event is part of.</Doc>
+</Timestamp>
+<Array name="PIN_FLD_STATUSES" use="required"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="1" maxElements="256"
+minElemId="1" maxElemId="256"
+isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+isRecursive="true" allowedElemIds="256">
+<Doc>  Status array.   There can only be 1 element, hence the recid is arbitrary.</Doc>
+<Fields>
+<Poid name="PIN_FLD_OFFERING_OBJ" use="required"
+mode="complete">
+<Doc> Uniquely identifies a discount in an account.</Doc>
+<ClassRef>obj://purchased_discount</ClassRef>
+</Poid>
+<Enum name="PIN_FLD_STATUS" use="required">
+<Doc> New status. The legal values are:  - PIN_DISCOUNT_STATUS_ACTIVE,  
+      - PIN_DISCOUNT_STATUS_INACTIVE,  - PIN_DISCOUNT_STATUS_CANCELLED.</Doc>
+<Values>
+<Value>1</Value>
+<Doc>PIN_DISCOUNT_STATUS_ACTIVE</Doc>
+</Values>
+<Values>
+<Value>2</Value>
+<Doc>PIN_DISCOUNT_STATUS_INACTIVE</Doc>
+</Values>
+<Values>
+<Value>3</Value>
+<Doc>PIN_DISCOUNT_STATUS_CANCELLED</Doc>
+</Values>
+</Enum>
+<Int name="PIN_FLD_STATUS_FLAGS" use="required">
+<Doc> New status flags. Each flag is a reason for the account/service   entry to be inactive.The legal values are:  - PIN_STATUS_FLAG_ACTIVATE (future activate date, acct only)  - PIN_STATUS_FLAG_DEBT (outstanding debt, acct only)  - PIN_STATUS_FLAG_MANUAL (via admin operator)  - PIN_STATUS_FLAG_DUE_TO_ACCOUNT (close all related services on     account, acct only)  - PIN_STATUS_FLAG_DUE_TO_PARENT (close all sub-ordinate accounts     if the parent is closed)  - PIN_STATUS_FLAG_PO_EXHAUSTED (via PO Mgmt System)  - PIN_STATUS_FLAG_PROVISIONING (via Provisioning System)</Doc>
+</Int>
+</Fields>
+</Array>
+</Fields>
+</Input>
+<Output>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Account object passed into call.</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Array name="PIN_FLD_RESULTS" use="required" elemIdMode="ignored" 
+iterationOrder="undefined">
+<Doc> Since only one event object is created by this call, only one element  will be returned. The element-id is not significant.</Doc>
+<Fields>
+<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+<Doc>Poid of the account object.</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_POID" use="required" mode="complete">
+<Doc> Poid of the event object created for event</Doc>
+</Poid>
+<Any name="EVT_FLDS" use="optional" mode="other" baseClassName="obj://event"
+     classNameRef="#out.RESULTS.POID">
+<Doc> Fields of the event object. Additional event object fields are added to
+the return flist here. If the PCM_OPFLG_READ_RESULT flag is set for the 
+operation, all the fields in the event object are returned on the output 
+flist, not just the poid. If the PCM_OPFLG_CALC_ONLY flag is set, no fields 
+in the database are changed and the event object is not actually created, 
+but the fields that would have been used to create the event object are 
+returned to the caller on the output flist. </Doc>
+</Any>
+</Fields>
+</Array>
+</Fields>
+</Output>
+</Opcode>

@@ -1,0 +1,522 @@
+========================================================================================
+DAT_Zone
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+Module Version: 10016 7.4  20-Jul-2011
+BUG12683317: PIPELINE SCHEMA CHANGE FOR PDC IN CHRONUS
+========================================================================================
+
+Module Version: 10015  7.4  11-Nov-2010    Chetan 
+Bug 10077369 ECR: PARALLEL LOADING IN THE PIPELINE ENGINE
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel. 
+========================================================================================
+Module Version: 10014  7.4 13-May-2009
+BUG8492644 - Removal of 1-1 mapping restriction of service type & service code for RTZP
+
+========================================================================================
+Module Version: 10013  7.4 27-Apr-2009
+BUG8361553: value of GeoFileName not getting updated in regUpdate. 
+
+========================================================================================
+Module Version: 10012  7.2_PATCH 12-Sep-2005
+PRSF00182363:change atol to atoi64 to avoid long truncation
+========================================================================================
+
+Module Version: 10011 v6.7FP2  Apollo  19-Oct-2004
+PRSF00132352: DAT Zone Constant Correctness changes
+             
+========================================================================================
+
+Module Version: 10010 v6.7FP2  Apollo  06-Oct-2004
+PRSF00133776: Non reentrant Unix function calls should be replaced by corrsponding reentrant versions
+             
+========================================================================================
+
+Module Version: 10009 v6.7FP2  Apollo  3-June-2004
+PRSF00114610: Previous ticket changed MAKE_STR2(LIBNAME) back to LIBNAME
+             
+========================================================================================
+
+Module Version: 10008 v6.7FP2  Apollo  21-May-2004
+PRSF00110840: Functionality to reload whole IFW_STANDARD_ZONE
+
+========================================================================================
+
+==============================================================================
+
+Module Version: 10007  6.7_FP2  14-May-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10006 v6.7FP2  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+========================================================================================
+Module Version : 6.7_FP1  10005
+----------------
+
+Date : 23-Jan-2004
+------
+
+Change Order :  PRSF00079303
+--------------
+
+Short Description :
+-------------------
+Standard Zone & USC Map: Support for a Label/Description for each entry in 
+the zoning and impact category configuration
+
+=====================================================================
+==============================================================================
+Module Version: v6.7FP1  Apollo  13-Jan-2004
+PRSF00085744:   Common Zoning : DAT changes for 6.7 FP1 common zone feature
+
+==============================================================================
+Module Version: 10004  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+========================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP1 10002
+----------------
+
+Date : 03-Apr-2003
+------
+
+Change Order :  PRSF00036697
+--------------
+
+Short Description :
+-------------------
+  Destination Description for a given Service Code, Impact Cat
+  Zone Entry Name is extracted from the IFW_STANDARD_ZONE [and/or File] which are used
+  by the other Functional Plugins to write back into EDR container.
+
+========================================================================================
+
+Actual Version : 10001 / Date : 26-Feb-2002
+----------------
+
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+=========================================================
+
+
+Actual Version : v6.4.1 / Date : 06-Aug-2002
+----------------
+
+Notes          :
+----------------
+
+PRSF000zzzzz DB2 zOS table- and column length adjustments
+
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 28-Jan-2002
+----------------
+
+Notes          :
+----------------
+
+PETS #38593 DB2 Port.
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 15-Jan-2002
+----------------
+
+Notes          :
+----------------
+
+PETS #42843 Change implementation of DAT_ZoneHist::isValidAt().
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 10-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro AIX port.
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 10-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36688 segmentaion fault (core dumped) after stopping process.
+Two Maps with different keys had the same entries and both tried to destroy
+the entries. Now only one destroys the entries. The other will only be
+cleaned.
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 05-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 26-Apr-2001
+----------------
+
+Notes          :
+----------------
+
+- IP numbers will be normalized during database load.
+- increased result strings will be returned
+- database table renaming...
+- inserted new copyright information
+
+================================================================================
+
+Actual Version : v4-10-02 / Date : 13-Feb-2001
+----------------
+
+Notes          :
+----------------
+
+ZoneValues are now Strings in the database!
+
+================================================================================
+========
+
+Actual Version : v4-10-00 / Date : 25-Oct-2000
+----------------
+
+New Features   :
+----------------
+
+- Updated for new database v4-10. CLIs may now be IP-v4 or -v6 addresses too.
+- Reg.-Parameter "ZoneModels" now optional for database access.
+
+Solved PRs/CRs :
+----------------
+
+#2381# Zonemodels have to be defined with their codes in the registry.
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 02-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implemented support for database version check.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-02 / Date : 17-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+Write warnings to process-log if areacodes contain invalid characters.
+Move error messages from global error.msg to new local file (DAT_Zone_Error.msg).
+Delete geoAreaTree only once.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-01 / Date : 14-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+Added Check program.
+Performed quantify and purify tests.
+Fixed some minor memory leaks.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Port to AIX.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-02-02 / Date : 22-May-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+* 2000 : Error if more than one history entry occurs.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-02-00 / Date : 11-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implement Reload Event.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-01-01 / Date : 28-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+Delete temporary pointers in DAT_ZonePlugIn add???ZoneModel functions.
+Make DAT_ZoneModel Destructor virtual to delete the ZoneTree's on exit.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-01-00 / Date : 18-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+Increased performance.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-00-01 / Date : 15-DEC-1999
+----------------
+
+Notes          :
+----------------
+
+Search zoneValues in all valid entries and not only in the newest.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v2-00-00 / Date : 25-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Added geographical zoning capability.
+- Zonemodel data will be read 'as is' and now sorted during
+  insertion into internal data-structures. This improves the
+  loading process.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-02 / Date : 02-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+Error in implementation of isUsable()-function.
+isUsable() checked an internal member that is only used for Database access
+in any case. This is now fixed.
+
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+* 1064: [2745] The object 'empty data collection' is not usable.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-01 / Date : 25-OCT-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+25-OCT-1999  #820# Update registry has now the same syntax as all other modules.
+
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-01 / Date : 21-OCT-1999
+----------------
+
+Notes          :
+----------------
+
+21-OCT-1999  Updated isUsable() function with log-messages
+             to fit the requirements.
+
+
+New Features   :
+----------------
+
+14-OCT-1999  Implementation of isUsable() function.
+
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

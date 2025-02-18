@@ -1,0 +1,251 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+##----------------------------------------------------------------------
+##
+##  Author                 :  Dev Sharma
+##  Date                   :  15-01-15
+##  Script	           :  Pre-bill due date reminder Script
+##  Description            :  To execute on business days and on  
+##                            consequetive days either holiday or weekend.
+##----------------------------------------------------------------------
+use POSIX;
+use pcmif;
+my $PATH;
+
+
+#sub get_holiday($,$,$);
+#=========================================#
+# Database number
+#=========================================#
+
+$DB_NO="0.0.0.1";
+
+print "Started @ : ";
+print scalar localtime()."\n";
+
+print "Reading Configuration File \n";
+my %ConfVarTable;
+my $conf = "pin.conf";
+
+#######################################
+#readConfigFile();
+#######################################
+if ( -e $conf )
+{
+   	$days_after = `grep '^-' $conf | grep days_after | awk '{print \$4}'`;
+	print "Configured days_after value: $days_after";
+    	chomp($days_after);
+}
+else
+{
+    print "\n $conf configuration file not found!\n\n";
+    exit(1);
+}
+
+################################################################################
+#	Subroutine to get Weekend/Weekday for sysdate
+################################################################################
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+
+my $wk = is_weekend($wday);
+print "In main Weekend/Weekday : $wk";
+
+################################################################################
+#	Subroutine to check the date is either weekend/holiday
+################################################################################
+my $flag = 0;
+my $file = "tmp.data";
+
+$flag = is_holiday($mday,$mon,$year,$wk);
+
+if ($flag == 0)
+{
+	print "Exited becuase holiday\n";
+	exit;
+}
+else
+{
+	$mon -=1;
+	$year -= 1900;
+
+	my $sysdate = mktime ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday);
+	print "\nSysdate $mday-$mon-$year Unixtime $sysdate";
+
+	#Generate due_date
+	my $due_date = $sysdate + ($days_after * 86400);
+
+	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($due_date);
+	print "\nDuedate $mday-$mon-$year Unixtime $due_date\n";
+
+	################################################################################
+	open (MYFILE, ">$file")|| die "couldnt open file.txt: $!";
+	print MYFILE "$due_date\n";
+	close (MYFILE);
+
+	################################################################################
+	# Invoke pymt_reminder mta
+	################################################################################
+	system(td_inv_pymt_reminder_mta);
+	print "\nInvoked pymt_reminder mta\n";
+	################################################################################
+
+
+	open (MYFILE, ">$file")|| die "couldnt open file.txt: $!";
+
+	while (1){
+		#$mday +=1;
+		#$sysdate = mktime ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday);
+		$sysdate = $sysdate + (1 * 86400);
+		($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($sysdate);
+		print "\nSysdate+1: $mday-$mon-$year Unixtime: $sysdate";
+
+		$wk = is_weekend($wday);
+		print "\nWeekend/Weekday : $wk";
+
+		$flag = 0;
+		$flag = is_holiday($mday,$mon,$year,$wk);
+
+		if ($flag == 0 ){
+			#open (MYFILE, ">$file")|| die "couldnt open file.txt: $!";
+			#Generate due_date
+		        $due_date = $sysdate + ($days_after * 86400);
+			($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($due_date);
+		        print "\nDuedate $mday-$mon-$year Unixtime $due_date\n";
+			print MYFILE "$due_date\n";
+			#close (MYFILE);
+		        ################################################################################
+        		# Invoke pymt_reminder mta
+		        ################################################################################
+			system(td_inv_pymt_reminder_mta);
+			print "\nInvoked pymt_reminder mta\n";
+		}
+		else{
+			print "Exited\n";
+			last;
+		}
+	}
+	close (MYFILE);
+#system(td_inv_pymt_reminder_mta);
+}
+print "\nFinished @ : ";
+print scalar localtime()."\n";
+
+
+
+
+
+
+#============================================#
+# Subroutine to Check Holiday
+#============================================#
+sub is_holiday($,$,$,$){
+
+#print "\nin get holiday()\n";
+
+my @dom = (0,0,0,0,0,0,0,0,0,0);
+my @moy = (0,0,0,0,0,0,0,0,0,0);
+my @year = (0,0,0,0,0,0,0,0,0,0);
+
+my $i = 0;
+my $j = 0;
+my $k = 0;
+
+
+$ebufp = pcmif::pcm_perl_new_ebuf();
+$pcm_ctxp = pcmif::pcm_perl_connect($db_no, $ebufp);
+
+my $cal_name ="td_collections_calendar";
+my $template = "select X from /config/calendar where F1 = V1 ";
+my $f1=<<"XXX";
+        0 PIN_FLD_POID        POID [0] $DB_NO /search -1 0
+        0 PIN_FLD_FLAGS       INT [0] 256
+        0 PIN_FLD_TEMPLATE     STR [0] "$template"
+        0 PIN_FLD_RESULTS    ARRAY [0] allocated 1, used 1
+        1        PIN_FLD_POID   POID [0] NULL
+        1 PIN_FLD_CALENDAR_DATE  ARRAY [*] allocated 20, used 3
+        2     PIN_FLD_CALENDAR_DOM    INT [0] 0
+        2     PIN_FLD_CALENDAR_MOY    INT [0] 0
+        2     PIN_FLD_CALENDAR_YEAR    INT [0] 0
+        0 PIN_FLD_ARGS          ARRAY [1] allocated 1, used 1
+        1        PIN_FLD_NAME   STR [0] "$cal_name"
+XXX
+
+#print ("Input flist:\n$f1\n");
+my $search_iflist = pcmif::pin_perl_str_to_flist($f1, $DB_NO, $ebufp);
+
+my $search_oflist = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_SEARCH", 0, $search_iflist, $ebufp);
+my $search_out = pcmif::pin_perl_flist_to_str($search_oflist, $ebufp);
+
+if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "\n Error processing input flist, please check logs...";
+}
+else{
+#print ("Output flist:\n$search_out\n");
+
+my @value = split(/\n/,$search_out);
+$value_count = $#value;
+       foreach $val_array_element(@value)
+                {       chomp($val_array_element);
+
+                        if ( $val_array_element =~ "PIN_FLD_CALENDAR_DOM" )
+                        {       #print "\n i value: $i";
+                                #print "\n Line:\n       $val_array_element";
+                                my @return_value = split(/\s/, $val_array_element);
+                                $dom[$i] = $return_value[$#return_value];
+                                #print "\n Calendar DOM $i: $dom[$i]\n";
+                                $i++;
+                        }
+                        if ( $val_array_element =~ "PIN_FLD_CALENDAR_MOY" )
+                        {
+                                #print "\n Line:\n       $val_array_element";
+                                my @return_value = split(/\s/, $val_array_element);
+                                $moy[$j] = $return_value[$#return_value];
+                                #print "\n Calendar MOY: $moy[$j]\n";
+                                $j++;
+                        }
+                        if ( $val_array_element =~ "PIN_FLD_CALENDAR_YEAR" )
+                        {
+                                #print "\n Line:\n       $val_array_element";
+                                my @return_value = split(/\s/, $val_array_element);
+                                $year[$k] = $return_value[$#return_value];
+                                #print "\n Calendar YEAR: $year[$k]\n";
+                                $k++;
+                        }
+
+
+                }
+}
+
+#print "\nDate: $mday-$mon-$year Weekday/end: $wk\n";
+
+$i = $i - 1;
+while($i > -1){
+
+        if (( $wk eq "weekend") || ( $mday == $dom[$i] && $mon == $moy[$i] && $year == $year[$i] )){
+                print "\nDate $mday-$mon-$year is $wk and $dom[$i]-$moy[$i]-$year[$i] is Holiday in Calendar\n";
+                #print "Exiting...........\n";
+                $flag = 0;
+		return $flag;
+		#last;
+                #exit;
+        }
+$i = $i - 1;
+$flag = 1;
+print "\nDate $mday-$mon-$year is $wk and NOT Holiday in Calendar\n";
+return $flag;
+
+}
+}
+#################################################################################
+# Subroutine is_weekend to get weekend or weekday
+#################################################################################
+sub is_weekend{
+
+my $wday = @_;
+$wk = $wday >= 1 && $wday <= 5 ? "weekday" : "weekend";
+
+$mon +=1;
+$year += 1900;
+
+print "\nIn is_weekend() Date passed: $mday-$mon-$year \n";
+return $wk
+}

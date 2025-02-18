@@ -1,0 +1,368 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved.
+
+        This material is the confidential property of Oracle Corporation or
+        its licensors and may be used, reproduced, stored or transmitted only
+        in accordance with a valid Oracle license or sublicense agreement.-->
+   <xsd:include schemaLocation="service.xsd"/>
+   <xsd:element name="PCM_OP_CUST_UPDATE_SERVICES_inputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="255"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PROGRAM_NAME" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="60"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="SERVICES" minOccurs="1" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="SERVICES_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1218">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SESSION_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(event/session)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="SERVICES_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1218">
+      <xsd:sequence>
+         <xsd:element name="ALIAS_LIST" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="ALIAS_LIST_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_121823">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CLOSE_WHEN_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COMMAND" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEVICES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DEVICES_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1218213">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="INHERITED_INFO" type="serviceExtensionType" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="LOGIN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PASSWD_CLEAR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PASSWD_STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SPONSOR_PARENT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="10100"/>
+                  <xsd:enumeration value="10102"/>
+                  <xsd:enumeration value="10103"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="WHEN_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ALIAS_LIST_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_121823">
+      <xsd:sequence>
+         <xsd:element name="NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="128"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="DEVICES_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1218213">
+      <xsd:sequence>
+         <xsd:element name="DEVICE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(device)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_UPDATE_SERVICES_1218212">
+      <xsd:sequence>
+         <xsd:element ref="serviceExtension"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_CUST_UPDATE_SERVICES_outputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="FIELD" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="FIELD_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1313">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="SERVICES" minOccurs="1" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="SERVICES_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1312">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="SERVICES_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1312">
+      <xsd:sequence>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RESULTS" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RESULTS_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_131222">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RESULTS_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_131222">
+      <xsd:sequence>
+         <xsd:element name="ACCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="LOGINS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="LOGINS_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_13122224">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(event)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SERVICE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="LOGINS_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_13122224">
+      <xsd:sequence>
+         <xsd:element name="ALIAS_LIST" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="ALIAS_LIST_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1312222422">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LOGIN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ALIAS_LIST_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1312222422">
+      <xsd:sequence>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="128"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="FIELD_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_1313">
+      <xsd:sequence>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ELEMENT_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="FIELD" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="FIELD_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_131325">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="FIELD_NUM" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RESULT" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+                  <xsd:enumeration value="4"/>
+                  <xsd:enumeration value="5"/>
+                  <xsd:enumeration value="6"/>
+                  <xsd:enumeration value="7"/>
+                  <xsd:enumeration value="8"/>
+                  <xsd:enumeration value="9"/>
+                  <xsd:enumeration value="10"/>
+                  <xsd:enumeration value="11"/>
+                  <xsd:enumeration value="12"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="FIELD_ARRAY_PCM_OP_CUST_UPDATE_SERVICES_131325">
+      <xsd:sequence/>
+   </xsd:complexType>
+   <xsd:complexType name="BUFFER_PCM_OP_CUST_UPDATE_SERVICES">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:hexBinary">
+            <xsd:attribute name="flags" type="xsd:string" use="optional"/>
+            <xsd:attribute name="size" type="xsd:string" use="optional"/>
+            <xsd:attribute name="offset" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:simpleType name="EMPTY_PCM_OP_CUST_UPDATE_SERVICES">
+      <xsd:restriction base="xsd:string">
+         <xsd:length value="0"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="UNION_PCM_OP_CUST_UPDATE_SERVICES">
+      <xsd:union memberTypes="xsd:decimal EMPTY_PCM_OP_CUST_UPDATE_SERVICES"/>
+   </xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,190 @@
+========================================================================================
+DAT_USC_Map (RateplanServiceClass-Map)
+----------------------------------------------------------------------------------------
+Module Release Notes 
+========================================================================================
+Module Version: 10012 7.4  20-Jul-2011
+BUG12683317: PIPELINE SCHEMA CHANGE FOR PDC IN CHRONUS
+========================================================================================
+Module Version : Pipeline_7.4 10011
+----------------
+
+Date : 05-Apr-2010
+------
+
+Change Order:  bug9549893
+------------
+
+Short Description :
+-------------------
+Make sure that the null values in DB do not use data from previous reads
+
+========================================================================================
+Module Version : Pipeline_7.4 10010
+----------------
+
+Date : 27-Apr-2009
+------
+
+Change Order:  bug8361553
+------------
+
+Short Description :
+-------------------
+Semaphore updates were not reflected in the infoWireless.reg for certain registry entries.
+
+========================================================================================
+Module Version : Pipeline_7.3_Patch 10009
+----------------
+
+Date : 23-May-2007
+------
+
+Change Order:  bug6060574
+------------
+
+Short Description :
+-------------------
+Enhancing DAT_USCMap to read pre-compiled data from files for improving startup performance as well as compiling the rules in multiple threads.
+
+========================================================================================
+Module Version : Pipeline_7.3_Patch 10008
+----------------
+
+Date : 23-Mar-2007
+------
+
+Change Order:  bug5950878
+------------
+
+Short Description :
+-------------------
+Fix one time memory leaks
+
+========================================================================================
+Module Version : Pipeline_7.3_Modular 10007
+----------------
+
+Date : 10-Apr-2007
+------
+
+Change Order:  bug5981509
+------------
+
+Short Description :
+-------------------
+ The pre-compiled data files are not created with .pc extension
+
+========================================================================================
+Module Version : Pipeline_7.3_Modular 10006
+----------------
+
+Date : 21-Mar-2007
+------
+
+Change Order:  bug5935526
+------------
+
+Short Description :
+-------------------
+ Enhancing DAT_USCMap to read pre-compiled data from files for improving startup performance as well as compiling the rules in multiple threads.
+
+========================================================================================
+Module Version : New_Pipeline_Velocity 10005
+----------------
+
+Date : 02-Jun-2005
+------
+
+Change Order:  PRSF00168570
+------------
+
+Short Description :
+-------------------
+WIN+Itanium+SQL: RE_Pipeline_Velocity nt_ia64: USC_Map plugin fails on MS_SQL server.
+
+========================================================================================
+Module Version : New_Pipeline_Velocity 10005
+----------------
+Date : 20-Apr-2005
+------
+Change Order:  PRSF00163714
+------------
+Short Description :
+-------------------
+WIN + Itanium: Pipeline is crashing while reading the bulk data of int64 type.
+Replaced the RWDBTBuffer class with BAS::DBTBuffer class for int64 type.
+
+========================================================================================
+Module Version : 6.7_FP2 10004
+----------------
+
+Date : 05-Jan-2005
+------
+
+Change Order:  PRSF00149205
+------------
+
+Short Description :
+-------------------
+Code streamlined with 67_FP1_EBF code . 
+
+========================================================================================
+Module Version : 6.7_FP2 10003
+----------------
+
+Date : 21-Sep-2004
+------
+
+Change Order :  PRSF00131941
+--------------
+
+Short Description :
+-------------------
+Propagation of changes made for CO 128674
+
+========================================================================================
+Module Version : 6.7_FP2 10002
+----------------
+
+Date : 15-Jul-2004
+------
+
+Change Order :  PRSF00121394
+--------------
+
+Short Description :
+-------------------
+ Compiler crashed on IA platforms due to bad casting in call to Entry::setup()
+
+========================================================================================
+Module Version : 6.7_FP2 10001
+----------------
+
+Date : 24-May-2004
+------
+
+Change Order :  PRSF00112618 and PRSF00119850
+--------------
+
+Short Description :
+-------------------
+   This CO is primarily for fixing Memory consumption increasing rapidly with large 
+number of USC_MAP entries.For incorporating the fix, the propagation of PRSF00047769
+(moving the USC map storage from the FCT_USC_Map plug-in to DAT) is also done along 
+with its relevant changes(PRSF00085388). 
+   To reduce the memory consumption, some fixes has been provided.An optional registry 
+entry "OptimizeFor"(possible values "Memory"/ "Speed", default is "Speed") has been 
+provided which instructs whether to use the memory optimized functions or to use the 
+default performance optimised functions.
+
+Change Order(Propagation) :  PRSF00113689
+---------------------------
+
+Short Description :
+-------------------
+ DAT USC Data PlugIn was not thread safe because of the FSM MultiVector searchData was
+being parallelly modifiable.So moved the member to FCT and modified the "map" interface
+and also made it constant. 
+
+========================================================================================

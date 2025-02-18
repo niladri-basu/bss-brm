@@ -1,0 +1,402 @@
+<Opcode name="PCM_OP_BAL_GET_BALANCES"
+	visibility="public"
+	transaction="required"
+	component="fm_bal"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+	opspec.xsd"
+	xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+    <Doc>Returns the POID of a /balance_group and, optionally, the balances it contains. 
+        This opcode returns the balances based on value in PIN_FLD_FLAGS.
+        By default sub-balances will be summed up and PIN_FLD_CURRENT_BAL will be returned.
+    </Doc>
+    <Input>
+        <Fields>
+            <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                <Doc>Account poid to get the balance group and balances</Doc>
+                <ClassRef>obj://account</ClassRef>
+            </Poid>
+            <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+                <Doc>Balance Group poid: if passed, only this balance group 
+                     will be considered</Doc>
+                <ClassRef>obj://balance_group</ClassRef>
+            </Poid>
+            <Poid name="PIN_FLD_SERVICE_OBJ" use="optional" mode="complete">
+                <Doc>Service poid: if passed, only the balance group for this 
+                     service will be  considered. This field is also recommended
+                     if the caller wants to get the balances for an event which
+                     belongs to a service instance (i.e, a service poid)</Doc>
+                <ClassRef>obj://service</ClassRef>
+            </Poid>
+            <Timestamp name="PIN_FLD_END_T" use="optional">
+                <Doc>The default time reference point to get the balances will 
+                     be the system  time. End time - this field is interpreted 
+                     as the event's end_t if  PIN_FLD_START_T is also passed; 
+                     otherwise it's viewed as just the reference  time point.
+                </Doc>
+            </Timestamp>
+            <Timestamp name="PIN_FLD_START_T" use="optional">
+                <Doc>Event's start time - only meaningful if the event's start 
+                     time is different than the end time.</Doc>
+            </Timestamp>
+            <Poid name="PIN_FLD_EVENT_OBJ" use="optional" mode="typeonly">
+                <Doc>Event poid - only the event type will be used; only 
+                     meaningful if both PIN_FLD_END_T and PIN_FLD_START_T are 
+                     passed; so the API can choose which time reference point 
+                     to use for this event type based on the configuration.
+                </Doc>
+                <ClassRef>obj://event</ClassRef>
+            </Poid>
+            <Substruct name="PIN_FLD_EVENT" use="optional" isRecursive="false">
+                <Doc>The following substruct is the place to pass the event 
+                     container to the API, so the API can access any field 
+                     from this substruct if necessary. NOTE: the previous 
+                     PIN_FLD_END_T, PIN_FLD_START_T, and PIN_FLD_EVENT_OBJ, if 
+                     they are not passed in, then the values inside this 
+                     substruct will be used if they are present in this 
+                     substruct. So basically if this substruct contains those 
+                     three fields, you don't need to pass them outside of this 
+                     substruct. If this substruct is not passed, the API will 
+                     not try to figure out the contributor; so everything will 
+                     match.</Doc>
+                <Fields>
+                    <Poid name="PIN_FLD_POID" use="optional" mode="complete">
+                        <Doc>Event poid inside the substruct; will be used the 
+                             same way as PIN_FLD_EVENT_OBJ</Doc>
+                        <ClassRef>obj://event</ClassRef>
+                    </Poid>
+                </Fields>
+            </Substruct>
+            <Int name="PIN_FLD_FLAGS" use="optional">
+                <Doc>Flags - if 0, (which is the default), then the sub-balances
+                     will be summed up and PIN_FLD_CURRENT_BAL will be returned;
+	             if 0x01(PIN_BAL_GET_BARE_RESULTS defined in fm_bal.h),
+		     then all the valid sub-balances will be returned.
+		     if 0x4(PIN_BAL_GET_ALL_BARE_RESULTS) defined,
+		     then get all the sub-balances regardless of time.
+		     if 0x10(PIN_BAL_GET_BASED_ON_PERIOD) defined,
+		     then get the sub-balances based on a period overlapping 
+                     to validity period.
+		     if 0x16(PIN_BAL_GET_WITHIN_PERIOD) defined,
+		     then get the sub-balances within the period.
+		</Doc>
+            </Int>
+            <Int name="PIN_FLD_READ_BALGRP_MODE" use="optional">
+                <Doc>PIN_FLD_READ_BALGRP_MODE - When reading the balance_group 
+                     object, this field is used to decide whether the object 
+                     should be locked or not. The default value of the flag 
+                     that is passed in this field is PIN_BAL_READ_BALGRP_LOCK(1)
+                     . This flag will lock the balance group object while 
+                     reading the object. When the flag - 
+                     PIN_BAL_READ_BALGRP_CALC_ONLY(0) is passed, then, the read 
+                     object is called without locking.</Doc>
+            </Int>
+            <Array name="PIN_FLD_BALANCES"
+		use="optional" elemIdMode="ignored"
+		iterationOrder="undefined"
+		minElements="0" 
+		minElemId="0"  
+		isElemIdAssignAllowed="false" isElemIdAnyAllowed="true" 
+		isRecursive="false">
+                <Doc>By default the API's output will only return the balance 
+                     group poid, the account object, and the billinfo object for
+                     this balance group. If you want to get information on the 
+                     balances for one or all the resources, you need to pass the
+                     PIN_FLD_BALANCES array and specify the fields in it, if the
+                     element's value is NULL, then all fields will be returned.
+                     The element id could be a specific resource (like 840), or
+                     *, means all the resources. For performance reasons even if
+                     you pass the sepcific resource id you shall get back the 
+                     balance for all the resources.</Doc>
+                <Fields>
+                    <Decimal name="PIN_FLD_CREDIT_LIMIT" use="optional">
+                        <Doc>Credit Limit.</Doc>
+                    </Decimal>
+                    <Decimal name="PIN_FLD_CREDIT_FLOOR" use="optional">
+                        <Doc>Credit floor.</Doc>
+                    </Decimal>
+                    <Int name="PIN_FLD_CREDIT_THRESHOLDS" use="optional">
+                        <Doc>Credit thresholds.</Doc>
+                    </Int>
+                    <Array name="PIN_FLD_THRESHOLDS" use="optional"
+                        elemIdMode="ignored" iterationOrder="undefined"
+                        isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                        isRecursive="false">
+                        <Doc> Array of fixed threshold values. </Doc>
+                        <Fields>
+                          <Int name="PIN_FLD_THRESHOLD" use="required">
+                            <Doc>Fixed threshold value.</Doc>
+                          </Int>
+                        </Fields>
+                    </Array>
+                    <Decimal name="PIN_FLD_RESERVED_AMOUNT" use="optional">
+                        <Doc>Reserved Amount</Doc>
+                    </Decimal>
+                    <Decimal name="PIN_FLD_NEXT_BAL" use="optional">
+                        <Doc>Next Bal</Doc>
+                    </Decimal>
+                    <Decimal name="PIN_FLD_CURRENT_BAL" use="optional">
+                        <Doc>Current Balance - this field will be blowed up into
+                             the sub-balances array if the PIN_FLD_FLAGS is not
+                             0. So just pass this field even though you want the
+                             BARE_RESULTS.</Doc>
+                    </Decimal>
+                    <Array name="PIN_FLD_FILTER_LIST" use="optional"
+			elemIdMode="ignored" iterationOrder="undefined"
+			minElements="0" 
+			minElemId="0" 
+			isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+			isRecursive="false" allowedElemIds="0">
+                        <Doc>Use this list under PIN_FLD_BALANCES to pass one or
+                             more contributors; if this is passed in, then the 
+                             API will not try to figure out the contributors for
+                             this particular resource</Doc>
+                        <Fields>
+                            <String name="PIN_FLD_CONTRIBUTOR_STR" 
+                             use="optional" maxlen="255">
+                                <Doc>Contributor string; if passed, then this 
+                                     API will not try to look into the 
+                                     contributor configuration object to figure
+                                     out the contributor, instead this field 
+                                     will be used.</Doc>
+                            </String>
+			    <Poid name="PIN_FLD_GRANTOR_OBJ" 
+				  use="optional" mode="complete">
+				<Doc>Poid of the grantor</Doc>
+				<ClassRef>obj://purchased_product</ClassRef>
+				<ClassRef>obj://purchased_discount</ClassRef>
+				<ClassRef>obj://product</ClassRef>
+			    </Poid>
+                        </Fields>
+                    </Array>
+                </Fields>
+            </Array>
+	    <Array name="PIN_FLD_BAL_INFO"
+                use="optional" elemIdMode="ignored"
+                iterationOrder="undefined"
+                minElements="0" maxElements="1"
+                minElemId="0" maxElemId="0"
+                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                isRecursive="false" allowedElemIds="0">
+                <Doc>Bal info array has output flist of PCM_OP_BAL_GET_BALANCES.
+                     This is passed for the performance reason. When 
+                     PIN_FLD_BAL_INFO array is present in the input flist then 
+                     opcode takes this array as balances for processing of 
+                     sub-balances for output flist and doesn't go to database 
+                     to retrieve the balances. Fields of output flist are not 
+                     being added here.  </Doc> 
+	   </Array>
+        </Fields>
+    </Input>
+    <Output>
+        <Fields>
+            <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                <Doc>Balance group poid</Doc>
+                <ClassRef>obj://balance_group</ClassRef>
+            </Poid>
+            <Poid name="PIN_FLD_BILLINFO_OBJ" use="required" mode="complete">
+                <Doc>billinfo poid for this balance group</Doc>
+                <ClassRef>obj://billinfo</ClassRef>
+            </Poid>
+            <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="complete">
+                <Doc>account poid for this balance group</Doc>
+                <ClassRef>obj://account</ClassRef>
+            </Poid>
+            <Int name="PIN_FLD_REALTIME_CNTR" use="optional">
+                <Doc>Used *internally* for realtime rec_id assignment.</Doc>
+            </Int>
+            <Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+                <Doc> Effective time of modification of this balance group 
+		      on an external system
+                </Doc>
+            </Timestamp>
+            <Array name="PIN_FLD_BALANCES" use="optional"
+		elemIdMode="key" iterationOrder="undefined" 
+		minElements="0"  
+		minElemId="0"  
+		isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" 
+		isRecursive="false">
+                <Doc>This array holds the balances for each resources.
+			The element id will be a specific resource (like 840).
+		</Doc>
+                <Fields>
+                    <Decimal name="PIN_FLD_CREDIT_LIMIT" use="optional">
+                        <Doc>Credit Limit.</Doc>
+                    </Decimal>
+                    <Decimal name="PIN_FLD_CREDIT_FLOOR" use="optional">
+                        <Doc>Credit floor.</Doc>
+                    </Decimal>
+                    <Int name="PIN_FLD_CREDIT_THRESHOLDS" use="optional">
+                        <Doc>Credit thresholds.</Doc>
+                    </Int>
+                    <String name="PIN_FLD_CREDIT_THRESHOLDS_FIXED"
+                     use="optional" maxlen="255">
+                        <Doc>Credit thresholds fixed.</Doc>
+                    </String>
+                    <Array name="PIN_FLD_THRESHOLDS" use="optional"             
+                        elemIdMode="ignored" iterationOrder="undefined"
+                        isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                        isRecursive="false">
+                        <Doc> Array of fixed threshold values. </Doc>
+                        <Fields>
+                          <Int name="PIN_FLD_THRESHOLD" use="required">
+                            <Doc>Fixed threshold value.</Doc>
+                          </Int>
+                        </Fields>
+                    </Array>
+                    <Decimal name="PIN_FLD_RESERVED_AMOUNT" use="optional">
+                        <Doc>Reserved Amount</Doc>
+                    </Decimal>
+                    <Decimal name="PIN_FLD_NEXT_BAL" use="optional">
+                        <Doc>Next Bal</Doc>
+                    </Decimal>
+                    <Decimal name="PIN_FLD_CURRENT_BAL" use="optional">
+                        <Doc>Current Balance - this field will be blowed up 
+                             into the sub-balances array if the caller wants it.
+                        </Doc>
+                    </Decimal>
+		    <Enum name="PIN_FLD_CONSUMPTION_RULE" use="optional">
+                        <Doc>Consumption Rule. Enum defined in pin_bal.h.</Doc>
+			<Values>
+			 <Value>0</Value>
+			 <Doc>The consumption rule is not defined
+                              (PIN_CONSUMPTION_RULE_UNDEFINED).</Doc>
+			</Values>
+			<Values>
+			 <Value>1</Value>
+			 <Doc>Earliest start time. Consume the sub-balance with
+                              the earliest validity start time (earliest 
+                              valid_from) first(PIN_CONSUMPTION_RULE_EST).</Doc>
+			</Values>
+			<Values>
+			 <Value>2</Value>
+			 <Doc>Latest start time. Consume the sub-balance with 
+                              the latest validity start time (latest valid_from)
+                              first(PIN_CONSUMPTION_RULE_LST).</Doc>
+			</Values>
+			<Values>
+			 <Value>3</Value>
+			 <Doc>Earliest expiration time. Consume the sub-balance
+                              that expires first (earliest valid_to.)
+                              (PIN_CONSUMPTION_RULE_EET)</Doc>
+			</Values>
+			<Values>
+			 <Value>4</Value>
+			 <Doc>Latest expiration time. Consume the sub-balance 
+                              that expires last (latest valid_to.)
+                              (PIN_CONSUMPTION_RULE_LET)</Doc>
+			</Values>
+			<Values>
+			 <Value>5</Value>
+			 <Doc>Earliest start time and latest expiration time. 
+                              Consume the sub-balance with the earliest 
+                              valid_from first. If more than one sub-balances 
+                              has the same valid_from, consume the one with the
+			      latest valid_to first
+                              (PIN_CONSUMPTION_RULE_ESTLET).</Doc>
+			</Values>
+			<Values>
+			 <Value>6</Value>
+			 <Doc>Earliest start time and earliest expiration time.
+                              Consume the sub-balance with the earliest 
+                              valid_from first. If more than one sub-balances 
+                              has the same valid_from, consume the one with the
+			      earliest valid_to first
+                              (PIN_CONSUMPTION_RULE_ESTEET).</Doc>
+			</Values>
+			<Values>
+			 <Value>7</Value>
+			 <Doc>Latest start time and earliest expiration time. 
+                              Consume the sub-balance with the latest 
+                              sub-balance first. If more than one sub-balances 
+                              has the same valid_from, consume the one with the
+			      earliest expired sub-balance first
+                              (PIN_CONSUMPTION_RULE_LSTEET).</Doc>
+			</Values>
+			<Values>
+			 <Value>8</Value>
+			 <Doc>Latest start time and latest expiration time. 
+                              Consume the sub-balance with the latest valid_from
+                              first. If more than one sub-balances has the 
+                              same valid_from, consume the one with the latest 
+                              valid_to first(PIN_CONSUMPTION_RULE_LSTLET).</Doc>
+			</Values>
+			<Values>
+			 <Value>9</Value>
+			 <Doc>Earliest expiration time and earliest start time.
+                              Consume the sub-balance with the earliest valid_to
+                              first. If more than one sub-balances has the same
+                              valid_to, consume the one with the earliest 
+                            valid_from first(PIN_CONSUMPTION_RULE_EETEST).</Doc>
+			</Values>
+			<Values>
+			 <Value>10</Value>
+			 <Doc>Earliest expiration time and latest start time. 
+                              Consume the sub-balance with the earliest valid_to
+                              first. If more than one sub-balances has the same
+                              valid_to, consume the one with the latest 
+                              valid_from first(PIN_CONSUMPTION_RULE_EETLST).
+                         </Doc>
+			</Values>
+			<Values>
+			 <Value>11</Value>
+			 <Doc>Latest expiration time and earliest start time. 
+                            Consume the sub-balance with the latest valid_to 
+                            first. If more than one sub-balances has the same 
+                            valid_to, use the one with the earliest
+			    valid_from first(PIN_CONSUMPTION_RULE_LETEST).</Doc>
+			</Values>
+			<Values>
+			 <Value>12</Value>
+			 <Doc>Latest expiration time and latest start time. 
+                            Consume the sub-balance with the latest valid_to 
+                            first. If more than one sub-balances has the 
+                            same valid_to, use the one with the latest
+			    valid_from first(PIN_CONSUMPTION_RULE_LETLST).</Doc>
+			</Values>
+                    </Enum>
+                    <Array name="PIN_FLD_SUB_BALANCES" use="optional" 
+			elemIdMode="index" iterationOrder="undefined" 
+			minElements="0"  
+			minElemId="0"  
+			isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" 
+			isRecursive="false">
+                        <Doc>Either the PIN_FLD_CURRENT_BAL will be returned or
+                            the following array will be returned, not both</Doc>
+                        <Fields>
+                            <Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+                                <Doc>The start date of this validity based 
+                                     balance.</Doc>
+                            </Timestamp>
+                            <Timestamp name="PIN_FLD_VALID_TO" use="optional">
+                                <Doc>The end date of this validity based 
+                                     balance, 0 indicate infinity</Doc>
+                            </Timestamp>
+                            <Decimal name="PIN_FLD_CURRENT_BAL" use="optional">
+                                <Doc>This field represents the current sub 
+                                     balance</Doc>
+                            </Decimal>
+                            <String name="PIN_FLD_CONTRIBUTOR_STR" 
+                             use="optional" maxlen="255">
+                                <Doc>The contributor for this sub-balance.</Doc>
+                            </String>
+                            <Int name="PIN_FLD_ROLLOVER_DATA" use="optional">
+                                <Doc>Rollover information for sub-balance.</Doc>
+                            </Int>
+                            <Int name="PIN_FLD_VALID_FROM_DETAILS" 
+                                       use="optional">
+                                <Doc>Detail of field PIN_FLD_VALID_FROM mode, 
+                                     offset and unit.</Doc>
+                            </Int>
+                            <Int name="PIN_FLD_VALID_TO_DETAILS" use="optional">
+                                <Doc>Detail of field PIN_FLD_VALID_TO mode, 
+                                     offset and unit.</Doc>
+                            </Int>
+                        </Fields>
+                    </Array>
+                </Fields>
+            </Array>
+        </Fields>
+    </Output>
+</Opcode>

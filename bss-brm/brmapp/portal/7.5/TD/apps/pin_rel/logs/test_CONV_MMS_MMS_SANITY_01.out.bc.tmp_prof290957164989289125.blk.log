@@ -1,0 +1,68 @@
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Tue Apr 14 21:16:00 2015
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_MMS_MMS_SANITY_01.out.bc.tmp_profile_event_ordering_t.ctl
+Character Set UTF8 specified for all input.
+
+Data File:      /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_MMS_MMS_SANITY_01.out.bc.tmp_prof290957164989289125.blk
+  Bad File:     /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_MMS_MMS_SANITY_01.out.bc.tmp_prof290957164989289125.blk.bad
+  Discard File: /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_CONV_MMS_MMS_SANITY_01.out.bc.tmp_prof290957164989289125.blk.discard 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Continuation:    none specified
+Path used:      Direct
+
+Load is UNRECOVERABLE; invalidation redo is produced.
+
+Table TMP_PROF290957164989289125, loaded from every logical record.
+Insert option in effect for this table: TRUNCATE
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+RECORD_TYPE                         FIRST     *  WHT      CHARACTER            
+  (FILLER FIELD)
+RECORD_NUMBER                        NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+BAL_GRP_OBJ_DB                       NEXT     *  WHT      CHARACTER            
+BAL_GRP_OBJ_TYPE                     NEXT     *  WHT      CHARACTER            
+BAL_GRP_OBJ_ID0                      NEXT     *  WHT      CHARACTER            
+BAL_GRP_OBJ_REV                      NEXT     *  WHT      CHARACTER            
+CRITERIA_NAME                        NEXT     *  WHT      CHARACTER            
+LAST_EVENT_PROCESS_T                 NEXT     *  WHT      CHARACTER            
+BILL_CYCLE_T                         NEXT     *  WHT      CHARACTER            
+PROFILE_OBJ_DB                       NEXT     *  WHT      CHARACTER            
+PROFILE_OBJ_TYPE                     NEXT     *  WHT      CHARACTER            
+PROFILE_OBJ_ID0                      NEXT     *  WHT      CHARACTER            
+PROFILE_OBJ_REV                      NEXT     *  WHT      CHARACTER            
+OBJ_ID0                              NEXT     *  WHT      CHARACTER            
+REC_ID                               NEXT     *  WHT      CHARACTER            
+
+
+Table TMP_PROF290957164989289125:
+  0 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+Bind array size not used in direct path.
+Column array  rows :    5000
+Stream buffer bytes: 5000000
+Read   buffer bytes:10000000
+
+Total logical records skipped:          0
+Total logical records read:             0
+Total logical records rejected:         0
+Total logical records discarded:        0
+Total stream buffers loaded by SQL*Loader main thread:        0
+Total stream buffers loaded by SQL*Loader load thread:        0
+
+Run began on Tue Apr 14 21:16:00 2015
+Run ended on Tue Apr 14 21:16:00 2015
+
+Elapsed time was:     00:00:00.23
+CPU time was:         00:00:00.03

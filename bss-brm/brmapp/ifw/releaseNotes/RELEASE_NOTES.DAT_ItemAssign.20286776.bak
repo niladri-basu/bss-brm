@@ -1,0 +1,215 @@
+
+================================================================================
+ Copyright (c) 2004, 2013, Oracle and/or its affiliates. All rights reserved. 
+ This material is the confidential property of Oracle Corporation or
+ its licensors and may be used, reproduced, stored or transmitted only
+ in accordance with a valid Oracle license or sublicense agreement.
+================================================================================
+DAT_ItemAssign
+================================================================================
+Module Version : 7.5 10013
+----------------
+
+Date : 23-Jan-2013
+---------------
+
+Change Order : bug16089031
+----------------
+
+Short Description :
+----------------
+Changes to support following features,
+1. Flexible item assignment per balance impact
+  Achieved through an enhancement to the existing customization of item assignment
+2. Split sponsored charges per charge sharing member along with flexible sponsor item type
+  Controlled through a new business parameter 'split_sponsor_item_by_member'
+================================================================================
+Module Version : 7.4 10012
+----------------
+
+Date : 14-Dec-2011
+---------------
+
+Change Order : bug13499042
+----------------
+
+Short Description :
+----------------
+When multiple pipelines do an FSM search simultaneously for a given <event_type, service_type> to find the
+corresponding configItemTag, the searchVector having the event_type,service_type was getting overwritten resulting
+in an incorrect search result by FSM.
+
+Solution :
+---------
+Modified the code to safeguard the searchVector from being overwritten in a multi-threaded sceanario. 
+================================================================================
+Module Version : 7.4 10011
+----------------
+
+Date : 31-Oct-2011
+---------------
+
+Change Order : bug13327324
+----------------
+
+Short Description :
+----------------
+standard library oStringStream object is not working consistantly in solaris and linux while preparing 
+poid string. Changed the code to use BAS::String object.
+================================================================================
+Module Version : 7.4 10010
+----------------
+
+Date : 19-Jul-2011
+---------------
+
+Change Order : bug12738406
+----------------
+
+Short Description :
+----------------
+0 ITEM POID ID'S ARE ASSIGNED BY DAT_ITEMASSIGN IN THE BALANCE IMPACTS
+
+Modified the code to handle error in the case no valid POID ID could be fetched from the reserved pool.
+================================================================================
+Module Version : 7.4 10009
+----------------
+
+Date : 10-Jun-2009
+---------------
+
+Change Order : bug8529570
+----------------
+
+Short Description :
+----------------
+Implementation of FSM to get itemPoid when Tag is not provided and there is no pre-created item.
+================================================================================
+Module Version : 7.4 10008
+----------------
+
+Date : 05-Jun-2009
+----------------
+
+Change Order :  8574244
+----------------
+
+Short Description :
+-------------------
+[Pipeline] MODIFIED THE RELOAD SEMAPHORE ENTRY
+Change the argument of reload semaphore
+================================================================================
+Module Version : 7.4 10007
+----------------
+
+Date : 06-Nov-2008
+----------------
+
+Change Order :  7491007
+----------------
+
+Short Description :
+-------------------
+[Pipeline] DAT_ITEMASSIGN REQUIRES CHANGE FOR SUPPORTING TWO DIGIT DB NUMBER.With this DB Number
+string would be fetched from poidlist based on the string before "|" and so there will not be any 
+limit on the number of digits in the DB number. 
+================================================================================
+Module Version : 7.4 10006
+----------------
+
+Date : 27-Oct-2008
+----------------
+
+Change Order :  bug6609184
+----------------
+
+Short Description :
+-------------------
+Correcting proctimer issues
+================================================================================
+DAT_ItemAssign
+================================================================================
+Module Version : 7.3_Patch 10005
+----------------
+
+Date : 03-May-2007
+----------------
+
+Change Order :  6027548
+----------------
+
+Short Description :
+-------------------
+[Pipeline] DAT_ITEMASSIGN MODULE CAN NOT BE RELOADED. This fix takes care of
+reloading the type-tag mapping via reload semaphore into DAT_ItemAssign.
+================================================================================
+
+Module Version : 6.7_FP2 10004
+----------------
+
+Date : 08-Dec-2004
+----------------
+
+Change Order :  PRSF00143461
+----------------
+
+Short Description :
+-------------------
+[Pipeline] Fix the issue of chopping the version number from Item Poid. 
+================================================================================
+Module Version : 6.7_FP2 10003
+----------------
+
+Date : 21-JUL-2004
+----------------
+
+Change Order :  PRSF00120954
+----------------
+
+Short Description :
+-------------------
+[Pipeline] Fix the core dump issue with multiple pipelines.
+================================================================================
+
+Module Version : 6.7_FP2 10002
+----------------
+
+Date : 01-JUL-2004
+----------------
+
+Change Order :  PRSF00119165
+----------------
+
+Short Description :
+-------------------
+[Pipeline] Reject the EDR if item poid list or next item poid list is EMPTY.
+================================================================================
+
+Module Version : 6.7_FP2 10001
+----------------
+
+Date : 23-JUN-2004
+----------------
+
+Change Order :  PRSF00117730
+----------------
+
+Short Description :
+-------------------
+[Pipeline] Handle item assignment for sponsorship cases. 
+================================================================================
+
+Module Version : 6.7_FP2 10000
+----------------
+
+Date : 04-JUN-2004
+----------------
+
+Change Order :  PRSF00094046
+----------------
+
+Short Description :
+-------------------
+[Pipeline] Intial release of Plugin for Flexible Item Assignment. 
+================================================================================
+

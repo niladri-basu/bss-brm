@@ -1,0 +1,26 @@
+//==============================================================================
+//  @(#)% %
+//      Copyright (c) 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//------------------------------------------------------------------------------
+// Block: ISC_UsageClassSetting.isc
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module populates the DETAIL.CONNECT_TYPE to DETAIL.USAGE_CLASS field
+//   so that later on this value can be populated in event_dlay_sess_tlcs_t table 
+//   which helps HUR to decide premimum calls.
+//
+//------------------------------------------------------------------------------
+// Responsible: Archan Misra
+//
+//------------------------------------------------------------------------------
+//==============================================================================
+// Detail Container
+//==============================================================================
+function onDetailEdr
+{
+  edrString(DETAIL.USAGE_CLASS) = edrString(DETAIL.CONNECT_TYPE);
+} // end onDetailEdr + end iScript

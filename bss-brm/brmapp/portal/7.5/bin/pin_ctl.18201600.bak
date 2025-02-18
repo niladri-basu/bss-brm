@@ -1,0 +1,3770 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#
+#	@(#)$Id: pinctl_template.pl /cgbubrm_main.rwsmod/2 2011/10/04 05:16:03 ssajjans Exp $
+#
+# Copyright (c) 1996, 2011, Oracle and/or its affiliates. All rights reserved. 
+#
+#	This material is the confidential property of Oracle Corporation or its
+#	licensors and may be used, reproduced, stored or transmitted only in
+#	accordance with a valid Oracle license or sublicense agreement.
+#
+
+BEGIN
+{
+	if (exists $ENV{PIN_HOME}) {
+		unshift(@INC, "$ENV{PIN_HOME}/tools/PerlLib");
+		unshift(@INC, "$ENV{PIN_HOME}/tools/SupportInformer");
+	} else {
+		print "Error: Please set PIN_HOME variable\n";
+		exit(1);
+	}
+}
+
+use strict;
+use File::Temp;
+use File::Path;
+use Registry::RegistryEntry;
+use Registry::RegistryLexer;
+use RegistryReader;
+use pcmif;
+use pcmdd;
+
+#
+#define global variables.
+#
+my $debug = 0;
+my $collect_data_var = 0;
+my $prn_usage = 0;
+my $all_alias = "all";
+
+#
+# System Commands. 
+#
+my $PSEF="/usr/bin/ps -ef 2>&1 ";
+my $UNAME="/usr/bin/uname";
+my $GREP="/usr/bin/grep";
+my $STRINGS="/usr/bin/strings";
+
+#
+# Some general defines below #
+#
+my $PIN_DONE=0;
+my $PIN_ERR=-1;
+my $TRUE=1;
+my $FALSE=0;
+my %List;
+my %ExpandedList;
+my %DependList;
+my $INF_VERS="7.5";
+my $version = $INF_VERS.'::2010.07.23';
+my $PIN_HOME=$ENV{"PIN_HOME"};
+my $PIN_LOG=$ENV{"PIN_LOG_DIR"};
+my $LD_LIBRARY_PATH="${PIN_HOME}/lib";
+my $host_name="";
+my $pin_ctl_log_dir = "";
+my $pin_ctl_conf_file="$PIN_HOME/bin/pin_ctl.conf";
+$ENV{'JAR_DIR'}=${PIN_HOME}.'/jars';
+my %service_name_env;
+
+#
+# For Windows, this is where Infranet files get installed.
+#
+my $pin_os_arch;
+my $is_sol_gt_58=$FALSE;
+my $env_preload_str;
+my $PIN_HOME_WIN ;
+my $VAR_HOME_WIN ;
+my $ZSCHED_ID=-1;
+
+#
+# Service names list
+#
+my %act_service_name = ();
+my %service_host = ();
+my %service_port = ();
+my %service_dbno = ();
+
+#
+# The service specific defines in a hash of hash.
+#
+my %dep_list=();
+my %subsystem_info = ();
+my %service_env = ();
+my @subsystem_order ;
+my $snmparg = {};
+my $settings = {};
+my @ALL_LIST ;
+my $action = '';
+my $arg_str = '';
+my $Machine='';
+my $IS_WIN=$FALSE;
+
+#
+# The valid actions are
+#
+my $valid_action = 'start stop halt restart status cstart clear snmpset snmpget hcheck ';
+
+#
+# All the possible states of Windows service are..
+#
+my @StatusList = qw(
+	undefined
+	stopped
+	starting
+	stopping
+	running
+	resuming
+	pausing
+	paused
+);
+
+#
+#new enhancement
+#
+my $log_level="debug";
+my $log_file;
+my $process_name;
+my %setupstuff=();
+my $user=$ENV{'LOGNAME'};
+my %ope=%ENV; 
+my @ops=sort keys %ope;
+my $i_mode=$FALSE;
+my $IFW_HOME=$ENV{'IFW_HOME'};
+my $outfile;
+
+# Snmp stuff
+# Some OID Base - headcoded as its not going to change
+my $PORTAL_BASE_OID		= "1.3.6.1.4.1.3512.1";
+my $PROCESS_MIB_TABLE_OID	= $PORTAL_BASE_OID.".101.1";
+my $PROCESS_DESCR_COLUMN	= $PROCESS_MIB_TABLE_OID.".2";
+my $REGISTRY_MIB_TABLE_OID	= $PORTAL_BASE_OID.".102.1";
+my $REGISTRY_DESCR_COLUMN	= $REGISTRY_MIB_TABLE_OID.".2";
+
+#
+# The subsystem_order Array -
+#
+#		 -----------------------------------------------------------------------
+#		| subsystem | 		 yes/no			| Corresponding Windows |
+#		|   Name    |					|      Service Name	|
+#		|-----------|-----------------------------------|-----------------------|
+#		|    cm	    |	0  -> Don't operate on cm.	|	CM		|
+#		|-----------|-----------------------------------|-----------------------|
+#		| dm_oracle |	1  -> Operate on dm_oracle.	|	DM		|
+#		|-----------|-----------------------------------|-----------------------|
+#		|  eai_js   |	0  -> Don't operate on js.	|	JS		|
+#		|-----------|-----------------------------------|-----------------------|
+#		|  dm_email |	1  -> Operate on dm_email.	|	dm_email	|
+#		 -----------------------------------------------------------------------
+#
+# The array is used "ONLY" for getting a proper of ordering
+# of the infranet subsystems and the corresponding Windows Service.
+# Even if the user instructed us to start cm before starting dm, we
+# we should not do that. Also, duplicate entries in the command line
+# are caught while initializing this array. The entry 3rd column
+# contains the Windows Service Name of the syb-system.
+#
+
+
+#
+# The following DependentList contains the names of dependent services.
+#			nmgr
+#			 ^
+#			 |
+#			 |
+#			 |
+#			CM
+#			 ^
+#			 |
+#			 |
+#			 |
+#			DM(dm_oracle)
+#
+# If DM service is stopped on Windows, then the depedents, CM and nmgr
+# will be stopped. This is the normal behaviour of Windows services
+# (which contains dependency tree). This utility is also made to behave
+# in the similar manner.
+#
+
+#
+#
+###########################################################################
+#########################	  MAIN		###########################
+###########################################################################
+#
+#
+{
+	my $str;
+	my $i;
+	my @arr;
+	my $index;
+	my $is_ip_valid;
+	my $c;
+	my $main_ret = $PIN_DONE;
+		
+	#flush stdout 
+	$|=1;
+	#remove masking on file permissions
+	umask(0);
+	&init();
+	&parse_cmd_line();
+	&parse_config_file();
+	if ( $ENV{OS} =~ m/hpux/ ) { #Get the complete process details using x option
+		$PSEF="/usr/bin/ps -exf 2>&1 ";
+	}
+
+	@arr = split(' ',$arg_str);
+	$action = shift(@arr);
+	$action = lc($action);
+	$index = index($valid_action,($action." "));
+	if ($index == $PIN_ERR) {
+		dump_log_message("error", "pin_ctl: Invalid action $action\n", 1);
+		&usage();
+		exit $PIN_ERR;
+	}
+	if ($action eq "snmpset" || $action eq "snmpget") {
+		&source_env_per_service($action,$action);
+		if (!($snmparg->{$arr[1]}->{lc($arr[0])})) {
+			if (!($snmparg->{$subsystem_info{$arr[1]}{'service_type'}}->{lc($arr[0])})) {
+				dump_log_message("error", "pin_ctl: $action does not support probe $arr[0] for $arr[1]\n", 1);
+			&usage();
+			exit $PIN_ERR;
+			}
+		}
+		$is_ip_valid = 1;
+	} else {
+		foreach $b (@arr) {
+			$b = lc($b);
+			# An indicator variable to check if
+			# the input is a valid sub-system or not?
+			$is_ip_valid = 0 ;
+			if (($b ne $all_alias) && ($b ne "all")) {
+				foreach (@subsystem_order) {
+					if (lc($b) eq lc($$_[1])) {
+						$is_ip_valid = 1;
+						$$_[0] = 1;
+					}
+				}
+				if (!$is_ip_valid) {
+					dump_log_message("error","pin_ctl:Error!!! Invalid service name $b \n", 1);
+					&usage();
+					exit $PIN_ERR;
+				} 
+				dump_log_message("debug", "pin_ctl: input service name is Valid <$b> \n", 0);
+
+			} elsif (($b eq $all_alias) || ($b eq "all")) {
+				foreach $c (@ALL_LIST) {
+					foreach (@subsystem_order) {
+						if (lc($c) eq  lc($$_[1])) {
+							$$_[0]= 1;
+						}
+					}
+				}
+				$is_ip_valid = 1;
+			}
+		}
+	}
+	if (!$is_ip_valid) {
+		dump_log_message("error", "pin_ctl:Error!!! No service name entered\n", 1);
+		&usage();
+		exit $PIN_ERR;
+	}
+
+	if ($action eq "start") {
+		if (&start() == $PIN_ERR) {
+			$main_ret=$PIN_ERR;
+		}        
+	} elsif ($action eq "stop") {
+		if (&stop() == $PIN_ERR) {
+			$main_ret=$PIN_ERR;
+		}
+	} elsif ($action eq "restart") {
+		if (&restart()) {
+			$main_ret=$PIN_ERR;
+		}
+	} elsif ($action eq "halt") {
+		if (&halt() == $PIN_ERR) {
+			$main_ret=$PIN_ERR;
+		}
+	} elsif ($action eq "clear") {
+		&clear();
+	} elsif ($action eq "cstart") {
+		if (&cstart()) {
+			$main_ret=$PIN_ERR;
+		}
+	} elsif ($action eq "status") {
+		if (&status()) {
+			$main_ret=$PIN_ERR;
+		}
+	} elsif ($action eq "hcheck") {
+		if (&hcheck()) {
+			$main_ret=$PIN_ERR;
+		}
+	} elsif ($action eq "snmpset" || $action eq "snmpget") {
+		push(@arr, $action);
+		if (&snmp_probe(@arr)) {
+			dump_log_message("error", "pin_ctl: Failed to set the given action\n", 1);
+			$main_ret=$PIN_ERR;
+		}
+	} else {
+                dump_log_message("error", "pin_ctl:Error!!! Not a valid action \n", 1);
+                &usage();
+		$main_ret=$PIN_ERR;
+		### NOP...we don't allow the 'view log files' feature ###
+	} 
+        exit $main_ret;
+}
+###########################################################################
+
+sub init
+{
+	my $os;
+
+	if ($^O =~ /MSWin32/) {
+		$IS_WIN=$TRUE;
+		$PIN_HOME_WIN =$ENV{"PIN_HOME"};
+    		$VAR_HOME_WIN = "${PIN_HOME_WIN}/var";
+		$host_name = $ENV{COMPUTERNAME};
+		# set the NT service names for the supported portal base processes
+		$act_service_name{dm_oracle} = "dm";
+		$act_service_name{dm_email} = "dm_email";
+		$act_service_name{dm_fusa} = "dm_fusa";
+		$act_service_name{dm_invoice} = "dm_invoice";
+		$act_service_name{dm_vertex} = "dm_vertex";
+		$act_service_name{dm_ldap} = "dm_ldap";
+		$act_service_name{dm_eai} = "dm_eai";
+		$act_service_name{dm_odbc} = "dm";
+		$act_service_name{dm_ifw_sync} = "dm_ifw_sync";
+		$act_service_name{cm} = "cm";
+		$act_service_name{cm_proxy} = "cm_proxy";
+		$act_service_name{cmmp} = "cmmpserv";
+		$act_service_name{answer_b} = "answer_b";
+		$act_service_name{answer_s} = "answer_s";
+		$act_service_name{formatter} = "formatterserv";
+		$act_service_name{nmgr} = "nmgr";
+		$act_service_name{infmgr} = "inf_mgr";
+		$act_service_name{eai_js} = "jseaiserv";
+		$act_service_name{batch_controller} = "batch_controller";
+	} else {
+		$os = `uname -s`;
+		chomp($os);      # get rid of end-of-line
+		if ($os eq "SunOS") {
+			$pin_os_arch = `uname -p`;
+			$ENV{'OS'}="solaris";
+			$os = `uname -r`;
+                        chomp($os);
+                        $os =~ s/\.//;
+                        if ($os > 58) {
+                                $is_sol_gt_58 = $TRUE if (!(-x "/usr/lib/sparcv9/libumem.so"));
+                        }
+			# If Solaris 10, then get the process Id of zsched process
+			if ($os == 510) {
+				my $temp = "/usr/bin/ps -ef | grep zsched | grep -v grep 2>&1 ";
+				open (PS, "${temp}|");
+				# In all possibilities there will be only one iteration,
+				# however just for clarity, written within a while loop
+				while (<PS>) {
+					next unless s{^\s*\w+\s*(\d+).*zsched}{$1};
+					$ZSCHED_ID=$1;
+				}
+				close PS;
+			}
+		}
+		elsif ($os eq "HP-UX") {
+			$pin_os_arch = `uname -m`;
+			chomp($pin_os_arch);
+			if ($pin_os_arch eq 'ia64') {
+				$ENV{'OS'}="hpux_ia64";
+			} else {
+				$ENV{'OS'}="hpux";
+			}
+		}
+		elsif ($os eq "Linux") {
+			$ENV{'OS'}="linux";
+			$PSEF="/bin/ps -ef 2>&1 ";
+			$UNAME="/bin/uname";
+			$GREP="/bin/grep";
+			$STRINGS="/usr/bin/strings";
+		}
+		elsif ($os eq "AIX") {
+			$ENV{'OS'}="aix";
+			$pin_os_arch = `uname -p`;
+			$os = `uname -r`;
+			chomp($os);
+			$os =~ s/\.//;
+		}
+		#also set host_name
+		$host_name = `uname -n`;
+	}
+	chomp($host_name);
+}
+
+#if file exists, add write access to current permissions
+#otherwise, use file creation umask with added write permissions
+sub setwriteperm
+{
+	my($filename)=@_;
+	chmod(0777,$filename);
+#	chmod( ( 0200 | (0777 & ( (stat $filename)[2] || umask() ) ) ), $filename);
+}
+
+sub start
+{
+	my @sys_arr;
+	my $arg;
+	my $err = $PIN_DONE;
+	my $ret_err = $PIN_DONE;
+
+	if ($IS_WIN) {
+		if (&start_win() == $PIN_ERR) {
+			return $PIN_ERR;
+		}
+		return $PIN_DONE;
+	}
+
+	# Call lookup_array....
+	@sys_arr = lookup_array();
+
+	foreach $arg (@sys_arr) {
+		if ($collect_data_var) {
+		 	$process_name = $arg;
+               		&setup_collect_data();
+        	}
+		$err = start_service($arg);
+		$ret_err = ($err == $PIN_ERR) ? $PIN_ERR : $ret_err;
+		$err = $PIN_DONE;
+	}
+	return $ret_err;
+}
+
+sub start_service
+{
+	my $service_name = $_[0];
+	my $aj1;
+	my $env_tag;
+	my @str;
+	my $pidaj;
+	my $result=$TRUE;
+	my $binary;
+	my $pos;
+	my $err = $PIN_DONE;
+	my $s;
+	my @start_arr;
+	my $pidfile;
+	my $logfile;
+	my $date;
+	my $arg;
+	my $allret;
+	my $lock_file;
+
+
+	if ($service_name =~ /answer/) {
+		$arg = 'answer';
+	} else {
+		$arg = $service_name;
+	}
+	my $service_type = $subsystem_info{$arg}{'service_type'}; 
+	&source_env_per_service($service_name,$service_type);
+
+	if (&init_start("$service_name")) {
+		return $PIN_ERR;
+	}
+	$binary = $subsystem_info{$arg}{'binfile'};
+	$pidfile = $subsystem_info{$arg}{'pidfile'};
+	$logfile = $subsystem_info{$arg}{'logfile'};
+	for $env_tag ( keys %{ $service_env{$service_type} } ) {
+		$ENV{$env_tag} = $service_env{$service_type}{$env_tag};
+	}
+
+	if ($arg eq "answer") {
+		$binary =~ s/$arg/$service_name/;
+		$pidfile =~ s/$arg/$service_name/;
+	}
+
+	if ($subsystem_info{$arg}{'is_pipeline'} == $TRUE) {
+		if ($service_type eq "dm_timos") {
+			$ENV{'LD_PRELOAD_64'} = $env_preload_str if (!$is_sol_gt_58);
+			$binary = $binary.' -r '.$subsystem_info{$arg}{'registry_filename'}.' -s';
+		} else {
+			$binary = $binary.' -r '.$subsystem_info{$arg}{'registry_filename'};
+			#
+			# For the pipeline services to start the binary should be 
+			# executed from ifw_home
+			#
+                        if ($settings->{$service_name}->{'pin_home_dir'} ) {
+                                chdir $settings->{$service_name}->{'pin_home_dir'};
+				dump_log_message("debug","Changed dir to $settings->{$service_name}->{'pin_home_dir'} \n");
+			} elsif ($settings->{$service_type}->{'pin_home_dir'} ) {
+                                chdir $settings->{$service_type}->{'pin_home_dir'};
+                                dump_log_message("debug","Changed dir to $settings->{$service_type}->{'pin_home_dir'} \n");
+                        } else {
+                                chdir $IFW_HOME;
+                        }
+		}
+		dump_log_message("debug", "Pipeline binary = $binary\n", 0);
+	}
+
+	# This is for HP Itanium. It works around a change in the thread libraries
+	# for itanium which affects the way shared memory mutexes work.
+
+	if (($service_type eq "dm_oracle") || ($service_type eq "dm_eai") || ($service_type eq "dm_invoice")) {
+		$pos = rindex(`${UNAME} -m`, "ia64");
+		if ($pos != -1) {
+			$ENV{'PTHREAD_DISABLE_HANDOFF'} = '1';
+		}
+	}
+	$pos=0;
+	if ($service_type eq "dm_ifw_sync") {
+		$pos = rindex(`${UNAME}`, "HP-UX");
+		if ($pos != -1) {
+			if (($s.`${STRINGS}  -a /usr/lib/dld.sl | ${GREP} LD_PRELOAD`) eq $s) {
+				dump_log_message("error", "pin_ctl: LD_PRELOAD not supported by current dld !!\n", 1);
+				dump_log_message("error", "Refer to Infranet documentation for patch requirements.\n", 1);
+				dump_log_message("error", "Aborting !!\n", 1);
+				exit 9;
+			}
+		}
+	}
+
+	# See if it is already running 
+	$aj1 = &get_procid("$service_name");
+	@str = split (/\|/,$aj1);
+
+	if ($str[0] == 0) {
+		if ($str[1] > 0) {
+			dump_log_message("debug", "pin_ctl: service <$service_name> [$str[1]] is already running\n", 1);
+		} else {
+			$| = 1;
+			if ($service_type eq "formatter") {
+				$ENV{'CLASSPATH'}='.:'.$ENV{'JAR_DIR'}.'/js.jar:'.$ENV{'JAR_DIR'}.'/pcm.jar:'.$ENV{'JAR_DIR'}.'/pcmext.jar:'.$ENV{'JAR_DIR'}.'/formatter.jar:'.$ENV{'JAR_DIR'}.'/classgen.jar:'.$ENV{'JAR_DIR'}.'/jstest.jar:'.$ENV{'JAR_DIR'}.'/xerces.jar:'.$ENV{'JAR_DIR'}.'/xt.jar:'.$ENV{'JAR_DIR'}.'/xalan.jar:'.$ENV{'JAR_DIR'}.'/serializer.jar:'.$ENV{'JAR_DIR'}.'/saxon.jar:'.$ENV{'JAR_DIR'}.'/sax.jar:'.$ENV{'JAR_DIR'}.'/pxslt.jar';
+			} elsif ($service_type eq "batch_controller") {
+				$ENV{'CLASSPATH'}=$PIN_HOME.'/apps/'.$service_name.'/'.':'.$ENV{'JAR_DIR'}.'/batch.jar:'.$ENV{'JAR_DIR'}.'/pcm.jar:'.$ENV{'JAR_DIR'}.'/pcmext.jar:'.$ENV{'JAR_DIR'}.'/xercesImpl.jar:'.$ENV{'JAR_DIR'}.'/xmlParserAPIs.jar';
+			} elsif ($service_type eq "eai_js") {
+				$ENV{'CLASSPATH'}='.:'.$ENV{'JAR_DIR'}.'/js.jar:'.$ENV{'JAR_DIR'}.'/pcm.jar:'.$ENV{'JAR_DIR'}.'/pcmext.jar:'.$ENV{'JAR_DIR'}.'/eai.jar:'.$ENV{'JAR_DIR'}.'/xercesImpl.jar:'.$ENV{'JAR_DIR'}.'/xmlParserAPIs.jar:'.$ENV{'JAR_DIR'}.'/xml4j.jar';
+			}
+
+			#make sure all output is fully flushed
+			select(STDERR); $|=1;
+			select(STDOUT); $|=1;
+						
+			# Remove the lock file (if exists) for pipeline services
+			if ($subsystem_info{$arg}{'is_pipeline'} == $TRUE) {
+				$lock_file = "$subsystem_info{$arg}{'registry_filename'}.lock";
+				if(-e "$lock_file") {
+					unlink "$lock_file";
+					dump_log_message("debug", "Removed lock file = $lock_file \n", 0);
+				}
+				# Also kill ifw_handler processes if any
+				my @pids = get_eventhdl_process();
+				foreach (@pids) {
+					if (!(kill KILL=> "$_")) {
+						dump_log_message("error","pin_ctl: Error while killing event_handler process [$_]\n ", 1);
+						exit $PIN_ERR;
+					} else {
+						dump_log_message("debug","pin_ctl: Killed event_handler process [$_]\n", 0);
+						sleep 5;
+					}
+				}
+			}
+
+			
+			#
+			# Forking, child will start the service process.
+			#
+
+			defined(my $pidaj = fork()) or die "pin_ctl: fork of child process failed";
+
+			if ($pidaj) {
+
+				#
+				# I just delivered my child !! Do the following in the parent -
+				#
+				# 1. Log time of start into log file.
+				# 2. Log pid of the process started in the pid file.
+				# 3. Update the access permissions of the log and pid files.
+				#
+
+				# Sleep 10 secs so that process get started
+				sleep 10;
+
+				if (($subsystem_info{$arg}{'is_pipeline'} == $TRUE) && ($service_type ne "dm_timos")) {
+					$allret = &check_start_stop_pipeline("start", $arg, $pidaj, "", $service_type);
+					dump_log_message("debug", "return value from check_start_stop_pipeline = $allret\n", 0);
+				} else {
+					$allret=&custom_functions("start", $arg);
+				}
+				if ($allret) {
+					# Create pid file only if successfully started
+					open (PID_FD,">$pidfile");
+					print PID_FD "$pidaj\n";
+					close (PID_FD);
+					setwriteperm($pidfile);
+					dump_log_message("msg", "service <$service_name> [$pidaj] started at ".
+						scalar(localtime())."\n", 1);
+					$err = $PIN_DONE;
+				} else {
+                                        #Check here whether the process $pidaj is still in the ps -ef output
+                                        my $is_process_still_running = &find_process_with_pid($pidaj);
+                                        if ($is_process_still_running) {
+
+                                                dump_log_message("error", "service <$service_name> [$pidaj] failed to start in the configured waittime/iterations \n", 1);
+                                        } else {
+                                                dump_log_message("error", "service <$service_name> [$pidaj] failed to start at ". scalar(localtime())."\n", 1);
+                                        }
+
+					$err = $PIN_ERR;
+				}
+			} else {
+
+				#Need to close STDIN STDOUT STDERR as ssh waits for them
+				close STDIN;
+				close STDOUT;
+				close STDERR;
+
+				# child.
+				open (STDIN, "<", "/dev/null") or die "pin_ctl: open(STDIN,</dev/null) failed: $!";
+				open (STDOUT,">>$logfile") or die "pin_ctl: open(STDOUT,>>$logfile) failed: $!";
+				open (STDERR,">&STDOUT") or die "pin_ctl: open(STDERR,>&STDOUT) failed: $!";
+
+				local $| = 1; # enable STDOUT autoflush for child 
+
+				if (($service_type eq "eai_js") || ($service_type eq "formatter")) {
+					if (exec("$ENV{JAVA_BIN_PATH}/java -mx33554432 -ms33554432 -ss1m com.portal.js.JSMain")) {
+						# If the start failed return
+						dump_log_message("error", "pin_ctl: Starting of service <$service_name> failed: $!\n", 1);
+						exit $PIN_ERR;
+					}
+				} elsif ($service_type eq "batch_controller") {
+					if (exec ("$ENV{JAVA_BIN_PATH}/java -server -Djava.awt.headless=true -Xms25m -Xmx64m -classpath $ENV{CLASSPATH} com.portal.batch.BatchControllerMain")) {
+						# If the start failed return
+						dump_log_message("error", "pin_ctl: Starting of service <$service_name> failed: $!\n", 1);
+						exit $PIN_ERR;
+					}
+				} else {
+ 
+					if (exec ($binary)) {
+						dump_log_message("error", "pin_ctl: Starting of service <$service_name> failed: $!\n", 1);
+						exit $PIN_ERR;
+					}
+					
+				}
+				dump_log_message("debug", "Started $service_name at ".scalar(localtime())."...\n", 0);
+			}
+		}
+	} else {
+		dump_log_message("error", "pin_ctl: Unable to start service <$service_name> \n", 1);
+		$err=$PIN_ERR;
+	}
+	return $err;
+}
+
+sub custom_functions
+{
+	my @cherou;
+	my ($nf,@narg,$type,$ap,$bp);
+	$type=$_[0];
+	my $parg= $_[1];
+	my $curcount = 0;
+	my ($inv,$allret,$ret);
+	my $ser_type = $subsystem_info{$parg}{'service_type'};
+	$ap=$type."_".$parg;
+	$bp=$type."_".$ser_type;
+	@cherou= map {
+		($nf,@narg)=split(/:/,$_);
+		# aw, heck: just "fatal-it" if somebody screws up the control table
+		&{$::{"setup_$nf"}}($type,@narg); #returns the subformat above
+	}  exists $setupstuff{$ap} ? @{$setupstuff{$ap}} : () ;
+	my ($pstr,$fname,@fargs);
+	my ($waitcount, $waittime);
+	if ($settings->{$parg}->{'iterations'}) {
+		$waitcount=$settings->{$parg}->{'iterations'};
+	} elsif ($settings->{$ser_type}->{'iterations'}){
+		$waitcount=$settings->{$ser_type}->{'iterations'};
+	} else {
+		#if not exist use the default count
+		$waitcount=5;
+	}
+	if ($settings->{$parg}->{'waittime'}) {
+		$waittime=$settings->{$parg}->{'waittime'};
+	} elsif ($settings->{$ser_type}->{'waittime'}){
+		$waittime=$settings->{$ser_type}->{'waittime'};
+	} else {
+		#if not exist use the default wait time
+		$waittime=5;
+	}
+	while(!$waitcount || $curcount <$waitcount) {
+		++$curcount;
+		if ($curcount>1) {
+			dump_log_message("debug", "\n", 0);
+		}
+		my $dbgmsg = "pin_ctl: ".$ap." $curcount/";
+		if ($waitcount) {
+			$dbgmsg = $dbgmsg.$waitcount;
+		} else {
+			$dbgmsg = $dbgmsg."*";
+		}
+		dump_log_message("debug", "$dbgmsg ", 0);
+#		dump_log_message("debug",  ($curcount>1 ? "\n" : ()). "pin_ctl: $ap  $curcount/". ($waitcount ? $waitcount : "*" ), 0);
+
+		$allret=1;
+		foreach $inv (@cherou){
+			($pstr,$fname,@fargs)=@{$inv};
+			$ret=&{$::{$fname}}(@fargs);
+			if ($ret == 1) {
+				dump_log_message("debug", "=OK", 0);
+			} elsif ( $ret == -1) {
+				dump_log_message("debug", "=ABORT", 0); $allret=0; last;
+			} else {
+				dump_log_message("debug", "services not yet started\n", 0); $allret=0; last;
+			}
+		}
+		last if $allret || $ret == -1;
+
+		dump_log_message("debug", "  SLEEP:$waittime \n", 0);
+		sleep($waittime);
+	}
+	return $allret;
+}
+
+sub setup_collect_data
+{
+	my $pname = $process_name;
+	$pname = 'answer' if $process_name =~ /answer/;
+	$outfile=$subsystem_info{$pname}{'logdir'}."/$process_name".'.diag.log';
+	my ($tsec, $tmin, $thour, $tday, $tmonth, $tyear) = localtime();
+	my $tmonth = $tmonth+1;
+	my $tyear = $tyear+1900;
+	my $time_st = $tyear.pad_zero($tmonth).pad_zero($tday).pad_zero($thour).pad_zero($tmin).pad_zero($tsec);
+	$outfile = $outfile.'.'.$time_st;
+	dump_log_message("debug", "Output file = $outfile\n", 0);
+        if (($ENV{'OS'} eq "solaris") || ($ENV{OS} =~ m/hpux/) || ($ENV{OS} eq "linux") || ($ENV{OS} eq "aix")) {
+                &collect_data("/bin/ps -eaf 2>&1 |");
+                &collect_data("date 2>&1 |");
+                &collect_data("env 2>&1 |");
+                &collect_data("vmstat 1 5 2>&1 |");
+                &collect_data("df -k 2>&1 |");
+                if (($ENV{'OS'} eq "solaris") || ($ENV{OS} =~ m/hpux/)) {
+			&collect_data("ulimit -a 2>&1 |");
+                	&collect_data("uname -X 2>&1 |");
+                	&collect_data("sysdef 2>&1 |");
+                	&collect_data("nfsstat -m 2>&1 |");
+                	if ($ENV{'OS'} eq "solaris") {
+           			&collect_data("pkginfo 2>&1 |");
+	                } elsif ($ENV{OS} =~ m/hpux/) {
+	                        &collect_data("swlist 2>&1 |");
+			}
+                } elsif ($ENV{OS} eq "linux") {
+			&collect_data("ulimit -a");
+                	&collect_data("uname -a 2>&1 |");
+			&collect_data("/usr/sbin/nfsstat  -m 2>&1 |");
+			&collect_data("cat /proc/devices 2>&1 |");
+			&collect_data("ls /sys/devices 2>&1 |");
+			&collect_data("rpm -qa 2>&1 |");
+		} elsif ( $ENV{OS} eq "aix") {
+			&collect_data("ulimit -a");
+			&collect_data("nfsstat -m 2>&1 |");
+			&collect_data("lsdev 2>&1 |");
+			&collect_data("lslpp -l 2>&1 |");
+		}
+		
+                &collect_data("ipcs -a 2>&1 |");
+                &collect_data("uptime 2>&1 |");
+                &collect_data("ps -ef 2>&1 |");
+                &collect_data("who 2>&1 |");
+        } elsif ($ENV{'OS'} eq "Windows_NT") {
+                &collect_data("date /T 2>&1 |");
+                &collect_data("time /T 2>&1 |");
+                &collect_data("systeminfo 2>&1 |");
+                &collect_data("set 2>&1 |");
+                &collect_data("tasklist /V 2>&1 |");
+                &collect_data("fsutil volume diskfree c: 2>&1 |");
+                &collect_data("ipconfig /all 2>&1 |");
+        }
+        &collect_data("netstat -a 2>&1 |");
+        &collect_data("netstat -s 2>&1 |");
+}
+
+sub collect_data
+{
+	open (OUT,"+>>$outfile") || die "Can't open $outfile";
+	print OUT "Data Collect Output for the command $_[0]\n";
+	print OUT "==========================================\n";
+	my $x="$_[0]";
+	my $line;
+	if ($x =~ m/ulimit/) {
+		system("$x >> $outfile");
+	} else {
+		open(SINP,$x) || die "ERROR_INTERNAL open($x)";
+		while ($line = <SINP>) {
+			print OUT "$line";
+		}
+	}
+	print OUT "====================================XooooooX====================================\n";
+	close(SINP);
+	close(OUT);
+}
+
+sub setup_env
+{
+        my $env_str = "";
+        my $env_tag;
+        my $env_process;
+        my $env_plat;
+	my $inv;
+	my $curcount = 0;
+        my @env_tok = split(/ |\t/, $_[0]);
+        foreach $inv (@env_tok) {
+                if ($curcount == 0) {
+                        $env_process = $inv;
+                } elsif ($curcount == 1) {
+			 my @get_plat = split(/:/,$inv);
+                         $env_plat = $get_plat[1];
+                } elsif ($curcount == 2) {
+			 my @get_tag = split(/:/,$inv);
+                         $env_tag = $get_tag[1];
+                } elsif ($curcount >= 3) {
+			my $env_var_index = index($inv,":");
+                        $inv = substr($inv,$env_var_index+1);
+			my @env_tok2 = split(/:/, $inv);
+			my $inv_colon;
+			
+			my $cusrpsn = 0;
+			my $final = "";
+			my $inv1;
+			foreach $inv_colon (@env_tok2) {
+
+			my @res=split(/\$/,$inv_colon);
+			$cusrpsn = 0;
+			$final = "";
+			foreach $inv1 (@res) {
+			        my $env = "";
+			        if ($cusrpsn != 0) {
+			                my @slash = split(/\//,$inv1);
+
+					my $tc=1;
+					if (!exists $ENV{"$slash[0]"}) {
+						dump_log_message("debug", "$slash[0] not set\n", 0);
+					}
+			                $env = $ENV{"$slash[0]"};
+					while ($slash[$tc]) {
+			                	$env = $env.'/'.$slash[$tc];
+						$tc++;
+					}
+			        }
+			        if ($final ne "") {
+			                $final = $final.'/'.$env;
+			        } else {
+			                $final = $env;  
+			        }
+			        ++$cusrpsn;
+			 }
+			 if ($final ne "") {
+				$inv_colon = $final;
+			 }
+                         if ($env_str ne  "") {
+                                $env_str = $env_str.':'.$inv_colon;
+                         } else {
+                                $env_str = $inv_colon;
+                         }
+			 }
+		# Storing the env variables to source them at the time of fork
+		$service_name_env{$env_process}{$env_plat}{$env_tag} = $env_str;
+		}
+                ++$curcount;
+        }
+
+	if (((index($arg_str, "all") != -1) || (index($arg_str, $env_process) != -1) || ($env_process eq "common"))
+	  && (($ENV{'OS'} eq $env_plat) || ($env_plat eq "common"))) {
+		if (($is_sol_gt_58 == $TRUE) && ($env_tag eq "LD_PRELOAD_64")) {
+                        $env_preload_str = $env_str;
+                } else {
+			# If the variable is a registry , set it immediately rather than exporting it.
+			# This will help if there are alias pipeline services.
+			if ($env_tag =~ m/REGISTRY/ ) {
+				$subsystem_info{($env_process)}{'registry_filename'} = $env_str;
+			}
+		}
+		if ($env_tag eq 'IFW_HOME') {
+			$IFW_HOME = $env_str;
+		}
+        }
+	elsif (($ENV{'OS'} eq $env_plat) || ($env_plat eq "common")) {
+		$service_env{$env_process}{$env_tag} = $env_str;
+	}
+
+}
+
+sub setup_control_script_log
+{
+	my @env_tok = split(/ |\t/, $_[0]);
+	$log_level = substr($env_tok[1], index($env_tok[1], ':') + 1);
+	# overwrite log_level, if debug is set on command line
+	$log_level = "debug" if $debug;
+	$log_file = substr($env_tok[2], index($env_tok[2], ':') + 1);
+	$pin_ctl_log_dir = substr($log_file, 0, rindex($log_file, "/"));
+
+        if (!(-e $pin_ctl_log_dir)) {
+		if (!(mkpath ${pin_ctl_log_dir})) {
+			dump_log_message("error","pin_ctl: Could not create the pin_ctl_log_dir - $pin_ctl_log_dir\n", 1);
+			return $PIN_ERR;
+		}
+        }
+
+	if (!( -e $log_file)) {
+		open(FN, ">$log_file");
+		print FN "pin_ctl: File Created\n";
+		close(FN);
+		setwriteperm($log_file);
+	}
+	dump_log_message("debug", "pin_ctl_log_dir = $pin_ctl_log_dir\n", 0);
+}
+
+sub setup_start_stop
+{
+	my ($rn,@rs,$odu, @temp);
+	($rn,@rs)=split(/\s+/,$_[0]);
+	my ($entry, $cpidproc, $proc, $cport, $port, $testnap, $test, $host, $dbno, $tmpStr);
+	die "pin_ctl: ERROR_INVALIDRULE pin_ctl.conf \"$odu\"\n" if $rn eq ""; #allow blank rule sets
+	my $service_name = substr($rn, 6); # Here, 6 is the size of start_
+	dump_log_message("debug", "setup_start_stop: rn = $rn\trs = @rs\n", 0);
+	if ($#rs >= 2) {
+		#append service_name and port to testnap details
+		foreach $entry (@rs) {
+			if ($entry =~ m/^cpidproc/) {
+				($cpidproc, $proc) = split(':', $entry);
+			} elsif ($entry =~ m/^cport/) {
+				($cport, $port) = split(':', $entry);
+			} elsif ($entry =~ m/^host/) {
+				($tmpStr, $host) = split(':', $entry);
+			} elsif ($entry =~ m/^dbno/) {
+				($tmpStr, $dbno) = split(':', $entry);
+			} elsif ($entry =~ m/^testnap/) {
+				($testnap, $test) = split(':', $entry);
+			}
+		}
+		$service_port{$service_name} = "$port";
+		$service_host{$service_name} = "$host";
+		$service_dbno{$service_name} = "$dbno";
+		if ($testnap eq "testnap") {
+			push(@temp, "$cpidproc:$proc");
+			push(@temp, "$cport:$port");
+			push(@temp, "$testnap:$test:$service_name:$port");
+			@rs = @temp;
+		}
+	}
+	$setupstuff{$rn} = [@rs];
+	$rn =~ s/start/stop/;
+	$setupstuff{$rn} = [@rs];
+	dump_log_message("debug", "setup_start_stop: rn = $rn\tactual rs = @rs\n", 0);
+}
+
+sub dump_log_message
+{
+#first argument will be message level.
+#second message will be message
+#third argument print message on screen if 1
+        if (($log_level eq "debug") || ($_[0] eq "msg")) {
+                 &log_message($_[0],$_[1]);
+        } elsif (($log_level eq "error") && ($_[0] eq "error")) {
+                 &log_message($_[0],$_[1]);
+        } elsif (($log_level eq "warning") || ($_[0] eq "error")) {
+		&log_message($_[0],$_[1]);
+	}
+	#To display the screen on the monitor
+	print $_[1] if $_[2] == 1;
+}
+
+sub log_message
+{
+	open (OUT,"+>>$log_file") || die "Make sure that control_script_log entry is first in pin_ctl.conf file\n";
+        print OUT "$_[0]: $_[1]";
+	close(OUT);
+}
+
+sub nowdie
+{
+	dump_log_message("error","\npin_ctl: ".join(" ",@_)."\npin_ctl.conf: ABORTING\n", 1);
+	exit 33;
+}
+
+# setup funcs need to return this:
+# subformat: [ printstr, fname, args ]
+
+# strictly, we could combine $par and $chi without too much impact, but I may tweak this later
+# to handle both seperately.
+sub getproclist
+{
+	dump_log_message("debug", "getproclist(".join(",",@_).")\n", 0);
+	my (%retproc,$x);
+	my ($pat,$par,$chi)=@_;
+	open(SINP,$x="/bin/ps -eaf 2>&1 |") || nowdie "ERROR_INTERNAL open($x)";
+	while(<SINP>) {
+		next unless s{^(\s*\w+\s+(\d+)\s+(\d+)\s+)\d+\s+.*$pat\s*}{$1}; #snip out the processor scheduling stuff
+		$retproc{$2}=$_ if exists $par->{$3} || exists $chi->{$2};
+	}
+	close(SINP);
+	%retproc;
+}
+
+sub setup_cpidproc
+{
+	# setup_cpidproc($pat,$pidsubstr)
+	# if $pidsubstr not specified, defaults to "PID" (as in "CMPID=")
+	# null pattern=no ps filter (dangerous!)
+	dump_log_message("debug", "setup_cpidproc(".join(",",@_).")\n", 0);
+	my ($ty,$pat,$pss,$psf,$psn)=@_;
+	my ($par,$chi,%scrh);
+	$pss='PID$' unless $pss;
+	$pss=~s{=*$}{}; #consistancy
+	dump_log_message("debug", "pss=$pss\n", 0);
+	# $psf=$ope{(grep /$pss/, @ops)[0]} ; #first come, first server. (luv one!)
+	$psf=$subsystem_info{$pat}{'pidfile'};
+	if (($subsystem_info{$pat}{'is_pipeline'} == $TRUE) && ($pat ne "dm_timos")) {
+		$pat = "ifw";
+	}
+	dump_log_message("debug", "psf=$psf\n", 0);
+	if (open(SINF,"<$psf")){
+		$psn=0+<SINF>;
+		close(SINF);
+	}
+	$par=$chi={$psn=>$psn};
+	if ($ty eq "stop") {
+		#i'm not sure WHY, but if I don't call getproclist this way, @_ doesn't get set properly in the subfunc
+		%scrh=&{$::{"getproclist"}}($pat,$par,$chi);
+		$par=$chi={ $psn => $psn, map { ( $_ => $_ ) } keys %scrh }; #cheapo approach
+	}
+	dump_log_message("debug", "$pat,{".join(',',keys %{$par})."},{".join(',',keys %{$chi})."}\n", 0);
+	$psn ? [ "cpidproc:".$pat.":".$psn, "cpidproc",  $ty, [], $pat, $par, $chi ] : (); #ignore if nothing's there
+}
+
+sub cpidproc
+{
+	# cpidproc($trackarray,$pat,{parpidlist},{chipidlist})
+	# check parent + child processes
+	# null pattern=no filter (dangerous!)
+	dump_log_message("debug", "\ncpidproc(".join(",",@_).")\n", 0);
+	my ($ty,$ta,$pat,$par,$chi)=@_;
+	my ($x,$y,$va,%scrh);
+	$va=$ta->[0];
+	#i'm not sure WHY, but if I don't call getproclist this way, @_ doesn't get set properly in the subfunc
+	$y=join("\n", sort &{$::{"getproclist"}}($pat,$par,$chi)); #direct approach, but needs to be ordered
+	$ta->[0]=$y; #save for later
+	$y= $ty eq "stop" ? $y eq "" : ($y eq "" ? -1 : $va eq $y) ;
+	dump_log_message("debug", "cpidproc: return value = $y\n", 0);
+	return $y ;
+}
+
+sub setup_cport
+{
+	# setup_cproc($portnum)
+	# check port num via "netstat -an"
+	# if 0+$portnum != $portnum, then derefs as env var (with +"_PORT" try first)
+	dump_log_message("debug", "setup_cport(".join(",",@_).")\n", 0);
+	my ($ty,$psn)=@_;
+	dump_log_message("debug", "$psn\n", 0);
+	$psn ? [ "cport:".$psn, "cport", $ty, $psn ]: (); #ignore if unknown
+}
+
+sub cport
+{
+	# cproc($portnum)
+	# check port num via "netstat -an"
+	dump_log_message("debug", "\ncport(".join(",",@_).")\n", 0);
+	my ($ty,$psn)=@_;
+	my ($x,$y); $y=0;
+	open(SINP,$x="/bin/netstat -an 2>&1 |") || nowdie "ERROR_INTERNAL open($x)";
+	while(<SINP>) {
+		$y=1 if m{[^0-9]$psn[^0-9].*LISTEN};
+	}
+	close(SINP);
+	$y=!$y if $ty eq "stop";
+	dump_log_message("debug", "cport: y = $y\n", 0);
+	return $y;
+}
+
+sub setup_testnap
+{
+	# setup_testnap($dir)
+	# run testnap in the specific directory & check
+	# if $dir is relative, then assumes $PIN_HOME/sys/$dir
+	dump_log_message("debug", "setup_testnap(".join(",",@_).")\n", 0);
+	my ($ty,$opsd, $service_name, $port)=@_;
+	dump_log_message("debug", "setup_testnap: ty = $ty, opsd = $opsd, ", 0);
+	dump_log_message("debug", "service_name = $service_name, port = $port\n", 0);
+	my $psd=$opsd;
+	$psd="$PIN_HOME/sys/$psd" unless $psd=~m{^/};
+	dump_log_message("debug", "setup_testnap: psd = $psd\n", 0);
+	-d $psd ?  [ "testnap:".$opsd, "testnap", $ty, $psd, $service_name, $port]: (); #ignore if unknown
+}
+
+sub testnap
+{
+	# setup_testnap($dir)
+	# run testnap in the specific directory & check
+	dump_log_message("debug", "\ntestnap(".join(",",@_).")\n", 0);
+	my ($ty, $psd, $service_name, $port, $x, $y)=@_; $y=0;
+	my $res_text;
+	my $pin_conf_file = "$pin_ctl_log_dir/pin.conf";
+	#create pin.conf file pin_ctl log directory
+	open(SINP, ">$pin_conf_file") || nowdie "ERROR: Failed to create pin.conf file\n";
+	print SINP "- nap login_type 1\n";
+	print SINP "- nap login_name root.0.0.0.1\n";
+	print SINP "- nap login_pw password\n";
+	print SINP "- - userid 0.0.0.1 /service/pcm_client 1\n";
+	print SINP "- nap cm_ptr ip $host_name $port\n";
+	close SINP;
+	# Now run testnap
+	open(SINP,$x="cd $pin_ctl_log_dir && echo q | $PIN_HOME/bin/testnap 2>&1 |") || nowdie "ERROR_INTERNAL open($x)";
+	$res_text = join("", <SINP>);
+	dump_log_message("debug", "testnap: $res_text\n", 0);
+	if ($service_name =~ m/^dm/) {
+		$y= $res_text =~ m{PIN_ERR_BAD_ARG};
+	} else {
+		$y= $res_text !~ m{PIN_ERR_BAD_OPCODE|PIN_ERR_NAP_CONNECT_FAILED};
+	}
+	close(SINP);
+	unlink "$pin_conf_file";
+	unlink "$pin_ctl_log_dir/default.pinlog";
+	$y=!$y if $ty eq "stop";
+	dump_log_message("debug", "testnap: return value = $y\n", 0);
+	return $y;
+}
+
+#############################################################################
+# The following functions are intentionally left empty and are only needed
+# for completeness
+#############################################################################
+sub setup_host { }
+sub host { }
+sub setup_dbno { }
+sub dbno { }
+#############################################################################
+
+sub check_binary
+{
+	my $service_name = $_[0];
+	my $arg;
+	my $binary;
+	if ($service_name =~ /answer/) {
+		$arg = "answer";
+		$binary = $subsystem_info{$arg}{'binfile'};
+		$binary =~ s/$arg/$service_name/;
+	} else {
+		$arg = $service_name;
+		if ($subsystem_info{$arg}{'is_java'} == $FALSE) {
+			$binary = $subsystem_info{$arg}{'binfile'};
+		} else {
+			if(exists $ENV{JAVA_BIN_PATH}) {
+				$binary = $ENV{JAVA_BIN_PATH}.'/java';
+			} else {
+				# Return, but don't exit the process
+				dump_log_message("error","pin_ctl: Please set JAVA_BIN_PATH in pin_ctl.conf file\n", 1);
+				return $PIN_ERR;
+			}
+		}
+	}
+	if (!(-e $binary)) {
+		# Return, but don't exit the process
+		dump_log_message("error","pin_ctl: File $binary executable for service <$_[0]> not found\n", 1);
+		return $PIN_ERR;
+	}
+	return $PIN_DONE;
+}
+
+sub init_start
+{
+	my $service_name = $_[0];
+	my $binary;
+	my $logdir;
+	my $binary_dir;
+	my $pinconf;
+	my $temp_sys;
+	my $is_java;
+	my $arg;
+
+	if ($service_name =~ /answer/) {
+		$arg = 'answer';
+	} else {
+		$arg = $service_name;
+	}
+
+	#check if binary exists
+	if (&check_binary($service_name)) {
+		return $PIN_ERR;
+	}
+	$pinconf = $subsystem_info{$arg}{'pinconf'};
+	$binary_dir = $subsystem_info{$arg}{'bindir'};
+	$logdir = $subsystem_info{$arg}{'logdir'};
+
+	# Check if we have the pin.conf files or infranet.properties 
+	# Search in the sequence as, bindir, PIN_HOME/config, system dir
+	# directory. Return error if not found in the above.
+
+	if ($arg ne 'answer') {
+		if ($subsystem_info{$arg}{'is_pipeline'} == $TRUE) {
+			if (!(-e $subsystem_info{$arg}{'registry_filename'})) {
+				dump_log_message("error", "pin_ctl: Can't find registry file $subsystem_info{$arg}{'registry_filename'}\n", 1);
+				return $PIN_ERR;
+			}
+		} else {
+			if (!(-e ${pinconf})) {
+				$pinconf = "${PIN_HOME}/config/pin.conf";
+				dump_log_message("debug", "alternate pinconf in config dir is $pinconf\n", 0);
+				if (!(-e ${pinconf})) {
+					$pinconf = "/etc/pin.conf";
+					dump_log_message("debug", "alternate pinconf is $pinconf \n", 0);
+					if (!(-e ${pinconf})) {
+						if ($subsystem_info{$arg}{'is_java'} == $FALSE) {
+							dump_log_message("error","pin_ctl: Can't find pin.conf file \n", 1);
+						} else {
+							dump_log_message("error","pin_ctl: Can't find Infranet.properties file \n", 1);
+						}
+						return $PIN_ERR;
+					}
+				}
+			}
+		}
+	}
+
+	# Check if we have the logdirs or not #
+
+	if (!(-e $logdir)) {
+		if (!(mkpath ${logdir})) {
+			dump_log_message("error","pin_ctl: Could not create the logdir - $logdir\n", 1);
+			return $PIN_ERR;
+		}
+	}
+
+	# Now, enter the bin dir #
+	if (-e $binary_dir) {
+		chdir $binary_dir;
+	} else {
+		dump_log_message("error","pin_ctl: Could not find the directory - $binary_dir\n", 1);
+		return $PIN_ERR;
+	}
+	return $PIN_DONE;
+}
+
+sub start_win
+{
+	my @start_arr;
+	my $Service;
+	my $Original_serv='';
+	my $err = $PIN_DONE;
+	my $ret_err = $PIN_DONE;
+	my $actual_serv;
+
+	# call - lookup_array()
+	@start_arr = &lookup_array();
+
+	foreach my $Service (@start_arr) {
+		my %Status = ();
+		$actual_serv = $act_service_name{lc $Service};
+		dump_log_message("debug", "Service = $Service\tActual_service = $actual_serv\n", 0);
+
+		if ($collect_data_var) {
+			$process_name = $Service;
+                	&setup_collect_data();
+        	}
+
+		# Service successfully stopped so now start it.
+		# check if the service is installed or NOT.
+		if ($ExpandedList{$actual_serv} eq '') {
+			dump_log_message("debug", "expanded value is $ExpandedList{$actual_serv}\n", 0);
+			$Original_serv = $Service;
+			$Service = $subsystem_info{$Service}{'alias'};
+			$actual_serv = $act_service_name{lc $Service};
+			dump_log_message("debug", "Alias Service = $Service\tActual_service = $actual_serv\n", 0);
+			dump_log_message("debug", "$Original_serv  Vs $Service \n", 0);
+			dump_log_message("debug", "-> expanded value is $ExpandedList{lc $Service} \n", 0);
+			if ( $ExpandedList{$actual_serv} eq '') {
+				dump_log_message("error", "The <$Service> service is not installed \n", 1);
+				$ret_err = $PIN_ERR;
+				$err = $PIN_DONE;
+				next;
+			}
+		}
+
+		#check if the service is already running..?
+
+		if (WaitState($Machine, $actual_serv, 4, 0)) {
+			if ($Original_serv eq '') {
+				dump_log_message("debug", "pin_ctl: service <$Service> already running.\n", 1);
+			} else {
+				dump_log_message("debug", "pin_ctl: service <$Original_serv|$Service> already running.\n", 1);
+			}
+			next;
+		}
+		dump_log_message("msg", "Starting <$Service> ...", 1);
+
+		Win32::Service::StartService($Machine, $actual_serv);
+		# Wait for 10 sec
+		sleep(10);
+		if (WaitState($Machine, $actual_serv, 4, 0)) {
+			dump_log_message("msg", "  successful at ".scalar(localtime())."\n", 1);
+		} else {
+			dump_log_message("msg"," failed at ".scalar(localtime())."\n", 1);
+			$err = $PIN_ERR;
+		}
+		$ret_err = ($err == $PIN_ERR) ? $PIN_ERR : $ret_err;
+		$err = $PIN_DONE;
+	}
+	return $ret_err;
+}
+
+sub stop_win
+{
+	my @stop_arr;
+	my $Service;
+	my $Original_serv='';
+	my @arr;
+	my $sys_str;
+	my @sys_list;
+	my $temp;
+	my $user_ip;
+	my $err = $PIN_DONE;
+	my $ret_err = $PIN_DONE;
+	my $actual_serv;
+
+	#call - lookup_array()
+	@stop_arr = &lookup_array();
+
+	#It is required to stop the services in reverse order of start....
+
+	foreach $Service (@stop_arr) {
+		my %Status = ();
+		$actual_serv = $act_service_name{lc $Service};
+		if ($collect_data_var) {
+        		$process_name = $Service;
+                	&setup_collect_data();
+        	}
+
+		#check if the service is installed or NOT
+		if ($ExpandedList{$actual_serv} eq '') {
+			$Original_serv = $Service;
+			$Service = $subsystem_info{$Service}{'alias'};
+			$actual_serv = $act_service_name{lc $Service};
+			dump_log_message("debug", "Original Service = $Original_serv\tAlias = $Service\tActual service = $actual_serv\n", 0);
+			if ($ExpandedList{$actual_serv} eq '') {
+				dump_log_message("error","The <$Service> service is not installed \n", 1);
+				$err = $PIN_ERR;
+				next;
+			}
+			$Service = $Original_serv;
+		}
+
+		#check if the service has any dependent services ....
+		$sys_str = &check_dependent_service($Service);
+
+		if ($sys_str eq '') {
+			#Stop only if the service is Running....
+			 if (WaitState( $Machine, $actual_serv, 4, 0)) {
+				if ($i_mode == $TRUE) {
+					if ($action ne "halt") {
+						#Parse user input and act accordingly....
+						dump_log_message("debug", "pin_ctl: $Service is Running, Do you want to stop? [Y/N]", 0);
+						chomp ($user_ip = <STDIN>);
+					} else {
+						$user_ip = "yes";
+					}
+				} else {
+					$user_ip = "yes";
+				}
+				if ((lc $user_ip eq "yes") || (lc $user_ip eq "y")) {
+					# extract the installed service name.
+					if ($Original_serv ne '') {
+						$Service = $subsystem_info{$Service}{'alias'};
+						$actual_serv = $act_service_name{lc $Service};
+					}
+					dump_log_message("msg", "STOPPING  service <$Service> ....", 1);
+					Win32::Service::StopService($Machine, $actual_serv);
+					if ( WaitState($Machine, $actual_serv, 1, 5)) {
+						dump_log_message("msg","  successful at ".scalar(localtime())."\n", 1);
+					} else{
+						dump_log_message("msg","  failed at ".scalar(localtime())."\n", 1);
+						$err = $PIN_ERR;
+					}
+					next;
+				} elsif ((lc $user_ip eq "no") || (lc $user_ip eq "n")) {
+					next;
+				} else {
+					dump_log_message("error","pin_ctl: Error!!! Invalid option chosen !! <$Service> NOT stopped\n", 1);
+				}
+			} else {
+				dump_log_message("debug", "pin_ctl: service <$Service> already stopped\n", 1);
+			}
+		} else {
+			@sys_list = split (' ', $sys_str);
+			dump_log_message("debug","pin_ctl: The following services are dependent on '$Service'\n", 0);
+			dump_log_message("debug","Stopping the '$Service' service will also stop these services.\n", 0);
+
+			foreach $temp (@sys_list) {
+				dump_log_message("debug","\t <$temp>\n", 0);
+			}
+			if ($i_mode == $TRUE) {
+				if ($action ne "halt") {
+					#Ask the user, then Parse user input and act accordingly....
+
+					dump_log_message("debug", "Do you want to continue this operation? [Y/N]", 0);
+					chomp ($user_ip = <STDIN>);
+				} else {
+					$user_ip = "yes";
+				}
+			} else {
+				$user_ip = "yes";
+			}
+			if ((lc $user_ip eq "yes") || (lc $user_ip eq "y")) {
+				$sys_str = $Service.' '.$sys_str;
+				&stop_list($sys_str);
+				next;
+			} elsif ((lc $user_ip eq "no") || (lc $user_ip eq "n")) {
+				next;
+			} else {
+				dump_log_message("error","\npin_ctl:Error!!! Invalid option chosen !! <$Service> NOT stopped\n", 1);
+			}
+		}
+		$ret_err = ($err == $PIN_ERR) ? $PIN_ERR : $ret_err;
+		$err = $PIN_DONE;
+	}
+	return $ret_err;
+}
+
+sub parse_cmd_line
+{
+	my $option;
+
+	while ($option = shift @ARGV) {
+		if (lc($option) eq '-c') {
+			#get the pin_ctl.conf path
+			$pin_ctl_conf_file = shift @ARGV;
+			next;
+		} elsif (lc($option) eq '-debug') {
+			# Set debug
+			$debug = $TRUE;
+			next;
+		} elsif (lc($option) eq '-version') {
+			# Display version
+			print "pin_ctl - Version <$version>\n";
+			exit 0;
+		} elsif (lc($option) eq '-help') {
+			# Set help
+			$prn_usage = $TRUE;
+			next;
+		} elsif (lc($option) eq '-collectdata') {
+			# Set collectdata
+			$collect_data_var = $TRUE; 
+			next;
+		} elsif (lc($option) eq '-i') {
+			# Set interactivemode
+			$i_mode= $TRUE; 
+			next;
+		} else {
+			$arg_str = $arg_str.' '.$option;
+		}
+	}
+}
+
+sub parse_config_file
+{
+	my($line);
+	my(@temp);
+	my $index;
+	my $val;
+	my @list;
+	my @names;
+	my @vals;
+	my $name;
+	my $name_temp;
+	my $b;
+	my $is_app;
+	my $type_name;
+	my $is_java;
+	my $is_pipeline_serv;
+	my $service_name;
+	my $service_type;
+	my $valid;
+	my $values;
+
+	if ($IS_WIN) {
+		my $res = eval "use Win32::Service";
+		die $@ if $@;
+
+		# Initialize the Expanded list with all the registed services on
+		# the system. This would be used to find whether the given
+		# sub-system(service) is Installed or not...
+
+		Win32::Service::GetServices( $Machine, \%List );
+		foreach (keys(%List)) {
+			$ExpandedList{lc $List{$_}} = $_;
+		}
+	}
+	# open for input
+	open(MYINPUTFILE, $pin_ctl_conf_file) || die "Cannot open \"$pin_ctl_conf_file\" file $!\n";
+	my(@lines) = <MYINPUTFILE>;         # read file into list
+
+	# sort the list, so that all services are arranged 
+	# in ascending order of start_sequence.
+#	@lines = sort(@lines);  
+
+	foreach $line (@lines) {
+		$type_name = "";
+
+		# skip if it is blank line
+		next if $line =~ /^\s*$/;
+
+		chomp($line);
+		
+		if ($line =~ /^#/) 	{
+			next;
+		} elsif ($line =~ /^control_script_log/) {
+			&setup_control_script_log($line);
+			next;		
+		} elsif ($line =~ /env_variable/) {
+			&setup_env($line);
+			next;
+		} elsif ($line =~ /^start_/) {
+			&setup_start_stop($line);
+			next;		
+		} elsif ($line =~ /^snmpset/) {
+			my @arr = split('\s+',$line);
+			if (lc($arr[3]) eq 'input_str') {
+				$snmparg->{$arr[1]}->{lc($arr[2])}->{'input_str'} = $arr[4];
+			} else {
+				$snmparg->{$arr[1]}->{lc($arr[2])}->{'registry_entry'} = lc($arr[3]);
+				$snmparg->{$arr[1]}->{lc($arr[2])}->{'base_oid'} = $arr[4];
+			}
+			next;		
+		} elsif ($line =~ /^settings/) {
+			my @arr = split('\s+',$line);
+			shift(@arr);
+			my $pname = shift(@arr);
+			foreach $values (@arr) {
+				my ($key, $val) = split(':', $values);
+				$settings->{$pname}->{$key} = $val;
+			}
+			next;		
+		} elsif ($line =~ /^all/ ) {
+			#store the alias for <all> tag.
+			if (index($line, "=") != $PIN_ERR) {
+				@temp = split(/\s|=/, $line);
+				$all_alias = $temp[1];
+			}
+
+			@ALL_LIST = split('\s+', $line);
+			shift(@ALL_LIST);
+			next;
+		} else {
+			@temp = split(/\s|:|=|->/, $line);
+			if ($line !~ /^\d\s/) {
+				dump_log_message("error","pin_ctl: <$line> Entry not formatted propery!!! \n", 1);
+				dump_log_message("error","\t Please correct \"pin_ctl.conf\" now.\n", 1);
+				exit $PIN_ERR;
+			}
+			dump_log_message("debug", "Configuration entry is <$line> \n", 0);
+
+			# dependeny services specific to windows only
+			if ($IS_WIN == $TRUE) {
+				$index = index($line, "->");
+				if ( $line =~ /->/) {
+					dump_log_message("debug", "<$temp[1]> has dependent services \n", 0);
+
+					$val = substr($line,index($line,"->")+2);
+					@list = split(':|\s',$val);
+					foreach $val(@list) {
+						# check for the validity of dependent service entries
+						# consider alias values as well
+						if ($val eq "") {
+							dump_log_message("error", "Service <$temp[1]> has invalid dependent service \n", 1);
+							dump_log_message("error", "Missing dependent service for <$temp[1]> !!!\n", 1);
+							dump_log_message("error","Please correct Line \"$line\" in  \'pin_ctl.conf\' file \n", 1);
+							exit $PIN_ERR;
+						}
+						$valid = 0;
+						foreach (@subsystem_order) {
+							if ( $val eq $$_[1] ) {
+								$valid = 1;
+							}
+						}
+						if (!$valid) {
+							dump_log_message("error","Service <$temp[1]> has invalid dependent service <$val>\n", 1);
+							dump_log_message("error","Please correct Line \"$line\" in  \'pin_ctl.conf\' file \n", 1);
+							exit $PIN_ERR;
+						}
+						if ($dep_list{$val} ne "") {
+							$dep_list{$val} = $dep_list{$val}." ".$temp[1];
+						} else {
+							$dep_list{$val} = $temp[1];
+						}
+						dump_log_message("debug", "<$dep_list{$val}> depends on service $val \n", 0);
+					}
+				}
+			}
+
+			$service_name = $temp[1];
+			if (index($line, "=") != $PIN_ERR) {
+				$service_type = $temp[2];
+			} else {
+				$service_type = $service_name;
+			}
+			$subsystem_info{$service_name}{'service_type'} = $service_type;
+			if (index($line, ":java") != $PIN_ERR) {
+				$is_java = $TRUE;
+			} else {
+				$is_java = $FALSE;
+			}
+			if (index($line, ":pipeline") != $PIN_ERR) {
+				$is_pipeline_serv = $TRUE;
+			} else {
+				$is_pipeline_serv = $FALSE;
+			}
+			if (index($line, ":app") != $PIN_ERR) {
+				$is_app = $TRUE;
+			} else {
+				$is_app = $FALSE;
+			}
+
+			# extract the other service system info.
+			$subsystem_info{$service_name}{'level'} = $temp[0];
+			$subsystem_info{$service_name}{'is_java'} = $is_java;
+			$subsystem_info{$service_name}{'is_apps'} = $is_app;
+			$subsystem_info{$service_name}{'is_pipeline'} = $is_pipeline_serv;
+			my $pin_home_dir = $PIN_HOME;
+			if ($settings->{$service_name}->{'pin_home_dir'}) {
+				$settings->{$service_name}->{'pin_home_dir'} = 
+					&expand_env_in_path($settings->{$service_name}->{'pin_home_dir'});
+				$pin_home_dir = eval("<<END\n".$settings->{$service_name}->{'pin_home_dir'}."\nEND\n");
+				chomp($pin_home_dir);
+			}
+			elsif ($settings->{$service_type}->{'pin_home_dir'}) {
+				$settings->{$service_type}->{'pin_home_dir'} = 
+					&expand_env_in_path($settings->{$service_type}->{'pin_home_dir'});
+				$pin_home_dir = eval("<<END\n".$settings->{$service_type}->{'pin_home_dir'}."\nEND\n");
+				chomp($pin_home_dir);
+			}
+			my $pin_log_dir = $PIN_LOG;
+			if ($settings->{$service_name}->{'pin_log_dir'}) {
+				$settings->{$service_name}->{'pin_log_dir'} = 
+					&expand_env_in_path($settings->{$service_name}->{'pin_log_dir'});
+				$pin_log_dir = eval("<<END\n".$settings->{$service_name}->{'pin_log_dir'}."\nEND\n");
+				chomp($pin_log_dir);
+			}
+			elsif ($settings->{$service_type}->{'pin_log_dir'}) {
+				$settings->{$service_type}->{'pin_log_dir'} = 
+					&expand_env_in_path($settings->{$service_type}->{'pin_log_dir'});
+				$pin_log_dir = eval("<<END\n".$settings->{$service_type}->{'pin_log_dir'}."\nEND\n");
+				chomp($pin_log_dir);
+			}
+
+			# For java related services, Infranet.properties file
+			# contains the configuration information
+			if ($is_app == $TRUE) {
+				$subsystem_info{$service_name}{'bindir'} = "$pin_home_dir/apps/".$service_name;
+				if ($is_java == $TRUE) {
+					$subsystem_info{$service_name}{'pinconf'} = "$pin_home_dir/apps/".$service_name."/Infranet.properties";
+				} else {
+					if ($service_type eq 'answer'){
+						$subsystem_info{$service_name}{'pinconf'} = "$pin_home_dir/apps/"."fusa_server/pin.conf";
+					}
+					else {
+						$subsystem_info{$service_name}{'pinconf'} = "$pin_home_dir/apps/".$service_name."/pin.conf";
+					}
+				}
+			} elsif ($is_pipeline_serv == $TRUE) { 
+				if ($service_type eq 'dm_timos') {
+					if(!exists($subsystem_info{$service_name}{'registry_filename'})) {
+						$subsystem_info{$service_name}{'registry_filename'} = "$pin_home_dir/sys/".$service_name."/timos.reg";
+					}
+					$subsystem_info{$service_name}{'bindir'} = "$pin_home_dir/sys/$service_name";
+				} elsif ($service_type eq 'rtp') {
+					if(!exists($subsystem_info{$service_name}{'registry_filename'})) {
+						if ($settings->{$service_name}->{'pin_home_dir'} || 
+							$settings->{$service_type}->{'pin_home_dir'}) {
+							$subsystem_info{$service_name}{'registry_filename'} = 
+								"$pin_home_dir/conf/wirelessRealtime.reg";
+						} else {
+							$subsystem_info{$service_name}{'registry_filename'} = 
+								"${IFW_HOME}/conf/wirelessRealtime.reg";
+						}
+					}
+                                        if ($settings->{$service_name}->{'pin_home_dir'} || $settings->{$service_type}->{'pi
+n_home_dir'}) {
+						$subsystem_info{$service_name}{'bindir'} = "$pin_home_dir";
+					} else {
+                                                $subsystem_info{$service_name}{'bindir'} = "${IFW_HOME}";
+					}
+				} elsif ($service_type eq 'aaa') {
+					if(!exists($subsystem_info{$service_name}{'registry_filename'})) {
+						if ($settings->{$service_name}->{'pin_home_dir'} || $settings->{$service_type}->{'pi
+n_home_dir'}) {
+							$subsystem_info{$service_name}{'registry_filename'} = "$pin_home_dir/conf/flist.reg";
+						} else {
+							$subsystem_info{$service_name}{'registry_filename'} = "${IFW_HOME}/conf/flist.reg";
+						}
+					}
+					
+                                        if ($settings->{$service_name}->{'pin_home_dir'} || $settings->{$service_type}->{'pi
+n_home_dir'}) {
+                                                $subsystem_info{$service_name}{'bindir'} = "$pin_home_dir";
+                                        } else {
+                                                $subsystem_info{$service_name}{'bindir'} = "${IFW_HOME}";
+                                        }
+
+				} elsif ($service_type eq 'bre') {
+					if(!exists($subsystem_info{$service_name}{'registry_filename'})) {
+						if ($settings->{$service_name}->{'pin_home_dir'} || $settings->{$service_type}->{'pi
+n_home_dir'}) {
+							$subsystem_info{$service_name}{'registry_filename'} = "$pin_home_dir/conf/wireless.reg";
+						} else {
+							$subsystem_info{$service_name}{'registry_filename'} = "${IFW_HOME}/conf/wireless.reg";
+						}
+					}
+                                        if ($settings->{$service_name}->{'pin_home_dir'} || $settings->{$service_type}->{'pi
+n_home_dir'}) {
+                                                $subsystem_info{$service_name}{'bindir'} = "$pin_home_dir";
+                                        } else {
+                                                $subsystem_info{$service_name}{'bindir'} = "${IFW_HOME}";
+                                        }  
+
+				} elsif ($service_type eq 'bre_tt') {
+					if(!exists($subsystem_info{$service_name}{'registry_filename'})) {
+						if ($settings->{$service_name}->{'pin_home_dir'} || $settings->{$service_type}->{'pi
+n_home_dir'}) {
+							$subsystem_info{$service_name}{'registry_filename'} = "$pin_home_dir/conf/wireless_tt.reg";
+						} else {
+							$subsystem_info{$service_name}{'registry_filename'} = "${IFW_HOME}/conf/wireless_tt.reg";
+						}
+					}
+                                        if ($settings->{$service_name}->{'pin_home_dir'} || $settings->{$service_type}->{'pi
+n_home_dir'}) {
+                                                $subsystem_info{$service_name}{'bindir'} = "$pin_home_dir";
+                                        } else {
+                                                $subsystem_info{$service_name}{'bindir'} = "${IFW_HOME}";
+                                        }  	
+					
+				} else {
+                                         if ($settings->{$service_name}->{'pin_home_dir'} || $settings->{$service_type}->{'pin_home_dir'}) {
+                                                 $subsystem_info{$service_name}{'bindir'} = "$pin_home_dir";
+                                         } else {
+                                                 $subsystem_info{$service_name}{'bindir'} = "${IFW_HOME}";
+                                         }
+				}
+			} else {
+				$subsystem_info{$service_name}{'bindir'} = "$pin_home_dir/sys/".$service_name;
+				if ($is_java == $TRUE) {
+					$subsystem_info{$service_name}{'pinconf'} = "$pin_home_dir/sys/".$service_name."/Infranet.properties";
+				} else {
+					$subsystem_info{$service_name}{'pinconf'} = "$pin_home_dir/sys/".$service_name."/pin.conf";
+				}
+			}
+			if (($is_pipeline_serv == $TRUE)  && ($service_type ne 'dm_timos')) {
+				if ($service_name eq 'rtp' || $service_name eq 'aaa' || $service_name eq 'bre' || $service_name eq 'bre_tt') {
+				    $subsystem_info{$service_name}{'binfile'} = "${IFW_HOME}/bin/ifw";
+				} else {        	
+				    $subsystem_info{$service_name}{'binfile'} = "${IFW_HOME}/bin/".$service_name;
+				}
+			} else {
+				$subsystem_info{$service_name}{'binfile'} = "$pin_home_dir/bin/".$service_name;
+				$ENV{'LD_PRELOAD_64'} = $env_preload_str if (!$is_sol_gt_58);
+			}
+			if ($service_type eq "answer") {
+				$subsystem_info{$service_name}{'logdir'} = "$pin_log_dir/dm_fusa";
+				$subsystem_info{$service_name}{'logfile'} = "$pin_log_dir/dm_fusa/answer.log";
+				$subsystem_info{$service_name}{'pidfile'} = "$pin_log_dir/dm_fusa/".$service_name.".pid";
+				$subsystem_info{$service_name}{'bindir'} = "$pin_home_dir/apps/fusa_server";
+			} else {
+				if (($is_pipeline_serv == $TRUE)  && ($service_type ne "dm_timos")) {
+
+                                if($settings->{$service_name}->{'pin_log_dir'}) {
+
+                                $subsystem_info{$service_name}{'logdir'} = 
+					"$settings->{$service_name}->{'pin_log_dir'}/".$service_name;
+                                $subsystem_info{$service_name}{'logfile'} = 
+					"$settings->{$service_name}->{'pin_log_dir'}/".$service_name."/".$service_name.".log";
+                                $subsystem_info{$service_name}{'pidfile'} = 
+					"$settings->{$service_name}->{'pin_log_dir'}/".$service_name."/".$service_name.".pid";
+
+				my $tmp_dir_path = "$settings->{$service_name}->{'pin_log_dir'}/".$service_name;
+			 	if (!(-e $tmp_dir_path)) {
+			         	if (!(mkpath ${tmp_dir_path})) {
+                         	  	    dump_log_message("error","pin_ctl: Could not create the log dir - $tmp_dir_path\n", 1);
+                        		    return $PIN_ERR;
+                		  	}
+        			}
+				} elsif($settings->{$service_type}->{'pin_log_dir'}) {
+
+                                $subsystem_info{$service_name}{'logdir'} = 
+					"$settings->{$service_type}->{'pin_log_dir'}/".$service_name;
+                                $subsystem_info{$service_name}{'logfile'} = 
+					"$settings->{$service_type}->{'pin_log_dir'}/".$service_name."/".$service_name.".log";
+                                $subsystem_info{$service_name}{'pidfile'} = 
+					"$settings->{$service_type}->{'pin_log_dir'}/".$service_name."/".$service_name.".pid";
+
+				my $tmp_dir_path = "$settings->{$service_type}->{'pin_log_dir'}/".$service_name;
+			 	if (!(-e $tmp_dir_path)) {
+			         	if (!(mkpath ${tmp_dir_path})) {
+                         	  	    dump_log_message("error","pin_ctl: Could not create the log dir - $tmp_dir_path\n", 1);
+                        		    return $PIN_ERR;
+                		  	}
+        			}
+
+				} else {
+
+					$subsystem_info{$service_name}{'logdir'} = "${IFW_HOME}/log/process";
+					$subsystem_info{$service_name}{'logfile'} = "${IFW_HOME}/log/process/".$service_name.".log";
+					$subsystem_info{$service_name}{'pidfile'} = "${IFW_HOME}/log/process/".$service_name.".pid";
+
+				}
+				} else {
+					$subsystem_info{$service_name}{'logdir'} = "$pin_log_dir/".$service_name;
+					$subsystem_info{$service_name}{'logfile'} = "$pin_log_dir/".$service_name."/".$service_name.".log";
+					$subsystem_info{$service_name}{'pidfile'} = "$pin_log_dir/".$service_name."/".$service_name.".pid";
+				}
+			}
+
+			if ($log_level eq 'debug') { #This is just to skip mutiple conditional checkings
+				dump_log_message("debug", "printing details of <$service_name> service \n", 0);
+				dump_log_message("debug", " \t Level = $subsystem_info{$service_name}{'level'} \n", 0);
+				dump_log_message("debug", " \t is_java = $subsystem_info{$service_name}{'is_java'} \n", 0);
+				dump_log_message("debug", " \t is_apps = $subsystem_info{$service_name}{'is_apps'} \n", 0);
+				dump_log_message("debug", " \t binfile = $subsystem_info{$service_name}{'binfile'} \n", 0);
+				dump_log_message("debug", " \t bindir = $subsystem_info{$service_name}{'bindir'} \n", 0);
+				dump_log_message("debug", " \t pinconf = $subsystem_info{$service_name}{'pinconf'} \n", 0);
+				dump_log_message("debug", " \t logdir = $subsystem_info{$service_name}{'logdir'} \n", 0);
+				dump_log_message("debug", " \t logfile = $subsystem_info{$service_name}{'logfile'} \n", 0);
+				dump_log_message("debug", " \t pidfile = $subsystem_info{$service_name}{'pidfile'} \n", 0);
+				dump_log_message("debug", " \t is_pipeline = $subsystem_info{$service_name}{'is_pipeline'} \n", 0);
+			}
+			dump_log_message("debug", "temp = @temp\n", 0);
+			push (@subsystem_order, [@temp]);
+		}
+	}
+	close(MYINPUTFILE);
+
+	# Now check correctness of all entry
+	foreach (@ALL_LIST) {
+		if ($subsystem_info{$_}{'binfile'} eq "")
+		{
+			dump_log_message("error","pin_ctl: invalid service entry <$_> in all tag !!! \n", 1);
+			dump_log_message("error"," \t Please correct \"pin_ctl.conf\" now.\n", 1);
+			exit $PIN_ERR;
+		}
+	}
+
+
+	if ($IS_WIN) {
+		@names = keys(%dep_list);
+		foreach $name (@names)
+		{
+			$name_temp = $dep_list{$name};
+			while ( $dep_list{$name_temp} ne "" )
+			{
+				$dep_list{$name} = $dep_list{$name}." ".$dep_list{$name_temp};
+				$name_temp = $dep_list{$name_temp};
+			}
+		}
+
+		if ($log_level eq "debug") {
+			@names = keys(%dep_list);
+			foreach $name(@names) {
+				dump_log_message("debug","Services '$dep_list{$name}' based on <$name> \n", 0);
+			}
+		}
+	}
+	foreach $line (@subsystem_order) {
+		$$line[0] = $FALSE;
+	}
+
+       
+	if ($prn_usage) {
+                &usage();
+                exit ${TRUE};
+        }
+
+	return $PIN_DONE;
+}
+
+#
+# BEGIN_IMS
+#
+# lookup_array():
+#
+# DESC:
+# -----
+# Looks up the  array to check if an action needs to be
+# performed on a sub-system or not.
+#
+# I/P:
+# ----
+# $action: Action that we ought to perform - start, stop etc...
+#
+# O/P:
+# ----
+# $ret_str: Contains the list of sub-systems that needs to be
+# operated upon.
+#
+# Globals referenced:
+# -------------------
+# @@subsystem_order:  Global array (see above).
+#
+
+sub lookup_array
+{
+	my $i=0;
+	my @ret_arr;
+	my @temp_arr;
+	my $len;
+
+	#
+	# Parse the global array, "subsystem_order" that'll contain info
+	# about the services to start/stop/restart/halt etc.
+	#
+
+	if (($action eq "stop") || ($action eq "halt")) {
+
+		# traverse the list in reverse order
+		@temp_arr = reverse(@subsystem_order);
+
+		foreach (@temp_arr) {
+			if ($$_[0] == $TRUE) {
+				if ($$_[1] eq "answer") {
+					push (@ret_arr, "answer_s");
+					push (@ret_arr, "answer_b");
+				} else {
+					push (@ret_arr, $$_[1]);
+				}
+			}
+		}
+
+	} else {
+		# traverse in forward order only
+		foreach (@subsystem_order) {
+			if ($$_[0] eq $TRUE) {
+				if ($$_[1] eq "answer") {
+					push (@ret_arr,"answer_s");
+					push (@ret_arr,"answer_b");
+				} else {
+					push (@ret_arr, $$_[1]);
+				}
+			}
+		}
+	}
+	dump_log_message("debug", "returning result from lookup_array is @ret_arr\n", 0);
+	return @ret_arr;
+}
+
+
+# A generic stop routine for stopping [any|all] sub-systems #
+sub stop
+{
+	my @sys_arr;
+	my $arg;
+	my $err = $PIN_DONE;
+	my $ret_err = $PIN_DONE;
+
+	if ($IS_WIN) {
+		if (stop_win() == $PIN_ERR) {
+			return $PIN_ERR;
+		}
+		return $PIN_DONE;
+	}
+
+	#call look-up array....
+	@sys_arr = &lookup_array();
+
+	foreach $arg (@sys_arr) {
+		$err = stop_service($arg);
+		$ret_err = ($err == $PIN_ERR) ? $PIN_ERR : $ret_err;
+		if ($collect_data_var) {
+			$process_name = $arg;
+			&setup_collect_data();
+		}
+		$err = $PIN_DONE;
+	}
+	return $ret_err;
+}
+
+sub stop_service
+{
+	my $service_name = $_[0];
+	my $status=-1;
+	my $parent=0;
+	my $child=0;
+	my $ans=0;
+	my $str=0;
+	my $pidfile;
+	my $arg;
+	my $allret;
+	my $err = $PIN_DONE;
+
+
+	if ($service_name =~ /answer/) {
+		$arg = "answer";
+	} else {
+		$arg = $service_name;
+	}
+	my $service_type = $subsystem_info{$arg}{'service_type'};
+	&source_env_per_service($service_name,$service_type);
+
+	if (&check_binary($service_name)) {
+		dump_log_message("debug", "pin_ctl: service <$service_name> is NOT running as binary does not exist\n", 1);
+		return $PIN_ERR;
+	}
+	$pidfile = $subsystem_info{$arg}{'pidfile'};
+	if ($arg eq "answer") {
+		$pidfile =~ s/answer/$service_name/;
+	}
+	my $service_type = $subsystem_info{$arg}{'service_type'};
+	# Find whether service is running or not
+	$str = &get_procid("$service_name");
+	($status, $parent, $child) = split (/\|/, $str, 3);
+	if ($status == 0) {
+		if ($parent == 0) {
+			dump_log_message("error","pin_ctl: service <$service_name> is not running in the system\n", 1);
+		} else {
+			if ($subsystem_info{$arg}{'is_pipeline'} == $TRUE) {
+				my $snmpset_method = 0;
+				my $reg_name = $subsystem_info{$arg}{'registry_filename'};
+				my $rootname = "ifw";
+				my $sem_file_name;
+				if ($service_type eq "dm_timos") {
+					$rootname = "timosMgr";
+					if (defined($ENV{SNMP_METHOD})) {
+						$snmpset_method = $ENV{SNMP_METHOD};
+					}
+				}
+				dump_log_message("debug", "stop_service: Snmpset value = $snmpset_method\n", 0);
+				# Read pid file
+				my $pidaj = get_pid($service_name);
+				if ($snmpset_method) {
+					if (snmp_probe('shutdown', $service_name, 'snmpset', 'stop')) {
+						dump_log_message("debug", "Error while stopping service <$service_name>\n", 1);
+						return $PIN_ERR;
+					}
+				} else {
+					chdir $subsystem_info{$arg}{'bindir'};
+					dump_log_message("debug", "Current working directory". $subsystem_info{$arg}{'bindir'}. "\n", 0);
+					$sem_file_name = get_semaphore_file($rootname, $reg_name);
+					open(SEM_FILE,">$sem_file_name")||nowdie "Can't create semaphore file $sem_file_name\n";
+					print SEM_FILE "$rootname.Active = False";
+					close(SEM_FILE);
+				}
+				if ($pidaj == $PIN_ERR) {
+					dump_log_message("error","pin_ctl: pid file not exists - cannot confirm stop\n", 0);
+					$allret = $PIN_DONE; #because I don't have process id to verify
+				} else {
+					$allret = &check_start_stop_pipeline("stop", $service_name, $pidaj, $sem_file_name, $service_type);
+				}
+				if ($allret) {
+					# Remove the pid file
+					if (-e ($pidfile)) {
+						dump_log_message("debug", "pidfile = $pidfile \n", 0);
+						unlink "$pidfile";
+					}
+					dump_log_message("msg","Successfully stopped service <$service_name> at ".scalar(localtime())."\n", 1);
+				} else {
+					dump_log_message("debug","Error while stopping service <$service_name>\n", 1);
+					$err = $PIN_ERR;
+				}
+			} else {
+				if (($child) && ($service_type eq "cm")) {
+					$child =~ s/\s+$//;
+					dump_log_message("debug", "CM child process(es) running. These would not be stopped.\n", 0);
+					dump_log_message("debug","Use 'halt' operation for stopping the children.\n", 0);
+					dump_log_message("debug","The Child process(es):\n", 0);
+					dump_log_message("debug","[$child]\n", 0);
+				}
+				if ($i_mode == $TRUE) {
+					print "Do you want to proceed ? yes/no [no]  ";
+					chomp ($ans = <STDIN>);
+				} else {
+					$ans="yes";
+				}
+				if (($ans eq "yes") || ($ans eq "y")) {
+					if (!(kill TERM=> $parent)) {
+						dump_log_message("error","pin_ctl: Error while stopping service <$service_name> \n", 1);
+						$err = $PIN_ERR;
+					} else {
+						my $allret=&custom_functions("stop", $service_name);
+						if ($allret) {
+							if (-e ($pidfile)) {
+								dump_log_message("debug", "pidfile = $pidfile \n", 0);
+								unlink "$pidfile";
+							}
+							dump_log_message("msg","pin_ctl: Successfully stopped service <$service_name> [$parent] at ".scalar(localtime())."\n", 1);
+						} else {
+							dump_log_message("error","pin_ctl: Error while stopping service <$service_name> \n", 1);
+							$err = $PIN_ERR;
+						}
+					}
+				} elsif (($ans eq "no") || ($ans eq "n")) {
+					dump_log_message("debug","pin_ctl: *** service <$service_name> NOT stopped ***\n", 1);
+				} else {
+					dump_log_message("error","pin_ctl:Error!!! Invalid option chosen !! service <$service_name> NOT stopped\n", 1);
+				}
+			}
+		}
+	} else {
+		dump_log_message("error","pin_ctl: Unable to stop service <$service_name> - ${pidfile} file is absent or empty\n", 1);
+			$err = $PIN_ERR;
+	}
+	return $err;
+}
+
+sub halt
+{
+	my @sys_arr;
+	my $arg;
+	my $err = $PIN_DONE;
+	my $ret_err = $PIN_DONE;
+
+	if ($IS_WIN) {
+		if (&halt_win() == $PIN_ERR) {
+			return $PIN_ERR;
+		}
+		return $PIN_DONE;
+	}
+
+	# Call lookup_array....
+	@sys_arr = lookup_array();
+
+	foreach $arg (@sys_arr) {
+		$err = halt_service($arg);
+		$ret_err = ($err == $PIN_ERR) ? $PIN_ERR : $ret_err;
+		$err = $PIN_DONE;
+	}
+	return $ret_err;
+}
+
+sub halt_service
+{
+	my $service_name = $_[0];
+	my $str=0;
+	my $pidfile;
+	my $pinconf;
+	my $binary;
+	my $binary_dir;
+	my $logdir;
+	my $eval_bin;
+	my $j;
+	my @halt_arr;
+	my @sys_arr;
+	my $err = $PIN_DONE;
+	my $cmd;
+	my $nstr;
+	my $is_java=0;
+	my $call_res;
+	my $temp_sys;
+	my $arg;
+	my $allret;
+
+	if ($service_name =~ /answer/) {
+		$arg = "answer";
+	} else {
+		$arg = $service_name;
+	}
+	my $service_type = $subsystem_info{$arg}{'service_type'};
+	&source_env_per_service($service_name,$service_type);
+
+	if (&check_binary($service_name)) {
+		dump_log_message("debug", "pin_ctl: service <$service_name> is NOT running as binary does not exist\n", 1);
+		return $PIN_ERR;
+	}
+
+	my $log_directory = $subsystem_info{$arg}{'logdir'};
+	$pidfile = $subsystem_info{$arg}{'pidfile'};
+	if ($service_name =~ /answer/) {
+		$pidfile =~ s/answer/$service_name/;
+	}
+	$str = &get_procid("$service_name");
+	@halt_arr = split (/\|/, $str);
+	if ($halt_arr[0] == 0) {
+		if ($halt_arr[1] == 0) {
+			dump_log_message("error","pin_ctl: service <$service_name> is Not running in the system\n", 1);
+		} else {
+			# Just do a normal kill here, that should suffice. Else, DM parent
+			# will not kill children. Nobody can catch a SIGKILL, so DM parent
+			# exits without handling the signal if it is delivered (kill -9).
+
+			shift(@halt_arr);
+			for ($j=0; $j < @halt_arr ; $j++) {
+				if ($halt_arr[$j] != 0) {
+					if (($service_type =~ m/^dm_/) || ($service_type =~ m/^cm_proxy/)) {
+						if (!(kill TERM=> "$halt_arr[$j]")) {
+							dump_log_message("error","pin_ctl: Error while halting service <$service_name> ", 1);
+							dump_log_message("error"," with pid=$halt_arr[$j]\n", 1);
+							$err = $PIN_ERR;
+						}
+					} else {
+						if (!(kill KILL=> "$halt_arr[$j]")) {
+							dump_log_message("error","pin_ctl: Error while halting service <$service_name> ", 1);
+							dump_log_message("error"," with pid=$halt_arr[$j]\n", 1);
+							if ($j >= 1) {
+								$err=$PIN_ERR;
+							}
+						}
+					}
+				} else {
+					dump_log_message("error","pin_ctl:Error!!! Invalid process - $halt_arr[$j] - Cannot kill...\n", 1);
+					dump_log_message("debug","pin_ctl: Continuing...\n", 0);
+				}
+			}
+			if ($err != $PIN_ERR) {
+				if (($subsystem_info{$arg}{'is_pipeline'} == $TRUE) && ($service_type ne "dm_timos")) {
+					$allret = &check_start_stop_pipeline("stop", $service_name, $halt_arr[0], "halt", $service_type);
+				} else {
+					$allret=&custom_functions("stop",$service_name);
+				}
+				if ($allret) {
+					# Remove the pid file
+					if (-e ($pidfile)) {
+						dump_log_message("debug", "pidfile = $pidfile \n", 0);
+						unlink "$pidfile";
+					}
+					if ($service_type eq 'cm') {
+						# Remove the data files if exists
+						system("rm $log_directory/*.data.*");
+					}
+					dump_log_message("msg","pin_ctl: service <$service_name> [@halt_arr] successfully halted at ". scalar(localtime())."\n", 1);
+				} else {
+					dump_log_message("error","pin_ctl: Error while halting service <$service_name> [@halt_arr] \n", 1);
+					$err = $PIN_ERR;
+				}
+			}
+		}
+	} else {
+		dump_log_message("error","pin_ctl: Unable to halt service <$service_name> - $pidfile is absent or empty\n", 1);
+	}
+	return $err;
+}
+
+# The restart routine for re-starting [any|all] sub-systems #
+
+sub restart
+{
+
+	#
+	# restart literally means halting a service and starting
+	# it again. So first call halt() and then call start().
+	#
+	$action = "halt" ;
+	if ($IS_WIN) {
+		if (&halt_win() != $PIN_DONE) {
+			dump_log_message("debug","pin_ctl: Halt of service(s) FAILED ! Trying to start the services now. Please wait...\n", 0);
+		} else {
+			dump_log_message("debug","pin_ctl: Restarting the services. Please wait...\n", 0);
+		}
+	} else {
+		if (&halt() != $PIN_DONE) {
+			dump_log_message("debug","pin_ctl: Halt of service(s) FAILED ! Trying to start the services now. Please wait...\n", 0);
+		} else {
+			dump_log_message("debug","pin_ctl: Restarting the services. Please wait...\n", 0);
+		}
+	}
+
+	#
+	# Wait for sometime as some processes take a lil time before they exit.
+	#
+
+	sleep 10;
+
+	#
+	# BTW, Allow start() to log error messages....
+	# Don't clutter the screen by logging here too
+	#
+
+	$action = "start" ;
+
+	if ($IS_WIN) {
+		if (&start_win() != $PIN_DONE) {
+			return $PIN_ERR;
+		}
+	} else {
+		if (&start() != $PIN_DONE) {
+			return $PIN_ERR;
+		}
+	}
+	return $PIN_DONE;
+}
+
+
+# A generic clear routine for log files of [any|all] sub-systems #
+
+sub clear
+{
+	if ($IS_WIN) {
+		&clear_log_files_win();
+	} else {
+		my @clear_arr = &lookup_array();
+		foreach (@clear_arr) {
+			&clear_log_files($_);
+		}
+	}
+	dump_log_message("msg", "Successfully cleared logs at ".scalar(localtime())."\n", 1);
+}
+
+sub clear_log_files
+{
+	my $ip_services;
+	$ip_services = $_[0];
+	my $reg_path;
+	my $file_name;
+
+        if (($subsystem_info{$ip_services}{'is_pipeline'} == $TRUE) && ($subsystem_info{$ip_services}{'service_type'} ne "dm_timos")) {
+		chdir $subsystem_info{$ip_services}{'bindir'};
+		my $registry = $subsystem_info{$ip_services}{'registry_filename'};
+		my @files_list = get_logfile_names("ifw", $registry);
+
+		#To clear the process log
+		push(@files_list, $subsystem_info{$ip_services}{'logfile'});
+
+                foreach (@files_list) {
+			truncate_file($_);
+                }
+		
+        } else {
+		my $logdir = $subsystem_info{$ip_services}{'logdir'};
+		if ($ip_services ne "answer") {
+			my $sys_log_file = "$logdir/$ip_services.log";
+			truncate_file($sys_log_file);
+			$sys_log_file = "$logdir/$ip_services.pinlog";
+			truncate_file($sys_log_file);
+		}
+        }
+}
+
+
+# The clear&start routine for clearing logs and starting [any|all] sub-systems #
+sub cstart
+{
+	my $answ;
+
+	#
+	# cstart means clearing log of a service and starting
+	# it. So first call clear() and then call start().
+	#
+	$action = "clear";
+	if (&clear() != $PIN_DONE) {
+		if ($i_mode == $TRUE) {
+			print "OK to Proceed ? yes/no [yes]  ";
+			chomp ($answ = <STDIN>);
+		} else {
+			$answ = "yes";
+		}
+		if (($answ eq 'no') || ($answ eq 'n')) {
+			return $PIN_ERR;
+		}
+	}
+
+	$action = "start";
+	if (!$IS_WIN) {
+		if (&start() != $PIN_DONE) {
+			return $PIN_ERR;
+		}
+	} else {
+		if (&start_win() != $PIN_DONE) {
+			return $PIN_ERR;
+		}
+	}
+	return $PIN_DONE;
+}
+
+sub halt_win
+{
+	# In windows halt internally uses stop
+	# as we don't have 'force kill' like
+	# in Windows platform
+
+	if (&stop_win() != $PIN_DONE) {
+		return $PIN_ERR;
+	}
+	return $PIN_DONE;
+}
+
+sub check_dependent_service
+{
+	my( $input) = @_;
+	my $depend_str;
+	my @depend_list;
+	my $ret_str = '';
+	my $sys;
+	my $val;
+	my @temp_arr;
+	my $len;
+	my $i=0;
+	my $var;
+
+	dump_log_message("debug", "check_dependent_service: Input service = <$input>\n", 0);
+
+	$depend_str = $dep_list{$input} ;
+	@depend_list = split (' ', $depend_str);
+	dump_log_message("debug", "check_dependent_service depend_str = $depend_str\tdepend_list = @depend_list\n", 0);
+
+	foreach $sys (@depend_list) {
+		if (WaitState($Machine, $sys, 4, 0)) {
+			$ret_str = $ret_str.' '.$sys;
+		}
+	}
+	dump_log_message("debug", "Returning from check_dependent_service ret_str = $ret_str\n", 0);
+	return $ret_str;
+}
+
+# This routine used to check the state with specified time-out
+sub WaitState
+{
+	my ($Machine, $Service, $RequiredState, $Timeout) = @_;
+	dump_log_message("debug", "checking for <$Service> Running or not?? \n", 0);
+	dump_log_message("debug", "WaitState: Required state = $RequiredState\n", 0);
+	my %Status;
+	my $Time = time() + $Timeout;
+	do {
+		sleep(1);
+		Win32::Service::GetStatus( $Machine, $Service, \%Status );
+	} while ($RequiredState != $Status{CurrentState} && $Time > time());
+	dump_log_message("debug", "Service $Service status = $Status{CurrentState}\n", 0);
+	return ($RequiredState == $Status{CurrentState});
+}
+
+sub stop_list
+{
+	my $input;
+	my @temp;
+	my @sys_list;
+	my $sys;
+	my $Original_serv;
+	my $actual_serv;
+
+	$input= $_[0];
+	@temp = split(' ', $input);
+	@sys_list = reverse(@temp);
+	foreach $sys (@sys_list) {
+		$actual_serv = $act_service_name{lc $sys};
+		if ($ExpandedList{$actual_serv} eq '') {
+			$Original_serv = $sys;
+			$sys = $subsystem_info{$sys}{'alias'};
+			$actual_serv = $act_service_name{lc $sys};
+			if ($ExpandedList{$actual_serv} eq '') {
+				dump_log_message("debug", "The <$sys> service is not installed \n", 1);
+				next;
+			}
+		}
+		if (WaitState($Machine, $actual_serv, 4, 0)) {
+			dump_log_message("msg", "STOPPING  <$sys> ...", 1);
+			Win32::Service::StopService( $Machine, $actual_serv);
+			if (WaitState($Machine, $actual_serv, 1, 5)) {
+				dump_log_message("msg", "  stopped at ".scalar(localtime())."\n", 1);
+			}
+		} else {
+			dump_log_message("debug", "Service <$sys> already stopped\n", 1);
+		}
+	}
+	return $PIN_DONE;
+}
+
+
+sub clear_log_files_win
+{
+	# call - lookup_array()
+	my @start_arr = &lookup_array();
+
+	foreach my $service_name (@start_arr) {
+		my $actual_serv = $act_service_name{lc $service_name};
+		my $sys_log_file = "${PIN_HOME_WIN}/sys/$service_name/$actual_serv.log";
+		truncate_file($sys_log_file);
+		$sys_log_file = "$VAR_HOME_WIN/$service_name/$service_name.pinlog";
+		truncate_file($sys_log_file);
+	}
+}
+
+# The routine to report status of a particular service #
+
+sub status
+{
+	my @sys_arr;
+	my $arg;
+	my $err = $PIN_DONE;
+	my $ret_err = $PIN_DONE;
+
+	if ($IS_WIN) {
+		if (status_win() == $PIN_ERR) {
+			return $PIN_ERR;
+		}
+		return $PIN_DONE;
+	}
+
+	#call look-up array....
+	@sys_arr = &lookup_array();
+
+	foreach $arg (@sys_arr) {
+		if ($collect_data_var) {
+			$process_name = $arg;
+			&setup_collect_data();
+		}
+		$err = status_of_service($arg);
+		$ret_err = ($err == $PIN_ERR) ? $PIN_ERR : $ret_err;
+		$err = $PIN_DONE;
+	}
+	return $ret_err;
+}
+
+# The routine to report health of a particular service #
+
+sub hcheck
+{
+	my @sys_arr;
+	my $arg;
+	my $err = $PIN_DONE;
+	my $ret_err = $PIN_DONE;
+
+	#call look-up array....
+	@sys_arr = &lookup_array();
+
+	foreach $arg (@sys_arr) {
+		if ($collect_data_var) {
+			$process_name = $arg;
+			&setup_collect_data();
+		}
+		$err = hcheck_of_service($arg);
+		$ret_err = ($err == $PIN_ERR) ? $PIN_ERR : $ret_err;
+		$err = $PIN_DONE;
+	}
+	return $ret_err;
+}
+
+sub hcheck_of_service
+# Arg 1: service name
+{
+	my $service_name = $_[0];
+	my $str;
+	my @s;
+	my $err = $PIN_DONE;
+	my $allret;
+	my $arg;
+
+	if ($service_name =~ /answer/) {
+		$arg = "answer";
+	} else {
+		$arg = $service_name;
+	}
+	my $service_type = $subsystem_info{$arg}{'service_type'};
+	&source_env_per_service($service_name,$service_type);
+	
+	if ($service_type ne "dm_oracle" && $service_type ne "dm_tt") {
+		dump_log_message("error", "pin_ctl: hcheck NOT supported for this service\n", 0);
+		return $PIN_ERR;
+	}
+	
+	my $dm_port = $service_port{lc $service_name};
+	my $dm_host = $service_host{lc $service_name};
+	my $dm_dbno = $service_dbno{lc $service_name};
+	
+	if ($dm_port eq "" || $dm_host eq "" || $dm_dbno eq "") {
+		dump_log_message("error", "pin_ctl: either of port/host/dbno is NOT configured in pin_ctl.conf\n", 0);
+		return $PIN_ERR;
+	}
+	
+	my $ebufp = pcmif::pcm_perl_new_ebuf();
+	
+	my $pcm_ctxp = pcmdd::pcmdd_connect($dm_host, $dm_port, $dm_dbno, $ebufp);
+	if (pcmif::pcm_perl_is_err($ebufp)) {
+		dump_log_message("error", "pin_ctl: failed to connect to the dm\n", 0);
+		pcmif::pcm_perl_print_ebuf($ebufp);
+		return $PIN_ERR;
+	}
+
+my $tmpStr = <<"XXX"
+0 PIN_FLD_POID POID [0] $dm_dbno /account 1
+XXX
+;
+	my $in_flistp = pcmif::pin_perl_str_to_flist($tmpStr, $dm_dbno, $ebufp);
+	my $out_flistp = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_TEST_LOOPBACK", 999, $in_flistp, $ebufp);
+	if (pcmif::pcm_perl_is_err($ebufp)) {
+		dump_log_message("error", "pin_ctl: failed to read object from the dm\n", 0);
+		pcmif::pcm_perl_print_ebuf($ebufp);
+		return $PIN_ERR;
+	}
+	
+	dump_log_message("debug", "pin_ctl: health check OK\n", 1);
+	#my $out = pcmif::pin_perl_flist_to_str($out_flistp, $ebufp);
+	#print $out;
+
+	return $PIN_DONE;
+}
+
+sub status_of_service
+# Arg 1: service name
+{
+	my $service_name = $_[0];
+	my $str;
+	my @s;
+	my $err = $PIN_DONE;
+	my $allret;
+	my $arg;
+
+	if ($service_name =~ /answer/) {
+		$arg = "answer";
+	} else {
+		$arg = $service_name;
+	}
+	my $service_type = $subsystem_info{$arg}{'service_type'};
+	&source_env_per_service($service_name,$service_type);
+
+	if (&check_binary($service_name)) {
+		dump_log_message("debug", "pin_ctl: service <$service_name> is NOT running as binary does not exist\n", 1);
+		return $PIN_ERR;
+	}
+	$str	= &get_procid($service_name);
+	@s	= split (/\|/, $str);
+	if ($s[0] == 0 && $s[1] > 0) {
+		dump_log_message("debug", "pin_ctl: service <$service_name> [$s[1]] is running\n", 1);
+	} elsif ($s[0] == 0 && $s[1] == 0) {
+		dump_log_message("debug", "pin_ctl: service <$service_name> is NOT running\n", 1);
+	} elsif ($s[0] == '-1') {
+		dump_log_message("error", "pin_ctl: service <$service_name> might be running\n", 1);
+		dump_log_message("error", "pin_ctl:Error!!! while finding the status of the service <$service_name> ...\n", 0);
+		if ($subsystem_info{$service_name}{'is_java'}  == $TRUE ) {
+			dump_log_message("debug", "\t found to be NOT running.\n", 0);
+		}
+		dump_log_message("error", "Please check the contents of pid file for the service <$service_name>. \n", 0);
+		dump_log_message("error", "The file appears to be absent or empty or having an invalid value\n", 0);
+		$err =  $PIN_ERR;
+	}
+	return $err;
+}
+
+#
+# BEGIN_IMS
+#
+# get_procid():
+#
+# DESC:
+# -----
+# Gets the process id for the service requested.
+#
+# I/P:
+# ----
+# $sys_name: Name of the service that needs to be checked.
+#
+# O/P:
+# ----
+# $ret_str: Contains error value (0 or -1) and a list of pids
+#
+# Algorithm:
+# ----------
+#
+#	1) Check the system (ps -e -o user,pid,ppid,args) to see if service is running;
+#	2) If yes, check which of those has a parent proc id = 1;
+#	3) If there is a single process with ppid = 1 and the rest
+#	   are its children, then send the process id whose ppid=1
+#	   to the caller.
+#	4) If we have a single process of the service running or a
+#	   number of them with ppid = 1, then, if the service is CM,
+#	   then check for the CM pid file. If pid file contents match
+#	   the running process' id, then send that pid back. Else,
+#	   send an error (-1) and pid(s) back.
+#	5) In case we have a java related service requested, then we
+#	   directly go for the pid file. All the services, formatter,
+#	   BC and EAI_JS run as "java <opts> ...." and we will not be
+#	   able to figure which one them is actually running.
+#	6) If we find the pid of the java service running same as the
+#	   one in the pid file of the service, then retrun that pid.
+#    	   Else return error.
+#	7) If called with 'stat' as the first parameter, then search for
+#		the process ( the next parameter)
+#			and return TRUE if found, else return ERROR / FALSE
+#
+
+
+sub get_procid
+{
+	my $service_name; # Don't disturb the service_name
+	my @pid;
+	my %ppid;
+	my @temp_arr;
+	my $count;
+	my $counter;
+	my ($i) = 0;                  # to count of number of processes(wanted) running
+	my ($j) = 0;                  # variable to use in loop processing
+	my ($k) = 0;                  # variable to use in loop processing
+	my ($text);                   # string variable to hold pid file contents
+	my (@temp_array);             # array to hold temporary values
+	my ($ret_str);                # string to hold return string
+	my ($pattern) ="";            # variable to hold absolute path of the service executable
+	my ($found);                  # to store flag variable, pattern found or not
+	my ($temp_procid_str) ="";    # string variable to hold temporary process id values
+	my ($temp_pprocid_str) ="";   # string variable to hold temporary process id values
+	my (@result_pid_array) = ();
+	my (@result_ppid_array) = ();
+	my $temp_var;
+	my $is_status_req;
+	my $stat_pid = 0;
+	my $alt_service_name;	  # In case of answer* services, alt_service_name will be answer
+	my $is_java = $FALSE; 	  # set to true for java based services
+	my $is_pipeline = $FALSE; # set to true for pipeline services
+	my $is_expected = $FALSE; # set to true if pid doesnot exist and lock file exists
+        my $is_proc_running = $FALSE; #set to true if process is running
+        my $pid_file_name;
+
+	$ENV{'LD_PRELOAD_64'} = $env_preload_str if (!$is_sol_gt_58) ;
+	open(PSEF_PIPE,"${PSEF}|") || nowdie "ERROR_INTERNAL open(${PSEF}|) ";
+	$j=0;
+	@temp_arr = split(' ', $_[0]);
+	if ($temp_arr[0] eq "stat") {
+		$stat_pid = $temp_arr[1];	# Process id
+		$pattern = $temp_arr[2];	# Binary file path
+		$service_name = $temp_arr[3];	# Service name
+		$is_status_req = $TRUE;
+		dump_log_message("debug", "get_procid: stat flag is set\n", 0);
+	} else {
+		$service_name = $_[0];
+	}
+	if ($service_name =~ /answer/) {
+		$alt_service_name = "answer";
+	} else {
+		$alt_service_name = $service_name;
+	}
+	my $service_type = $subsystem_info{$alt_service_name}{'service_type'};
+	if ($subsystem_info{$alt_service_name}{'is_pipeline'} == $TRUE) {
+		$is_pipeline = $TRUE;
+	}
+	# Get pattern if first parameter is not stat
+	if ($is_status_req == $FALSE) {
+		$pattern = $subsystem_info{$alt_service_name}{'binfile'};
+		if ($service_name =~ /answer/) {
+			$pattern =~ s/$alt_service_name/$service_name/ ;
+		}
+		if (($action eq 'halt') and
+		  !(($subsystem_info{$alt_service_name}{'is_pipeline'} == $TRUE) or
+		  ($subsystem_info{$alt_service_name}{'is_java'} == $TRUE))) {
+			dump_log_message("debug", "Setting is_expected as TRUE for halt actions\n");
+			$is_expected = $TRUE;
+		} else {
+			# Get the process id
+			$stat_pid = get_pid($service_name);	
+			if ($subsystem_info{$alt_service_name}{'is_java'} == $TRUE) {
+				if ($stat_pid == -1) { # pid file does not exists
+					return "0|0";
+				}
+				my $java_path ="";
+				# On solaris & linux , ps shows the actual command started and so no need to evaluate links.
+				if (($ENV{OS} eq "linux")  || ($ENV{OS} eq "solaris") || ($ENV{OS} eq "aix")) {
+					$java_path = $ENV{JAVA_BIN_PATH};
+				} else {
+				
+					$java_path = evaluate_links($ENV{JAVA_BIN_PATH});
+				}
+				if ($ENV{OS} =~ m/hpux/) {
+					$pattern = $java_path.'.*java';
+				} else {
+					$pattern = $java_path.'/java';
+				}
+				$is_java = $TRUE;
+			} elsif (($subsystem_info{$alt_service_name}{'is_pipeline'} == $TRUE) && ($service_type ne 'dm_timos')) {
+				if ($stat_pid == -1) { # pid file does not exists
+					my $lock_file_name = "$subsystem_info{$alt_service_name}{'registry_filename'}.lock";
+					dump_log_message("debug", "Lock file = $lock_file_name\n", 0);
+					# Check whether Lock file exists
+					if(-e "$lock_file_name") {
+						dump_log_message("debug", "Pid file not exist but lock file exists\n", 0);
+						# Get the pid from the lock file.
+						open ( LOCK_FD, $lock_file_name);
+						while (<LOCK_FD>) {
+							if (/^#\s*Process\s+ID\s+:\s+(\d+).*$/) {
+								$stat_pid = $1;
+								close (LOCK_FD);
+							}
+						}
+						$is_expected = $FALSE;
+					} else { # Lock file also not exists
+						return "0|0";
+					}
+				}
+			} else {
+				if ($stat_pid == -1) { # pid file does not exists
+					dump_log_message("debug", "Pid file does not exist\n", 0);
+					$is_expected = $TRUE;
+				}
+			}
+		}
+	}
+	dump_log_message("debug", "pattern = $pattern\tstat_pid=$stat_pid\n", 0);
+	while (<PSEF_PIPE>) {
+		chomp;
+		if ($is_java == $TRUE) {
+			next unless s{^(\s*\w+\s+$stat_pid\s+(\d+)\s+)\d+\s+.*$pattern\s*}{$1};
+			$is_proc_running = $TRUE;
+			$pid[$j] = $stat_pid; #store pid, same as .pid file content.
+			$ppid{$pid[$j]} = $2;        #store Parent-process-id
+		} elsif ($is_pipeline == $TRUE) {
+			if ($is_expected == $FALSE) {
+				next unless s{^(\s*\w+\s+$stat_pid\s+(\d+)\s+)\d+\s+.*$pattern\s*}{$1};
+				$is_proc_running = $TRUE;
+				$pid[$j] = $stat_pid; #store pid, same as .pid file content.
+				$ppid{$pid[$j]} = $2;        #store Parent-process-id
+			} else { # We don't have process id
+				next unless s{^(\s*\w+\s+(\d+)\s+(\d+)\s+)\d+\s+.*$pattern\s*}{$1};
+				$is_proc_running = $TRUE;
+				$pid[$j] = $2;        		#store process-id
+				$ppid{$pid[$j]} = $3;        #store Parent-process-id
+			}
+		} else {
+			if ($is_expected == $FALSE) {
+				next unless s{^(\s*\w+\s+$stat_pid\s+(\d+)\s+)\d+\s+.*$pattern\s*}{$1};
+				$is_proc_running = $TRUE;
+				$pid[$j] = $stat_pid; #store pid, same as .pid file content.
+				$ppid{$pid[$j]} = $2;        #store Parent-process-id
+
+			} else { # We don't have process id
+				next unless s{^(\s*\w+\s+(\d+)\s+(\d+)\s+)\d+\s+.*$pattern\s*$}{$1};
+				$is_proc_running = $TRUE;
+				$pid[$j] = $2;        		#store process-id
+				$ppid{$pid[$j]} = $3;        #store Parent-process-id
+			}
+		}
+		dump_log_message("debug", "matched string is $_ \n", 0);
+		dump_log_message("debug", "pid is $pid[$j] \t ppid is $ppid{$pid[$j]} \n", 0);
+
+		if ($is_status_req == $TRUE and $pid[$j] == $stat_pid ) {
+			close(PSEF_PIPE);
+			return $PIN_DONE;
+		}
+
+		if ( ($ppid{$pid[$j]} == 1) || ($ppid{$pid[$j]} == $ZSCHED_ID) ) {
+			# Store the list of Master process(es), whose ppid is 1.
+			$temp_pprocid_str = $temp_pprocid_str.$pid[$j]."|";
+			$result_ppid_array[$i] = $j;
+			$i++;
+		} else {
+			#Store the list of Child process(es), whose ppid != 1.
+			$temp_procid_str = $temp_procid_str.$pid[$j]."|";
+			$result_pid_array[$k] = $j;
+			$k++;
+		}
+		$j++;
+	}
+	if ($is_status_req) {
+		close(PSEF_PIPE);
+		return $PIN_ERR;
+	}
+
+	if ($i == 0) {
+		# No Process of the service Running ...
+		$ret_str = "0|0";
+	} elsif (($is_java == $TRUE) || ($is_pipeline == $TRUE)) { # There will not be any child processes
+		if ($is_expected == $TRUE) { # Expecting that pipeline is running
+			$ret_str = "-1|".$temp_pprocid_str;
+		} else {
+			$found = -1;
+			for ($count = 0; ($count < @result_ppid_array) && ($found == -1) ; $count++) {
+				# This is required because if pid = 123 and processes running are 123, 1123 and 2123
+				# then find the correct one
+				if ($stat_pid == $pid[${result_ppid_array[$count]}]) {
+					$found = $count;
+				}
+			}
+			if ($found < 0) {
+				$ret_str = "-1|".$temp_pprocid_str;
+			} else {
+				$ret_str = "0|".$stat_pid;
+			}
+		}
+	} elsif (lc($action) eq "halt") {
+
+		###########################################################
+		# Handle halt operation, which returns all the proc-ids
+		# But in case of dm_* and cm_proxy , only ppid is returned.
+		###########################################################
+		if (($service_type =~ m/^dm_/) || ($service_type eq "cm_proxy")) {
+			$ret_str = "0|".$temp_pprocid_str;
+		} else {
+			$ret_str = "0|".$temp_pprocid_str.$temp_procid_str;
+		}
+	} elsif ($i == 1) {
+
+		$temp_var = 0; # to count the processes, who have ppid same as master process
+
+		###########################################################
+		# Handle the left-over operations
+		# Try to find the master process-id from the system status
+		###########################################################
+		for ($counter =0; $counter < @result_pid_array; $counter++) {
+			if (($pid[${result_ppid_array[0]}]) ==
+				($ppid{$pid[${result_pid_array[$counter]}]})) {
+				$temp_var++;
+			} 
+		}
+		if ($temp_var == $counter) {
+			# Master process found with system status ONLY..
+			$ret_str = "0|".$pid[${result_ppid_array[0]}];
+			if (($action eq "stop")  && ($service_name eq "cm")) {
+				$ret_str = $ret_str."|".$temp_procid_str;
+			}
+		} else {
+			# Find the process-id with pid file
+			$text = get_pid($service_name);
+			if ($text == $pid[${result_ppid_array[0]}]) {
+				$ret_str = "0|".$pid[${result_ppid_array[0]}];
+				if (($action eq "stop")  && ($service_type eq "cm")) {
+					$ret_str = $ret_str."|".$temp_procid_str;
+				}
+			} else {
+				$ret_str = "-1|".$pid[${result_ppid_array[0]}];
+			}
+		}
+	} else {
+
+		# More than one master-process found in the system,
+		# then depend on the pid file contents.
+
+		$text = get_pid($service_name);
+		$found = -1;
+		for ($count = 0; ($count < @result_ppid_array) && ($found == -1) ; $count++) {
+			if ($text == $pid[${result_ppid_array[$count]}]) {
+				$found = $count;
+			}
+		}
+		if ($found == -1) {
+			$ret_str = "-1|".$temp_pprocid_str;
+		} else {
+			$ret_str = "0|".$text;
+		}
+	}
+        $pid_file_name = $subsystem_info{$service_name}{'pidfile'};
+        if (-e $pid_file_name && $is_proc_running == $FALSE) {
+		if( (unlink($pid_file_name)) == 1){
+                	dump_log_message("debug", "removed the old pid file $pid_file_name \n",0);
+		}else {
+                	dump_log_message("debug", "pin_ctl failed to remove the old pid file $pid_file_name\n 
+			If $service_name failed to start please remove the pid file manually",0);
+		}
+        }
+	close(PSEF_PIPE);
+	return $ret_str;
+}
+
+#
+# This routine will report how pin_ctl should be used in case user
+# made some mistake while entering the command line.
+#
+
+sub usage
+{
+	my $print_str ;
+	my $i=0;
+	my $line;
+
+	$print_str = "Usage: pin_ctl [-c pin_conf_file_name] [-debug] [-collectdata] [-i] \n\t\t[start|stop|halt|restart|status|cstart|clear|snmpset|hcheck action|snmpget action] \n\t\t[$all_alias |";
+	foreach (@subsystem_order ) {
+		$i++;
+		$print_str = $print_str." ".$$_[1];
+		if ($i % 4 eq 0) {
+			$print_str = $print_str."\n\t\t";
+		}
+	}
+	print "$print_str ]\n";
+
+	if ($log_level eq "debug") {
+		foreach (@ALL_LIST) {
+			dump_log_message("debug", "$_\n", 0);
+		}
+		$line = @ALL_LIST;
+	}
+}
+
+# The routine to report status of a particular service #
+
+sub status_win
+{
+	my @stat_arr;
+	my $Service;
+	my $State;
+	my $Original_serv = '';
+	my $actual_serv;
+
+	@stat_arr = lookup_array();
+
+	foreach $Service (@stat_arr) {
+		my %Status = ();
+		$actual_serv = $act_service_name{lc $Service};
+		dump_log_message("debug", "Service = $Service\t Actual service = $actual_serv\n", 0);
+		if ($collect_data_var) {
+			$process_name = $Service;
+			&setup_collect_data();
+		}
+		if ($ExpandedList{$actual_serv} eq '') {
+			$Original_serv = $Service;
+			$Service = $subsystem_info{$Service}{'alias'};
+			$actual_serv = $act_service_name{lc $Service};
+			if ($ExpandedList{$actual_serv} eq '') {
+				dump_log_message("debug", "The <$Service> service is not installed \n", 1);
+				next;
+			}
+		}
+
+		Win32::Service::GetStatus($Machine, $actual_serv, \%Status);
+
+	    $State = $Status{CurrentState};
+	    if ($Original_serv eq '') {
+		dump_log_message("debug", "service <$Service> is $StatusList[$State].\n", 1);
+	    } else {
+		dump_log_message("debug", "service <$Original_serv|$Service> is $StatusList[$State].\n", 1);
+	    }
+	}
+	return $PIN_DONE;
+}
+
+sub get_pid
+{
+	my $service_name = $_[0];
+	my $pid_file_name;
+	my $pid = -1;
+	if ($service_name =~ /answer/) {
+		$pid_file_name = $subsystem_info{"answer"}{'pidfile'};
+		$pid_file_name =~ s/answer/$service_name/ ;
+	} else {
+		$pid_file_name = $subsystem_info{$service_name}{'pidfile'};
+	}
+	dump_log_message("debug", "Pid filename = $pid_file_name\n", 0);
+	if (-e $pid_file_name) {
+		open ( PID_FD, $pid_file_name) || die "pin_ctl: Could not open pid file of the service <$service_name>";
+		$pid = <PID_FD>;
+		chomp($pid);
+		close (PID_FD);
+	}
+	return $pid;
+}
+
+sub printLog
+{
+  my $logEntry = shift(@_);
+  dump_log_message("debug", $logEntry, 0);
+}
+
+# Get the process Id associated with the passed-in process name i.e ProcessDescription.
+# Walk and look through the process table.
+sub getProcessId
+#Arg 1: Host name of the master agent
+#Arg 2: Port number of the master agent
+#Arg 3: Process Description
+{
+	my $host = $_[0];
+	my $port = $_[1];
+	my $processName = $_[2];
+	my $ret;
+	my $line;
+	my $walkFile = createTmpFile();
+	my $snmpwalk = $ENV{CTL_SNMP_PATH}."/snmpWalk";
+	my $cmd;
+	# Check if exec exists
+	if (!(-e "$snmpwalk")) {
+		dump_log_message("error", "snmpWalk executable does not exist\n", 0);
+		return $PIN_ERR;
+	}
+
+	# walk through process mib table to get all registered portal processes
+	$cmd = "$snmpwalk $host $PROCESS_DESCR_COLUMN -P$port -S";
+	dump_log_message("debug", "getProcessId: snmpWalk cmd = $cmd\n", 0);
+	$ret = system("$cmd > $walkFile");
+	$ret = $ret >> 8;
+	if ($ret != 0 && $ret != 252 )
+	{
+		dump_log_message("error", "$snmpwalk returns $ret\n", 0);
+		return $PIN_ERR;
+	}
+	my $found = 0;
+	my @flds = ();
+	my @oid = ();
+	my $processId = -1;
+	open(FILE, "<$walkFile") || nowdie("ERROR: cannot open ".$walkFile." $!\n");
+	while ($line = <FILE>)
+	{
+		if ($line =~ m/$processName/i)
+		{
+			$found = 1;
+			# processDescr.<process_id> = "<process_description>"
+			@flds = split(/=/, $line);
+			@oid = split(/\./, $flds[0]);
+			$processId = $oid[$#oid];
+			chomp($processId);
+			$processId =~ s/ //g;
+			last;
+		}
+	}
+	close(FILE);
+	unlink $walkFile;
+	if ($found == 0)
+	{
+		dump_log_message("error", "The process id for \"".$processName."\" is not found\n", 0);
+		return $PIN_ERR;
+	}
+	dump_log_message("debug", "The process Id for process [$processName] is [$processId] \n", 0);
+	return $processId;
+}
+
+# Get the registry Id associated with the passed-in process name and
+# associated registry names.
+# Walk and look through the registry table for the registry name and
+# process Id.
+sub getRegistryId
+#Arg 1: Host name of the master agent
+#Arg 2: Port number of the master agent
+#Arg 3: Registry entry
+#Arg 4: Process Id
+{
+	my $host = $_[0];
+	my $port =  $_[1];
+	my $registryName = $_[2];
+	my $processId = $_[3];
+	my $cmd;
+
+	my $REGISTRY_PROCESS_DESCR_COLUMN = "$REGISTRY_DESCR_COLUMN.$processId";
+
+	# walk through process mib table to get all registered registry names
+	my $walkFile = createTmpFile();
+	my $snmpwalk = $ENV{CTL_SNMP_PATH}."/snmpWalk";
+	# Check if exec exists
+	if (!(-e "$snmpwalk")) {
+		dump_log_message("error", "snmpWalk executable does not exist\n", 0);
+		return $PIN_ERR;
+	}
+
+	$cmd = "$snmpwalk $host $REGISTRY_PROCESS_DESCR_COLUMN -P$port -S";
+	dump_log_message("debug", "getRegistryId: snmpWalk cmd = $cmd\n", 0);
+	my $ret = system("$cmd > $walkFile");
+	$ret = $ret >> 8;
+	if ($ret != 0 && $ret !=252 )
+	{
+		print "ERROR: $snmpwalk returns $ret\n";
+		return $PIN_ERR;
+	}
+	my $found = 0;
+	my $line;
+	my @flds = ();
+	my @oid = ();
+	my $registryId = -1;
+	dump_log_message("debug", "getRegistryId: registry entry  = $registryName\n", 0);
+	open(FILE, "<$walkFile") || nowdie("ERROR: cannot open $walkFile $!\n");
+	while ($line = <FILE>)
+	{
+		# read registry name
+		chomp($line);
+		if ($line =~ m/$registryName$/i)
+		{
+			# check if it matches with process id
+			@flds = split(/=/, $line);
+			@oid = split(/\./, $flds[0]);
+			if ($oid[$#oid-1] == $processId)
+			{
+				# Find the registry id from the result
+				# The format is
+				# registryName.<process_id>.<registry_id>
+				# = "<registry_description>"
+				$registryId = $oid[$#oid];
+				chomp($registryId);
+				$registryId =~ s/ //g;
+				$found = 1;
+				last;
+			}
+		}
+	}
+	close(FILE);
+	unlink($walkFile);
+	if ($found == 0) {
+		dump_log_message("error", "snmpWalk failed to get registry in process_id $processId\n", 0);
+		return $PIN_ERR;
+	}
+	dump_log_message("debug", "The registry Id for entry [$registryName] is [$registryId]\n", 0);
+	return $registryId;
+}
+
+# Create temporary file for storing Walk and Get data
+sub createTmpFile
+{
+	my ($fh, $file) = tmpnam();
+#|| nowdie("Error creating temporary file $!");
+	return $file;
+}
+
+sub snmp_probe
+# Arg 1:contains probe
+# Arg 2:contains service name
+# Arg 3:contains snmp action
+# Arg 4:contains call mode
+# Returns PIN_DONE on success and PIN_ERR on failure
+{
+	my ($probe, $service_name, $action_type, $call_mode) = @_;
+	$probe = lc($probe);
+	$action_type = lc($action_type);
+	$call_mode = lc($call_mode);
+	my $ret = $PIN_DONE;
+	my $proc_desc;
+	my $line;
+	my $dbg_print = 1;
+	$dbg_print = 0 if $call_mode eq 'stop';
+
+	my $host = $ENV{CTL_SNMP_MAGENT_HOST};
+	my $port = $ENV{CTL_SNMP_MAGENT_PORT};
+	my $service_type = $subsystem_info{$service_name}{'service_type'};
+	dump_log_message("debug", "Master Agent host name = $host\n", 0);
+	dump_log_message("debug", "Master Agent port number = $port\n", 0);
+
+	my $snmp_input = "true";
+	if ($snmparg->{$service_name}->{$probe}->{'input_str'}) {
+		$snmp_input = $snmparg->{$service_name}->{$probe}->{'input_str'};
+	} elsif ($snmparg->{$service_type}->{$probe}->{'input_str'}) {
+		dump_log_message("debug", "Using input str for $service_type since it is missed for $service_name in conf file\n", 0);
+		$snmp_input = $snmparg->{$service_type}->{$probe}->{'input_str'};
+	}
+	dump_log_message("msg", "SNMP INPUT = $snmp_input\n", 0);
+
+	# Get process description from registry
+	my $root = "ifw";
+	if ($service_type eq "dm_timos") {
+		$root = "timosMgr";
+	}
+	my $registry;
+	if ($subsystem_info{$service_name}{'registry_filename'}) {
+		$registry = $subsystem_info{$service_name}{'registry_filename'};
+	} elsif ($subsystem_info{$service_type}{'registry_filename'}) {
+		$registry = $subsystem_info{$service_type}{'registry_filename'};
+	}
+	dump_log_message("debug", "Registry file name = $registry\n", 0);
+	$proc_desc = get_process_desc($root, $registry);
+	if ($proc_desc eq 'notfound') {
+		dump_log_message("error", "Failed to get process description\n", 0);
+		return $PIN_ERR;
+	}
+
+	# Get process id from snmp process table for the given process description
+	my $processId = getProcessId($host, $port, $proc_desc);
+	if($processId == $PIN_ERR) {
+		dump_log_message("error", "snmpWalk failed to get process id\n", 0);
+		return $PIN_ERR;
+	}
+
+	my $registryName;
+	# get the registry entry for the probe in conf file
+	if ($snmparg->{$service_name}->{$probe}->{'registry_entry'}) {
+		$registryName = $snmparg->{$service_name}->{$probe}->{'registry_entry'};
+	} elsif ($snmparg->{$service_type}->{$probe}->{'registry_entry'}) {
+		dump_log_message("debug", "Using Registry entry for $service_type since it is missed for $service_name in conf file\n", 0);
+		$registryName = $snmparg->{$service_type}->{$probe}->{'registry_entry'};
+	} else {
+		dump_log_message("error", "Registry entry for $probe probe is missed in conf file\n", 0);
+		return $PIN_ERR;
+	}
+
+	# Get registry id from snmp probe table for the given registry entry i.e probe
+	my $registryId = getRegistryId($host, $port, $registryName, $processId);
+	if($registryId == $PIN_ERR) {
+		dump_log_message("error", "snmpWalk failed to get registry id\n", 0);
+		return $PIN_ERR;
+	}
+
+	#need to map the BASE OID with process and action
+	my $base_oid;
+	if ($snmparg->{$service_name}->{$probe}->{'base_oid'}) {
+		$base_oid = $snmparg->{$service_name}->{$probe}->{'base_oid'};
+	} elsif ($snmparg->{$service_type}->{$probe}->{'base_oid'}) {
+		dump_log_message("debug", "Using Base oid entry for $service_type since it is missed for $service_name in conf file\n", 0);
+		$base_oid = $snmparg->{$service_type}->{$probe}->{'base_oid'};
+	} else {
+		dump_log_message("error", "Base oid entry for $probe probe is missed in conf file\n", 0);
+		return $PIN_ERR;
+	}
+
+	# Change being done to accomodate the OID changes done as part of bug# 9165034,
+	my $oid_len = length($base_oid);
+	my $oid_part1 = substr($base_oid,0,($oid_len-2));
+	my $oid_part2 = substr($base_oid,($oid_len-1),1);
+
+	my $snmp_oid = $oid_part1.".".$processId.".".$registryId.".".$oid_part2.".0";
+
+	dump_log_message("debug", "Finally derived probe = $snmp_oid\n", 0);
+
+	my $setFile = createTmpFile();
+	# set the probe
+	# Note windows compatability(echo)
+	my $snmpset = $ENV{CTL_SNMP_PATH}."/snmpSet";
+	my $snmpget = $ENV{CTL_SNMP_PATH}."/snmpGet";
+	if ($action_type eq 'snmpset') {
+		# Check if exec exists
+		if (!(-e "$snmpset")) {
+			dump_log_message("error", "snmpset executable does not exist\n", 0);
+			return $PIN_ERR;
+		}
+		my $cmd = "$snmpset $host $snmp_oid -P$port -S";
+		dump_log_message("debug", "snmp_probe: cmd = $cmd\n", 0);
+		$ret = system("echo $snmp_input | $cmd > $setFile");
+		$ret = $ret >> 8;
+		if ($ret != 0 && $ret != 252 )
+		{
+			dump_log_message("error","$snmpset returns $ret\n", 0);
+			return $ret;
+		}
+
+		my $found = 0;
+		open(FILE, "<$setFile") || nowdie("cannot open ".$setFile." $!\n");
+		while ($line = <FILE>) {
+			if ($line =~ /Success/) {
+				$found = 1;
+				last;
+			}
+		}
+		close(FILE);
+		unlink $setFile;
+		if ($found == 1) {
+			dump_log_message("debug", "$probe action triggered successfully at ".scalar(localtime())."\n", $dbg_print);
+		} else {
+			dump_log_message("debug", "Action triggered is not successful\n", 0);
+			$ret = $PIN_ERR;
+		}
+	} elsif ($action_type eq 'snmpget') {
+		# Check if exec exists
+		if (!(-e "$snmpget")) {
+			dump_log_message("error", "snmpget executable does not exist\n", 0);
+			return $PIN_ERR;
+		}
+		my $cmd = "$snmpget $host $snmp_oid -P$port -S";
+		dump_log_message("debug", "snmp_probe: cmd = $cmd\n", 0);
+		$ret = system($cmd);
+		$ret = $ret >> 8;
+		if ($ret != 0 && $ret != 252 )
+		{
+			dump_log_message("error","$snmpget returns $ret\n", 0);
+			return $ret;
+		}
+	}
+	return $ret;
+}
+
+sub get_info_file
+#Arg 1: rootname
+#Arg 2: registry file name
+#Return: Info file name
+{
+	my ($rootname, $registry) = @_;
+	my $root = Registry::RegistryLexer::registryNew($rootname, $registry, "");
+	# Read Registry
+	my $node = RegistryReader::getSubNode($root, "Registry", 1);
+	my $data = RegistryReader::readInfos($node);
+	my $sem_file = info2str($data);
+	dump_log_message("msg", "Info file name = $sem_file\n", 0);
+	return $sem_file;
+}
+
+sub get_semaphore_file
+#Arg 1: rootname
+#Arg 2: registry file name
+#Return: Semaphore file name
+{
+	my ($rootname, $registry) = @_;
+	my $root = Registry::RegistryLexer::registryNew($rootname, $registry, "");
+	# Read Semaphore
+	my $node = RegistryReader::getSubNode($root, "Semaphore", 1);
+	my $data = RegistryReader::readInfos($node);
+	my $sem_file = info2str($data);
+	dump_log_message("msg", "Semaphore file name = $sem_file\n", 0);
+	return $sem_file;
+}
+
+sub get_process_desc
+#Arg 1: rootname
+#Arg 2: registry file name
+#Return: Process description from SnmpServer section
+{
+	my ($rootname, $registry) = @_;
+	my ($pdesc, $key);
+	my $entry_missed = 0;
+	my $found = 0;
+	my $root = Registry::RegistryLexer::registryNew($rootname, $registry, "");
+	my $node = RegistryReader::getSubNode($root, "Instrumentation", 0);
+	if ($node) {
+		$node = RegistryReader::getSubNode($node, "SnmpServer", 0);
+		if ($node) {
+			$node = RegistryReader::getSubNode($node, "ProcessDescription", 0);
+			if ($node) {
+				$pdesc = $node->getValue();
+				$found = 1;
+			} else {
+				$entry_missed = 1;
+			}
+		} else {
+			$entry_missed = 1;
+		}
+	} else {
+		$entry_missed = 1;
+	}
+	if ($entry_missed) { #search for dot notation entry
+		open(FIL, "$registry");
+		while(<FIL>) {
+			chomp($_);
+			if ($_ =~ /^\s*$rootname\.Instrumentation\.SnmpServer\.ProcessDescription/) {
+				($key, $pdesc) = split('=', $_);
+				chomp($pdesc);
+				$found = 1;
+				last;
+			}
+		}
+		close(FIL);
+	}
+	if ($found) {
+		dump_log_message("debug", "ProcessDescription = $pdesc\n", 0);
+	} else {
+		$pdesc = 'notfound';
+	}
+	return $pdesc;
+}
+
+sub get_logfile_names
+#Arg 1: rootname
+#Arg 2: registry file name
+#Return: List of log files
+{
+	my ($rootname, $registry) = @_;
+	my @files = ();
+	my %NOI;
+	my ($node, $node1,$node2, $node3,$data1,$data, $file_name, $iter, $iter1);
+	my $root = Registry::RegistryLexer::registryNew($rootname, $registry, "");
+
+	# Read ProcessLogs
+	dump_log_message("debug", "ProcessLogs..\n", 0);
+	$node = RegistryReader::getSubNode($root, "ProcessLog", 1);
+	$node = RegistryReader::getSubNode($node, "Module", 1);
+	$node = RegistryReader::getSubNode($node, "ITO", 1);
+	$data = RegistryReader::readInfos($node);
+	$file_name = info2str($data);
+	push(@files, $file_name);
+	dump_log_message("debug", "$file_name\n", 0);
+
+
+	# Read PipelineLogs and OutputLogs
+	dump_log_message("debug", "PipelineLogs and OuputLogs ..\n", 0);
+	$node = RegistryReader::getSubNode($root, "Pipelines", 1);
+	$iter = new RegistryIterator($node);
+	while (my $format = $iter->next())
+	{
+		if ($format->getName() eq "Instances") {
+			$node1 = RegistryReader::getSubNode($node, "Instances", 1);
+			$iter1 = new RegistryIterator($node1);
+			while (my $format1 = $iter1->next())
+			{
+				$node2 = RegistryReader::getSubNode($format1, "NumberOfInstances", 1);
+				$NOI{$format1->getName()}{"Number"} = $node2->getValue();
+			}
+			
+		}
+	}
+	$node = RegistryReader::getSubNode($root, "Pipelines", 1);
+	$iter = new RegistryIterator($node);
+	while (my $format = $iter->next())
+	{
+		if ($format->getName() ne "Instances") {
+			# Read PipelineLogs
+			$node = RegistryReader::getSubNode($format, "PipelineLog", 1);
+			$node = RegistryReader::getSubNode($node, "Module", 1);
+			$node = RegistryReader::getSubNode($node, "ITO", 1);
+			$data = RegistryReader::readInfos($node);
+			$file_name = info2str($data);
+			my $i = 0;
+			while ($i < $NOI{$format->getName()}{"Number"}) {
+				my $file_name1 = $file_name . $i;
+				dump_log_message("debug", "Filename = $file_name1\n", 0);
+				push(@files, $file_name1);
+				$i++;
+			}
+			if ($i == 0) {
+				push(@files, $file_name);
+				dump_log_message("debug", "Filename= $file_name\n", 0);
+			}
+
+			# Read OutputLog
+			my $node = RegistryReader::getSubNode($format, "Output", 1);
+			my $node3 = RegistryReader::getSubNode($node, "OutputLog", 1);
+			$data = RegistryReader::readInfos($node3);
+			$node2 = RegistryReader::getSubNode($node3, "FilePath", 1);
+			my $filePath = $node2->getValue();
+			$node2 = RegistryReader::getSubNode($node3, "FileName", 1);
+			my $fileName = $node2->getValue();
+			$node2 = RegistryReader::getSubNode($node3, "FilePrefix", 1);
+			my $filePrefix = $node2->getValue();
+			$node2 = RegistryReader::getSubNode($node3, "FileSuffix", 1);
+			my $fileSuffix = $node2->getValue();
+			
+			#For PCM log files
+			my $file_name1 = $filePath."/".$filePrefix."PCM".$fileSuffix;
+			push(@files, $file_name1);
+			
+
+			my $i = 0;
+			while ($i < $NOI{$format->getName()}{"Number"}) {
+				my $file_name1 = $filePath."/".$filePrefix.$fileName.$i.$fileSuffix;
+				dump_log_message("debug", "Output Filename = $file_name1\n", 0);
+				push(@files, $file_name1);
+				
+				#For PCM log files
+				$file_name1 = $filePath."/".$filePrefix."PCM".$i.$fileSuffix;
+				push(@files, $file_name1);
+				$i++;
+			}
+
+			if ($i == 0) {
+				my $file_name1 = $filePath."/".$filePrefix.$fileName.$fileSuffix;
+				push(@files, $file_name1);
+				dump_log_message("debug", "Output Filename= $file_name1\n", 0);
+			}
+		}
+	}
+
+	#To clear dump log files
+	my $info_file_name = &get_info_file($rootname, $registry);
+	&infoFileParse("FCT_EdrDump","FileName",$info_file_name);
+	#To Clear Statistic log files
+	&infoFileParse("EdrFactory","UsageStatistic",$info_file_name);
+
+	return @files;
+}
+
+sub infoFileParse
+{
+	my ($mod,$pat,$infoFile) = @_;
+	my $foundModule = 0;
+	open (INFOFILE,$infoFile) or die "pin_ctl: Not able to open $infoFile\n";
+        while(<INFOFILE>) {
+		chomp($_);
+
+
+                if ($_ =~ /^#/) {
+                        next;
+                }
+
+		if($pat =~ /UsageStatistic/)
+		{
+			$foundModule = 1;
+		}
+
+                if ($_ =~ /ModuleName\s*=\s*$mod$/) {
+                        $foundModule = 1;
+                }
+		
+		if(($_=~/$pat\s*=\s*/) && ($foundModule == 1)) {
+                        my @file;
+                        @file = split('=');
+                        $file[1] =~ s/^ *//;
+                        truncate_file($file[1]);
+			$foundModule = 0;
+                }
+
+	}
+}
+
+sub info2str($)
+{
+  my $info = shift(@_);
+    return $info->{Path} . "/" . $info->{Prefix} . $info->{Name} . $info->{Suffix};
+}
+
+sub truncate_file
+# Truncate the file only if it exists
+{
+	my $file_name = shift(@_);
+	if ( -e $file_name) {
+		dump_log_message("debug", "pin_ctl: Truncated file $file_name\n", 0);
+		open (FD, "> $file_name");
+		truncate(FD,0);
+		close (FD);
+	} else {
+		dump_log_message("error", "pin_ctl: $file_name absent\n", 0);
+	}
+}
+
+# This procedure checks whether the pipeline is up, do 5 attempts with 5seconds of duration
+sub check_start_stop_pipeline
+#Arg 1: start/stop
+#Arg 2: service name
+#Arg 3: process id
+#Arg 4: Semaphore file name in case of stop
+#Returns: 1 for success and 0 for fail
+{
+	my ($type, $service_name, $pid, $sem_file, $service_type) = @_;
+	my $binary = $subsystem_info{$service_name}{'binfile'};
+	my $ret;
+	my $temp;
+	my $waittime = 10;
+	my $waitcount = 6;
+	my $j = 0;
+	if ($type eq 'stop') {
+		$ret = 0;
+		if ($settings->{$service_name}->{'waittime'}) {
+			$waittime = $settings->{$service_name}->{'waittime'};
+		}
+		elsif ($settings->{$service_type}->{'waittime'}) {
+			$waittime = $settings->{$service_type}->{'waittime'};
+		}
+		if  ($settings->{$service_name}->{'iterations'}) {
+			$waitcount = $settings->{$service_name}->{'iterations'};
+		}
+		elsif ($settings->{$service_type}->{'iterations'}) {
+			$waitcount = $settings->{$service_type}->{'iterations'};
+		}
+		
+	} else {
+		$ret = 1;
+	}
+	for (my $i = 0; $i < $waitcount; $i++) {
+		dump_log_message("debug", "pid = $pid binary=$binary service_name=$service_name\n", 0);
+		$temp = get_procid("stat $pid $binary $service_name");		
+		if ($temp == $PIN_ERR) {
+			if ($type eq 'stop') {
+				$ret = 1;
+			} else {
+				$ret = 0;
+			}
+			last;
+		} else {
+			if (($type eq 'stop') && ($sem_file ne 'halt')) {
+				if (($j == 0) && (!(-e $sem_file))) {
+					dump_log_message("msg", "$service_name accepted semaphore file - $sem_file\n", 0);
+					$j++;
+				}
+			}
+		}
+		dump_log_message("debug", "check_start_stop_pipeline iteration = $i\n", 0);
+		sleep($waittime);
+	}
+	return $ret;
+}
+
+sub get_eventhdl_process
+{
+	my @ret_pids = ();
+	my ($pid, $ppid);
+	my $pattern = "$IFW_HOME/bin/ifw_eventhandler64";
+	open(PSEF_PIPE,"${PSEF}|") || nowdie "ERROR_INTERNAL open(${PSEF}|) ";
+	dump_log_message("debug", "pattern = $pattern\n", 0);
+	while (<PSEF_PIPE>) {
+		chomp;
+		next unless s{^(\s*\w+\s+(\d+)\s+(\d+)\s+)\d+\s+.*$pattern\s*}{$1};
+		$pid = $2;        		#store process-id
+		$ppid = $3;        #store Parent-process-id
+		dump_log_message("debug", "matched string is $_ \n", 0);
+		if ($ppid == 1 || $ppid == $ZSCHED_ID) {
+			# Catch the list of Master process(es), whose ppid is 1.
+			dump_log_message("debug", "pid is $pid \t ppid is $ppid \n", 0);
+			push(@ret_pids, $pid);
+		}
+	}
+	return @ret_pids;
+}
+
+# pads 0 to the left if number is single digit
+sub pad_zero
+{
+	my $in_val = $_[0];
+	if ($in_val > 9) {
+		return $in_val;
+	} else {
+		return "0".$in_val;
+	}
+}
+
+sub evaluate_links
+{
+	my $inp = $_[0];
+	my @arr1 = split('/', $inp);
+	my $input = "";
+	my $output = "";
+	my $arg;
+	foreach $arg (@arr1) {
+		$input = $input."$arg";
+		my $templink = readlink $input;
+		if (defined $templink) {
+			$output = $templink;
+		} elsif ($arg ne "") {
+			$output = $output.'/'.$arg;
+		}
+		$input = $input . '/';
+	}
+	$output =~ s/\/$//;
+	return $output;
+}
+
+sub source_env_per_service
+{
+	my $source_env_tag;
+	my($service_name,$service_type)=@_;
+	dump_log_message("debug", "pin_ctl: Sourcing envs for service_name:$service_name\n");
+	
+			#Need to souce the env variables before forking
+			
+			for $source_env_tag ( keys %{$service_name_env{'common'}{'common'}}) {
+				$ENV{$source_env_tag} = $service_name_env{'common'}{'common'}{$source_env_tag};
+				dump_log_message("debug", "\t$source_env_tag = $ENV{$source_env_tag}\n", 0);
+			}
+
+			for $source_env_tag ( keys %{$service_name_env{'common'}{$ENV{'OS'}}}) {
+				$ENV{$source_env_tag} = $service_name_env{'common'}{$ENV{'OS'}}{$source_env_tag};
+				dump_log_message("debug", "\t$source_env_tag = $ENV{$source_env_tag}\n", 0);
+			}
+                    
+                        #For making aliases to work properly
+			if( $service_name ne $service_type && $service_type ne "") {
+
+				for $source_env_tag ( keys %{$service_name_env{$service_type}{'common'}}) {
+					$ENV{$source_env_tag} = $service_name_env{$service_type}{'common'}{$source_env_tag};
+				dump_log_message("debug", "\t$source_env_tag = $ENV{$source_env_tag}\n", 0);
+				}
+
+				#for Specic service type and specific OS
+				for $source_env_tag ( keys %{$service_name_env{$service_type}{$ENV{'OS'}}}) {
+					$ENV{$source_env_tag} = $service_name_env{$service_type}{$ENV{'OS'}}{$source_env_tag};
+				dump_log_message("debug", "\t$source_env_tag = $ENV{$source_env_tag}\n", 0);
+				}
+			}
+
+			for $source_env_tag ( keys %{$service_name_env{$service_name}{'common'}}) {
+				$ENV{$source_env_tag} = $service_name_env{$service_name}{'common'}{$source_env_tag};
+				dump_log_message("debug", "\t$source_env_tag = $ENV{$source_env_tag}\n", 0);
+			}
+
+			for $source_env_tag ( keys %{$service_name_env{$service_name}{$ENV{'OS'}}}) {
+				$ENV{$source_env_tag} = $service_name_env{$service_name}{$ENV{'OS'}}{$source_env_tag};
+				dump_log_message("debug", "\t$source_env_tag = $ENV{$source_env_tag}\n", 0);
+			}
+
+}
+
+sub expand_env_in_path
+{
+        my $inp = $_[0];
+        my @arr1 = split('/', $inp);
+        my $output = "";
+        my $arg;
+        foreach $arg (@arr1) {
+		my $tmpop = "";
+                if ($arg =~ /\$/ ) {
+			if ($output eq "") {
+				$output = $ENV{substr($arg,1)};	
+			} else {
+			  	$tmpop = $ENV{substr($arg,1)};	
+                        	$output = $output.'/'.$tmpop;
+			}
+                } else {
+				if($arg ne "") {
+	               			$output = $output.'/'.$arg;
+				}
+		}
+        }
+        return $output;
+}
+sub find_process_with_pid {
+        my $stat_pid = $_[0];
+        my $PSEF="/usr/bin/ps -ef 2>&1 ";
+        open(PSEF_PIPE,"${PSEF}|") ;
+        while (<PSEF_PIPE>) {
+                chomp;
+                next unless m/^(\s*\w+\s+$stat_pid\s+)/;
+                next unless $_ !~ m/defunct/;
+		dump_log_message("debug", "There is process still running with pid $stat_pid\n", 0);
+                return 1;
+        }
+        return 0;
+}

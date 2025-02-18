@@ -1,0 +1,154 @@
+================================================================================
+SuspenseHandling
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.SuspenseHandling,v $
+$Revision: 1.0 $
+$Author: msung $
+$Date: 2003/10/27 16:11:09 $ 
+=============================================================================
+
+Actual Version : 7.3.1 / 12-Sep-2007
+
+Notes          : Modified RECYCLE_MODE mapping 
+---------------- 
+
+bug6359309     : SEL DOES NOT LOAD THE RECYCLED DATA INFORMATION INTO DB CORRECTLY 
+
+=============================================================================
+
+Actual Version : 7.3_Modular / 23-Mar-2007
+
+Notes          : Modified SUSPENDED_BATCH_ID mapping 
+---------------- 
+
+bug5943102     : SUSPENSE CHANGES FOR RA PROPAGATION
+
+=============================================================================
+
+Actual Version : 7.3 / 31-Mar-2006
+
+Notes          : Added UTC_OFFSET_SECONDS 
+---------------- 
+
+PRSF00200993   : SuspendedUsageCreation.dsc and SuspendedUsageCreationMapping.dsc 
+                 does not have an entry for PIPELINE_CATEGORY 
+
+=============================================================================
+
+Actual Version : 7.3 / 10-Jan-2006
+
+Notes          : Added PIPELINE_CATEGORY in description file and provided 
+---------------- mapping for the same
+
+PRSF00189682   : Batch suspense & pipeline category support in suspense pipeline plug-ins
+
+=============================================================================
+
+Actual Version : 6.7 FP2  / 01-December-2004
+
+Notes          :
+----------------
+
+PRSF000142552: SEL does not allow HEADER.CREATION_PROCESS to be set with a user defined value in SuspenseCreateOutput.
+
+================================================================================
+
+Actual Version : v6.7 FP2 / Date 11-Jun-2004
+----------------
+
+Notes          :
+----------------
+
+PRSF00116126 :  Added RECYCLE_KEY in SuspenseHandling update description file.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v6.7 FP2 / Date 28-May-2004
+----------------
+
+Notes          :
+----------------
+
+PRSF00109228 :  New field RECYCLE_KEY in containerDesc and SuspenseUsageCreate description file, dependency CO-104801
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+=============================================================================
+
+Actual Version : v6.7 FP2  / 25-May-2004
+
+Notes          :
+----------------
+
+PRSF000103037: Need to store original batch id as well as suspended (rerating) batch id in /suspended_usage object in
+Suspense Handling
+
+================================================================================
+
+Actual Version : v6.5 FP3 / Date 27-Oct-2003
+----------------
+
+Notes          : 
+----------------
+
+PRSF00074498 : [VF Greece] Ouput recycle mode to suspense update output during recycling process
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v6.5 FP3 / Date 20-Aug-2003
+----------------
+
+Notes          : 
+----------------
+
+PRSF00056410 : Initial version of output plugins format descriptions for suspense handling
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================

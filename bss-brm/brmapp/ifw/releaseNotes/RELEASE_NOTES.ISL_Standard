@@ -1,0 +1,296 @@
+================================================================================
+ISL_Samples
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.ISL_Standard $
+$Revision: /cgbubrm_main.pipeline/1 $
+$Author: ashisguk $
+$Date: 2011/04/15 17:28:08 $ 
+================================================================================
+Module Version : 7.5 10001
+----------------
+
+Date : 08-Apr-2011 
+----------------
+
+Change Order : bug11906420
+----------------
+
+Short Description :
+-------------------
+Adding a new data & iRule  IRL_EventTypeSplitting_tt.data and IRL_EventTypeSplitting_tt.irl 
+to check DETAIL.LOGICAL_PARTITION_ID for TimesTen specific installationsi. It routes streams 
+(output) based upon event type as well as TimesTen Partition #. 
+
+================================================================================
+Module Version : 7.4 10016
+----------------
+
+Date : 13-May-2009
+----------------
+
+Change Order : bug8492644
+----------------
+
+Short Description :
+-------------------
+Adding a new iScript ISC_SetSvcCodeRTZoning.isc to populate DETAIL.INTERN_SERVICE_CODE with 
+desired service code, when the same service type is mapped to different pipeline service code.
+================================================================================
+Module Version : 7.3.2 10015
+----------------
+
+Date : 15-Apr-2008
+----------------
+
+Change Order : bug6774455 
+----------------
+
+Short Description :
+-------------------
+Adding a new iscript ISC_ProfileLabel.isc to populate DETAIL.PROFILE_LABEL_LIST
+================================================================================
+Module Version : 7.3 10014
+----------------
+
+Date : 22-Jun-2006
+----------------
+
+Change Order : PRSF00220266 
+----------------
+
+Short Description :
+-------------------
+Adding support for /service/telco/gprs in ISC_BACKOUTTypeSplitting.isc and
+IRL_EventTypeSplitting.data
+================================================================================
+Module Version : 7.2 10013
+----------------
+
+Date : 16-Jun-2005
+----------------
+
+Change Order :  PRSF00172841
+----------------
+
+Short Description :
+-------------------
+The iScript compareABCustEraPaValues in ISC_UsageTypeFunctions.isc compares only
+the 1st item in ERA.PA array.
+================================================================================
+Module Version : 6.7 FP2 10012
+----------------
+
+Date : 20-Aug-2004
+----------------
+
+Change Order :  PRSF00127295
+----------------
+
+Short Description :
+-------------------
+TwinTalk if we have only one 2ndry acct(1:00 AM-11:00 AM),EDR's at 2:30PM not getting processed
+==================================================
+Module Version : 6.7 FP2 10011
+----------------
+Date : 17-Aug-2004
+----------------
+Change Order :  PRSF00126151
+----------------
+Short Description :
+-------------------
+PCR3:CR046 Promotional Saving not calculated if IRL_PromotionalSavingPerEDR.irl 
+           is set TRUE in wireless.reg
+================================================================================
+Module Version : 6.7 FP2 10010
+----------------
+
+Date : 12-Aug-2004
+----------------
+
+Change Order :  PRSF00125615
+----------------
+
+Short Description :
+-------------------
+TwinTalk Accts EDR's B_Number, in out file is having ## signs
+==================================================
+Module Version : 6.7 FP2 10009
+----------------
+Date : 06-Aug-2004
+----------------
+Change Order :  PRSF00123232
+----------------
+Short Description :
+-------------------
+Added a new iRule to check the Customer segment & product attributes to turn 
+CUST_A.PROMOTIONAL_SAVING ON/OFF. Files are IRL_PromotionalSavingPerEDR.data, 
+IRL_PromotionalSavingPerEDR.irl & ISC_PromotionalSavingPerEDR.isc.
+================================================================================
+
+Module Version : 6.7 FP2 10008
+----------------
+
+Date : 28-Jul-2004
+----------------
+
+Change Order :  PRSF00123541
+----------------
+
+Short Description :
+-------------------
+PCR3: UsageType iScripts gives core dump while processing the edr.
+=====================================================
+
+Module Version : 6.7 FP2 10007
+----------------
+
+Date : 15-Jul-2004
+----------------
+
+Change Order :  PRSF00117453
+----------------
+
+Short Description :
+-------------------
+Updated UsageType files to set USAGE_TYPE based on market segment
+for the release of Product catalouge V-PAC R3.
+=====================================================
+Module Version : Apollo 10006
+----------------
+
+Date : 5-Jul-2004
+----------------
+
+Change Order :  PRSF00112899
+----------------
+
+Short Description :
+-------------------
+This iScript will determine the least cost ACB
+=====================================================
+
+Module Version : Apollo 10005
+----------------
+
+Date : 30-JUN-2004
+----------------
+
+Change Order :  PRSF00114315
+----------------
+
+Short Description :
+-------------------
+Adding ISC_BACKOUTTypeSplitting.isc for setting the output stream in backout pipeline
+================================================================================
+Module Version : Apollo 10004
+----------------
+Date : 17-JUN-2004
+----------------
+Change Order :  PRSF00117014
+----------------
+Short Description :
+-------------------
+Added a new iRule to check the Customer segment & priority and then set the 
+CUST_A.LEAST_COST edr field. Files are IRL_LeastCostPerEDR.data, 
+IRL_LeastCostPerEDR.irl & ISC_LeastCostPerEDR.isc.
+================================================================================
+Module Version : Apollo 10003
+----------------
+
+Date : 09-JUN-2004
+----------------
+
+Change Order :  PRSF00115637
+----------------
+
+Short Description :
+-------------------
+Build Spec Change:Twin Talk Enabler
+================================================================================
+
+Module Version : Apollo 10002
+----------------
+
+Date : 15-JAN-2004
+----------------
+
+Change Order :  PRSF00082691
+----------------
+
+Short Description :
+-------------------
+Provide a i-script library with functions generally required to determine the usage type
+================================================================================
+
+Module Version : Apollo 10001 
+----------------
+
+Date : 13-Aug-2003
+----------------
+
+Change Order :  PRSF00055249
+----------------
+
+Short Description :
+-------------------
+  Move the invoice Iscript to the ISL_Samples Directory
+================================================================================
+
+Module Version : 6.5 SP1  
+----------------
+
+Date : 14-Mar-2003
+----------------
+
+Change Order :  PRSF00030766
+----------------
+
+Short Description :
+-------------------
+  Added the I-script to update the Invoice String
+================================================================================
+ 
+Actual Version : v4-30-07 / Date : 04-Jan-2002
+----------------
+ 
+Notes          :
+----------------
+
+PETS #42574 Added Scripts ISC_LERG.isc and ISC_LERGDistance.isc for flexible
+            LERG data mapping.
+
+================================================================================
+ 
+Actual Version : v4-30-03 / Date : 17-Jul-2001
+----------------
+ 
+Notes          :
+----------------
+
+PETS #36647 ISC_AddInfranetBillingRecord.isc. Added support for delivery of 
+            Product Poid 
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 09-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36654 Splitting of output-streams per Event-Type.
+            Added new IRules for EventTypeSplitting.
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 30-Mai-2001
+----------------
+
+Notes          :
+----------------
+
+New module for standard iScript modules added.
+
+================================================================================

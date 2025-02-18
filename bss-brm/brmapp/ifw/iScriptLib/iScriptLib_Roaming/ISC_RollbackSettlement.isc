@@ -1,0 +1,59 @@
+//==============================================================================
+//  @(#)% %
+//      Copyright (c) 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//------------------------------------------------------------------------------
+// Block: ISC_RollbackSettlement.isc
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module decides whether there is any error in edr.In case of error it will
+//   call demandRollback on TAM so that FCT_BatchSuspense suspends the whole file.
+//
+//------------------------------------------------------------------------------
+// Responsible: Archan Misra
+//
+//------------------------------------------------------------------------------
+String Msg;
+Long i;
+//==============================================================================
+//
+// This function will check whether any error is there or not.If some error is there 
+// it will demand rollback.
+//============================================================================
+function callRollback
+{
+  for ( i = 0; i < edrNumErrors(); i = i+1 )
+  {
+    Msg = "ERROR " + longToStr(i) + ": " + edrGetError(i) + "\n";
+    logPipeline( Msg,1);
+
+    // call demandRollback only if the error severity is more than warning
+
+    if(edrGetErrorSeverity(i) > 1) 
+    {
+      if ( edrDemandRollback(edrGetError(i)) == false )
+      {
+        logPipeline("ERROR: failed to demand rollback \n",4);
+      }
+      else
+      {
+        i = edrNumErrors();
+      }
+    }
+  }
+}
+//==============================================================================
+// Detail Container
+//==============================================================================
+function onInvalidDetailEdr
+{
+  callRollback(); 
+} // end onInvalidDetailEdr 
+
+function onDetailEdr
+{
+  callRollback(); 
+} // end onDetailEdr + end iScript

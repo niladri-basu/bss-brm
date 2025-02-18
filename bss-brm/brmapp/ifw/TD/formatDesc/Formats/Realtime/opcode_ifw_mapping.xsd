@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="EdrBlock">
+		<xs:complexType>
+			<xs:attribute name="name" use="required"/>
+			<xs:attribute name="use" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="lazyCreate"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PropagateBlock">
+		<xs:complexType>
+			<xs:attribute name="name" use="required"/>
+			<xs:attribute name="use" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="optional"/>
+						<xs:enumeration value="required"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="EdrField">
+		<xs:complexType>
+			<xs:attribute name="name" use="required"/>
+			<xs:attribute name="value" use="optional"/>
+			<xs:attribute name="useAlias" use="optional"/>
+			<xs:attribute name="useArrayIndex" use="optional"/>
+			<xs:attribute name="concat" type="xs:string" use="optional"/>
+			<xs:attribute name="format" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="short"/>
+						<xs:enumeration value="long"/>
+						<xs:enumeration value="id"/>
+						<xs:enumeration value="type"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FlistField">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="EdrBlock"/>
+				<xs:element ref="PropagateBlock"/>
+				<xs:element ref="EdrField"/>
+				<xs:element ref="FlistField"/>
+			</xs:choice>
+			<xs:attribute name="name" use="required"/>
+			<xs:attribute name="use" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="optional"/>
+						<xs:enumeration value="required"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="format" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="short"/>
+						<xs:enumeration value="long"/>
+						<xs:enumeration value="id"/>
+						<xs:enumeration value="type"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="applyUTCOffset" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="true"/>
+						<xs:enumeration value="false"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="target"/>
+			<xs:attribute name="alias" type="xs:string"/>
+			<xs:attribute name="onAlias" type="xs:string"/>
+			<xs:attribute name="onAliasValue" type="xs:string"/>
+			<xs:attribute name="concat" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InputMap">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="EdrBlock"/>
+				<xs:element ref="PropagateBlock"/>
+				<xs:element ref="EdrField"/>
+				<xs:element ref="FlistField"/>
+			</xs:choice>
+			<xs:attribute name="containerType" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="OutputMap"/>
+	<xs:element name="OpcodeMap">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="1">
+				<xs:element ref="InputMap"/>
+				<xs:element ref="OutputMap"/>
+			</xs:choice>
+			<xs:attribute name="opName" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

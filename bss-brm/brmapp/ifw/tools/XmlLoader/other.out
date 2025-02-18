@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IFW xsi:noNamespaceSchemaLocation="LoadIfwConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<RecordSet>
+<IFW_SERVICE BASIC ="1" DEF_GLACCOUNT ="1600" NAME ="Data" PIN_SERVICETYPE ="/service/telco/gsm/data" RANK ="1" RUMGROUP ="DURATION" SERVICECODE ="DAT" TOS ="B" />
+</RecordSet>
+<RecordSet>
+<IFW_SERVICE_MAP EXT_SERVICECODE ="DAT.*" INT_SERVICECLASS ="DEF" INT_SERVICECODE ="DAT" LOCARIND_VASEVENT =".*" MAP_GROUP ="ALL_RATE" NAME ="DATA Identification out of CDR" QOS_REQUESTED =".*" QOS_USED =".*" RANK ="104" RECORDTYPE =".*" USAGECLASS =".*" />
+</RecordSet>
+<RecordSet>
+<IFW_REF_MAP ID ="CustomerData" REF_OBJ ="/service/telco/gsm" REF_PARAM ="/event/delayed/session/telco/gsm/vap" />
+</RecordSet>
+<RecordSet>
+<IFW_ALIAS_MAP EDRC_DESC ="ALL_RATE" FIELD_ID ="20032" KEY_ID ="VAP" REFERENCE ="UniData_CustA" TYPE ="I" />
+</RecordSet>
+<RecordSet>
+<IFW_SERVICECLASS NAME ="Service Class for DAT" SERVICECLASS ="DEF" SERVICECODE ="DAT" />
+</RecordSet>
+</IFW>

@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+#  @(#) %full_filespec: stop_dm.sh~1:shsrc:1 %
+#
+# Copyright (c) 1994 - 2006 Oracle. All rights reserved.This material is the confidential property of Oracle Corporation
+# or its licensors and may be used,reproduced, stored or transmitted only in accordance with a valid Oracle license or sublicense
+# agreement.
+#
+# stop_dm_aq
+#
+# run this BEFORE stopping the underlying database (if any)
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+DM=dm_aq
+
+LOGDIR=/brmapp/portal/7.5/var/dm_aq
+DMPID=${LOGDIR}/dm_aq.pid
+
+me=$0
+
+if [ ! -f ${DMPID} ]; then
+	echo "${me}: ERROR: no pid file: ${DMPID}, cannot kill \"${DM}\""
+        exit 1
+fi       
+
+kill `cat ${DMPID}`
+rc=$?
+if [ ${rc} -ne 0 ]; then
+	echo "${me}: ERROR: kill ${DM} `cat ${DMPID}` FAILED"
+	exit ${rc}
+else
+	rm ${DMPID}
+fi
+
+exit 0

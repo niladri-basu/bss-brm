@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Opcode component="fm_subscription"
+        name="PCM_OP_SUBSCRIPTION_SHARING_GROUP_CREATE" transaction="required"
+        visibility="public"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd">
+  <Doc>PCM_OP_SUBSCRIPTION_SHARING_GROUP_CREATE input and output flist
+       specifications. This opcode creates either a discount sharing group, a
+       charge sharing group, a profile sharing group, or a monitor sharing group.</Doc>
+  <!-- INPUT SPEC  -->
+  <Input>
+    <Fields>
+      <Poid mode="complete" name="PIN_FLD_POID" use="required">
+        <Doc>The account owner of the sharing group object to be created.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Poid mode="complete" name="PIN_FLD_GROUP_OBJ" use="required">
+        <Doc>Type only poid object. Type is either /group/sharing/discounts,
+             /group/sharing/charges (new-style sponsorship),
+             /group/sharing/monitor or /group/sharing/profiles object.</Doc>
+        <ClassRef>obj://group</ClassRef>
+      </Poid>
+      <String maxlen="255" name="PIN_FLD_NAME" use="required">
+        <Doc>Name of the sharing group.The name of the resource sharing group
+	     must be unique and cannot be used for another resource sharing
+	     group owned by the group owner.</Doc>
+      </String>
+      <String maxlen="255" name="PIN_FLD_PROGRAM_NAME" use="optional">
+        <Doc>Program name for the event.</Doc>
+      </String>
+      <String maxlen="255" name="PIN_FLD_DESCR" use="optional">
+        <Doc>Description text to be recorded in /event</Doc>
+      </String>
+      <Poid mode="complete" name="PIN_FLD_BAL_GRP_OBJ" use="optional">
+        <Doc>Balance group object poid. This is the balance group that is to be
+             shared with the members and should match the balance group of the
+             PIN_FLD_PARENT (either service or account obj). If not passed, the
+             default is the PIN_FLD_PARENT's balance group. For a monitor group
+             (/group/sharing/monitor) however, this field points to the monitor
+             (/balance_group/monitor) object. This field is mandatory for
+             creation of a monitor group.</Doc>
+        <ClassRef>obj://balance_group</ClassRef>
+      </Poid>
+      <Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+        <Doc>Effective time - Used by rating engine in the audit table (Portal
+             Time)</Doc>
+      </Timestamp>
+      <Poid mode="complete" name="PIN_FLD_PARENT" use="optional">
+        <Doc>Parent object to be set in the group. It is either the account or
+             service object for which the group sharing object is created. If
+             not passed, it defaults to the service/account object in the input
+             flist.</Doc>
+        <ClassRef>obj://account</ClassRef>
+        <ClassRef>obj://service</ClassRef>
+      </Poid>
+      <Poid mode="complete" name="PIN_FLD_SERVICE_OBJ" use="optional">
+        <Doc>Service instance object. This is optional and if passed, the parent
+             of the group object is set to the Service object.</Doc>
+        <ClassRef>obj://service</ClassRef>
+      </Poid>
+      <Array elemIdMode="ignored" iterationOrder="undefined"
+             name="PIN_FLD_MEMBERS" use="optional">
+        <Doc>Member details array (list of member account/service instance). If
+             no member is passed, members list will be empty.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_ACCOUNT_OBJ" use="required">
+            <Doc>Member account object.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Poid mode="complete" name="PIN_FLD_SERVICE_OBJ" use="optional">
+            <Doc>Member service object. If the service object is NULL, it means
+                 the member is an account. If it is a type-only service, then
+                 all same-types qualify. Duplication/Qualifying entries are
+                 ignored. Error is thrown if the member currency is not the same
+                 as the parents currency or if the member has a cyclic relation
+                 with the parent (Performs only one-level cyclic check).</Doc>
+            <ClassRef>obj://service</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+      <Array elemIdMode="ignored" iterationOrder="undefined"
+             name="PIN_FLD_DISCOUNTS" use="optional">
+        <Doc>List of discount instances (only if the GROUP_OBJ poid-type is
+             /group/sharing/discounts). If no discounts array element is passed,
+             one discounts array entry will be added with NULL discount-object
+             and offering_obj (Discount instance poid). This entry indicates
+             that all the owner's (parent of group object) discount instances
+             are shared. Duplicate entries are ignored.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_DISCOUNT_OBJ" use="required">
+            <Doc>Discount object reference.</Doc>
+            <ClassRef>obj://discount</ClassRef>
+          </Poid>
+          <Poid mode="complete" name="PIN_FLD_OFFERING_OBJ" use="required">
+            <Doc>Uniquely identifies a discount in an account.</Doc>
+            <ClassRef>obj://purchased_discount</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+      <Array elemIdMode="ignored" iterationOrder="undefined"
+             name="PIN_FLD_SPONSORS" use="optional">
+        <Doc>list of sponsor objects (only if the GROUP_OBJ poid-type is
+             /group/sharing/charges). This object is similar to the pricing
+             discount object. Refer to the object specs for this pricing object.
+             If no sponsor object is passed, sponsors list will be empty.
+             Duplicate entries are ignored.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_SPONSOR_OBJ" use="required">
+            <Doc>Sponsor object reference.</Doc>
+            <ClassRef>obj://sponsorship</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+      <Array elemIdMode="ignored" iterationOrder="undefined"
+             name="PIN_FLD_PROFILES" use="optional">
+        <Doc>Profile object list (only if GROUP_OBJ input poid-type is
+             /group/sharing/profiles). Refer to the object specs for this
+             pricing object. If no profile object is passed, profiles list will
+             be empty. Duplicate entries are ignored.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_PROFILE_OBJ" use="required">
+            <Doc>Profile object reference.</Doc>
+            <ClassRef>obj://profile</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+    </Fields>
+  </Input>
+  <!-- OUTPUT SPEC  -->
+  <Output>
+    <Fields>
+      <Poid mode="complete" name="PIN_FLD_POID" use="required">
+        <Doc>Poid of the group sharing object created.</Doc>
+        <ClassRef>obj://group</ClassRef>
+      </Poid>
+      <Array elemIdMode="ignored" iterationOrder="undefined"
+             name="PIN_FLD_RESULTS" use="optional">
+        <Doc>Array of results information.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_POID" use="required">
+            <Doc>Poid of the event object created</Doc>
+            <ClassRef>obj://event</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+    </Fields>
+  </Output>
+</Opcode>

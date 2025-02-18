@@ -1,0 +1,74 @@
+========================================================================================
+DAT_Recycle
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Module Version: 10018  7.5  28-Jul-2011   Sumeet
+11815646 - P-10434779 PHASE II CHANGES FOR PIPELINE PARALLEL LOADING ECR
+================================================================================
+Module Version: 10017  7.5  20-Jul-2011   Santanu
+BUG 12772188 - PROBLEM IN CREATING NEW FILE FOR RECYCLE PLUGIN 
+================================================================================
+Module Version: 10016  7.4  11-Nov-2010   Chetan
+BUG 10077369 - ECR: PARALLEL LOADING IN THE PIPELINE ENGINE
+===============================================================================
+Revision 10015 7.4.0 03-Jul-2009 awani
+bug8651998     : DOCUMENTATION BUG IN DAT_RECYCLE MODULES SAMPLE REGISTRY
+===============================================================================
+Revision 10014 7.4.0 16-Apr-2009 awani
+bug8363882     : MANDATORY REGISTRY ENTRY DURING STATUP IS NOT VERIFIED
+===============================================================================
+Revision 10013 7.3_Patch 20-Dec-2006 ashishk 
+PRSF00240534 - 7.2.1 -> 7.3(Unix/Ora) Upgrade : Unable to recycle the EDRs in 7.3 
+               which were initially suspended in 7.2.1 
+===============================================================================
+Revision 10012 7.3 30-Aug-2006 ashishk
+PRSF00231052 - ifw dumps core in DAT::Recycle::RecycleQueue::~RecycleQueue if 
+               a directory specified for the ControlPath registry entry
+===============================================================================
+Revision 10011 7.3 14-Feb-2006 pkashyap
+PRSF00191168 - rename() function should be modified to handle the call in Win-IA
+===============================================================================
+Revision 10010 7.3 27-Jan-2006 dbhatt
+PRSF00189682 - :  Batch suspense & pipeline category support in suspense pipeline plug-ins
+=========================================================================================
+Revision 10009 7.3 20-Jan-2006 ashishk
+PRSF00188403   : Problem in Processing the suspended CDR's in 6.5 after upgrading to 7.0 
+=========================================================================================
+Revision 10008 7.2 08-July-2005 pmahishi
+PRSF00175566 - :  Batch Pipeline Will Not Shutdown Gracefully
+===============================================================================
+Revision 10007 7.2 22-June-2005 pmahishi
+PRSF00172670 - :  Runaway process /ifw/conf/wireless.reg.
+==============================================================================================
+Revision 10006 7.2 08-June-2005 pmahishi
+PRSF00171627 - :  Failing while unloading the data plugin DAT_Recycle during the ifw shutdown.
+==============================================================================================
+Revision       7.2 08-June-2005 pmahishi
+PRSF00171203 - : ./data/RecycleJobIds_wireless.dat : Bad file number 
+============================================================================================================
+Revision 10005 7.0 17-May-2005 pmahishi
+PRSF00162976 - :  Need way of processing RecycleRequest ifw_sync events without awaiting PreRecycle pipeline
+============================================================================================================
+Revision 10004 6.7_FP2 25-Oct-2004 dkapila 
+PRSF00137367 - regression: ERR_LISTENER_NOT_FOUND: fw.DataPool.Listener (ia64 only). 
+==============================================================================
+Revision 10003 6.7_FP2 13-Oct-2004 smvenkat
+PRSF00132870 - Potential synchronization problem in DAT_Recycle
+===============================================================================
+Module Version: 10002  6.7_FP2  28-Apr-2004
+PRSF00107376: NT Build Problem: Modify build spec
+
+==============================================================================
+Revision 10001 6.7_FP1 2003/11/19 rjadav
+PRSF00078930 - Changed prototype of receiveEvent() function
+===============================================================================
+
+Actual Version : 10000 6.5_FP3 / Date: 31-Oct-2003
+----------------
+
+PRSF00075949: [VF Greece] new DAT::Recycle plugin for suspense handling
+              and related change
+
+===============================================================================
+

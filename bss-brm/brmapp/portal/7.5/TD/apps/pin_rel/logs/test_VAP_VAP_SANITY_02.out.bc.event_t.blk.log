@@ -1,0 +1,183 @@
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Tue Apr 14 20:14:11 2015
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_VAP_VAP_SANITY_02.out.bc.event_t.ctl
+Character Set UTF8 specified for all input.
+
+Data File:      /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_VAP_VAP_SANITY_02.out.bc.event_t.blk
+  Bad File:     /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_VAP_VAP_SANITY_02.out.bc.event_t.blk.bad
+  Discard File: /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_VAP_VAP_SANITY_02.out.bc.event_t.blk.discard 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Continuation:    none specified
+Path used:      Direct
+
+Load is UNRECOVERABLE; invalidation redo is produced.
+
+Table EVENT_T, partition P_D_05012015, loaded from every logical record.
+Insert option in effect for this partition: APPEND
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+RECORD_TYPE                         FIRST     *  WHT      CHARACTER            
+  (FILLER FIELD)
+RECORD_NUMBER                        NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+EVENT_NO                             NEXT     *  WHT      CHARACTER            
+BATCH_ID                             NEXT     *  WHT      CHARACTER            
+ORIGINAL_BATCH_ID                    NEXT     *  WHT      CHARACTER            
+CHAIN_REFERENCE                      NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+SOURCE_NETWORK                       NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+DESTINATION_NETWORK                  NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+A_NUMBER                             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+B_MODIFICATION_INDICATOR             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+B_NUMBER                             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+DESCR                                NEXT     *  WHT      CHARACTER            
+USAGE_DIRECTION                      NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CONNECT_TYPE                         NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CONNECT_SUB_TYPE                     NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+BASIC_SERVICE                        NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+QOS_REQUESTED                        NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+QOS_USED                             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CALL_COMPLETION_INDICATOR            NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+LONG_DURATION_INDICATOR              NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+TIMEZONE_ID                          NEXT     *  WHT      CHARACTER            
+VOLUME_SENT                          NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+VOLUME_RECEIVED                      NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+NUMBER_OF_UNITS                      NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+USAGE_CLASS                          NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+USAGE_TYPE                           NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+PREPAID_INDICATOR                    NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+INTERN_PROCESS_STATUS                NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+START_T                              NEXT     *  WHT      CHARACTER            
+END_T                                NEXT     *  WHT      CHARACTER            
+NET_QUANTITY                         NEXT     *  WHT      CHARACTER            
+POID_ID0                             NEXT     *  WHT      CHARACTER            
+RECORD_TYPE2                         NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+RECORD_NUMBER2                       NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+ACCOUNT_OBJ_DB                       NEXT     *  WHT      CHARACTER            
+ACCOUNT_OBJ_TYPE                     NEXT     *  WHT      CHARACTER            
+ACCOUNT_OBJ_ID0                      NEXT     *  WHT      CHARACTER            
+ACCOUNT_OBJ_REV                      NEXT     *  WHT      CHARACTER            
+SERVICE_OBJ_DB                       NEXT     *  WHT      CHARACTER            
+SERVICE_OBJ_TYPE                     NEXT     *  WHT      CHARACTER            
+SERVICE_OBJ_ID0                      NEXT     *  WHT      CHARACTER            
+SERVICE_OBJ_REV                      NEXT     *  WHT      CHARACTER            
+ITEM_OBJ_DB                          NEXT     *  WHT      CHARACTER            
+ITEM_OBJ_TYPE                        NEXT     *  WHT      CHARACTER            
+ITEM_OBJ_ID0                         NEXT     *  WHT      CHARACTER            
+ITEM_OBJ_REV                         NEXT     *  WHT      CHARACTER            
+RERATE_OBJ_DB                        NEXT     *  WHT      CHARACTER            
+RERATE_OBJ_TYPE                      NEXT     *  WHT      CHARACTER            
+RERATE_OBJ_ID0                       NEXT     *  WHT      CHARACTER            
+RERATE_OBJ_REV                       NEXT     *  WHT      CHARACTER            
+TAX_LOCALES                          NEXT  1024  WHT      CHARACTER            
+RUM_NAME                             NEXT     *  WHT      CHARACTER            
+NUMBER_OF_BALANCE_PACKETS            NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+INVOICE_DATA                         NEXT  4000  WHT      CHARACTER            
+POID_REV                                                  CONSTANT
+    Value is '0'
+READ_ACCESS                                               CONSTANT
+    Value is 'L'
+WRITE_ACCESS                                              CONSTANT
+    Value is 'L'
+NAME                                                      CONSTANT
+    Value is 'Pre-rated Event'
+EARNED_START_T                                            CONSTANT
+    Value is '0'
+EARNED_END_T                                              CONSTANT
+    Value is '0'
+EARNED_TYPE                                               CONSTANT
+    Value is '0'
+ARCHIVE_STATUS                                            CONSTANT
+    Value is '0'
+EFFECTIVE_T                                               CONSTANT
+    Value is '0'
+PROGRAM_NAME                                              CONSTANT
+    Value is 'IREL'
+CREATED_T                                                 CONSTANT
+    Value is '1428999250'
+MOD_T                                                     CONSTANT
+    Value is '1428999250'
+POID_DB                                                   CONSTANT
+    Value is '1'
+POID_TYPE                                                 CONSTANT
+    Value is '/event/delayed/session/telco/gsm/valuepack'
+SYS_DESCR                                                 CONSTANT
+    Value is '/event/delayed/session/telco/gsm/valuepack'
+SESSION_OBJ_DB                                            CONSTANT
+    Value is '1'
+SESSION_OBJ_TYPE                                          CONSTANT
+    Value is '/batch/rel'
+SESSION_OBJ_ID0                                           CONSTANT
+    Value is '290957164989291301'
+SESSION_OBJ_REV                                           CONSTANT
+    Value is '0'
+USERID_DB                                                 CONSTANT
+    Value is '1'
+USERID_TYPE                                               CONSTANT
+    Value is '/service/admin_client'
+USERID_ID0                                                CONSTANT
+    Value is '2'
+USERID_REV                                                CONSTANT
+    Value is '5'
+
+The following index(es) on table EVENT_T were processed:
+index PIN.I_EVENT_ITEM_OBJ__ID partition P_D_05012015 loaded successfully with 1 keys
+index PIN.I_EVENT__ACCTOBJ_END_T partition P_D_05012015 loaded successfully with 1 keys
+index PIN.I_EVENT__ID partition P_D_05012015 loaded successfully with 1 keys
+index PIN.I_EVENT__SERVOBJ_END_T partition P_D_05012015 loaded successfully with 1 keys
+
+Table EVENT_T, partition P_D_05012015:
+  1 Row successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+Bind array size not used in direct path.
+Column array  rows :    5000
+Stream buffer bytes: 5000000
+Read   buffer bytes:10000000
+
+Total logical records skipped:          0
+Total logical records read:             1
+Total logical records rejected:         0
+Total logical records discarded:        0
+Total stream buffers loaded by SQL*Loader main thread:        1
+Total stream buffers loaded by SQL*Loader load thread:        0
+
+Run began on Tue Apr 14 20:14:11 2015
+Run ended on Tue Apr 14 20:14:11 2015
+
+Elapsed time was:     00:00:00.41
+CPU time was:         00:00:00.03

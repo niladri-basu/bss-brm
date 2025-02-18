@@ -1,0 +1,28 @@
+
+// Source File Name:   SampleWebService.java
+//Sample file to create a custom  WebService: it implements two webService API - customOpReadActProduct and customOpActInfo
+
+package com.custom.webservices;
+
+import com.portal.webservices.OpcodeCaller;
+import org.apache.axiom.om.OMElement;
+
+public class SampleWebService
+{
+
+    public SampleWebService()
+    {
+    }
+
+    public OMElement customOpReadActProduct(OMElement CUSTOM_OP_READ_ACT_PRODUCT_request)
+    {
+        OpcodeCaller oc = new OpcodeCaller();
+        return oc.exec_opcode("CUSTOM_OP_READ_ACT_PRODUCT", CUSTOM_OP_READ_ACT_PRODUCT_request, "CUSTOM_OP_READ_ACT_PRODUCT.xsd");
+    }
+
+    public OMElement customOpActInfo(OMElement CUSTOM_OP_ACT_INFO_request)
+    {
+        OpcodeCaller oc = new OpcodeCaller();
+        return oc.exec_opcode("CUSTOM_OP_ACT_INFO", CUSTOM_OP_ACT_INFO_request, "CUSTOM_OP_ACT_INFO.xsd");
+    }
+}

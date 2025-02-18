@@ -1,0 +1,33 @@
+<Opcode name="PCM_OP_CUST_DELETE_ACCT" visibility="public"
+        transaction="required" component="fm_cust"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>
+    The opcode PCM_OP_CUST_DELETE_ACCT deletes the specified account and all the
+    objects related to this account.
+    <h:br/>
+    CAUTION: Do not delete accounts on a production system.
+    <h:br/>
+  </Doc>
+  <Input>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required" mode="complete">
+        <Doc>Poid of the account to be deleted.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+    </Fields>
+  </Input>
+  <Output>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required" mode="complete">
+        <Doc>Poid of the deleted account.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+    </Fields>
+  </Output>
+</Opcode>
+
+
+

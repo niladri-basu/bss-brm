@@ -1,0 +1,294 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved.
+
+        This material is the confidential property of Oracle Corporation or
+        its licensors and may be used, reproduced, stored or transmitted only
+        in accordance with a valid Oracle license or sublicense agreement.-->
+   <xsd:element name="PCM_OP_BAL_GET_BALANCES_inputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="BALANCES" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="BALANCES_ARRAY_PCM_OP_BAL_GET_BALANCES_12110">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="BAL_INFO" minOccurs="0" maxOccurs="1">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="BAL_INFO_ARRAY_PCM_OP_BAL_GET_BALANCES_12111">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="EVENT" type="EVENT_SUBSTRUCT_PCM_OP_BAL_GET_BALANCES_1217" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="EVENT_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(event)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="READ_BALGRP_MODE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="BALANCES_ARRAY_PCM_OP_BAL_GET_BALANCES_12110">
+      <xsd:sequence>
+         <xsd:element name="CREDIT_FLOOR" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_LIMIT" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_THRESHOLDS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CURRENT_BAL" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="FILTER_LIST" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="FILTER_LIST_ARRAY_PCM_OP_BAL_GET_BALANCES_1211028">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="NEXT_BAL" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RESERVED_AMOUNT" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="THRESHOLDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="THRESHOLDS_ARRAY_PCM_OP_BAL_GET_BALANCES_1211024">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="THRESHOLDS_ARRAY_PCM_OP_BAL_GET_BALANCES_1211024">
+      <xsd:sequence>
+         <xsd:element name="THRESHOLD" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="FILTER_LIST_ARRAY_PCM_OP_BAL_GET_BALANCES_1211028">
+      <xsd:sequence>
+         <xsd:element name="CONTRIBUTOR_STR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="GRANTOR_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_INFO_ARRAY_PCM_OP_BAL_GET_BALANCES_12111">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="EVENT_SUBSTRUCT_PCM_OP_BAL_GET_BALANCES_1217">
+      <xsd:sequence>
+         <xsd:element name="POID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(event)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_BAL_GET_BALANCES_outputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="ACCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="BALANCES" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="BALANCES_ARRAY_PCM_OP_BAL_GET_BALANCES_1316">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="BILLINFO_OBJ" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="EFFECTIVE_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="REALTIME_CNTR" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="BALANCES_ARRAY_PCM_OP_BAL_GET_BALANCES_1316">
+      <xsd:sequence>
+         <xsd:element name="CONSUMPTION_RULE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+                  <xsd:enumeration value="4"/>
+                  <xsd:enumeration value="5"/>
+                  <xsd:enumeration value="6"/>
+                  <xsd:enumeration value="7"/>
+                  <xsd:enumeration value="8"/>
+                  <xsd:enumeration value="9"/>
+                  <xsd:enumeration value="10"/>
+                  <xsd:enumeration value="11"/>
+                  <xsd:enumeration value="12"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CREDIT_FLOOR" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_LIMIT" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_THRESHOLDS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_THRESHOLDS_FIXED" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CURRENT_BAL" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="NEXT_BAL" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RESERVED_AMOUNT" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="SUB_BALANCES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SUB_BALANCES_ARRAY_PCM_OP_BAL_GET_BALANCES_1316210">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="THRESHOLDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="THRESHOLDS_ARRAY_PCM_OP_BAL_GET_BALANCES_131625">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="THRESHOLDS_ARRAY_PCM_OP_BAL_GET_BALANCES_131625">
+      <xsd:sequence>
+         <xsd:element name="THRESHOLD" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SUB_BALANCES_ARRAY_PCM_OP_BAL_GET_BALANCES_1316210">
+      <xsd:sequence>
+         <xsd:element name="CONTRIBUTOR_STR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CURRENT_BAL" type="UNION_PCM_OP_BAL_GET_BALANCES" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ROLLOVER_DATA" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="VALID_FROM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="VALID_FROM_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="VALID_TO" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="VALID_TO_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BUFFER_PCM_OP_BAL_GET_BALANCES">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:hexBinary">
+            <xsd:attribute name="flags" type="xsd:string" use="optional"/>
+            <xsd:attribute name="size" type="xsd:string" use="optional"/>
+            <xsd:attribute name="offset" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:simpleType name="EMPTY_PCM_OP_BAL_GET_BALANCES">
+      <xsd:restriction base="xsd:string">
+         <xsd:length value="0"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="UNION_PCM_OP_BAL_GET_BALANCES">
+      <xsd:union memberTypes="xsd:decimal EMPTY_PCM_OP_BAL_GET_BALANCES"/>
+   </xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,611 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved.
+
+        This material is the confidential property of Oracle Corporation or
+        its licensors and may be used, reproduced, stored or transmitted only
+        in accordance with a valid Oracle license or sublicense agreement.-->
+   <xsd:element name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_inputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="AMOUNT" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="AMOUNT_ORIG" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="255"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="ITEM_NO" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="60"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PROGRAM_NAME" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="60"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="RESOURCE_ID_ORIG" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="STRING_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="STR_VERSION" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="SUB_BALANCES" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="SUB_BALANCES_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_12115">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="SUB_BALANCES_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_12115">
+      <xsd:sequence>
+         <xsd:element name="VALID_FROM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="VALID_TO" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_AR_ACCOUNT_ADJUSTMENT_outputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="255"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="EXTENDED_INFO" type="EXTENDED_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1316" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="ON_DEMAND_INFO" type="ON_DEMAND_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1314" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="RESULT" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:enumeration value="0"/>
+                     <xsd:enumeration value="1"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="RESULTS" minOccurs="1" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="RESULTS_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1315">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ROLLOVER_INFO" type="ROLLOVER_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1317" minOccurs="0" maxOccurs="1"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="RESULTS_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1315">
+      <xsd:sequence>
+         <xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_IMPACTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_IMPACTS_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131522">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CYCLE_INFO" type="CYCLE_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1315210" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(event)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATING_STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="10"/>
+                  <xsd:enumeration value="11"/>
+                  <xsd:enumeration value="12"/>
+                  <xsd:enumeration value="13"/>
+                  <xsd:enumeration value="14"/>
+                  <xsd:enumeration value="15"/>
+                  <xsd:enumeration value="16"/>
+                  <xsd:enumeration value="17"/>
+                  <xsd:enumeration value="18"/>
+                  <xsd:enumeration value="19"/>
+                  <xsd:enumeration value="20"/>
+                  <xsd:enumeration value="21"/>
+                  <xsd:enumeration value="22"/>
+                  <xsd:enumeration value="23"/>
+                  <xsd:enumeration value="24"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RUM_MAP" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RUM_MAP_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131525">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SUB_BAL_IMPACTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SUB_BAL_IMPACTS_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131523">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="TOTAL" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="TOTAL_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131524">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="UNRATED_QUANTITY" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_IMPACTS_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131522">
+      <xsd:sequence>
+         <xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="AMOUNT" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="AMOUNT_DEFERRED" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="AMOUNT_ORIG" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNT" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DISCOUNT_INFO" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="GL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="IMPACT_CATEGORY" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="IMPACT_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="4"/>
+                  <xsd:enumeration value="8"/>
+                  <xsd:enumeration value="16"/>
+                  <xsd:enumeration value="32"/>
+                  <xsd:enumeration value="64"/>
+                  <xsd:enumeration value="128"/>
+                  <xsd:enumeration value="256"/>
+                  <xsd:enumeration value="258"/>
+                  <xsd:enumeration value="288"/>
+                  <xsd:enumeration value="512"/>
+                  <xsd:enumeration value="1024"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ITEM_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(item)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="LINEAGE" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PERCENT" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PRODUCT_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RATE_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(rate)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATE_TAG" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RESOURCE_ID_ORIG" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RUM_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="TAX_CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SUB_BAL_IMPACTS_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131523">
+      <xsd:sequence>
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="SUB_BALANCES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SUB_BALANCES_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_13152323">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SUB_BALANCES_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_13152323">
+      <xsd:sequence>
+         <xsd:element name="AMOUNT" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CONTRIBUTOR_STR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="256"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="GRANTOR_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ROLLOVER_DATA" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="VALID_FROM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="VALID_FROM_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="VALID_TO" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="VALID_TO_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="TOTAL_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131524">
+      <xsd:sequence>
+         <xsd:element name="AMOUNT" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RUM_MAP_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131525">
+      <xsd:sequence>
+         <xsd:element name="NET_QUANTITY" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="RUM_NAME" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="UNRATED_QUANTITY" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CYCLE_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1315210">
+      <xsd:sequence>
+         <xsd:element name="CYCLE_END_T" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_T" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="ORIGINAL_SCALE" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="SCALE" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="ON_DEMAND_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1314">
+      <xsd:sequence>
+         <xsd:element name="AR_BILL_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(bill)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILL_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(bill)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ITEM_POID_LIST" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="256"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SERVICES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SERVICES_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131425">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SPONSOR" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SPONSOR_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131424">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SPONSOR_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131424">
+      <xsd:sequence>
+         <xsd:element name="AR_BILL_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(bill)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILL_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(bill)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CURRENCY" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="ITEM_POID_LIST" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="256"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAYINFO_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(payinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="SERVICES_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131425">
+      <xsd:sequence>
+         <xsd:element name="ITEM_POID_LIST" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="256"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SERVICE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="EXTENDED_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1316">
+      <xsd:sequence>
+         <xsd:element name="INHERITED_INFO" type="INHERITED_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131621" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RESULTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RESULTS_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131622">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RESULTS_ARRAY_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131622">
+      <xsd:sequence>
+         <xsd:element name="LINEAGE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STRING" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_131621">
+      <xsd:sequence/>
+   </xsd:complexType>
+   <xsd:complexType name="ROLLOVER_INFO_SUBSTRUCT_PCM_OP_AR_ACCOUNT_ADJUSTMENT_1317">
+      <xsd:sequence>
+         <xsd:element name="IMPACT_CATEGORY" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="256"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRORATE_FIRST" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="701"/>
+                  <xsd:enumeration value="702"/>
+                  <xsd:enumeration value="703"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRORATE_LAST" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="701"/>
+                  <xsd:enumeration value="702"/>
+                  <xsd:enumeration value="703"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ROLLOVER_COUNT" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="ROLLOVER_MAX_UNITS" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="ROLLOVER_UNITS" type="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="ROLLOVER_UOM" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BUFFER_PCM_OP_AR_ACCOUNT_ADJUSTMENT">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:hexBinary">
+            <xsd:attribute name="flags" type="xsd:string" use="optional"/>
+            <xsd:attribute name="size" type="xsd:string" use="optional"/>
+            <xsd:attribute name="offset" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:simpleType name="EMPTY_PCM_OP_AR_ACCOUNT_ADJUSTMENT">
+      <xsd:restriction base="xsd:string">
+         <xsd:length value="0"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="UNION_PCM_OP_AR_ACCOUNT_ADJUSTMENT">
+      <xsd:union memberTypes="xsd:decimal EMPTY_PCM_OP_AR_ACCOUNT_ADJUSTMENT"/>
+   </xsd:simpleType>
+</xsd:schema>

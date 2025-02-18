@@ -1,0 +1,53 @@
+//===============================================================================
+//
+//      Copyright (c) 2004 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//===============================================================================
+// Block: IRL_PromotionalSavingPerEDR.irl
+//-------------------------------------------------------------------------------
+// Module Description:
+//   This module is to be used to check the customrer market segment & product 
+//   attributes in the edr container. If these attributes satisfied the conditions 
+//   in the data file, it set the CUST_A.PROMOTIONAL_SAVING to ON/OFF as supplied
+//   by data file.
+//
+//   Attention: the rulesets within the ".data"-file
+//   have to be used in a well defined order, to avoid
+//   that one rules overrides another if this is not
+//   wanted!
+//
+//===============================================================================
+//
+//
+// Responsible: Ashwani Kumar
+//
+// $RCSfile: IRL_PromotionalSavingPerEDR.irl,v $
+// $Revision: 1.0 $
+// $Author: akumar $
+// $Date: 2004/08/06 11:06:07 $
+// $Locker:  $
+//
+// $Log: IRL_PromotionalSavingPerEDR.irl,v $
+// Revision 1.0  2004/08/06 11:06:07  akumar
+// iRules files for ISC_PromotionalSavingPerEDR.isc
+//                                                                                                                
+//===============================================================================
+
+RULE: PromotionalSaving
+SOURCE: File
+FILE: ./iScriptLib/iScriptLib_Standard/IRL_PromotionalSavingPerEDR.data
+
+INIT_SCRIPT:
+include "./iScriptLib/iScriptLib_Standard/ISC_PromotionalSavingPerEDR.isc";
+
+getIndexAndProductInfo();
+
+CONDITION:
+${1};
+
+RESULT:
+edrLong( DETAIL.CUST_A.PROMOTIONAL_SAVING ) = ${2};

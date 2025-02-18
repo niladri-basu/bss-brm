@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--VERSION 10000-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!--ROOT ELEMENT CallAssemblyData  DEFINED-->
+	<xs:element name="CallAssemblyData">
+		<xs:complexType mixed="false">
+			<xs:sequence minOccurs="0">
+				<xs:element ref="CallRecord" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!--CallRecord ELEMENT DEFINED-->
+	<xs:element name="CallRecord">
+		<xs:complexType mixed="true">
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="AbstractStoredField" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="CallSection" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="chainReference" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="state" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="OPEN"/>
+						<xs:enumeration value="CLOSED"/>
+						<xs:enumeration value="TIMEOUT"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="logic" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="INCLUSIVE"/>
+						<xs:enumeration value="JOIN"/>
+						<xs:enumeration value="ACTUAL"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="actualStart" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="actualEnd" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="leftFlushMarker" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="rightFlushMarker" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="totalDurationReceived" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="cdrCount" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="lateCdrCount" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="overlapCdrCount" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="lastInsertDate" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:date"/>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="serviceCode" type="xs:string" use="optional"/>
+			<xs:attribute name="lastProcessSegmentDate" type="xs:unsignedInt" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<!--CallSection ELEMENT DEFINED-->
+	<xs:element name="CallSection">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:element ref="DataElement" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="SINGLE"/>
+						<xs:enumeration value="MULTI"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="state" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ACTIVE"/>
+						<xs:enumeration value="REJECTED"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="serializedEdrPosition" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="cdrTimestamp" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="flushedCdrTimestamp" type="xs:unsignedInt" use="optional"/>
+			<xs:attribute name="longDurationIndicator" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="COMPLETE"/>
+						<xs:enumeration value="PARTIAL"/>
+						<xs:enumeration value="SLICE"/>
+						<xs:enumeration value="UNKNOWN"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!--AbstractStoredField ELEMENT DEFINED-->
+	<xs:element name="AbstractStoredField" abstract="true"/>
+	<!--StoredFieldInteger ELEMENT DEFINED-->
+	<xs:element name="StoredFieldInteger" substitutionGroup="AbstractStoredField">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+                    <xs:attribute name="edrIndex" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+					<xs:attribute name="value" type="xs:long" use="required"/>
+					<xs:attribute name="segment" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="FIRST"/>
+								<xs:enumeration value="LAST"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<!--StoredFieldDate ELEMENT DEFINED-->
+	<xs:element name="StoredFieldDate" substitutionGroup="AbstractStoredField">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+                    <xs:attribute name="edrIndex" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+					<xs:attribute name="value" type="xs:unsignedLong" use="required"/>
+					<xs:attribute name="segment" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="FIRST"/>
+								<xs:enumeration value="LAST"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<!--StoredFieldString ELEMENT DEFINED-->
+	<xs:element name="StoredFieldString" substitutionGroup="AbstractStoredField">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+                    <xs:attribute name="edrIndex" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+					<xs:attribute name="value" type="xs:string" use="required"/>
+					<xs:attribute name="segment" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="FIRST"/>
+								<xs:enumeration value="LAST"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<!--StoredFieldDecimal ELEMENT DEFINED-->
+	<xs:element name="StoredFieldDecimal" substitutionGroup="AbstractStoredField">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+                    <xs:attribute name="edrIndex" use="required">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:minLength value="1"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+					<xs:attribute name="value" type="xs:decimal" use="required"/>
+					<xs:attribute name="segment" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="FIRST"/>
+								<xs:enumeration value="LAST"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<!--DataElement ELEMENT DEFINED-->
+	<xs:element name="DataElement">
+		<xs:complexType>
+			<xs:sequence minOccurs="0">
+				<xs:element ref="AbstractAssemblyData" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="startTime" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="endTime" type="xs:unsignedInt" use="required"/>
+			<xs:attribute name="cdrCount" type="xs:unsignedInt" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--AbstractAssemblyData ELEMENT DEFINED-->
+	<xs:element name="AbstractAssemblyData" abstract="true"/>
+	<!--VolumeAssemblyData ELEMENT DEFINED-->
+	<xs:element name="VolumeAssemblyData" substitutionGroup="AbstractAssemblyData">
+		<xs:complexType>
+			<xs:attribute name="volumeSent" type="xs:decimal" use="required"/>
+			<xs:attribute name="volumeReceived" type="xs:decimal" use="required"/>
+			<xs:attribute name="numberOfUnits" type="xs:decimal" use="required"/>
+			<xs:attribute name="retailChargedAmount" type="xs:decimal" use="required"/>
+			<xs:attribute name="wholesaleChargedAmount" type="xs:decimal" use="required"/>
+			<xs:attribute name="longDuration" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--SGSNAssemblyData ELEMENT DEFINED-->
+	<xs:element name="SGSNAssemblyData" substitutionGroup="AbstractAssemblyData">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SGSNString" maxOccurs="unbounded">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

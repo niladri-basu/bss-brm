@@ -1,0 +1,675 @@
+Solution42
+----------------------------------------------------------------------------------------
+Module Release Notes
+=========================================================================================
+Actual Version : v7.5.0.0 / Date : 26 April 2011
+
+Solved PRs/CRs :
+----------------
+bug12371489 : Adding field for streaming LP Router info. Primarily for Account Router in 
+case of multi schema with multiple Logical partitions (n case of TimesTen)
+=========================================================================================
+Module Release Notes 
+=========================================================================================
+Actual Version : v7.4.0.5 / Date : 12 Jul 2010
+
+Solved PRs/CRs :
+----------------
+bug9831530 : PROPAGATION OF FIXES IN 7.3.1 TO 7.4 AS UNINOR IS UPGRADING TO 7.4
+=========================================================================================
+Actual Version : v7.4.0 / Date : 30 Jul 2009
+
+Solved PRs/CRs :
+----------------
+bug8745018 : Added PIN_IMPACT_TYPE field in the BALANCE_IMPACT for invoicing reasone
+=========================================================================================
+Actual Version : v7.4.0 / Date : 02 Jul 2009
+
+Solved PRs/CRs :
+----------------
+bug8651668 : Added PIN_PERCENT field in the BALANCE_PACKET
+=========================================================================================
+Actual Version : v7.4.0 / Date : 09 Feb 2009
+
+Solved PRs/CRs :
+----------------
+
+bug8213399     : 7.4 - REGRESSION: OOB SOL42 DESC/MAPPING FILES DO NOT HAVE ENTRIES FOR CIBER ASS
+=========================================================================================
+Actual Version : v7.4.0 / Date : 02 Feb 2009
+
+Solved PRs/CRs :
+----------------
+
+bug7830378     : P-7681255 MISSING OOB CIBER ROAMING REGISTRY AND V25 IS NOT SUPPORTED
+=========================================================================================
+Actual Version : v7.3.1 / Date : 04 Sep 2007
+
+Solved PRs/CRs :
+----------------
+
+bug6389234     : P-6350422 [7.3 OLE] - TIMEZONE OFFSET ISSUE ON RERATING 
+		 Added conversion from event time locale to number of seconds 
+		 since Jan 1, 1970 00:00:00 @ the event's timezone for 
+		 DETAIL.CHARGING_START_TIMESTAMP and DETAIL.CHARGING_END_TIMESTAMP
+		 in V670_EVENT_LOADER_OutGrammar.dsc
+=========================================================================================
+Actual Version : v7.3.1 / Date : 17 Jul 2007
+
+Solved PRs/CRs :
+----------------
+
+bug6161411     : Failed loading cdrs with pin_rel.
+                 Stripped off arbitrary no. of spaces in BP.PIN_OFFERING_POID.
+=========================================================================================
+Actual Version : v7.3.1 / Date : 06 Jun 2007
+
+Solved PRs/CRs :
+----------------
+
+bug6115647     : NET_QUANTITY field is added to be mapped from pipeline output.
+                 Added it in V670_EVENT_LOADER_OutMap.dsc and V670_EVENT_LOADER.dsc.
+=========================================================================================
+Actual Version : v7.3_Modular / Date : 22 Mar 2007
+
+Solved PRs/CRs :
+----------------
+
+bug5943102     : SUSPENSE CHANGES FOR RA PROPAGATION   
+=========================================================================================
+Actual Version : v7.3_Patch / Date : 31 Oct 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00236824   : NUMBER_OF_MONITOR_PACKETS field is not mapped from from the BackOut 
+                 pipeline output.
+                 Mapped it in SOL42_V670_REL.dsc and SOL42_V670_REL_OutMap.dsc.
+=========================================================================================
+
+Actual Version : v7.3 / Date : 11 Sep 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00232606   : Fix a bug that was introduced during the fix for CO 232609
+=========================================================================================
+
+Actual Version : v7.3 / Date : 11 Sep 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00232609   : Remove the conversion from event time locale to UTC for the 
+DETAIL.CHARGING_START_TIMESTAMP and DETAIL.CHARGING_END_TIMESTAMP 
+in V670_EVENT_LOADER_OutGrammar.dsc
+=========================================================================================
+
+Actual Version : v7.3 / Date : 17 Aug 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00229238   : Like PIN_FLD_AMOUNT, value of new field PIN_AMOUNT_ORIG is made negative in backout
+In grammar.
+=========================================================================================
+Actual Version : v7.3 / Date : 12 Aug 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00228571   : Added field DROPPED_CALL_QUANTITY in the description/mapping files. 
+=========================================================================================
+Actual Version : DaVinci / Date : 08 Aug 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00224728   : Added the mapping for the following fields in the dsc files:
+                  PIN_RESOURCE_ID_ORIG, PIN_AMOUNT_ORIG in BALANCE_PACKET block
+                  RESOURCE_ID_ORIG, CHARGED_AMOUNT_VALUE_ORIG in CHARGE_PACKET block
+                  RESOURCE_ID_ORIG, GRANTED_AMOUNT_ORIG in DISCOUNT_PACKET block
+                  TAX_VALUE_ORIG in TAX_PACKET block
+=========================================================================================
+Actual Version : v7.3 / Date : 04 Aug 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00227261   : Moved the CHARGING_START_TIMESTAMP and CHARGING_END_TIMESTAMP fields 
+                 to the end of the DETAIL block as it improved the performance of IREL.
+=========================================================================================
+Actual Version : v7.3 / Date : 26 Jul 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00225671   : Field Addition in the description/mapping files. 
+=========================================================================================
+Actual Version : DaVinci / Date : 11 Jul 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00222925   : Add the HEADER.OBJECT_CACHE_TYPE support to the V670_REL_FORINPUT and
+                 V670_REL_InMap dsc files.
+=========================================================================================
+Actual Version : DaVinci / Date : 29 Jun 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00218581   :  If the PIN_OFFERING_POID in the Balance packet is null, set it with
+                  three blanks, so that the IREL doesn't error out.
+=========================================================================================
+Actual Version : DaVinci / Date : 23 Jun 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00220121   : Add the HEADER.OBJECT_CACHE_TYPE support to the dsc files.
+=========================================================================================
+Actual Version : v7.3 / Date : 19 Jun 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00220551   : correcting asS_roaming serialization/de-serialization in sol42 grammars
+=========================================================================================
+Actual Version : v7.3 / Date : 14 Jun 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00219351   : Minor changes for Roaming
+                 1. Serialization/de-serialization of the ASS_ROAMING Block to/from
+                    the stream.
+=========================================================================================
+Actual Version : v7.3 / Date : 28 Feb 2006
+
+Solved PRs/CRs :
+----------------
+
+PRSF00207742   : Configurable Validity feature changes
+                 1. Added  the fields GRANTOR, VALID_FROM_DETAILS,VALID_TO_DETAILS to 
+                    ASS_PIN.SBI.SB and ASS_CBD.DP.SUB_BALANCE in V670_EVENT_LOADER 
+                    description and Mapping files.
+=========================================================================================
+Actual Version : v7.3 / Date : 16-Apr-2006
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00203985  : 1. In Sol42 outgrammar side, ASS_ROAMING_EXT block is considered.
+                2. In Sol42 Ingrammar side, ASS_ROAMING_EXT and tax packet is considered.
+                   Missing format of detail type has been added.
+                3. Since there is a restriction of multi detail record type appearing in a 
+                   outfile, EVENT_LOADER outmap file detail.record_type is hardcoded to 020
+                   so that only one record type appears in the outfile.
+=========================================================================================
+Actual Version : v7.2_Patch / Date : 30-Aug-2005
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000181122  : In outgrammer, record number field of SBI block will be updated with
+                 respect to 020(detail) record.It should not check the SBI block w.r.t
+                 ASS_PIN(900).This will be for each edr.One variable will be defined and
+                 initialized to 0 in ondetail function.For the first SBI, it will be given
+                 the 0 value.Next onwards, it will be incremented by 1.
+=========================================================================================
+Actual Version : v7.2_PATCH / Date : 19-Aug-2005
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000180207  : Having two 900 records is causing a problem in rerating
+Modify V670_EVENT_LOADER_OutGrammar.dsc:  
+In case of rerating, the grammar file will copy the ORIGINAL_EVNET_POID from 
+the original ASS_PIN to the rerated ASS_PIN.
+Propagation of CO175159(7.0_EBF) to 7.2_patch
+=========================================================================================
+Actual Version : v7.2 / Date : 30-Jun-2005
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000174977  : INVOICE_DATA not populated for GPRS
+Modify V670_EVENT_LOADER_OutMap.dsc:
+TERMINATING_SWITCH_IDENTIFICATION     <- DETAIL.INTERN_TERMINATING_SWITCH_IDENTIFICATION;
+Modify V670_EVENT_LOADER_OutGrammar.dsc:
+Depends on the type of Edr, populate the value of INTERN_TERMINATING_SWITCH_IDENTIFICATION
+=========================================================================================
+Actual Version : v7.2 / Date : 24-Jun-2005
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000173821  : QF:  IREL: New feature to auto-generate control files from the 
+pipeline's output description file -- FAILED.
+Add the IREL comment to the end of the each line.
+=========================================================================================
+Actual Version : v7.2 / Date : 18-May-2005
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000168776  : BalancePackets_Sums_2ChargePackets_InCaseofDifferentRums 
+Add the RUM_ID to the BALANCE_PACKET and created a RUM_MAP (400)
+Add DETAIL.ASS_PIN.RUM_NAME to the ASS_PIN (900) record in case of single RUM.
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 13-Jan-2005
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000149962  : BMON Changes to SOL42_V670_REL_FORINPUT.dsc, SOL42_V670_REL_InMap.dsc
+and container.dsc file to add NUMBER_OF_MONITOR_PACKETS.
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 06-Jan-2005
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000148623  : BMON Output grammar changes for the Balance Monitoring.
+PRSF000148385  : BMON: Changes to the input grammar of Backout and rerating pipelines
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 31-Aug-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000128113  : Remove dateToUTC conversion from the SOL42_V670_REL_OutGrammar.dsc file
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 26-Aug-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000128052  : Fix Sol42 Input Grammar to calculate CHARGING_END_TIMESTAMP
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 2nd-Aug-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000124131  : INTERN_PROCESS_STATUS should be assigned with 0 value
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 16-Jul-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000119914  : Removed ASSOCIATED_SUSPENSE record from V670_EVENT_LOADER files
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 11-Jun-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000114315  : Make Changes to SOL42_V670_REL_InMap.dsc so that CREATION_PROCESS is populated
+                 in Header of Edr Container as this field is later used to identify backout without rerating edrs 
+=============================================================================
+Actual Version : v6.7_FP2 / Date : 11-Jun-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000116126  : Added RECYCLE_KEY to the ASSOCIATED_SUSPENSE record in Solution 42 format.
+=============================================================================
+Actual Version : v6.7_FP2 / Date : 11-Jun-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000115893  : Remove field PREMPTED_BAL from Discount subbalance and SUB_BALANCE_IMPACT's SUB_BAL
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 25-May-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000111405  : Make Changes to output grammer to support Discounting changes.
+		 Add a new field PREMPTED_BAL to Discount subbalance and SUB_BALANCE_IMPACT's
+		 SUB BAL. 
+=============================================================================
+Actual Version : v6.7_FP2 / Date : 25-May-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000106678  : Make Changes to output grammer to support Taxation. 
+=============================================================================
+Actual Version : v6.7_FP2 / Date : 28-April-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00104592   : Created EVENT_LOADER stream, mapping and grammar files.  This
+                 new format will output only the necessary pin_rel expected fields.
+		 
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 25-Mar-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+Actual Version : v6.7_FP2 / Date : 31-Mar-2004
+
+PRSF000101112   : Propagate format description changes for FCT_PreSuspense and FCT_Suspense into SOL42_Rel  format files
+=============================================================================
+Solved PRs/CRs :
+
+PRSF00100112   : For introducing 605 and 607 block Backout grammar has changed.
+                 For introducing 605 and 607 SOL42_V670_REL_InGrammar.dsc has changed.  
+=========================================================================================
+
+Actual Version : v6.7_FP2 / Date : 15-Mar-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00099753   : Propagate format description changes for FCT_PreSuspense and FCT_Suspense to fix VF Greece performance problem into the standard Solution_42 format files
+=========================================================================================
+
+=========================================================================================
+Actual Version : v6.7_FP2 / Date : 13-Mar-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00097683   : Change the PIN_AMOUNT value to negative in Balance Packet for BACKOUT Pipeline .
+=========================================================================================
+
+Actual Version : v6.7_FP2 / Date : 03-MAR-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00097003   : Propagated the changes from SOL42_V650* to SOL42_V670*
+
+=========================================================================================
+
+Actual Version : v6.7_FP2 / Date : 04-FEB-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00090375   : As part of Revenue Assurance Rel 2, each batch of CDRs bears a unique batchid. 
+                 and each event bears a unique eventid. Event also has fields to specify which 
+                 batchid it belongs to. An event can be rated multiple times, in that case 
+                 original_batch_id field of the event tells the original(mediation) batch the 
+                 event belongs to. The necesary stream description/mapping files have been 
+                 changed for these new fields.(Propagtion of PRSF00084137)
+
+=========================================================================================
+
+Actual Version : v6.7_FP1 / Date : 19-Jan-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00087370   : Fixed the parse error while starting up the BACKUP pipeline.
+=========================================================================================
+
+Actual Version : v6.7_FP1 / Date : 23-Dec-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00083462   : changes made to support commonCDR format
+=========================================================================================
+
+Actual Version : v6.5_SP1.6 / Date : 09-APR-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00037267   : merge the addition of the fields added in PRSF00036697 to *_REL_FORINPUT.dsc
+=======================================================================================
+
+========================================================================================
+
+Module Version : 6.5 SP1.5
+----------------
+Date : 03-Apr-2003
+----------------
+
+Change Order :  PRSF00036697
+----------------
+
+Short Description :
+-------------------
+  Destination Description for a given Service Code, Impact Cat
+  Zone Entry Name is extracted from the IFW_STANDARD_ZONE [and/or File] which are used
+  by the other Functional Plugins to write back into EDR container.
+
+  Two new fields are added in the EDR Container:
+  1. DETAIL.ASS_ZBD.ZP.ZONE_ENTRY_NAME [ZoneEntryName in Zone Packet of Associated Zone Breakdown]
+  1. DETAIL.ASS_CBD.CP.ZONE_ENTRY_NAME [ZoneEntryName in Charge Packet of Associated Charge Breakdown]
+
+  Hence, Output Description file [SOL42_V630_REL.dsc & SOL42_V650_REL.dsc] &
+  Output Mapping File [SOL42_V630_REL_OutMap.dsc & SOL42_V650_REL_OutMap.dsc] are modfied accordingly.
+=========================================================================================
+
+=========================================================================================
+
+Actual Version : v6.5_SP1.4 / Date : 01-APR-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00035980   : input map/grammar needs some more work
+=======================================================================================
+
+=======================================================================================
+
+Actual Version : v6.5_SP1.3 / Date : 26-MAR-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00035790   : Problem: input mapping needs to be fixed up for the invoice enrichment change.
+
+                 Solution: Also change the field delimitation, and add a field delimitation in front the
+                           bal impact array 
+=======================================================================================
+
+=======================================================================================
+
+Actual Version : v6.5_SP1.2 / Date : 25-MAR-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00035736   : Problem: V650 grammars etc. not merged with the invoice enrichment change in V630.
+
+                 Solution:
+=======================================================================================
+
+=======================================================================================
+
+Actual Version : v6.5_SP1.1 / Date : 14-MAR-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00034018   : Problem: Provide the solution for invoicing enrichment performance issue.
+                                Also fix outstanding CO on the existing solution (30766 and 
+                                30421).
+
+                 Solution:
+                 (Already stated above.)
+=======================================================================================
+
+=======================================================================================
+
+Actual Version : v6.5_SP1 / Date : 13-FEB-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00031781   : Problem:
+                 Integrate rated events are always tax deferred, so the value of the 
+				 amount_deferred in the balance impact table is equal to the amount. 
+				 Today we don't populate this field in the output file, so IREL gets 
+				 the amount's value from balance impact table and sets as the 
+				 amount deferred. This is a very time consuming operation.
+				 				 
+                 Solution:
+                 Populate the amount_deffered field in the output file, so that it 
+				 can be mapped through the control file.
+=======================================================================================
+
+=======================================================================================
+
+Actual Version : v6.5_EBF / Date : 01-Jan-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00030604 / : Problem:
+PRSF00030620     Input map doesn't map the account poid in BACKOUT plugin.
+                 This is neither generated in the BACKOUT plugin. IREL fails
+                 while loading the backed out event, because backed out EDR 
+				 doesn't contain the ACCOUNT POID.
+				 
+                 Solution:
+                 Fixed the input mapping to map account poid provided in the 
+                 EDR generated by the event extraction tool. Event extraction 
+                 tool is fixed by another CO - PRSF00030620.      
+=======================================================================================
+
+=======================================================================================
+
+Actual Version : v6.4.1 / Date : 18-Sep-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00018621 If EETool extracts the events from InfranetDB by acct#, 
+             the output file is unable to be processed by BACKOUT pipeline.
+              
+=======================================================================================
+
+Actual Version : v6.3.4 / Date : 19-Jul-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00014558 IREL is expecting extra space in EDR 900 record type. 
+             Working Original event poid should be specified 0  0 0. 
+             (2 spaces between the first 0 and 2nd 0).
+              
+=======================================================================================
+
+Actual Version : v6.3.3 / Date : 16-Jul-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00014253 SOL42_V630_REL: modify trailer checks for event-extraction
+              
+=======================================================================================
+
+Actual Version : v6.3.2 / Date : 21-Jun-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00012756 Out of the box default value for the original event poid 
+             in the EDR file should be "0 0 0"
+             Fixed in SOL42_V630_REL_OutGrammar.dsc
+              
+=======================================================================================
+
+...
+
+=======================================================================================
+
+Actual Version : v4-30-10 / Date : 01-Oct-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #39726 Number normalisation must support multiple IACs.
+            SOL42 EDR format header changed. Added IAC and CC list.
+
+PETS #39725 Add EXCHANGE_CURRENCY field to the CHARGE_PACKET block used to know
+            to wich currency the EXCHANGE_RATE converts.
+
+PETS #39724 Number Normalization for Roaming MTC call numbers
+            The number normalization implementation for Roaming-MTC needs to be
+            changed in order to work on the TERMINATING_SWITCH_IDENTIFICATION.
+
+=======================================================================================
+
+Actual Version : v4-30-08 / Date :11-Sep-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #39092 SOL42_V430_REL Output Grammar maps character values in
+            CALL_COMPLETION_INDICATOR into numeric values as follows:
+            C, T -> 00 (Completed, Test -> normal)
+            D    -> 04 (Dropped         -> abnormal release)
+
+=======================================================================================
+
+Actual Version : v4-30-07 / Date :30-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38805 Provide timestamps in SOL42_V430 format in PIN format.
+
+=======================================================================================
+
+Actual Version : v4-30-08 / Date :05-OCT-2010
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #10146956 Created amount_deferred field with negated impact for 
+events with deferred taxation during backout process
+
+=======================================================================================

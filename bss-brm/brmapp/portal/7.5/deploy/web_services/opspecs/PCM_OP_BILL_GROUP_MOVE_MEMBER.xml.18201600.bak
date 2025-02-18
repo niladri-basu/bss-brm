@@ -1,0 +1,63 @@
+<Opcode name="PCM_OP_BILL_GROUP_MOVE_MEMBER"
+visibility="public"
+transaction="required"
+component="financial"
+xmlns:h="http://www.w3.org/1999/xhtml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>
+This opcode moves the specified account to (or out from) the group. 
+In particular, it can move a member-account from one group to other.
+</Doc>
+<Input>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Poid of account to be moved</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_PARENT" use="optional"
+mode="complete">
+<Doc> Poid of account to be moved to (target).  
+If it is not presented then the movement is provided out of the group.
+</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Timestamp name="PIN_FLD_WHEN_T" use="optional">
+<Doc> 
+This field is used in order to provide a differed movement by creation of 
+the schedule object (so, the real movement will not be done by the opcode at 
+this time). This field indicates the time when the deferred movement should 
+be executed.
+</Doc>
+</Timestamp>
+<String name="PIN_FLD_DESCR" use="optional"
+maxlen="255">
+<Doc> 
+This field should be used only if PIN_FLD_WHEN_T is specified. 
+It may contain an arbitrary text which describes the deferred movement.
+</Doc>
+</String>
+</Fields>
+</Input>
+<Output>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Poid of account that was moved.</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_GROUP_OBJ" use="optional"
+mode="complete">
+<Doc> 
+Poid of group that account was moved to (target).
+If account is moved out of the group (so, there is no target), 
+then this is a group that account was moved out (source).
+</Doc>
+<ClassRef>obj://group</ClassRef>
+</Poid>
+</Fields>
+</Output>
+</Opcode>

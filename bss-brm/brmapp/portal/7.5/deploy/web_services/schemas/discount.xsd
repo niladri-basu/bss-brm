@@ -1,0 +1,84 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:op="http://www.portal.com/schemas/BusinessOpcodes"
+            xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            elementFormDefault="qualified">
+<xsd:complexType name="discountExtensionType">
+	<xsd:sequence>
+		<xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="CREATED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="DISCOUNT_CYCLE_VALIDITY" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="DISCOUNT_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+				</xsd:sequence>
+				<xsd:attribute type="xsd:string" name="elem"/>
+			</xsd:complexType>
+		</xsd:element>
+		<xsd:element name="DISCOUNT_USAGE_VALIDITY" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="DISCOUNT_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+				</xsd:sequence>
+				<xsd:attribute type="xsd:string" name="elem"/>
+			</xsd:complexType>
+		</xsd:element>
+		<xsd:element name="DISPLAY_NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="MODE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="MOD_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="OWN_MAX" type="UNION_discount" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="OWN_MIN" type="UNION_discount" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PERMITTED" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="POID" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PRIORITY" type="UNION_discount" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PROVISIONING_TAG" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PURCHASE_MAX" type="UNION_discount" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PURCHASE_MIN" type="UNION_discount" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="READ_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="USAGE_MAP" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="DISCOUNT_MODEL" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="EVENT_TYPE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="MODEL_SELECTOR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="SNOWBALL_FLAG" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+				</xsd:sequence>
+				<xsd:attribute type="xsd:string" name="elem"/>
+			</xsd:complexType>
+		</xsd:element>
+		<xsd:element name="WRITE_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element ref="discountExtension" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:simpleType name="EMPTY_discount">
+	<xsd:restriction base="xsd:string">
+		<xsd:length value="0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="UNION_discount">
+	<xsd:union memberTypes="xsd:decimal EMPTY_discount"/>
+</xsd:simpleType>
+<xsd:element name="discountExtension" type="discountExtensionType"/>
+</xsd:schema>

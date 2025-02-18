@@ -1,0 +1,32 @@
+========================================================================================
+discount_event_xml
+----------------------------------------------------------------------------------------
+Module Release Notes
+----------------------------------------------------------------------------------------
+Module Version : 10005 7.5 20-MAR-14
+bug18255638 - P-18044818 - Credit limit plugin change to include min/incr to round quantity in last incr
+Added net_quantity, min_quantity, incr_quantity into detail record.
+================================================================================
+Module Version : 10004 7.4 02-Jul-09
+bug8651668     : "PIPELINE RATED EVENTS ARE HAVING PIN_FLD_PERCENT IS NULL IN BAL_IMPACTS ARRAY"
+PIN_FLD_PERCENT is mapped to PIN_PERCENT field of BALANCE IMPACT block
+================================================================================
+Module Version : 10003 7.4 14-May-09
+bug8466228     : WRONG VALIDITY OF BALANCE IMPACT FOR BILLING-TIME DISCOUNT
+LAST_BILL and BILL_WHEN are mapped into CUSTOMER_DATA block
+================================================================================
+Module Version : 10002 7.4.0 09-Apr-08
+bug8362355     : Authorize failed with type only /product poid, caused by reverse rating triggered
+		 by credit limit exceeded.
+CHARGE_INDEX is added into CHARGE PACKET mapping 
+================================================================================
+Module Version : 10001 7.4.0 04-Nov-08
+bug7490996     : "DOUBLE GRANTED_AMOUNT IN DISCOUNT_PACKET(CAN'T ZERO OUT A NON-CURRENCY RESOURCE)"
+DISCOUNT_ONLY_FLAG is added     
+================================================================================
+Module Version : 10000 7.3_PATCH  11-Dec-06
+PRSF00240894   : Create a new RELEASE_NOTES file for each xml file in INP plugin.
+xml file will have the revision number in a comment.
+Previous release history of discount_event.xml file can be found in 
+RELEASE_NOTES.INP_Realtime
+================================================================================

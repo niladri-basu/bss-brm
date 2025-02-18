@@ -1,0 +1,362 @@
+<Opcode
+    name="PCM_OP_AR_GET_BILLS"
+    visibility="public"
+    transaction="required"
+    component="fm_ar"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+    <Doc>
+
+        <!--h:p>
+            <h:i> Copyright &#169; 2006-2007 Oracle. All rights reserved. This
+            material is the confidential property of Oracle Corporation or
+            its licensors and may be used, reproduced, stored or transmitted
+            only in accordance with a valid Oracle license or sublicense
+            agreement. </h:i>
+            </h:p-->
+        
+         This opcode is used to get the list of bills of a given Bill-info based on search criteria. 
+         This opcode also accepts a Bill poid for the search.
+ 
+        <h:p/> Notes on the alternation to the opcode input flist: <h:ul>
+            <h:li>The opcode does not make a copy of the input flist. The input
+                flist can be altered. For example, the PIN_FLD_BILL_OBJ or 
+                the PIN_FLD_BILLINFO_OBJ field is inserted according to the PIN_FLD_POID type.
+            </h:li>
+        </h:ul>
+    </Doc>
+
+    <SeeAlso>
+        <Item
+            href="obj://bill">
+            <Doc>Bill object.</Doc>
+        </Item>
+        <Item
+            href="obj://billinfo">
+            <Doc>Bill Info object.</Doc>
+        </Item>
+        <Item
+            href="obj://account">
+            <Doc>Account  Object</Doc>
+        </Item>
+        <Item
+            href="op://PCM_OP_AR_GET_ACCT_BILLS">
+            <Doc>Instead of the PCM_OP_AR_GET_BILLS opcode, 
+                use the PCM_OP_AR_GET_ACCT_BILLS opcode to get 
+                ALL the AR Bill objects of an account object.</Doc>
+        </Item>
+        <Item
+            href="file://pin_flds.h">
+            <Doc>The C Header file contains the PIN_FLD definitions. The C++
+                Header file is PinFlds.h.</Doc>
+        </Item>
+        <Item
+            href="file://pcm_ops.h">
+            <Doc>The Header file contains the PCM_OP definitions.</Doc>
+        </Item>
+        <Item
+            href="file://pcm.h">
+            <Doc>The Header file contains the opcode flags OPFLG
+                definitions.</Doc>
+        </Item>
+        <Item
+            href="file://pin_bill.h">
+            <Doc>The Header file contains PIN_OBJ_TYPE_ITEM definitions.</Doc>
+        </Item>
+        <Item
+            href="http://www.portal.com">
+            <Doc>Visit Portal web site for additional information.</Doc>
+        </Item>
+    </SeeAlso>
+
+
+    <Input>
+
+        <Doc> All Time Stamps are given in Portal format.</Doc>
+        <Fields>
+            <Poid
+                name="PIN_FLD_POID"
+                use="required"
+                mode="complete">
+                <Doc>Poid of  a Bill-info object or a Bill object. 
+                AR Account is determined using the Bill-info object.</Doc>
+                <ClassRef>obj://billinfo</ClassRef>
+                <ClassRef>obj://bill</ClassRef>
+            </Poid>
+
+            <Poid
+                name="PIN_FLD_AR_BILLINFO_OBJ"
+                use="required"
+                mode="complete">
+                <Doc> Poid of a corresponding AR Bill-info object to the one given in PIN_FLD_POID.
+                    If the same poid is specified here, the Bills of the
+                    Bill-info hierarchy (if any) will be included.</Doc>
+                <ClassRef>obj://billinfo</ClassRef>
+            </Poid>
+            <Poid
+                name="PIN_FLD_AR_ACCOUNT_OBJ"
+                use="optional"
+                mode="complete">
+                <Doc> Poid of a corresponding AR Account object. Given here for backward compatibility reason.</Doc>
+                <ClassRef>obj://account</ClassRef>
+            </Poid>
+
+
+            <Int
+                name="PIN_FLD_INCLUDE_CHILDREN"
+                use="required">
+                <Doc> Indicator of how the Bill-info hierarchy view is to be returned.
+                    Specify a 0 value, if an simple non-hierarchical view is desired.
+                    Otherwise, detail hierarchical view  will be  returned. </Doc>
+            </Int>
+            <Enum
+                name="PIN_FLD_STATUS"
+                use="optional">
+                <Doc> Item Status that will be used as a search criteria.
+                    The default is to include all Item Statuses.
+                    The value can be a union of :
+                    <h:ul>
+                        <h:li>PIN_ITEM_STATUS_OPEN (2)</h:li>
+                        <h:li>PIN_ITEM_STATUS_CLOSED (4)</h:li>
+                        <h:li>Union of PIN_ITEM_STATUS_OPEN and PIN_ITEM_STATUS_CLOSED.Gets the bills for items which are either in  PIN_ITEM_STATUS_OPEN or PIN_ITEM_STATUS_CLOSED</h:li> 
+                    </h:ul>
+                </Doc>
+                <Values>
+                    <Value>2</Value>
+                    <Doc> PIN_ITEM_STATUS_OPEN</Doc>
+                </Values>
+                <Values>
+                    <Value>4</Value>
+                    <Doc>PIN_ITEM_STATUS_CLOSED</Doc>
+                </Values>
+                <Values>
+                    <Value>6</Value>
+                    <Doc>Union of PIN_ITEM_STATUS_OPEN and PIN_ITEM_STATUS_CLOSED.Gets the bills for items which are either in PIN_ITEM_STATUS_OPEN or PIN_ITEM_STATUS_CLOSED</Doc>
+                </Values>
+            </Enum>
+
+
+
+            <Int
+                name="PIN_FLD_NUMBER_OF_BILLS"
+                use="optional">
+                <Doc> The maximum number of Bills to be fetched per Bill-info object.
+                    This is used to as a search criteria to
+                    override the Start and End times of a Bill. </Doc>
+            </Int>
+            <Timestamp
+                name="PIN_FLD_START_T"
+                use="optional">
+                <Doc> Start time search criteria on the value of
+                    the PIN_FLD_END_T of the Bill objects. </Doc>
+            </Timestamp>
+            <Timestamp
+                name="PIN_FLD_END_T"
+                use="optional">
+                <Doc> End time search criteria on the value of
+                    the PIN_FLD_END_T of the Bill objects.  </Doc>
+            </Timestamp>
+            <String
+                name="PIN_FLD_ORDERED_BY"
+                use="optional"
+                maxlen="256">
+                <Doc> Text used to order the SQL select set of the Bills of a Bill-info object.
+                    The ordering keyword can with either be "asc" or "desc" for 
+                    ascending or descending sorted order respectively. </Doc>
+            </String>
+	    <Int
+		name="PIN_FLD_FLAGS"
+		use="optional">
+		<Doc> This optional field will indicate to return either the latest bill, or previous bill, or all bills. Default is to return only the last bill
+			<h:ul>
+				<h:li>PIN_AR_LAST_BILL: return latest bill.</h:li>
+				<h:li>PIN_AR_ORIG_BILL: return previous bill.</h:li>
+				<h:li>PIN_AR_ALL_BILLS: return all bills.</h:li>
+			</h:ul>
+		</Doc>
+	   </Int>
+        </Fields>
+    </Input>
+
+
+    <Output>
+        <Doc> All Time Stamps are given in Portal format.</Doc>
+        <Fields>
+            <Poid
+                name="PIN_FLD_POID"
+                use="required"
+                mode="complete">
+                <Doc>Input poid passed, billinfo poid or bill poid.</Doc>
+                <ClassRef>obj://billinfo</ClassRef>
+                <ClassRef>obj://bill</ClassRef>
+            </Poid>
+            <Array
+                name="PIN_FLD_RESULTS"
+                use="optional"
+                elemIdMode="ignored"
+                iterationOrder="undefined"
+                minElements="1"
+                minElemId="0"
+                isElemIdAssignAllowed="false"
+                isElemIdAnyAllowed="false"
+                isRecursive="false">
+                <Doc/>
+                <Fields>
+                    <Poid
+                        name="PIN_FLD_POID"
+                        use="required"
+                        mode="complete">
+                        <Doc> Poid of a Bill object</Doc>
+                        <ClassRef>obj://bill</ClassRef>
+                    </Poid>
+                    <Poid
+                        name="PIN_FLD_PARENT"
+                        use="required"
+                        mode="complete">
+                        <Doc> Parent Account of the Bill.</Doc>
+                        <ClassRef>obj://account</ClassRef>
+                    </Poid>
+
+
+                    <Poid
+                        name="PIN_FLD_ACCOUNT_OBJ"
+                        use="required"
+                        mode="complete">
+                        <Doc> Account object of the Bill.</Doc>
+                        <ClassRef>obj://account</ClassRef>
+                    </Poid>
+                    <Poid
+                        name="PIN_FLD_BILLINFO_OBJ"
+                        use="required"
+                        mode="complete">
+                        <Doc> Bill-info object of the Bill.</Doc>
+                        <ClassRef>obj://billinfo</ClassRef>
+                    </Poid>
+                    <Poid
+                        name="PIN_FLD_AR_BILLINFO_OBJ"
+                        use="required"
+                        mode="complete">
+                        <Doc> Poid of the corresponding AR Bill-info to the Bill-info object above.</Doc>
+                        <ClassRef>obj://billinfo</ClassRef>
+                    </Poid>
+                    <String
+                        name="PIN_FLD_BILL_NO"
+                        use="required"
+                        maxlen="60">
+                        <Doc> Bill Number.</Doc>
+                    </String>
+                    <Decimal
+                        name="PIN_FLD_TOTALS"
+                        use="required">
+                        <Doc> Total Amount of the Bill. </Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_CURRENT_TOTAL"
+                        use="required">
+                        <Doc>Current Total Amount of the Account.</Doc>
+                    </Decimal>
+
+                    <Decimal
+                        name="PIN_FLD_SUBORDS_TOTAL"
+                        use="required">
+                        <Doc> Total Amount of all the sub-Accounts.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_DUE"
+                        use="required">
+                        <Doc>Amount Due of the Bill.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_DISPUTED"
+                        use="required">
+                        <Doc> Disputed Amount of the Bill.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_RECVD"
+                        use="required">
+                        <Doc>  Total Payment Received on the Bill.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_ADJUSTED"
+                        use="required">
+                        <Doc>  Total Adjustment Amount of the Bill</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_TRANSFERED"
+                        use="required">
+                        <Doc>  Total Amount Transferred out of the Bill.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_WRITEOFF"
+                        use="required">
+                        <Doc> Total Written Off Amount  of  the Bill.</Doc>
+                    </Decimal>
+                    <Decimal
+                        name="PIN_FLD_PREVIOUS_TOTAL"
+                        use="required">
+                        <Doc> Total AR Amount of all the Out-Standing Bills. </Doc>
+                    </Decimal>
+                    <Timestamp
+                        name="PIN_FLD_CREATED_T"
+                        use="required">
+                        <Doc> Creation Time of the Bill</Doc>
+                    </Timestamp>
+                    <Timestamp
+                        name="PIN_FLD_START_T"
+                        use="optional">
+                        <Doc> Start Time of the Bill.</Doc>
+                    </Timestamp>
+                    <Timestamp
+                        name="PIN_FLD_END_T"
+                        use="optional">
+                        <Doc> End Time of the Bill.</Doc>
+                    </Timestamp>
+                    <Timestamp
+                        name="PIN_FLD_DUE_T"
+                        use="optional">
+                        <Doc> Payment Due Time that are derived from Bill Items.</Doc>
+                    </Timestamp>
+                    <String
+                        name="PIN_FLD_ORIG_NUM"
+                        use="optional"
+                        maxlen="60">
+                        <Doc>Previous Bill Number.</Doc>
+                    </String>
+                    <String
+                        name="PIN_FLD_NAME"
+                        use="optional"
+                        maxlen="60">
+                        <Doc>Type of Bill.</Doc>
+                    </String>
+                    <Decimal
+                        name="PIN_FLD_AMOUNT_ORIG"
+                        use="optional">
+                        <Doc> Total PIN_FLD_DUE field of Previous Bill. </Doc>
+                    </Decimal>
+                    <Timestamp
+                        name="PIN_FLD_LAST_BILL_T"
+                        use="optional">
+                        <Doc> Creation Time of the Previous Bill.</Doc>
+                    </Timestamp>
+		    <Int
+			name="PIN_FLD_REASON_DOMAIN_ID"
+			use="optional">
+			<Doc>Reason Domain Code for the Corrective Bill.</Doc>
+		    </Int>
+		    <Int
+			name="PIN_FLD_REASON_ID"
+			use="optional">
+			<Doc>Reason Id for the Corrective Bill.</Doc>
+		    </Int>
+		    <Enum
+			name="PIN_FLD_INV_TYPE"
+			use="optional">
+			<Doc>Invoice Type for the Bill.</Doc>
+		    </Enum>
+                </Fields>
+            </Array>
+        </Fields>
+    </Output>
+</Opcode>

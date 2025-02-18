@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# @(#)%Portal Version: start_batch_controller.sh:UelEaiVelocityInt:1:2006-Sep-05 22:24:00 %
+#
+# Copyright (c) 2000, 2009, Oracle and/or its affiliates. All rights reserved. 
+#      This material is the confidential property of Oracle Corporation
+#      or its licensors and may be used, reproduced, stored
+#      or transmitted only in accordance with a valid Oracle license
+#      or sublicense agreement.
+#
+
+
+PINDIR=/brmapp/portal/7.5
+PATH=${PINDIR}/bin:/usr/bin:/bin:.:${PATH}
+
+BCDIR=${PINDIR}/apps/batch_controller
+LOGDIR=${BCDIR}
+BCLOG=${LOGDIR}/BatchController.log
+BCPID=${LOGDIR}/BatchController.pid
+
+# does the propreties file exist?  Success implies that ${LOGDIR} exists...
+if [ ! -r  ${BCDIR}/Infranet.properties ]; then
+   echo "HELP: no Infranet.properties for BatchController in \"${BCDIR}\"!"
+   exit 1
+fi
+
+# set JAR_DIR to be the full pathname of the dir where the
+# jar files are located
+JARDIR=${PINDIR}/jars
+
+# set the classpath variable
+CLASSPATH=${BCDIR}:${JARDIR}/batch.jar:${JARDIR}/pcm.jar:${JARDIR}/pcmext.jar:${JARDIR}/xercesImpl.jar:${JARDIR}/xmlParserAPIs.jar
+
+JAVA=$BRM_JRE/bin/java
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${BCDIR} ;
+  echo "started BatchController at..." >> ${BCLOG}
+  date >> ${BCLOG}
+
+  # The headless AWT option is used to avoid an unnecessary X server run-time requirement.
+  ${JAVA} -server -Djava.awt.headless=true -Xms25m -Xmx64m -classpath ${CLASSPATH} com.portal.batch.BatchControllerMain >> ${BCLOG} 2>&1 &
+
+  echo $! > ${BCPID} ;
+  chmod 664 ${BCLOG} ;
+  chmod 664 ${BCPID} )
+
+# get rc from BatchController startup
+exit $?

@@ -1,0 +1,309 @@
+<Opcode
+    name="PCM_OP_AR_BILL_ADJUSTMENT"
+    visibility="public"
+    transaction="required"
+    component="fm_ar"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+    <Doc>
+        <!--h:p>
+            <h:i>
+           Copyright &#169; 2006 Oracle. All rights reserved.
+           This material is the confidential property of Oracle Corporation or
+           its licensors and may be used, reproduced, stored or transmitted
+           only in accordance with a valid Oracle license or sublicense agreement.
+        </h:i>
+        </h:p-->
+
+        This opcode adjusts a bill by calling the item adjustment opcode.<h:p/> 
+        Following are the different ways a bill can be adjusted: 
+        <h:ol>
+            <h:li> The bill adjustment amount may be specified. The amount can
+                be a positive or a negative number. A negative amount  credits a
+                bill while a positive amount debits it. A bill can
+                <h:u>not</h:u> be credited beyond its total due. However, there
+                is no such limit on amount by which a bill can be debited.</h:li>
+            <h:li> Optionally we may also specify the percentage of the bill due
+                amount as the adjustment parameter. This parameter if specified
+                overrides the adjustment amount. </h:li>
+            <h:li> In case we want to specific amount should be allocated to
+                which item, we need to specify the items with corresponding
+                amounts.</h:li>
+            <h:li> In case amount of any item returned by the bill-item search
+                opcode is 0, then the item will not be considered for
+                adjustment. </h:li>
+        </h:ol>
+        <h:p/> Notes on tax treatment: <h:ol>
+            <h:li> The opcode reads the tax flag from optional field
+                PIN_FLD_FLAGS specified in the input flist. If the value of the
+                flag is PIN_AR_WITH_TAX then tax is calculated on the amount
+                specified in the input flist. If the value of the field is
+                PIN_AR_WITHOUT_TAX then only the amount specified in the input
+                flist is adjusted. </h:li>
+            <h:li> If the PIN_FLD_FLAGS optional field is not specified in the
+                input flist then the system's default tax behavior
+                (PIN_AR_WITH_TAX) is used. This setting is specified in the
+                cm pin.conf as follows: <h:ul>
+                    <h:li> - fm_ar tax_reversal_with_tax 1 #for without tax</h:li>
+                    <h:li>- fm_ar tax_reversal_with_tax 2 #for with tax </h:li>
+                </h:ul>
+            </h:li>
+        </h:ol>
+        <!-- Now it is applicable for only account adjustment:
+        <h:p/> In case of taxation, the tax can be applied as TAX_NOW or
+        TAX_DEFERRED. This behaviour is controlled by a cm's pin.conf entry. The
+        values for this entry are: <h:p/>
+        <h:ul>
+            <h:li>- fm_ar tax_now 0 #for deferred tax</h:li>
+            <h:li>- fm_ar tax_now 1 #for tax now</h:li>
+        </h:ul-->
+        <h:p/> By default this entry will not be there in cm's pin.conf and so
+        the behaviour will be deferred taxation. 
+        <h:p/> One of the following opcode operation description messages can be returned to the caller: 
+        <h:ul>
+            <h:li>The input bill object must be AR bill object.</h:li>
+            <h:li>No adjustable items found.</h:li>
+            <h:li>Tax only item cannot be adjusted.</h:li>
+        </h:ul>
+        <h:p/>The PIN_ERRCLASS_SYSTEM_DETERMINATE error buffer returned (if any) can be:
+        <h:ul>
+            <h:li>PIN_ERR_BAD_OPCODE</h:li>
+        </h:ul>
+    </Doc>
+
+
+    <Events>
+        <Event
+            objRef="obj://event.item.adjustment">
+            <Doc>PIN_OBJ_TYPE_EVENT_ITEM_ADJUSTMENT </Doc>
+        </Event>
+        <Event
+            objRef="obj://event.tax.adjustment">
+            <Doc>PIN_OBJ_TYPE_TAX_EVENT_ADJUSTMENT</Doc>
+        </Event>
+    </Events>
+    <SeeAlso>
+        <Item
+            href="obj://item">
+            <Doc>Bill Items.</Doc>
+        </Item>
+        <Item
+            href="op://fm_ar/PCM_OP_BILL_ITEM_SEARCH">
+            <Doc>Use this opcode to search for bill adjustment Items. An opcode
+                flag of zero is used.</Doc>
+        </Item>
+        <Item
+            href="op://fm_ar/PCM_OP_AR_ITEM_ADJUSTMENT">
+            <Doc>Use this opcode to adjust Bill Items. An opcode flag of zero is
+                used. Therefore, it does not lock on the Items and the
+                adjustment will be updated to the database.</Doc>
+        </Item>
+        <Item
+            href="op://fm_bill_utils/fm_utils_trans_open">
+            <Doc>This opcode opens a transaction to lock all the Bill object
+                with a PCM_TRANS_OPEN_LOCK_OBJ flag.</Doc>
+        </Item>
+        <Item
+            href="file://pin_flds.h">
+            <Doc>The C Header file contains the PIN_FLD definitions.
+                The C++ Header file is PinFlds.h</Doc>
+        </Item>
+        <Item
+            href="file://pcm_ops.h">
+            <Doc>The Header file contains the PCM_OP definitions.</Doc>
+        </Item>
+        <Item
+            href="file://pcm.h">
+            <Doc>The Header file contains the opcode flags OPFLG definitions.</Doc>
+        </Item>
+        <Item
+            href="file://pin_bill.h">
+            <Doc>The Header file contains PIN_BILL, PIN_EVENT and
+               tax flags definitions.</Doc>
+        </Item>
+        <Item
+            href="http://www.portal.com">
+            <Doc>Visit Portal web site for additional information.</Doc>
+        </Item>
+    </SeeAlso>
+
+    <Input>
+        <Fields>
+            <Poid
+                name="PIN_FLD_POID"
+                use="required"
+                mode="complete">
+                <Doc>Poid of the Bill object to be adjusted. This must be an AR
+                    Bill object.</Doc>
+                <ClassRef>obj://bill</ClassRef>
+            </Poid>
+            <Decimal
+                name="PIN_FLD_AMOUNT"
+                use="required">
+                <Doc> The adjustment amount to be adjusted from the Bill. If the
+                    amount is greater than 0, it must be less than or equal to
+                    the total amount due of the Bill as the adjustment cannot be
+                    more than the amount due. 
+                    The amount field can have a value of zero only if the
+                    percentage is specified or if the amount is specified within
+                    the items array.</Doc>
+            </Decimal>
+            <Decimal
+                name="PIN_FLD_PERCENT"
+                use="optional">
+                <Doc> Adjustment percent of the Bill amount due. This is an
+                    optional parameter. If specified, it will override the value
+                    specified in the PIN_FLD_AMOUNT field. This is the percent
+                    of the net amount(i.e. amount without tax) of total amount
+                    due on the bill.</Doc>
+            </Decimal>
+            <String
+                name="PIN_FLD_PROGRAM_NAME"
+                use="required"
+                maxlen="60">
+                <Doc> A name that identifies calling program.</Doc>
+            </String>
+            <String
+                name="PIN_FLD_DESCR"
+                use="required"
+                maxlen="255">
+                <Doc> Text from the caller application to describe the
+                    adjustment.</Doc>
+            </String>
+            <Int
+                name="PIN_FLD_REASON_DOMAIN_ID"
+                use="optional">
+                <Doc> Pass reason info to the adjust Items.</Doc>
+            </Int>
+            <Int
+                name="PIN_FLD_REASON_ID"
+                use="optional">
+                <Doc> Pass reason codes to the adjust Items.</Doc>
+            </Int>
+            <!--String
+                name="PIN_FLD_TAX_CODE"
+                maxlen="255"
+                use="optional">
+                <Doc>Pass the tax information to the adjust Items.</Doc>
+            </String>
+            <Int
+                name="PIN_FLD_TAX_SUPPLIER"
+                use="optional">
+                <Doc>Pass the tax information to the adjust Items.</Doc>
+            </Int-->
+            <Timestamp
+                name="PIN_FLD_END_T"
+                use="optional">
+                <Doc> Pass event End Time (in Portal format) to the adjust
+                    Items.</Doc>
+            </Timestamp>
+            <Int
+                name="PIN_FLD_FLAGS"
+                use="optional">
+                <Doc> Optional flag for tax treatment. The value can either be
+                    PIN_AR_WITH_TAX or PIN_AR_WITHOUT_TAX. The default value is
+                    PIN_AR_WITH_TAX.</Doc>
+            </Int>
+            <Array
+                name="PIN_FLD_ITEMS"
+                use="optional"
+                elemIdMode="ignored"
+                iterationOrder="undefined"
+                minElements="0"
+                minElemId="0"
+                isElemIdAssignAllowed="false"
+                isElemIdAnyAllowed="false"
+                isRecursive="false">
+                <Doc> Optional array of the Bill Items to be adjusted.</Doc>
+                <Fields>
+                    <Poid
+                        name="PIN_FLD_POID"
+                        use="required"
+                        mode="complete">
+                        <Doc> The Item object that is associated with the Bill.</Doc>
+                        <ClassRef>obj://item</ClassRef>
+                    </Poid>
+                    <Decimal
+                        name="PIN_FLD_AMOUNT"
+                        use="required">
+                        <Doc> The amount to be adjusted from the Bill
+                        Item.</Doc>
+                    </Decimal>
+                </Fields>
+            </Array>
+        </Fields>
+    </Input>
+
+    <Output>
+        <Fields>
+            <Poid
+                name="PIN_FLD_POID"
+                use="required"
+                mode="complete">
+                <Doc>The Bill object adjusted.</Doc>
+                <ClassRef>obj://bill</ClassRef>
+            </Poid>
+            <Enum
+                name="PIN_FLD_RESULT"
+                use="required">
+                <Doc> Result of the operation (pass or fail). It is considered a
+                    failed operation if there is no Items found for the Bill.
+                    The values are:
+                <h:ul>
+                        <h:li>PIN_RESULT_PASS:
+                        The operation is successful.</h:li>
+                        <h:li>PIN_RESULT_FAIL:
+                        The operation failed.</h:li>
+                    </h:ul>
+                </Doc>
+                <Values>
+                    <Value>1</Value>
+                    <Doc>PIN_RESULT_PASS</Doc>
+                </Values>
+                <Values>
+                    <Value>0</Value>
+                    <Doc>PIN_RESULT_FAIL</Doc>
+                </Values>
+            </Enum>
+            <String
+                name="PIN_FLD_DESCR"
+                use="optional"
+                maxlen="255">
+                <Doc> Text to the caller application to describe the opcode
+                    results. It may be sent on success as well as failure.</Doc>
+            </String>
+            <Array
+                name="PIN_FLD_RESULTS"
+                use="optional"
+                elemIdMode="ignored"
+                iterationOrder="undefined"
+                minElements="0"
+                minElemId="0"
+                isElemIdAssignAllowed="false"
+                isElemIdAnyAllowed="false"
+                isRecursive="false">
+                <Doc> Array of the results information. There is one element for
+                    each Item that is adjusted.</Doc>
+                <Fields>
+                    <Poid
+                        name="PIN_FLD_POID"
+                        use="required"
+                        mode="complete">
+                        <Doc> Poid of the Item object that was adjusted.</Doc>
+                        <ClassRef>obj://item</ClassRef>
+                    </Poid>
+                    <Poid
+                        name="PIN_FLD_EVENT_OBJ"
+                        use="required"
+                        mode="complete">
+                        <Doc> Poid of the Event object created for the
+                            adjustment.</Doc>
+                        <ClassRef>obj://event</ClassRef>
+                    </Poid>
+                </Fields>
+            </Array>
+        </Fields>
+    </Output>
+</Opcode>

@@ -1,0 +1,260 @@
+========================================================================================
+EXT_OutFileManager
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.EXT_OutFileManager $
+$Revision: /cgbubrm_7.5.0.pipeline/1 $
+$Author: sknanda $
+$Date: 2013/04/16 02:36:11 $ 
+======================================================================================
+Actual Version : 10013 /Date 15-Apr-2013  /Santanu
+Notes:
+-----
+Bug 16660464 - P-13345078 BAD FILE NUMBER ERROR IN PIPELINE OCCURRING AGAIN  
+====================================================================================
+Actual Version : 10012 /Date 16-May-2010  /Santanu
+Notes:
+-----
+Bug 11882202 - P-10349440  INCREASE IN PIPELINE STARTUP TIME - NOW TAKING 12+ HOURS 
+=======================================================================================
+Actual Version : 10011 / Date : 15-Nov-2010 / Santanu
+---------------
+Notes   :
+---------
+Bug 10085874 - PIPELINE GENERATES A NORMAL ERROR INSTEAD OF CRITICAL WHEN FILE SYSTEM IS FULL 
+
+========================================================================================
+Actual Version : 10010 / Date : 09-Apr-2004 / gdouglas
+----------------
+
+Notes          :
+----------------
+* PRSF00104241: Don't save a pointer when iterating through the loop,
+                copy by value instead
+========================================================================================
+========================================================================================
+Actual Version : 10009 / Date : 29-Sep-2003 / shiva
+----------------
+
+Notes          :
+----------------
+* PRSF00067365: Move pipeline specific identifiers in tmp files after the 
+                TempPrefix to enable Debitel Customizations to work unmodified.
+                This is a change to 35640 and might affect any customer 
+                depending on the tmp file format prior to this release 
+========================================================================================
+Actual Version : 10008 / Date : 10-Sep-2003 / shiva
+----------------
+
+Notes          :
+----------------
+* PRSF00042982:  Eliminate calls to the Registry parser for maintaining temporary 
+                 extension and stream lists, so can also handle filenames with spaces 
+===============================================================================
+Actual Version : 10007 / Date : 05-Jun-2003 / bertm
+----------------
+
+Notes          :
+----------------
+* PRSF00040429: EXT_OutFileManager doesn't log anything if it can't rollback a  
+transaction.
+
+===============================================================================
+Actual Version : 10006 / Date : 25-Mar-2003 / kbref
+----------------
+
+Notes          :
+----------------
+* PRSF00043126 core dump OutFileManager
+
+========================================================================================
+Actual Version : 10005 / Date : 25-Mar-2003 / shiva
+----------------
+
+Notes          :
+----------------
+* PRSF00035640: Ensure tmp files have pipeline specific identifiers to allow 
+multiple pipelines to write to same directory (propagation of 34807)
+
+========================================================================================
+Actual Version : 10004 / Date : 10-Mar-2003 / kbref
+----------------
+
+Notes          :
+----------------
+* PRSF00034368: TAM_Transaction not completely thread-safe
+                (propagation of 32552)
+
+========================================================================================
+Actual Version : 10003 / Date : 01-Mar-2003 / gdouglas
+----------------
+
+Notes          :
+----------------
+* PRSF00033366 Fixed recursive lock path that lead to deadlock
+========================================================================================
+Actual Version : 10002 / Date : 21-Feb-2003 / arockel
+----------------
+
+Notes          :
+----------------
+* PRSF00032419 Implement a thread trace.
+
+========================================================================================
+
+Actual Version : v6.3.4 / Date : 01-Mar-2003 / gdouglas
+----------------
+
+Notes          :
+----------------
+* PRSF00033364 Recursive locking of a non-recursive mutex attempted;
+removed code path that caused error
+========================================================================================
+========================================================================================
+Actual Version : v6.3.3 / Date : 24-Feb-2003 / gdouglas
+----------------
+
+Notes          :
+----------------
+* PRSF00032775 Corrected guard for emtpyStreamListM as the lock was
+inconsistent and not obtained in every possible case. This is a
+propogation of PRSF00032669
+* PRSF00031924 partial backport of changes pertaining to
+EXT_OutFileManager - again santizing of locks.
+========================================================================================
+Actual Version : v6.3.2 / Date : 06-Jun-2002 / cdiab
+----------------
+
+Notes          :
+----------------
+
+- modifications_for_Batch_Reject activity
+- implemented methode to build the output name and the temp output name
+- added receiveRequest() methode to reply to external requests for the filenames
+
+========================================================================================
+
+Actual Version : v4-30-08 / Date : 18-Dec-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #41917 EXT_InFileManager and EXT_OutFileManager shows 
+
+================================================================================
+
+Actual Version : v4-30-07 / Date : 25-Sep-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #38714 registry-parameter DeleteEmptyFile moved into the base-class
+              PLG_OutputStreamDevice of the Framework as registry-parameter
+	      DeleteEmptyStream.
+              
+================================================================================
+
+Actual Version : v4-30-06 / Date : 03-Sep-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #37618 in consequence of the code review 08.2001 of the PLG_Base/Framework.
+              in consequence of the code review 08.2001 of the STR/Framework.
+              
+================================================================================
+
+Actual Version : v4-30-05 / Date : 10-Aug-2001
+----------------
+
+Solved PRs/CRs :
+---------------- 
+PETS #38555 Event EVT_OUTPUT_FILE_READY is now send on commit, 
+            not on prepareCommit..
+
+================================================================================
+
+Actual Version : v4-30-04 / Date : 10-Aug-2001
+----------------
+
+Solved PRs/CRs :
+---------------- 
+PETS #36559 SourcePro AIX Port.
+
+================================================================================
+Actual Version : v4-30-03 / Date : 09-Aug-2001
+----------------
+
+Solved PRs/CRs :
+---------------- 
+PETS #37757 : No error message any longer by recycle_test files on output.
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 18-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+---------------- 
+PETS #37175 : when trying to write a 0 length string, file is sent to error.
+              In write, error is when return != size (0 is accepted as OK when
+	      expected).
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 09-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PETS #36689
+---------------- default value for registry parameter DeleteEmptyFile is
+                 modified to true
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 08-Jun-2001
+----------------
+
+Notes          :
+----------------
+                 - Just new
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PT0000000036516
+---------------- extension format fixed on outputfile
+
+Open PRs/CRs   :
+----------------
+

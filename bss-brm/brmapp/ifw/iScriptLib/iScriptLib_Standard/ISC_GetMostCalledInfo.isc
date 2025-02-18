@@ -1,0 +1,40 @@
+//==============================================================================
+//
+// Copyright (c) 2006 Oracle. All rights reserved.
+// 
+// This material is the confidential property of Oracle Corporation
+// or its licensors and may be used, reproduced, stored or transmitted
+// only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+// Block: ISC_GetMostCalledInfo.isc
+//-------------------------------------------------------------------------------
+// Module Description:
+//
+// Contains functions generally required to be used by the  expressions in discounting
+// Can be used in other iScripts too.
+//
+
+
+function Decimal getMostCalledCost
+{
+  Decimal val = edrDecimal(DETAIL.MC.AMOUNT, 0);
+  logPipeline("getmostCalledCost Charge: " + decimalToStr(val) + ";\n");
+  return val;
+}
+
+function Decimal getMostCalledDuration
+{
+  Decimal val = edrDecimal(DETAIL.MC.QUANTITY, 0);
+  logPipeline("getmostCalledCost Duration: " + decimalToStr(val) + ";\n");
+  return val;
+}
+
+function Decimal getMostCalledOccurrences
+{
+  Long val = edrLong(DETAIL.MC.COUNT, 0);
+  logPipeline("getmostCalledCost Occurances: " + longToStr(val) + ";\n");
+  Decimal deciVal = longToDecimal(val);
+  return deciVal;
+}

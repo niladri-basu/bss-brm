@@ -1,0 +1,25 @@
+-------------------------------------------------------------------
+PORTAL - Pipeline Plugin Development Kit (PDK)
+-------------------------------------------------------------------
+
+Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+
+This material is the confidential property of Oracle Corporation or its
+licensors and may be used, reproduced, stored or transmitted only in
+accordance with a valid Oracle license or sublicense agreement.
+
+Sample-execution
+================
+
+- Simple
+  ------
+  Use this example to verify that ifw is installed properly. 
+  It has very limited function and does not need a database.
+  For more information, see ./samples/simple/simple.readme.
+
+- Wireless
+  --------
+  This example uses the whole bandwith of functions and is intended 
+  to be used with an Portal installation. An empty database for 
+  ifw is needed. For more information, see 
+  ./samples/wireless/wireless.readme.

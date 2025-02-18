@@ -1,0 +1,43 @@
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+Starting Revenue Forecast execution at: 
+Fri Sep  1 18:39:32 NZST 2017
+Incorrect Execution: Execute as td_revenue_forecast_report.sh YYYYMMDD
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+Starting Revenue Forecast execution at: 
+Fri Sep  1 20:14:16 NZST 2017
+Incorrect Execution: Execute as td_revenue_forecast_report.sh YYYYMMDD
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+egrep: login.cfg: No such file or directory
+Incorrect Execution: Execute as td_get_unbilled_revenue_report.sh YYYYMMDD
+Starting timestamp for 20191201 is 1575111600
+Ending timestamp for 20200101 is 1577790000
+Starting Unbilled GL report generation starting from 20191201 to 20200101: 
+Tue Dec 17 13:53:43 NZDT 2019
+pin_ledger_report -mode run_report -start 12/01/19 -end 01/01/20 -type billed -detail -verbose
+Couldn't connect to Portal.
+pin_ledger_report -mode run_report -start 12/01/19 -end 01/01/20 -type unbilled_earned -detail -verbose
+Couldn't connect to Portal.
+pin_ledger_report -mode run_report -start 12/01/19 -end 01/01/20 -type unbilled_unearned -detail -verbose
+Couldn't connect to Portal.
+Completed Unbilled GL report generation at: 
+Tue Dec 17 13:53:43 NZDT 2019
+Starting td_unbilled_gl_proc.sh at: 
+Tue Dec 17 13:53:43 NZDT 2019
+sh: ./all_scripts/td_unbilled_gl_proc.sh: No such file or directory
+Completed td_unbilled_gl_proc.sh at: 
+Tue Dec 17 13:53:43 NZDT 2019
+Starting td_trigger_bip_report.sh at: 
+Tue Dec 17 13:53:43 NZDT 2019
+sh: ./all_scripts/td_trigger_bip_report.sh: No such file or directory
+Completed td_trigger_bip_report.sh at: 
+Tue Dec 17 13:53:43 NZDT 2019

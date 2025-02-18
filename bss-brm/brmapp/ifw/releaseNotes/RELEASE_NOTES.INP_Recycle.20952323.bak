@@ -1,0 +1,123 @@
+========================================================================================
+INP_Recycle
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Module Version:  10015  7.3_Patch / Date 03-Jan-2013 Santanu 
+----------------
+Bug 15943878 - P-14122728 POTENTIAL PERFORMANCE ISSUE WITH INP_RECYCLE IN GENERATING DUPLIC... 
+================================================================================
+
+Module Version:  10014  7.4 / Date 08-Dec-2008 cprabhak
+----------------
+bug 7626087 : Typecasting of RWCString to const char * to resolve ambiguity
+              issue in the call to EDR::setString
+
+================================================================================
+
+Module Version:  10013  7.3_Patch / Date 20-Dec-2006 ashishk 
+----------------
+PRSF00240534 7.2.1 -> 7.3(Unix/Ora) Upgrade : Unable to recycle the EDRs in 7.3 
+             which were initially suspended in 7.2.1 
+
+================================================================================
+
+Module Version:  10012  7.3 / Date 20-Jan-2006 ashishk 
+----------------
+PRSF00188403: Problem in Processing the suspended CDR's in 6.5 after upgrading to 7.0
+
+================================================================================
+
+Module Version:  Velocity / Date 04-Apr-2005 pmahishi 
+----------------
+PRSF00161986: RE_Pipeline_Velocity nt_ia64: Pipeline Packaging (Reject Recyle files missing)
+
+================================================================================
+
+Module Version:  10011  6.7_FP2 / Date 17-Dec-2004 dbhatt 
+----------------
+PRSF00145636: In INP_Recycle, Header & Trailer container "isvalidDetail" is set to true
+
+================================================================================
+
+Module Version:  10010  6.7_FP2 / Date 29-Nov-2004 pmahishi
+----------------
+PRSF000140250: Propagate the changes of CO PRSF00139419 to 6.7 FP2.            
+================================================================================
+
+Module Version:  10009  6.7_FP2 / Date 08-Nov-2004 dbhatt 
+----------------
+PRSF00139132: Changes done to push EDRs as they are created instead of storing 
+              in a vector
+
+================================================================================
+
+Module Version:  10008  6.7_FP2 / Date 25-Oct-2004 dkapila 
+----------------
+PRSF000137662: Propagate the changes of CO PRSF00131691 to 6.7 FP2. 
+
+================================================================================
+
+Module Version:  10007  6.7_FP2 / Date 25-Oct-2004 dkapila 
+----------------
+PRSF000137367: regression: ERR_LISTENER_NOT_FOUND: fw.DataPool.Listener (ia64 only). 
+
+================================================================================
+
+Module Version:  10006  6.7_FP2 / Date 01-Oct-2004 dkapila 
+----------------
+PRSF000133467:  QF: To create a StdRecycleDetail.sql file for standard recycling mechanism.
+
+================================================================================
+Module Version:  10005  6.7_FP2 / Date 11-Jun-2004  vgounder
+----------------
+PRSF000116149:  Storing recycle_key in EDR.
+================================================================================
+
+Module Version:  10004  6.7_FP2 / Date 25-May-2004  pmahishi
+----------------
+PRSF000103037:  Need to store original batch id as well as suspended (rerating) 
+		batch id in /suspended_usage object in Suspense Handling.
+
+===============================================================================
+Module Version: 10004  6.7_FP2 / 21-May-2004 vgounder
+---------------
+PRSF00112343: Modified RWZone::local() to RWZone::utc() for setting utc time in
+              CreationTimeStamp, which will correct Recycle Time.
+
+===============================================================================
+Module Version:  10003 6.7_FP2 / Date 19-Apr-2004
+----------------
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+===============================================================================
+
+Module Version:  10002 6.7_FP1 / Date 05-Dec-2003  Louis Piro
+----------------
+
+PRSF00081996: INP_Recycle does not set HEADER.CREATION_TIMESTAMP used by 
+              updating recycle time.
+
+	    : FCT::Recycle fails to Parse UTF-8 XML on HPUX.
+	       
+            : When recycling, need to restore EDRs from earlier container
+              descriptions.  
+	      
+            : [VF Greece] Change XML serialize/restore function names used in 
+              OUT_Serialize, INP_Restore, FCT_PreSuspense, and INP_Recycle  
+              plugins
+	      
+            : [VF Greece] new DAT::Recycle plugin for suspense handling
+              and related change
+	      
+===============================================================================
+Module Version:  10001 6.7_FP1 / Date 18-Nov-2003  rjadav
+----------------
+PRSF00078522 - Set Original_Batch_Id and Override_Reasons (Changes for SHM Rel-2)
+
+===============================================================================
+Actual Version : 10000 6.5_FP3 / Date: 03-Oct-2003
+----------------
+PRSF00063482: Initial release
+===============================================================================
+

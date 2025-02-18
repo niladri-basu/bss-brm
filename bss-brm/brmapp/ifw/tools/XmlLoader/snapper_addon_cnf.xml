@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IFW xsi:noNamespaceSchemaLocation="LoadIfwConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<RecordSet>
+<IFW_UOM NAME ="Occurence" UOM ="OCC" />
+</RecordSet>
+<RecordSet>
+<IFW_UOM_MAP FROM_UOM ="OCC" ROUNDING ="U" RUM ="EVT" TO_UOM ="OCC" UOM_FACTOR ="1" />
+</RecordSet>
+<RecordSet>
+<IFW_RUMGROUP_LNK RUM ="EVT" RUMGROUP ="OCCURENCE" UOM ="OCC" />
+</RecordSet>
+</IFW>

@@ -1,0 +1,58 @@
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Tue Oct 12 16:22:49 2021
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /brmapp/portal/7.5/TD/apps/td_gl_reports/logs/report_loader.ctl
+Data File:      ./output_files/output_file.txt
+  Bad File:     /brmapp/portal/7.5/TD/apps/td_gl_reports/logs/output_file.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table TD_REVENUE_FORECAST_T, loaded from every logical record.
+Insert option in effect for this table: APPEND
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+ACCOUNT_OBJ_ID0                     FIRST     *   ,       CHARACTER            
+BILLINFO_OBJ_ID0                     NEXT     *   ,       CHARACTER            
+PRODUCT_OBJ_ID0                      NEXT     *   ,       CHARACTER            
+OFFERING_OBJ_ID0                     NEXT     *   ,       CHARACTER            
+EARNED_START_T                       NEXT     *   ,       CHARACTER            
+EARNED_END_T                         NEXT     *   ,       CHARACTER            
+CURRENCY                             NEXT     *   ,       CHARACTER            
+AMOUNT                               NEXT     *   ,       CHARACTER            
+GL_ID                                NEXT     *   ,       CHARACTER            
+QUANTITY                             NEXT     *   ,       CHARACTER            
+TAX_CODE                             NEXT     *   ,       CHARACTER            
+
+
+Table TD_REVENUE_FORECAST_T:
+  22 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 181632 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:            22
+Total logical records rejected:         0
+Total logical records discarded:        0
+
+Run began on Tue Oct 12 16:22:49 2021
+Run ended on Tue Oct 12 16:22:50 2021
+
+Elapsed time was:     00:00:00.12
+CPU time was:         00:00:00.03

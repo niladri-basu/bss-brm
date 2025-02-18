@@ -1,0 +1,105 @@
+--------------------------------------------------------------------------------------------------
+-- Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+-- This material is the confidential property of Oracle Corporation or its
+-- licensors and may be used, reproduced, stored or transmitted only in
+-- accordance with a valid Oracle license or sublicense agreement.
+--
+--------------------------------------------------------------------------------------------------
+-- Module Description
+-- SQL script to modify IFW_NETWORKOPER in 7.5 PS7.
+--------------------------------------------------------------------------------------------------
+--
+--------------------------------------------------------------------------------------------------
+-- Responsible: Archan Misra
+--------------------------------------------------------------------------------------------------
+
+create or replace
+PROCEDURE modify_ifw_networkoper_PS7 AS
+  v_ddl_stmt VARCHAR2(500);
+  v_constraint_exists NUMBER := 0;
+  ADD_CONSTRAINT_UPDATE CONSTANT NUMBER := -20001;
+  ADD_COLUMN_UPDATE CONSTANT NUMBER := -20002;
+  SOME_OTHER_EXCEPTION  CONSTANT NUMBER := -20003;
+  v_errmsg VARCHAR2(200);
+  
+  BEGIN
+    IF(pin_upg_common.table_exists('IFW_NETWORKOPER', v_errmsg)) THEN
+        BEGIN
+	  SELECT COUNT(*) into v_constraint_exists FROM USER_CONSTRAINTS WHERE CONSTRAINT_NAME = 'CKC_NOP_TAXFLAG';
+          -- Add the check constraint on taxflag
+	  IF (v_constraint_exists = 0) THEN
+		v_ddl_stmt := 'alter table  IFW_NETWORKOPER add constraint CKC_NOP_TAXFLAG CHECK (TAXFLAG  in (''Y'',''N''))';
+		EXECUTE IMMEDIATE v_ddl_stmt;
+	  END IF;
+          EXCEPTION
+            WHEN OTHERS THEN
+              RAISE_APPLICATION_ERROR(ADD_CONSTRAINT_UPDATE,'modify_ifw_networkoper_PS7: add constraint CKC_NOP_TAXFLAG failed with Reason:' || v_errmsg, TRUE);
+        END;
+
+        -- Add new column decimal places for ifw_networkoper table
+        BEGIN
+          IF (NOT pin_upg_common.column_exists('IFW_NETWORKOPER', 'DECIMAL_PLACES', v_errmsg)) THEN
+		v_ddl_stmt := 'ALTER TABLE IFW_NETWORKOPER ADD (DECIMAL_PLACES   NUMBER(9, 0)   DEFAULT 5 NOT NULL)';
+		EXECUTE IMMEDIATE v_ddl_stmt;
+		v_ddl_stmt := 'COMMENT ON COLUMN IFW_NETWORKOPER.DECIMAL_PLACES IS ''holds the TAP decimal places for the operator'''; 
+		EXECUTE IMMEDIATE v_ddl_stmt;
+	  END IF;
+          EXCEPTION
+            WHEN OTHERS THEN
+              RAISE_APPLICATION_ERROR(ADD_COLUMN_UPDATE,'modify_ifw_networkoper_PS7: Add column decimal_places in ifw_networkoper failed with Reason:' || v_errmsg, TRUE);
+        END;
+		
+	-- Add new column CAMELFLAG for ifw_networkoper table
+        BEGIN          
+          IF (NOT pin_upg_common.column_exists('IFW_NETWORKOPER', 'CAMELFLAG', v_errmsg)) THEN
+		v_ddl_stmt := 'ALTER TABLE IFW_NETWORKOPER ADD (CAMELFLAG    CHAR(1)   DEFAULT ''N'' NOT NULL)';
+		EXECUTE IMMEDIATE v_ddl_stmt;
+		v_ddl_stmt := 'COMMENT ON COLUMN IFW_NETWORKOPER.CAMELFLAG IS ''Indicator for supporting camel for the operator'''; 
+		EXECUTE IMMEDIATE v_ddl_stmt;
+		v_ddl_stmt :=  'alter table  IFW_NETWORKOPER add constraint CKC_NOP_CAMELFLAG CHECK (CAMELFLAG  in (''Y'',''N''))';
+		EXECUTE IMMEDIATE v_ddl_stmt;
+	   END IF;
+	   EXCEPTION
+            WHEN OTHERS THEN
+              RAISE_APPLICATION_ERROR(ADD_COLUMN_UPDATE,'modify_ifw_networkoper_PS7: Add column CAMELFLAG in ifw_networkoper failed with Reason:' || v_errmsg, TRUE);
+        END;
+		
+	-- Add new column NRTRDEFLAG for ifw_networkoper table
+	BEGIN
+          IF (NOT pin_upg_common.column_exists('IFW_NETWORKOPER', 'NRTRDEFLAG', v_errmsg)) THEN
+		v_ddl_stmt := 'ALTER TABLE IFW_NETWORKOPER ADD (NRTRDEFLAG    CHAR(1)   DEFAULT ''N'' NOT NULL )';
+		EXECUTE IMMEDIATE v_ddl_stmt;
+		v_ddl_stmt := 'COMMENT ON COLUMN IFW_NETWORKOPER.NRTRDEFLAG IS ''Indicator for supporting NRTRDE for the operator'''; 
+		EXECUTE IMMEDIATE v_ddl_stmt;
+		v_ddl_stmt :=  'alter table  IFW_NETWORKOPER add constraint CKC_NOP_NRTRDEFLAG CHECK (NRTRDEFLAG  in (''Y'',''N''))';
+		EXECUTE IMMEDIATE v_ddl_stmt;
+	  END IF;
+          EXCEPTION
+            WHEN OTHERS THEN
+              RAISE_APPLICATION_ERROR(ADD_COLUMN_UPDATE,'modify_ifw_networkoper_PS7: Add column NRTRDEFLAG in ifw_networkoper failed with Reason:' || v_errmsg, TRUE);
+        END;
+		
+	-- Add new column COUNTRYCODE for ifw_networkoper table
+	BEGIN
+          IF (NOT pin_upg_common.column_exists('IFW_NETWORKOPER', 'COUNTRYCODE', v_errmsg)) THEN
+		v_ddl_stmt := 'ALTER TABLE IFW_NETWORKOPER ADD (COUNTRYCODE   VARCHAR2(10)    DEFAULT ''42'' NOT NULL)';
+		EXECUTE IMMEDIATE v_ddl_stmt;
+		v_ddl_stmt := 'COMMENT ON COLUMN IFW_NETWORKOPER.COUNTRYCODE IS ''operator country code'''; 
+		EXECUTE IMMEDIATE v_ddl_stmt;
+	  END IF;
+          EXCEPTION
+            WHEN OTHERS THEN
+              RAISE_APPLICATION_ERROR(ADD_COLUMN_UPDATE,'modify_ifw_networkoper_PS7: Add column COUNTRYCODE in ifw_networkoper failed with Reason:' || v_errmsg, TRUE);
+        END;
+
+   END IF;
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE_APPLICATION_ERROR(SOME_OTHER_EXCEPTION,'SCRIPT modify_ifw_networkoper_PS7 FAILED with Reason:' || v_errmsg , TRUE);
+  END;
+/
+
+SET SERVEROUTPUT ON SIZE 1000000
+PROMPT Starting procedure modify_ifw_networkoper_PS7...
+EXEC modify_ifw_networkoper_PS7;
+DROP PROCEDURE modify_ifw_networkoper_PS7;

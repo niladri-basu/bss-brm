@@ -1,0 +1,530 @@
+================================================================================
+DAT_Rateplan
+--------------------------------------------------------------------------------
+Module Release Notes
+==============================================================================
+Module Version: 10034 7.5  25-Sep-2014
+bug19684084 : Random core dump while starting pipeline
+Issue Description:
+------------------
+Core Dump is observed when DAT_Rateplan and DAT_PriceModel tries to register
+events with listener at the same time during initialization.
+Solution:
+---------
+Registering the events before initialization; event processing is skipped if 
+not required.
+==============================================================================
+Module Version: 10033 7.5  04-Aug-2014
+bug19334711 : CRITICAL Error in pipeline invalid state change; RWReadersWriterLock
+acquireRead
+Issue Description:
+------------------
+Lock on derived rateplans were not getting released.
+Solution:
+---------
+1. Derived rateplans locks are released properly.
+2. Using business params to skip locking completely, if TailorMade feature is
+not being used.
+==============================================================================
+Module Version: 10032 7.5PS2  06-JUN-2012
+BUG 13990406 : Changed the size of buffer, from 10 to 255 bytes,of the variable
+used to save the rumgroup information, because of changes in the database.
+==============================================================================
+Module Version: 10031 7.5  21-Oct-2011
+BUG13245730: FIX BUILD BREAK ON SOLARIS
+==============================================================================
+Module Version: 10030 7.5  20-Oct-2011
+BUG13241538: PROPAGATION OF DAT RATEPLAN CHANGES REQUIRED FOR PDC
+==============================================================================
+Module Version: 10029 7.4  20-Jul-2011
+BUG12683317: PIPELINE SCHEMA CHANGE FOR PDC IN CHRONUS
+================================================================================
+Module Version: 10028  7.4   11-Nov-2010
+Bug 10077369: ECR: PARALLEL LOADING IN THE PIPELINE ENGINE 
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+Module Version: 10027  7.4   28-Apr-2010
+BUG9563625  : IFW DOESN'T START WITH INACTIVE RATE PLANS
+Rateplans with status 'D' are not loaded. While loading rateplan config data, consider it.
+================================================================================
+Module Version: 10026  7.3.2  29-FEB-2008
+BUG6840238 : EMPTY RUMGROUP LEADS TO MISLEADING ERROR
+================================================================================
+Module Version: 10025  7.3  11-Sep-2007
+BUG6362392: Reasoning: Fixes for memory leak and uninitialized variable in
+Rateplan and Price PlugIns
+================================================================================
+Module Version: 10024  7.3_Patch  24-July-2007
+BUG6166726   : DATA DUMP INTERFACE IMPLEMENTATION FOR PIPELINEDATADUMP.
+================================================================================
+Module Version: 10023  7.3_Patch  13-Feb-2007
+BUG5876179  : THE REALTIME PIPELINE CORE DUMPS WHEN NO RATE PLAN IS CONFIGURED
+Added a check for null pointer, which was causing the core.
+================================================================================
+Module Version: 10022  7.3_Patch  30-Oct-2006
+PRSF00235691  : Capacity of Time Model Hash has been doubled when the number of 
+                entries exceed the current capacity.
+================================================================================
+Module Version: 10021 Davinci  24-Aug-2006
+PRSF00230128: Misleading warning message was shown in process log, eventhough the 
+new DAT_RatePlan semaphore was correct. Set the workedOn = true to solve this.
+================================================================================
+Module Version: 10020 Davinci  21-Aug-2006
+PRSF00229694: There was a problem in the loading of rateplan configuration data
+which results in missing configuration data for some rateplans.Later on at the
+processing time MainRating was giving ERR_TIMEMODEL_NOT_FOUND in the stream log
+for those rate plans.
+================================================================================
+Module Version: 10019 Davinci  07-Aug-2006
+PRSF00227749: In case of invalid rateplan core dump is happening.Add the rateplan
+pointer check before acquiring or releasing lock
+================================================================================
+Module Version: 10018 Davinci  06-July-2006
+PRSF00222084: Add facility log events in the process log and to dump data using 
+semaphore 
+================================================================================
+Module Version: 10017 Davinci  30-June-2006
+PRSF00222244: TailormadePlan: Fix for array index logic for the modify case
+================================================================================
+Module Version: 10016 Davinci  27-June-2006
+PRSF00221575: FT_IT_TailormadePlan pipeline DAT Price &  DAT Rate plan
+issues retrieving optional fields
+Changes made to fix array indices.
+================================================================================
+Module Version: 10015 Davinci  19-June-2006
+PRSF00219691 : Not optimal reading data from ifw_*_cnf tables in Pipeline
+Changes made to optimize loading rateplan config from ifw_rateplan_cnf
+An optional registry parameter is introduced to make the fetch size from database
+configurable.
+================================================================================
+Module Version: 10014 Davinci  13-June-2006
+PRSF00216278 : TailormadePlan: Changes to handle new field PIN_FLD_SEQUENCE_NUM
+in event flist.
+================================================================================
+Module Version: 10013 Davinci  05-Apr-2006
+PRSF00201836 : TailormadePlan: DAT_Rateplan changes
+Changed DAT_Rateplan to enable it to listen to Tailormade product info change
+events and update the cache accordingly.
+================================================================================
+Module Version: 10012 Davinci  21-Nov-2005
+PRSF00187289 : Model Selector : Pipeline Rating,Discounting and 
+               Registry Changes(propagation to Davinci).
+	       Made changes to DAT::Rating::RateplanTimeZone and 
+	       DAT::Rating::RateplanPlugin for the model selector feature.
+================================================================================
+Module Version: 10011  7.2_Patch  22-Sep-2005
+PRSF00183366 A rateplan version can refer to same rateplan as its basic rateplan 
+              and previous version as basic version.
+================================================================================
+Module Version: 10010  New_Pipeline_Velocity  20-Apr-2005
+PRSF00163714  : WIN + Itanium: Pipeline is crashing while reading the bulk data of int64 type.
+                Replaced the RWDBTBuffer class with BAS::DBTBuffer class for int64 type.
+
+================================================================================
+Module Version: 10009  Velocity  04-Mar-2005
+PRSF00156872	Pipeline hangs at mainrating after CarrirIcRating has added a 991 block to the EDR container	
+
+================================================================================
+Module Version: 10008  6.7_FP2  28-Apr-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+Module Version: 10007  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+==============================================================================
+
+
+Module Version : 10006  6.7_FP2
+----------------
+
+Date : 20-April-2004
+----------------
+
+Change Order :  PRSF00105175
+----------------
+
+Short Description :
+-------------------
+67FP2 regression: BAT failed for results mismatch in many fields
+Wrong RUMGROUP selections at the time of creation of TimeModel.
+
+================================================================================
+Module Version : 10005  6.7_FP2
+----------------
+
+Date : 02-April-2004
+----------------
+
+Change Order :  PRSF00093376
+----------------
+
+Short Description :
+-------------------
+Improve the Load time performance for Rating module using less number of SQL queries & Bulkreader
+
+Edited description per KE...
+
+Rate plan load performance and memory impact during startup and processing has been improved by:
+
+- Using fewer SQL queries. (Queries on rateplans and corresponding versions are now combinded into a single query.)
+
+- Using a bulk reader.
+
+- Optimizing some data structures, such as changing PtrHashMap to PtrMap.
+
+- Removing unnecesary functions, such as checkrumintegrity and checkrumgroupinservice.
+
+==============================================================================
+
+Module Version: 10004  Apollo  18-Oct-2003
+PRSF00072510:   Integrate Sample database has problem.
+
+- DAT::Rateplan can't come up due to removal of DISCOUNTMODEL column from
+  the ifw_rateplan_ver table.
+
+==============================================================================
+Module Version: 10003  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+================================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+================================================================================
+
+
+Actual Version : v6.4.1 / Date : 09-Sep-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00017981 "Revenue Group" not available in 6.3 which was part of the 
+             Rate Plan configuration.
+    
+================================================================================
+
+Actual Version : v4-30-07 / Date : 05-Feb-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #40834 TimeZone Splitting doesn't support ISOLATED and CONSECUTIVE modes.
+
+================================================================================
+
+Actual Version : v4-30-06 / Date : 28-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38593 DB2 Port.
+
+================================================================================
+
+Actual Version : v4-30-05 / Date : 15-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42843 Change interface of DAT_RateplanVersion::getTimeModel() to avoid
+            temp. string creation.
+
+================================================================================
+
+Actual Version : v4-30-04 / Date : 22-Nov-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #41102 To avoid temp. BAS_Strings in FCT_Pre-/MainRating store char-flags
+            additionally as String.
+
+================================================================================
+
+Actual Version : v4-30-03 / Date : 23-Oct-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+- PETS #40836 Check the rum tables before loading. This prevents an invalid rum
+              configuration.
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 22-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+- PETS #37618 Code Review. Checked all remarks.
+- PETS #38331 DAT_RateplanRumGroup-reload failed...
+              ALL reference tables need to be cleared before starting reload.
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 05-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #36559 SourcePro Port
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 27-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+- new database table names
+- new copyright block
+- module renamed from DAT_TariffModel to DAT_Rateplan
+
+New Features   :
+----------------
+
+- return all rums for a service...
+- find rateplan with code
+
+================================================================================
+
+Actual Version : v4-10-00 / Date : 27-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Support for new database version v4-10.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Fixed PR 1871.
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-01-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+- Support for AIX compiler.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Fixed PR 1871.
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-27-01 / Date : 26-Apr-2000
+----------------
+
+Notes          :
+----------------
+
+- This version requires the database model v4.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Fixed PR 1871.
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-27-00 / Date : 15-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+- This version requires the database model v4.
+
+New Features   :
+----------------
+
+- New database column INT_TARIFFMODEL_CNF.SERVICECLASS added.
+  The time zone evaluation now uses service code, service class and zone.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-26-00 / Date : 11-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- New database column INT_TARIFFMODEL_CNF.ALT_PRICEMODEL added.
+  The alternative pricemodel can be used to calculate two prices
+  with one tariffmodel configuration.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-25-00 / Date : 13-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Performance improvements.
+
+- Reload events added.
+
+  After receiving a reload command the module generates one of the 
+  following events :
+
+  EVT_RELOAD_SUCCESSFUL : The reload was successful.
+  EVT_RELOAD_FAILED     : The reload failed.
+
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-24-00 / Date : 23-Dec-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Use BAS_Decimal instead of double to avoid 
+  rounding problems during rating and billing.
+- Implementation changed to support the HP aCC compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-23-00 / Date : 09-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+check all code reviews marks and correct them.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-21-00 / Date : 07-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+  - New function isUsable() added.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+

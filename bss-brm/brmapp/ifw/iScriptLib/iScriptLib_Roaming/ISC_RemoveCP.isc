@@ -1,0 +1,98 @@
+//==============================================================================
+//  @(#)% %
+//      Copyright (c) 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//------------------------------------------------------------------------------
+// Block: ISC_RemoveCP.isc
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module deletes all those CP whose currency type is not matching with the 
+//    currency type given in the registry.Corresponding tax packets will also be deleted 
+//
+//------------------------------------------------------------------------------
+// Responsible: Archan Misra
+//
+//------------------------------------------------------------------------------
+//==============================================================================
+const Long   LOG_MAJOR    = 3;
+String currencyType;
+//------------------------------------------------------------------------------
+// init()
+//------------------------------------------------------------------------------
+function BEGIN
+{
+  currencyType = regString(registryNodeName() + ".CurrencyType");
+  if (currencyType == "")
+  {
+    currencyType = "B";
+  }  
+}
+function onDetailEdr
+{
+  Long tpEntries; 
+  Long cpEntries;
+  Long cpIndex;
+  Long tpIndex;
+  Long blockIndex;
+  Long tpshiftcounter;
+  String Msg;
+
+  //----------------------------------------------------------------------------
+  // check whether any incoming TAP charge has come or not
+  //----------------------------------------------------------------------------
+  Long blockEntries = edrNumDatablocks( DETAIL.ASS_CBD);
+
+  for(blockIndex = 0; blockIndex < blockEntries; blockIndex = blockIndex + 1)
+  {
+    cpEntries = edrNumDatablocks( DETAIL.ASS_CBD.CP,blockIndex);
+
+    // This iScript will be used after exchange rate module in pipeline.
+    // In an ASS_CBD there will be first CP of rated currency and then CP of billing
+    // currency and then CP of home currency. 
+
+    for(cpIndex = 0; cpIndex < cpEntries; cpIndex = cpIndex + 1)
+    {
+      if(edrString(DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE,blockIndex,0) != currencyType)
+      {
+         // cp index is hardcoded to 0 because we are deleting first rated currency CP
+         // even if there are 2 CPs of rated currency it will not be an issue.Once
+         // the first cp gets deleted, second cp index will be shifted by 1. 
+        if (edrDeleteDatablock( DETAIL.ASS_CBD.CP, blockIndex,0) == false )
+        {
+          Msg = "ERROR:Failed to delete the CP block";
+          edrAddError("ERR_DELETION_CP_FAILURE", LOG_MAJOR, Msg);
+          edrSetIsValidDetail( false ); 
+          return;
+        }
+        tpshiftcounter = tpshiftcounter + 1;
+      }
+    }
+
+    // In the below loop we are deleting TP related to rated currency CP as it is already deleted above loop.
+    // also TP of billing currency gets shifted because of the deletion
+
+    tpEntries = edrNumDatablocks( DETAIL.ASS_CBD.TP,blockIndex); 
+
+    for (tpIndex = 0; tpIndex < tpEntries; tpIndex = tpIndex + 1)
+    {
+      edrLong(DETAIL.ASS_CBD.TP.RELATED_CHARGE_INFO_ID,blockIndex,tpIndex) = edrLong(DETAIL.ASS_CBD.TP.RELATED_CHARGE_INFO_ID,blockIndex,tpIndex) - tpshiftcounter;
+    }
+
+    for (tpIndex = 0; tpIndex < tpEntries; tpIndex = tpIndex + 1)
+    {
+      if(edrLong(DETAIL.ASS_CBD.TP.RELATED_CHARGE_INFO_ID,blockIndex,0) < 0)
+      {
+        if (edrDeleteDatablock( DETAIL.ASS_CBD.TP, blockIndex,0) == false )
+        {
+          Msg = "ERROR:Failed to delete the TP block";
+          edrAddError("ERR_DELETION_TP_FAILURE", LOG_MAJOR,Msg); 
+          edrSetIsValidDetail( false );
+          return;
+        }
+      }
+    }
+  }
+} // end onDetailEdr + end iScript

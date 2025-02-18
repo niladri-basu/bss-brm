@@ -1,0 +1,190 @@
+<?xml version='1.0'?>
+<!--
+#
+# Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved. 
+#
+# This material is the confidential property of Oracle Corporation or its
+# licensors and may be used, reproduced, stored or transmitted only in
+# accordance with a valid Oracle license or sublicense agreement.
+#
+-->
+<wsdl-generate>
+  <namespaces>
+    <partnerlink-namespace prefix="plt">http://schemas.xmlsoap.org/ws/2003/05/partner-link/</partnerlink-namespace>
+    <jca-namespace prefix="jca">http://xmlns.oracle.com/pcbpel/wsdl/jca/</jca-namespace>
+    <soap-namespace prefix="soap">http://schemas.xmlsoap.org/wsdl/soap/</soap-namespace>
+    <default-namespace>http://schemas.xmlsoap.org/wsdl/</default-namespace>
+    <brm-nameSpace prefix="brm">http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes</brm-nameSpace>
+    <xsd-nameSpace prefix="xsd">http://www.w3.org/2001/XMLSchema</xsd-nameSpace>
+  </namespaces>
+  <namespaces_11g_jca>
+    <default-namespace>http://platform.integration.oracle/blocks/adapter/fw/metadata</default-namespace>
+  </namespaces_11g_jca>
+  <groups>
+   <![CDATA[ 
+    <!-- Sample group information, duplicated this for a new set of opcodes, 
+         give a unique group name for which a WSDL will be generated -->
+    <!-- base: Specify if the opcodes in this group are base opcodes, defaults to false,
+         overridden by the entry in the opcode -->
+    <!-- schemaPath: Specify the schema location for the opcodes in this, overridden 
+         by the entry in the opcode -->
+    <!-- includePath: Specify the schema location for the group, this will be used in the include 
+         tags within wsdl to specify the relative path of schemas-->
+    <!-- wsdlFileInFix: Specify the the name to be prefixed in the generated wsdl file
+	 ex: If specified as 'Bill' the filename will be BRMBillServices.wsdl. If this attribute 
+         is not present then the group name will be taken as default in the filename infix. If the 
+         attribute is present but its empty then the application will error out -->
+    <!-- schemaFile: Specify the schema file for the opcodes in this group, overridden 
+         by the entry in the opcode -->
+    <!-- validation: Specify if validation is required or not, "ValidationRequired"
+         or "ValidationNotRequired", default to "ValidationRequired", external or 
+         internal schema location, "InternalSchemaValidation", for the opcodes in 
+         this group, overridden by the entry in the opcode -->
+    <!-- validationAttr: Specify the validation attributes "InputValidationNotRequired"
+         or "OutputValidationNotRequired" to validate input or output for the opcodes 
+         in this group, overridden by the entry in the opcode -->
+    <group-info name="sample" schemaPath="/path/" schemaFile="abc.xsd">
+      <!-- Optional namespace incase this group/WSDL has a different namespace than
+           the one specified above(brm-nameSpace)-->
+      <nameSpace prefix="brm">http://xmlns.oracle.com/schemas/BusinessOpcodes</nameSpace>
+      <!-- Name of the opcode(operation) exposed as part of this service, 
+           passed in as part of the interaction spec for JCA -->
+      <!-- base: Specify if the opcodes is a base opcode, defaults to false,
+         overrides the entry in the group -->
+      <!-- custom attribute to specify whether the opcode is a custom opcode valid values "yes/no" -->
+      <!-- opcodeNumber attribute  to specify the opcode number , mandatory field if custom = "yes" -->
+
+      <!-- schemaPath: Specify the schema location for this opcode, passed in the 
+           interaction spec for JCA, overides the group entry  -->
+      <!-- schemaFile: Specify the schema file for this opcode, passed in the 
+           interaction spec for JCA, overides the group entry. -->
+      <!-- validation: Specify if validation is required or not, "ValidationRequired"
+         or "ValidationNotRequired", default to "ValidationRequired", external or 
+         internal schema location, "InternalSchemaValidation", for this opcode, 
+         overrides the entry in the group -->
+      <!-- validationAttr: Specify the validation attributes "InputValidationNotRequired"
+         or "OutputValidationNotRequired" to validate input or output for this opcode, 
+         overrides the entry in the group -->
+      <opcode name="PCM_OP_AR_ADJUST_ACCOUNT" schemaPath="/path/" schemaFile="abc.xsd">
+        <!-- Optional flag that needs to be passed in the interaction spec 
+             for JCA. If not specified, defaults to zero -->
+        <opcodeFlag>1</opcodeFlag>
+      </opcode>
+      
+      <opcode name="PCM_OP_SEARCH" base="true">
+        <opcodeFlag>1</opcodeFlag>
+        <!-- Optional input header message used in JCA -->
+        <inputHeader/>
+        <!-- Optional output header message used in JCA -->
+        <outputHeader/>
+      </opcode>
+    </group-info>
+   ]]>
+    <group-info name="AR" includePath="../schemas/" wsdlFileInFix="AR">
+      <opcode name="PCM_OP_AR_ACCOUNT_ADJUSTMENT"></opcode>
+      <opcode name="PCM_OP_AR_BILL_ADJUSTMENT"></opcode>
+      <opcode name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS"></opcode>
+      <opcode name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY"></opcode>
+      <opcode name="PCM_OP_AR_GET_ACCT_BILLS"></opcode>
+      <opcode name="PCM_OP_AR_GET_BAL_SUMMARY"></opcode>
+      <opcode name="PCM_OP_AR_GET_BILL_ITEMS"></opcode>
+      <opcode name="PCM_OP_AR_ITEM_ADJUSTMENT"></opcode>
+      <opcode name="PCM_OP_AR_EVENT_ADJUSTMENT"></opcode>
+      <opcode name="PCM_OP_AR_GET_ACTION_ITEMS"></opcode>
+      <opcode name="PCM_OP_AR_GET_BILLS"></opcode>
+      <opcode name="PCM_OP_AR_RESOURCE_AGGREGATION"></opcode>
+    </group-info>
+    <group-info name="BAL" includePath="../schemas/" wsdlFileInFix="Bal">
+      <opcode name="PCM_OP_BAL_GET_BALANCES"></opcode>
+      <opcode name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC"></opcode>
+      <opcode name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC"></opcode>
+      <opcode name="PCM_OP_BAL_GET_ACCT_BILLINFO"></opcode>
+    </group-info>
+    <group-info name="BILL" includePath="../schemas/" wsdlFileInFix="Bill">
+      <opcode name="PCM_OP_BILL_GET_ITEM_EVENT_CHARGE_DISCOUNT"></opcode>
+      <opcode name="PCM_OP_BILL_GROUP_MOVE_MEMBER"></opcode>
+      <opcode name="PCM_OP_BILL_MAKE_BILL_NOW"></opcode>
+      <opcode name="PCM_OP_BILL_DEBIT"></opcode>
+      <opcode name="PCM_OP_BILL_GROUP_GET_PARENT"></opcode>
+    </group-info>
+    <group-info name="CUST" includePath="../schemas/" wsdlFileInFix="Cust">
+      <opcode name="PCM_OP_CUST_COMMIT_CUSTOMER"></opcode>
+      <opcode name="PCM_OP_CUST_MODIFY_CUSTOMER"></opcode>
+      <opcode name="PCM_OP_CUST_SET_STATUS"></opcode>
+      <opcode name="PCM_OP_CUST_UPDATE_CUSTOMER"></opcode>
+      <opcode name="PCM_OP_CUST_UPDATE_SERVICES"></opcode>
+      <opcode name="PCM_OP_CUST_DELETE_ACCT"></opcode>
+      <opcode name="PCM_OP_CUST_DELETE_PAYINFO"></opcode>
+      <opcode name="PCM_OP_CUST_CREATE_PROFILE"></opcode>
+      <opcode name="PCM_OP_CUST_MODIFY_PROFILE">
+        <opcodeFlag>32</opcodeFlag>
+      </opcode>
+      <opcode name="PCM_OP_CUST_DELETE_PROFILE"></opcode>
+    </group-info>
+    <group-info name="CUSTCARE" includePath="../schemas/" wsdlFileInFix="Custcare">
+      <opcode name="PCM_OP_CUSTCARE_MOVE_ACCT"></opcode>
+    </group-info>
+    <group-info name="INV" includePath="../schemas/" wsdlFileInFix="Inv">
+      <opcode name="PCM_OP_INV_VIEW_INVOICE"></opcode>
+    </group-info>
+    <group-info name="PYMT" includePath="../schemas/" wsdlFileInFix="Pymt">
+      <opcode name="PCM_OP_PYMT_COLLECT"></opcode>
+    </group-info>
+    <group-info name="SUBSCRIPTION" includePath="../schemas/" wsdlFileInFix="Subscription">
+      <opcode name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_SET_BUNDLE"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_SET_PRODINFO"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION"></opcode>
+      <opcode name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS"></opcode>
+    </group-info>
+    <group-info name="COLLECTIONS" includePath="../schemas/" wsdlFileInFix="Collections">
+      <opcode name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS"></opcode>
+    </group-info>
+    <group-info name="PRICING" includePath="../schemas/" wsdlFileInFix="Pricing">
+      <opcode name="PCM_OP_PRICE_COMMIT_PRODUCT"></opcode>
+      <opcode name="PCM_OP_PRICE_COMMIT_DISCOUNT"></opcode>
+      <opcode name="PCM_OP_PRICE_SET_PRICE_LIST"></opcode>
+      <opcode name="PCM_OP_PRICE_GET_PRICE_LIST"></opcode>
+    </group-info>
+    <group-info name="BASE" base="true" includePath="../schemas/" wsdlFileInFix="Base">
+      <opcode name="PCM_OP_READ_FLDS"></opcode>
+      <opcode name="PCM_OP_READ_OBJ"></opcode>
+      <opcode name="PCM_OP_SEARCH" base="false"></opcode>
+    </group-info>
+    <group-info name="TXN" includePath="../schemas/" wsdlFileInFix="TXN">
+      <opcode name="PCM_OP_TRANS_OPEN">
+        <opcodeFlag>65536</opcodeFlag>
+      </opcode>
+      <opcode name="PCM_OP_TRANS_ABORT"></opcode>
+      <opcode name="PCM_OP_TRANS_COMMIT"></opcode>
+    </group-info>
+  </groups>
+  <binding-info>
+    <!-- binding information specific to J2CA and SOAP. 
+    The general binding information is filled by the tool. -->
+    <JCA>
+      <InteractionSpec>oracle.tip.adapter.brm.BRMInteractionSpec</InteractionSpec>
+    </JCA>
+    <SOAP>
+      <Action>http://localhost/operationName</Action>
+      <encodingStyle>http://schemas.xmlsoap.org/soap/encoding/</encodingStyle>
+    </SOAP>
+  </binding-info>
+  <service-info>
+    <!-- Service information specific to J2CA and SOAP -->
+    <JCA>
+      <!-- JNDI name of the BRM JCA Adapter -->
+      <location>eis/BRM</location>
+    </JCA>
+    <SOAP>
+      <address>http://localhost:8080/brm/BRMWS</address>
+    </SOAP>
+  </service-info>
+</wsdl-generate>

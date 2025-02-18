@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<price_list version="7.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="price_list.xsd">
+<plan ondemand_billing="no">
+<plan_name>GSM Plan with MostCalled Discount</plan_name>
+<service_deal>
+<service_name>/service/telco/gsm/telephony</service_name>
+<deal_name>MostCalled GSM Deal</deal_name>
+<bal_info_index>0</bal_info_index>
+<subscription_index>0</subscription_index>
+</service_deal>
+</plan>
+<deal customization_flag="optional" ondemand_billing="no">
+<deal_name>MostCalled GSM Deal</deal_name>
+<permitted>/service/telco/gsm/telephony</permitted>
+<deal_product status="active">
+<product_name>Standard GSM Telephony</product_name>
+<product_code>Standard GSM Telephony</product_code>
+<quantity>1.0</quantity>
+<purchase_discount>0.0</purchase_discount>
+<cycle_discount>0.0</cycle_discount>
+<usage_discount>0.0</usage_discount>
+</deal_product>
+<deal_discount status="active">
+<discount_name>MostCalled GSM Discount</discount_name>
+<discount_code>MostCalled GSM Discount</discount_code>
+<quantity>1.0</quantity>
+</deal_discount>
+</deal>
+<product partial="yes" type="subscription">
+<product_name>Standard GSM Telephony</product_name>
+<product_code>Standard GSM Telephony</product_code>
+<priority>0.0</priority>
+<description>Voice standard service with caller ID, call waiting, voice mail, and Friends and Family. 50 euros per month for telephony and SMS; Usage fee described and managed by Integrate. Include 3600 free seconds (60 minutes)</description>
+<permitted>/service/telco/gsm/telephony</permitted>
+<event_rating_map incr_unit="none" min_unit="none" rounding_rule="nearest" timezone_mode="server" tod_mode="start_time">
+<event_type>/event/delayed/session/telco/gsm</event_type>
+<rum_name>Occurrence</rum_name>
+<min_quantity>1.0</min_quantity>
+<incr_quantity>1.0</incr_quantity>
+<rate_plan_name>Standard</rate_plan_name>
+<rate_plan advance_billing_unit="day" tax_when="never">
+<rate_plan_name>Standard</rate_plan_name>
+<currency_id>978</currency_id>
+<event_type>/event/delayed/session/telco/gsm</event_type>
+<advance_billing_offset>0</advance_billing_offset>
+<cycle_fee_flags>0</cycle_fee_flags>
+<rate_tier date_range_type="absolute">
+<rate_tier_name>Tier 1</rate_tier_name>
+<priority>0.0</priority>
+<rate prorate_first="prorate" prorate_last="full" step_type="total_quantity_rated" type="normal">
+<description>Rate 1</description>
+<step_resource_id>0</step_resource_id>
+<quantity_tier>
+<balance_impact scaled_unit="none">
+<resource_id>978</resource_id>
+<glid>0</glid>
+<fixed_amount>0.0</fixed_amount>
+<scaled_amount>0.0</scaled_amount>
+</balance_impact>
+</quantity_tier>
+</rate>
+</rate_tier>
+</rate_plan>
+</event_rating_map>
+<event_rating_map incr_unit="none" min_unit="none" rounding_rule="nearest" timezone_mode="server" tod_mode="start_time">
+<event_type>/event/billing/product/fee/cycle/cycle_forward_monthly</event_type>
+<rum_name>Occurrence</rum_name>
+<min_quantity>1.0</min_quantity>
+<incr_quantity>1.0</incr_quantity>
+<rate_plan_name>Monthly GSM Subscription for Standard</rate_plan_name>
+<rate_plan advance_billing_unit="day" tax_when="never">
+<rate_plan_name>Monthly GSM Subscription for Standard</rate_plan_name>
+<currency_id>978</currency_id>
+<event_type>/event/billing/product/fee/cycle/cycle_forward_monthly</event_type>
+<advance_billing_offset>0</advance_billing_offset>
+<cycle_fee_flags>0</cycle_fee_flags>
+<rate_tier date_range_type="absolute">
+<rate_tier_name>Tier 1</rate_tier_name>
+<priority>0.0</priority>
+<rate prorate_first="prorate" prorate_last="prorate" step_type="total_quantity_rated" type="default">
+<description>Rate 1</description>
+<step_resource_id>0</step_resource_id>
+<quantity_tier>
+<balance_impact flag="proratable" scaled_unit="none">
+<resource_id>978</resource_id>
+<impact_category>*</impact_category>
+<glid>102</glid>
+<fixed_amount>0.0</fixed_amount>
+<scaled_amount>50.0</scaled_amount>
+</balance_impact>
+<balance_impact flag="proratable grantable" scaled_unit="none">
+<resource_id>1000095</resource_id>
+<impact_category>*</impact_category>
+<glid>0</glid>
+<fixed_amount>0.0</fixed_amount>
+<scaled_amount>-3600.0</scaled_amount>
+<relative_start_offset unit="event_cycle">1</relative_start_offset>
+</balance_impact>
+</quantity_tier>
+</rate>
+</rate_tier>
+</rate_plan>
+</event_rating_map>
+<event_rating_map incr_unit="none" min_unit="none" rounding_rule="nearest" timezone_mode="server" tod_mode="start_time">
+<event_type>/event/billing/cycle/rollover/monthly</event_type>
+<rum_name>Occurrence</rum_name>
+<min_quantity>1.0</min_quantity>
+<incr_quantity>1.0</incr_quantity>
+<rate_plan_name>Monthly Cycle Rollover Event</rate_plan_name>
+</event_rating_map>
+<rollover date_range_type="absolute" relative_end_unit="day" relative_start_unit="day">
+<rollover_name>Monthly Cycle Rollover Event</rollover_name>
+<description></description>
+<relative_start_offset>0</relative_start_offset>
+<relative_end_offset>0</relative_end_offset>
+<balance_impact prorate_first="prorate" prorate_last="prorate">
+<resource_id>1000095</resource_id>
+<glid>0</glid>
+<rollover_max_units>3600.0</rollover_max_units>
+<rollover_units>3600.0</rollover_units>
+<rollover_max_cycles>1</rollover_max_cycles>
+</balance_impact>
+</rollover>
+</product>
+<discount mode="parallel" type="subscription">
+<discount_name>MostCalled GSM Discount</discount_name>
+<discount_code>MostCalled GSM Discount</discount_code>
+<priority>0.0</priority>
+<permitted>/service/telco/gsm/telephony</permitted>
+<discount_usage_validity discount_from_validity_flags="prorate" discount_partial_validity_flags="prorate" discount_to_validity_flags="prorate"></discount_usage_validity>
+<discount_cycle_validity discount_from_validity_flags="prorate" discount_partial_validity_flags="prorate" discount_to_validity_flags="prorate"></discount_cycle_validity>
+<discount_usage_map discount_flags="discount_inactivated" snowball_flag="no">
+<event_type>/event/billing/cycle/discount/mostcalled</event_type>
+<discount_model>DM_MOSTCL</discount_model>
+</discount_usage_map>
+</discount>
+</price_list>

@@ -1,0 +1,197 @@
+========================================================================================
+<Module>
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+==============================================================================
+
+Module Version: 10006  7.3  18-Jul-2006
+PRSF00219265: Da Vinci Code Clean Up:--pipeline_mediation & suspense Please set 
+              isValidDetail false when you set error above warning 
+		
+==============================================================================
+
+Module Version: 10005  6.7_FP2  04-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10004  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 30-Apr-2003
+----------------
+
+Change Order :  PRSF00039309
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+================================================================================
+
+Module Version : 6.5 EBF 10000
+----------------
+
+Date : 08-Jan-2003
+----------------
+
+Change Order :  PRSF00028180
+----------------
+
+Short Description :
+-------------------
+Changed to use the Acoount id of the parent obj instead of the audit account id
+
+================================================================================
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 17-SEP-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS#39464 PPL_OutputCollection: Resolving stream number
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 13-SEP-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS#39275 : Added an extra, higher level error message for the case
+- of a wrongly configured streams registry. 
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 17-AUG-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS#37293 : Eliminated unnecessary registry paremeter. 
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 12-JUL-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS#36559 : SourcePro port on AIX
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 12-JUL-2001
+----------------
+
+Notes          :
+----------------
+
+- Fixes for Solaris. 
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 11-JUL-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS#36559 : SourcePro port.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 22-JUN-2001
+----------------
+
+Notes          :
+----------------
+
+- Modified for the v4-30 framework.
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 16-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+- Updated from the use of specialist system to system brand for the stream
+- number mapping.
+
+========================================================================================
+
+Actual Version : v4-01-01 / Date : 26-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+- Implementation changed to support the IBM xlC compiler.
+- BugFix in process loop when first edr container was invalid.
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 13-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+- Support for new v4 edr container added.
+- New interface for function processEdrContainer(EdrContainerList&) added.
+
+========================================================================================
+
+Actual Version : v1-21-00 / Date : 05-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Function isUsable() added to check the internal state of the module.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+

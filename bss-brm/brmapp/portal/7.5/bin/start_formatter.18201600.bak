@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+#	Copyright (c) 2000 - 2009 Oracle Corporation.
+#
+#	This material is the confidential property of Oracle Corporation.
+#	or its subsidiaries or licensors and may be used, reproduced, stored
+#	or transmitted only in accordance with a valid Oracle license or
+#	sublicense agreement.
+#
+
+#
+# start_formatter
+#
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+PINDIR=/brmapp/portal/7.5
+
+JSDIR=${PINDIR}/sys/formatter
+LOGDIR=/brmapp/portal/7.5/var/formatter
+JSLOG=${LOGDIR}/formatter.log
+JSPID=${LOGDIR}/formatter.pid
+
+# does the propreties file for the Java Server
+if [ ! -r  ${JSDIR}/Infranet.properties ]; then
+		echo "HELP: no Infranet.properties for formatter in \"${JSDIR}\"!"
+			exit 1
+fi
+
+if [ ! -d  ${LOGDIR} ]; then
+	mkdir -p ${LOGDIR}
+	if [ $? -ne 0 ]; then
+		echo "HELP: problem making LOGDIR \"${LOGDIR}\"!"
+		exit 1
+	fi
+fi
+
+# set JAR_DIR to be the full pathname of the dir where the
+# jar files are located
+JAR_DIR=${PINDIR}/jars
+
+CLASSPATH=.:$JAR_DIR/js.jar:$JAR_DIR/pcm.jar:$JAR_DIR/pcmext.jar:$JAR_DIR/formatter.jar:$JAR_DIR/classgen.jar:$JAR_DIR/jstest.jar:$JAR_DIR/xerces.jar:$JAR_DIR/xt.jar:$JAR_DIR/xalan.jar:$JAR_DIR/serializer.jar:$JAR_DIR/saxon.jar:$JAR_DIR/sax.jar:$JAR_DIR/pxslt.jar:$JAR_DIR/xercesImpl.jar:$JAR_DIR/xmlParserAPIs.jar:
+
+export CLASSPATH
+
+JAVA=$BRM_JRE/bin/java
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${JSDIR} ;
+  echo "started formatter at..." >> ${JSLOG}
+  date >> ${JSLOG}
+	$JAVA        -mx33554432     -ms33554432     -ss1m com.portal.js.JSMain &
+  echo $! > ${JSPID} ;
+  chmod 664 ${JSLOG} ;
+  chmod 664 ${JSPID} )
+
+# get rc from cm startup
+exit $?

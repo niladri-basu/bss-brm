@@ -1,0 +1,671 @@
+<Opcode name="PCM_OP_PYMT_TOPUP"
+  visibility="public"
+  transaction="required"
+  component="fm_pymt"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+  opspec.xsd"
+  xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>
+                <!--h:p>
+                        <h:i>
+                        Copyright &#169; 2004 - 2009 Oracle. All rights reserved.
+                        This material is the confidential property of Oracle Corporation or
+                        its licensors and may be used, reproduced, stored or transmitted
+                        only in accordance with a valid Oracle license or sublicense agreement.
+                        </h:i>
+                </h:p-->
+ 	Performs standard top-ups and sponsored top-ups.
+  </Doc>
+  <Input>
+	<Fields>
+	  <Poid name="PIN_FLD_POID" use="required"
+		 mode="complete">
+		<Doc>Account Poid.
+		</Doc>
+		<ClassRef>obj://account</ClassRef>
+	  </Poid>
+	  <String name="PIN_FLD_PROGRAM_NAME" use="required"
+		 maxlen="60">
+		<Doc> Program name - identifies calling program.
+		</Doc>
+	  </String>
+	  <String name="PIN_FLD_DESCR" use="optional"
+                maxlen="255">
+                <Doc> Description - free text for application.</Doc>
+          </String>
+	  <Timestamp name="PIN_FLD_START_T" use="optional">
+		<Doc> Start time - Timestamp of when event started [BRM Server Time].
+		</Doc>
+	  </Timestamp>
+	  <Timestamp name="PIN_FLD_END_T" use="optional">
+		<Doc> End time - Timestamp of when event ended [BRM Server Time].
+			This field is used to determine which billing cycle the event is part of.
+		</Doc>
+	  </Timestamp>
+	  <Substruct name="PIN_FLD_INHERITED_INFO" use="optional"
+		        isRecursive="false">
+		<Doc> 
+			Inherited info - container for payment specific fields.
+			Contains either of the following array elements:    
+			<h:ul>
+				<h:li> VOUCHER_INFO : This array is for Voucher Topup </h:li>
+				<h:li> TOPUP_INFO   : This array is for all other topup except Voucher Topup</h:li>
+			</h:ul>
+		</Doc>
+		<Fields>
+		  <Array name="PIN_FLD_VOUCHERS_INFO" use="optional"
+		        elemIdMode="ignored" iterationOrder="undefined"
+		        minElements="0" maxElements="1"
+		        minElemId="0" 
+		        isElemIdAssignAllowed="false" isElemIdAnyAllowed="true"
+		        isRecursive="false" allowedElemIds="0">
+			<Doc>  Voucher Info   Element-id is not significant,
+				except return values use matching element-ids.
+				This array contains voucher related information
+			</Doc>
+			<Fields>
+			  <String name="PIN_FLD_DEVICE_ID" use="required"
+				 maxlen="255">
+				<Doc> Voucher serial number.
+				</Doc>
+			  </String>
+			  <String name="PIN_FLD_VOUCHER_PIN" use="required"
+				 maxlen="255">
+				<Doc> Voucher Pin.
+				</Doc>
+			  </String>
+			  <Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+				 mode="complete">
+				<Doc> Billinfo which will get impacted by this topup.
+				</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="required"
+				 mode="complete">
+				<Doc> Balance group which will get impacted by this topup.
+				</Doc>
+				<ClassRef>obj://balance_group</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+				 mode="complete">
+				<Doc> Service Object that will get topped up.
+				</Doc>
+				<ClassRef>obj://service</ClassRef>
+			  </Poid>
+			  <Substruct name="PIN_FLD_DEAL_INFO" use="optional"
+				 isRecursive="false">
+				<Doc> Deal Info of the deal to be purchased.
+				</Doc>
+				<Fields>
+				</Fields>
+			  </Substruct>
+			  <Poid name="PIN_FLD_DEAL_OBJ" use="optional"
+				 mode="complete">
+				<Doc>Deal Poid of the deal to be purchased.
+				</Doc>
+				<ClassRef>obj://deal</ClassRef>
+			  </Poid>
+			</Fields>
+		  </Array>
+		  <Array name="PIN_FLD_TOPUP_INFO" use="optional"
+			 elemIdMode="ignored" iterationOrder="undefined"
+			 minElements="0" maxElements="1"
+			 minElemId="0" 
+			 isElemIdAssignAllowed="false" isElemIdAnyAllowed="true"
+			 isRecursive="false" allowedElemIds="0">
+			<Doc> 
+			<h:pre>
+			This array contains all the information required 
+			for topup info. This array is not required for
+			Voucher topup.
+			Additional conditions for the fields in
+                        this array.
+                                PIN_FLD_TOPUP_CAP is optional but if provided
+                                and the value is greater than 0 , then
+                                PIN_FLD_POID (/topup) is mandatory
+				In case of automatic sponsored topups 
+				the following fields are mandatory 
+				PIN_FLD_PARENT 
+				PIN_FLD_ACCOUNT_OBJ 
+				PIN_FLD_RESOURCE_ID 
+				PIN_FLD_BILLINFO_OBJ 
+				PIN_FLD_GROUP_OBJ 
+				PIN_FLD_GROUP_INDEX 
+				PIN_FLD_TOPUP_INTERVAL 
+				PIN_FLD_TOPUP_CAP 
+				PIN_FLD_NEXT_TOPUP_T 
+				PIN_FLD_TOPUP_AMT 
+				PIN_FLD_BAL_INFO[0] for sponsor or parent 
+					PIN_FLD_BAL_GRP_OBJ
+				PIN_FLD_BAL_INFO[1] for sponsoree or member 
+					PIN_FLD_BAL_GRP_OBJ
+				In case of Manually sponsored topups  
+				PIN_FLD_BAL_GRP_OBJ  is mandatory
+				PIN_FLD_PIN is mandatory	
+				PIN_FLD_POID or PIN_FLD_GROUP_OBJ is mandatory
+					If PIN_FLD_GROUP_OBJ is provided then
+                                		PIN_FLD_GROUP_INDEX is mandatory
+                                		PIN_FLD_ACCOUNT_OBJ is mandatory
+				</h:pre>
+ 
+			</Doc>
+			<Fields>
+			  <Poid name="PIN_FLD_DEAL_OBJ" use="optional"
+				 mode="complete">
+				<Doc> Deal poid of the deal to be purchased.
+				</Doc>
+				<ClassRef>obj://deal</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_POID" use="optional"
+				 mode="complete">
+				<Doc> Topup poid of recipient.
+				  <h:ul>
+                                        <h:li> Standard Topup : This field is required </h:li>
+                                        <h:li> Sponsored Topup : This field is required if it is not Automatic Sponsored topup and PIN_FLD_GROUP_OBJ is not provided. </h:li>
+                                  </h:ul>
+				</Doc>
+				<ClassRef>obj://topup</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+				 mode="complete">
+				<Doc> Billinfo which will get impacted by this topup. 
+				</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="required"
+				 mode="complete">
+				<Doc> Balance group which will get impacted by this topup.
+				</Doc>
+				<ClassRef>obj://balance_group</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+				 mode="complete">
+				<Doc> 
+				  Account object which will get impacted by this topup.
+				  <h:ul>
+                                        <h:li> Standard Topup : This field is optional </h:li>
+                                        <h:li> Sponsored Topup: This field is required </h:li>
+                                  </h:ul>
+				</Doc>
+				<ClassRef>obj://account</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+				 mode="complete">
+				<Doc> Service Object that will get topped up.
+				</Doc>
+				<ClassRef>obj://service</ClassRef>
+			  </Poid>
+			  <Array name="PIN_FLD_BAL_INFO" use="optional"
+				 elemIdMode="ignored" iterationOrder="undefined"
+				 minElements="0" maxElements="1"
+				 minElemId="0" 
+				 isElemIdAssignAllowed="false" isElemIdAnyAllowed="true"
+				 isRecursive="false" allowedElemIds="0">
+				<Doc> 
+					Balance group Array.
+					Element of array [0] belongs to Sponsor or parent 
+					Element of array [1] belongs to sponsoree or menber  
+				  <h:ul>
+                                        <h:li> Standard Topup : This field is not required </h:li>
+                                  </h:ul>
+				</Doc>
+				<Fields>
+				  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="required"
+					 mode="complete">
+					<Doc>
+						Balance Groups of payer and Recipient  Payer balance group 
+						in BAL_INFO[0]  Recipient Balance group in BAL_INFO[1].</Doc>
+					<ClassRef>obj://balance_group</ClassRef>
+				  </Poid>
+				  <Int name="PIN_FLD_REASON_ID" use="optional">
+				<Doc> 
+					Reason ID.   It is recorded as property of
+					/event/billing object. See file reasons.locale
+				</Doc>
+				  </Int>
+				  <Int name="PIN_FLD_REASON_DOMAIN_ID" use="optional">
+					<Doc> Domain ID of Reason Id.  It is recorded as property of  
+						/event/billing object. See file reasons.locale
+					</Doc>
+				  </Int>
+				</Fields>
+			  </Array>
+			  <String name="PIN_FLD_PIN" use="optional"
+				 maxlen="60">
+				<Doc> Recipient's PIN for validation of ad-hoc topup. 
+				  <h:ul>
+                                        <h:li> Standard Topup : This field is not required </h:li>
+                                        <h:li> Sponsored Topup: This field is required  except 
+								if it is automatic sponsored topup
+								(If BAL_INFO array exist).
+					</h:li>
+                                  </h:ul>
+				</Doc>
+			  </String>
+			  <Int name="PIN_FLD_GROUP_INDEX" use="optional">
+				<Doc>
+					Recipient's group index where his/her information will be stored.
+				  <h:ul>
+                                        <h:li> Standard Topup  : This field is not required </h:li>
+                                        <h:li> Sponsored Topup : This field is required in all cases if 
+								 GROUP_OBJ is specified.
+					</h:li>
+                                  </h:ul>
+				</Doc>
+			  </Int>
+			  <Poid name="PIN_FLD_GROUP_OBJ" use="optional"
+				 mode="complete">
+				<Doc>
+					Recipient's group object, which group he belongs to.
+				  <h:ul>
+					<h:li> Standard Topup : This field is not required </h:li>
+					<h:li> Sponsored Topup : This field is required </h:li>
+				  </h:ul>
+				</Doc>
+				<ClassRef>obj://group</ClassRef>
+			  </Poid>
+			  <Int name="PIN_FLD_RESOURCE_ID" use="optional">
+				<Doc> 
+					Resource id by which the bill transfer will happen. 
+				  <h:ul>
+                                        <h:li> Standard Topup : This field is not required </h:li>
+                                        <h:li> Sponsored Topup: This field is required if it is an Automatic Sponsored topup
+								(If BAL_INFO array exist).
+					</h:li>
+                                  </h:ul>
+				</Doc>
+			  </Int>
+			  <Poid name="PIN_FLD_PARENT" use="optional"
+				 mode="complete">
+				<Doc> Payer's account poid.
+				 <h:ul>
+                                        <h:li> Standard Topup : This field is not required </h:li>
+                                        <h:li> Sponsored Topup: This field is required if it is an Automatic Sponsored topup
+								(If BAL_INFO array exist).
+					</h:li>
+                                  </h:ul>
+				</Doc>
+				<ClassRef>obj://account</ClassRef>
+			  </Poid>
+			  <Decimal name="PIN_FLD_TOPUP_CAP" use="optional">
+				<Doc> Max amount that can be topped in a given billing cycle.
+				<h:ul>
+                                        <h:li> Sponsored Topup: This field is required if it is an Automatic Sponsored topup
+								(If BAL_INFO array exist).
+					</h:li>
+                                  </h:ul>
+				</Doc>
+			  </Decimal>
+			  <Timestamp name="PIN_FLD_NEXT_TOPUP_T" use="optional">
+				<Doc> The date on which the next auto topup is due.
+				  <h:ul>
+					<h:li> Standard Topup : This field is not required </h:li>
+					<h:li> Sponsored Topup: This field is required if it is an Automatic Sponsored topup
+								(If BAL_INFO array exist). </h:li>
+				  </h:ul>
+				</Doc>
+			  </Timestamp>
+
+				<Int name="PIN_FLD_TOPUP_INTERVAL" use="optional">
+                                <Doc>
+                                        This indicates the interval at which automatic sponsored topup occur.
+                                  <h:ul>
+                                        <h:li> Standard Topup : This field is not required </h:li>
+                                        <h:li> Sponsored Topup : This field is required if it is an Automatic Sponsored topup
+                                                                 (If BAL_INFO array exist).
+                                        </h:li>
+                                  </h:ul>
+                                </Doc>
+  				</Int>
+
+			  <Decimal name="PIN_FLD_TOPUP_AMT" use="optional">
+				<Doc> Amount to be topped up.
+				</Doc>
+			  </Decimal>
+			  <Decimal name="PIN_FLD_CYCLE_TOPPED_AMT" use="optional">
+			  <Doc> Sum of total topups in the current billing period. 
+			  </Doc>
+			  </Decimal>
+			  <Timestamp name="PIN_FLD_LAST_TOPUP_T" use="optional">
+				<Doc> The last time this service was topped. 
+				</Doc>
+			  </Timestamp>
+			  <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional"
+				 mode="complete">
+				<Doc> Payinfo poid.
+				</Doc>
+				<ClassRef>obj://payinfo</ClassRef>
+			  </Poid>
+			  <Array name="PIN_FLD_PAYINFO" use="optional"
+				 elemIdMode="ignored" iterationOrder="undefined"
+				 minElements="0" maxElements="1"
+				 minElemId="0" 
+				 isElemIdAssignAllowed="false" isElemIdAnyAllowed="true"
+				 isRecursive="false" allowedElemIds="0">
+				<Doc>
+					Payinfo object - information for immediate payment. 
+					The  entire object including inherited fields should be included. 
+					This will bypass database lookup.
+				</Doc>
+				<Fields>
+				  <Array name="PIN_FLD_CC_INFO" use="optional"
+					 elemIdMode="ignored" iterationOrder="undefined"
+					 minElements="0" maxElements="1"
+					 minElemId="0" 
+					 isElemIdAssignAllowed="false" isElemIdAnyAllowed="true"
+					 isRecursive="false" allowedElemIds="0">
+					<Doc> Credit card info.
+					</Doc>
+					<Fields>
+					  <String name="PIN_FLD_ADDRESS" use="required"
+						 maxlen="255">
+						<Doc> Street Address.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_CITY" use="required"
+						 maxlen="90">
+						<Doc> City.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_COUNTRY" use="required"
+						 maxlen="60">
+						<Doc> Country.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_DEBIT_EXP" use="required"
+						 maxlen="128">
+						<Doc> Credit card expiration date (mmyy).
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_DEBIT_NUM" use="required"
+						 maxlen="255">
+						<Doc> Credit card number.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_NAME" use="required"
+						 maxlen="255">
+						<Doc> Name as it appears on the credit card.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_SECURITY_ID" use="optional"
+						 maxlen="30">
+						<Doc> 
+							Security ID. Used for credit card fraud prevention.
+							This field  stores the 3 digit CVV2 for Visa and 4 digit CID for amex.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_STATE" use="required"
+						 maxlen="90">
+						<Doc> State or province.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_ZIP" use="required"
+						 maxlen="60">
+						<Doc> Zipcode.
+						</Doc>
+					  </String>
+					</Fields>
+				  </Array>
+				  <Array name="PIN_FLD_DD_INFO" use="optional"
+					 elemIdMode="ignored" iterationOrder="undefined"
+					 minElements="0" maxElements="1"
+					 minElemId="0" 
+					 isElemIdAssignAllowed="false" isElemIdAnyAllowed="true"
+					 isRecursive="false" allowedElemIds="0">
+					<Doc> Direct Debit info.
+					</Doc>
+					<Fields>
+					  <String name="PIN_FLD_ADDRESS" use="required"
+						 maxlen="255">
+						<Doc> Street Address.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_BANK_NO" use="required"
+						 maxlen="30">
+						<Doc> RDFI/Bank ID used for routing transactions.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_CITY" use="required"
+						 maxlen="90">
+						<Doc> City.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_COUNTRY" use="required"
+						 maxlen="60">
+						<Doc> Country.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_DEBIT_NUM" use="required"
+						 maxlen="255">
+						<Doc> Customer's bank account number.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_NAME" use="required"
+						 maxlen="255">
+						<Doc> Name as it appears on the credit card.
+						</Doc>
+					  </String>
+					  <String name="PIN_FLD_STATE" use="required"
+						 maxlen="90">
+						<Doc> State or province.
+						</Doc>
+					  </String>
+					  <Enum name="PIN_FLD_TYPE" use="optional">
+					  	<Doc> Type of failure (Portal defined value)
+							The values can be:
+							<h:ul>
+								<h:li>0:Pass.</h:li>
+								<h:li>1:Fail.</h:li>
+							</h:ul>
+						</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>Pass.</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>Fail.</Doc>
+						</Values>
+					</Enum>
+					  <String name="PIN_FLD_ZIP" use="required"
+						 maxlen="60">
+						<Doc> Zipcode.
+						</Doc>
+					  </String>
+					</Fields>
+				  </Array>
+				</Fields>
+			  </Array>
+			  <Substruct name="PIN_FLD_DEAL_INFO" use="optional"
+				 isRecursive="false">
+					<Doc> Refer to purchase deal opcode for details specified  here.
+					</Doc>
+				<Fields>
+				</Fields>
+			  </Substruct>
+			</Fields>
+		  </Array>
+		</Fields>
+	  </Substruct>
+	  <Int name="PIN_FLD_REASON_ID" use="optional">
+		<Doc> Reason ID.
+		</Doc>
+	  </Int>
+	  <Int name="PIN_FLD_REASON_DOMAIN_ID" use="optional">
+		<Doc> Domain ID of Reason Id.
+		</Doc>
+	  </Int>
+	</Fields>
+</Input>
+<Output>
+	<Fields>
+	  <Poid name="PIN_FLD_POID" use="required"
+		 mode="complete">
+		<Doc>Account object passed into call.
+		</Doc>
+		<ClassRef>obj://account</ClassRef>
+	  </Poid>
+	  <Array name="PIN_FLD_VOUCHERS_INFO" use="required"
+		 elemIdMode="ignored" iterationOrder="undefined"
+		 minElements="0" maxElements="1" 
+		 minElemId="0" 
+		 isElemIdAssignAllowed="false" isElemIdAnyAllowed="true"
+		 isRecursive="false" allowedElemIds="0">
+		<Doc> Array of results information.
+		</Doc>
+		<Fields>
+		  <Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+			 mode="complete">
+			<Doc> Billinfo poid.
+			</Doc>
+			<ClassRef>obj://billinfo</ClassRef>
+		  </Poid>
+		  <Timestamp name="PIN_FLD_VALID_FROM" use="required">
+			<Doc> Validity period start.
+			</Doc>
+		  </Timestamp>
+		  <Timestamp name="PIN_FLD_VALID_TO" use="required">
+			<Doc> Validity period end.
+			</Doc>
+		  </Timestamp>
+		  <Timestamp name="PIN_FLD_EXPIRATION_T" use="required">
+			<Doc> Expiration time of the voucher</Doc>
+		  </Timestamp>
+		  <String name="PIN_FLD_DEVICE_ID" use="required"
+			 maxlen="255">
+			<Doc> Device ID.
+			</Doc>
+		  </String>
+		  <String name="PIN_FLD_VOUCHER_PIN" use="required"
+			 maxlen="255">
+			<Doc> Voucher PIN.
+			</Doc>
+		  </String>
+		  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="required"
+			 mode="complete">
+			<Doc> BalInfo poid.
+			</Doc>
+			<ClassRef>obj://balance_group</ClassRef>
+		  </Poid>
+		  <Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+			 mode="complete">
+			<Doc> Service poid.
+			</Doc>
+			<ClassRef>obj://service</ClassRef>
+		  </Poid>
+		</Fields>
+	  </Array>
+	  <Decimal name="PIN_FLD_AMOUNT" use="required">
+		<Doc> Amount.
+		</Doc>
+	  </Decimal>
+	  <Int name="PIN_FLD_CURRENCY" use="required">
+		<Doc> Currency.
+		</Doc>
+	  </Int>
+	  <Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+		<Doc> Validity period start.
+		</Doc>
+	  </Timestamp>
+	  <Timestamp name="PIN_FLD_VALID_TO" use="optional">
+		<Doc> Validity period end.
+		</Doc>
+	  </Timestamp>
+	  <Array name="PIN_FLD_RESULTS" use="required"
+		 elemIdMode="ignored" iterationOrder="undefined"
+		 minElements="0" maxElements="1"
+		 minElemId="0" 
+		 isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+		 isRecursive="false" allowedElemIds="0">
+		<Doc>
+			Results array.  The results array will contain the 
+			output from  following opcodes:   rcv_payment (if payment created)
+			or  act_usage (for non-currency) or   transfer_balance (for sponsored topup)
+		</Doc>
+		<Fields>
+		  <Array name="PIN_FLD_BAL_IMPACTS" use="optional"
+			 elemIdMode="ignored" iterationOrder="undefined"
+			 minElements="0" 
+			 minElemId="0" 
+			 isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+			 isRecursive="false" allowedElemIds="0">
+			<Doc> For each balance impacts.
+			</Doc>
+			<Fields>
+			  <Int name="PIN_FLD_RESOURCE_ID" use="required">
+				<Doc> Resource id.
+				</Doc>
+			  </Int>
+			  <Decimal name="PIN_FLD_AMOUNT" use="required">
+				<Doc> balance impact amount.
+				</Doc>
+			  </Decimal>
+			  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="required"
+				 mode="complete">
+				<Doc> balance group poid.
+				</Doc>
+				<ClassRef>obj://balance_group</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+				 mode="complete">
+				<Doc> Account object of the balance impact.
+				</Doc>
+				<ClassRef>obj://account</ClassRef>
+			  </Poid>
+			  <Poid name="PIN_FLD_ITEM_OBJ" use="required"
+				 mode="complete">
+				<Doc> payment item poid.
+				</Doc>
+				<ClassRef>obj://item</ClassRef>
+			  </Poid>
+			  <Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+				<Doc> Validity period start.
+				</Doc>
+			  </Timestamp>
+			  <Timestamp name="PIN_FLD_VALID_TO" use="optional">
+				<Doc> Validity period end.
+				</Doc>
+			  </Timestamp>			 <Enum name="PIN_FLD_IMPACT_TYPE" use="optional">
+				 <Doc>Impact type.Indicates the impact type of the event.
+					<h:ul>
+						<h:li> PIN_IMPACT_TYPE_RATED </h:li>
+						<h:li> PIN_IMPACT_TYPE_PRERATED </h:li>
+						<h:li> PIN_IMPACT_TYPE_TAX </h:li>
+							
+					</h:ul>
+				 </Doc>
+				<Values>
+                                       <Value>1</Value>
+                                       	<Doc> PIN_IMPACT_TYPE_RATED </Doc>
+                                 </Values>
+                                 <Values>
+                                       <Value>2</Value>
+                                       <Doc>PIN_IMPACT_TYPE_PRERATED</Doc>
+                                 </Values>
+				 <Values>
+                                       <Value>4</Value>
+                                       <Doc>PIN_IMPACT_TYPE_TAX </Doc>
+                                </Values>
+			</Enum>
+			</Fields>
+		  </Array>
+		</Fields>
+	  </Array>
+	  <Array name="PIN_FLD_DEAL_INFO" use="optional"
+		 elemIdMode="ignored" iterationOrder="undefined"
+		 minElements="0" maxElements="1"
+		 minElemId="0" 
+		 isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+		 isRecursive="false" allowedElemIds="0">
+		<Doc> 
+			If any deal is purchased the ouput of  
+			PCM_OP_PYMT_POL_PURCHASE_DEAL output is passed here.
+		</Doc>
+		<Fields>
+		</Fields>
+	  </Array>
+	</Fields>
+  </Output>
+</Opcode>

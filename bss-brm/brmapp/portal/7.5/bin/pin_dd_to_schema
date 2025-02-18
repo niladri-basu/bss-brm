@@ -1,0 +1,475 @@
+#!/tools/CGBU/contrib/DO/BRM/7.5.0.TP.TOOL.R1/tools_vob/tools/linux/perl_5_18_2/perl/bin/perl
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#
+# Copyright (c) 2007, 2014, Oracle and/or its affiliates. All rights reserved.
+#
+#    This material is the confidential property of Oracle Corporation
+#    or its subsidiaries or licensors and may be used, reproduced, stored
+#    or transmitted only in accordance with a valid Oracle license or
+#    sublicense agreement.
+
+#use strict;
+use Getopt::Std;
+
+
+my $version = "2007.07.16";
+(my $ME = $0) =~ s,.*/,,;
+
+my $USAGE =<<END
+ Usage: $ME [-h|e <config_file>|r <storable_class>]
+     -h: help
+     -e: Reads a config file supplied and generates schema for all classes 
+	 specified in config file.
+     -r: Generates schema for the storable class specified. 
+END
+;
+
+# Deal with the command line args - need to transform the perl script options
+# to the expected options for our Java utility.
+getopt('h|e|r');
+
+if (defined $opt_r)
+{
+	&generate_podl_and_call_process($opt_r);
+}
+elsif (defined $opt_e)
+{
+	&read_input_file($opt_e);
+}
+else
+{
+	die $USAGE;
+}
+
+
+# The name says it all. This subroutine removes junk records from
+# the PODL file, so that we parse only necessary details.
+sub process_podl_data
+{
+	@podl_data = ();
+        open(PODL_FILE_HANDLE, "< $podl_file") or die "cant open $podl_file file\n : $!";
+        while (<PODL_FILE_HANDLE>)
+        {
+                s/#.*//;            # ignore comments by erasing them
+                s/^\s*(.*?)\s*$/$1/;# trim spaces
+                next if /^(\s)*$/;  # skip blank lines
+                next if /;$/;  # skip blank lines
+                push @podl_data, $_;
+        }
+        close(PODL_FILE_HANDLE);
+}
+
+# This subroutine reads a file which contains list of storable class names
+# for which we need to create the schema.
+sub read_input_file
+{
+        local ($storable_class_input_file) = @_;
+        local ($line);
+
+	open(STORABLE_CLASS_LIST_INPUT_FILE_HANDLE, "$storable_class_input_file") or die "cant open $storable_class_input_file file\n";
+
+	$line=<STORABLE_CLASS_LIST_INPUT_FILE_HANDLE>;
+	while ($line)
+	{
+		$line =~ s/^\s*(.*?)\s*$/$1/;
+		if ($line)
+		{
+			&generate_podl_and_call_process($line);
+		}
+		$line=<STORABLE_CLASS_LIST_INPUT_FILE_HANDLE>;
+	}
+	close(STORABLE_CLASS_LIST_INPUT_FILE_HANDLE);
+}
+
+# This subroutine is the actual workhorse code which parses through the
+# PODL file and creates an xsd. It parses through the PODL and adds the 
+# the relevant tags based on the type of field encountered within the PODL 
+# like STRING, INT, ARRAY etc. and also takes care of TAB SPACING for visually 
+# enhancing the xsd.
+sub process_input_file
+{
+	local ($record);
+	local ($store_val) = "";
+	local ($first) = 1;
+	local ($tab_counter) = 0;
+	local ($align) = 0;
+	local ($ref_name) = "";
+	local ($last_storable) = 0;
+        local ($array_flag) = 0;
+        local ($buffer_flag) = 0;
+	local ($dec_flag) = 0;
+	foreach $record(@podl_data)
+	{
+		if ($record eq  "}")
+		{
+			if ($store_val eq "}")
+			{
+				if($first == 1){
+					$align = $tab_counter -2;
+					if($align == 0)
+					{
+						$ref_name = $podl_file . "Extension";
+						print XSD_FILE_HANDLE "\t" x  $tab_counter;
+						print XSD_FILE_HANDLE "<xsd:element ref=\"$ref_name\" minOccurs=\"0\" maxOccurs=\"unbounded\"/>\n"
+					}
+					print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+					print XSD_FILE_HANDLE "</xsd:sequence>\n";
+					if($tab_counter != 1)
+					{
+						if( $array_flag >= 1 )
+                                                {
+                                                        print XSD_FILE_HANDLE "\t" x  $tab_counter;
+                                                        print XSD_FILE_HANDLE "<xsd:attribute type=\"xsd:string\" name=\"elem\"/>\n";
+                                                        $array_flag--;
+                                                }
+						print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+						print XSD_FILE_HANDLE "</xsd:complexType>\n";
+						print XSD_FILE_HANDLE "\t" x --$tab_counter;
+						print XSD_FILE_HANDLE "</xsd:element>\n";
+					}
+					else
+					{
+						print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+						print XSD_FILE_HANDLE "</xsd:complexType>\n";
+						$first =0;
+					}
+				}
+				else
+				{
+					print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+					print XSD_FILE_HANDLE "</xsd:sequence>\n";
+					if( $tab_counter-3 != 0)
+					{
+						if( $array_flag >= 1 )
+                                                {
+                                                        print XSD_FILE_HANDLE "\t" x  $tab_counter;
+                                                        print XSD_FILE_HANDLE "<xsd:attribute type=\"xsd:string\" name=\"elem\"/>\n";
+                                                        $array_flag--; 
+                                                }
+						print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+						print XSD_FILE_HANDLE "</xsd:complexType>\n";
+						print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+						print XSD_FILE_HANDLE "</xsd:element>\n";
+					}
+					else
+					{
+						add_ending_tags($tab_counter);
+					}
+				}
+
+			}
+			if($last_storable == 1)
+			{
+				print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+				print XSD_FILE_HANDLE "</xsd:sequence>\n";
+                                if($first ==1)
+                                {
+                                        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+                                        print XSD_FILE_HANDLE "</xsd:complexType>\n";
+                                }
+                                else
+                                {
+                                        &add_ending_tags($tab_counter);
+                                }
+			}
+			$store_val = $record;
+		}
+		else
+        	{
+			@tokens = split(/ /, $record);
+			$tokens[1] =~ s/^PIN_FLD_//g;
+			$store_val = $tokens[0];
+			$last_storable = 0;
+			if ($tokens[0] ne "STORABLE")
+			{
+				print XSD_FILE_HANDLE "\t" x  $tab_counter;
+			}
+			elsif ($tokens[0] eq "STORABLE")
+			{
+		       
+			       	handle_storable_tags($podl_file, $tab_counter, $first, @tokens);		
+				
+			}
+			elsif ($tokens[0] eq "POID")
+			{
+				handle_poid_tags($tab_counter,@tokens);
+
+		       	}
+			elsif ($tokens[0] eq "STRING")
+		       	{
+				
+			        print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" type=\"xsd:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n";
+
+		      	}
+			elsif ($tokens[0] eq  "INT")
+		        {
+					print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" type=\"xsd:int\" minOccurs=\"0\" maxOccurs=\"1\"/>\n";
+		      	}
+			elsif ($tokens[0] eq "ENUM")
+		       	{
+					print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" type=\"xsd:int\" minOccurs=\"0\" maxOccurs=\"1\"/>\n";
+		       	}
+			elsif ($tokens[0] eq "TIMESTAMP")
+		       	{
+					print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" type=\"xsd:dateTime\" nillable=\"true\" minOccurs=\"0\" maxOccurs=\"1\"/>\n";
+		       	}
+			elsif ($tokens[0] eq  "BINSTR")
+		       	{
+					print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" type=\"xsd:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n";
+		       	}
+			elsif ($tokens[0] eq  "BUF" )
+		       	{
+					local ($buf_type) = " ";
+                                        $buf_type = "BUFFER_" . $podl_file;
+					print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" type=\"$buf_type\" minOccurs=\"0\" maxOccurs=\"1\"/>\n";
+					$buffer_flag++;
+		       	}
+		        elsif ($tokens[0] eq  "ARRAY")
+		       	{
+					handle_array_tags($podl_file, $tab_counter, @tokens);
+                                        $array_flag++;
+		       	}
+			elsif ($tokens[0] eq  "SUBSTRUCT")
+		       	{
+					handle_substruct_tags($podl_file, $tab_counter, @tokens);
+		       	}
+			elsif ($tokens[0] eq "DECIMAL" )
+		       	{
+					local ($dec_type) = " ";
+                                        $dec_type = "UNION_" . $podl_file;
+                                        print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" type=\"$dec_type\" minOccurs=\"0\" maxOccurs=\"1\"/>\n";
+                                        $dec_flag++;
+
+		       	}
+	            }
+		
+		
+	}
+	if($buffer_flag !=0)
+        {
+                add_buftype_tags($podl_file,$tab_counter,@tokens);
+        }
+        if($dec_flag !=0)
+        {
+                add_dectype_tags($podl_file,$tab_counter,@tokens);
+        }
+	if($first != -1)
+        {
+                $elem_name = $podl_file . "Extension";
+                $substitution_group = $elem_name . "Type";
+                print XSD_FILE_HANDLE "<xsd:element name=\"$elem_name\" type=\"$substitution_group\"/>\n";
+        }
+}
+
+# This subroutine adds tags to xsd specific to poid  
+sub handle_poid_tags
+{
+	local ($poid_pattern) = "<xsd:pattern value=\"([0-9]*\.)+[0-9]*(\\s)+((/)*([a-zA-Z_]*))*(\\s)+[\\-]*[0-9]+(\\s)+[0-9]*\"/>";
+	local ($empty_pattern) = "<xsd:pattern value=\"\"/>";
+	print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" minOccurs=\"0\" maxOccurs=\"1\">\n";
+	print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+	print XSD_FILE_HANDLE "<xsd:simpleType>\n";
+	print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+	print XSD_FILE_HANDLE "<xsd:restriction base=\"xsd:string\">\n";
+	print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+	print XSD_FILE_HANDLE "$poid_pattern\n";
+        print XSD_FILE_HANDLE "\t" x  $tab_counter;
+	# This is added to allow Empty poid tags
+        print XSD_FILE_HANDLE "$empty_pattern\n";
+	print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+	print XSD_FILE_HANDLE "</xsd:restriction>\n";
+	print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+	print XSD_FILE_HANDLE "</xsd:simpleType>\n";
+	print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+	print XSD_FILE_HANDLE "</xsd:element>\n";
+}
+
+# This subroutine adds tags specific to an array
+sub handle_array_tags
+{
+	print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" minOccurs=\"0\" maxOccurs=\"unbounded\">\n";
+	print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+	print XSD_FILE_HANDLE "<xsd:complexType>\n";
+	print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+	print XSD_FILE_HANDLE "<xsd:sequence>\n";
+	++$tab_counter;
+}
+
+# This subroutine adds tags specific to a substruct 
+sub handle_substruct_tags
+{
+	print XSD_FILE_HANDLE "<xsd:element name=\"$tokens[1]\" minOccurs=\"0\" maxOccurs=\"1\">\n";
+	print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+	print XSD_FILE_HANDLE "<xsd:complexType>\n";
+	print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+	print XSD_FILE_HANDLE "<xsd:sequence>\n";
+	++$tab_counter;
+}
+
+# This subroutine adds tags specific to a bufferType 
+sub add_buftype_tags
+{
+        local ($buf_type) = " ";
+	$buf_type = "BUFFER_" . $podl_file;
+        print XSD_FILE_HANDLE "<xsd:complexType name=\"$buf_type\">\n";
+        print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+        print XSD_FILE_HANDLE "<xsd:simpleContent>\n";
+        print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+        print XSD_FILE_HANDLE "<xsd:extension base=\"xsd:hexBinary\">\n";
+        print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+        print XSD_FILE_HANDLE "<xsd:attribute name=\"flags\" type=\"xsd:string\" use=\"optional\"/>\n";
+        print XSD_FILE_HANDLE "\t" x  $tab_counter;
+        print XSD_FILE_HANDLE "<xsd:attribute name=\"size\" type=\"xsd:string\" use=\"optional\"/>\n";
+        print XSD_FILE_HANDLE "\t" x  $tab_counter;
+        print XSD_FILE_HANDLE "<xsd:attribute name=\"offset\" type=\"xsd:string\" use=\"optional\"/>\n";
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:extension>\n";
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:simpleContent>\n";
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:complexType>\n";
+}
+
+
+# This subroutine adds tags specific to a decimal type(Empty Type + Union)
+sub add_dectype_tags
+{
+        local ($empty_type) = " ";
+        $empty_type = "EMPTY_" . $podl_file;
+        local ($dec_type) = " ";
+        $dec_type = "UNION_" . $podl_file;
+        print XSD_FILE_HANDLE "<xsd:simpleType name=\"$empty_type\">\n";
+        print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+        print XSD_FILE_HANDLE "<xsd:restriction base=\"xsd:string\">\n";
+        print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+        print XSD_FILE_HANDLE "<xsd:length value=\"0\"/>\n";
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:restriction>\n";
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:simpleType>\n";
+        print XSD_FILE_HANDLE "\t" x  $tab_counter;
+        print XSD_FILE_HANDLE "<xsd:simpleType name=\"$dec_type\">\n";
+        print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+        print XSD_FILE_HANDLE "<xsd:union memberTypes=\"xsd:decimal $empty_type\"/>\n";
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:simpleType>\n";
+}
+
+#This subroutine adds tags specific to STORABLE Class
+sub handle_storable_tags
+{
+	local ($complex_type) = "";
+	local ($elem_name) = "";
+	local ($substitution_group) = "";
+	local ($substitution_group_type) = "";
+	local ($class_name) = "";
+	if($first == 1)
+	{
+		$complex_type = $podl_file . "ExtensionType";
+		print XSD_FILE_HANDLE "<xsd:complexType name=\"$complex_type\">\n";
+		print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+		print XSD_FILE_HANDLE "<xsd:sequence>\n" ;
+	}
+	else
+	{
+		if($first == 0)
+		{
+			$elem_name = $podl_file . "Extension";
+			$substitution_group = $elem_name . "Type";
+			print XSD_FILE_HANDLE "<xsd:element name=\"$elem_name\" type=\"$substitution_group\" abstract=\"true\"/>\n";
+			$first = -1;
+		}
+		$tab_counter = 0;
+                $class_name = $tokens[2];
+                $tokens[2]=~ s/\//_/g;
+                $tokens[2] =~ s/^_//g;
+                $elem_name = $tokens[2] . "Extension";
+                $class_name =~ s/\/[0-9a-zA-Z_]*$//g;
+                $class_name=~ s/\//_/g;
+                $class_name =~ s/^_//g;
+                $substitution_group = $class_name . "Extension";
+                $substitution_group_type = $substitution_group . "Type";
+                $complex_type = $tokens[2] . "ExtensionType";
+		print XSD_FILE_HANDLE "<xsd:element name=\"$elem_name\" substitutionGroup=\"$substitution_group\" type=\"$complex_type\"/>\n";
+		print XSD_FILE_HANDLE "<xsd:complexType name=\"$complex_type\">\n";
+		print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+		print XSD_FILE_HANDLE "<xsd:complexContent>\n";
+		print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+		print XSD_FILE_HANDLE "<xsd:extension base=\"$substitution_group_type\">\n";
+		print XSD_FILE_HANDLE "\t" x  ++$tab_counter;
+		print XSD_FILE_HANDLE "<xsd:sequence>\n" ;
+	}
+	++$tab_counter;
+	$last_storable = 1;
+
+}
+
+# This subroutine adds the ending tags based on whether its the end
+# of an array or end of a class
+sub add_ending_tags
+{
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:extension>\n";
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:complexContent>\n";
+        print XSD_FILE_HANDLE "\t" x  --$tab_counter;
+        print XSD_FILE_HANDLE "</xsd:complexType>\n";
+}
+
+# This Subroutine Calls the pin_deploy and generates the PODL for a
+# given class and then inturn calls process_podl_data and
+# process_input_file functions.
+sub generate_podl_and_call_process
+{
+      local ($pin_deploy_cmd);
+      local (@podl_data);
+      local ($pin_deploy_id);
+      local ($exit_code);
+      local ($podl_file);
+      local ($xsd_file);
+      local ($class)=@_;
+      local ($header) = "<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+            xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"
+            xmlns:op=\"http://www.portal.com/schemas/BusinessOpcodes\"
+            xmlns=\"http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes\"
+            targetNamespace=\"http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes\"
+            elementFormDefault=\"qualified\">";
+      local ($footer) = "</xsd:schema>";
+      local ($pinhome) = "/brmapp/portal/7.5";
+
+      $podl_file = $class;
+      $podl_file =~ s/\//_/g;
+      $podl_file =~ s/^_//g;
+      if ($^O =~ /MSWin32/) {  
+          $pinhome =~ s/\//\\/g;
+          $pin_deploy_cmd = "\"$pinhome\"\\bin\\pin_deploy class -s $class > $podl_file";                     
+      } else {
+          $pin_deploy_cmd = "\"$pinhome\"/bin/pin_deploy class -s $class > $podl_file";
+      }
+
+      if (!defined ($pin_deploy_id = fork())) {
+          die "$$: Cannot execute pin_deploy utility";
+      } elsif ($pin_deploy_id == 0) {
+          exec($pin_deploy_cmd);
+          die "$$: Cannot execute pin_deploy utility";
+      } else {
+          waitpid($pin_deploy_id, 0);
+          $exit_code = ($? >> $UNIX_SHIFT);
+      }
+      if ($exit_code != 0)
+      {
+          print "pin_deploy failed for $class storable class\n";
+      }
+      else
+      {
+          $xsd_file = $podl_file . ".xsd";
+          process_podl_data($podl_file);
+          open(XSD_FILE_HANDLE, ">$xsd_file") or die "cant open $xsd_file file\n";
+          print XSD_FILE_HANDLE $header . "\n";
+          &process_input_file ($podl_file);
+          print XSD_FILE_HANDLE $footer . "\n";
+          close(XSD_FILE_HANDLE);
+      }
+      unlink $podl_file;
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--Module Version : 10000-->
+<OpcodeMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./opcode_ifw_mapping.xsd" opName="PCM_OP_RATE_GET_ZONEMAP_INFO">
+<!--@(#)%Portal Version: zonemap_event.xml:Pipeline7.3PatchInt:2:2006-Dec-15 11:56:14 %-->
+	<InputMap containerType="DETAIL">
+		<!--CONSTANT EDR DETAIL ITEMS-->
+		<EdrField name="DETAIL.RECORD_TYPE" value="020"/>
+		<EdrField name="DETAIL.DISCARDING" value="0"/>
+		<!--EVENT FLIST STRUCT ITEM-->
+		<FlistField name="PIN_FLD_EVENT">
+			<!--EVENT_TYPE-->
+			<FlistField name="PIN_FLD_POID" format="type" target="DETAIL.EVENT_TYPE" alias="event_type"/>
+			<!--CHARGING_START-->
+			<FlistField name="PIN_FLD_START_T" target="DETAIL.CHARGING_START_TIMESTAMP" applyUTCOffset="true" use="optional"/>
+			<!--CHARGING_END-->
+			<FlistField name="PIN_FLD_END_T" target="DETAIL.CHARGING_END_TIMESTAMP" applyUTCOffset="true" use="optional"/>
+		</FlistField>
+		<!--END EVENT FLIST STRUCT ITEM-->
+		<!--SERVICE_CODE-->
+		<FlistField name="PIN_FLD_SERVICE_CLASS" format="short" target="DETAIL.INTERN_SERVICE_CODE" use="optional"/>
+                <!--A_NUMBER and B_NUMBER-->
+		<FlistField name="PIN_FLD_ANI" target="DETAIL.INTERN_A_NUMBER_ZONE" use="optional"/>
+		<FlistField name="PIN_FLD_DN" target="DETAIL.INTERN_B_NUMBER_ZONE" use="optional"/>
+                <!--ZONE_MAP_NAME--> 
+		<FlistField name="PIN_FLD_ZONEMAP_NAME" target="DETAIL.ZONE_ENTRY_NAME"/>
+	</InputMap>
+</OpcodeMap>

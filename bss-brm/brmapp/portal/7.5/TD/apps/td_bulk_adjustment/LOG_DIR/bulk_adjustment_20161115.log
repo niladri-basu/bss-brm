@@ -1,0 +1,74 @@
+
+############################################################
+TD_BULK_ADJUSTMENT started at Tue Nov 15 19:05:17 NZDT 2016
+############################################################
+
+Reading the input file /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/INPUT_DIR/TD_BULK_ADJUSTMENT_20161115.csv
+
+Loading the adjustment file
+pin_apply_bulk_adjustment -v -f /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20161115.csv
+Rows(elements) read from file:16 (1)
+
+	Initializing the application.
+
+	Opening the input file: /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20161115.csv
+
+	Opening the file pin_mta_search.flist for writing
+
+	Opening the file pin_mta_failed.csv for writing Invalid Records
+
+	Reading the input file: /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20161115.csv
+
+	pin_mta_init_app: Read 1 record(s) from the CSV file, out of which 0 was/were erroneous.
+
+	pin_mta_init_search: Distributing the task among the worker threads...
+
+	Opening the input file: /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20161115.csv
+
+	Opening the file pin_mta_failed.csv for writing Invalid Records
+
+	No. of records successfully processed = 1
+	No. of records failed to process      = 0
+	Total No. of records processed        = 1
+Completed
+
+############################################################
+TD_BULK_ADJUSTMENT finished at Tue Nov 15 19:05:18 NZDT 2016
+############################################################
+
+############################################################
+TD_BULK_ADJUSTMENT started at Tue Nov 15 19:43:43 NZDT 2016
+############################################################
+
+Reading the input file /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/INPUT_DIR/TD_BULK_ADJUSTMENT_Nov152016.csv
+
+Loading the adjustment file
+pin_apply_bulk_adjustment -v -f /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20161115.csv
+Rows(elements) read from file:48 (3)
+
+	Initializing the application.
+
+	Opening the input file: /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20161115.csv
+
+	Opening the file pin_mta_search.flist for writing
+
+	Opening the file pin_mta_failed.csv for writing Invalid Records
+
+	Reading the input file: /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20161115.csv
+
+	pin_mta_init_app: Read 3 record(s) from the CSV file, out of which 0 was/were erroneous.
+
+	pin_mta_init_search: Distributing the task among the worker threads...
+
+	Opening the input file: /brmapp/portal/7.5/TD/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20161115.csv
+
+	Opening the file pin_mta_failed.csv for writing Invalid Records
+
+	No. of records successfully processed = 3
+	No. of records failed to process      = 0
+	Total No. of records processed        = 3
+Completed
+
+############################################################
+TD_BULK_ADJUSTMENT finished at Tue Nov 15 19:43:45 NZDT 2016
+############################################################

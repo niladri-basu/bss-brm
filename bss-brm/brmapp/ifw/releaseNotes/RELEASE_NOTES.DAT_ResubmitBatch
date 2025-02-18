@@ -1,0 +1,24 @@
+========================================================================================
+DAT_ResubmitBatch
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Revision: 10005 7.5  16-May-2011  Santanu 
+Bug11882202 - P-10349440 : -  SPB: INCREASE IN PIPELINE STARTUP TIME - NOW TAKING 12+ HOURS
+================================================================================
+Module Version: 10004  7.4  11-Nov-2010   Chetan
+BUG 10077369 - ECR: PARALLEL LOADING IN THE PIPELINE ENGINE
+================================================================================
+Revision: 10003 7.3  04-Aug-2006  Ashish Wani
+PRSF00226495: DAT_ResubmitBatch module dumps core when processing a ResubmitBatchRequest event 
+================================================================================
+Revision: 10002 7.3  28-May-2006  Ashish Wani
+PRSF00215715: Suspense not woking inside Roaming Registry
+================================================================================
+Revision 10001 7.3 28-Mar-2006 AshishK
+PRSF00199729 : DAT_ResubmitBatch dumps core in 
+               DAT::ResubmitBatch::FilePersistentTQueue<BAS::String>::enqueue 
+================================================================================
+Revision 10000 7.3 10-Jan-2005 Kiran Kumar
+PRSF00189682 : Batch suspense & pipeline category support in suspense pipeline plug-ins
+================================================================================

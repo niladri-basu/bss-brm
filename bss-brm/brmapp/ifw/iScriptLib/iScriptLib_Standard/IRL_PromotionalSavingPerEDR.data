@@ -1,0 +1,2 @@
+segmentContains("1234") and productName("Standard GSM Telephony", "Highest") and  priority("Highest") > 4 and usageStartTimeGreaterThan("20040101000000", "Highest") and serviceType("/service/telco/gsm/telephony", "Highest"); 2
+segmentContains("1234") and productName("Test Product 2", "Base") and  priority("Base") < 4 and usageStartTimeGreaterThan("20040101000000", "Base") and serviceType("/service/telco/gsm/telephony", "Base"); 2

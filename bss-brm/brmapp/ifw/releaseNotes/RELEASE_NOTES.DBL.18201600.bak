@@ -1,0 +1,493 @@
+================================================================================
+ dbLoader
+--------------------------------------------------------------------------------
+ Module Release Notes 
+================================================================================
+Actual Version : 7.4.0 10008 / Date : 05-Aug-2010
+----------------
+
+bug8825549 - P-8805537 ISSUE FOUND IN DB LOADER DURING TESTING OF THE BUG 6771178 
+================================================================================
+Actual Version : 7.4.0 10007 / Date : 20-Apr-2009
+----------------
+
+bug8363882     : MODIFY THE COPY RIGHT AND RELEASE INFO 
+================================================================================
+Actual Version : 7.3_2 10006 / Date : 16-Aug-2008
+----------------
+
+bug7007299     : LOG NOT INITIALISED IN DBLOADER 
+================================================================================
+Actual Version : 6.7_FP2 10005 / Date : 16-Jun-2004
+----------------
+
+PRSF00116729: Build NT Errors in DBLoader
+
+================================================================================
+Actual Version : 6.7_FP2 10004 / Date : 19-Apr-2004
+----------------
+
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Actual Version : 6.7 10003 / Date : 16-Mar-2004
+----------------
+
+PRSF00099934: While running dbloader, core dump occured.
+             
+
+================================================================================
+Actual Version : 6.7 10002 / Date : 21-Jan-2004
+----------------
+
+PRSF00087477: Incorrect CRITICAL log message for missing ROLLBACKSEGMENT registry 
+             entry.
+
+================================================================================
+Actual Version : 6.7 10001 / Date : 21-Oct-2003
+----------------
+
+PRSF00073259: dbLoader logging needs to be changed to use the new LogMessageTable
+
+================================================================================
+
+Actual Version : 6.7 10000 / Date : 08-Oct-2003
+----------------
+
+Notes          :
+----------------
+PRSF00068545: Apollo - incorrect dbLoader log message for missing 
+	      ROLLBACKSEGMENT registry entry
+
+================================================================================
+Actual Version : 6.5 10004 / Date : 19-May-2003
+----------------
+
+PRSF00041326: Made ROLLBACKSEGMENT registry entry optional to support Oracle 9i
+ 	      Automatic Undo Management.
+================================================================================
+
+Actual Version : 6.5 10003 / Date : 19-May-2003
+----------------
+
+PRSF00041296: Fixed dbLoader core dump problem when converting formatted string
+	      to RWDBDateTime
+================================================================================
+Actual Version : 6.5 10002 / Date : 07-May-2003
+----------------
+
+PRSF00040118: Add name space for DBL loader.
+
+================================================================================
+Actual Version : 6.5 10001 / Date : 28-Feb-2003
+----------------
+
+PRSF00033335: Added fixes for thread tracing.
+
+================================================================================
+
+Actual Version : v4-30-08 / Date : 01-Mar-2002
+----------------
+
+PETS #43708 check if an update affected more than one row
+
+================================================================================
+
+Actual Version : v4-30-07 / Date : 31-Jan-2002
+----------------
+
+PETS #38593 DB2 port 
+a specific rollback segment will only be used if the database type is Oracle
+
+================================================================================
+
+Actual Version : v4-30-06 / Date : 02-Nov-2001
+----------------
+
+PETS #40888 locking tables in exclusive mode to ensure parallel processing
+
+================================================================================
+
+Actual Version : v4-30-05 / Date : 11-Sep-2001
+----------------
+
+PETS #39071 core dump after (un)successful processing
+
+================================================================================
+
+Actual Version : v4-30-04 / Date : 22-Aug-2001
+----------------
+
+PETS #36559 SourcePro 
+
+================================================================================
+
+Actual Version : v4-30-03 / Date : 07-Aug-2001
+----------------
+
+PETS #37861: Replaced Sequence by TransactionId.
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 11-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36859 TLS/DBL and TAM use the same message identifiers.
+Renamed messages in DBL_error.msg.
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 11-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+================================================================================
+
+Actual Version : v4-01-04 / Date : 11-SEP-2000
+----------------
+
+Notes          :
+----------------
+Database version support
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+================================================================================
+
+Actual Version : v4-01-03 / Date : 31-AUG-2000
+----------------
+
+Notes          :
+----------------
+change startup message
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+================================================================================
+
+Actual Version : v4-01-02 / Date : 25-AUG-2000
+----------------
+
+Notes          :
+----------------
+support Framework v4-07-XX
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+================================================================================
+
+Actual Version : v4-01-01 / Date : 18-AUG-2000
+----------------
+
+Notes          :
+----------------
+support sequences until LONG_MAX
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+================================================================================
+
+Actual Version : v4-01-00 / Date : 17-JUN-2000
+----------------
+
+Notes          :
+----------------
+
+Implementation changed to support the IBM AIX xlC compiler.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-00-01 / Date : 02-MAY-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+#1893# close updater and inserter when a control file has been worked out
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-00-00 / Date : 25-APR-2000
+----------------
+
+Notes          :
+----------------
+- adapted to new v4 aggreGate control file format
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v2-00-10 / Date : 24-MAR-2000
+----------------
+
+Notes          :
+----------------
+- avoid opening new database connection for each data file
+- ignore empty data files
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v2-00-09 / Date : 20-MAR-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+#1722# ignore path and suffix of the DATAFILEs value
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v2-00-08 / Date : 09-MAR-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- avoid not thread safe system() call
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+#1673# using wrong scenario when splitting different data files
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+Actual Version : v2-00-07 / Date : 03-MAR-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+#1641# date/time elements are prefilled as follows
+YYYY (current year), DD and MM with 1, all other with 0
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v2-00-06 / Date : 22-FEB-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- sorted/merged files (mode 3) can be splitted into pieces to keep database 
+transactions small (see new registry parameter entries below). Sorting and splitting
+can be enabled and disabled by registry parameter.
+SORTING         = true
+SPLITTING       = true
+MAXSPLITLINES   = 50000
+
+- all modes are running under HP-UX 11
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v2-00-05 / Date : 18-FEB-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- the sort command for mode 3 can be configured via the registry
+for example
+SORTCMD         = sort      ; the command
+SORTTMPDIR      = /tmp      ; the directory for the temporary files
+SORTMAXFILESIZE = 20000000  ; the maximum filesize after merging files
+
+
+Known Problems :
+----------------
+- bulk and sort mode are not running under HP UX 11.00 (will cause core dump)
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v2-00-04 / Date : 16-FEB-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- load mode 3; identical structured files (or single files with FLUSHCOUNT > 1)
+are sorted/merged via UNIX sort. The sources for the merged files are moved to the MERGE 
+directory (new registry parameter). The sorted data files are aggregated row by row 
+before they are transmitted to the database.
+
+Known Problems :
+----------------
+- bulk and sort mode are not running under HP UX 11.00 (will cause core dump)
+- sort command can no be configured (directory, file size)
+
+Solved PRs/CRs :
+----------------
+#1564# avoid core dump if a transaction cannot be initialized
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v2-00-03 / Date : 10-FEB-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+- DBC_Database PlugIn is used for database connection
+- debug version available
+- doc++ class documentation available
+- memory leak in bulk mode fixed
+- segmentation fault at the end of bulk mode fixed
+
+Known Problems :
+----------------
+- bulk mode not running under HP UX 11.00 (will cause a core dump)
+- not fast enough
+
+Solved PRs/CRs :
+----------------
+#1500# transactions during one file can be set to a specific rollback segment
+via a registry parameter
+
+Open PRs/CRs   :
+----------------
+
+================================================================================

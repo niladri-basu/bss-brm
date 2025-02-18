@@ -1,0 +1,64 @@
+INF_BALANCE_MODEL_BEGIN                 | Start loading balance models from database.   | 31201
+INF_BALANCE_MODEL_END                   | Loading of balance models finished.           | 31202
+INF_BALANCE_MESSAGE                     | Information for DAT_Balance plugin module: '%s'       | 31203
+INF_BALANCE_STARTED_LOADING             | Started loading balance data.                 | 31204
+INF_BALANCE_ENTRIES_LOADED              | %s %s loaded.                                 | 31205
+INF_BALANCE_FINISHED_LOADING            | Finished loading balance data.                | 31206
+INF_BALANCE_START_INIT_THREADS          | Starting Multi-Threaded Initialization with %s threads.       | 31207
+INF_BALANCE_END_INIT_THREADS            | Finished Multi-Threaded Initialization.       | 31208
+INF_BALANCE_INIT_THREADS_COMPLETED      | Multi-Threaded Initialization has completed in %s seconds     | 31209
+INF_BALANCE_REDUCING_THREAD_COUNT       | Reducing number of threads down to %s to improve balance partitioning.        | 31210
+INF_BALANCE_THREAD_STARTED              | Thread-%s is starting and will process balances in poid range %s to %s        | 31211
+INF_BALANCE_THREAD_FINISHED             | Thread-%s has completed in %s seconds.        | 31212
+INF_BALANCE_BEGIN_MERGE                 | Starting balance data merge...                | 31213
+INF_BALANCE_END_MERGE                   | Complete balance data merge in %s seconds.    | 31214
+INF_BALANCE_GET_POID_BEGIN              | Start to get balance group with size = %s percent.    | 31215
+INF_BALANCE_GET_POID_END                | Getting balance group poid completed in %s seconds.   | 31216
+INF_BALANCE_POID_SIZE                   | Balance group poid contains %s out of %s total objects.       | 31217
+INF_BALANCE_THREAD_ELEMENT_LOADED       | Thread-%s loaded %s balance elements.         | 31218
+INF_BALANCE_THREAD_SUBBALANCE_LOADED    | Thread-%s loaded %s subBalances.              | 31219
+INF_BALANCE_MERGE_FINISHED              | Merging the balance map has completed in %s seconds.  | 31220
+INF_BALANCE_REG_VALUE_HASHMAP           | Set balance thread hash map size to %s.       | 31221
+INF_BALANCE_HASHMAP_SIZE                | Final balance hash map size set to %s.        | 31222
+INF_BALANCE_FETCH_SIZE                  | Fetch size buffer = %s rows.                  | 31223
+INF_BALANCE_FILE_CREATED                | Transaction Manager file %s created           | 31224
+INF_BALANCE_PROCESS_EVENT_DEADLOCK      | Could not process event due to deadlock for event: %s.        | 31225
+INF_BALANCE_PROCESS_EVENT_INVALID       | Could not precess event because the balance does not exist for event: %s.     | 31226
+ERR_BALANCE_MESSAGE                     | Error message for DAT_Balance plugin module: '%s'     | 31227
+ERR_BALANCE_DETACH_MODULE               | Could not detach pipeline '%s' (not attached).        | 31228
+ERR_BALANCE_GET_POID_RANGE              | Get poidrange failure: Reason=%s              | 31229
+ERR_BALANCE_INIT_THREAD_DIED            | Thread-%s has died with an expection in DAT_InitCustomerThread::run() - %s    | 31230
+ERR_BALANCE_MERGE_THREAD_DIED           | DAT_MapMergeThread::%s has died with an expection: %s         | 31231
+ERR_BALANCE_THREAD_DIED_UNEXPECTED      | Thread=%s has unexpectedly died: Info=%s      | 31232
+ERR_BALANCE_DATABASE                    | Database operation failed in DAT_BalanceBatch: '%s'   | 31233
+ERR_BALANCE_LISTENER_NOT_FOUND          | Listener '%s' not found.                      | 31234
+ERR_BALANCE_THREAD_INIT                 | Initial Thread for loading balance failed to create and start: Reason=%s      | 31235
+ERR_BALANCE_THREAD_MERGE                | Merge Thread for loading balance failed to create and start: Reason=%s        | 31236
+ERR_BALANCE_ATTACH_TRANS_MODULE         | Can not attach transaction module %s.         | 31237
+ERR_BALANCE_PROCESS_EVENT_ERROR         | Could not process event because there is an unknown error for event: %s.      | 31238
+ERR_BALANCE_PROCESSING_EVENT_BEGIN      | Could not begin event transaction for event id '%s'.  | 31239
+ERR_BALANCE_PROCESSING_EVENT_COMMIT     | Could not commit event transaction for event id '%s'.         | 31240
+ERR_BALANCE_PROCESSING_EVENT_ROLLBACK   | Could not rollback event transaction for event id '%s'.       | 31241
+ERR_BALANCE_INVALID_STATE               | Invalid transaction state, transId '%s'.           | 31242
+WRN_BALANCE_MERGE_THREAD                | Login %s found in multiple threads but update failed during balance merge     | 31243
+WRN_BALANCE_INVALID_TRANSACTION         | Current transaction is invalid or has errors during '%s'.  | 31244
+WRN_BALANCE_INVALID_TRANSACTION_ID      | Invalid transaction Id : '%s'.      | 31245
+ERR_BALANCE_TRANSACTION_MISMATCH        | Transactions mismatch between '%s'. | 31246
+ERR_BALANCE_MISSING_BALANCE_GROUP       | Balance group missing. | 31247
+ERR_BALANCE_UPDATE_BALANCE              | Error while updating the balance. | 31248
+ERR_BALANCE_INVALID_EDRTRANSACTION      | No transaction for this EDR on the transaction list in '%s'. | 31249
+INF_BALANCE_ELEMENT_LOADED_FOR_ACCOUNT  | %s Balance Elements Loaded Successfully in %s seconds.| 31250
+INF_BALANCE_SUBBALANCE_LOADED_FOR_ACCOUNT  | %s Balance SubBalances Loaded Successfully in %s seconds.| 31251
+INF_BALANCE_STARTED_RELOADING             | Started reloading balance data.                 | 31252
+ERR_BALANCE_INVALID_TRANSACTION         | Invalid transaction during '%s'. | 31253
+ERR_BALANCE_INVALID_BALANCEDATA         | Invalid balance data during '%s'. | 31254
+ERR_BALANCE_INVALID_TRANSACTIONDATA     | Invalid transaction data during '%s'. | 31255
+WRN_BALANCE_DEADLOCK_BTN_TRANS          | Deadlock between two transactions, '%s'. | 31256 
+WRN_BALANCE_DEADLOCK_BTN_EDRTRANS       | Deadlock between edr transactions on '%s'. | 31257 
+WRN_BALANCE_GROUP_NOT_FOUND             | Balance group '%s' not found. | 31259
+WRN_INVALID_CONSUMPTION_RULE            | Invalid consumption rule '%s' for resourceId '%s' and balance group '%s'. | 31260
+WRN_BALANCE_GROUP_LOCKED                | Processing on hold as BG is locked: '%s'. | 31261
+INF_BALANCE_GROUP_LOCK_RELEASED         | BG Lock has been acquired, procesing would continue for: '%s'. | 31262
+INF_BGLOCK_STATUS_LOG                   | BG Lock status log has been turned '%s'. | 31263
+INF_BALANCE_THREAD_BALANCE_GROUP_LOADED | Thread-%s loaded %s balance groups. | 31264
+ERR_MULTI_THREAD_LOAD                   | Failed to load balances. | 31265

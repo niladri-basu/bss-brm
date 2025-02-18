@@ -1,0 +1,57 @@
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211001 20211101
+Starting timestamp for 20211001 is 1632999600
+Ending timestamp for 20211101 is 1635678000
+Starting Unbilled GL report generation starting from 20211001 to 20211101: 
+Tue Oct 12 16:26:00 NZDT 2021
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue Oct 12 16:26:00 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Tue Oct 12 16:26:00 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Tue Oct 12 16:26:03 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Tue Oct 12 16:26:03 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Tue Oct 12 16:26:03 NZDT 2021
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211001 20211101
+Starting timestamp for 20211001 is 1632999600
+Ending timestamp for 20211101 is 1635678000
+Starting Unbilled GL report generation starting from 20211001 to 20211101: 
+Tue Oct 12 17:22:07 NZDT 2021
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Tue Oct 12 17:22:07 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Tue Oct 12 17:22:07 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Tue Oct 12 17:22:11 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Tue Oct 12 17:22:11 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Tue Oct 12 17:22:11 NZDT 2021
+
+Starting execution of td_get_unbilled_revenue_report.sh for dom date 20211001 20211101
+Starting timestamp for 20211001 is 1632999600
+Ending timestamp for 20211101 is 1635678000
+Starting Unbilled GL report generation starting from 20211001 to 20211101: 
+Wed Oct 13 09:32:29 NZDT 2021
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type billed -detail -verbose
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type unbilled_earned -detail -verbose
+pin_ledger_report -mode run_report -start 10/01/21 -end 11/01/21 -type unbilled_unearned -detail -verbose
+Completed Unbilled GL report generation at: 
+Wed Oct 13 09:32:30 NZDT 2021
+Starting td_unbilled_gl_proc.sh at: 
+Wed Oct 13 09:32:30 NZDT 2021
+Completed td_unbilled_gl_proc.sh at: 
+Wed Oct 13 09:32:35 NZDT 2021
+Starting td_trigger_bip_report.sh at: 
+Wed Oct 13 09:32:35 NZDT 2021
+Completed td_trigger_bip_report.sh at: 
+Wed Oct 13 09:32:35 NZDT 2021

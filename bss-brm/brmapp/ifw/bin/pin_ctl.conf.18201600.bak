@@ -1,0 +1,263 @@
+###############################################################################
+# The configuration file for controlling / monitoring all the Portal services.
+###############################################################################
+
+# To Start and Stop any BRM optional components, We need to configure this file. 
+# Steps to Configure :-
+#   1) Need to add new component into components list.
+#   2) Need to add in pin_ctl startup to configure an entry with their corresponding port number to start a portal process
+#      for that optional component.
+# Note : Please refer "Configuring the pin_ctl utility" section from BRM Doc for more Information for configuring pin_ctl.conf
+# For an example : If we want to start and stop optional component "dm_aq", We need to configure following in this file:-
+# 1) Add component entry dm_aq in components list.
+# 2) Add the following entry in pin_ctl startup configuration:-
+#    start_dm_aq             cpidproc:dm_aq: cport: --DM_AQ_PORT__
+
+
+# The configuration entry for logging will be as follows,
+# controle_script_log loglevel:LEVEL logfile:LOGFILE
+# The value for LEVEL entry can be:
+#     none    : no logging
+#     error   : log error messages only (default)
+#     warning : log error messages and warnings
+#     debug   : log error messages, warnings, and debugging messages
+control_script_log loglevel:error logfile:/brmapp/ifw/var/pin_ctl/pin_ctl.log
+
+# List of all environment variables which needs to be set
+# or override during the execution a particular process
+# The syntax for setting or overriding the environment variable will be,
+# program_name  env_platform:OS  env_variable:ENV_VAR    env_val:ENV_VAL
+
+#common env_platform:solaris env_variable:EXAMPLE env_val:example
+common env_platform:common env_variable:CTL_SNMP_PATH env_val:$PIN_HOME/bin
+common env_platform:common env_variable:JAVA_BIN_PATH env_val:$PIN_HOME/jre/bin
+dm_timos env_platform:hpux env_variable:_M_ARENA_OPTS env_val:64:4
+dm_timos env_platform:hpux env_variable:_M_CACHE_OPTS env_val:0
+dm_timos env_platform:hpux env_variable:_M_SBA_OPTS env_val:512:100:32
+dm_timos env_platform:hpux env_variable:SHLIB_PATH env_val:$PIN_HOME/lib:$SHLIB_PATH
+common env_platform:hpux env_variable:LD_LIBRARY_PATH env_val:$PIN_HOME/lib64:$PIN_HOME/lib:$LD_LIBRARY_PATH
+dm_timos env_platform:hpux_ia64 env_variable:_M_ARENA_OPTS env_val:64:4
+dm_timos env_platform:hpux_ia64 env_variable:_M_CACHE_OPTS env_val:0
+dm_timos env_platform:hpux_ia64 env_variable:_M_SBA_OPTS env_val:512:100:32
+dm_timos env_platform:hpux_ia64 env_variable:SHLIB_PATH env_val:$PIN_HOME/lib:$SHLIB_PATH
+common env_platform:hpux_ia64 env_variable:LD_LIBRARY_PATH env_val:$PIN_HOME/lib64:$PIN_HOME/lib:$LD_LIBRARY_PATH
+common env_platform:solaris env_variable:LD_LIBRARY_PATH env_val:$PIN_HOME/lib:$ORACLE_HOME/lib32:$ORACLE_HOME/rdbms/lib32:$LD_LIBRARY_PATH
+common env_platform:solaris env_variable:LD_LIBRARY_PATH_64 env_val:$PIN_HOME/lib:$PIN_HOME/lib64:$IFW_HOME/lib:$ORACLE_HOME/lib:$ORACLE_HOME/rdbms/lib:$LD_LIBRARY_PATH_64
+common env_platform:linux env_variable:LD_LIBRARY_PATH env_val:$PIN_HOME/lib:$PIN_HOME/lib64:$IFW_HOME/lib:$ORACLE_HOME/lib:$ORACLE_HOME/rdbms/lib:$ORACLE_HOME/lib32:$ORACLE_HOME/rdbms/lib32:$LD_LIBRARY_PATH
+common env_platform:aix env_variable:LIBPATH env_val:$PIN_HOME/lib:$PIN_HOME/lib64:$ORACLE_HOME/lib32:$LIBPATH
+snmpset env_platform:aix env_variable:LIBPATH env_val:$IFW_HOME/lib:$LIBPATH_64:$ORACLE_HOME/lib:$LIBPATH
+snmpget env_platform:aix env_variable:LIBPATH env_val:$IFW_HOME/lib:$LIBPATH_64:$ORACLE_HOME/lib:$LIBPATH
+bre env_platform:aix env_variable:LIBPATH env_val:$IFW_HOME/lib:$LIBPATH_64:$ORACLE_HOME/lib:$PIN_HOME/lib:$LIBPATH
+bre_tt env_platform:aix env_variable:LIBPATH env_val:$IFW_HOME/lib:$LIBPATH_64:$ORACLE_HOME/lib:$PIN_HOME/lib:$LIBPATH
+rtp env_platform:aix env_variable:LIBPATH env_val:$IFW_HOME/lib:$LIBPATH_64:$ORACLE_HOME/lib:$PIN_HOME/lib:$LIBPATH
+aaa env_platform:aix env_variable:LIBPATH env_val:$IFW_HOME/lib:$LIBPATH_64:$ORACLE_HOME/lib:$PIN_HOME/lib:$LIBPATH
+dm_timos env_platform:aix env_variable:LIBPATH env_val:$IFW_HOME/lib:$LIBPATH_64:$ORACLE_HOME/lib:$PIN_HOME/lib:$LIBPATH
+dm_timos env_platform:solaris env_variable:LD_LIBRARY_PATH_64 env_val:$PIN_HOME/lib64:$PIN_HOME/lib:$ORACLE_HOME/lib:$ORACLE_HOME/rdbms/lib:$LD_LIBRARY_PATH_64
+dm_timos env_platform:linux env_variable:LD_LIBRARY_PATH env_val:$PIN_HOME/lib64:$PIN_HOME/lib:$ORACLE_HOME/lib:$ORACLE_HOME/rdbms/lib:$PIN_HOME/ThirdPartyApps/SNMP/lib:$LD_LIBRARY_PATH
+dm_timos env_platform:common env_variable:SNMP_METHOD env_val:1
+common env_platform:common env_variable:NLS_LANG env_val:$NLS_LANG
+common env_platform:common env_variable:ORACLE_HOME env_val:$ORACLE_HOME
+common env_platform:common env_variable:TNS_ADMIN env_val:$TNS_ADMIN
+common env_platform:common env_variable:IFW_HOME env_val:$IFW_HOME
+common env_platform:solaris env_variable:LIBRARYEXTENSION env_val:.so
+common env_platform:linux env_variable:LIBRARYEXTENSION env_val:.so
+common env_platform:aix env_variable:LIBRARYEXTENSION env_val:.a
+common env_platform:hpux env_variable:LIBRARYEXTENSION env_val:.sl
+common env_platform:hpux_ia64 env_variable:LIBRARYEXTENSION env_val:.so
+common env_platform:common env_variable:LIBRARYPREFIX env_val:lib
+
+# registry details for pipeline services
+aaa env_platform:common env_variable:AAA_REGISTRY env_val:$IFW_HOME/conf/flist.reg
+rtp env_platform:common env_variable:RTP_REGISTRY env_val:$IFW_HOME/conf/wirelessRealtime.reg
+bre env_platform:common env_variable:BRE_REGISTRY env_val:$IFW_HOME/conf/wireless.reg
+bre_tt env_platform:common env_variable:BRE_TT_REGISTRY env_val:$IFW_HOME/conf/wireless_tt.reg
+dm_timos env_platform:common env_variable:TIMOS_REGISTRY env_val:$PIN_HOME/sys/dm_timos/timos.reg
+
+#######################################################################
+# SYSTEM MEMORY ALLOCATOR TUNING SETTINGS FOR PIPELINE PROCESSES
+# These settings are for the OOB installation. 
+# Please consult the Sys Admin to fine tune these values.
+#######################################################################
+# Solaris settings
+aaa env_platform:solaris env_variable:LD_PRELOAD_64 env_val:/usr/lib/sparcv9/libumem.so
+rtp env_platform:solaris env_variable:LD_PRELOAD_64 env_val:/usr/lib/sparcv9/libumem.so
+bre env_platform:solaris env_variable:LD_PRELOAD_64 env_val:/usr/lib/sparcv9/libumem.so
+bre_tt env_platform:solaris env_variable:LD_PRELOAD_64 env_val:/usr/lib/sparcv9/libumem.so
+dm_timos env_platform:solaris env_variable:LD_PRELOAD_64 env_val:/usr/lib/sparcv9/libumem.so
+
+# HP_UX_IA64 Settings
+
+aaa env_platform:hpux_ia64 env_variable:_M_ARENA_OPTS env_val:32:4
+rtp env_platform:hpux_ia64 env_variable:_M_ARENA_OPTS env_val:32:4
+bre env_platform:hpux_ia64 env_variable:_M_ARENA_OPTS env_val:32:4
+bre_tt env_platform:hpux_ia64 env_variable:_M_ARENA_OPTS env_val:32:4
+dm_timos env_platform:hpux_ia64 env_variable:_M_ARENA_OPTS env_val:32:4
+
+aaa env_platform:hpux_ia64 env_variable:_M_CACHE_OPTS env_val:40:12:1
+rtp env_platform:hpux_ia64 env_variable:_M_CACHE_OPTS env_val:40:12:1
+bre env_platform:hpux_ia64 env_variable:_M_CACHE_OPTS env_val:40:12:1
+bre_tt env_platform:hpux_ia64 env_variable:_M_CACHE_OPTS env_val:40:12:1
+dm_timos env_platform:hpux_ia64 env_variable:_M_CACHE_OPTS env_val:40:12:1
+
+# AIX settings
+
+aaa env_platform:aix env_variable:MALLOCTYPE env_val:buckets
+rtp env_platform:aix env_variable:MALLOCTYPE env_val:buckets
+bre env_platform:aix env_variable:MALLOCTYPE env_val:buckets
+bre_tt env_platform:aix env_variable:MALLOCTYPE env_val:buckets
+dm_timos env_platform:aix env_variable:MALLOCTYPE env_val:buckets
+
+rtp env_platform:aix env_variable:MALLOCOPTIONS env_val:number_of_buckets:64,buckets,multiheap:16
+bre env_platform:aix env_variable:MALLOCOPTIONS env_val:number_of_buckets:64,buckets,multiheap:16
+bre_tt env_platform:aix env_variable:MALLOCOPTIONS env_val:number_of_buckets:64,buckets,multiheap:16
+dm_timos env_platform:aix env_variable:MALLOCOPTIONS env_val:number_of_buckets:64,buckets,multiheap:16
+
+aaa env_platform:aix env_variable:LDR_CNTRL env_val:TEXTPSIZE=4K:STACKPSIZE=64K:DATAPSIZE=64K
+bre env_platform:aix env_variable:LDR_CNTRL env_val:TEXTPSIZE=4K:STACKPSIZE=64K:DATAPSIZE=64K
+bre_tt env_platform:aix env_variable:LDR_CNTRL env_val:TEXTPSIZE=4K:STACKPSIZE=64K:DATAPSIZE=64K
+rtp env_platform:aix env_variable:LDR_CNTRL env_val:TEXTPSIZE=4K:STACKPSIZE=64K:DATAPSIZE=64K
+dm_timos env_platform:aix env_variable:LDR_CNTRL env_val:TEXTPSIZE=4K:STACKPSIZE=64K:DATAPSIZE=64K
+
+# Linux settings
+aaa env_platform:linux env_variable:MALLOC_TRIM_THRESHOLD_ env_val:-1
+bre env_platform:linux env_variable:MALLOC_TRIM_THRESHOLD_ env_val:-1
+bre_tt env_platform:linux env_variable:MALLOC_TRIM_THRESHOLD_ env_val:-1
+rtp env_platform:linux env_variable:MALLOC_TRIM_THRESHOLD_ env_val:-1
+dm_timos env_platform:linux env_variable:MALLOC_TRIM_THRESHOLD_ env_val:-1
+
+aaa env_platform:linux env_variable:MALLOC_MMAP_MAX_ env_val:0
+bre env_platform:linux env_variable:MALLOC_MMAP_MAX_ env_val:0
+bre_tt env_platform:linux env_variable:MALLOC_MMAP_MAX_ env_val:0
+rtp env_platform:linux env_variable:MALLOC_MMAP_MAX_ env_val:0
+dm_timos env_platform:linux env_variable:MALLOC_MMAP_MAX_ env_val:0
+
+aaa env_platform:linux env_variable:MALLOC_TOP_PAD_ env_val:268435456
+bre env_platform:linux env_variable:MALLOC_TOP_PAD_ env_val:268435456
+bre_tt env_platform:linux env_variable:MALLOC_TOP_PAD_ env_val:268435456
+rtp env_platform:linux env_variable:MALLOC_TOP_PAD_ env_val:268435456
+dm_timos env_platform:linux env_variable:MALLOC_TOP_PAD_ env_val:268435456
+
+########################################################################################
+#                                END OF                                                #
+#        SYSTEM MEMORY ALLOCATOR TUNING SETTINGS FOR PIPELINE PROCESSES                #
+########################################################################################
+# This sections will be used to have different settings for each service like
+# 1. waittime -- number of seconds to be waited
+# 2. iterations -- Number of times to be checked
+# 3. pin_home_dir -- PIN_HOME path 
+# 4. pin_log_dir -- PIN_LOG_DIR path
+# All these are optional, if these are not set then default values will be used.
+
+# settings servicename waittime:value iterations:value pin_home_dir:path pin_log_dir:path
+settings dm_oracle waittime:5 iterations:5 pin_home_dir:$PIN_HOME pin_log_dir:$PIN_LOG_DIR
+settings dm_tt waittime:5 iterations:5 pin_home_dir:$PIN_HOME pin_log_dir:$PIN_LOG_DIR
+settings cm waittime:5 iterations:24
+settings bre waittime:5 iterations:60
+settings bre_tt waittime:5 iterations:60
+settings rtp waittime:5 iterations:24
+settings aaa waittime:5 iterations:24
+
+# The format of entry for each service is ,
+# start_sequence service_name [=<alias_name>|:java|:app|-><list of services, this depends on>]
+# 
+# The start sequence is a mandatory field, which gives sequence to start/stop [Mandatory]. 
+#	Sequence is a numerical value, and starts from 1. The service should be specified 
+#       in the assending order based on the sequence number.
+# Mention the service name. This service_name is mandatory field [Mandatory].
+# NOTE:	Start sequence and Service name should be separated by a space.
+# 
+# '='	should be used if service name is different with standard service names [Optional].
+#	For example, cm2=cm
+#	Here, cm2 is the service which is of cm category.
+#	This is useful when multiple CMs/DMs are installed.
+# :app	should be used if its located in $PIN_HOME/apps directory [Optional].
+# :java should be used if its a java based service [optional].
+# ->	should be used if the current service has any dependencies [Optional].
+#	This is generally useful in WINDOWS.
+# :pipeline	should be used if it is Pipeline service [Optional].
+
+1 dm_oracle
+1 dm_tt
+1 dm_email
+1 dm_fusa
+1 dm_invoice
+1 dm_vertex
+1 dm_ldap
+1 dm_eai
+1 dm_ifw_sync
+2 dm_timos:pipeline
+3 cm->dm_oracle
+4 cm_proxy
+4 cmmp
+4 formatter:java
+4 nmgr->cm
+4 infmgr->nmgr
+4 eai_js:java
+4 answer:app
+4 batch_controller:app:java
+4 rtp:pipeline
+4 aaa:pipeline
+4 bre:pipeline
+4 bre_tt:pipeline
+
+# List of services to be part of all [Optional].
+#	Mention the service names separated by a space.
+# '='	should be used to create an alisas for 'all'.
+#	For example, all=my_all
+# all=my_all dm_oracle dm_email cm cmmp formatter 
+
+all dm_oracle dm_email cm cmmp formatter
+
+# The configuration entry to start a Portal process is as follows
+# program_name must be unique, or last parsed definition is used.
+#   cpidproc:searchpattern:pidvarname
+#     check for process existance/changes (like runtime)
+#     checks both parent + children processes
+#     searchpattern is a simple process name/arg/whatever filter
+#     pidvarname (default "PID$") is a partial match for the pidfile var from ${program_name}
+#       (i.e. "CMPID=$PIN_LOG/cm/cm.pid" from start_cm, and default PID$ matches CMPID)
+#     start criteria: succeeds when processes don't change anymore; aborts if no processes
+#     stop criteria: succeeds when processes go away
+#
+#   cport:PORTNUM
+#     checks "netstat -an" for tcpip listen on specified port
+#     start criteria: succeeds when listen found
+#     stop criteria: succeeds when listen not found
+#
+#   testnap:DIRNAME
+#     run a CM-style testnap in the specified directory
+#     if directory is relative, uses $PIN_HOME/sys/DIRNAME
+#     start criteria: succeeds when testnap connects
+#     stop criteria: N/A
+start_cm          	cpidproc:cm:  cport:__CM_PORT__ testnap:test
+start_dm_timos          cpidproc:dm_timos:  cport:__DM_TIMOS_PORT__
+start_dm_oracle		cpidproc:dm_oracle:  cport:__DM_ORACLE_PORT__ testnap:test host:__DM_ORACLE_HOST__ dbno:0.0.0.1
+start_dm_tt		cpidproc:dm_tt:  cport:__DM_TT_PORT__ host:__DM_TT_HOST__ dbno:0.0.0.1
+start_dm_email		cpidproc:dm_email:  cport:__DM_EMAIL_PORT__
+start_cm_proxy		cpidproc:cm_proxy:  cport:__CM_PROXY_PORT__
+start_cmmp		cpidproc:cmmp:  cport:__CMMP_PORT__
+start_dm_invoice	cpidproc:dm_invoice:  cport:__DM_INVOICE_PORT__
+start_infmgr		cpidproc:infmgr:  cport:__INFMGR_PORT__
+start_nmgr		cpidproc:nmgr:  cport:__NMGR_PORT__
+
+#snmp master_agent hostname port
+common env_platform:common env_variable:CTL_SNMP_MAGENT_HOST env_val:__MAGENT_HOST__
+common env_platform:common env_variable:CTL_SNMP_MAGENT_PORT env_val:__MAGENT_PORT__
+
+
+#snmpSet servicename probe registryentry baseOID
+snmpset dm_timos rebalancedmo timosMgr.TimosDataManager.ConnectorPool.NetworkListener.ConnectionConfigurations 1.3.6.1.4.1.3512.1.5.2.1.1.5
+snmpset dm_timos shutdown timosMgr.HighAvailabilityManager 1.3.6.1.4.1.3512.1.1.6.1.1.7
+snmpset dm_timos switchover timosMgr.HighAvailabilityManager 1.3.6.1.4.1.3512.1.1.6.1.1.6
+snmpset dm_timos updatedmofarm timosMgr.TimosDataManager.ConnectorPool.NetworkListener.ConnectionConfigurations 1.3.6.1.4.1.3512.1.5.2.1.1.4
+snmpset aaa rebalanceaaagw ifw.DataPool.CMConnectionPool.Module 1.3.6.1.4.1.3512.1.7.1.1.1.1
+
+
+#Input values for snmpset actions
+#snmpset servicename probe input_str value
+snmpset dm_timos rebalancedmo input_str __DM_ORACLE_HOST__:__DM_ORACLE_PORT__
+snmpset dm_timos shutdown input_str true
+
+dm_tt env_platform:common env_variable:LD_LIBRARY_PATH env_val:$TIMESTEN_HOME/ttoracle_home/instantclient_11_1:$TIMESTEN_HOME/lib:$PIN_HOME/lib64:$PIN_HOME/lib:$LD_LIBRARY_PATH
+
+dm_tt env_platform:solaris env_variable:LD_LIBRARY_PATH_64 env_val:$TIMESTEN_HOME/ttoracle_home/instantclient_11_1:$TIMESTEN_HOME/lib:$PIN_HOME/lib64:$PIN_HOME/lib:$LD_LIBRARY_PATH

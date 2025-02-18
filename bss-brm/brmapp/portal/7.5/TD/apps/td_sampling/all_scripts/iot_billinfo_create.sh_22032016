@@ -1,0 +1,48 @@
+#!/usr/bin/ksh
+LOGINSQL=`egrep -v "#" login.cfg | grep "DB_LOGIN" |cut -d'=' -f2`
+outfile=`egrep -v "#" login.cfg | grep "OUTFILE_DIR" |cut -d'=' -f2 |sed -e 's/$/\/iot_billinfo_create.log/'`
+actg_dom=$1;
+echo $LOGINSQL
+$ORACLE_HOME/bin/sqlplus -s $LOGINSQL>>$outfile<<EOF
+SET WRAP ON
+--
+set heading off;
+set feedback off;
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS ON VERIFY OFF;
+--
+set linesize 200
+set serveroutput on size 2000
+
+
+DECLARE
+
+        v_ddl_stmt VARCHAR2(4000);
+        v_errmsg VARCHAR2(200);
+        v_count number(5) := 0;
+
+BEGIN
+
+        select count(1) into v_count from user_tables where table_name='IOT_BILLINFO_T';
+
+        if v_count <> 1
+        then
+
+v_ddl_stmt := 'CREATE TABLE IOT_BILLINFO_T (item_poid_id0, billinfo_poid_id0, CONSTRAINT pk_iot_billinfo_x PRIMARY KEY(item_poid_id0) ) 
+ORGANIZATION INDEX 
+as
+select it.poid_id0, bi.poid_id0
+from billinfo_t bi, item_t it
+where bi.poid_id0=it.billinfo_obj_id0
+and bi.next_bill_t=(select td_nz_to_unix(to_date(''$actg_dom'', ''YYYYMMDD'')) from dual)
+and bi.billing_status<>1
+and it.status=1
+and bi.pay_type<>10000';
+
+        EXECUTE IMMEDIATE v_ddl_stmt;
+        end if;
+
+END;
+/
+
+exit;
+EOF

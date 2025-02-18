@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+#
+#  @(#) %full_filespec: start_js.sh~5:shsrc:1 %
+#
+# Copyright (c) 1998, 2014, Oracle and/or its affiliates. All rights reserved.
+# or its licensors and may be used, # reproduced, stored or transmitted only in accordance with a valid Oracle license or sublicense
+# agreement.
+#
+# start_js
+#
+#
+VERSION=7.5
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/eai_js
+
+JSDIR=${PINDIR}/sys/eai_js
+JSLOG=${LOGDIR}/eai_js.log
+JSPID=${LOGDIR}/eai_js.pid
+
+if [ -r ${JSPID} ]; then
+  /bin/ps -f -p `cat ${JSPID}` | grep eai_js > /dev/null
+  if [ $? -eq 0 ]; then
+        echo "ERROR: eai_js is already running"
+        exit 1
+  fi
+fi
+
+# does the propreties file for the Java Server
+if [ ! -r  ${JSDIR}/Infranet.properties ]; then
+		echo "HELP: no Infranet.properties for eai_js in \"${JSDIR}\"!"
+				exit 1
+fi
+
+
+if [ ! -d  ${LOGDIR} ]; then
+	mkdir -p ${LOGDIR}
+	if [ $? -ne 0 ]; then
+		echo "HELP: problem making LOGDIR \"${LOGDIR}\"!"
+		exit 1
+	fi
+fi       
+
+# set JAR_DIR to be the full pathname of the dir where the
+# jar files are located
+JAR_DIR=${PINDIR}/jars
+CLASSPATH=.:$JAR_DIR/js.jar:$JAR_DIR/pcm.jar:$JAR_DIR/pcmext.jar:$JAR_DIR/eai.jar:$JAR_DIR/xercesImpl.jar:$JAR_DIR/xmlParserAPIs.jar:$JAR_DIR/xml4j.jar:$JAR_DIR/oraclepki.jar:$JAR_DIR/osdt_cert.jar:$JAR_DIR/osdt_core.jar
+
+export CLASSPATH
+
+JAVA=$BRM_JRE/bin/java
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${JSDIR} ;
+  echo "started JS at..." >> ${JSLOG}
+  date >> ${JSLOG}
+	$JAVA -Deai_js=1 -mx33554432 -ms33554432 -ss1m com.portal.js.JSMain &
+  echo $! > ${JSPID} ;
+  chmod 664 ${JSLOG} ;
+  chmod 664 ${JSPID} )
+
+# get rc from cm startup
+exit $?

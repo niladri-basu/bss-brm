@@ -1,0 +1,127 @@
+================================================================================
+DAT_Tadig2Plmn
+--------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+
+Module Version: 10008  7.4  11-Nov-2010    Chetan 
+Bug 10077369:ECR: PARALLEL LOADING IN THE PIPELINE ENGINE 
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+
+Module Version: 10007  DaVinci  14-jun-2006 
+PRSF00213731: Reasoning: R-060323-0114  Memory Leak
+
+================================================================================
+
+Module Version: 10006  6.7_FP2  28-Apr-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10005  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+==============================================================================
+
+Module Version: 10004  Apollo  23-Sep-2003
+PRSF00064129:   Adding namespaces to roaming plugins - Propagation
+
+==============================================================================
+
+================================================================================
+
+Module Version: 10003  6.5_SP2  02-Jul-2003
+PRSF00047972:   Adding namespaces to roaming plugins
+
+==============================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 6.5 10001 / Date : 28-FEB-2003
+----------------
+
+PRSF00033256: Added fixes for thread tracing.
+
+================================================================================
+
+Actual Version : v6.4.1 / Date : 17-Sep-2002
+----------------
+
+Notes          :
+----------------
+
+PRSF00018582 DAT_Tadig2Plmn is still using old db table IFW_NETWORKOPERATOR
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 05-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 27-Apr-2001
+----------------
+
+Notes          :
+----------------
+
+- new database table names
+- new copyright block
+
+================================================================================
+
+Actual Version : v4-02-00 / Date : 04-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+Checked CodeReview remarks.
+
+New Features   :
+----------------
+
+Implemented support for new database check feature.
+
+================================================================================
+
+Actual Version : v4-00-01 / Date : 07-Jun-2000
+----------------
+
+Solved PRs/CRs :
+----------------
+#2083# Reload semaphore doesnt work. Fixed.
+
+================================================================================
+
+Actual Version : v4-00-00 / Date : 24-May-2000
+----------------
+
+Notes          :
+----------------
+
+Initial version.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================

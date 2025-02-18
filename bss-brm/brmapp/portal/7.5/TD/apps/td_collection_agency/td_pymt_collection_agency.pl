@@ -1,0 +1,507 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+################################################################################
+# Script name : td_collection_agency
+# This utilty does the follwing activities:
+#       - Reads Account_no ,MSISDN , Bill_info_id , Amount ,Collection agency id
+#	  Payment transaction id and payment date from input file
+#       - Prepare input flist for opcode TD_OP_PYMT_REVERSE
+#	- Call the opcode and archive the input file
+# Revision : 23.01.2015
+################################################################################
+#use DBI;
+#use DBD::Oracle;
+use Time::Local;
+use File::Copy;
+use lib '.' ;
+use pcmif;
+use Sys::Hostname;
+use File::Basename;
+use File::Path;
+use strict;
+use warnings;
+use Cwd;
+
+
+my $ebufp;
+my $db_no;
+my $script = "TD_COLLECTION_AGENCY";
+my $PIN_HOME;
+my $INPUT_DIR;
+my $ARCHIVE_DIR;
+my $LOG_DIR;
+my $REJ_DIR;
+my $LOG_FILE;
+my $pcm_ctxp;
+my $reason;
+my $in_file;
+my $p_transaction_id = "";
+my $reject_no = 0 ;
+my $processed_no = 0  ;
+my $total_no = 0;
+my $col_in_flist;
+my $str;
+my $len;
+my $chr;
+my $trans_flag = 0;
+sub process_records($);
+sub reject_records($);
+sub get_flist_fld_value($);
+sub Lpad();
+#######################################
+# Reading Configaration File
+#######################################
+print  "Reading Configuration File \n\n";
+my %ConfVarTable;
+my $conf = "config.conf";
+#readConfigFile();
+
+if ( -e $conf )
+{
+    $PIN_HOME = `grep '^-' $conf | grep PIN_HOME | awk '{print \$NF}'`;
+    $INPUT_DIR = `grep '^-' $conf | grep INPUT_DIR | awk '{print \$NF}'`;
+    $ARCHIVE_DIR = `grep '^-' $conf | grep ARCHIVE_DIR | awk '{print \$NF}'`;
+    $LOG_DIR = `grep '^-' $conf | grep LOG_DIR | awk '{print \$NF}'`;
+    $REJ_DIR = `grep '^-' $conf | grep REJ_DIR | awk '{print \$NF}'`;
+    chomp($PIN_HOME);
+    chomp($INPUT_DIR);
+    chomp($ARCHIVE_DIR);
+    chomp($LOG_DIR);
+    chomp($REJ_DIR);
+
+}
+else
+{
+    print "\n$script: $conf configuration file not found!\n\n";
+    exit(1);
+}
+
+
+########################################
+# Create log file
+########################################
+my ($dd, $mm, $yyyy) = (localtime)[3..5];
+$mm=$mm+1;
+$yyyy=$yyyy+1900;
+my $date="$mm/$dd/$yyyy";
+
+if (length $mm ne 2)
+        {
+        $mm=LPad($mm,2,0);
+        }
+
+if (length $dd ne 2)
+        {
+        $dd=LPad($dd,2,0);
+        }
+
+my $file_date="$yyyy$mm$dd";
+
+my $log_file = "collection_agency_$file_date.log";
+$log_file = "$PIN_HOME"."$LOG_DIR"."/$log_file";
+open(LOG_FILE,">> $log_file") or die "Could not open log file";
+
+print(LOG_FILE "\n\n####################################################\n");
+print(LOG_FILE "Starting td_collection_agency at $date");
+print(LOG_FILE "\n####################################################\n");
+
+
+######################################
+# Get context and create error buffer
+######################################
+$ebufp = pcmif::pcm_perl_new_ebuf();
+$db_no='0.0.0.1';
+$pcm_ctxp = pcmif::pcm_perl_connect($db_no, $ebufp);
+
+if (pcmif::pcm_perl_is_err($ebufp)) {
+        print LOG_FILE "FAILED to Connect to Infranet\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        #display_date("finished");
+        print "\nLog File $log_file\n\n";
+        close(LOG_FILE);
+        exit(1);
+}
+my $DB_NO = $db_no;
+
+###################################
+# Process the files in input folder
+###################################
+my $input_dir = "$PIN_HOME"."$INPUT_DIR";
+opendir(INPUT_DIR, $input_dir) or die "Could not open the input directory";
+my $file;
+
+while ($file = readdir(INPUT_DIR))
+{
+    $in_file="$input_dir/$file";
+
+    # Skip directories and swap files
+    next if(-d $in_file || $in_file =~ /\/\./);
+
+    # Open input file
+    open(IN_FILE,"<$in_file") or die ("Could not open input file");
+    print("Processing $file\n");
+    print LOG_FILE "Reading the input file $file";
+
+    # Read all the records from the input file into array
+    my @all_col_records = <IN_FILE>;
+    foreach my $col_record (@all_col_records)
+    {
+        # Process each record
+        process_records($col_record);
+  
+  }
+    $processed_no = $total_no - $reject_no;
+
+    print(LOG_FILE "\nTotal no of records in flie :  $total_no");
+    print(LOG_FILE "\nTotal no of records Processed :  $processed_no");
+    print(LOG_FILE "\nTotal no of records Rejected :  $reject_no");
+    # Close input file
+    close(IN_FILE);
+    $total_no = 0;
+    $reject_no = 0;
+    $p_transaction_id = "";
+
+    # Archive the input file
+    my $archive_dir = "$PIN_HOME"."$ARCHIVE_DIR";
+    move("$in_file","$archive_dir") or die ("Could not archive the input file");
+    print(LOG_FILE "\nArchived $file\n\n");
+}
+
+# Close input directory
+closedir(INPUT_DIR);
+
+sub process_records($)
+{
+
+	my $pay_record = $_[0];
+	$total_no = $total_no +1;
+       #if ($pay_record =~ /^([\d\w]+[^, ]*),([^,]*),([+-]?\d+[^, ]*),([^,]*),([^,]*),([^,]*),([^,]*)$/){
+	if ($pay_record =~ /^([\d\w]+[^, ]*),([+-]?\d+[^, ]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)$/){
+		my ($account_no,$bill_info_id,$amount,$collection_agency_id,$payment_date,$bill_no,$msisdn,$pymt_trans_id)=($1,$2,$3,$4,$5,$6,$7,$8);
+		chomp($account_no);
+                chomp($bill_info_id);
+                chomp($amount);
+                chomp($collection_agency_id);
+                chomp($payment_date);
+                chomp($bill_no);
+                chomp($msisdn);
+                chomp($pymt_trans_id);
+
+		my ($mday,$mon,$year,$hour,$min,$sec) = split(/[\s.:]+/, $payment_date);
+		my $time = timelocal($sec,$min,$hour,$mday,$mon-1,$year);
+ 
+		if (($account_no eq '') || ($bill_info_id eq '') || ($amount eq '') || ($collection_agency_id eq '') || ($payment_date eq ''))
+		{
+                	$reason = "Invalid Record";
+                        chomp($pay_record);
+                        $pay_record = "$in_file"." : $pay_record";
+                        chomp($pay_record);
+                        $pay_record = "$pay_record".", $reason";
+                        chomp($pay_record);
+                        reject_records($pay_record);
+
+                }
+
+		if ($pymt_trans_id ne ''){
+#####################################
+#Search for duplicate tras_id
+####################################
+			#print "in search\n";
+        	        my $template = "select X from /event/billing/payment 1, /account 2 where 1.F1 = V1 and 1.F2 = 2.F3 and 2.F4 = V4 ";
+	                my $s_in_flist=<<"XXX";
+                	0 PIN_FLD_POID        POID [0] $DB_NO /search -1 0
+	                0 PIN_FLD_FLAGS       INT [0] 256
+        	        0 PIN_FLD_TEMPLATE     STR [0] "$template"
+                	0 PIN_FLD_RESULTS    ARRAY [*] allocated 1, used 1
+	                1        PIN_FLD_PAYMENT          SUBSTRUCT [0] allocated 1, used 1
+        	        2                PIN_FLD_TRANS_ID   STR [0] NULL
+                	0 PIN_FLD_ARGS       ARRAY [1] allocated 1, used 1
+	                1     PIN_FLD_PAYMENT          SUBSTRUCT [0] allocated 1, used 1
+			2         PIN_FLD_TRANS_ID           STR [0] "$pymt_trans_id"
+			0 PIN_FLD_ARGS                     ARRAY [2] allocated 1, used 1
+			1     PIN_FLD_ACCOUNT_OBJ           POID [0] 0.0.0.1 /account -1 0
+			0 PIN_FLD_ARGS                     ARRAY [3] allocated 1, used 1
+			1     PIN_FLD_POID                  POID [0] 0.0.0.1 /account -1 0
+			0 PIN_FLD_ARGS                     ARRAY [4] allocated 1, used 1
+			1     PIN_FLD_ACCOUNT_NO             STR [0] "$account_no"
+XXX
+			#print "in put:\n$s_in_flist\n";
+	                my $search_in_flistp = pcmif::pin_perl_str_to_flist($s_in_flist,$DB_NO,$ebufp);
+                	my $flag = 0;
+        	        my $search_out_flistp = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_SEARCH",$flag, $search_in_flistp, $ebufp);
+
+	                if( pcmif::pcm_perl_is_err($ebufp) )
+                	{
+ 		                pcmif::pcm_perl_print_ebuf($ebufp);
+	                        pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+                        	print "\nLog File $log_file\n\n";
+                	        close(LOG_FILE);
+        	                close(IN_FILE);
+	                        closedir(INPUT_DIR);
+                        	exit(1);
+                	}
+        	        my $search_oflist = pcmif::pin_perl_flist_to_str($search_out_flistp, $ebufp);
+		
+			#print "Output $search_oflist\n";
+			my @value = split(/\n/, $search_oflist);
+                	foreach my $val_array_element(@value){
+  		                chomp($val_array_element);
+	        	        if ($val_array_element=~ /PIN_FLD_TRANS_ID/i)
+                		{
+                        	#	$p_transaction_id = get_flist_fld_value($val_array_element);
+						                        
+        	                        $trans_flag = 1;
+                	                chomp($pay_record);
+                        	        $pay_record = "$in_file"." : $pay_record";
+                                	chomp($pay_record);
+  	                                $pay_record = "$pay_record"." ,Duplicate Payment transaction id";
+        	                        reject_records($pay_record);
+
+				}	
+        	        }
+			pcmif::pin_flist_destroy($search_in_flistp);
+                     #   pcmif::pin_flist_destroy($search_out_flistp); 
+		}
+########################################
+#If the transaction id not duplicate
+#Prepare input flist to post payment
+########################################
+		if ( $trans_flag ne 1)
+		{
+			if (($bill_no eq '')&&($msisdn ne '')&&($pymt_trans_id ne '')){
+	                         $col_in_flist=<<"XXX";
+                                0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+                                0 PIN_FLD_FLAGS         INT [0] 1
+                                0 PIN_FLD_MSISDN        STR [0] "$msisdn"
+                                0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+                                0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+                                0 PIN_FLD_PAY_TYPE      ENUM [0] 10011
+                                0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+                                0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+                                0 PIN_FLD_TRANS_ID      STR [0] "$pymt_trans_id"
+                                0 PIN_FLD_CHANNEL_ID    INT [0] 15
+                                0 PIN_FLD_MERCHANT      STR [0] "$collection_agency_id"
+XXX
+			}
+
+			if (($msisdn eq '')&&($bill_no ne '')&&($pymt_trans_id ne '')){
+                         	$col_in_flist=<<"XXX";
+                                0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+                                0 PIN_FLD_FLAGS         INT [0] 1
+                                0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+                                0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+                                0 PIN_FLD_BILL_NO       STR [0] "$bill_no"
+                                0 PIN_FLD_PAY_TYPE      ENUM [0] 10011
+                                0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+                                0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+                                0 PIN_FLD_TRANS_ID      STR [0] "$pymt_trans_id"
+                                0 PIN_FLD_CHANNEL_ID    INT [0] 15
+                                0 PIN_FLD_MERCHANT      STR [0] "$collection_agency_id"
+XXX
+			}
+			if (($pymt_trans_id eq '')&&($bill_no ne '')&&($msisdn ne '')){
+                         	$col_in_flist=<<"XXX";
+                                0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+                                0 PIN_FLD_FLAGS         INT [0] 1
+                                0 PIN_FLD_MSISDN        STR [0] "$msisdn"
+                                0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+                                0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+                                0 PIN_FLD_BILL_NO       STR [0] "$bill_no"
+                                0 PIN_FLD_PAY_TYPE      ENUM [0] 10011
+                                0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+                                0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+                                0 PIN_FLD_CHANNEL_ID    INT [0] 15
+                                0 PIN_FLD_MERCHANT      STR [0] "$collection_agency_id"
+XXX
+			}
+                        if (($pymt_trans_id eq '')&&($bill_no eq '')&&($msisdn ne '')){
+
+                                $col_in_flist=<<"XXX";
+                                0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+                                0 PIN_FLD_FLAGS         INT [0] 1
+                                0 PIN_FLD_MSISDN        STR [0] "$msisdn"
+                                0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+                                0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+                                0 PIN_FLD_PAY_TYPE      ENUM [0] 10011
+                                0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+                                0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+                                0 PIN_FLD_CHANNEL_ID    INT [0] 15
+                                0 PIN_FLD_MERCHANT      STR [0] "$collection_agency_id"
+XXX
+}
+                        if (($pymt_trans_id eq '')&&($bill_no ne '')&&($msisdn eq '')){
+
+                                $col_in_flist=<<"XXX";
+                                0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+                                0 PIN_FLD_FLAGS         INT [0] 1
+                                0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+                                0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+                                0 PIN_FLD_BILL_NO       STR [0] "$bill_no"
+                                0 PIN_FLD_PAY_TYPE      ENUM [0] 10011
+                                0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+                                0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+                                0 PIN_FLD_CHANNEL_ID    INT [0] 15
+                                0 PIN_FLD_MERCHANT      STR [0] "$collection_agency_id"
+XXX
+}
+                        if (($pymt_trans_id ne '')&&($bill_no eq '')&&($msisdn eq '')){
+
+                                $col_in_flist=<<"XXX";
+                                0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+                                0 PIN_FLD_FLAGS         INT [0] 1
+                                0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+                                0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+                                0 PIN_FLD_PAY_TYPE      ENUM [0] 10011
+                                0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+                                0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+                                0 PIN_FLD_TRANS_ID      STR [0] "$pymt_trans_id"
+                                0 PIN_FLD_CHANNEL_ID    INT [0] 15
+                                0 PIN_FLD_MERCHANT      STR [0] "$collection_agency_id"
+XXX
+}
+                        if (($pymt_trans_id eq '')&&($bill_no eq '')&&($msisdn eq '')){
+
+                                $col_in_flist=<<"XXX";
+                                0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+                                0 PIN_FLD_FLAGS         INT [0] 1
+                                0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+                                0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+                                0 PIN_FLD_PAY_TYPE      ENUM [0] 10011
+                                0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+                                0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+                                0 PIN_FLD_CHANNEL_ID    INT [0] 15
+                                0 PIN_FLD_MERCHANT      STR [0] "$collection_agency_id"
+XXX
+}
+                        if (($pymt_trans_id ne '')&&($bill_no ne '')&&($msisdn ne '')){
+
+			 	$col_in_flist=<<"XXX";
+        			0 PIN_FLD_POID          POID [0] 0.0.0.1 /account -1 0
+        			0 PIN_FLD_FLAGS         INT [0] 1
+				0 PIN_FLD_MSISDN        STR [0] "$msisdn" 
+	        		0 PIN_FLD_ACCOUNT_NO    STR [0] "$account_no"
+			        0 PIN_FLD_BILLINFO_ID   STR [0] "$bill_info_id"
+                                0 PIN_FLD_BILL_NO       STR [0] "$bill_no"
+			        0 PIN_FLD_PAY_TYPE      ENUM [0] 10011
+				0 PIN_FLD_AMOUNT        DECIMAL [0] $amount
+			        0 PIN_FLD_EFFECTIVE_T   TSTAMP [0] ($time)
+				0 PIN_FLD_TRANS_ID	STR [0] "$pymt_trans_id"
+				0 PIN_FLD_CHANNEL_ID	INT [0] 15
+				0 PIN_FLD_MERCHANT      STR [0] "$collection_agency_id"
+XXX
+			}
+			#print "\n col_in_flist\n $col_in_flist";
+			my $in_flistp = pcmif::pin_perl_str_to_flist($col_in_flist,$DB_NO,$ebufp);
+        		if( pcmif::pcm_perl_is_err($ebufp) ){
+            			pcmif::pcm_perl_print_ebuf($ebufp);
+		        	pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+	           		# display_date("finished");
+		                print "\nLog File $log_file\n\n";
+       				close(LOG_FILE);
+		        	close(IN_FILE);
+			        closedir(INPUT_DIR);
+        	    		exit(1);
+        		}
+		 #       print LOG_FILE "\nInput flist \n $col_in_flist";
+        		my $flags = 0;
+			my $out_flistp = pcmif::pcm_perl_op($pcm_ctxp,"TD_OP_PYMT_REVERSE",$flags, $in_flistp, $ebufp);
+	        	if( pcmif::pcm_perl_is_err($ebufp) )
+        		{
+				pcmif::pcm_perl_print_ebuf($ebufp);
+	        	        pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+				print "\nLog File $log_file\n\n";
+            			close(LOG_FILE);
+            			close(IN_FILE);
+            			closedir(INPUT_DIR);
+	            		exit(1);
+        		}
+
+        		my $col_out_flist = pcmif::pin_perl_flist_to_str($out_flistp, $ebufp);
+			#print  "\nOutput flist \n $col_out_flist";
+###############################################################
+#Added by Dev: 05/28/2015
+#Check payment processing result, if result equals 0 i.e.failed
+#then reject the payment record
+################################################################
+			my @value = split(/\n/, $col_out_flist);
+			my $result = 0;
+                        
+			foreach my $val_array_element(@value)
+                        {
+                        chomp($val_array_element);
+                        	if ($val_array_element=~ /PIN_FLD_RESULT/i)
+                        	{
+                                	my @temp = split /] /, $val_array_element;
+                                	$result = $temp[1];
+				}
+                        }
+			if($result == 0)
+			{
+                                $reason = "Account creation and Payment date mismatch";
+                                chomp($pay_record);
+                                $pay_record = "$in_file"." : $pay_record";
+                                chomp($pay_record);
+                                $pay_record = "$pay_record".", $reason";
+                                chomp($pay_record);
+                                reject_records($pay_record);
+
+			}
+#################################################################
+			 pcmif::pin_flist_destroy($in_flistp);
+                         pcmif::pin_flist_destroy($out_flistp);
+
+     	  }
+
+   }
+
+   else
+    {
+       # print LOG_FILE "Invalid record --> $pay_record";
+		$reason = "Invalid record";
+                chomp($pay_record);
+                $pay_record = "$in_file"." : $pay_record";
+                chomp($pay_record);
+                $pay_record = "$pay_record".",Invalid record";
+                chomp($pay_record);
+                #print LOG_FILE "Invalid record --> $rev_record";
+                reject_records($pay_record);
+
+
+
+    }
+
+}
+##########################################
+# Subroutine to process rejected records
+##########################################
+sub reject_records($)
+{
+	$reject_no = $reject_no + 1;
+        #print LOG_FILE "\nIn reject_records()\n";
+        my $rev_record = $_[0];
+        my $rej_file = "collection_agency_$file_date.rej";
+        $rej_file = "$PIN_HOME"."$REJ_DIR"."/$rej_file";
+        open(REJ_FILE,">> $rej_file") or die "Could not open reject file";
+        print REJ_FILE "\n$rev_record";
+
+}
+###########################################
+# Subroutine to get field value from flist
+###########################################
+sub get_flist_fld_value($)
+{
+         my $out_flist_string_row = shift;
+         my @return_value = split(/\s/, $out_flist_string_row);
+         my $temp_value = $return_value[$#return_value];
+         if ($temp_value =~ /\"/){
+                my @temp_array = split(/\"/, $temp_value);
+                $temp_value = $temp_array[1];
+         }
+        my $ret_flist_fld_value = $temp_value;
+}
+
+sub LPad
+{
+	($str, $len, $chr) = @_;
+	$chr = "0" unless (defined($chr));
+	return substr(($chr x ($len - length $str)).$str, 0, $len);
+}

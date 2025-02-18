@@ -1,0 +1,123 @@
+================================================================================
+
+ Copyright (c) 1996, 2014, Oracle and/or its affiliates. All rights reserved.
+
+This material is the confidential property of Oracle Corporation or its
+licensors and may be used, reproduced, stored or transmitted only in
+accordance with a valid Oracle license or sublicense agreement.
+
+==============================================================================
+FCT_CreditLimitCheck
+------------------------------------------------------------------------------
+Module Release Notes
+------------------------------------------------------------------------------
+Module Version: v10020 7.5 20-MAR-2014
+Bug 18255638 - P-18044818 - Credit limit plugin change to include min/incr to round quantity in last incr 
+Changes for single RUM only to limit the scope of complicity.
+==============================================================================
+Module Version: v10019 7.5 10-Sep-2012
+Bug14598369 - Allowing fully discountable call even if the Credit Limit of the
+subscriber is reached.
+==============================================================================
+Module Version: v10018 7.4 21-Mar-2012
+Bug 13866161 - FCT_CREDITLIMITCHECK INCORRECTLY CHANGING UNRATED_QUANTITY
+There was some calculation problem with the multi RUM credit limit check.
+Changed the calculation to get more refined output. 
+------------------------------------------------------------------------------
+Module Version: v10017 7.4 08-June-2011
+Bug 11775000: P-10226508 CORE DUMP WITH CREDITLIMITCHECK ACTIVATED
+================================================================================
+Module Version: v10016 7.4 23-May-2011
+Bug 12529475 : P-11735899 TT-AIX: SUITE GPRS_MULTIRUM_AAA HANGS - NO ERRORS SEEN
+There was a hang problem while calling destructor for the MultiRumSegmentManager
+and SingleRumSegmentManager.
+It was due to dereference of a already deleted pointer.
+------------------------------------------------------------------------------
+Module Version: v10015 7.4 02-Feb-2010
+BUG9312737: ST251:PCM_OP_SUBSCRIPTION_SET_PRODINFO FAILS WITH ERR_CREDIT_LIMIT_EXCEEDED
+The logic of increasing credit limit with current balance for the account 
+having balance,was not checked for unlimited credit limit in the 
+CreditLimitCheckBalanceElement.hpp.
+================================================================================
+Module Version: v10014 7.4 20-Oct-2009
+BUG8852376:AUTHORIZATION QUANTITY RE-CALCULATION IN PIPELINE IS PRONE TO ARITHMETIC ERRORS
+A new algorithm is implemented in case of credit breach the charge for prorated quantity is 
+calculated and compared against the available balance, if this amount doesn't fits into the 
+available  balance the prorated quatity is reduced by step value (a new registry parameter)
+with default value of 1. This process is repeated till the rounded prorated charge becomes 
+less than or equal to available balance.
+================================================================================
+Module Version: v10013 7.4 30-Sep-2009
+BUG8833193: FT_LINUX_BMT: AUTHORIZATION OF ACCOUNTS WITHOUT RESOURCES DUMPS A LOT OFF ERROR
+Core dump was happing in the race condition because Segment pool was decalred as Static.
+================================================================================
+Module Version: v10012 7.4 18-Sep-2009
+BUG8925463: CLC IS FAILING EVEN IF CREDIT LIMIT IS SET TO NULL
+The logic of increasing credit limit with current balance for the account 
+having balance,was not checked for unlimited credit limit.
+================================================================================
+Module Version: v10011 7.4 04-May-2009
+BUG8482647: P-8372142 NO REAL-TIME TAX CALCULATED DURING RATING
+Changed the logic of Credit Limit Check done on Balance Elements.
+Check is only done on BE impacted by CP/DP packets.
+================================================================================
+Module Version: v10010 7.4 27-Feb-2009
+BUG8286530:PIPELINE INCORRECTLY MODIFIES UNRATED QUANTITY VALUE
+Handling Unrated Quantity in the multi rum case. The Unrated quantity recieved from
+the rating should be appended to the one calculated by CLC.
+BUG8296897: 7.4 REGRESSIONS: CF EVENT GETS TRIGGERED WITH 0 BI IN THE SECOND CYCLE
+Default Credit Profile is to fetched for those resouces not having credit profile
+sent from the infranet.
+================================================================================
+
+Module Version: v10009 7.3.2 16-June-2008
+BUG7083368:Modified the Segment creation logic.If a segement already exists update
+the existing one or else create a new one.Modified for both Single RUM and Multi RUM cases.
+================================================================================
+Module Version: v10008 7.3 27-AUG-2007
+BUG6340087:P-6279718 MEMORY LEAK IDENTIFIED IN RTP  PLUGINS FOR 7.3_PATCH
+================================================================================
+Module Version: v10007 7.3 28-NOV-2006
+PRSF00239409:Reverse Rating: Credit Limit Plugin changes
+================================================================================
+Module Version: v10006 7.2_PATCH 12-Sep-2005
+PRSF00182363:change atol to atoi64 to avoid long truncation
+==============================================================================
+Module Version: v10005 / Date : 06-JUN-2005
+PRSF00171368 "Memory Leak in CreditLimitCheck"
+==============================================================================
+==============================================================================
+Module Version: v10004 / Date : 25-APR-2005
+PRSF00165266 "Credit Limit plugin needs to cater to zero credit limit and 
+              negative current balance"
+==============================================================================
+Module Version: v10003 / Date : 08-MAR-2005
+PRSF00157388 "In CreditLimitCheck plug-in, BalanceElement's creditCheckBracketM 
+             member variable is not being properly initialized"
+
+==============================================================================
+Module Version: v10002 / Date : 15-FEB-2005
+PRSF00154609 "CreditLimitCheck's Discount Packet processing needs to use 
+             GRANTED_AMOUNT instead of AMOUNT"
+
+==============================================================================
+Module Version: v10001 / Date : 09-FEB-2005
+PRSF00153299 "Balance Groups not being properly set up in Credit Limit Check plug-in"
+
+==============================================================================
+----------------
+
+Module Version : 6.7_FP2 10000
+----------------
+
+Date : 08-NOV-2004
+----------------
+
+Change Order :  PRSF00138461
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+[Pipeline] Intial release of Plugin for Credit Limit Check.
+================================================================================

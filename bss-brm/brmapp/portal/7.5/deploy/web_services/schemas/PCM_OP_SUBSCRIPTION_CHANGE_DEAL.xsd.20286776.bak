@@ -1,0 +1,224 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved.
+
+        This material is the confidential property of Oracle Corporation or
+        its licensors and may be used, reproduced, stored or transmitted only
+        in accordance with a valid Oracle license or sublicense agreement.-->
+   <xsd:include schemaLocation="event.xsd"/>
+   <xsd:element name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_inputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="CANCEL_DEAL_INFO" type="CANCEL_DEAL_INFO_SUBSTRUCT_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_1217" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="255"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PROGRAM_NAME" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="60"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PURCHASE_DEAL_INFO" type="PURCHASE_DEAL_INFO_SUBSTRUCT_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_1218" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="CANCEL_DEAL_INFO_SUBSTRUCT_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_1217">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="PURCHASE_DEAL_INFO_SUBSTRUCT_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_1218">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_outputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="RESULTS" minOccurs="1" maxOccurs="256">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="RESULTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_1312">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="RESULTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_1312">
+      <xsd:sequence>
+         <xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_IMPACTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_IMPACTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131222">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CYCLE_INFO" type="CYCLE_INFO_SUBSTRUCT_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131223" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131226">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131225">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RESULTS" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RESULTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131227">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_IMPACTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131222">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131225">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131226">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RESULTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131227">
+      <xsd:sequence>
+         <xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_IMPACTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_IMPACTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_13122722">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CYCLE_INFO" type="CYCLE_INFO_SUBSTRUCT_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_13122723" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_IMPACTS_ARRAY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_13122722">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CYCLE_INFO_SUBSTRUCT_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_13122723">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="CYCLE_INFO_SUBSTRUCT_PCM_OP_SUBSCRIPTION_CHANGE_DEAL_131223">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BUFFER_PCM_OP_SUBSCRIPTION_CHANGE_DEAL">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:hexBinary">
+            <xsd:attribute name="flags" type="xsd:string" use="optional"/>
+            <xsd:attribute name="size" type="xsd:string" use="optional"/>
+            <xsd:attribute name="offset" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:simpleType name="EMPTY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL">
+      <xsd:restriction base="xsd:string">
+         <xsd:length value="0"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="UNION_PCM_OP_SUBSCRIPTION_CHANGE_DEAL">
+      <xsd:union memberTypes="xsd:decimal EMPTY_PCM_OP_SUBSCRIPTION_CHANGE_DEAL"/>
+   </xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,88 @@
+#!/bin/sh
+
+
+#####################################
+# 1. remove unwanted stuff
+#####################################
+umask 77             # only user can read the wallet
+unset ORA_SEC_WLT
+
+#####################################
+# 2. identify where this script lives
+#####################################
+TOOLNAME=$0
+mypwd="`pwd`"
+case ${TOOLNAME} in
+  /*)  TOOLDIR=`dirname "${TOOLNAME}"` ;;
+   *)  TOOLDIR=`dirname "${mypwd}/${TOOLNAME}"` ;;
+esac
+
+TOOLHOME=`cd "${TOOLDIR}/.." ; pwd`
+TOOLROOT=`cd "${TOOLHOME}/.." ; pwd`
+
+PKI=${PIN_HOME}/jars/oraclepki.jar
+RSA=${PIN_HOME}/jars/cryptoj_5_0.jar
+OSDT_CORE=${PIN_HOME}/jars/osdt_core.jar
+OSDT_CERT=${PIN_HOME}/jars/osdt_cert.jar
+OJMISC=${PIN_HOME}/jars/ojmisc.jar
+
+# Get the platform
+PLATFORM=`uname`
+
+# Some platforms may need other JVM environment variables set
+# or unset as appropriate.
+case $PLATFORM in "AIX")
+   JAVA_COMPILER=NONE
+   export JAVA_COMPILER
+esac
+
+# Linux platform uses native threads.
+SET_DEFAULT=YES
+case $PLATFORM in "Linux")
+   SET_DEFAULT=NO
+   THREADS_FLAG=native 
+   export THREADS_FLAG
+esac
+case $SET_DEFAULT in "YES")
+#  we only use green threads for the other platforms
+   THREADS_TYPE=green_threads
+   export THREADS_TYPE
+esac
+
+# Set the shared library path for JNI shared libraries
+# A few platforms use an environment variable other than LD_LIBRARY_PATH
+SET_DEFAULT_VAR=YES
+SLLIBDIRNAME=lib
+# for Sparc64, HP-PA, HPI invoke java with -d64 option to run in 64-bit mode.
+JAVAMODE=
+# for specific platforms reset variables and set others as needed.
+case $PLATFORM in "HP-UX")
+   JAVAMODE=-d64
+esac
+
+case $PLATFORM in "AIX")
+   SET_DEFAULT_VAR=NO
+   LIBPATH=$TOOLHOME/$SLLIBDIRNAME:$TOOLHOME/network/$SLLIBDIRNAME:$LIBPATH
+   export LIBPATH
+esac
+case $PLATFORM in "SunOS")
+   PLATFORM_ARCH=`uname -p`
+   case $PLATFORM_ARCH in "sparc")
+       JAVAMODE=-d64
+   esac
+   case $PLATFORM_ARCH in "i386")
+      JAVAMODE=-d64
+   esac
+esac
+
+# if still selected, set the default variable name:LD_LIBRARY_PATH.
+case $SET_DEFAULT_VAR in "YES")
+   LD_LIBRARY_PATH=$TOOLHOME/$SLLIBDIRNAME:$TOOLHOME/network/$SLLIBDIRNAME:$LD_LIBRARY_PATH
+   export LD_LIBRARY_PATH
+esac
+
+if [ "$CODECOV" = TRUE ]; then
+  ${BRM_JRE}/bin/java -Xms64m -Xmx512m -cp $PKI:$RSA:$EMMA_JAR:$OJMISC:$OSDT_CORE:$OSDT_CERT oracle.security.pki.textui.OraclePKITextUI "$@"
+else
+  ${BRM_JRE}/bin/java $JAVAMODE -Xms64m -Xmx512m -cp $PKI:$RSA:$OJMISC:$OSDT_CORE:$OSDT_CERT oracle.security.pki.textui.OraclePKITextUI "$@"
+fi

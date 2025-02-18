@@ -1,0 +1,642 @@
+D Tue Jan  6 02:22:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17780  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Tue Jan  6 02:22:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17780  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Tue Jan  6 02:22:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17780  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17780:-149940512:0:1420464139:0
+	(17780): SSL disabled
+D Tue Jan  6 02:22:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17780  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17780:-149940512:0:1420464139:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Tue Jan  6 02:22:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17780  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17780:-149940512:0:1420464139:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-JTFQ5"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Tue Jan  6 02:22:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17780  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17780:-149940512:7:1420464139:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1275434 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 7
+D Tue Jan  6 02:22:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17780  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17780:-149940512:7:1420464139:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1275434 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 7
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 1
+D Tue Jan  6 02:22:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17780  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17780:-149940512:58:1420464139:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1275434 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 7
+D Wed Mar  4 00:07:18 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:18231  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Mar  4 00:07:18 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:18231  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Mar  4 00:07:18 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:18231  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:18231:-150157600:0:1420464643:0
+	(18231): SSL disabled
+D Wed Mar  4 00:07:18 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:18231  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:18231:-150157600:0:1420464643:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Mar  4 00:07:18 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:18231  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:18231:-150157600:0:1420464643:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-JTFQ5"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Mar  4 00:07:18 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:18231  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:18231:-150157600:7:1420464643:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1275434 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 8
+D Wed Mar  4 00:07:18 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:18231  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:18231:-150157600:7:1420464643:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1275434 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 8
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 0
+D Wed Mar  4 00:07:18 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:18231  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:18231:-150157600:58:1420464643:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1275434 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 8
+D Tue Jan  6 02:55:14 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:19696  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Tue Jan  6 02:55:14 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:19696  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Tue Jan  6 02:55:14 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:19696  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:19696:-149817632:0:1420466114:0
+	(19696): SSL disabled
+D Tue Jan  6 02:55:14 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:19696  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:19696:-149817632:0:1420466114:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Tue Jan  6 02:55:14 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:19696  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:19696:-149817632:0:1420466114:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1275434"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Tue Jan  6 02:55:14 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:19696  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:19696:-149817632:7:1420466114:1
+	Search output flist
+# number of field entries allocated 20, used 1
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+D Tue Jan  6 02:55:14 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:19696  td_bill_suppress.c:265 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:19696:-149817632:7:1420466114:1
+	record can not be precessed
+D Wed Mar  4 15:56:15 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28015  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Mar  4 15:56:15 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28015  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Mar  4 15:56:15 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28015  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28015:-149207328:0:1420523724:0
+	(28015): SSL disabled
+D Wed Mar  4 15:56:15 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28015  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28015:-149207328:0:1420523724:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Mar  4 15:56:15 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28015  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28015:-149207328:0:1420523724:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-JTFQ5"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Mar  4 15:56:15 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28015  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28015:-149207328:7:1420523724:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1275434 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 13
+D Wed Mar  4 15:56:15 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28015  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28015:-149207328:7:1420523724:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1275434 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 13
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 1
+D Wed Mar  4 15:56:15 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28015  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28015:-149207328:58:1420523724:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1275434 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 13
+D Tue Jan  6 19:11:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28785  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Tue Jan  6 19:11:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28785  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Tue Jan  6 19:11:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28785  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28785:-149285152:0:1420524668:0
+	(28785): SSL disabled
+D Tue Jan  6 19:11:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28785  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28785:-149285152:0:1420524668:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Tue Jan  6 19:11:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28785  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28785:-149285152:0:1420524668:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-JTFQ5"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Tue Jan  6 19:11:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28785  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28785:-149285152:7:1420524668:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1275434 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 14
+D Tue Jan  6 19:11:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28785  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28785:-149285152:7:1420524668:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1275434 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 14
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 0
+D Tue Jan  6 19:11:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:28785  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:28785:-149285152:58:1420524668:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1275434 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1275178 14
+D Wed Jan  7 01:28:11 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:15544  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Jan  7 01:28:11 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:15544  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Jan  7 01:28:11 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:15544  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:15544:-149248288:0:1420547291:0
+	(15544): SSL disabled
+D Wed Jan  7 01:28:11 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:15544  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:15544:-149248288:0:1420547291:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Jan  7 01:28:11 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:15544  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:15544:-149248288:0:1420547291:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-LV810"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 01:28:11 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:15544  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:15544:-149248288:7:1420547291:1
+	Search output flist
+# number of field entries allocated 20, used 1
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+D Wed Jan  7 01:28:11 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:15544  td_bill_suppress.c:265 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:15544:-149248288:7:1420547291:1
+	record can not be precessed
+D Tue Feb 10 00:22:05 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16550  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Tue Feb 10 00:22:05 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16550  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Tue Feb 10 00:22:05 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16550  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16550:-149960992:0:1420548717:0
+	(16550): SSL disabled
+D Tue Feb 10 00:22:05 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16550  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16550:-149960992:0:1420548717:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Tue Feb 10 00:22:05 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16550  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16550:-149960992:0:1420548717:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-LV810"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Tue Feb 10 00:22:05 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16550  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16550:-149960992:7:1420548717:1
+	Search output flist
+# number of field entries allocated 20, used 1
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+D Tue Feb 10 00:22:05 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16550  td_bill_suppress.c:265 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16550:-149960992:7:1420548717:1
+	record can not be precessed
+D Tue Feb 10 00:24:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16681  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Tue Feb 10 00:24:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16681  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Tue Feb 10 00:24:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16681  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16681:-149424416:0:1420548851:0
+	(16681): SSL disabled
+D Tue Feb 10 00:24:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16681  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16681:-149424416:0:1420548851:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Tue Feb 10 00:24:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16681  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16681:-149424416:0:1420548851:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-LV810"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Tue Feb 10 00:24:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16681  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16681:-149424416:7:1420548852:1
+	Search output flist
+# number of field entries allocated 20, used 1
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+D Tue Feb 10 00:24:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16681  td_bill_suppress.c:265 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16681:-149424416:7:1420548852:1
+	record can not be precessed
+D Wed Jan  7 01:56:16 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16803  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Jan  7 01:56:16 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16803  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Jan  7 01:56:16 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16803  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16803:-149158176:0:1420548976:0
+	(16803): SSL disabled
+D Wed Jan  7 01:56:16 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16803  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16803:-149158176:0:1420548976:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Jan  7 01:56:16 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16803  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16803:-149158176:0:1420548976:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-LV810"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 01:56:16 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16803  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16803:-149158176:7:1420548976:1
+	Search output flist
+# number of field entries allocated 20, used 1
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+D Wed Jan  7 01:56:16 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:16803  td_bill_suppress.c:265 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:16803:-149158176:7:1420548976:1
+	record can not be precessed
+D Wed Jan  7 02:01:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17017  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Jan  7 02:01:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17017  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Jan  7 02:01:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17017  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17017:-149272864:0:1420549280:0
+	(17017): SSL disabled
+D Wed Jan  7 02:01:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17017  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17017:-149272864:0:1420549280:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Jan  7 02:02:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17062  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Jan  7 02:02:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17062  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Jan  7 02:02:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17062  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17062:-150071584:0:1420549340:0
+	(17062): SSL disabled
+D Wed Jan  7 02:02:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17062  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17062:-150071584:0:1420549340:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Jan  7 02:02:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17062  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17062:-150071584:0:1420549340:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-LV81O"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 02:02:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17062  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17062:-150071584:7:1420549340:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1288914 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1288658 7
+D Wed Jan  7 02:02:20 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17062  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17062:-150071584:7:1420549340:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1288914 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1288658 7
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 1
+D Wed Jan  7 02:02:21 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17062  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17062:-150071584:58:1420549340:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1288914 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1288658 7
+D Tue Mar 10 00:05:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17327  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Tue Mar 10 00:05:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17327  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Tue Mar 10 00:05:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17327  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17327:-149436704:0:1420549711:0
+	(17327): SSL disabled
+D Tue Mar 10 00:05:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17327  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17327:-149436704:0:1420549711:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Tue Mar 10 00:05:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17327  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17327:-149436704:0:1420549711:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-LV81O"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Tue Mar 10 00:05:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17327  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17327:-149436704:7:1420549711:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1288914 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1288658 8
+D Tue Mar 10 00:05:08 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17327  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17327:-149436704:7:1420549711:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1288914 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1288658 8
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 0
+D Tue Mar 10 00:05:09 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:17327  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:17327:-149436704:58:1420549711:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1288914 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1288658 8
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:0:1420626799:0
+	(8402): SSL disabled
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:0:1420626799:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:0:1420626799:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-M3LWD"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:7:1420626799:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1289650 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1290162 4
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:7:1420626799:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1289650 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1290162 4
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 1
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:58:1420626799:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1289650 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1290162 4
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:58:1420626799:2
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-M4N38"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:7:1420626799:3
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1367084 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1367596 5
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:7:1420626799:3
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1367084 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1367596 5
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 1
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:58:1420626799:4
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1367084 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1367596 5
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:58:1420626799:4
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-M56RK"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:7:1420626799:5
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1280809 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 5
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:7:1420626799:5
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1280809 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 5
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 1
+D Wed Jan  7 23:33:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:8402  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:8402:-149608736:58:1420626799:6
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1280809 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 5
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:0:1420628044:0
+	(9596): SSL disabled
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:0:1420628044:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:0:1420628044:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-M3LWD"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:7:1420628044:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1289650 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1290162 5
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:7:1420628044:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1289650 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1290162 5
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 0
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:58:1420628044:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1289650 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1290162 5
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:58:1420628044:2
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-M4N38"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:7:1420628044:3
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1367084 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1367596 6
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:7:1420628044:3
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1367084 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1367596 6
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 0
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:58:1420628044:4
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1367084 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1367596 6
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:58:1420628044:4
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-M56RK"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:7:1420628044:5
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1280809 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 6
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:7:1420628044:5
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1280809 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 6
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 0
+D Wed Jan  7 23:54:04 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9596  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9596:-149752096:58:1420628044:6
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1280809 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 6
+D Wed Jan  7 23:55:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9650  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Wed Jan  7 23:55:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9650  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Wed Jan  7 23:55:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9650  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9650:-149993760:0:1420628119:0
+	(9650): SSL disabled
+D Wed Jan  7 23:55:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9650  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9650:-149993760:0:1420628119:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Wed Jan  7 23:55:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9650  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9650:-149993760:0:1420628119:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-M56RK"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Wed Jan  7 23:55:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9650  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9650:-149993760:7:1420628119:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1280809 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 7
+D Wed Jan  7 23:55:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9650  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9650:-149993760:7:1420628119:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1280809 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 7
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 1
+D Wed Jan  7 23:55:19 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:9650  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:9650:-149993760:58:1420628119:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1280809 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 7
+D Thu Jan  8 00:11:32 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:10364  pcm_tbls.c(21):313 1:<machine>:<program>:0:0:0:0:0
+	libpcmext.so Library initialized
+D Thu Jan  8 00:11:32 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:10364  pcm_tbls.c(21):316 1:<machine>:<program>:0:0:0:0:0
+	PCMEXT initialized with 0 function failures
+D Thu Jan  8 00:11:32 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:10364  pcpst.c(87):2379 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:10364:-149391648:0:1420629092:0
+	(10364): SSL disabled
+D Thu Jan  8 00:11:32 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:10364  pcpst.c(87):451 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:10364:-149391648:0:1420629092:0
+	connect to host=exlhamcitbrm-ib, port=11960 OK
+D Thu Jan  8 00:11:32 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:10364  td_bill_suppress.c:214 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:10364:-149391648:0:1420629092:0
+	Serach input flist
+# number of field entries allocated 20, used 5
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_FLAGS           INT [0] 0
+0 PIN_FLD_TEMPLATE        STR [0] "select X from /billinfo where F1=V1"
+0 PIN_FLD_ARGS          ARRAY [1] allocated 20, used 1
+1     PIN_FLD_BILLINFO_ID     STR [0] "1-M56RK"
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 1
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] NULL poid pointer
+D Thu Jan  8 00:11:32 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:10364  td_bill_suppress.c:218 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:10364:-149391648:7:1420629092:1
+	Search output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /search -1 0
+0 PIN_FLD_RESULTS       ARRAY [0] allocated 20, used 2
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1280809 0
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 8
+D Thu Jan  8 00:11:32 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:10364  td_bill_suppress.c:245 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:10364:-149391648:7:1420629092:1
+	Suppression input flist
+# number of field entries allocated 20, used 3
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1280809 0
+0 PIN_FLD_PROGRAM_NAME    STR [0] "td_bill_suppress"
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 8
+1     PIN_FLD_BILLING_STATUS   ENUM [0] 0
+D Thu Jan  8 00:11:32 2015  exlhamcitbrm.2degreesmobile.co.nz  td_bill_suppress:10364  td_bill_suppress.c:249 1:exlhamcitbrm.2degreesmobile.co.nz:td_bill_suppress:10364:-149391648:58:1420629092:2
+	Suppression output flist
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /account 1280809 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 1
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 1280169 8

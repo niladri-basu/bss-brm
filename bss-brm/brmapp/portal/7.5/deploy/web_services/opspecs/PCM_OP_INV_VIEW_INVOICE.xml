@@ -1,0 +1,205 @@
+<Opcode name="PCM_OP_INV_VIEW_INVOICE"
+  visibility="public"
+  transaction="required"
+  component="fm_inv"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+    opspec.xsd"
+  xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>
+      This opcode retrieves an invoice from the database. It uses the poid of 
+      the /bill object or /invoice object to locate and retrieve a specific 
+      invoice and the PIN_FLD_THRESHOLD value to determine the maximum allowable 
+      size of the invoice to be viewed.
+      <h:p />
+      <h:p />
+      The PIN_FLD_FLAGS value in the output flist determines the type of invoice 
+      to view, for example a summary or detailed invoice for a non-hierarchical 
+      account. The PIN_FLD_INV_SIZE value in the output flist specifies the 
+      size of the invoice returned.
+  </Doc>
+  <Input>
+	<Fields>
+	  <Poid name="PIN_FLD_POID" use="required"
+		mode="complete">
+		<Doc>This represents either an invoice or a bill poid.
+		</Doc>
+		<ClassRef>obj://invoice</ClassRef>
+		<ClassRef>obj://bill</ClassRef>
+	  </Poid>
+	  <Decimal name="PIN_FLD_THRESHOLD_UPPER" use="optional">
+		<Doc> This indicates the threshold size (in KB) for viewing the
+                      invoice.
+		</Doc>
+	  </Decimal>	
+	  <String name="PIN_FLD_TYPE_STR" use="optional"
+		maxlen="255">
+		<Doc> This is the requested invoice format type, specified as a
+		 mime type. If it is not specified, all formats in the invoice
+                 object will be returned. Available format types are HTML, XML,
+                  DOC1 and plain text.
+		</Doc>
+	  </String>
+	</Fields>
+  </Input>
+  <Output>
+	<Fields>
+ 	  <Poid name="PIN_FLD_POID" use="required"
+		mode="complete">
+		<Doc>This is the returned invoice Poid. If the invoice is 
+                     subclassed, additional fields may be returned below.
+		</Doc>
+		<ClassRef>obj://invoice</ClassRef>
+	  </Poid>
+	  <Enum name="PIN_FLD_INV_FLAGS" use="optional">
+		<Doc>This determines what kind of invoice will be created.
+                     The default value is set to PIN_INV_TYPE_DETAIL.
+		</Doc>
+                <Values>
+                   <Value>0x00000001</Value>
+                   <Doc>Detail Invoice(PIN_INV_TYPE_DETAIL)</Doc>
+                </Values>
+                <Values>
+                   <Value>0x00000002</Value>
+                   <Doc>Summary Invoice(PIN_INV_TYPE_SUMMARY)</Doc>
+                </Values>
+                <Values>
+                   <Value>0x00000004</Value>
+                   <Doc>Regular Invoice(PIN_INV_TYPE_REGULAR)</Doc>
+                </Values>
+                <Values>
+                   <Value>0x00000008</Value>
+                   <Doc>Subordinate Invoice(PIN_INV_TYPE_SUBORDINATE)</Doc>
+                </Values>
+                <Values>
+                   <Value>0x00000010</Value>
+                   <Doc>Parent Invoice(PIN_INV_TYPE_PARENT)</Doc>
+                </Values>
+                <Values>
+                   <Value>0x00000020</Value>
+                   <Doc>Hierarchy Invoice(PIN_INV_TYPE_HIERARCHY)</Doc>
+                </Values>
+                <Values>
+                   <Value>0x00000040</Value>
+                   <Doc>Trial Invoice(PIN_INV_TYPE_TRIAL_INVOICE)</Doc>
+                </Values>
+                <Values>
+                   <Value>0x00000018</Value>
+                   <Doc>Parent and Subordinates Invoice(PIN_INV_TYPE_PARENT_WITH_SUBORDS)</Doc>
+                </Values>
+	  </Enum>
+	  <Poid name="PIN_FLD_BILL_OBJ" use="required"
+		mode="complete">
+		<Doc> This is the bill object poid associated with this invoice.
+		</Doc>
+		<ClassRef>obj://bill</ClassRef>
+	  </Poid>
+	  <String name="PIN_FLD_BILL_NO" use="required"
+		maxlen="60">
+		<Doc> Bill number</Doc>
+	  </String>
+	  <Timestamp name="PIN_FLD_BILL_DATE_T" use="required">
+		<Doc> This shows the date that the bill was created.</Doc>
+	  </Timestamp>
+	  <Int name="PIN_FLD_HEADER_NUM" use="optional">
+		<Doc> Customer definable field</Doc>
+	  </Int>
+	  <String name="PIN_FLD_HEADER_STR" use="optional"
+		maxlen="255">
+		<Doc> Customer definable field</Doc>
+	  </String>
+	  <Array name="PIN_FLD_STATUSES" use="optional"
+		minElements="0">
+		<Doc> This array holds the statuses of the returned invoice.
+                </Doc>
+		<Fields>
+		  <Enum name="PIN_FLD_STATUS" use="optional">
+                     <Doc> The status is either "printed" or "emailed".</Doc>
+                     <Values>
+                       <Value>1</Value>
+                       <Doc>Email invoice(PIN_INV_EMAILED)</Doc>
+                     </Values>
+                     <Values>
+                       <Value>2</Value>
+                       <Doc>Print invoice(PIN_INV_PRINTED)</Doc>
+                     </Values>
+                     <Values>
+                       <Value>0</Value>
+                       <Doc>Nothing(PIN_INV_NONE)</Doc>
+                     </Values>
+		  </Enum>
+		  <Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+			<Doc> This shows the time that the status was created.
+                        </Doc>
+		  </Timestamp>
+		</Fields>
+	  </Array>
+	  <Array name="PIN_FLD_FORMATS" use="optional"
+		minElements="0">
+		<Doc> The requested format will be returned based on what  
+                      user has specifed in TYPE_STR of the input flist. If
+                      user didn't specify the format then it will retrieve the 
+                      format that the policy opcode has specifed.
+		</Doc>
+		<Fields>
+		  <Decimal name="PIN_FLD_INV_SIZE" use="optional">
+			<Doc> This is the size (in KB) of returned 
+                              invoice.
+                        </Doc>
+		  </Decimal>	
+		  <String name="PIN_FLD_TYPE_STR" use="optional"
+			maxlen="255">
+			<Doc> This shows the type of invoice format that is 
+                              being returned: XML, HTML, DOC1 and
+                              plain text.
+                        </Doc>
+		  </String>
+		  <String name="PIN_FLD_LOCALE" use="optional"
+			maxlen="255">
+			<Doc> This is an optional locale information used 
+                              during formatting.</Doc>
+		  </String>
+		  <Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+			<Doc> Effective time</Doc>
+		  </Timestamp>
+		  <Int name="PIN_FLD_HEADER_NUM" use="optional">
+			<Doc> Customer definable field</Doc>
+		  </Int>
+		  <String name="PIN_FLD_HEADER_STR" use="optional"
+			maxlen="255">
+			<Doc> Customer definable field</Doc>
+		  </String>
+		  <Buf name="PIN_FLD_BUFFER" use="optional"
+			maxlen="2147483647">
+			<Doc> The output buffer containing invoice information.
+			      The xerces XML validation parser expects a max
+			      of 2GB.
+                        </Doc>
+		  </Buf>                  
+		</Fields>
+	  </Array>
+	  <Enum name="PIN_FLD_RESULT" use="required">
+		<Doc> If there is no matching invoice or no format is found, 
+                      the result will be PIN_RESULT_FAIL. Otherwise the result
+                      will be PIN_RESULT_PASS.
+		</Doc>
+                <Values>
+                   <Value>1</Value>
+                      <Doc>The formatting operation was sucessful(PIN_RESULT_PASS).</Doc>
+               </Values>
+               <Values>
+                   <Value>0</Value>
+                      <Doc>The formatting operation was not sucessful.(PIN_RESULT_FAIL)</Doc>
+               </Values>
+	  </Enum>
+	</Fields>
+  </Output>
+</Opcode>
+
+
+
+
+
+
+

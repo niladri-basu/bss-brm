@@ -1,0 +1,62 @@
+010	1			4734	4734	1449671832	1449671832	1449671832		0	0				00	974	RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/sms			2
+020	2					Montserrat	2degrees	228011670	00	225780112	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449625006	1449625007	1
+520	3		228011670	0
+900	4	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[225780112,2,0]		1	@INTEGRATE#228011670#225780112#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.79#400201615#NILGST|>#<613#0.00###|>#<Postpay Cash#0.79#-1275.82|>
+600	5	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.79	0.0	0.79	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.79	1449625033	0			0	0
+800	6	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.79
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.79	1449619200	1449705600	
+888	5	10854868	C01303	1.00	0.00	Montserrat	International Zone 3	New Zealand	International Zone 1							C01303	POSTPAY				202117799	20151209013646	57005	57350				613
+890	Postpay Cash	0.79	-1275.82
+892	SMPP VPLMN MO	International Zone 3	79	0.00	0	1	1391	62
+020	10					Morocco	2degrees	228011670	00	225780112	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449625009	1449625010	1
+520	11		228011670	0
+900	12	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[225780112,2,0]		1	@INTEGRATE#228011670#225780112#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.79#400201615#NILGST|>#<613#0.00###|>#<Postpay Cash#0.79#-1276.61|>
+600	13	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.79	0.0	0.79	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.79	1449625033	0			0	0
+800	14	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.79
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.79	1449619200	1449705600	
+888	5	10854871	C01303	1.00	0.00	Morocco	International Zone 4	New Zealand	International Zone 1							C01303	POSTPAY				202117799	20151209013649	57005	57350				613
+890	Postpay Cash	0.79	-1276.61
+892	SMPP VPLMN MO	International Zone 4	79	0.00	0	1	905	62
+020	18					Nauru	2degrees	228011670	00	225780112	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449625011	1449625012	1
+520	19		228011670	0
+900	20	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[225780112,2,0]		1	@INTEGRATE#228011670#225780112#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.79#400201615#NILGST|>#<613#0.00###|>#<Postpay Cash#0.79#-1277.40|>
+600	21	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.79	0.0	0.79	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.79	1449625033	0			0	0
+800	22	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.79
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.79	1449619200	1449705600	
+888	5	10854873	C01303	1.00	0.00	Nauru	International Zone 5	New Zealand	International Zone 1							C01303	POSTPAY				202117799	20151209013651	57005	57350				613
+890	Postpay Cash	0.79	-1277.40
+892	SMPP VPLMN MO	International Zone 4	79	0.00	0	1	1390	62
+020	26					Nepal	2degrees	228011670	00	225780112	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449625013	1449625014	1
+520	27		228011670	0
+900	28	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[225780112,2,0]		1	@INTEGRATE#228011670#225780112#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.79#400201615#NILGST|>#<613#0.00###|>#<Postpay Cash#0.79#-1278.19|>
+600	29	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.79	0.0	0.79	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.79	1449625033	0			0	0
+800	30	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.79
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.79	1449619200	1449705600	
+888	5	10854876	C01303	1.00	0.00	Nepal	International Zone 3	New Zealand	International Zone 1							C01303	POSTPAY				202117799	20151209013653	57005	57350				613
+890	Postpay Cash	0.79	-1278.19
+892	SMPP VPLMN MO	International Zone 3	79	0.00	0	1	905	62
+020	34					Netherlands	2degrees	228011670	00	225780112	Roaming texts		17	01	SMS			00	S	+1300	0.0	0.0	1	NORM	International roaming	0	0	1449625015	1449625016	1
+520	35		228011670	0
+900	36	1 /account 475905776 0	1 /service/telco/gsm/sms 490137320 0	1 /item/usage_niltax 295161698212615934 0	0  0 0	;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[228011670,2,0]|;;;;[225780112,2,0]		1	@INTEGRATE#228011670#225780112#SMS#1#1#International roaming##Roaming texts##<1 /item/usage_niltax 295161698212615934 0#554#1##0.79#400201615#NILGST|>#<613#0.00###|>#<Postpay Cash#0.79#-1278.98|>
+600	37	1 /account 475905776 0	1 /balance_group 490137160 0	1 /item/usage_niltax 295161698212615934 0	554	0	ALL	258	1 /product 320615438 0	400201615	0	NILGST			1 /purchased_product 490135576 0	1	0.79	0.0	0.79	0.0	0	P
+605	0	1 /balance_group 490137160 0	554
+607	0	0.79	1449625033	0			0	0
+800	38	1 /account 475905776 0	1 /balance_group/monitor 475902984 0	554	0.79
+805	0	1 /balance_group/monitor 475902984 0	554
+807	1449619200	0.79	1449619200	1449705600	
+888	5	10854879	C01303	1.00	0.00	Netherlands	International Zone 3	New Zealand	International Zone 1							C01303	POSTPAY				202117799	20151209013655	57005	57350				613
+890	Postpay Cash	0.79	-1278.98
+892	SMPP VPLMN MO	International Zone 3	79	0.00	0	1	1393	62
+090	42			4734	4734	5	1449625006	+1300	1449625015	+1300	0.0	3.95

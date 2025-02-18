@@ -1,0 +1,117 @@
+========================================================================================
+OUT_DB
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Actual Version : 10006 / Date : 16-May-2011
+----------------
+
+Solved PRs/CRs :
+----------------
+* bug11882202 : P-10349440  INCREASE IN PIPELINE STARTUP TIME - NOW TAKING 12+ HOURS
+
+================================================================================
+Actual Version : 10005 / Date : 01-Sep-2009
+----------------
+
+Solved PRs/CRs :
+----------------
+* bug8870665 - Fixed OUT_DB MODULE "open" function prototype
+
+================================================================================
+Actual Version : 10004 / Date : 19-Apr-2004
+----------------
+
+Solved PRs/CRs :
+----------------
+* PRSF00086920 [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Actual Version : 10003 / Date : 01-May-2003
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+* PRSF00039576: Udpate to use namespaces.
+		
+================================================================================
+
+Actual Version : 10002 / Date : 12-Mar-2003
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+* PRSF00034368: TAM_Transaction not completely thread-safe
+                (propagation of 32552)
+
+================================================================================
+Actual Version : 10001 / Date: 21-Feb-2003
+----------------
+
+PRSF00032419: Implement a thread trace
+
+================================================================================
+
+Actual Version : v4-30-03 / Date : 28-Aug-2001
+----------------
+
+Solved PRs/CRs : 
+----------------
+- PETS #38645 error messages updated
+- PETS #37618 code review changes implemented
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 10-Aug-2001
+----------------
+
+Solved PRs/CRs : 
+---------------- 
+- PETS #36559 SourcePro AIX port
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 18-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PETS #37124
+---------------- - registry parameter NumberOfRows works now with values
+                   greater than 1. Now the buldInserter is used for insertion
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 29-Jun-2001
+----------------
+
+Notes          :
+----------------
+                 - Just new
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+                 - Registry-parameter NumOfRows only works with value 1.
+                 - Registry-parameter Source and Destination are defined
+                   in the registry but not set in the EDR-Container.
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+

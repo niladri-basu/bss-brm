@@ -1,0 +1,895 @@
+#!/tools/CGBU/contrib/DO/BRM/7.5.0.TP.TOOL.R1/tools_vob/tools/linux/perl_5_18_2/perl/bin/perl
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+# @(#)%Portal Version: pin_mib_generator.pl:NewPipelineVelocityInt:4:2006-Sep-19 07:40:18 %
+#
+# Copyright (c) 2006 - 2007 Oracle. All rights reserved.
+#
+# This material is the confidential property of Oracle Corporation or 
+# its licensors and may be used, reproduced, stored or transmitted only 
+# in accordance with a valid Oracle license or sublicense agreement.
+#
+#--------------------------------------------------------------------------------
+#
+# Script: pin_mib_generator.pl
+#
+# Description:
+#   This script is used to generate Portal Mib file.
+#
+# Usage:
+#   pin_mib_generator.pl <instrumentation_dir> [<debug_flag>]
+#
+# Argument(s):
+#   instrumentation_dir - Directory that has all instrumentation files
+#   debug_flag (optional) - Set to 1 to print debug messages to STDOUT
+#
+#--------------------------------------------------------------------------------
+#
+# Revision: 2007-05-03
+#
+#--------------------------------------------------------------------------------
+
+($me = $0) =~ s,.*/,,;
+
+if ($#ARGV < 0)
+{
+	die("Usage: $me <instrumentation_dir> [<debug_flag>]\n");
+}
+
+#--------------------------------------------------------------------------------
+# Read command line arguments
+#--------------------------------------------------------------------------------
+$instrumentationDir = $ARGV[0];
+$debug_flag = 0;
+if ($#ARGV >= 1)
+{
+	$debug_flag = $ARGV[1];
+}
+
+#--------------------------------------------------------------------------------
+# assign OS specifics
+#--------------------------------------------------------------------------------
+if ($^O eq "MSWin32") 
+{
+	$SLASH = "\\";
+}
+else	# for UNIX platforms
+{
+	$SLASH = "/";
+}
+
+#--------------------------------------------------------------------------------
+# Set global constants
+#--------------------------------------------------------------------------------
+$PORTAL_BASE_OID = "1.3.6.1.4.1.3512.1";	# Portal base OID
+
+#--------------------------------------------------------------------------------
+# Instrumentation files
+#--------------------------------------------------------------------------------
+$mibFile = $instrumentationDir . $SLASH . "PORTAL-MIB.txt";
+$componentInfoFile = $instrumentationDir . $SLASH . "ComponentInfo.txt";
+$moduleInfoFile = $instrumentationDir . $SLASH . "ModuleInfo.txt";
+$probeFileExtension = ".probe";
+
+#--------------------------------------------------------------------------------
+# Other global variables
+#--------------------------------------------------------------------------------
+%componentByName = ();
+%componentById = ();
+%moduleByName = ();
+%moduleByComp = ();
+%moduleOid = ();
+%parentKids = ();
+
+# Open output mib file
+open(MIB_FILE, ">$mibFile") || die("Could not open $mibFile $!\n");
+
+# Read component and module files
+readComponentInfoFile();
+readModuleInfoFile();
+
+# Print MIB file header
+printHeader();
+
+# Print all available components
+printComponents();
+
+# Print all available modules
+printModules();
+
+# Print processTable
+printProcessTableMibs();
+
+# Print registryTable
+printRegistryTableMibs();
+
+# Print all available probes found in *.prb file
+processProbeInfoFiles();
+
+# Print Mib file footer
+printFooter();
+
+# Close output mib file
+close(MIB_FILE);
+
+# Exit program
+exit(0);
+
+#--------------------------------------------------------------------------------
+# Read all available components from ComponentInfo.txt
+#--------------------------------------------------------------------------------
+sub readComponentInfoFile
+{
+	open(FILE, "<$componentInfoFile") || 
+		die("ERROR: Could not open \"$componentInfoFile\": $!\n");
+
+	while ($line = <FILE>)
+	{
+		chomp($line);
+		$line = trim($line);
+
+		# skip comment line and empty line
+		if ($line =~ /^#/ || $line eq "")
+		{
+			next;
+		}
+
+		# format is "<componentId> | <componentName>"
+		@fld = split(/\|/, $line);
+
+		if (@fld < 2)
+		{
+			die("ERROR: Unexpected format at line \"$line\" in \"$componentInfoFile\"\n");
+		}
+
+		$componentId = trim($fld[0]);
+		$componentName = trim($fld[1]);
+
+		printDebug("Compoenent name = $componentName, id = $componentId");
+		$componentByName{$componentName} = $componentId;
+		$componentById{$componentId} = $componentName;
+	}
+
+	close(FILE);
+}
+
+#--------------------------------------------------------------------------------
+# Read all available modules from ModuleInfo.txt
+#--------------------------------------------------------------------------------
+sub readModuleInfoFile
+{
+	open(FILE, "<$moduleInfoFile") || 
+		die("ERROR: Could not open \"$moduleInfoFile\": $!\n");
+
+	while ($line = <FILE>)
+	{
+		chomp($line);
+		$line = trim($line);
+
+		# skip comment line and empty line
+		if ($line =~ /^#/ || $line eq "")
+		{
+			next;
+		}
+
+		# format is "<componentName> | <moduleId> | <moduleName>"
+		@fld = split(/\|/, $line);
+
+		if (@fld < 3)
+		{
+			die("ERROR: Unexpected format at line \"$line\" in \"$moduleInfoFile\"\n");
+		}
+
+		$componentName = trim($fld[0]);
+		$moduleId = trim($fld[1]);
+		$moduleName = trim($fld[2]);
+
+		printDebug("Module name = $moduleName, id = $moduleId, parent = $componentName");
+		$assocComp = $componentName . " " . $moduleId;
+		$moduleByName{$moduleName} = $assocComp;
+		$moduleByComp{$assocComp} = $moduleName;
+		$moduleOid{$moduleName} = $PORTAL_BASE_OID . "." .
+			$componentByName{$componentName} .  "." . $moduleId;
+	}
+
+	close(FILE);
+}
+
+#--------------------------------------------------------------------------------
+# Print MIB file header
+#--------------------------------------------------------------------------------
+sub printHeader
+{
+	my $header = << "MIB_END"
+PORTAL-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	OBJECT-TYPE, Integer32,
+	MODULE-IDENTITY, enterprises		FROM SNMPv2-SMI
+	DisplayString				FROM SNMPv2-TC
+	MODULE-COMPLIANCE, OBJECT-GROUP		FROM SNMPv2-CONF;
+
+portal MODULE-IDENTITY
+	LAST-UPDATED	"200705030000Z"	-- May 03, 2007
+	ORGANIZATION	"Oracle Corporation"
+	CONTACT-INFO	"www.oracle.com"
+	DESCRIPTION	"The MIB module file defines all objects 
+			that can be used for managing Portal processes."
+	REVISION	"200705030000Z"	-- May 03, 2007
+	DESCRIPTION	"Initial version"
+	::= { enterprises 3512 }
+
+--
+
+components			 OBJECT IDENTIFIER ::= { portal 1 }
+MIB_END
+;
+
+	print MIB_FILE $header;
+}
+
+#--------------------------------------------------------------------------------
+# Print all available components
+#--------------------------------------------------------------------------------
+sub printComponents
+{
+	print MIB_FILE "\n--\n\n";
+	for my $id ( sort { $a <=> $b } keys %componentById )
+	{
+		$name = $componentById{$id};
+		$tabs = getTabs($name);
+		print MIB_FILE "$name$tabs OBJECT IDENTIFIER ::= { components $id }\n";
+
+	}
+}
+
+#--------------------------------------------------------------------------------
+# Print all available modules
+#--------------------------------------------------------------------------------
+sub printModules
+{
+	print MIB_FILE "\n--\n\n";
+	for my $assocComp ( sort keys %moduleByComp )
+	{
+		$name = $moduleByComp{$assocComp};
+		$tabs = getTabs($name);
+		print MIB_FILE "$name$tabs OBJECT IDENTIFIER ::= { $assocComp }\n";
+
+	}
+}
+
+#--------------------------------------------------------------------------------
+# Print process table MIB's
+#--------------------------------------------------------------------------------
+sub printProcessTableMibs
+{
+	my $mib = << "MIB_END"
+--
+-- processTable
+--
+-- 1.3.6.1.4.1.3512.1.101
+processTable OBJECT-TYPE
+	SYNTAX		SEQUENCE OF ProcessEntry
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"A List of Portal Processes"
+	::= { components 101 }
+
+-- 1.3.6.1.4.1.3512.1.101.1
+processEntry OBJECT-TYPE
+	SYNTAX		ProcessEntry
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"An Entry of Portal Process in processTable"
+	INDEX { processIndex }
+	::= { processTable 1 }
+
+ProcessEntry ::= SEQUENCE {
+	processIndex			Integer32,
+	processDescr			DisplayString
+}
+
+-- 1.3.6.1.4.1.3512.1.101.1.1
+processIndex OBJECT-TYPE
+	SYNTAX		Integer32
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"Reference Index for Each Observed Process"
+	::= { processEntry 1 }
+
+-- 1.3.6.1.4.1.3512.1.101.1.2
+processDescr OBJECT-TYPE
+	SYNTAX		DisplayString
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"Process Description To Be Checked On"
+	::= { processEntry 2 }
+
+MIB_END
+;
+
+	print MIB_FILE "\n$mib";
+}
+
+#--------------------------------------------------------------------------------
+# Print registry table MIB's
+#--------------------------------------------------------------------------------
+sub printRegistryTableMibs
+{
+	my $mib = << "MIB_END"
+--
+-- registryTable
+--
+-- 1.3.6.1.4.1.3512.1.102
+registryTable OBJECT-TYPE
+	SYNTAX		SEQUENCE OF RegistryEntry
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"A List of Registry Names within a Process"
+	::= { components 102 }
+
+-- 1.3.6.1.4.1.3512.1.102.1
+registryEntry OBJECT-TYPE
+	SYNTAX		RegistryEntry
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"An Entry of Registry Name in registryTable"
+	INDEX { processIndex, registryIndex }
+	::= { registryTable 1 }
+
+RegistryEntry ::= SEQUENCE {
+	registryIndex			Integer32,
+	registryName			DisplayString
+}
+
+-- 1.3.6.1.4.1.3512.1.102.1.1
+registryIndex OBJECT-TYPE
+	SYNTAX		Integer32
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"Reference Index for Each Observed Registered Object"
+	::= { registryEntry 1 }
+
+-- 1.3.6.1.4.1.3512.1.102.1.2
+registryName OBJECT-TYPE
+	SYNTAX		DisplayString
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION	"Registered Object Name in the Dotted Notation"
+	::= { registryEntry 2 }
+
+MIB_END
+;
+
+	print MIB_FILE "\n$mib";
+}
+
+#--------------------------------------------------------------------------------
+# Process all probe info files found in instrumentation directory
+#--------------------------------------------------------------------------------
+sub processProbeInfoFiles
+{
+	my $entry;
+	my $file;
+
+	printDebug("Looking for probe files under \"$instrumentationDir\"...");
+
+	opendir(DIR, $instrumentationDir) || 
+		die("ERROR: Could not open \"$instrumentationDir\": $!\n");
+
+	while ($entry = readdir(DIR))
+	{
+		$file = $instrumentationDir . $SLASH . $entry;
+
+		if (-d $file)
+		{
+			# it is a directory
+			printDebug("Found \"$entry\" is a directory, skipping...");
+			next;
+		}
+
+		if ($file !~ /$probeFileExtension$/)
+		{
+			# file extension not match
+			printDebug("Found \"$entry\" is not a probe file, skipping...");
+			next;
+		}
+
+		processProbeInfoFile($file);
+	}
+	closedir(DIR);
+}
+
+#--------------------------------------------------------------------------------
+# Process probe info file and print all probes converted to MIB's
+#--------------------------------------------------------------------------------
+sub processProbeInfoFile
+{
+	my $probeFile = $_[0];
+	my $module = "";
+	my %topProbes = ();
+
+	# reset some hash tables
+	%probes = ();
+	%parentKids = ();
+
+	printDebug("Processing probe file \"$probeFile\"...");
+
+	open(FILE, "<$probeFile") || 
+		die("ERROR: Could not open \"$probeFile\": $!\n");
+
+	while ($line = <FILE>)
+	{
+		chomp($line);
+		$line = trim($line);
+
+		# skip comment line and empty line
+		if ($line =~ /^#/ || $line eq "")
+		{
+			next;
+		}
+
+		# format is "<parent> | <probeId> | <probeName> | <probeDescr> |
+		#	<probeMode> | <probeType> | <probeUnit>"
+		@fld = split(/\|/, $line);
+
+		if (@fld < 6)
+		{
+			die("ERROR: Unexpected format at line \"$line\" in \"$probeFile\"\n");
+		}
+
+		$parent = trim($fld[0]);
+		$probeId = trim($fld[1]);
+		$probeName = trim($fld[2]);
+		$probeDescr = trim($fld[3]);
+		$probeMode = trim($fld[4]);
+		$probeType = trim($fld[5]);
+		$probeUnit = trim($fld[6]);
+
+		if (defined $moduleByName{$parent} && $module eq "")
+		{
+			# found module name this probe file belongs to
+			$module = $parent;
+			$oidBase = $moduleOid{$parent};
+			printDebug("Module is \"$module\", base oid is \"$oidBase\"");
+		}
+
+		# set up probes hash table
+		$probes{$probeName}->{'parent'} = $parent;
+		$probes{$probeName}->{'id'} = $probeId;
+		$probes{$probeName}->{'name'} = $probeName;
+		$probes{$probeName}->{'descr'} = $probeDescr;
+		$probes{$probeName}->{'mode'} = $probeMode;
+		$probes{$probeName}->{'type'} = $probeType;
+		$probes{$probeName}->{'unit'} = $probeUnit;
+
+		# set up topProbes hash table
+		if ($probes{$probeName}->{'parent'} eq $module)
+		{
+			$topProbes{$probeId} = $probeName;
+			printDebug("Found top probe \"$probeName\" under \"$module\"");
+		}
+
+		# setup parentKids hash table
+		if (! defined $parentKids{$parent}->{$probeId})
+		{
+			$parentKids{$parent}->{$probeId} = $probeName;
+		}
+		else
+		{
+			die("ERROR: Duplicate probe id ($probeId) found\n");
+		}
+
+		printDebug("parent=$parent,id=$probeId,name=$probeName,descr=$probeDescr,mode=$probeMode,type=$probeType,unit=$probeUnit");
+	}
+
+	close(FILE);
+
+	# print probes (sorted by probeId)
+	for my $probeId ( sort { $a <=> $b } keys %topProbes )
+	{
+		$probeName = $topProbes{$probeId};
+		$probeType = $probes{$probeName}->{'type'};
+
+		if ($probeType =~ /BigTable/)
+		{
+			printDebug("Skipping big probe table \"$probeName\"");
+		}
+		elsif ($probeType =~ /Table/)
+		{
+			printProbeTable($probeName);
+		}
+		elsif ($probeType =~ /Group/)
+		{
+			printProbeGroup($probeName);
+		}
+		elsif ($probeType =~ /Integer/ || $probeType =~ /String/)
+		{
+			printProbeAttribute($probeName);
+		}
+		else
+		{
+			die("ERROR: Unknown probe type \"$probeType\"\n");
+		}
+	}
+}
+
+#--------------------------------------------------------------------------------
+# Print MIB file footer
+#--------------------------------------------------------------------------------
+sub printFooter
+{
+	$footer = << "MIB_END"
+--
+-- END
+END
+MIB_END
+;
+	print MIB_FILE "\n$footer";
+}
+
+#--------------------------------------------------------------------------------
+# Print mib's for a given probe table
+#--------------------------------------------------------------------------------
+sub printProbeTable
+{
+	my $tableName = $_[0];
+	my $tableId = $probes{$tableName}->{'id'};
+	my $tableDescr = $probes{$tableName}->{'descr'};
+	my $tableParent = $probes{$tableName}->{'parent'};
+
+	my $entryName = $parentKids{$tableName}->{'1'};
+	my $entryId = $probes{$entryName}->{'id'};
+	my $entryDescr = $probes{$entryName}->{'descr'};
+	my $entryType = $probes{$entryName}->{'type'};
+	my $oid = $oids{'$probeName'};
+
+	my $indexName = $parentKids{$entryName}->{'1'};
+	my $unitLine = "";
+	my $sequenceName = ucfirst($entryName);
+
+	printDebug("Processing probe table \"$tableName\"");
+
+	$mib = << "MIB_END"
+--
+-- $tableName
+--
+-- $oidBase.$tableId
+$tableName OBJECT-TYPE
+	SYNTAX		SEQUENCE OF $sequenceName
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"$tableDescr"
+	::= { $tableParent $tableId }
+
+MIB_END
+;
+	print MIB_FILE $mib;
+
+	$mib = << "MIB_END"
+-- $oidBase.$tableId.1
+$entryName OBJECT-TYPE
+	SYNTAX		$sequenceName
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"$entryDescr"
+	INDEX { processIndex, registryIndex, $indexName }
+	::= { $tableName $entryId }
+
+$sequenceName ::= SEQUENCE {
+MIB_END
+;
+
+	%kids = %{$parentKids{$entryName}};
+	$count = 1;
+	for my $id ( sort { $a <=> $b } keys %kids )
+	{
+		if ($count > 1)
+		{
+			$mib = $mib . ",\n";
+		}
+		$name = $parentKids{$entryName}->{$id};
+		$syntax = getSyntax($probes{$name}->{'type'});
+		$tabs = getTabs($name);
+		$mib = $mib . "\t$name$tabs$syntax";
+		$count++;
+	}
+	$mib = $mib . "\n}\n\n";
+	print MIB_FILE $mib;
+
+	$count = 1;
+	for my $id ( sort { $a <=> $b } keys %kids )
+	{
+		$name = $parentKids{$entryName}->{$id};
+		$type = getSyntax($probes{$name}->{'type'});
+		$access = getAccess($probes{$name}->{'mode'});
+		$descr = $probes{$name}->{'descr'};
+		$unit = $probes{$name}->{'unit'};
+		$unitLine = "";
+		if ($unit ne "")
+		{
+			$unitLine = "\n\tUNITS\t\t\"$unit\"";
+		}
+
+		$mib = << "MIB_END"
+-- $oidBase.$tableId.1.$id
+$name OBJECT-TYPE
+	SYNTAX		$type$unitLine
+	MAX-ACCESS	$access
+	STATUS		current
+	DESCRIPTION	"$descr"
+	::= { $entryName $id }
+
+MIB_END
+;
+		print MIB_FILE $mib;
+		$count++;
+	}
+}
+
+#--------------------------------------------------------------------------------
+# Print mib's for a given probe group
+#--------------------------------------------------------------------------------
+sub printProbeGroup
+{
+	my $probeName = $_[0];
+	my $probeDescr = $probes{$probeName}->{'descr'};
+	my $probeType = $probes{$probeName}->{'type'};
+	my $probeId = $probes{$probeName}->{'id'};
+	my $parent = $probes{$probeName}->{'parent'};
+	my $sequenceName = ucfirst($probeName) . "Entry";
+	my $unitLine = "";
+
+	printDebug("Processing probe group \"$probeName\"");
+
+	$mib = << "MIB_END"
+--
+-- $probeName
+--
+-- $oidBase.$probeId
+$probeName OBJECT-TYPE
+	SYNTAX		SEQUENCE OF $sequenceName
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"$probeDescr"
+	::= { $parent $probeId }
+
+-- $oidBase.$probeId.1
+${probeName}Entry OBJECT-TYPE
+	SYNTAX		$sequenceName
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"An Entry of $probeDescr"
+	INDEX { processIndex, registryIndex, ${probeName}Index }
+	::= { $probeName 1 }
+
+$sequenceName ::= SEQUENCE {
+MIB_END
+;
+
+	%kids = %{$parentKids{$probeName}};
+	for my $id ( sort { $a <=> $b } keys %kids )
+	{
+		$name = $parentKids{$probeName}->{$id};
+		$syntax = getSyntax($probes{$name}->{'type'});
+		$tabs = getTabs($name);
+		$mib = $mib . "\t$name$tabs$syntax,\n";
+	}
+	$tabs = getTabs("${probeName}Index");
+	$mib = $mib . "\t${probeName}Index${tabs}Integer32\n}\n\n";
+	print MIB_FILE $mib;
+
+	$count = 1;
+	for my $id ( sort { $a <=> $b } keys %kids )
+	{
+		$name = $parentKids{$probeName}->{$id};
+		$type = getSyntax($probes{$name}->{'type'});
+		$access = getAccess($probes{$name}->{'mode'});
+		$descr = $probes{$name}->{'descr'};
+		$unit = $probes{$name}->{'unit'};
+		$unitLine = "";
+		if ($unit ne "")
+		{
+			$unitLine = "\n\tUNITS\t\t\"$unit\"";
+		}
+
+		$mib = << "MIB_END"
+-- $oidBase.$probeId.1.$id
+$name OBJECT-TYPE
+	SYNTAX		$type$unitLine
+	MAX-ACCESS	$access
+	STATUS		current
+	DESCRIPTION	"$descr"
+	::= { ${probeName}Entry $id }
+
+MIB_END
+;
+		print MIB_FILE $mib;
+		$count++;
+	}
+
+	# print index column
+	$mib = << "MIB_END"
+-- $oidBase.$probeId.1.$count
+${probeName}Index OBJECT-TYPE
+	SYNTAX		Integer32
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"$probeDescr Index"
+	::= { ${probeName}Entry $count }
+
+MIB_END
+;
+	print MIB_FILE $mib;
+}
+
+#--------------------------------------------------------------------------------
+# Print mib's for a given probe attribute
+#--------------------------------------------------------------------------------
+sub printProbeAttribute
+{
+	my $probeName = $_[0];
+	my $probeDescr = $probes{$probeName}->{'descr'};
+	my $probeType = $probes{$probeName}->{'type'};
+	my $probeId = $probes{$probeName}->{'id'};
+	my $probeUnit = $probes{$probeName}->{'unit'};
+	my $syntax = getSyntax($probes{$probeName}->{'type'});
+	my $access = getAccess($probes{$probeName}->{'mode'});
+	my $parent = $probes{$probeName}->{'parent'};
+	my $sequenceName = ucfirst($probeName) . "Entry";
+	my $unitLine = "";
+
+	printDebug("Processing probe attribute \"$probeName\"");
+
+	$mib = << "MIB_END"
+--
+-- $probeName
+--
+-- $oidBase.$probeId
+${probeName}Table OBJECT-TYPE
+	SYNTAX		SEQUENCE OF $sequenceName
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"$probeDescr"
+	::= { $parent $probeId }
+
+-- $oidBase.$probeId.1
+${probeName}Entry OBJECT-TYPE
+	SYNTAX		$sequenceName
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"An Entry of $probeDescr"
+	INDEX { processIndex, registryIndex, ${probeName}Index }
+	::= { ${probeName}Table 1 }
+
+$sequenceName ::= SEQUENCE {
+MIB_END
+;
+
+	$tabs = getTabs($probeName);
+	$mib = $mib . "\t$probeName$tabs$syntax,\n";
+	$tabs = getTabs("${probeName}Index");
+	$mib = $mib . "\t${probeName}Index${tabs}Integer32\n}\n\n";
+
+	print MIB_FILE $mib;
+
+	if ($probeUnit ne "")
+	{
+		$unitLine = "\n\tUNITS\t\t\"$probeUnit\"";
+	}
+
+	$mib = << "MIB_END"
+-- $oidBase.$probeId.1.1
+$probeName OBJECT-TYPE
+	SYNTAX		$syntax$unitLine
+	MAX-ACCESS	$access
+	STATUS		current
+	DESCRIPTION	"$probeDescr"
+	::= { ${probeName}Entry 1 }
+
+-- $oidBase.$probeId.1.2
+${probeName}Index OBJECT-TYPE
+	SYNTAX		Integer32
+	MAX-ACCESS	not-accessible
+	STATUS		current
+	DESCRIPTION	"$probeDescr Index"
+	::= { ${probeName}Entry 2 }
+
+MIB_END
+;
+	print MIB_FILE $mib;
+}
+
+#--------------------------------------------------------------------------------
+# Get snmp syntax for a given probe type
+#--------------------------------------------------------------------------------
+sub getSyntax
+{
+	my $type = $_[0];
+
+	if ($type =~ /Integer/)
+	{
+		return "Integer32";
+	}
+	elsif ($type =~ /String/)
+	{
+		return "DisplayString";
+	}
+	else
+	{
+		die("ERROR: Unknown type \"$type\"\n");
+	}
+}
+
+#--------------------------------------------------------------------------------
+# Get snmp access for a given probe mode
+#--------------------------------------------------------------------------------
+sub getAccess
+{
+	my $mode = $_[0];
+
+	if ($mode =~ /ReadOnly/)
+	{
+		return "read-only";
+	}
+	elsif ($mode =~ /ReadWrite/ || $mode =~ /WriteOnly/)
+	{
+		return "read-write";
+	}
+	else
+	{
+		die("ERROR: Unknown mode \"$mode\"\n");
+	}
+}
+
+#--------------------------------------------------------------------------------
+# Get a string with tabs depending on the length of string
+#--------------------------------------------------------------------------------
+sub getTabs
+{
+	my $length = length($_[0]);
+
+	if ($length < 8)
+	{
+		$tabs = "\t\t\t\t";
+	}
+	elsif ($length < 16)
+	{
+		$tabs = "\t\t\t";
+	}
+	elsif ($length < 24)
+	{
+		$tabs = "\t\t";
+	}
+	else
+	{
+		$tabs = "\t";
+	}
+
+	return $tabs;
+}
+
+#--------------------------------------------------------------------------------
+# Trim the white spaces from the start and end of a string
+#--------------------------------------------------------------------------------
+sub trim
+{
+	my $string = $_[0];
+
+	$string =~ s/^\s+//;
+	$string =~ s/\s+$//;
+
+	return $string;
+}
+
+#--------------------------------------------------------------------------------
+# Prints to STDOUT if $debug_flag is set to '1'
+#--------------------------------------------------------------------------------
+sub printDebug
+{
+	my $string = $_[0];
+
+	if ($debug_flag == 1)
+	{
+		print "DEBUG: $string\n";
+	}
+}

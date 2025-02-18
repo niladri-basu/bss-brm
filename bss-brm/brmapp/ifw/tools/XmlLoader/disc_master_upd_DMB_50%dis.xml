@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IFW xsi:noNamespaceSchemaLocation="LoadIfwConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<RecordSet>
+<IFW_DISCOUNTMASTER CODE ="DMB_50%dis" DISCOUNTMASTER ="DMB_50%dis" NAME ="DMB_50%dis" />
+<IFW_DISCOUNTDETAIL DISCOUNTMASTER ="DMB_50%dis" GLID ="20020025[4-7]" IMPACT_CATEGORY =".*" PRICEMODEL =".*" RANK ="35" RATE_PLAN =".*" RATE_TAG =".*" RECORDTYPE =".*" RESSOURCE =".*" RUM =".*" SERVICECLASS =".*" SERVICECODE =".*" TIMEMODEL =".*" TIMEZONE =".*" USAGECLASS =".*" USAGETYPE =".*" VALID_FROM ="20220101" ZONEMODEL =".*" />
+</RecordSet>
+</IFW>

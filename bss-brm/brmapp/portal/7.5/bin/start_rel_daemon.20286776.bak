@@ -1,0 +1,97 @@
+#!/bin/sh
+#
+# @(#)%Portal Version: start_batch_controller.sh:UelEaiVelocityInt:1:2006-Sep-05 22:24:00 %
+#
+# Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
+#      This material is the confidential property of Oracle Corporation
+#      or its licensors and may be used, reproduced, stored
+#      or transmitted only in accordance with a valid Oracle license
+#      or sublicense agreement.
+#
+
+
+PINDIR=/brmapp/portal/7.5
+PATH=${PINDIR}/bin:/usr/bin:/bin:.:${PATH}
+#If RelAsDaemon runnin in TT mode then set correct TT_LIB_PATH,
+TT_LIB_PATH=__TIMESTEN_CLIENT_HOME__/lib
+
+RELDIR=${PINDIR}/apps/pin_rel
+LOGDIR=${RELDIR}
+REL_DAEMON_LOG=${LOGDIR}/RelDaemon.log
+REL_DAEMON_PID=${LOGDIR}/RelDaemon.pid
+
+# does the propreties file exist?  Success implies that ${LOGDIR} exists...
+if [ ! -r  ${RELDIR}/Infranet.properties ]; then
+   echo "HELP: no Infranet.properties for RelDaemon in \"${RELDIR}\"!"
+   exit 1
+fi
+#set LD_LIB_PATH to include TT_LIB_PATH
+#get the lib path speciifc to platform
+
+uname=`uname`
+if [ "$uname" = "SunOS" -o "$uname" = "Linux" ];
+then
+    if [ "$LD_LIBRARY_PATH" = "" ];
+    then
+          LD_LIBRARY_PATH=$ORACLE_HOME/lib32:$PIN_HOME/lib
+    else
+          LD_LIBRARY_PATH=$ORACLE_HOME/lib32:$PIN_HOME/lib:$LD_LIBRARY_PATH
+    fi
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TT_LIB_PATH}
+    export LD_LIBRARY_PATH
+elif [ "$uname" = "HP-UX" ];
+then
+   if [ "$LD_LIBRARY_PATH" = "" ];
+   then
+        LD_LIBRARY_PATH=$ORACLE_HOME/lib32:$PIN_HOME/lib
+   else
+        LD_LIBRARY_PATH=$ORACLE_HOME/lib32:$PIN_HOME/lib:$LD_LIBRARY_PATH
+   fi
+   if [ "$SHLIB_PATH" = "" ];
+   then
+         SHLIB_PATH=$ORACLE_HOME/lib32:$PIN_HOME/lib
+   else
+         SHLIB_PATH=$ORACLE_HOME/lib32:$PIN_HOME/lib:$SHLIB_PATH
+   fi
+   SHLIB_PATH=${SHLIB_PATH}:${TT_LIB_PATH}
+   LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TT_LIB_PATH}
+   export SHLIB_PATH
+   export LD_LIBRARY_PATH
+elif [ "$uname" = "AIX" ];
+then
+    if [ "$LIBPATH" = "" ];
+    then
+          LIBPATH=$ORACLE_HOME/lib32:$PIN_HOME/lib
+    else
+          LIBPATH=$ORACLE_HOME/lib32:$PIN_HOME/lib:$LIBPATH
+    fi
+    LIBPATH=${LIBPATH}:${TT_LIB_PATH}
+    export LIBPATH
+fi
+
+
+
+ #set JAR_DIR to be the full pathname of the dir where the
+# jar files are located
+JARDIR=${PINDIR}/jars
+
+# set the classpath variable
+CLASSPATH=${RELDIR}:${JARDIR}/batch.jar:${JARDIR}/pcm.jar:${JARDIR}/pcmext.jar:${JARDIR}/rel.jar:${JARDIR}/xercesImpl.jar:${JARDIR}/xmlParserAPIs.jar:${BRM_JRE}/lib/rt.jar:$ORACLE_HOME/jdbc/lib/ojdbc5.jar:$ORACLE_HOME/jdbc/lib/classes12.zip:${TT_LIB_PATH}/orai18n.jar:${TT_LIB_PATH}/ttjdbc6.jar:${JARDIR}/oraclepki.jar:${JARDIR}/osdt_cert.jar:${JARDIR}/osdt_core.jar
+
+
+JAVA=$BRM_JRE/bin/java
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${RELDIR} ;
+  echo "started RelDaemon at..." >> ${REL_DAEMON_LOG}
+  date >> ${REL_DAEMON_LOG}
+
+  # The headless AWT option is used to avoid an unnecessary X server run-time requirement.
+  ${JAVA} -server -Djava.awt.headless=true -Xms1024m -Xmx1024m -classpath ${CLASSPATH} com.portal.batch.BatchControllerMain REL >> ${REL_DAEMON_LOG} 2>&1 &
+
+  echo $! > ${REL_DAEMON_PID} ;
+  chmod 664 ${REL_DAEMON_LOG} ;
+  chmod 664 ${REL_DAEMON_PID} )
+
+# get rc from RelDaemon startup
+exit $?

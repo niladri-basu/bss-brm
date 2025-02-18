@@ -1,0 +1,78 @@
+//==============================================================================
+//
+//      Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+//      
+//      This material is the confidential property of Oracle Corporation or its
+//      licensors and may be used, reproduced, stored or transmitted only in
+//      accordance with a valid Oracle license or sublicense agreement.
+//
+//-------------------------------------------------------------------------------
+// Block: ISC_SetRevenueStream
+//-------------------------------------------------------------------------------
+// Module Description:
+//   This script sets the Revenue Stream.(Retail / Wholesale / Roaming / Unknown)
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible: 
+//
+//------------------------------------------------------------------------------
+
+function onDetailEdr
+{
+	String revenueStream;
+	
+	// Adding the ARA block
+	if ( edrNumDatablocks(DETAIL.ASS_ARA_EXT) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+
+	//Checking whether ASS_CBD block is present
+	if ( edrNumDatablocks(DETAIL.ASS_CBD) == 0 )
+		revenueStream = "Unknown";
+
+	else if ( edrString(DETAIL.ASS_CBD.RECORD_TYPE, 0) == "991" )
+		revenueStream = "Wholesale";
+
+	else if ( edrString(DETAIL.ASS_CBD.RECORD_TYPE, 0) == "980" )
+		revenueStream = "Roaming";
+	
+	else if ( edrString(DETAIL.ASS_CBD.RECORD_TYPE, 0) == "981" )
+		revenueStream = "Retail";
+
+	else
+		revenueStream = "Unknown";
+
+	edrString(DETAIL.ASS_ARA_EXT.REVENUE_STREAM, 0) = revenueStream;
+}
+
+function onInvalidDetailEdr
+{
+	String revenueStream;
+
+	// Adding the ARA block
+	if ( edrNumDatablocks(DETAIL.ASS_ARA_EXT) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+
+	//Checking whether ASS_CBD block is present
+	if ( edrNumDatablocks(DETAIL.ASS_CBD) == 0 )
+		revenueStream = "Unknown";
+
+	else if ( edrString(DETAIL.ASS_CBD.RECORD_TYPE, 0) == "991" )
+		revenueStream = "Wholesale";
+
+	else if ( edrString(DETAIL.ASS_CBD.RECORD_TYPE, 0) == "980" )
+		revenueStream = "Roaming";
+	
+	else if ( edrString(DETAIL.ASS_CBD.RECORD_TYPE, 0) == "981" )
+		revenueStream = "Retail";
+
+	else
+		revenueStream = "Unknown";
+
+	edrString(DETAIL.ASS_ARA_EXT.REVENUE_STREAM, 0) = revenueStream;
+}

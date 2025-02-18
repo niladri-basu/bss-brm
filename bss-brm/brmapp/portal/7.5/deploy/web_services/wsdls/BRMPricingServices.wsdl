@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PRICING" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="PCM_OP_PRICE_COMMIT_PRODUCT.xsd"/>
+            <include schemaLocation="PCM_OP_PRICE_SET_PRICE_LIST.xsd"/>
+            <include schemaLocation="PCM_OP_PRICE_COMMIT_DISCOUNT.xsd"/>
+            <include schemaLocation="PCM_OP_PRICE_GET_PRICE_LIST.xsd"/>
+        </schema>
+    </types>
+    <message name="PCM_OP_PRICE_COMMIT_PRODUCT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_PRICE_COMMIT_PRODUCT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_PRICE_COMMIT_PRODUCT_outmsg">
+        <part name="PCM_OP_PRICE_COMMIT_PRODUCT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_PRICE_SET_PRICE_LIST_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_PRICE_SET_PRICE_LIST_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_PRICE_SET_PRICE_LIST_outmsg">
+        <part name="PCM_OP_PRICE_SET_PRICE_LIST_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_PRICE_COMMIT_DISCOUNT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_PRICE_COMMIT_DISCOUNT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_PRICE_COMMIT_DISCOUNT_outmsg">
+        <part name="PCM_OP_PRICE_COMMIT_DISCOUNT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_PRICE_GET_PRICE_LIST_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_PRICE_GET_PRICE_LIST_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_PRICE_GET_PRICE_LIST_outmsg">
+        <part name="PCM_OP_PRICE_GET_PRICE_LIST_response" type="xsd:string"/>
+    </message>
+    <portType name="BRMPRICINGService_ptt">
+        <operation name="PcmOpPriceCommitProduct">
+            <input message="brm:PCM_OP_PRICE_COMMIT_PRODUCT_inmsg" name="PCM_OP_PRICE_COMMIT_PRODUCT_inmsg"/>
+            <output message="brm:PCM_OP_PRICE_COMMIT_PRODUCT_outmsg" name="PCM_OP_PRICE_COMMIT_PRODUCT_outmsg"/>
+        </operation>
+        <operation name="PcmOpPriceSetPriceList">
+            <input message="brm:PCM_OP_PRICE_SET_PRICE_LIST_inmsg" name="PCM_OP_PRICE_SET_PRICE_LIST_inmsg"/>
+            <output message="brm:PCM_OP_PRICE_SET_PRICE_LIST_outmsg" name="PCM_OP_PRICE_SET_PRICE_LIST_outmsg"/>
+        </operation>
+        <operation name="PcmOpPriceCommitDiscount">
+            <input message="brm:PCM_OP_PRICE_COMMIT_DISCOUNT_inmsg" name="PCM_OP_PRICE_COMMIT_DISCOUNT_inmsg"/>
+            <output message="brm:PCM_OP_PRICE_COMMIT_DISCOUNT_outmsg" name="PCM_OP_PRICE_COMMIT_DISCOUNT_outmsg"/>
+        </operation>
+        <operation name="PcmOpPriceGetPriceList">
+            <input message="brm:PCM_OP_PRICE_GET_PRICE_LIST_inmsg" name="PCM_OP_PRICE_GET_PRICE_LIST_inmsg"/>
+            <output message="brm:PCM_OP_PRICE_GET_PRICE_LIST_outmsg" name="PCM_OP_PRICE_GET_PRICE_LIST_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="BRMPRICINGService_binding" type="brm:BRMPRICINGService_ptt">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PcmOpPriceCommitProduct">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_PRICE_COMMIT_PRODUCT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_PRICE_COMMIT_PRODUCT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpPriceSetPriceList">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_PRICE_SET_PRICE_LIST_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_PRICE_SET_PRICE_LIST_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpPriceCommitDiscount">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_PRICE_COMMIT_DISCOUNT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_PRICE_COMMIT_DISCOUNT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpPriceGetPriceList">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_PRICE_GET_PRICE_LIST_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_PRICE_GET_PRICE_LIST_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="BRMPRICINGService">
+        <port binding="brm:BRMPRICINGService_binding" name="BRMPRICINGService_pt">
+            <soap:address location="http://localhost:8080/brm/BRMWSPRICINGServices"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="BRMService_plt">
+        <plt:role name="BRMService_role">
+            <plt:portType name="brm:BRMPRICINGService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

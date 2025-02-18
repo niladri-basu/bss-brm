@@ -1,0 +1,118 @@
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Tue Apr 14 20:03:11 2015
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_TEL_TEL_SAN09.out.bc.event_dlay_sess_tlcs_t.ctl
+Character Set UTF8 specified for all input.
+
+Data File:      /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_TEL_TEL_SAN09.out.bc.event_dlay_sess_tlcs_t.blk
+  Bad File:     /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_TEL_TEL_SAN09.out.bc.event_dlay_sess_tlcs_t.blk.bad
+  Discard File: /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_TEL_TEL_SAN09.out.bc.event_dlay_sess_tlcs_t.blk.discard 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Continuation:    none specified
+Path used:      Direct
+
+Load is UNRECOVERABLE; invalidation redo is produced.
+
+Table EVENT_DLAY_SESS_TLCS_T, partition P_D_05012015, loaded from every logical record.
+Insert option in effect for this partition: APPEND
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+RECORD_TYPE                         FIRST     *  WHT      CHARACTER            
+  (FILLER FIELD)
+RECORD_NUMBER                        NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+EVENT_NO                             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+BATCH_ID                             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+ORIGINAL_BATCH_ID                    NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+NETWORK_SESSION_ID                   NEXT     *  WHT      CHARACTER            
+ORIGIN_NETWORK                       NEXT     *  WHT      CHARACTER            
+DESTINATION_NETWORK                  NEXT     *  WHT      CHARACTER            
+PRIMARY_MSID                         NEXT     *  WHT      CHARACTER            
+B_MODIFICATION_INDICATOR             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CALLED_TO                            NEXT     *  WHT      CHARACTER            
+DESCRIPTION                          NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+USAGE_DIRECTION                      NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CONNECT_TYPE                         NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CONNECT_SUB_TYPE                     NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+SVC_TYPE                             NEXT     1           CHARACTER            
+SVC_CODE                             NEXT     *  WHT      CHARACTER            
+QOS_REQUESTED                        NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+QOS_USED                             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+TERMINATE_CAUSE                      NEXT     *  WHT      CHARACTER            
+LONG_DURATION_INDICATOR              NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+UTC_TIME_OFFSET                      NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+VOLUME_SENT                          NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+BYTES_IN                             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+NUMBER_OF_UNITS                      NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+USAGE_CLASS                          NEXT     *  WHT      CHARACTER            
+USAGE_TYPE                           NEXT     *  WHT      CHARACTER            
+PREPAID_INDICATOR                    NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+INTERN_PROCESS_STATUS                NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CHARGING_START_TIMESTAMP             NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CHARGING_END_TIMESTAMP               NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+NET_QUANTITY                         NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+OBJ_ID0                              NEXT     *  WHT      CHARACTER            
+RECORD_TYPE2                         NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+RECORD_NUMBER2                       NEXT     *  WHT      CHARACTER            
+  (FILLER FIELD)
+SECONDARY_MSID                       NEXT     *  WHT      CHARACTER            
+CALLING_FROM                         NEXT     *  WHT      CHARACTER            
+NUMBER_OF_SS_EVENT_PACKETS           NEXT     1           CHARACTER            
+  (FILLER FIELD)
+
+The following index(es) on table EVENT_DLAY_SESS_TLCS_T were processed:
+index PIN.I_EVENT_DLAY_SESSION_TLCS__ID partition P_D_05012015 loaded successfully with 1 keys
+index PIN.TD_CALLING_FROM__IDX partition P_D_05012015 loaded successfully with 1 keys
+
+Table EVENT_DLAY_SESS_TLCS_T, partition P_D_05012015:
+  1 Row successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+Bind array size not used in direct path.
+Column array  rows :    5000
+Stream buffer bytes: 5000000
+Read   buffer bytes:10000000
+
+Total logical records skipped:          0
+Total logical records read:             1
+Total logical records rejected:         0
+Total logical records discarded:        0
+Total stream buffers loaded by SQL*Loader main thread:        1
+Total stream buffers loaded by SQL*Loader load thread:        0
+
+Run began on Tue Apr 14 20:03:11 2015
+Run ended on Tue Apr 14 20:03:12 2015
+
+Elapsed time was:     00:00:00.31
+CPU time was:         00:00:00.03

@@ -1,0 +1,74 @@
+#!/bin/sh
+#
+#	@(#)$Id: start_dm.sh /cgbubrm_7.5.0.rwsmod/3 2014/02/14 16:24:22 rjfilipp Exp $
+# Copyright (c) 2012, 2014, Oracle and/or its affiliates. All rights reserved.
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# start_dm_invoice
+#
+# The underlying database (if any) must already be started
+# when this script runs.
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+	
+# This is for HP Itanium. It works around a change in the thread libraries
+# for itanium which affects the way shared memory mutexes work
+case `uname -m` in
+  ia64**)
+    export PTHREAD_DISABLE_HANDOFF=1
+    ;;
+esac
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/dm_invoice
+
+DM=${PINDIR}/bin/dm_invoice
+
+DMDIR=${PINDIR}/sys/dm_invoice
+DMLOG=${LOGDIR}/dm_invoice.log
+DMPID=${LOGDIR}/dm_invoice.pid
+
+if [ -r ${DMPID} ]; then
+  /bin/ps -f -p `cat ${DMPID}` | grep ${DM} > /dev/null
+  if [ $? -eq 0 ]; then
+        echo "ERROR: dm_invoice is already running"
+        exit 1
+  fi
+fi
+
+if [ ! -x ${DM} ]; then
+        echo "HELP: executable \"${DM}\" not found!"
+        exit 1
+fi       
+
+if [ ! -d ${DMDIR} ]; then
+        echo "HELP: dm_invoice dir \"${DMDIR}\" not found!"
+        exit 1
+fi
+
+if [ ! -d ${LOGDIR} ]; then
+	mkdir -p ${LOGDIR}
+	if [ $? -ne 0 ]; then
+		echo "HELP: problems making dm_invoice LOGDIR \"${LOGDIR}\"!"
+		exit 1
+	fi
+fi       
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${DMDIR} ;
+  echo "started dm_invoice at..." >> ${DMLOG}
+  date >> ${DMLOG}
+  ${DM} >> ${DMLOG} 2>&1 &
+  echo $! > ${DMPID} ;
+  chmod 664 ${DMLOG} ;
+  chmod 664 ${DMPID} )
+
+# use rc from dm_invoice startup
+exit $?

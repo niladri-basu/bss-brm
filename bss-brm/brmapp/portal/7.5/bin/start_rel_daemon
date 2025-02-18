@@ -1,0 +1,131 @@
+#!/bin/sh
+#
+# @(#)%Portal Version: start_batch_controller.sh:UelEaiVelocityInt:1:2006-Sep-05 22:24:00 %
+#
+# Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+#      This material is the confidential property of Oracle Corporation
+#      or its licensors and may be used, reproduced, stored
+#      or transmitted only in accordance with a valid Oracle license
+#      or sublicense agreement.
+#
+
+
+PINDIR=/brmapp/portal/7.5
+PATH=${PINDIR}/bin:/usr/bin:/bin:.:${PATH}
+#If RelAsDaemon runnin in TT mode then set correct TT_LIB_PATH,
+TT_LIB_PATH=__TIMESTEN_CLIENT_HOME__/lib
+
+RELDIR=${PINDIR}/apps/pin_rel
+LOGDIR=${RELDIR}
+REL_DAEMON_LOG=${LOGDIR}/RelDaemon.log
+REL_DAEMON_PID=${LOGDIR}/RelDaemon.pid
+
+# does the propreties file exist?  Success implies that ${LOGDIR} exists...
+if [ ! -r  ${RELDIR}/Infranet.properties ]; then
+   echo "HELP: no Infranet.properties for RelDaemon in \"${RELDIR}\"!"
+   exit 1
+fi
+#set LD_LIB_PATH to include TT_LIB_PATH
+#get the lib path speciifc to platform
+
+
+# TT_LIB_PATH refers to the lib directory under the TimesTen's 32-bit client
+# installation home. 
+
+if [ ! -d "$TT_LIB_PATH" ]
+then
+    TT_LIB_PATH=/lib
+fi
+
+# From 11GR2 onwards, on 64-bit machines, 32-bit oracle client libraries are 
+# not installed in the lib32 directory as per Oracle documentation. 
+# Therefore, Full 32-bit oracle client needs to be 
+# installed in a separate ORACLE_HOME and the client libraries in the 
+# the clients $ORACLE_HOME/lib directory should be used and ORACLE_HOME needs to be set 
+# to reflect the client install in this script .
+
+# In the next major release, we can let installer replace tokens for 
+# 32-bit client install home directory and/or the oracle version
+# Then we can derive the libraries for use in this script
+
+# For 11G2 , set to client install home
+# ORACLE_HOME=
+# export ORACLE_HOME 
+# ORA_CLIENT_LIB_PATH=${ORACLE_HOME}/lib
+
+# For 11GR1 
+ORA_CLIENT_LIB_PATH=${ORACLE_HOME}/lib32
+
+# From 7.5 onwards, java6 is being used so we should be using ojdbc6.jar
+# from oracle client. 11G Oracle client is recommended since
+# 10G client does not ship with ojdbc6.jar. 
+OJDBCJAR=ojdbc6.jar
+
+
+REL_CLIENT_LIBS=${ORA_CLIENT_LIB_PATH}:${TT_LIB_PATH}
+REL_LIBS=${REL_CLIENT_LIBS}:${PIN_HOME}/lib
+
+uname=`uname`
+if [ "$uname" = "SunOS" -o "$uname" = "Linux" ];
+then
+    if [ "$LD_LIBRARY_PATH" = "" ];
+    then
+          LD_LIBRARY_PATH=${REL_LIBS}
+    else
+          LD_LIBRARY_PATH=${REL_LIBS}:${LD_LIBRARY_PATH}
+    fi
+    export LD_LIBRARY_PATH
+elif [ "$uname" = "HP-UX" ];
+then
+   if [ "$LD_LIBRARY_PATH" = "" ];
+   then
+        LD_LIBRARY_PATH=${REL_LIBS}
+   else
+        LD_LIBRARY_PATH=${REL_LIBS}:${LD_LIBRARY_PATH}
+   fi
+   if [ "$SHLIB_PATH" = "" ];
+   then
+         SHLIB_PATH=${REL_LIBS}
+   else
+         SHLIB_PATH=${REL_LIBS}:${SHLIB_PATH}
+   fi
+   export SHLIB_PATH
+   export LD_LIBRARY_PATH
+elif [ "$uname" = "AIX" ];
+then
+    if [ "$LIBPATH" = "" ];
+    then
+          LIBPATH=${REL_LIBS}
+    else
+          LIBPATH=${REL_LIBS}:${LIBPATH}
+    fi
+    export LIBPATH
+fi
+      
+
+
+#set JAR_DIR to be the full pathname of the dir where the
+# jar files are located
+JARDIR=${PINDIR}/jars
+
+JAVA=$BRM_JRE/bin/java
+
+# set the classpath variable
+CLASSPATH=${RELDIR}:${JARDIR}/batch.jar:${JARDIR}/pcm.jar:${JARDIR}/pcmext.jar:${JARDIR}/rel.jar:${JARDIR}/xercesImpl.jar:${JARDIR}/xmlParserAPIs.jar:$BRM_JRE/lib/rt.jar:$ORACLE_HOME/jdbc/lib/${OJDBCJAR}:$ORACLE_HOME/jdbc/lib/classes12.zip:${TT_LIB_PATH}/orai18n.jar:${TT_LIB_PATH}/ttjdbc6.jar:${JARDIR}/oraclepki.jar:${JARDIR}/osdt_cert.jar:${JARDIR}/osdt_core.jar
+
+
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${RELDIR} ;
+  echo "started RelDaemon at..." >> ${REL_DAEMON_LOG}
+  date >> ${REL_DAEMON_LOG}
+
+  # The headless AWT option is used to avoid an unnecessary X server run-time requirement.
+  ${JAVA} -server -Djava.awt.headless=true -Xms1024m -Xmx1024m -classpath ${CLASSPATH} com.portal.batch.BatchControllerMain REL >> ${REL_DAEMON_LOG} 2>&1 &
+
+  echo $! > ${REL_DAEMON_PID} ;
+  chmod 664 ${REL_DAEMON_LOG} ;
+  chmod 664 ${REL_DAEMON_PID} )
+
+# get rc from RelDaemon startup
+exit $?

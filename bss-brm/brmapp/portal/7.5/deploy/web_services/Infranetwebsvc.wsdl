@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+#
+# Copyright (c) 2003 - 2007 Oracle. All rights reserved.
+#
+# This material is the confidential property of Oracle Corporation or its
+# licensors and may be used, reproduced, stored or transmitted only in
+# accordance with a valid Oracle license or sublicense agreement.
+#
+-->
+<wsdl:definitions targetNamespace="http://webservices.portal.com" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://webservices.portal.com-impl" xmlns:intf="http://webservices.portal.com" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types/>
+   <wsdl:message name="opcodeRequest">
+      <wsdl:part name="opcode" type="xsd:string"/>
+      <wsdl:part name="inputXML" type="xsd:string"/>
+   </wsdl:message>
+   <wsdl:message name="testRequest">
+   </wsdl:message>
+   <wsdl:message name="testResponse">
+      <wsdl:part name="testReturn" type="xsd:string"/>
+   </wsdl:message>
+   <wsdl:message name="opcodeWithFlagsRequest">
+      <wsdl:part name="opcode" type="xsd:string"/>
+      <wsdl:part name="flags" type="xsd:int"/>
+      <wsdl:part name="inputXML" type="xsd:string"/>
+   </wsdl:message>
+
+   <wsdl:message name="opcodeResponse">
+      <wsdl:part name="opcodeReturn" type="xsd:string"/>
+   </wsdl:message>
+
+   <wsdl:message name="opcodeWithFlagsResponse">
+      <wsdl:part name="opcodeWithFlagsReturn" type="xsd:string"/>
+   </wsdl:message>
+
+   <wsdl:portType name="Infranet">
+      <wsdl:operation name="test">
+         <wsdl:input message="intf:testRequest" name="testRequest"/>
+         <wsdl:output message="intf:testResponse" name="testResponse"/>
+      </wsdl:operation>
+
+      <wsdl:operation name="opcode" parameterOrder="opcode inputXML">
+         <wsdl:input message="intf:opcodeRequest" name="opcodeRequest"/>
+         <wsdl:output message="intf:opcodeResponse" name="opcodeResponse"/>
+
+		<documentation>
+		  Call an Infranet opcode with input flist specified by XML string.
+		  param: Opcode name in the form 'PCM_OP_CUST_COMMIT_CUSTOMER',
+			'CUST_COMMIT_CUSTOMER', or the numeric equivalent
+		  param: XML XML string representation of the input flist. XML should
+		  	be in the form that FList.createFromXML method understands.
+		  return: XML string representation of the output flist or an error
+		</documentation>
+      </wsdl:operation>
+
+      <wsdl:operation name="opcodeWithFlags" parameterOrder="opcode flags inputXML">
+         <wsdl:input message="intf:opcodeWithFlagsRequest" name="opcodeWithFlagsRequest"/>
+         <wsdl:output message="intf:opcodeWithFlagsResponse" name="opcodeWithFlagsResponse"/>
+
+		<documentation>
+		  Call an Infranet opcode with input flist specified by XML string.
+		  param: Opcode name in the form 'PCM_OP_CUST_COMMIT_CUSTOMER',
+			'CUST_COMMIT_CUSTOMER', or the numeric equivalent
+		  param: Opcode flags that are passed to Infranet.
+		  param: XML string representation of the input flist. XML should
+		  	be in the form that FList.createFromXML method understands.
+		  return: XML string representation of the output flist or an error
+		</documentation>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="InfranetSoapBinding" type="intf:Infranet">
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="test">
+         <wsdlsoap:operation soapAction=" "/>
+         <wsdl:input name="testRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.portal.com" use="encoded"/>
+         </wsdl:input>
+
+         <wsdl:output name="testResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.portal.com" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+      <wsdl:operation name="opcode">
+         <wsdlsoap:operation soapAction=" "/>
+         <wsdl:input name="opcodeRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.portal.com" use="encoded"/>
+         </wsdl:input>
+
+         <wsdl:output name="opcodeResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.portal.com" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+      <wsdl:operation name="opcodeWithFlags">
+         <wsdlsoap:operation soapAction=" "/>
+         <wsdl:input name="opcodeWithFlagsRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.portal.com" use="encoded"/>
+         </wsdl:input>
+
+         <wsdl:output name="opcodeWithFlagsResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.portal.com" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="InfranetService">
+      <wsdl:port binding="intf:InfranetSoapBinding" name="Infranet">
+         <wsdlsoap:address location="http://localhost:8080/infranetwebsvc/services/Infranet"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

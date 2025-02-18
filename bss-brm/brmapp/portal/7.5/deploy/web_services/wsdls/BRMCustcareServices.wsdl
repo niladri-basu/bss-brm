@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CUSTCARE" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="PCM_OP_CUSTCARE_MOVE_ACCT.xsd"/>
+        </schema>
+    </types>
+    <message name="PCM_OP_CUSTCARE_MOVE_ACCT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUSTCARE_MOVE_ACCT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUSTCARE_MOVE_ACCT_outmsg">
+        <part name="PCM_OP_CUSTCARE_MOVE_ACCT_response" type="xsd:string"/>
+    </message>
+    <portType name="BRMCUSTCAREService_ptt">
+        <operation name="PcmOpCustcareMoveAcct">
+            <input message="brm:PCM_OP_CUSTCARE_MOVE_ACCT_inmsg" name="PCM_OP_CUSTCARE_MOVE_ACCT_inmsg"/>
+            <output message="brm:PCM_OP_CUSTCARE_MOVE_ACCT_outmsg" name="PCM_OP_CUSTCARE_MOVE_ACCT_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="BRMCUSTCAREService_binding" type="brm:BRMCUSTCAREService_ptt">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PcmOpCustcareMoveAcct">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUSTCARE_MOVE_ACCT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUSTCARE_MOVE_ACCT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="BRMCUSTCAREService">
+        <port binding="brm:BRMCUSTCAREService_binding" name="BRMCUSTCAREService_pt">
+            <soap:address location="http://localhost:8080/brm/BRMWSCUSTCAREServices"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="BRMService_plt">
+        <plt:role name="BRMService_role">
+            <plt:portType name="brm:BRMCUSTCAREService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

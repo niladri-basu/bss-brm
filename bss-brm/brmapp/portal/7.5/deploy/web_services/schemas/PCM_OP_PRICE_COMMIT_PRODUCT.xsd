@@ -1,0 +1,1148 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved.
+
+        This material is the confidential property of Oracle Corporation or
+        its licensors and may be used, reproduced, stored or transmitted only
+        in accordance with a valid Oracle license or sublicense agreement.-->
+   <xsd:element name="PCM_OP_PRICE_COMMIT_PRODUCT_inputFlist">
+      <xsd:complexType>
+         <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="PROGRAM_NAME" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="256"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+         </xsd:choice>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CODE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DELETED_FLAG" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OWN_MAX" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="OWN_MIN" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PARTIAL" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PERMITTED" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PIPELINE_RATEPLANS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PIPELINE_RATEPLANS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PRIORITY" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PROVISIONING_TAG" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="64"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_MAX" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_MIN" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RATE_PLANS" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RATE_PLANS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213222">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ROLLOVERS" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="ROLLOVERS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213223">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RUM_MAP" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RUM_MAP_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213221">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SUPPLIER_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TAILORMADE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="601, 602, 603"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_MAP" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="USAGE_MAP_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213220">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ZONEMAP_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="USAGE_MAP_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213220">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="EVENT_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="INCR_QUANTITY" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="INCR_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2,3,4,11,12,13,14"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MIN_QUANTITY" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="MIN_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2,3,4,11,12,13,14"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATE_PLAN_CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATE_PLAN_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATE_PLAN_SELECTOR" type="RATE_PLAN_SELECTOR_SUBSTRUCT_PCM_OP_PRICE_COMMIT_PRODUCT_1213220213" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ROUNDING_MODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RUM_NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TIMEZONE_MODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TOD_MODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RATE_PLAN_SELECTOR_SUBSTRUCT_PCM_OP_PRICE_COMMIT_PRODUCT_1213220213">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SELECTOR" minOccurs="0" maxOccurs="1" type="BUFFER_PCM_OP_PRICE_COMMIT_PRODUCT"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RUM_MAP_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213221">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="EVENT_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RUM_LIST" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RUM_LIST_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322122">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RUM_LIST_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322122">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="RUM_NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RATE_PLANS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213222">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BILL_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CURRENCY" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CYCLE_FEE_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="EVENT_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OFFSET_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATES" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RATES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213222211">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RATE_TIERS" minOccurs="1" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RATE_TIERS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213222210">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="TAX_CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TAX_WHEN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RATE_TIERS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213222210">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DATE_RANGES" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DATE_RANGES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322221025">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DATE_RANGE_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRIORITY" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RATE_INDEX" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DATE_RANGES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322221025">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DAY_RANGES" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DAY_RANGES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322221025210">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="LINEAGE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATE_INDEX" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RELATIVE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RELATIVE_END_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1,2,3,4"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RELATIVE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RELATIVE_START_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1,2,3,4"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DAY_RANGES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322221025210">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="LINEAGE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATE_INDEX" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="TOD_RANGES" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="TOD_RANGES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_12132222102521027">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="VALID_DOM" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="VALID_DOW" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="VALID_MOY" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="TOD_RANGES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_12132222102521027">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="END_OFFSET" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="LINEAGE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATE_INDEX" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="START_OFFSET" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RATES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213222211">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRORATE_FIRST" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="701,702,703"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRORATE_LAST" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="701,702,703"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="QUANTITY_TIERS" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="QUANTITY_TIERS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322221128">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="STEP_RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="STEP_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TAILORMADE_DATA" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1024"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,740,741"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="QUANTITY_TIERS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322221128">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BAL_IMPACTS" minOccurs="0" maxOccurs="256">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_IMPACTS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_12132222112823">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="STEP_MAX" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="STEP_MIN" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_IMPACTS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_12132222112823">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ELEMENT_ID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FIXED_AMOUNT" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="GL_ID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="IMPACT_CATEGORY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RELATIVE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RELATIVE_END_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RELATIVE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RELATIVE_START_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SCALED_AMOUNT" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="SCALED_UNIT" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2,3,4"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="ROLLOVERS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213223">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BAL_IMPACTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_IMPACTS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213223211">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DATE_RANGE_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RELATIVE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RELATIVE_END_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1,2,3,4"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RELATIVE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RELATIVE_START_UNIT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1,2,3,4"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_IMPACTS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213223211">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="GL_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="IMPACT_CATEGORY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRORATE_FIRST" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="701,702,703"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRORATE_LAST" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="701,702,703"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="ROLLOVER_COUNT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ROLLOVER_MAX_UNITS" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ROLLOVER_UNITS" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ROLLOVER_UOM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0,1,2,3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PIPELINE_RATEPLANS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CALENDAR" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CURRENCY_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MODEL_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATEPLAN_VER" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RATEPLAN_VER_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224211">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RATE_PLAN_CODE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RATE_PLAN_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SPLITTING" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SYSTEM_BRAND" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="5"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TAILORMADE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="TAX_TREAMTMENT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="UTC_TIMEOFFSET" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="5"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RATEPLAN_VER_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224211">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BASIC" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="BASIC_RATEPLAN" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="BASIC_VERSION" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="MODEL_SELECTORS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="MODEL_SELECTORS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322421119">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PRICE_MODELS" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRICE_MODELS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224211110">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RATEPLAN_CNF" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RATEPLAN_CNF_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322421118">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SELECTOR_DETAILS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SELECTOR_DETAILS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224211112">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SELECTOR_RULES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SELECTOR_RULES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224211111">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="STATUS_STR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="VERSION_ID" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="ZONEMODEL" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RATEPLAN_CNF_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322421118">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDON_CHARGE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ADDON_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ALT_PRICE_MODEL" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="IMPACT_CATEGORY" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="10"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="INFO" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="40"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MODEL_SELECTOR_INDEX" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PASSTHROUGH" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PRICE_MODEL_INDEX" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="SVC_CLASS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="5"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SVC_CODE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="5"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TIME_MODEL" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="TIME_ZONE" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="MODEL_SELECTORS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322421119">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="MODEL_SELECTOR_CODE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MODEL_SELECTOR_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MODEL_SELECTOR_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SELECTOR_RULESET" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SELECTOR_RULESET_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_12132242111925">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="TAILORMADE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="SELECTOR_RULESET_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_12132242111925">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="PRICE_MODEL_INDEX" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="RANK" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="SELECTOR_RULESET_CODE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SELECTOR_RULE_INDEX" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="VALID_FROM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="VALID_TO" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PRICE_MODELS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224211110">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DECIMAL_PLACES" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PRICE_MODEL_CODE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRICE_MODEL_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRICE_MODEL_STEPS" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRICE_MODEL_STEPS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322421111027">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ROUNDING_METHOD" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="5"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TAILORMADE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="TAILORMADE_DATA" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1024"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PRICE_MODEL_STEPS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322421111027">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BEAT" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CHARGE_AMT" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CHARGE_BASE" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="FRAME" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="GLACCOUNT" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="10"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MIN_CHARGE" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="RESOURCE_NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="10"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="REV_GROUP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="5"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RUM_NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="10"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STEP" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="THRESHOLD_FROM" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="THRESHOLD_TO" type="UNION_PCM_OP_PRICE_COMMIT_PRODUCT" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="SELECTOR_RULES_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224211111">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="SELECTOR_RULE_CODE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SELECTOR_RULE_LINK" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SELECTOR_RULE_LINK_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322421111123">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SELECTOR_RULE_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="SELECTOR_RULE_LINK_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_121322421111123">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="SELECTOR_DETAIL_INDEX" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="SELECTOR_DETAILS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1213224211112">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="EDR_FIELD_NAME" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OPERATOR_STR" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="10"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SELECTOR_DETAIL_CODE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="VALUE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_PRICE_COMMIT_PRODUCT_outputFlist">
+      <xsd:complexType>
+         <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="255"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1313">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="RESULT" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:enumeration value="1,0"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="RESULT_FORMAT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         </xsd:choice>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_PRICE_COMMIT_PRODUCT_1313">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="PRODUCT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BUFFER_PCM_OP_PRICE_COMMIT_PRODUCT">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:hexBinary">
+            <xsd:attribute name="flags" type="xsd:string" use="optional"/>
+            <xsd:attribute name="size" type="xsd:string" use="optional"/>
+            <xsd:attribute name="offset" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:simpleType name="EMPTY_PCM_OP_PRICE_COMMIT_PRODUCT">
+      <xsd:restriction base="xsd:string">
+         <xsd:length value="0"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="UNION_PCM_OP_PRICE_COMMIT_PRODUCT">
+      <xsd:union memberTypes="xsd:decimal EMPTY_PCM_OP_PRICE_COMMIT_PRODUCT"/>
+   </xsd:simpleType>
+</xsd:schema>

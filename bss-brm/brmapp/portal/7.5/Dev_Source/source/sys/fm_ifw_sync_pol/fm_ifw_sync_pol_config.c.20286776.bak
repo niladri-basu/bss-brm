@@ -1,0 +1,37 @@
+/*******************************************************************
+ *
+ *  @(#) %full_filespec: fm_ifw_sync_pol_config.c~15:csrc:1 %
+ *
+ * Copyright (c) 2002 - 2006 Oracle. All rights reserved.This material is the confidential property of Oracle Corporation
+ * or its licensors and may be used, reproduced, stored or transmitted only in accordance with a valid Oracle
+ * license or sublicense  agreement.
+ *
+ *
+ *******************************************************************/
+
+#ifndef lint
+static  char Sccs_Id[] = "@(#)%Portal Version: fm_ifw_sync_pol_config.c:UelEaiVelocityInt:1:2006-Sep-05 06:52:29 %";
+#endif
+
+#include <stdio.h>			/* for FILE * in pcm.h */
+#include "pcm.h"
+#include "cm_fm.h"
+#include "ops/ifw_sync.h"
+
+PIN_EXPORT void * fm_ifw_sync_pol_config_func();
+
+/*******************************************************************
+ *******************************************************************/
+
+struct cm_fm_config fm_ifw_sync_pol_config[] = {
+	/* opcode as a u_int, function name (as a string) */
+	{ PCM_OP_IFW_SYNC_POL_PUBLISH_EVENT,	"op_ifw_sync_pol_publish_event" },
+	{ 0,	(char *)0 }
+};
+
+void *
+fm_ifw_sync_pol_config_func()
+{
+  return ((void *) (fm_ifw_sync_pol_config));
+}
+

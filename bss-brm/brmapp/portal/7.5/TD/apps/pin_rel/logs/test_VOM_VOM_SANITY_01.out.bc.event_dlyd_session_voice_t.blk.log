@@ -1,0 +1,62 @@
+
+SQL*Loader: Release 11.2.0.4.0 - Production on Tue Apr 14 20:15:41 2015
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_VOM_VOM_SANITY_01.out.bc.event_dlyd_session_voice_t.ctl
+Character Set UTF8 specified for all input.
+
+Data File:      /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_VOM_VOM_SANITY_01.out.bc.event_dlyd_session_voice_t.blk
+  Bad File:     /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_VOM_VOM_SANITY_01.out.bc.event_dlyd_session_voice_t.blk.bad
+  Discard File: /brmapp/portal/7.5/2d/apps/pin_rel/logs/test_VOM_VOM_SANITY_01.out.bc.event_dlyd_session_voice_t.blk.discard 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Continuation:    none specified
+Path used:      Direct
+
+Load is UNRECOVERABLE; invalidation redo is produced.
+
+Table EVENT_DLYD_SESSION_VOICE_T, partition P_D_05012015, loaded from every logical record.
+Insert option in effect for this partition: APPEND
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+RECORD_TYPE                         FIRST     *  WHT      CHARACTER            
+  (FILLER FIELD)
+CELL_ID                              NEXT     *  WHT      CHARACTER            
+SK                                   NEXT     *  WHT      CHARACTER            
+IMSI                                 NEXT     *  WHT      CHARACTER            
+LOC_NUM                              NEXT     *  WHT      CHARACTER            
+CALL_ID                              NEXT     *  WHT      CHARACTER            
+RDPN                                 NEXT     *  WHT      CHARACTER            
+TN                                   NEXT     *  WHT      CHARACTER            
+OBJ_ID0                              NEXT     *  WHT      CHARACTER            
+
+
+Table EVENT_DLYD_SESSION_VOICE_T, partition P_D_05012015:
+  1 Row successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+Bind array size not used in direct path.
+Column array  rows :    5000
+Stream buffer bytes: 5000000
+Read   buffer bytes:10000000
+
+Total logical records skipped:          0
+Total logical records read:             1
+Total logical records rejected:         0
+Total logical records discarded:        0
+Total stream buffers loaded by SQL*Loader main thread:        1
+Total stream buffers loaded by SQL*Loader load thread:        0
+
+Run began on Tue Apr 14 20:15:41 2015
+Run ended on Tue Apr 14 20:15:41 2015
+
+Elapsed time was:     00:00:00.30
+CPU time was:         00:00:00.01

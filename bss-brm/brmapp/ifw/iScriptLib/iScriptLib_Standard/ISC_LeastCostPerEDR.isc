@@ -1,0 +1,73 @@
+//==============================================================================
+//
+//      Copyright (c) 2004 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//==============================================================================
+// Block: ISC_LeastCostPerEDR.isc
+//-------------------------------------------------------------------------------
+// Module Description:
+//  
+// Contains functions to check the Customer Market Segment & the product Priority.
+// Can be used to add new functions if required in future. 
+//
+//==============================================================================
+
+// This function set the Least_Cost to some initial value 1.
+function Bool setLeastCostDefault
+{
+  edrLong(DETAIL.CUST_A.LEAST_COST,0) = 1;
+  return ( true );
+}
+
+// This function returns false if the segment list contains the passed string
+function Bool segmentContains( String segment )
+{
+  String segmentList[];
+  Long i;
+
+  // Split the segment string on the "|"s
+  Long numSegments = strSplit( segmentList, edrString(DETAIL.CUST_A.CUST_SEG_LIST, 0), "|");
+
+  for( i = 0; i < numSegments; i = i + 1)
+  {
+    if ( segment == segmentList[i] )
+    {
+      // if contains, return true;
+      return( true );
+    }
+  }
+  //segment not found in list, return false.
+  return( false );
+}
+
+
+// This function returns priority of the highest priority product.
+function Long priority
+{
+  Long maxPriority = 0;
+  String internRatingProduct = edrString(DETAIL.CUST_A.INTERN_RATING_PRODUCTS,0);
+  String indexPriorityArray[];
+
+  // Split on the bases of ";".
+  Long numProducts = strSplit( indexPriorityArray, internRatingProduct, ";" );
+  Long i;
+  for (i=0 ; i<numProducts ; i=i+1)
+  {
+    String index_and_priority[];
+
+    // Split on the bases of ":" to get the priority.
+    strSplit( index_and_priority,indexPriorityArray[i], ":");
+    Long currentPriority = strToLong(index_and_priority[1]);
+    if( currentPriority > maxPriority )
+    {
+       // Get the highest priority from all the products.
+      maxPriority = currentPriority;
+    }
+  }
+
+  return ( maxPriority );
+}

@@ -1,0 +1,1000 @@
+    9  ls -rlt
+   10  vi cm.pinlog
+   11  sys
+   12  cd cm
+   13  ls -rlt
+   14  vi pin.conf
+   15  test
+   16  pvt
+   17  pvt -m2 102200002015
+   18  pvt
+   19  pvt -m0
+   20  pvt
+   21  pvt -m2 102200002015
+   22  pvt
+   23  pvt -m0
+   24  pvt
+   25  testnap
+   26  test
+   27  testmap
+   28  testnap
+   29  var
+   30  cd cm
+   31  var
+   32  bin
+   33  ls 0rlt
+   34  ls -rlt
+   35  vi tracepvtchanges.log
+   36  stop_batch_controller_postpaid 
+   37  stop_batch_controller_prepaid 
+   38  psme
+   39  sys
+   40  cd cm
+   41  ls -rlt
+   42  vi pin.conf
+   43  stop_cm
+   44  pkill cm
+   45  start_cm
+   46  psme | grep cm
+   47  psme
+   48  test
+   49  testnap
+   50  pvt
+   51  bin
+   52  ls -rlt
+   53  vi tracepvtchanges.log
+   54  var
+   55  cd cm
+   56  ls r-lt
+   57  ls -rlt
+   58  vi cm.pinlog
+   59  grep -n 06102015012 cm.pinlog_6Oct1 | grep TRANS_ID
+   60  vi cm.pinlog_6Oct1 
+   61  opt
+   62  cd bin
+   63  ls -lrt
+   64  date
+   65  vi tracepvtchanges.log
+   66  test
+   67  var
+   68  cd cm
+   69  ls -lrt
+   70  vi cm.pinlog_6Oct1
+   71  test
+   72  pvt
+   73  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+   74  vi Trial
+   75  pin_trial_bill_accts -end 10/26/2015 -verbose -f Trial
+   76  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+   77  vi InvoiceList.xml
+   78  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+   79  vi Trial
+   80  pin_trial_bill_accts -end 11/01/2015 -verbose -f Trial
+   81  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+   82  vi InvoiceList.xml
+   83  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+   84  vi Trial
+   85  pin_trial_bill_accts -end 10/26/2015 -verbose -f Trial
+   86  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+   87  vi InvoiceList.xml
+   88  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+   89  vi Trial
+   90  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+   91  vi InvoiceList.xml
+   92  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+   93  vi Trial
+   94  pin_trial_bill_accts -end 11/01/2015 -verbose -f Trial
+   95  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+   96  vi InvoiceList.xml
+   97  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+   98  vi Trial
+   99  pin_trial_bill_accts -end 11/01/2015 -verbose -f Trial
+  100  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  101  vi InvoiceList.xml
+  102  opt
+  103  cd bin
+  104  ls -lrt
+  105  vi tracepvtchanges.log
+  106  exit
+  107  var
+  108  cd cm
+  109  ls -lrt
+  110  vi cm.pinlog
+  111  var
+  112  cd pin_collections/
+  113  ls -lrt
+  114  vi pin_collections.pinlog
+  115  vi pin_collections.pinlog
+  116  var
+  117  cd cm
+  118  ls -lrt
+  119  grep 1-128ITU cm.pinlog
+  120  vi cm.pinlog
+  121  vi cm.pinlog
+  122  exit
+  123  var
+  124  opt
+  125  cd 2d
+  126  apps
+  127  cd pin_monitor/
+  128  ls -rlt
+  129  vi crontab_pin_monitor_balance.sh
+  130  vi crontab_pin_monitor_balance.sh
+  131  vi cron_pin_monitor.log
+  132  ./crontab_pin_monitor_balance.sh
+  133  pwd
+  134  crontab -e
+  135  exit
+  136  opr
+  137  opt
+  138  cd 2d 
+  139  ls -lrt
+  140  cd apps
+  141  ls -lrt
+  142  cd td_suspense_payment
+  143  ls -rlt
+  144  vi crontab_td_pymt_retry.log
+  145  cd..
+  146  cd ..
+  147  ls -lrt
+  148  vi td_suspense_account
+  149  cd td_suspense_account
+  150  ls -lrt
+  151  vi crontab_td_suspense_account.sh
+  152  opt
+  153  cd apps
+  154  cd pin_billd
+  155  ls -lrt
+  156  vi crontab_td_daily_bill_day.sh
+  157  vi /brmapp/portal/7.5/apps/pin_billd/crontab_td_daily_bill_day.sh
+  158  ls -lrt
+  159  opt
+  160  cd 2d
+  161  cd apps
+  162  ls -rlt
+  163  cd td_suspense_account
+  164  ls -rlt
+  165  exit
+  166  crontab -l
+  167  bin
+  168  ls -lrt
+  169  vi tracepvtchanges.log
+  170  crontab -l
+  171  vi /brmapp/portal/7.5/apps/pin_monitor/crontab_pin_monitor_balance.sh
+  172  vi /brmapp/portal/7.5/apps/pin_monitor/crontab_pin_monitor_balance.sh
+  173  vi /brmapp/portal/7.5/apps/pin_monitor/cron_pin_monitor.log
+  174  exit
+  175  opt
+  176  cd 2d
+  177  cd apps
+  178  ls -rlt
+  179  apps
+  180  cd pin_rel
+  181  ls -rlt
+  182  apps
+  183  cd pin_collections
+  184  ls -rlt
+  185  vi crontab_td_collections_process.sh
+  186  test
+  187  testnap
+  188  var
+  189  cd cm
+  190  tail -f cm.pinlog >sk
+  191  vi sk
+  192  ls -lrt
+  193  var
+  194  cd cm
+  195  ls -lrt
+  196  cp cm.pinlog cm.pinlog_6Oct2
+  197  opt
+  198  cd 2d
+  199  cd apps
+  200  l s-rlt
+  201  ls -rlt
+  202  cd td_suspense_account
+  203  ls -rlt
+  204  ./crontab_td_suspense_account.sh
+  205  lls -rlt
+  206  ls -rlt
+  207  apps
+  208  cd pin_billd
+  209  ls -rlt
+  210  ls -lrt
+  211  ls -lrt
+  212  crontab -l
+  213  cd ../pin_monitor
+  214  ls -rlt
+  215  vi cron_pin_monitor.log
+  216  cd ../
+  217  ls -rlt
+  218  copt
+  219  cd 2d
+  220  opt
+  221  cd 2d
+  222  cd apps
+  223  ls r-lt
+  224  ls -rlt
+  225  cd td_suspense_payment
+  226  ls -lrt
+  227  vi crontab_td_pymt_retry.log
+  228  vi crontab_td_pymt_retry.sh
+  229  ls -lrt
+  230  exit
+  231  test
+  232  pvt
+  233  cd /brmapp/portal/7.5/TD/apps/td_cc_reverse/ARCHIVE_DIR
+  234  ls -lrt
+  235  vi TD_CC_REVERSE_20150129_1.csv
+  236  ls -lrt
+  237  cd ..
+  238  ls -lrt
+  239  cd INPUT_DIR
+  240  ls -lrt
+  241  vi TestFileReversal_1.csv
+  242  history
+  243  ls -lrt
+  244  ls -lrt
+  245  pwd
+  246  cd ..
+  247  ls -lrt
+  248  vi td_cc_reverse.pl
+  249  vi crontab_td_cc_reverse.sh
+  250  history > test.txt
+  251  vi test.txt
+  252  var
+  253  ls -rlt
+  254  opt
+  255  cd 2d
+  256  cd apps
+  257  ls -rlt
+  258  opt
+  259  cd apps
+  260  cd pin_monitor/
+  261  ls -rlt
+  262  ls -rlt
+  263  vi crontab_pin_monitor_balance.sh
+  264  ./crontab_pin_monitor_balance.sh &
+  265  chmod 777 crontab_pin_monitor_balance.sh
+  266  ./crontab_pin_monitor_balance.sh &
+  267  telnet 172.23.181.200 11960
+  268  ps -ef
+  269  find . -name tracepvtchanges.log
+  270  vi ./bin/tracepvtchanges.log
+  271  psme | grep batch
+  272  ls rlt
+  273  ls -rlt
+  274  var
+  275  cd pin_rel
+  276  cd prepaid
+  277  cd reject
+  278  ls -lrt
+  279  chmod 777 test_*bc
+  280  mv test_*bc /brmapp/portal/7.5/TD/apps/pin_rel
+  281  cd ../../postpaid/rej
+  282  cd ../../postpaid/reject
+  283  chmod 777 test_*bc
+  284  mv test_*bc /brmapp/portal/7.5/TD/apps/pin_rel 
+  285  cd ../
+  286  ls -rlt
+  287  cd ..
+  288  ls -lrt
+  289  mv logs logs_06102015
+  290  cp  classid_values.txt logs
+  291  ls -lrt
+  292  rm logs
+  293  mkdir logs
+  294  cp classid_values.txt logs
+  295  ls -lrt
+  296  cd prepaid/
+  297  cd archive
+  298  pwd
+  299  start_batch_controller_postpaid
+  300  cdr
+  301  start_batch_controller_prepaid
+  302  cdr
+  303  psme | grep Han
+  304  psme | grep pin_rel
+  305  cdr
+  306  exit
+  307  ls -lrt
+  308  apps
+  309  opt
+  310  cd 2d
+  311  cd pin_rel
+  312  cd apps
+  313  cd pin_rel
+  314  ls -lrt
+  315  pwd
+  316  ls -lrt
+  317  ls test*.bc > rel20.sh
+  318  vi rel20.sh
+  319  chmod 777 rel20.sh
+  320  nohup ./rel20.sh > nohup.out &
+  321  cat nohup.out | wc -l
+  322  cat nohup.out | wc -l
+  323  cat nohup.out | wc -l
+  324  cat rel20.sh | wc -l
+  325  cat rel20.sh | wc -l
+  326  cat rel20.sh | wc -l
+  327  cat nohup.out | wc -l
+  328  cat nohup.out | wc -l
+  329  cat nohup.out | wc -l
+  330  cat nohup.out | wc -l
+  331  cat nohup.out | wc -l
+  332  mv test_CONV* /var/portal/pin_rel/prepaid/archive
+  333  mv test_*bc  /var/portal/pin_rel/postpaid/archive
+  334  ls -rlt
+  335  exit
+  336  ls -rlt
+  337  opt
+  338  cd 2d
+  339  cd apps
+  340  ls -rlt
+  341  cd td_gl_reports
+  342  ls -rlt
+  343  vi tmp.flist
+  344  opt
+  345  cd 2d
+  346  ls -lrt
+  347  cd apps
+  348  ls -rlt
+  349  cd td_gl_reports
+  350  ls -lrt
+  351  cd all_scripts/
+  352  ls -lrt
+  353  vi td_revenue_forecast_report.sh
+  354  vi td_create_input_file.sh
+  355  cd ../
+  356  ls -lrt
+  357  ./
+  358  ./td_gl_report.pl
+  359  ./td_gl_report.pl -r revenue_forecast_report -d 20151001 
+  360  cd -
+  361  ls -rlt
+  362  cd ..
+  363  ls -rlt
+  364  cd  -
+  365  ls -rlt
+  366  vi td_unbilled_gl_proc.sql
+  367  cd ..
+  368  ls -lrt
+  369  ./td_gl_report.pl
+  370  ./td_gl_report.pl -r gl_unbilled_revenue_report -d 20151001
+  371  start_batch_controller_postpaid 
+  372  start_batch_controller_prepaid
+  373  cdr
+  374  psme | grep pin_rel
+  375  cdr
+  376  cdr
+  377  cdr
+  378  cdr
+  379  cdr
+  380  psme | grep batch
+  381  stop_batch_controller_postpaid 
+  382  stop_batch_controller_prepaid 
+  383  start_batch_controller_postpaid 
+  384  start_batch_controller_prepaid
+  385  cdr
+  386  cdr
+  387  cdr
+  388  psme | grep Han
+  389  cdr
+  390  cdr
+  391  psme | grep Han
+  392  psme | grep Han
+  393  stop_batch_controller_postpaid 
+  394  stop_batch_controller_prepaid
+  395  appa
+  396  apps
+  397  ll
+  398  cd pin_trial_bill
+  399  ll
+  400  vi trial_bill_input_08172015
+  401  vi trial_bill_input_08172015
+  402  pin_trial_bill_accts -end 10/20/2015 -f trial_bill_input_08172015
+  403  /brmapp/portal/7.5/TD/apps/td_cc_reverse/ARCHIVE_DIR
+  404  cd /brmapp/portal/7.5/TD/apps/td_cc_reverse/ARCHIVE_DIR
+  405  ls -lrt
+  406  cd ..
+  407  ls -lrt
+  408  cd INPUT_DIR
+  409  ls -lrt
+  410  vi TestFileReversal_1.csv
+  411  cd /brmapp/portal/7.5/TD/apps/td_cc_reverse/ARCHIVE_DIR
+  412  cd ..
+  413  ls -lrt
+  414  cd INPUT_DIR
+  415  ls -lrt
+  416  vi TestFileReversal_1.csv
+  417  cd ..
+  418  ls -lrt
+  419  ./td_cc_reverse.pl
+  420  ls -lrt
+  421  cd INPUT_DIR
+  422  ls -lrt
+  423  apps
+  424  ll
+  425  cd pin_trial_bill
+  426  ll
+  427  vi trial_bill_input_08172015
+  428  ll
+  429  pin_trial_bill_accts -end 10/21/2015 -f trial_bill_input_08172015
+  430  vi trial_bill_input_08172015
+  431  ll
+  432  pin_trial_bill_accts -end 11/01/2015 -f trial_bill_input
+  433  vi trial_bill_input
+  434  ll
+  435  pin_trial_bill_accts -end 11/01/2015 -f trial_bill_input
+  436  vi trial_bill_input
+  437  pin_trial_bill_accts -end 11/01/2015 -f trial_bill_input
+  438  vi trial_bill_input
+  439  ll
+  440  pin_trial_bill_accts -end 11/01/2015 -f trial_bill_input
+  441  opt
+  442  cd apps
+  443  cd pin_trial_bill/
+  444  l
+  445  vi trial_bill_input_08172015
+  446  cp trial_bill_input_08172015 trial_bill_input
+  447  vi trial_bill_input
+  448  ls -lrt
+  449  vi trial_bill_input
+  450  vi trial_bill_input_08172015
+  451  cd ../pin_inv
+  452  l
+  453  vi in1
+  454  pin_inv_export -details in1
+  455  cd invoice_dir
+  456  l
+  457  cd ..
+  458  pin_inv_export -detail in1
+  459  cd -
+  460  l
+  461  cd -
+  462  vi in1
+  463  pin_inv_export -detail in1
+  464  cd -
+  465  l
+  466  cd -
+  467  cd -
+  468  vi in1
+  469  cd -
+  470  vi in1
+  471  pin_inv_export -detail in1
+  472  vi in1
+  473  pin_inv_export -detail in1
+  474  cd -
+  475  l
+  476  cdr
+  477  psme | grep batch
+  478  ls -lrt
+  479  var
+  480  cd cm
+  481  ls -rt
+  482  ls -lrt
+  483  cp cm.pinlog cm.pinlog_7Oct1
+  484  :>cm.pinlog
+  485  opt
+  486  cd 2d
+  487  cd apps
+  488  ls -lrt
+  489  cd td_suspense_payment
+  490  ls -lrt
+  491  vi crontab_td_pymt_retry.log
+  492  cd ..
+  493  ls -lrt
+  494  cd td_suspense_account
+  495  ls -rlt
+  496  vi crontab_td_suspense_account.log
+  497  psme | grep sus
+  498  vi crontab_td_suspense_account.sh
+  499  vi crontab_td_suspense_account.log
+  500  ./crontab_td_suspense_account.sh
+  501  l s-lrt
+  502  ls -rlt
+  503  vi crontab_td_suspense_account.log
+  504  crontab -e
+  505  crontab -l
+  506  crontab -e
+  507  opt
+  508  cd apps
+  509  ls -rlt
+  510  cd pin_monitor
+  511  ls -rlt
+  512  vi cron_pin_monitor.log
+  513  var
+  514  cd cm
+  515  ls -rlt
+  516  ls -rlt
+  517  var
+  518  cd cm
+  519  ls -rlt
+  520  cdr
+  521  cd 2d
+  522  cd apps
+  523  ls -lrt
+  524  cd td_suspense_account
+  525  ls -lrt
+  526  vi crontab_td_suspense_account.log
+  527  vi crontab_td_suspense_account.sh
+  528  cdr
+  529  cdr
+  530  ls -rlt
+  531  cdr
+  532  exit
+  533  var
+  534  cd cm
+  535  ls -rlt
+  536  cp cm.pinlog cm.pinlog_7Oct1
+  537  : > cm.pinlog
+  538  ls -rlt
+  539  vi cm.pinlog
+  540  psme | grep inv
+  541  his
+  542  psme | grep inv
+  543  psme | grep inv
+  544  psme | grep inv
+  545  psme | grep inv
+  546  psme | grep inv
+  547  psme | grep inv
+  548  psme | grep inv
+  549  psme | grep inv
+  550  psme | grep inv
+  551  psme | grep inv
+  552  psme | grep inv
+  553  psme | grep inv
+  554  psme | grep inv
+  555  psme | grep inv
+  556  psme | grep inv
+  557  psme | grep inv
+  558  psme | grep inv
+  559  psme | grep inv
+  560  psme | grep inv
+  561  psme | grep inv
+  562  psme | grep inv
+  563  psme | grep inv
+  564  psme | grep inv
+  565  psme | grep inv
+  566  psme | grep inv
+  567  psme | grep inv
+  568  psme | grep inv
+  569  psme | grep inv
+  570  psme | grep inv
+  571  psme | grep inv
+  572  psme | grep inv
+  573  psme | grep inv
+  574  psme | grep inv
+  575  psme | grep inv
+  576  test
+  577  pvt
+  578  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  579  vi Trial
+  580  pin_trial_bill_accts -end 10/26/2015 -verbose -f Trial
+  581  pin_trial_bill_accts -end 10/26/2015 -verbose -f Trial
+  582  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  583  vi InvoiceList.xml
+  584  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  585  pin_trial_bill_accts -end 12/26/2015 -verbose -f Trial
+  586  pin_trial_bill_accts -end 01/26/2016 -verbose -f Trial
+  587  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  588  vi Trial
+  589  pin_trial_bill_accts -end 10/26/2015 -verbose -f Trial
+  590  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  591  vi InvoiceList.xml
+  592  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  593  vi Trial
+  594  pin_trial_bill_accts -end 11/01/2015 -verbose -f Trial
+  595  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  596  vi InvoiceList.xml
+  597  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  598  vi Trial
+  599  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  600  vi InvoiceList.xml
+  601  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  602  pin_trial_bill_accts -end 10/26/2015 -verbose -f Trial
+  603  cd /brmapp/portal/7.5/apps/pin_inv
+  604  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  605  vi Trial
+  606  pin_trial_bill_accts -end 11/04/2015 -verbose -f Trial
+  607  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  608  vi InvoiceList.xml
+  609  cd /brmapp/portal/7.5/apps/pin_inv
+  610  vi Trial
+  611  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  612  vi Trial
+  613  pin_trial_bill_accts -end 11/01/2015 -verbose -f Trial
+  614  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  615  vi InvoiceList.xml
+  616  pin_trial_bill_accts -end 12/01/2015 -verbose -f Trial
+  617  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  618  pin_trial_bill_accts -end 12/01/2015 -verbose -f Trial
+  619  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  620  vi Trial
+  621  pin_trial_bill_accts -end 12/01/2015 -verbose -f Trial
+  622  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  623  vi InvoiceList.xml
+  624  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  625  vi Trial
+  626  pin_trial_bill_accts -end 11/01/2015 -verbose -f Trial
+  627  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  628  vi InvoiceList.xml
+  629  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  630  pin_trial_bill_accts -end 12/01/2015 -verbose -f Trial
+  631  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  632  vi Trial
+  633  pin_trial_bill_accts -end 11/01/2015 -verbose -f Trial
+  634  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  635  vi InvoiceList.xml
+  636  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  637  pin_trial_bill_accts -end 12/01/2015 -verbose -f Trial
+  638  vi Trial
+  639  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  640  vi Trial
+  641  pin_trial_bill_accts -end 10/17/2015 -verbose -f Trial
+  642  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  643  vi InvoiceList.xml
+  644  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  645  cd /brmapp/portal/7.5/apps/pin_inv
+  646  ls -lrt
+  647  vi B1-26
+  648  pin_inv_accts -regen -detail -file B1-26 -end 09/30/15 -start 09/30/15 
+  649  pin_inv_accts -regen -detail -hierarchy    -start 09/30/15 -end 09/30/15 &
+  650  pin_inv_accts -regen  -detail -pay_type 10001 -start 09/30/15 -end 09/30/15 &
+  651  pin_inv_accts -regen  -detail -pay_type 10003 -start 09/30/15 -end 09/30/15 &
+  652  pin_inv_accts -regen -detail -pay_type 10005 -start 09/30/15 -end 09/30/15 &
+  653  pin_inv_accts -regen -detail -pay_type 10005 -start 10/01/15 -end 10/01/15 
+  654  pin_inv_accts -regen -detail -pay_type 10003 -start 10/01/15 -end 10/01/15 &
+  655  pin_inv_accts -regen -detail -pay_type 10001 -start 10/01/15 -end 10/01/15 &
+  656  ps -ef|grep pin_inv
+  657  test
+  658  pvt
+  659  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  660  vi Trial
+  661  pin_trial_bill_accts -end 10/17/2015 -verbose -f Trial
+  662  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  663  vi InvoiceList.xml
+  664  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  665  vi Trial
+  666  pin_trial_bill_accts -end 11/01/2015 -verbose -f Trial
+  667  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  668  vi InvoiceList.xml
+  669  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  670  vi Trial
+  671  pin_trial_bill_accts -end 10/17/2015 -verbose -f Trial
+  672  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen 
+  673  vi InvoiceList.xml
+  674  cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  675  pin_trial_bill_accts -end 10/17/2015 -verbose -f Trial
+  676  test
+  677   cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  678  ls -lrt
+  679  cp ad_hoc_trial_bill_C01_Win_Over ad_hoc_trial_bill_C01_Freedom
+  680  cp ad_hoc_trial_C01_Win_Over ad_hoc_trial_C01_Freedom
+  681  vi ad_hoc_trial_C01_Freedom
+  682  cat ad_hoc_trial_C01_Freedom
+  683  pin_trial_bill_accts -end 11/01/2015 -verbose -f ad_hoc_trial_C01_Freedom
+  684  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen
+  685  ls -lrt
+  686  vi InvoiceList.xml
+  687  cat InvoiceList.xml
+  688  pin_trial_bill_accts -end 12/01/2015 -verbose -f ad_hoc_trial_C01_Freedom
+  689   cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  690  pin_trial_bill_accts -end 12/01/2015 -verbose -f ad_hoc_trial_C01_Freedom
+  691  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen
+  692  cat InvoiceList.xml
+  693   cd /brmapp/portal/7.5/apps/pin_trial_bill 
+  694  pin_trial_bill_accts -end 12/01/2015 -verbose -f ad_hoc_trial_C01_Freedom
+  695  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen
+  696  cat InvoiceList.xml
+  697  vi InvoiceList.xls
+  698  rm InvoiceList.xls
+  699  vi InvoiceList.xml
+  700  cat InvoiceList.xml
+  701  test
+  702  cd /brmapp/portal/7.5/apps/pin_trial_bill
+  703  ls -lrt
+  704  cp ad_hoc_trial_C01_Freedom ad_hoc_trial_C01_Connect
+  705  vi ad_hoc_trial_C01_Connect
+  706  cat ad_hoc_trial_C01_Connect
+  707  pin_trial_bill_accts -end 10/01/2015 -verbose -f ad_hoc_trial_C01_Connect 
+  708  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen
+  709  cat InvoiceList.xml
+  710  vi InvoiceList.xml
+  711  cat InvoiceList.xml
+  712  cd /brmapp/portal/7.5/apps/pin_trial_bill
+  713  pin_trial_bill_accts -end 11/01/2015 -verbose -f ad_hoc_trial_C01_Connect 
+  714  pin_trial_bill_accts -end 12/01/2015 -verbose -f ad_hoc_trial_C01_Connect 
+  715  cd /brmapp/portal/7.5/apps/pin_trial_bill
+  716  vi ad_hoc_trial_C01_Connect
+  717  pin_trial_bill_accts -end 11/01/2015 -verbose -f ad_hoc_trial_C01_Connect 
+  718  pin_trial_bill_accts -end 12/01/2015 -verbose -f ad_hoc_trial_C01_Connect 
+  719  cd /brmapp/portal/7.5/apps/pin_inv_doc_gen
+  720  vi InvoiceList.xml
+  721  cat InvoiceList.xml
+  722  vi InvoiceList.xml
+  723  cat InvoiceList.xml
+  724  exit
+  725  cdr
+  726  var
+  727  cd cm
+  728  ls -rlt
+  729  cp cm.pinlog cm.pinlog_7Oct2
+  730  :  > cm.pinlog
+  731  ls -lrt
+  732  vi cm.pinlog
+  733  grep 20151007152600 cm.pinlog
+  734  grep 20151007152600 cm.pinlog
+  735  tail -f cm.pinlog  >  pymt_hayder
+  736  grep 20151007152600 cm.pinlog
+  737  ls -lrt
+  738  vi pymt_hayder
+  739  cdr
+  740  cdr
+  741  cdr
+  742  var
+  743  cd pin_rel
+  744  ls -rltg
+  745  ls -rlt
+  746  cd postpaid/
+  747  ls -rlt
+  748  cd archive
+  749  ls -rlt
+  750  cd ../
+  751  ls -rlt
+  752  cd suspense/
+  753  ls -rtl | grep Oct
+  754  cd sus_reject
+  755  ls -rtl | grep Oct
+  756  cd  ../archive
+  757  cd  ../archive
+  758  cd ..
+  759  ls -rlt
+  760  cd sus_archive/
+  761  ls -rtl | grep Oct
+  762  vi suspense_update_DB2015.10.07-16.45.28.out.bc
+  763  ls -lrt
+  764  opt
+  765  cd 2d
+  766  cd apps
+  767  ls -rlt
+  768  cd td_payment_processing
+  769  ls -lrt
+  770  ./crontab_td_payment_processing.sh
+  771  vi crontab_td_payment_processing.log
+  772  ls -rlt
+  773  vi pin.conf
+  774  ./crontab_td_payment_processing.sh
+  775  ls -rlt
+  776  vi crontab_td_payment_processing.log
+  777  ls -rt
+  778  opt
+  779  cd 2d
+  780  ls -rlt
+  781  cd apps
+  782  ls -rlt
+  783  cd td_cc_reverse
+  784  ls -rlt
+  785  cd INPUT_DIR/
+  786  ls -rlt
+  787  cd ..
+  788  ls -lrt
+  789  cd ARCHIVE_DIR/
+  790  ls -rlt
+  791  ls -lrt
+  792  vi TestFileReversal_1.csv
+  793  test
+  794  ll Grep *pay*
+  795  vi pay 
+  796  opt
+  797  cd 2d/apps/
+  798  ls -lrt
+  799  cd td_cc_reverse/
+  800  ls -lrt
+  801  vi INPUT_DIR/
+  802  cd INPUT_DIR/
+  803  ls -lrt
+  804  cd ..
+  805  vi test.txt
+  806  ls -lrt
+  807  cd INPUT_DIR/
+  808  ls -lrt
+  809  cd ../ARCHIVE_DIR/
+  810  ls -lrt
+  811  vi TestFileReversal_1.csv
+  812  cd ..
+  813  ls -rlt
+  814  var
+  815  cd pin_rel
+  816  ls -rlt
+  817  cd postpaid/
+  818  ls -rlt
+  819  cd suspense/
+  820  ls -rlt
+  821  cd sus_archive
+  822  ls -lrt
+  823  ls -lrt | grep Oct
+  824  crontab -e
+  825  crontab -e
+  826  exit
+  827  var
+  828  cd pin_rel
+  829  ls -rlt
+  830  cd postpaid
+  831  ls -rlt
+  832  cd archive
+  833  ls -rlt
+  834  ls -rlt | grep Oct
+  835  cd ..
+  836  ls -lrt
+  837  cd ..
+  838  ls -rlt
+  839  cd postpaid/
+  840  ls -lrt
+  841  cd suspense/
+  842  ls -rlt
+  843  cd sus_archive
+  844  ls -rlt
+  845  ls -rlt
+  846  ls -lrt
+  847  exit
+  848  test
+  849  pvt
+  850  ls -rlt
+  851  opt
+  852  var
+  853  cd eai_js
+  854  ls -rlt
+  855  grep BP113 *
+  856  grep -n  BP113 *
+  857  vi eai_js.pinlog_5Oct
+  858  cd ..
+  859  cd cm
+  860  ls -rlt
+  861  grep BP113 cm.pinlog_29sep3
+  862  grep -n BP113 cm.pinlog_29sep3 | grep -n ProductStartTime
+  863  vi cm.pinlog_29sep3
+  864  var
+  865  cd cm
+  866  ls -lrt
+  867  vi cm.pinlog_7Oct2
+  868  apps
+  869  ll
+  870  cd pin_trial_bill
+  871  ll
+  872  vi trial_bill_input
+  873  ll
+  874  pin_trial_bill_accts -end 11/01/2015 -f trial_bill_input
+  875  var
+  876  cd cm
+  877  ls -lrt
+  878  vi cm.pinlog
+  879  opt
+  880  var
+  881  cd cm
+  882  ls -lrt
+  883  cp cm.pinlog cm.pinlog_7Oct3
+  884  :>cm.pinlog
+  885  opt
+  886  cd 2d/apps/td_sampling
+  887  ls -lrt
+  888  vi sampling_control.cfg
+  889  cd all_scripts/
+  890  ls -lrt
+  891  vi iot_billinfo_create.sh
+  892  cd ..
+  893  ls -lrt
+  894  ./sampling_control.pl
+  895  ls -lrt
+  896  cd scenario_logs/
+  897  ls -lrt
+  898  cat trial_bill_input_10102015
+  899  var
+  900  cd cm
+  901  vi cm.pinlog
+  902  exit
+  903  sqlplus pin/Brm_213pin@brmuat
+  904  cd
+  905  ls -lrt
+  906  ls -lart
+  907  vi .ssh
+  908  vi .ssh
+  909  vi .ssh
+  910  cd ssh
+  911  cd .ssh
+  912  ls -lrt
+  913  vi authorized_keys 
+  914  pwd
+  915  vi authorized_keys 
+  916  pwd
+  917  pwd
+  918  cd ..
+  919  ls -lart
+  920  cd -
+  921  ls -lrt
+  922  opt
+  923  cd pin
+  924  cd apps
+  925  cd pin_billd
+  926  cd ../pin_inv
+  927  pin_inv_export -trial
+  928  cd invoice_dir/
+  929  grep CUG *TRIAL-226549351-1443182401*
+  930  grep CUG *TRIAL-226549351-1445770801*
+  931  grep CUG *TRIAL-226549351-1443182401*
+  932  grep 'AoG CUG Member $15' *TRIAL*
+  933  vi 466022268_TRIAL-466021628-1446289201-110415_001600.xml
+  934  grep 128136 466022268_TRIAL-466021628-1446289201-110415_001600.xml
+  935  grep 128136 475890650_TRIAL-475889722-1446289201-100815_002316.xml
+  936  vi 475890650_TRIAL-475889722-1446289201-100815_002316.xml
+  937  opt
+  938  cd 2d/apps/td_cc_reverse/
+  939  ls -lrt
+  940  cd REJ_DIR/
+  941  ls -lrt
+  942  cd ../ARCHIVE_DIR/
+  943  ls -lrt
+  944  cd ../LOG_DIR/
+  945  apps
+  946  ls -lrt
+  947  vi pin_trial_bill
+  948  cd pin_trial_bill
+  949  ll
+  950  vi trial_bill_input
+  951  pin_trial_bill_accts -end 10/10/2015 -f trial_bill_input
+  952  pin_trial_bill_accts -end 10/11/2015 -f trial_bill_input
+  953  vi trial_bill_input
+  954  pin_trial_bill_accts -end 10/11/2015 -f trial_bill_input
+  955  vi trial_bill_input
+  956  pin_trial_bill_accts -end 10/10/2015 -f trial_bill_input
+  957  apps
+  958  ll
+  959  cd pin_trial_bill
+  960  ll
+  961  vi trial_bill_input
+  962  apps
+  963  cd pin_inv_doc_gen
+  964  vi docgen_file_input_10102015.xml
+  965  cdr
+  966  opt
+  967  cd pin_trial_bill
+  968  apps
+  969  cd pin_trial_bill
+  970  ls -rlt
+  971  vi ac1
+  972  pin_trial_bill_accts -end 10/10/2015 -verbose -f ac1 
+  973  cd ../
+  974  cd pin_inv_doc_gen
+  975  ls -rlt
+  976  var
+  977  cd cm
+  978  ls -rlt
+  979  cp cm.pinlog cm.pinlog_8Oct1
+  980  var
+  981  cd cm
+  982  ls -rlt
+  983  : > cm.pinlog
+  984  opt
+  985  cd 2d
+  986  cd apps
+  987  cd td_sampling
+  988  ls -rlt
+  989  cd scenario_logs
+  990  ls -rlt
+  991  vi trial_bill_input_10102015.log
+  992  cd ..
+  993  ls -lrlt
+  994  vi td_sampling_crontab.log
+  995  va
+  996  var
+  997  cd cm
+  998  ls -rlt
+  999  vi cm.pinlog
+ 1000  cd /brmapp/portal/7.5/TD/apps/td_cc_reverse/ARCHIVE_DIR
+ 1001  ls -lrt
+ 1002  cd ..
+ 1003  ls -lrt
+ 1004  cd INPUT_DIR
+ 1005  ls -lrt
+ 1006  history crontab
+ 1007  history
+ 1008  history >abc.txt

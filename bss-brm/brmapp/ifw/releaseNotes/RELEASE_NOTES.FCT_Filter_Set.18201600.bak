@@ -1,0 +1,164 @@
+========================================================================================
+FCT_Filter_Set
+----------------------------------------------------------------------------------------
+Module Release Notes
+----------------------------------------------------------------------------------------
+
+========================================================================================
+Module Version : 7.4 10029
+----------------
+Date : 15-May-2011
+----------------
+Change Order :  bug12421013 
+----------------
+Short Description :
+-------------------
+In case of Group Sharing Discounts, the Filter-Set was over-writing the Balance Group information
+after inserting the System Discount to the first Discount List that it encountered.
+
+Modified the code to add System Discounts to the DISCOUNT_LIST with correct Balance Group.
+================================================================================
+Module Version : 7.4 10028
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+Module Version: 10027  7.4 20-Aug-2010
+bug10037580 - P-10027925 RATING PIPE GENERATE A CORE DUMP ( DUE TO MEMORY LEAKS) 
+================================================================================
+Module Version : 7.4 10026
+----------------
+Date : 02-Jul-2010
+----------------
+Change Order : 9780676
+----------------
+Short Description:
+----------------
+System products will be populated even if there is no rating product.
+================================================================================
+Module Version : 7.4 10025
+----------------
+Date : 06-Apr-2010
+---------------
+
+Change Order : 9504428
+---------------
+
+Short Description :
+----------------
+Filter set plugin was not adding any system discounts, if any one system discount is having problem.
+========================================================================================
+Module Version: 10024  7.4 05-Jun-2009
+bug8543061 7.4 IMPLEMENTED RELOAD SEMAPHORE FOR FCT_FILTER_SET 
+========================================================================================
+Module Version: 10023  7.4 22-Dec-2008
+bug7661566 7.4 PIPELINE BUILD FAILING FOR FCT  FILTER SET COMPONENT 
+Called BAS::String function data() to convert BAS::String to const char* instead of direct
+typecasting.
+========================================================================================
+Module Version: 10022  7.4 16-Dec-2008
+bug7623837:P-7359095 FILTER_SET CONDITION DEPENDENT ON THE EDR FIELD ORDER
+using edrIndex get the name to search for in FSM
+========================================================================================
+Module Version: 10021  7.4 28-Nov-2008
+bug7558559: while using filter_set, every time a cdr is processed, a major error is logged
+            when the rules do not match. 
+========================================================================================
+Module Version: 10020  7.3.1 29-Sep-2007
+bug6454774: pipeline_rating fail due to type mismatch 
+========================================================================================
+Module Version: 10019  7.3.1 13-Sep-2007
+BUG6362633: Reasoning fixes for FilterSet PlugIn
+========================================================================================
+Module Version: 10018  DaVinci 20-Jul-2006
+PRSF00213711: Fixed memory leaks and uninitialized variable access.
+========================================================================================
+Module Version: 10017  DaVinci 05-July-2006
+PRSF00219258: Set isValidDetail false when set an error. 
+========================================================================================
+Module Version: 10016  New_Pipeline_Velocity  29-June-2006 Meera Sundaram 
+PRSF00213575: Reasoning: S-060323-0123  Buffer Overflow
+
+========================================================================================
+Module Version: 10015  New_Pipeline_Velocity  21-Feb-2006  Louis Piro
+PRSF00187903: Replace NodeLocation with OfferingPoid.
+
+========================================================================================
+Module Version: 10014  New_Pipeline_Velocity  11-Apr-2005  Ashwani Kumar
+PRSF00163202: W2_PPL_PKH+ Promotional Overlay doesnt work as described in FNS.
+
+========================================================================================
+
+Module Version:  10013  pipeline_velocity  23-Feb-2005
+PRSF00154383  :  EBF 03325 Repost 2 (jumbo patch) : ifw core dumps if filter_set is set to true.
+
+========================================================================================
+
+Module Version:  10012  pipeline_velocity  15-Feb-2005
+PRSF00154384  :  Regression:PCR3 : System Products not added by FilterSet if the EDR matching 
+                 criteria is DETAIL.CHARGING_START_TIMESTAMP
+
+========================================================================================
+
+Module Version: 10011  6.7_FP2  24-Nov-2004
+PRSF00141766:  Regression: Pipeline Hangs if the Filter set created has filteration criteria such as
+               DETAIL.ASS_GPRS_EXT.RECORD_TYPE
+
+========================================================================================
+
+Module Version: 10010  6.7_FP2  06-Oct-2004
+PRSF00133776:  Non reentrant Unix function calls should be replaced by corrsponding reentrant versions
+
+========================================================================================
+
+Module Version: 10009  6.7_FP2  14-Sept-2004
+PRSF00131401:  PCR3: Change IntegrateConnection to InfranetConnection for Filter_Set registry entry field.
+
+========================================================================================
+
+Module Version: 10008  6.7_FP2  10-Sept-2004
+PRSF00127027:  Implementation for Realtime Pipeline to support the Filter_SetPlugIn.
+
+========================================================================================
+
+Module Version: 10007  6.7_FP2  02-Sept-2004
+PRSF00125747:  PCR3: Create a function call for 4 copies of same code.
+
+========================================================================================
+Module Version: 10006  6.7_FP2  10-Aug-2004
+PRSF00125535:  PCR3: Filter_set is not supporting for the edr field name depth of 6.
+
+========================================================================================
+Module Version: 10005  6.7_FP2  03-Aug-2004
+PRSF00124515:  Fix a bug in FCT_DiscountAnalysis wrt to Fliter Set and setting qty index.
+
+========================================================================================
+
+Module Version: 10004  6.7_FP2  05-Aug-2004
+PRSF00124742: PCR3: System Discount is applied twice if the EDR matching criteria is satisfied for two filter sets.
+
+========================================================================================
+Module Version: 10003  6.7_FP2  04-Aug-2004
+PRSF00124521: PCR3: Balance impact is not generated if the base product has to be 
+                    choosed and filterset is set to TRUE.
+
+========================================================================================
+Module Version: 10002  6.7_FP2  26-Jul-2004
+PRSF00123068: PCR3: FCT_Filter_Set sholuld add system products and disconts which is matching for that filterset id.
+
+========================================================================================
+
+Module Version: 10001  6.7_FP2  18-Jul-2004
+PRSF00119469: Remove the parser from the FilterSetPlugIn to improve the performance.
+
+========================================================================================
+
+Module Version: 10000  6.7_FP2  22-Jun-2004
+PRSF00103291: New Filter_Set plugin for V-PAC Product catalog release 3.
+
+========================================================================================

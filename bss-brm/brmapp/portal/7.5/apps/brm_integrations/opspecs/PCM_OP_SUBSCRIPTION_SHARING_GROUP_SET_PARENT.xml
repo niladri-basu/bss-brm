@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Opcode component="fm_subscription"
+        name="PCM_OP_SUBSCRIPTION_SHARING_GROUP_SET_PARENT"
+        transaction="required" visibility="public"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd">
+  <Doc>PCM_OP_SUBSCRIPTION_SHARING_GROUP_SET_PARENT input and output flist
+       specifications. This opcode changes the owner of a discount sharing
+       group, charge sharing group, profile sharing group, or monitor sharing
+       group.</Doc>
+  <!-- INPUT SPEC  -->
+  <Input>
+    <Fields>
+      <Poid mode="complete" name="PIN_FLD_POID" use="required">
+        <Doc>Current Account owner of the group.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Poid mode="complete" name="PIN_FLD_GROUP_OBJ" use="required">
+        <Doc>The sharing group object for this action</Doc>
+        <ClassRef>obj://group</ClassRef>
+      </Poid>
+      <Poid mode="complete" name="PIN_FLD_ACCOUNT_OBJ" use="required">
+        <Doc>New Account owner of the group.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Poid mode="complete" name="PIN_FLD_PARENT" use="required">
+        <Doc>New Parent object for the group object, it can be either an account
+             object or a service object. Its currency should match the currency
+             of the old parent and should not have a cyclic relationship (checks
+             one level only) with any of the group members. The currency of old
+             parent and new parent need not be same for /group/sharing/profiles
+             object.</Doc>
+        <ClassRef>obj://account</ClassRef>
+        <ClassRef>obj://service</ClassRef>
+      </Poid>
+      <Poid mode="complete" name="PIN_FLD_BAL_GRP_OBJ" use="required">
+        <Doc>New balance group object for the group. This field is optional for
+             /group/sharing/profiles object.</Doc>
+        <ClassRef>obj://balance_group</ClassRef>
+      </Poid>
+      <String maxlen="255" name="PIN_FLD_PROGRAM_NAME" use="optional">
+        <Doc>Name of program invoking this opcode, to be recorded in /event.</Doc>
+      </String>
+      <String maxlen="255" name="PIN_FLD_DESCR" use="optional">
+        <Doc>Description text to be recorded in /event</Doc>
+      </String>
+      <Array elemIdMode="index" iterationOrder="undefined"
+             name="PIN_FLD_DISCOUNTS" use="optional">
+        <Doc>List of discount instances (only if the input poid-type is a
+             /group/sharing/discounts) of the new parent. If no discounts is
+             passed an empty discounts array element is attached.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_DISCOUNT_OBJ" use="required">
+            <Doc>Discount object reference.</Doc>
+            <ClassRef>obj://discount</ClassRef>
+          </Poid>
+          <Poid mode="complete" name="PIN_FLD_OFFERING_OBJ" use="required">
+            <Doc>Uniquely identifies a discount in an account.</Doc>
+            <ClassRef>obj://purchased_discount</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+      <Array elemIdMode="index" iterationOrder="undefined"
+             name="PIN_FLD_PROFILES" use="optional">
+        <Doc>List of profile instances (only if the input poid-type is a
+             /group/sharing/profiles) of the new parent.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_PROFILE_OBJ" use="required">
+            <Doc>Profile object reference.</Doc>
+            <ClassRef>obj://profile</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+    </Fields>
+  </Input>
+  <!-- OUTPUT SPEC  -->
+  <Output>
+    <Fields>
+      <Poid mode="complete" name="PIN_FLD_POID" use="required">
+        <Doc>Poid of the group sharing object modified.</Doc>
+        <ClassRef>obj://group</ClassRef>
+      </Poid>
+      <Array elemIdMode="ignored" iterationOrder="undefined"
+             name="PIN_FLD_RESULTS" use="optional">
+        <Doc>Array of results information.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_POID" use="required">
+            <Doc>Poid of the event object created</Doc>
+            <ClassRef>obj://event</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+    </Fields>
+  </Output>
+</Opcode>

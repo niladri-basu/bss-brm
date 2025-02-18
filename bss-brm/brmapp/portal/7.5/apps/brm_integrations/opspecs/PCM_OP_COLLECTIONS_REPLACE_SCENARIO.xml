@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<!--  $Header: optional_mgrs_vob/collections/opcodes/fm_collections/op_specs/PCM_OP_COLLECTIONS_REPLACE_SCENARIO.xml /cgbubrm_2.0.0.collections/2 2012/06/12 01:33:15 rpradyum Exp $ -->
+
+<!-- 
+ Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved. 
+
+   NAME
+     PCM_OP_COLLECTIONS_REPLACE_SCENARIO.xml 
+
+   DESCRIPTION
+     Replaces current collections scenario for a billinfo with a new scenario.
+-->
+<Opcode name="PCM_OP_COLLECTIONS_REPLACE_SCENARIO"
+                visibility="public"
+                transaction="required"
+                component="fm_collections"
+                xmlns:h="http://www.w3.org/1999/xhtml"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+                xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+        <Doc>
+                Replaces current collections scenario for a billinfo with a new scenario.
+        </Doc>
+        <Input>
+                <Fields>
+                        <Poid name="PIN_FLD_POID" use="required"
+                                        mode="complete">
+                                <Doc>The account poid</Doc>
+                                <ClassRef>obj://account</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+                                        mode="complete">
+                                <Doc> The billinfo poid</Doc>
+                                <ClassRef>obj://billinfo</ClassRef>
+                        </Poid>
+                        <String name="PIN_FLD_PROGRAM_NAME" use="required"
+                                        maxlen="255">
+                                <Doc> The program name</Doc>
+                        </String>
+			<Substruct name="PIN_FLD_REPLACE_SCENARIO_INFO" use="required"
+				isRecursive="false">
+				<Doc> Scenario replacement info substructure</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_FROM_OBJ" use="optional"
+						mode="complete">
+						<Doc> Current config collections scenario poid </Doc>
+						<ClassRef>obj://config.collections.scenario</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_TO_OBJ" use="optional"
+						mode="complete">
+						<Doc> New config collections scenario poid</Doc>
+						<ClassRef>obj://config.collections.scenario</ClassRef>
+					</Poid>
+					<Enum name="PIN_FLD_SCHEDULE_MODE" use="required">
+						<Doc> Collections action scheduling mode during scenario
+						 replacement, could be one of the following values:
+						<h:ul>
+							<h:li>0 - PIN_ACTION_SCHEDULE_BILL_DUE_DATE.</h:li>
+							<h:li>1 - PIN_ACTION_SCHEDULE_USER_DATE.</h:li>
+						</h:ul>
+						</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_ACTION_SCHEDULE_BILL_DUE_DATE.</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc> PIN_ACTION_SCHEDULE_USER_DATE.</Doc>
+						</Values>
+					</Enum>
+					<Timestamp name="PIN_FLD_SCHEDULE_T" use="optional">
+						<Doc> Date with reference to which the new scenario actions are to
+						be scheduled. If mode is PIN_ACTION_SCHEDULE_USER_DATE and no date 
+						is specified, current date will be considered. Else, specified date 
+						is considered. If mode is PIN_ACTION_SCHEDULE_BILL_DUE_DATE, this
+						field has no significance.
+						</Doc>
+					</Timestamp>
+					<Int name="PIN_FLD_FLAGS" use="optional">
+						<Doc> Specifies whether to consider scenario entry dates also while 
+						calculating due date for new scenario actions.
+						Values: 0 . Ignore new scenario entry days (default)
+							1- Consider new scenario entry days </Doc>
+					</Int>
+				</Fields>
+			</Substruct>
+                </Fields>
+        </Input>
+        <Output>
+                <Fields>
+                        <Poid name="PIN_FLD_POID" use="required"
+                                        mode="complete">
+                                <Doc>The account poid</Doc>
+                                <ClassRef>obj://account</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+                                        mode="complete">
+                                <Doc> The billinfo poid</Doc>
+                                <ClassRef>obj://billinfo</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_SCENARIO_OBJ" use="required"
+                                        mode="complete">
+                                <Doc> New scenario poid</Doc>
+                                <ClassRef>obj://collections_scenario</ClassRef>
+                        </Poid>
+                </Fields>
+        </Output>
+</Opcode>

@@ -1,0 +1,16 @@
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,0,'/accounttool/collections/agent',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,1,'/accounttool/collections/manager',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,2,'/appcenter/collectioncenter',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,3,'/collectionapps/collections/actionhistory',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,4,'/collectionapps/collections/assign',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,5,'/collectionapps/collections/changestatus',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,6,'/collectionapps/collections/chargeCC',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,7,'/collectionapps/collections/exempt',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,8,'/collectionapps/collections/insert',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,9,'/collectionapps/collections/maskcarddetails',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,10,'/collectionapps/collections/newcard',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,11,'/collectionapps/collections/promisetopay',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,12,'/collectionapps/collections/removeexempt',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,13,'/collectionapps/collections/reschedule',0,0,2);
+Insert into service_admin_permitteds_t (OBJ_ID0,REC_ID,ACTION,MAXIMUM,MINIMUM,TYPE) values (58421,14,'/collectionapps/collections/updatepayment',0,0,2);
+commit;

@@ -1,0 +1,250 @@
+<Opcode name="PCM_OP_BAL_GET_ACCT_BILLINFO"
+visibility="public"
+transaction="required"
+component="fm_bal"
+xmlns:h="http://www.w3.org/1999/xhtml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>
+Returns the main contact information for an account, and a list of the account's /billinfo objects with the default /billinfo marked.
+</Doc>
+<Input>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>The account poid for which to get the results</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+</Fields>
+</Input>
+<Output>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>The Account poid</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Array name="PIN_FLD_NAMEINFO" use="required"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="1" maxElements="1"
+minElemId="1" maxElemId="1"
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="false" allowedElemIds="1">
+<Doc>  Name / Address info. The element-id of the element defines the contact type for some predefined  values. 1 is here to indicate the billing address </Doc>
+<Fields>
+<String name="PIN_FLD_SALUTATION" use="optional"
+maxlen="75">
+<Doc> Mr. or Mrs. or Ms.</Doc>
+</String>
+<String name="PIN_FLD_LAST_NAME" use="optional"
+maxlen="90">
+<Doc> Last name</Doc>
+</String>
+<String name="PIN_FLD_LAST_CANON" use="optional"
+maxlen="90">
+<Doc>Last Canon </Doc>
+</String>
+<String name="PIN_FLD_FIRST_NAME" use="optional"
+maxlen="90">
+<Doc> First name</Doc>
+</String>
+<String name="PIN_FLD_FIRST_CANON" use="optional"
+maxlen="90">
+<Doc>First Canon </Doc>
+</String>
+<String name="PIN_FLD_MIDDLE_NAME" use="optional"
+maxlen="90">
+<Doc> Middle name</Doc>
+</String>
+<String name="PIN_FLD_MIDDLE_CANON" use="optional"
+maxlen="90">
+<Doc>Middle Canon </Doc>
+</String>
+<String name="PIN_FLD_TITLE" use="optional"
+maxlen="90">
+<Doc> Job title</Doc>
+</String>
+<String name="PIN_FLD_COMPANY" use="optional"
+maxlen="90">
+<Doc> Company affiliation</Doc>
+</String>
+<String name="PIN_FLD_CANON_COMPANY" use="optional"
+maxlen="90">
+<Doc>Canon Company </Doc>
+</String>
+<String name="PIN_FLD_ADDRESS" use="optional"
+maxlen="255">
+<Doc> Street address</Doc>
+</String>
+<String name="PIN_FLD_CITY" use="optional"
+maxlen="90">
+<Doc> City</Doc>
+</String>
+<String name="PIN_FLD_STATE" use="optional"
+maxlen="90">
+<Doc> State / Province</Doc>
+</String>
+<String name="PIN_FLD_ZIP" use="optional"
+maxlen="60">
+<Doc> Zip / Postal code</Doc>
+</String>
+<String name="PIN_FLD_COUNTRY" use="optional"
+maxlen="60">
+<Doc> Country</Doc>
+</String>
+<String name="PIN_FLD_CANON_COUNTRY" use="optional"
+maxlen="255">
+<Doc>Canon Country </Doc>
+</String>
+<String name="PIN_FLD_EMAIL_ADDR" use="optional"
+maxlen="1023">
+<Doc> Email address for this person</Doc>
+</String>
+<String name="PIN_FLD_CONTACT_TYPE" use="optional"
+maxlen="255">
+<Doc> Contact type comment for this person (for undefined element-ids)</Doc>
+</String>
+<Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+mode="complete">
+<Doc> service object, not yet implemented</Doc>
+<ClassRef>obj://service</ClassRef>
+</Poid>
+<Array name="PIN_FLD_PHONES" use="optional"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="0" maxElements="7"
+minElemId="1" maxElemId="7"
+isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+isRecursive="true" allowedElemIds="256">
+<Doc> Phone array</Doc>
+<Fields>
+<Enum name="PIN_FLD_TYPE" use="optional">
+<Doc> Phone types defined by Infranet are Home (1), Work (2), Fax (3), Pager (4), Portable (5), POP (6), Support (7).</Doc>
+<Values>
+<Value></Value>
+<Doc></Doc>
+</Values>
+</Enum>
+<String name="PIN_FLD_PHONE" use="required"
+maxlen="75">
+<Doc> Phone Number</Doc>
+</String>
+</Fields>
+</Array>
+</Fields>
+</Array>
+<Array name="PIN_FLD_BILLINFO" use="optional"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="0" 
+minElemId="0" 
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="false" allowedElemIds="0">
+<Doc> The results array have the information of billinfo </Doc>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc> Billinfo poid</Doc>
+<ClassRef>obj://billinfo</ClassRef>
+</Poid>
+<String name="PIN_FLD_BILLINFO_ID" use="required"
+maxlen="60">
+<Doc> The billinfo id</Doc>
+</String>
+<Poid name="PIN_FLD_BILL_OBJ" use="required"
+mode="complete">
+<Doc> The current bill object for this billinfo</Doc>
+<ClassRef>obj://bill</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_AR_BILLINFO_OBJ" use="required"
+mode="complete">
+<Doc> The AR billinfo object for this billinfo</Doc>
+<ClassRef>obj://billinfo</ClassRef>
+</Poid>
+<Timestamp name="PIN_FLD_LAST_BILL_T" use="required">
+<Doc> The current billing cycle start time</Doc>
+</Timestamp>
+<Timestamp name="PIN_FLD_NEXT_BILL_T" use="required">
+<Doc> The current billing cycle end time</Doc>
+</Timestamp>
+<Int name="PIN_FLD_CURRENCY" use="required">
+<Doc> Currency associated with Amount</Doc>
+</Int>
+<Int name="PIN_FLD_CURRENCY_SECONDARY" use="required">
+<Doc> Second currency associated with Amount.</Doc>
+</Int>
+<Enum name="PIN_FLD_PAY_TYPE" use="required">
+<Doc>The pay_type defined in pin_pymt.h</Doc>
+<Values>
+<Value>0</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10000</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10001</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10002</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10003</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10004</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10005</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10006</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10007</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10011</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10012</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10013</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10014</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10015</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10016</Value>
+<Doc> </Doc>
+</Values>
+<Values>
+<Value>10017</Value>
+<Doc> </Doc>
+</Values>
+</Enum>
+<Int name="PIN_FLD_FLAGS" use="required">
+<Doc> The flags indicating whether a billinfo is the account default</Doc>
+</Int>
+</Fields>
+</Array>
+</Fields>
+</Output>
+</Opcode>

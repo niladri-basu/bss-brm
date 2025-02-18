@@ -1,0 +1,20 @@
+-------------------------------------------------------------------
+PORTAL Infranet - Pipeline Plugin Development Kit (PDK)
+-------------------------------------------------------------------
+
+ Copyright (c) 1996, 2011, Oracle and/or its affiliates. All rights reserved. 
+
+This material is the confidential property of Oracle Corporation or its
+licensors and may be used, reproduced, stored or transmitted only in
+accordance with a valid Oracle license or sublicense agreement.
+
+Please refer to wireless.readme for basic instructions.
+
+Purpose of router related reg files is mentioned below
+
+acc_router.reg - for plain (schema) router (no TimesTen Logical Partitioning)
+acc_post_router_schema1.reg - sample for schema 1 to be processed for rating after it is splitted from pipeline using acc_router.reg
+acc_router_tt.reg - for (schema) router with TimesTen Logical Partitioning
+acc_post_router_schema1_tt.reg - sample for schema 1 to be processed for rating after it is splitted from pipeline using acc_router_tt.reg
+
+  

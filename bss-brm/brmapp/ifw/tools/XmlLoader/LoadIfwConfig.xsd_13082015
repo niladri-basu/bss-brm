@@ -1,0 +1,3782 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="DECIMAL_9_0">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="9"/>
+			<xs:fractionDigits value="0"/>
+			<xs:minExclusive value="-1000000000"/>
+			<xs:maxExclusive value="1000000000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VARCHAR_4000">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="4000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CUSTOM_CODE_TYPE">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CHAR_2000">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DATE">
+		<xs:restriction base="xs:dateTime">
+			<xs:minInclusive value="-4712-01-01T00:00:00"/>
+			<xs:maxInclusive value="9999-12-31T23:59:59"/>
+			<xs:pattern value="\p{Nd}{4}-\p{Nd}{2}-\p{Nd}{2}T\p{Nd}{2}:\p{Nd}{2}:\p{Nd}{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DECIMAL_1_0">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="1"/>
+			<xs:fractionDigits value="0"/>
+			<xs:minExclusive value="-10"/>
+			<xs:maxExclusive value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BLOB_4294967295">
+		<xs:restriction base="xs:base64Binary">
+			<xs:maxLength value="294967295"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DECIMAL_3_0">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="3"/>
+			<xs:fractionDigits value="0"/>
+			<xs:minExclusive value="-1000"/>
+			<xs:maxExclusive value="1000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DECIMAL_38_0">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="38"/>
+			<xs:fractionDigits value="38"/>
+			<xs:minExclusive value="-100000000000000000000000000000000000000"/>
+			<xs:maxExclusive value="100000000000000000000000000000000000000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DECIMAL_18_0">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="18"/>
+			<xs:fractionDigits value="0"/>
+			<xs:minExclusive value="-1000000000000000000"/>
+			<xs:maxExclusive value="1000000000000000000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CLOB_2147483647">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2147483647"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DECIMAL_15_0">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="15"/>
+			<xs:fractionDigits value="0"/>
+			<xs:minExclusive value="-1000000000000000"/>
+			<xs:maxExclusive value="1000000000000000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BLOB_2000">
+		<xs:restriction base="xs:base64Binary">
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DECIMAL_4_0">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="4"/>
+			<xs:fractionDigits value="0"/>
+			<xs:minExclusive value="-10000"/>
+			<xs:maxExclusive value="10000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RowType_IFW_AGGREGATION">
+		<xs:sequence/>
+		<xs:attribute name="AGGREGATION_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SCENARIO_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="FIELD_ID" type="DECIMAL_9_0"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="COL_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="PRECISIONDIGITS" type="DECIMAL_9_0"/>
+		<xs:attribute name="FUNC" type="CHAR_2000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_ALIAS_MAP">
+		<xs:sequence/>
+		<xs:attribute name="EDRC_DESC" type="VARCHAR_4000"/>
+		<xs:attribute name="REFERENCE" type="VARCHAR_4000"/>
+		<xs:attribute name="KEY_ID" type="VARCHAR_4000"/>
+		<xs:attribute name="TYPE" type="CHAR_2000"/>
+		<xs:attribute name="FIELD_ID" type="DECIMAL_9_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_APN_GROUP">
+		<xs:sequence/>
+		<xs:attribute name="APN_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_APN_MAP">
+		<xs:sequence/>
+		<xs:attribute name="APN_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="ACCESSPOINTNAME" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONE_WS" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONE_RT" type="VARCHAR_4000"/>
+		<xs:attribute name="PDP_ADDRESS" type="VARCHAR_4000"/>
+		<xs:attribute name="NEW_ZONE_WS" type="VARCHAR_4000"/>
+		<xs:attribute name="NEW_ZONE_RT" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CALENDAR">
+		<xs:sequence/>
+		<xs:attribute name="CALENDAR" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CIBER_OCC">
+		<xs:sequence/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="GEN_RECORD" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CLASS">
+		<xs:sequence/>
+		<xs:attribute name="CLASS_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="DATATYPE" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CLASSCON">
+		<xs:sequence/>
+		<xs:attribute name="CLASSCON_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NODE_GRPG_CNF_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NEXT_GRPG_CNF_ID" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CLASSCON_LNK">
+		<xs:sequence/>
+		<xs:attribute name="CLASSCON_ID" type="DECIMAL_9_0"/>
+		<xs:attribute name="CLASSITEM_ID" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CLASSITEM">
+		<xs:sequence/>
+		<xs:attribute name="CLASSITEM_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="DATATYPE" type="CHAR_2000"/>
+		<xs:attribute name="VALUE" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CLASS_LNK">
+		<xs:sequence/>
+		<xs:attribute name="CLASS_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CLASSITEM_ID" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CONDITION">
+		<xs:sequence/>
+		<xs:attribute name="CONDITION_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SCENARIO_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="FIELD_ID" type="DECIMAL_9_0"/>
+		<xs:attribute name="VALUE" type="VARCHAR_4000"/>
+		<xs:attribute name="DATATYPE" type="CHAR_2000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_CURRENCY">
+		<xs:sequence/>
+		<xs:attribute name="CURRENCY" type="VARCHAR_4000"/>
+		<xs:attribute name="CURRENCY_ID" type="DECIMAL_3_0"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DAYCODE">
+		<xs:sequence/>
+		<xs:attribute name="DAYCODE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="DATEDAY" type="DATE"/>
+		<xs:attribute name="MONDAY" type="DECIMAL_1_0"/>
+		<xs:attribute name="TUESDAY" type="DECIMAL_1_0"/>
+		<xs:attribute name="WEDNESDAY" type="DECIMAL_1_0"/>
+		<xs:attribute name="THURSDAY" type="DECIMAL_1_0"/>
+		<xs:attribute name="FRIDAY" type="DECIMAL_1_0"/>
+		<xs:attribute name="SATURDAY" type="DECIMAL_1_0"/>
+		<xs:attribute name="SUNDAY" type="DECIMAL_1_0"/>
+		<xs:attribute name="HOLIDAY" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DBVERSION">
+		<xs:sequence/>
+		<xs:attribute name="DBVERSION" type="VARCHAR_4000"/>
+		<xs:attribute name="DESCRIPTION" type="VARCHAR_4000"/>
+		<xs:attribute name="USERNAME" type="VARCHAR_4000"/>
+		<xs:attribute name="INSTALL_DATE" type="DATE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DESTINDESC">
+		<xs:sequence/>
+		<xs:attribute name="AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="TYPE" type="CHAR_2000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DICTIONARY">
+		<xs:sequence/>
+		<xs:attribute name="IMPORT_TABLE" type="VARCHAR_4000"/>
+		<xs:attribute name="IMPORT_COLUMN" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTINATION_COLUMN" type="VARCHAR_4000"/>
+		<xs:attribute name="EXPAND_VALUE" type="VARCHAR_4000"/>
+		<xs:attribute name="KEY_ID" type="DECIMAL_1_0"/>
+		<xs:attribute name="COLUMN_GROUP" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DISCARDING">
+		<xs:sequence/>
+		<xs:attribute name="PIPELINE" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="RECORDTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="SOURCE_NETWORK" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTIN_NETWORK" type="VARCHAR_4000"/>
+		<xs:attribute name="CALL_COMPLETION" type="VARCHAR_4000"/>
+		<xs:attribute name="LONG_DURATION" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SWITCH" type="VARCHAR_4000"/>
+		<xs:attribute name="TARIFFCLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="TARIFFSUBCLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="CONNECTTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="CONNECTSUBTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="B_NUMBER" type="VARCHAR_4000"/>
+		<xs:attribute name="MAX_AGE" type="DECIMAL_9_0"/>
+		<xs:attribute name="WS_NULL" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DISCOUNTDETAIL">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTMASTER" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="VALID_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONEMODEL" type="VARCHAR_4000"/>
+		<xs:attribute name="IMPACT_CATEGORY" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGETYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="TIMEMODEL" type="VARCHAR_4000"/>
+		<xs:attribute name="TIMEZONE" type="VARCHAR_4000"/>
+		<xs:attribute name="PRICEMODEL" type="VARCHAR_4000"/>
+		<xs:attribute name="RESSOURCE" type="VARCHAR_4000"/>
+		<xs:attribute name="RUM" type="VARCHAR_4000"/>
+		<xs:attribute name="RECORDTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="RATE_PLAN" type="VARCHAR_4000"/>
+		<xs:attribute name="RATE_TAG" type="VARCHAR_4000"/>
+		<xs:attribute name="GLID" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DISCOUNTMASTER">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTMASTER" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DISCOUNTMODEL">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="CHARGESHARE_FLAG" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DISCOUNTRULE">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTRULE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DISCOUNTMASTER" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="DRUM_EXPRESSION" type="VARCHAR_4000"/>
+		<xs:attribute name="RULE_TYPE" type="CHAR_2000"/>
+		<xs:attribute name="DRUM_TYPE" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DISCOUNTSTEP">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTSTEP" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="DISCOUNTRULE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="THRESHOLD_FROM" type="DECIMAL_38_0"/>
+		<xs:attribute name="THRESHOLD_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="PRORATE_PURCHASE" type="DECIMAL_9_0"/>
+		<xs:attribute name="PRORATE_CANCEL" type="DECIMAL_9_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DSCBALIMPACT">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTBALIMPACT" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DISCOUNTSTEP" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="RESOURCE_ID" type="DECIMAL_9_0"/>
+		<xs:attribute name="GRANT_PRORATEDBEAT" type="DECIMAL_1_0"/>
+		<xs:attribute name="GRANT_UNITS" type="DECIMAL_38_0"/>
+		<xs:attribute name="GRANT_BEAT" type="DECIMAL_38_0"/>
+		<xs:attribute name="BASE_EXPRESSION" type="VARCHAR_4000"/>
+		<xs:attribute name="IMPACT_CATEGORY" type="VARCHAR_4000"/>
+		<xs:attribute name="EVENT_BALANCE_ID" type="DECIMAL_9_0"/>
+		<xs:attribute name="DISCOUNT_OWNER_FLAG" type="CHAR_2000"/>
+		<xs:attribute name="GRANT_VALID_FROM" type="DATE"/>
+		<xs:attribute name="GRANT_VALID_TO" type="DATE"/>
+		<xs:attribute name="GRANT_PERIOD_OFFSET" type="DECIMAL_9_0"/>
+		<xs:attribute name="GRANT_PERIOD_UNIT" type="DECIMAL_38_0"/>
+		<xs:attribute name="FIRST_USAGE" type="DECIMAL_38_0"/>
+		<xs:attribute name="DISCOUNT_TYPE" type="CHAR_2000"/>
+		<xs:attribute name="TAX_CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="GLID" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DSCCONDITION">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTCONDITION" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DISCOUNTTRIGGER" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="COND_EXPRESSION" type="VARCHAR_4000"/>
+		<xs:attribute name="COND_OPERATOR" type="VARCHAR_4000"/>
+		<xs:attribute name="CONDITION_VALUE" type="DECIMAL_38_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DSCMDL_CNF">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTCONFIG" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DISCOUNTMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VERSION" type="DECIMAL_9_0"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="DISCOUNTTRIGGER" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DISCOUNTRULE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DSC_MODE" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DSCMDL_VER">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VERSION" type="DECIMAL_9_0"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_DSCTRIGGER">
+		<xs:sequence/>
+		<xs:attribute name="DISCOUNTTRIGGER" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_EDRC_DESC">
+		<xs:sequence/>
+		<xs:attribute name="EDRC_DESC" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_EDRC_FIELD">
+		<xs:sequence/>
+		<xs:attribute name="FIELD_ID" type="DECIMAL_9_0"/>
+		<xs:attribute name="EDRC_DESC" type="VARCHAR_4000"/>
+		<xs:attribute name="FIELD_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="TYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="DESCRIPTION" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_EXCHANGE_RATE">
+		<xs:sequence/>
+		<xs:attribute name="FROM_CURRENCY" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="TO_CURRENCY" type="VARCHAR_4000"/>
+		<xs:attribute name="EXCHANGE_RATE" type="DECIMAL_38_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_GEOAREA_LNK">
+		<xs:sequence/>
+		<xs:attribute name="GEOMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="LONGITUDE" type="DECIMAL_38_0"/>
+		<xs:attribute name="LATITUDE" type="DECIMAL_38_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_GEO_MODEL">
+		<xs:sequence/>
+		<xs:attribute name="GEOMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+		<xs:attribute name="RULESET" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_GEO_ZONE">
+		<xs:sequence/>
+		<xs:attribute name="ZONEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DESCRIPTION" type="VARCHAR_4000"/>
+		<xs:attribute name="DISTANCE" type="DECIMAL_38_0"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="ZONE_WS" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONE_RT" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="ALT_ZONEMODEL" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_GLACCOUNT">
+		<xs:sequence/>
+		<xs:attribute name="GLACCOUNT" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="TAXCODE" type="VARCHAR_4000"/>
+		<xs:attribute name="GLA_TYPE" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_GROUPING">
+		<xs:sequence/>
+		<xs:attribute name="GROUPING_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SCENARIO_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="FIELD_ID" type="DECIMAL_9_0"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="COL_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="COL_FORMAT" type="VARCHAR_4000"/>
+		<xs:attribute name="DATATYPE" type="CHAR_2000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_GROUPING_CNF">
+		<xs:sequence/>
+		<xs:attribute name="GROUPING_CNF_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="GROUPING_ID" type="DECIMAL_9_0"/>
+		<xs:attribute name="CLASS_ID" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_HOLIDAY">
+		<xs:sequence/>
+		<xs:attribute name="CALENDAR" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="HOLIDAY" type="DATE"/>
+		<xs:attribute name="RECURRING" type="DECIMAL_1_0"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_ICPRODUCT">
+		<xs:sequence/>
+		<xs:attribute name="ICPRODUCT" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_ICPRODUCT_CNF">
+		<xs:sequence/>
+		<xs:attribute name="NETWORKMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="ICPRODUCT_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="SOURCE_NETWORK" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTIN_NETWORK" type="VARCHAR_4000"/>
+		<xs:attribute name="ORIGIN_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTIN_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="TRANSIT_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="RECORDTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="ICPRODUCT" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_ICPRODUCT_GRP">
+		<xs:sequence/>
+		<xs:attribute name="NETWORKMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="ICPRODUCT_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_ICPRODUCT_RATE">
+		<xs:sequence/>
+		<xs:attribute name="NETWORKMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="ICPRODUCT" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="ZONE_DIRECTION" type="CHAR_2000"/>
+		<xs:attribute name="ZONE_TYPE" type="CHAR_2000"/>
+		<xs:attribute name="BILL_DIRECTION" type="CHAR_2000"/>
+		<xs:attribute name="RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="ALT_RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="FIXCOST" type="DECIMAL_38_0"/>
+		<xs:attribute name="PIN_LOGIN_ALIAS" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_IMPACT_CAT">
+		<xs:sequence/>
+		<xs:attribute name="IMPACT_CATEGORY" type="VARCHAR_4000"/>
+		<xs:attribute name="RESULT" type="VARCHAR_4000"/>
+		<xs:attribute name="TYPE" type="DECIMAL_1_0"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_ISCRIPT">
+		<xs:sequence/>
+		<xs:attribute name="SCRIPTCODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="SCRIPT" type="CLOB_2147483647"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_MAP_GROUP">
+		<xs:sequence/>
+		<xs:attribute name="MAP_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_MODEL_SELECTOR">
+		<xs:sequence/>
+		<xs:attribute name="MODEL_SELECTOR" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="TYPE" type="CHAR_2000"/>
+		<xs:attribute name="TAILORMADE" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_NETWORKMODEL">
+		<xs:sequence/>
+		<xs:attribute name="NETWORKMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="CALCMODE" type="CHAR_2000"/>
+		<xs:attribute name="MODELTYPE" type="CHAR_2000"/>
+		<xs:attribute name="USE_SWITCH" type="DECIMAL_1_0"/>
+		<xs:attribute name="USE_FIXCOST" type="DECIMAL_1_0"/>
+		<xs:attribute name="SYSTEM_BRAND" type="VARCHAR_4000"/>
+		<xs:attribute name="RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CURRENCY" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_NETWORKOPER">
+		<xs:sequence/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="NOTYPE" type="CHAR_2000"/>
+		<xs:attribute name="CAC" type="VARCHAR_4000"/>
+		<xs:attribute name="CIC" type="VARCHAR_4000"/>
+		<xs:attribute name="PLMN_ID" type="VARCHAR_4000"/>
+		<xs:attribute name="TADIG" type="VARCHAR_4000"/>
+		<xs:attribute name="CURRENCY" type="VARCHAR_4000"/>
+		<xs:attribute name="TAXGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="TAXFLAG" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_NOPRODUCT">
+		<xs:sequence/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="PRODUCTCODE" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="CURRENCY" type="VARCHAR_4000"/>
+		<xs:attribute name="TAXCODE" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_NOPRODUCT_CNF">
+		<xs:sequence/>
+		<xs:attribute name="ICPRODUCT" type="VARCHAR_4000"/>
+		<xs:attribute name="TIMEZONE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="IMPACT_CATEGORY" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="PRODUCTCODE" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_NOSP">
+		<xs:sequence/>
+		<xs:attribute name="MAP_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="OLD_SOURCE" type="VARCHAR_4000"/>
+		<xs:attribute name="OLD_DESTINATION" type="VARCHAR_4000"/>
+		<xs:attribute name="A_PREFIX" type="VARCHAR_4000"/>
+		<xs:attribute name="NEW_SOURCE" type="VARCHAR_4000"/>
+		<xs:attribute name="NEW_DESTINATION" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_NO_BILLRUN">
+		<xs:sequence/>
+		<xs:attribute name="NETWORKMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="BILLRUN" type="VARCHAR_4000"/>
+		<xs:attribute name="BOC_DATE" type="DATE"/>
+		<xs:attribute name="EOC_DATE" type="DATE"/>
+		<xs:attribute name="BILLRUN_DATE" type="DATE"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_PIPELINE">
+		<xs:sequence/>
+		<xs:attribute name="PIPELINE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="EDRC_DESC" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_POI">
+		<xs:sequence/>
+		<xs:attribute name="POI" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="UTC_TIME_OFFSET" type="VARCHAR_4000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_POIAREA_LNK">
+		<xs:sequence/>
+		<xs:attribute name="NETWORKMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="POI" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_PRICEMDL_STEP">
+		<xs:sequence/>
+		<xs:attribute name="PRICEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="ENTRYDATE" type="DATE"/>
+		<xs:attribute name="RESOURCE_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="RUM" type="VARCHAR_4000"/>
+		<xs:attribute name="STEP" type="DECIMAL_9_0"/>
+		<xs:attribute name="THRESHOLD_FROM" type="DECIMAL_15_0"/>
+		<xs:attribute name="THRESHOLD_TO" type="DECIMAL_15_0"/>
+		<xs:attribute name="BEAT" type="DECIMAL_38_0"/>
+		<xs:attribute name="CHARGE" type="DECIMAL_38_0"/>
+		<xs:attribute name="CHARGE_BASE" type="DECIMAL_9_0"/>
+		<xs:attribute name="FRAME" type="DECIMAL_9_0"/>
+		<xs:attribute name="GLACCOUNT" type="VARCHAR_4000"/>
+		<xs:attribute name="REVENUEGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="MINIMUM_CHARGE" type="DECIMAL_38_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_PRICEMODEL">
+		<xs:sequence/>
+		<xs:attribute name="PRICEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="ROUNDING_METHOD" type="VARCHAR_4000"/>
+		<xs:attribute name="DECIMAL_PLACES" type="DECIMAL_9_0"/>
+		<xs:attribute name="TAILORMADE" type="DECIMAL_1_0"/>
+		<xs:attribute name="TAILORMADE_DATA" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_QUEUE">
+		<xs:sequence/>
+		<xs:attribute name="IMPORT_TABLE" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTINATION_TABLE" type="VARCHAR_4000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+		<xs:attribute name="ENTRY_DATE" type="DATE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RATEADJUST">
+		<xs:sequence/>
+		<xs:attribute name="RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VERSION" type="DECIMAL_9_0"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="VALID_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="QUANTITY_VALUE" type="DECIMAL_9_0"/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGETYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="IMPACT_CATEGORY" type="VARCHAR_4000"/>
+		<xs:attribute name="SOURCE_NETWORK" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTIN_NETWORK" type="VARCHAR_4000"/>
+		<xs:attribute name="DISCOUNT_TYPE" type="CHAR_2000"/>
+		<xs:attribute name="DISCOUNT_VALUE" type="DECIMAL_38_0"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RATEPLAN">
+		<xs:sequence/>
+		<xs:attribute name="RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+		<xs:attribute name="SYSTEM_BRAND" type="VARCHAR_4000"/>
+		<xs:attribute name="MODELTYPE" type="CHAR_2000"/>
+		<xs:attribute name="SPLITTING" type="CHAR_2000"/>
+		<xs:attribute name="CALENDAR" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="UTC_TIME_OFFSET" type="VARCHAR_4000"/>
+		<xs:attribute name="CURRENCY" type="VARCHAR_4000"/>
+		<xs:attribute name="TAXTREATMENT" type="DECIMAL_1_0"/>
+		<xs:attribute name="TAILORMADE" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RATEPLAN_CNF">
+		<xs:sequence/>
+		<xs:attribute name="RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VERSION" type="DECIMAL_9_0"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="IMPACT_CATEGORY" type="VARCHAR_4000"/>
+		<xs:attribute name="TIMEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="TIMEZONE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="MODEL_SELECTOR" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="PRICEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="ALT_PRICEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="PASSTHROUGH" type="DECIMAL_1_0"/>
+		<xs:attribute name="ADDON_TYPE" type="CHAR_2000"/>
+		<xs:attribute name="ADDON_CHARGE" type="DECIMAL_38_0"/>
+		<xs:attribute name="INFO" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RATEPLAN_VER">
+		<xs:sequence/>
+		<xs:attribute name="RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VERSION" type="DECIMAL_9_0"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+		<xs:attribute name="ZONEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="BASIC_RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="BASIC_VERSION" type="DECIMAL_9_0"/>
+		<xs:attribute name="BASIC" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_REF_MAP">
+		<xs:sequence/>
+		<xs:attribute name="ID" type="VARCHAR_4000"/>
+		<xs:attribute name="REF_OBJ" type="VARCHAR_4000"/>
+		<xs:attribute name="REF_COL" type="VARCHAR_4000"/>
+		<xs:attribute name="REF_PARAM" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RESOURCE">
+		<xs:sequence/>
+		<xs:attribute name="RESOURCE_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="SYMBOL" type="VARCHAR_4000"/>
+		<xs:attribute name="TYPE" type="CHAR_2000"/>
+		<xs:attribute name="CURRENCY" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_REVENUEGROUP">
+		<xs:sequence/>
+		<xs:attribute name="REVENUEGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RSC_GROUP">
+		<xs:sequence/>
+		<xs:attribute name="RSC_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RSC_MAP">
+		<xs:sequence/>
+		<xs:attribute name="RSC_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="VALID_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="RATEPLAN" type="VARCHAR_4000"/>
+		<xs:attribute name="QOS_REQUESTED" type="VARCHAR_4000"/>
+		<xs:attribute name="QOS_USED" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGETYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="IMPACT_CATEGORY" type="VARCHAR_4000"/>
+		<xs:attribute name="NEW_SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NEW_SERVICECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RULE">
+		<xs:sequence/>
+		<xs:attribute name="RULE_ID" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="INIT_SCRIPT" type="CLOB_2147483647"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RULEITEM">
+		<xs:sequence/>
+		<xs:attribute name="RULE_ID" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="CONDITION" type="VARCHAR_4000"/>
+		<xs:attribute name="RESULT" type="CLOB_2147483647"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RULESET">
+		<xs:sequence/>
+		<xs:attribute name="RULESET" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="DESCRIPTION" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RULESETLIST">
+		<xs:sequence/>
+		<xs:attribute name="RULESET" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="RULE_ID" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RUM">
+		<xs:sequence/>
+		<xs:attribute name="RUM" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="TYPE" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RUMGROUP">
+		<xs:sequence/>
+		<xs:attribute name="RUMGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="TYPE" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_RUMGROUP_LNK">
+		<xs:sequence/>
+		<xs:attribute name="RUMGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="RUM" type="VARCHAR_4000"/>
+		<xs:attribute name="UOM" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SCENARIO">
+		<xs:sequence/>
+		<xs:attribute name="SCENARIO_ID" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="EDRC_DESC" type="VARCHAR_4000"/>
+		<xs:attribute name="DEFAULT_TAB_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="DEFAULT_FLUSHMODE" type="DECIMAL_1_0"/>
+		<xs:attribute name="DEFAULT_THRESHOLD" type="DECIMAL_9_0"/>
+		<xs:attribute name="DEFAULT_TEMP_DIR" type="VARCHAR_4000"/>
+		<xs:attribute name="DEFAULT_DONE_DIR" type="VARCHAR_4000"/>
+		<xs:attribute name="DEFAULT_CTL_DIR" type="VARCHAR_4000"/>
+		<xs:attribute name="DEFAULT_FLD_DELIM" type="CHAR_2000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SEGMENT">
+		<xs:sequence/>
+		<xs:attribute name="SEGMENT" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SEGRATE_LNK">
+		<xs:sequence/>
+		<xs:attribute name="SEGMENT" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SEGZONE_LNK">
+		<xs:sequence/>
+		<xs:attribute name="SEGMENT" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="ZONEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SELECTOR_BLOCK">
+		<xs:sequence/>
+		<xs:attribute name="SELECTOR_BLOCK" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SELECTOR_BLOCK_LNK">
+		<xs:sequence/>
+		<xs:attribute name="SELECTOR_BLOCK" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SELECTOR_DETAIL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SELECTOR_SUB_BLOCK" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SELECTOR_DETAIL">
+		<xs:sequence/>
+		<xs:attribute name="SELECTOR_DETAIL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="EDR_FLD_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="OPERATOR" type="VARCHAR_4000"/>
+		<xs:attribute name="VALUE" type="VARCHAR_4000"/>
+		<xs:attribute name="TAILORMADE" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SELECTOR_RULE">
+		<xs:sequence/>
+		<xs:attribute name="SELECTOR_RULE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="TAILORMADE" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SELECTOR_RULESET">
+		<xs:sequence/>
+		<xs:attribute name="MODEL_SELECTOR" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SELECTOR_RULE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="MODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SELECTOR_RULE_LNK">
+		<xs:sequence/>
+		<xs:attribute name="SELECTOR_RULE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SELECTOR_BLOCK" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SELECTOR_DETAIL" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SEQCHECK">
+		<xs:sequence/>
+		<xs:attribute name="SEQUENCE_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="KEY_ID" type="VARCHAR_4000"/>
+		<xs:attribute name="SEQ_NUMBER" type="DECIMAL_9_0"/>
+		<xs:attribute name="SEQ_ORIGNUMBER" type="DECIMAL_9_0"/>
+		<xs:attribute name="SEQ_GAPNUMBERS" type="VARCHAR_4000"/>
+		<xs:attribute name="SEQ_OFFSET" type="DECIMAL_9_0"/>
+		<xs:attribute name="SEQ_MAXSEQUENCE" type="DECIMAL_9_0"/>
+		<xs:attribute name="SEQ_MAXOFFSET" type="DECIMAL_9_0"/>
+		<xs:attribute name="SEQ_MINSEQUENCE" type="DECIMAL_9_0"/>
+		<xs:attribute name="SEQ_MINOFFSET" type="DECIMAL_9_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SEQLOG_IN">
+		<xs:sequence/>
+		<xs:attribute name="STREAMNAME" type="VARCHAR_4000"/>
+		<xs:attribute name="CHECK_KEY" type="VARCHAR_4000"/>
+		<xs:attribute name="ORIG_SEQNO" type="DECIMAL_9_0"/>
+		<xs:attribute name="RECYCLING" type="DECIMAL_1_0"/>
+		<xs:attribute name="PROCESSED" type="DATE"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+		<xs:attribute name="NUM_REC_IN" type="DECIMAL_9_0"/>
+		<xs:attribute name="NUM_REC_OUT" type="DECIMAL_9_0"/>
+		<xs:attribute name="NUM_REC_WARN" type="DECIMAL_9_0"/>
+		<xs:attribute name="DURATION" type="DECIMAL_9_0"/>
+		<xs:attribute name="PROCESSEDBY_PPL" type="VARCHAR_4000"/>
+		<xs:attribute name="SEQUENCE_NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SEQLOG_OUT">
+		<xs:sequence/>
+		<xs:attribute name="STREAMNAME_IN" type="VARCHAR_4000"/>
+		<xs:attribute name="GENERATION_KEY" type="VARCHAR_4000"/>
+		<xs:attribute name="ORIG_SEQNO" type="DECIMAL_9_0"/>
+		<xs:attribute name="RECYCLING" type="DECIMAL_1_0"/>
+		<xs:attribute name="SEQUENCE_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="NEW_SEQNO" type="DECIMAL_9_0"/>
+		<xs:attribute name="PROCESSED" type="DATE"/>
+		<xs:attribute name="NUM_REC_OUT" type="DECIMAL_9_0"/>
+		<xs:attribute name="SUM_QUANTITY" type="DECIMAL_38_0"/>
+		<xs:attribute name="SUM_RT_CHARGE" type="DECIMAL_38_0"/>
+		<xs:attribute name="SUM_WS_CHARGE" type="DECIMAL_38_0"/>
+		<xs:attribute name="STREAMNAME_OUT" type="VARCHAR_4000"/>
+		<xs:attribute name="PROCESSEDBY_PPL" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SERVICE">
+		<xs:sequence/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="TOS" type="CHAR_2000"/>
+		<xs:attribute name="RUMGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="DEF_GLACCOUNT" type="VARCHAR_4000"/>
+		<xs:attribute name="DEF_REVENUEGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="PARENT_SERVICE" type="VARCHAR_4000"/>
+		<xs:attribute name="BASIC" type="DECIMAL_1_0"/>
+		<xs:attribute name="PIN_SERVICETYPE" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SERVICECLASS">
+		<xs:sequence/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SERVICE_MAP">
+		<xs:sequence/>
+		<xs:attribute name="MAP_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="EXT_SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="LOCARIND_VASEVENT" type="VARCHAR_4000"/>
+		<xs:attribute name="QOS_REQUESTED" type="VARCHAR_4000"/>
+		<xs:attribute name="QOS_USED" type="VARCHAR_4000"/>
+		<xs:attribute name="RECORDTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="INT_SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="INT_SERVICECLASS" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SLA">
+		<xs:sequence/>
+		<xs:attribute name="SLA_CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="RSC_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="USC_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="RULESET" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SOCIALNUMBER">
+		<xs:sequence/>
+		<xs:attribute name="SOCIALNUMBER" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SPECIALDAYRATE">
+		<xs:sequence/>
+		<xs:attribute name="SPECIALDAYRATE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="DISCOUNT_TYPE" type="CHAR_2000"/>
+		<xs:attribute name="DISCOUNT_VALUE" type="DECIMAL_38_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SPECIALDAY_LNK">
+		<xs:sequence/>
+		<xs:attribute name="RATEPLAN" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VERSION" type="DECIMAL_9_0"/>
+		<xs:attribute name="SPECIALDAYRATE" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SPLITTING_TYPE">
+		<xs:sequence/>
+		<xs:attribute name="PIPELINE" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="RECORDTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="SOURCE_NETWORK" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTIN_NETWORK" type="VARCHAR_4000"/>
+		<xs:attribute name="SWITCH" type="VARCHAR_4000"/>
+		<xs:attribute name="TRUNK_IN" type="VARCHAR_4000"/>
+		<xs:attribute name="TRUNK_OUT" type="VARCHAR_4000"/>
+		<xs:attribute name="ORIGIN_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTIN_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="TRANSIT_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SYSTEM_BRAND" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_STANDARD_ZONE">
+		<xs:sequence/>
+		<xs:attribute name="ZONEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DESCRIPTION" type="VARCHAR_4000"/>
+		<xs:attribute name="ORIGIN_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="DESTIN_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="ZONE_WS" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONE_RT" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="ALT_ZONEMODEL" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SWITCH">
+		<xs:sequence/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SWITCH" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SYNC">
+		<xs:sequence/>
+		<xs:attribute name="Q_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="MSGID" type="BLOB_2000"/>
+		<xs:attribute name="CORRID" type="VARCHAR_4000"/>
+		<xs:attribute name="PRIORITY" type="DECIMAL_38_0"/>
+		<xs:attribute name="STATE" type="DECIMAL_38_0"/>
+		<xs:attribute name="DELAY"/>
+		<xs:attribute name="EXPIRATION" type="DECIMAL_38_0"/>
+		<xs:attribute name="TIME_MANAGER_INFO"/>
+		<xs:attribute name="LOCAL_ORDER_NO" type="DECIMAL_38_0"/>
+		<xs:attribute name="CHAIN_NO" type="DECIMAL_38_0"/>
+		<xs:attribute name="CSCN" type="DECIMAL_38_0"/>
+		<xs:attribute name="DSCN" type="DECIMAL_38_0"/>
+		<xs:attribute name="ENQ_TIME"/>
+		<xs:attribute name="ENQ_UID" type="DECIMAL_38_0"/>
+		<xs:attribute name="ENQ_TID" type="VARCHAR_4000"/>
+		<xs:attribute name="DEQ_TIME"/>
+		<xs:attribute name="DEQ_UID" type="DECIMAL_38_0"/>
+		<xs:attribute name="DEQ_TID" type="VARCHAR_4000"/>
+		<xs:attribute name="RETRY_COUNT" type="DECIMAL_38_0"/>
+		<xs:attribute name="EXCEPTION_QSCHEMA" type="VARCHAR_4000"/>
+		<xs:attribute name="EXCEPTION_QUEUE" type="VARCHAR_4000"/>
+		<xs:attribute name="STEP_NO" type="DECIMAL_38_0"/>
+		<xs:attribute name="RECIPIENT_KEY" type="DECIMAL_38_0"/>
+		<xs:attribute name="DEQUEUE_MSGID" type="BLOB_2000"/>
+		<xs:attribute name="SENDER_NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="SENDER_ADDRESS" type="VARCHAR_4000"/>
+		<xs:attribute name="SENDER_PROTOCOL" type="DECIMAL_38_0"/>
+		<xs:attribute name="USER_DATA"/>
+		<xs:attribute name="USER_PROP"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_SYSTEM_BRAND">
+		<xs:sequence/>
+		<xs:attribute name="SYSTEM_BRAND" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="ACTIVE" type="DECIMAL_1_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TAX">
+		<xs:sequence/>
+		<xs:attribute name="TAXGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="TAXCODE" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="TAXRATE" type="DECIMAL_4_0"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TAXCODE">
+		<xs:sequence/>
+		<xs:attribute name="TAXCODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TAXGROUP">
+		<xs:sequence/>
+		<xs:attribute name="TAXGROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TIMEINTERVAL">
+		<xs:sequence/>
+		<xs:attribute name="INTERVAL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_TO" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TIMEMODEL">
+		<xs:sequence/>
+		<xs:attribute name="TIMEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TIMEMODEL_LNK">
+		<xs:sequence/>
+		<xs:attribute name="TIMEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="DAYCODE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="INTERVAL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="TIMEZONE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TIMEZONE">
+		<xs:sequence/>
+		<xs:attribute name="TIMEZONE" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TRUNK">
+		<xs:sequence/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SWITCH" type="VARCHAR_4000"/>
+		<xs:attribute name="TRUNK" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="TRUNKTYPE" type="CHAR_2000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+		<xs:attribute name="CONNECTED_NO" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_TRUNK_CNF">
+		<xs:sequence/>
+		<xs:attribute name="NETWORKMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="NO" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="SWITCH" type="VARCHAR_4000"/>
+		<xs:attribute name="TRUNK" type="VARCHAR_4000"/>
+		<xs:attribute name="DIRECTION" type="CHAR_2000"/>
+		<xs:attribute name="VALID_FROM" type="DATE"/>
+		<xs:attribute name="VALID_TO" type="DATE"/>
+		<xs:attribute name="POI" type="VARCHAR_4000"/>
+		<xs:attribute name="ICPRODUCT_GROUP" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_UOM">
+		<xs:sequence/>
+		<xs:attribute name="UOM" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_UOM_MAP">
+		<xs:sequence/>
+		<xs:attribute name="RUM" type="VARCHAR_4000"/>
+		<xs:attribute name="FROM_UOM" type="VARCHAR_4000"/>
+		<xs:attribute name="TO_UOM" type="VARCHAR_4000"/>
+		<xs:attribute name="UOM_FACTOR" type="DECIMAL_38_0"/>
+		<xs:attribute name="ROUNDING" type="CHAR_2000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_USAGECLASS">
+		<xs:sequence/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_USAGECLASS_MAP">
+		<xs:sequence/>
+		<xs:attribute name="MAP_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="EXT_USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGETYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONE_WS" type="VARCHAR_4000"/>
+		<xs:attribute name="TARIFFCLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="TARIFFSUBCLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="RECORDTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="CONNECTTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="CONNECTSUBTYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="SS_PACKET" type="VARCHAR_4000"/>
+		<xs:attribute name="APN_ADDRESS" type="VARCHAR_4000"/>
+		<xs:attribute name="TRANSIT_AREACODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="INT_USAGECLASS" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_USAGETYPE">
+		<xs:sequence/>
+		<xs:attribute name="USAGETYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_USC_GROUP">
+		<xs:sequence/>
+		<xs:attribute name="USC_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_USC_MAP">
+		<xs:sequence/>
+		<xs:attribute name="USC_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="RANK" type="DECIMAL_9_0"/>
+		<xs:attribute name="DESCRIPTION" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="VALID_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_FROM" type="VARCHAR_4000"/>
+		<xs:attribute name="TIME_TO" type="VARCHAR_4000"/>
+		<xs:attribute name="QUANTITY_VALUE" type="DECIMAL_9_0"/>
+		<xs:attribute name="MIN_WS_AMOUNT" type="DECIMAL_38_0"/>
+		<xs:attribute name="MAX_WS_AMOUNT" type="DECIMAL_38_0"/>
+		<xs:attribute name="USAGECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="USAGETYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECODE" type="VARCHAR_4000"/>
+		<xs:attribute name="SERVICECLASS" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONE_WS" type="VARCHAR_4000"/>
+		<xs:attribute name="ZONE_RT" type="VARCHAR_4000"/>
+		<xs:attribute name="NEW_USAGETYPE" type="VARCHAR_4000"/>
+		<xs:attribute name="IMPACT_CATEGORY_WS" type="VARCHAR_4000"/>
+		<xs:attribute name="IMPACT_CATEGORY_RT" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:complexType name="RowType_IFW_ZONEMODEL">
+		<xs:sequence/>
+		<xs:attribute name="ZONEMODEL" type="CUSTOM_CODE_TYPE"/>
+		<xs:attribute name="CODE" type="VARCHAR_4000"/>
+		<xs:attribute name="NAME" type="VARCHAR_4000"/>
+		<xs:attribute name="MODELTYPE" type="CHAR_2000"/>
+		<xs:attribute name="FRAME" type="CHAR_2000"/>
+		<xs:attribute name="STATUS" type="CHAR_2000"/>
+		<xs:attribute name="APN_GROUP" type="VARCHAR_4000"/>
+		<xs:attribute name="GEOMODEL" type="CUSTOM_CODE_TYPE"/>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_AGGREGATION">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_AGGREGATION">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="AGGREGATION_ID"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_AGGREGATION"/>
+						</xs:complexType>
+					</xs:element>
+                                        <xs:element name="RetrieveDependingTable" minOccurs="0">
+                                                <xs:complexType>
+                                                        <xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_EDRC_FIELD"/>
+                                                        <xs:attribute name="IFW_EDRC_FIELD" type="xs:string" fixed="FIELD_ID:FIELD_ID"/>
+                                                </xs:complexType>
+                                        </xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_ALIAS_MAP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_ALIAS_MAP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_APN_GROUP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_APN_GROUP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_APN_MAP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_APN_MAP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CALENDAR">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CALENDAR">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="CALENDAR"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_CALENDAR"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CIBER_OCC">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CIBER_OCC">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CLASS">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CLASS">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="CLASS_ID"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_CLASS"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CLASSCON">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CLASSCON">
+				<xs:sequence>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CLASSCON_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CLASSCON_LNK">
+				<xs:sequence>
+                                        <xs:element name="RetrieveDependingTable" minOccurs="0">
+                                                <xs:complexType>
+                                                        <xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_CLASSITEM|IFW_CLASSCON"/>
+                                                        <xs:attribute name="IFW_CLASSITEM" type="xs:string" fixed="CLASSITEM_ID:CLASSITEM_ID"/>
+                                                        <xs:attribute name="IFW_CLASSCON" type="xs:string" fixed="CLASSCON_ID:CLASSCON_ID"/>
+                                                </xs:complexType>
+                                        </xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CLASSITEM">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CLASSITEM">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="CLASSITEM_ID"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_CLASSITEM"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CLASS_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CLASS_LNK">
+				<xs:sequence>
+                                        <xs:element name="RetrieveDependingTable" minOccurs="0">
+                                                <xs:complexType>
+                                                        <xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_CLASS|IFW_CLASSITEM"/>
+                                                        <xs:attribute name="IFW_CLASS" type="xs:string" fixed="CLASS_ID:CLASS_ID"/>
+                                                        <xs:attribute name="IFW_CLASSITEM" type="xs:string" fixed="CLASSITEM_ID:CLASSITEM_ID"/>
+                                                </xs:complexType>
+                                        </xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CONDITION">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CONDITION">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="CONDITION_ID"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_CONDITION"/>
+						</xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="RetrieveDependingTable" minOccurs="0">
+                                                <xs:complexType>
+                                                        <xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_EDRC_FIELD"/>
+                                                        <xs:attribute name="IFW_EDRC_FIELD" type="xs:string" fixed="FIELD_ID:FIELD_ID"/>
+                                                </xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_CURRENCY">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_CURRENCY">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DAYCODE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DAYCODE">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DAYCODE"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DAYCODE"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DBVERSION">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DBVERSION">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DESTINDESC">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DESTINDESC">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DICTIONARY">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DICTIONARY">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DISCARDING">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DISCARDING">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DISCOUNTDETAIL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DISCOUNTDETAIL">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DISCOUNTMASTER">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DISCOUNTMASTER">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DISCOUNTMASTER"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DISCOUNTMASTER"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DSCMDL_CNF">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DSCMDL_CNF">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DISCOUNTCONFIG"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DISCOUNTCONFIG"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="RetrieveDependingTable" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_DISCOUNTMODEL|IFW_DISCOUNTRULE|IFW_DSCTRIGGER"/>
+							<xs:attribute name="IFW_DISCOUNTMODEL" type="xs:string" fixed="DISCOUNTMODEL:DISCOUNTMODEL"/>
+							<xs:attribute name="IFW_DISCOUNTRULE" type="xs:string" fixed="DISCOUNTRULE:DISCOUNTRULE"/>
+							<xs:attribute name="IFW_DSCTRIGGER" type="xs:string" fixed="DISCOUNTTRIGGER:DISCOUNTTRIGGER"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DISCOUNTMODEL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DISCOUNTMODEL">
+				<xs:sequence>
+					<xs:element name="IFW_DSCMDL_CNF" type="TableType_IFW_DSCMDL_CNF" minOccurs="0" maxOccurs="unbounded">
+					</xs:element>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DISCOUNTMODEL"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DISCOUNTMODEL"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DISCOUNTRULE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DISCOUNTRULE">
+				<xs:sequence>
+					<xs:element name="IFW_DSCMDL_CNF" type="TableType_IFW_DSCMDL_CNF" minOccurs="0" maxOccurs="unbounded">
+                                                <xs:key name="IFW_DSCMDL_CNF_PrimaryKey_2">
+                                                        <xs:selector xpath="IFW_DSCMDL_CNF"/>
+                                                        <xs:field xpath="DISCOUNTCONFIG"/>
+                                                </xs:key>
+					</xs:element>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DISCOUNTRULE"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DISCOUNTRULE"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="RetrieveDependingTable" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_DISCOUNTMASTER"/>
+							<xs:attribute name="IFW_DISCOUNTMASTER" type="xs:string" fixed="DISCOUNTMASTER:DISCOUNTMASTER"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DISCOUNTSTEP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DISCOUNTSTEP">
+				<xs:sequence>
+					<xs:element name="IFW_DSCBALIMPACT" type="TableType_IFW_DSCBALIMPACT" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DISCOUNTSTEP"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DISCOUNTSTEP"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DSCBALIMPACT">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DSCBALIMPACT">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DISCOUNTBALIMPACT"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DISCOUNTBALIMPACT"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DSCCONDITION">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DSCCONDITION">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DISCOUNTCONDITION"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DISCOUNTCONDITION"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DSCMDL_VER">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DSCMDL_VER">
+				<xs:sequence>
+					<xs:element name="IFW_DSCMDL_CNF" type="TableType_IFW_DSCMDL_CNF" minOccurs="0" maxOccurs="unbounded">
+                                                <xs:key name="IFW_DSCMDL_CNF_PrimaryKey_3">
+                                                        <xs:selector xpath="IFW_DSCMDL_CNF"/>
+                                                        <xs:field xpath="DISCOUNTCONFIG"/>
+                                                </xs:key>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_DSCTRIGGER">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_DSCTRIGGER">
+				<xs:sequence>
+					<xs:element name="IFW_DSCCONDITION" type="TableType_IFW_DSCCONDITION" minOccurs="0" maxOccurs="unbounded">
+						<xs:key name="IFW_DSCCONDITION_PrimaryKey_1">
+							<xs:selector xpath="IFW_DSCTRIGGER/IFW_DSCCONDITION"/>
+							<xs:field xpath="@DISCOUNTCONDITION"/>
+						</xs:key>
+					</xs:element>
+					<xs:element name="IFW_DSCMDL_CNF" type="TableType_IFW_DSCMDL_CNF" minOccurs="0" maxOccurs="unbounded">
+					</xs:element>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="DISCOUNTTRIGGER"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_DISCOUNTTRIGGER"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_EDRC_DESC">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_EDRC_DESC">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_EDRC_FIELD">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_EDRC_FIELD">
+				<xs:sequence>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_EXCHANGE_RATE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_EXCHANGE_RATE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_GEOAREA_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_GEOAREA_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_GEO_MODEL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_GEO_MODEL">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="GEOMODEL"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_GEOMODEL"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_GEO_ZONE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_GEO_ZONE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_GLACCOUNT">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_GLACCOUNT">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_GROUPING">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_GROUPING">
+				<xs:sequence>
+
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_GROUPING_CNF">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_GROUPING_CNF">
+				<xs:sequence>
+                                        <xs:element name="RetrieveDependingTable" minOccurs="0">
+                                                <xs:complexType>
+                                                        <xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_CLASS|IFW_GROUPING"/>
+                                                        <xs:attribute name="IFW_CLASS" type="xs:string" fixed="CLASS_ID:CLASS_ID"/>
+                                                        <xs:attribute name="IFW_GROUPING" type="xs:string" fixed="GROUPING_ID:GROUPING_ID"/>
+                                                </xs:complexType>
+                                        </xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_HOLIDAY">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_HOLIDAY">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_ICPRODUCT">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_ICPRODUCT">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_ICPRODUCT_CNF">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_ICPRODUCT_CNF">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_ICPRODUCT_GRP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_ICPRODUCT_GRP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_ICPRODUCT_RATE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_ICPRODUCT_RATE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_IMPACT_CAT">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_IMPACT_CAT">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_ISCRIPT">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_ISCRIPT">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_MAP_GROUP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_MAP_GROUP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_MODEL_SELECTOR">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_MODEL_SELECTOR">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="MODEL_SELECTOR"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_MODELSELECTOR"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="RetrieveDependingTable" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_PRICEMODEL|IFW_DISCOUNTMODEL"/>
+							<xs:attribute name="IFW_PRICEMODEL" type="xs:string" fixed="CODE:CODE"/>
+							<xs:attribute name="IFW_DISCOUNTMODEL" type="xs:string" fixed="CODE:CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_NETWORKMODEL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_NETWORKMODEL">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="NETWORKMODEL"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_NETWORKMODEL"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_NETWORKOPER">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_NETWORKOPER">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="NO"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_NO"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_NOPRODUCT">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_NOPRODUCT">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_NOPRODUCT_CNF">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_NOPRODUCT_CNF">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_NOSP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_NOSP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_NO_BILLRUN">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_NO_BILLRUN">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_PIPELINE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_PIPELINE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_POI">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_POI">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_POIAREA_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_POIAREA_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_PRICEMDL_STEP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_PRICEMDL_STEP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_PRICEMODEL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_PRICEMODEL">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="PRICEMODEL"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_PRICEMODEL"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_QUEUE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_QUEUE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RATEADJUST">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RATEADJUST">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RATEPLAN">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RATEPLAN">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="RATEPLAN"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_RATEPLAN"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RATEPLAN_CNF">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RATEPLAN_CNF">
+				<xs:sequence>
+					<xs:element name="RetrieveDependingTable" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="DependingTableNames" type="xs:string" fixed="IFW_PRICEMODEL|IFW_IMPACT_CAT"/>
+							<xs:attribute name="IFW_PRICEMODEL" type="xs:string" fixed="PRICEMODEL:PRICEMODEL"/>
+							<xs:attribute name="IFW_IMPACT_CAT" type="xs:string" fixed="IMPACT_CATEGORY:IMPACT_CATEGORY"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RATEPLAN_VER">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RATEPLAN_VER">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_REF_MAP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_REF_MAP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RESOURCE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RESOURCE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_REVENUEGROUP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_REVENUEGROUP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RSC_GROUP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RSC_GROUP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RSC_MAP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RSC_MAP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RULE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RULE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RULEITEM">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RULEITEM">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RULESET">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RULESET">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RULESETLIST">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RULESETLIST">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RUM">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RUM">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RUMGROUP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RUMGROUP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_RUMGROUP_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_RUMGROUP_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SCENARIO">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SCENARIO">
+				<xs:sequence>
+					<xs:element name="IFW_AGGREGATION" type="TableType_IFW_AGGREGATION" minOccurs="0" maxOccurs="unbounded">
+						<xs:key name="IFW_AGGREGATION_PrimaryKey_1">
+							<xs:selector xpath="IFW_SCENARIO/IFW_AGGREGATION"/>
+							<xs:field xpath="@AGGREGATION_ID"/>
+						</xs:key>
+					</xs:element>
+					<xs:element name="IFW_CONDITION" type="TableType_IFW_CONDITION" minOccurs="0" maxOccurs="unbounded">
+					</xs:element>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="SCENARIO_ID"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_SCENARIO"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SEGMENT">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SEGMENT">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SEGRATE_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SEGRATE_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SEGZONE_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SEGZONE_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SELECTOR_BLOCK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SELECTOR_BLOCK">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="SELECTOR_BLOCK"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_SELECTORBLOCK"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SELECTOR_BLOCK_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SELECTOR_BLOCK_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SELECTOR_DETAIL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SELECTOR_DETAIL">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="SELECTOR_DETAIL"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_SELECTORDETAIL"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SELECTOR_RULE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SELECTOR_RULE">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="SELECTOR_RULE"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_SELECTORRULE"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SELECTOR_RULESET">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SELECTOR_RULESET">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SELECTOR_RULE_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SELECTOR_RULE_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SEQCHECK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SEQCHECK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SEQLOG_IN">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SEQLOG_IN">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SEQLOG_OUT">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SEQLOG_OUT">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SERVICE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SERVICE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SERVICECLASS">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SERVICECLASS">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SERVICE_MAP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SERVICE_MAP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SLA">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SLA">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SOCIALNUMBER">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SOCIALNUMBER">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SPECIALDAYRATE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SPECIALDAYRATE">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="SPECIALDAYRATE"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_SPECIALDAYRATE"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SPECIALDAY_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SPECIALDAY_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SPLITTING_TYPE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SPLITTING_TYPE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_STANDARD_ZONE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_STANDARD_ZONE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SWITCH">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SWITCH">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SYNC">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SYNC">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_SYSTEM_BRAND">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_SYSTEM_BRAND">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TAX">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TAX">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TAXCODE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TAXCODE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TAXGROUP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TAXGROUP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TIMEINTERVAL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TIMEINTERVAL">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="INTERVAL"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_TIMEINTERVAL"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TIMEMODEL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TIMEMODEL">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="TIMEMODEL"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_TIMEMODEL"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TIMEMODEL_LNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TIMEMODEL_LNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TIMEZONE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TIMEZONE">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="TIMEZONE"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_TIMEZONE"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TRUNK">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TRUNK">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_TRUNK_CNF">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_TRUNK_CNF">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_UOM">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_UOM">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_UOM_MAP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_UOM_MAP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_USAGECLASS">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_USAGECLASS">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_USAGECLASS_MAP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_USAGECLASS_MAP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_USAGETYPE">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_USAGETYPE">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_USC_GROUP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_USC_GROUP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_USC_MAP">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_USC_MAP">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TableType_IFW_ZONEMODEL">
+		<xs:complexContent>
+			<xs:extension base="RowType_IFW_ZONEMODEL">
+				<xs:sequence>
+					<xs:element name="MetaInfo" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="SequenceFieldName" type="xs:string" fixed="ZONEMODEL"/>
+							<xs:attribute name="SequenceName" type="xs:string" fixed="IFW_SEQ_ZONEMODEL"/>
+							<xs:attribute name="AlternateCodeFld" type="xs:string" fixed="CODE"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IfwSchema">
+		<xs:sequence>
+			<xs:element name="IFW_MODEL_SELECTOR" type="TableType_IFW_MODEL_SELECTOR" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_MODEL_SELECTOR_PrimaryKey_1">
+					<xs:selector xpath="IFW_MODEL_SELECTOR"/>
+					<xs:field xpath="@MODEL_SELECTOR"/>
+				</xs:key>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_3" refer="IFW_MODEL_SELECTOR_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@MODEL_SELECTOR"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SELECTOR_RULESET_ForeignKey_1" refer="IFW_MODEL_SELECTOR_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_RULESET"/>
+					<xs:field xpath="@MODEL_SELECTOR"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_EDRC_DESC" type="TableType_IFW_EDRC_DESC" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_EDRC_DESC_PrimaryKey_1">
+					<xs:selector xpath="IFW_EDRC_DESC"/>
+					<xs:field xpath="@EDRC_DESC"/>
+				</xs:key>
+				<xs:keyref name="IFW_ALIAS_MAP_ForeignKey_1" refer="IFW_EDRC_DESC_PrimaryKey_1">
+					<xs:selector xpath="IFW_ALIAS_MAP"/>
+					<xs:field xpath="@EDRC_DESC"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_EDRC_FIELD_ForeignKey_1" refer="IFW_EDRC_DESC_PrimaryKey_1">
+					<xs:selector xpath="IFW_EDRC_FIELD"/>
+					<xs:field xpath="@EDRC_DESC"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_PIPELINE_ForeignKey_1" refer="IFW_EDRC_DESC_PrimaryKey_1">
+					<xs:selector xpath="IFW_PIPELINE"/>
+					<xs:field xpath="@EDRC_DESC"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SCENARIO_ForeignKey_1" refer="IFW_EDRC_DESC_PrimaryKey_1">
+					<xs:selector xpath="IFW_SCENARIO"/>
+					<xs:field xpath="@EDRC_DESC"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_EDRC_FIELD" type="TableType_IFW_EDRC_FIELD" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_EDRC_FIELD_PrimaryKey_1">
+					<xs:selector xpath="IFW_EDRC_FIELD"/>
+					<xs:field xpath="@FIELD_ID"/>
+				</xs:key>
+				<xs:keyref name="IFW_ALIAS_MAP_ForeignKey_2" refer="IFW_EDRC_FIELD_PrimaryKey_1">
+					<xs:selector xpath="IFW_ALIAS_MAP"/>
+					<xs:field xpath="@FIELD_ID"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_GROUPING_ForeignKey_1" refer="IFW_EDRC_FIELD_PrimaryKey_1">
+					<xs:selector xpath="IFW_GROUPING"/>
+					<xs:field xpath="@FIELD_ID"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SCENARIO" type="TableType_IFW_SCENARIO" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SCENARIO_PrimaryKey_1">
+					<xs:selector xpath="IFW_SCENARIO"/>
+					<xs:field xpath="@SCENARIO_ID"/>
+				</xs:key>
+				<xs:keyref name="IFW_AGGREGATION_ForeignKey_2" refer="IFW_SCENARIO_PrimaryKey_1">
+					<xs:selector xpath="IFW_SCENARIO/IFW_AGGREGATION"/>
+					<xs:field xpath="@SCENARIO_ID"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_CONDITION_ForeignKey_2" refer="IFW_SCENARIO_PrimaryKey_1">
+					<xs:selector xpath="IFW_SCENARIO/IFW_CONDITION"/>
+					<xs:field xpath="@SCENARIO_ID"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_GROUPING_ForeignKey_2" refer="IFW_SCENARIO_PrimaryKey_1">
+					<xs:selector xpath="IFW_GROUPING"/>
+					<xs:field xpath="@SCENARIO_ID"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_CLASS" type="TableType_IFW_CLASS" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_CLASS_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASS"/>
+					<xs:field xpath="@CLASS_ID"/>
+				</xs:key>
+				<xs:keyref name="IFW_CLASS_LNK_ForeignKey_1" refer="IFW_CLASS_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASS_LNK"/>
+					<xs:field xpath="@CLASS_ID"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_GROUPING_CNF_ForeignKey_1" refer="IFW_CLASS_PrimaryKey_1">
+					<xs:selector xpath="IFW_GROUPING_CNF"/>
+					<xs:field xpath="@CLASS_ID"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_CLASSITEM" type="TableType_IFW_CLASSITEM" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_CLASSITEM_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASSITEM"/>
+					<xs:field xpath="@CLASSITEM_ID"/>
+				</xs:key>
+				<xs:keyref name="IFW_CLASS_LNK_ForeignKey_2" refer="IFW_CLASSITEM_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASS_LNK"/>
+					<xs:field xpath="@CLASSITEM_ID"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_CLASSCON_LNK_ForeignKey_2" refer="IFW_CLASSITEM_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASSCON_LNK"/>
+					<xs:field xpath="@CLASSITEM_ID"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_DBVERSION" type="TableType_IFW_DBVERSION" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DBVERSION_PrimaryKey_1">
+					<xs:selector xpath="IFW_DBVERSION"/>
+					<xs:field xpath="@DBVERSION"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_DESTINDESC" type="TableType_IFW_DESTINDESC" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DESTINDESC_PrimaryKey_1">
+					<xs:selector xpath="IFW_DESTINDESC"/>
+					<xs:field xpath="@AREACODE"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_QUEUE" type="TableType_IFW_QUEUE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_QUEUE_PrimaryKey_1">
+					<xs:selector xpath="IFW_QUEUE"/>
+					<xs:field xpath="@IMPORT_TABLE"/>
+				</xs:key>
+				<xs:keyref name="IFW_DICTIONARY_ForeignKey_1" refer="IFW_QUEUE_PrimaryKey_1">
+					<xs:selector xpath="IFW_DICTIONARY"/>
+					<xs:field xpath="@IMPORT_TABLE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_DICTIONARY" type="TableType_IFW_DICTIONARY" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DICTIONARY_PrimaryKey_1">
+					<xs:selector xpath="IFW_DICTIONARY"/>
+					<xs:field xpath="@IMPORT_TABLE"/>
+					<xs:field xpath="@IMPORT_COLUMN"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_ISCRIPT" type="TableType_IFW_ISCRIPT" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_ISCRIPT_PrimaryKey_1">
+					<xs:selector xpath="IFW_ISCRIPT"/>
+					<xs:field xpath="@SCRIPTCODE"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_RULESET" type="TableType_IFW_RULESET" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RULESET_PrimaryKey_1">
+					<xs:selector xpath="IFW_RULESET"/>
+					<xs:field xpath="@RULESET"/>
+				</xs:key>
+				<xs:keyref name="IFW_GEO_MODEL_ForeignKey_1" refer="IFW_RULESET_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEO_MODEL"/>
+					<xs:field xpath="@RULESET"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RULESETLIST_ForeignKey_1" refer="IFW_RULESET_PrimaryKey_1">
+					<xs:selector xpath="IFW_RULESETLIST"/>
+					<xs:field xpath="@RULESET"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SLA_ForeignKey_1" refer="IFW_RULESET_PrimaryKey_1">
+					<xs:selector xpath="IFW_SLA"/>
+					<xs:field xpath="@RULESET"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_GEO_MODEL" type="TableType_IFW_GEO_MODEL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_GEO_MODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEO_MODEL"/>
+					<xs:field xpath="@GEOMODEL"/>
+				</xs:key>
+				<xs:keyref name="IFW_GEOAREA_LNK_ForeignKey_1" refer="IFW_GEO_MODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEOAREA_LNK"/>
+					<xs:field xpath="@GEOMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_ZONEMODEL_ForeignKey_2" refer="IFW_GEO_MODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_ZONEMODEL"/>
+					<xs:field xpath="@GEOMODEL"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_GEOAREA_LNK" type="TableType_IFW_GEOAREA_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_GEOAREA_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEOAREA_LNK"/>
+					<xs:field xpath="@GEOMODEL"/>
+					<xs:field xpath="@AREACODE"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_TAXGROUP" type="TableType_IFW_TAXGROUP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TAXGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_TAXGROUP"/>
+					<xs:field xpath="@TAXGROUP"/>
+				</xs:key>
+				<xs:keyref name="IFW_NETWORKOPER_ForeignKey_2" refer="IFW_TAXGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_NETWORKOPER"/>
+					<xs:field xpath="@TAXGROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TAX_ForeignKey_1" refer="IFW_TAXGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_TAX"/>
+					<xs:field xpath="@TAXGROUP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_CURRENCY" type="TableType_IFW_CURRENCY" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_CURRENCY_PrimaryKey_1">
+					<xs:selector xpath="IFW_CURRENCY"/>
+					<xs:field xpath="@CURRENCY"/>
+				</xs:key>
+				<xs:keyref name="IFW_EXCHANGE_RATE_ForeignKey_1" refer="IFW_CURRENCY_PrimaryKey_1">
+					<xs:selector xpath="IFW_EXCHANGE_RATE"/>
+					<xs:field xpath="@FROM_CURRENCY"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_EXCHANGE_RATE_ForeignKey_2" refer="IFW_CURRENCY_PrimaryKey_1">
+					<xs:selector xpath="IFW_EXCHANGE_RATE"/>
+					<xs:field xpath="@TO_CURRENCY"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NETWORKMODEL_ForeignKey_1" refer="IFW_CURRENCY_PrimaryKey_1">
+					<xs:selector xpath="IFW_NETWORKMODEL"/>
+					<xs:field xpath="@CURRENCY"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NETWORKOPER_ForeignKey_1" refer="IFW_CURRENCY_PrimaryKey_1">
+					<xs:selector xpath="IFW_NETWORKOPER"/>
+					<xs:field xpath="@CURRENCY"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NOPRODUCT_ForeignKey_1" refer="IFW_CURRENCY_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT"/>
+					<xs:field xpath="@CURRENCY"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_ForeignKey_2" refer="IFW_CURRENCY_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN"/>
+					<xs:field xpath="@CURRENCY"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RESOURCE_ForeignKey_1" refer="IFW_CURRENCY_PrimaryKey_1">
+					<xs:selector xpath="IFW_RESOURCE"/>
+					<xs:field xpath="@CURRENCY"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_NETWORKOPER" type="TableType_IFW_NETWORKOPER" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_NETWORKOPER"/>
+					<xs:field xpath="@NO"/>
+				</xs:key>
+				<xs:keyref name="IFW_CIBER_OCC_ForeignKey_1" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_CIBER_OCC"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_ICPRODUCT_RATE_ForeignKey_1" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_RATE"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NETWORKMODEL_ForeignKey_2" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_NETWORKMODEL"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NO_BILLRUN_ForeignKey_1" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_NO_BILLRUN"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NOPRODUCT_ForeignKey_2" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SWITCH_ForeignKey_1" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_SWITCH"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TRUNK_ForeignKey_1" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK"/>
+					<xs:field xpath="@CONNECTED_NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TRUNK_CNF_ForeignKey_1" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK_CNF"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NOPRODUCT_CNF_ForeignKey_50" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT_CNF"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TRUNK_ForeignKey_50" refer="IFW_NETWORKOPER_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK"/>
+					<xs:field xpath="@NO"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SYSTEM_BRAND" type="TableType_IFW_SYSTEM_BRAND" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SYSTEM_BRAND_PrimaryKey_1">
+					<xs:selector xpath="IFW_SYSTEM_BRAND"/>
+					<xs:field xpath="@SYSTEM_BRAND"/>
+				</xs:key>
+				<xs:keyref name="IFW_NETWORKMODEL_ForeignKey_3" refer="IFW_SYSTEM_BRAND_PrimaryKey_1">
+					<xs:selector xpath="IFW_NETWORKMODEL"/>
+					<xs:field xpath="@SYSTEM_BRAND"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_ForeignKey_3" refer="IFW_SYSTEM_BRAND_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN"/>
+					<xs:field xpath="@SYSTEM_BRAND"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SPLITTING_TYPE_ForeignKey_2" refer="IFW_SYSTEM_BRAND_PrimaryKey_1">
+					<xs:selector xpath="IFW_SPLITTING_TYPE"/>
+					<xs:field xpath="@SYSTEM_BRAND"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_CALENDAR" type="TableType_IFW_CALENDAR" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_CALENDAR_PrimaryKey_1">
+					<xs:selector xpath="IFW_CALENDAR"/>
+					<xs:field xpath="@CALENDAR"/>
+				</xs:key>
+				<xs:keyref name="IFW_HOLIDAY_ForeignKey_1" refer="IFW_CALENDAR_PrimaryKey_1">
+					<xs:selector xpath="IFW_HOLIDAY"/>
+					<xs:field xpath="@CALENDAR"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_ForeignKey_1" refer="IFW_CALENDAR_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN"/>
+					<xs:field xpath="@CALENDAR"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RATEPLAN" type="TableType_IFW_RATEPLAN" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:key>
+				<xs:keyref name="IFW_ICPRODUCT_RATE_ForeignKey_3" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_RATE"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_ICPRODUCT_RATE_ForeignKey_4" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_RATE"/>
+					<xs:field xpath="@ALT_RATEPLAN"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NETWORKMODEL_ForeignKey_4" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_NETWORKMODEL"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_VER_ForeignKey_2" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_VER"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SEGRATE_LNK_ForeignKey_1" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEGRATE_LNK"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEADJUST_ForeignKey_50" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEADJUST"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_50" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_VER_ForeignKey_50" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_VER"/>
+					<xs:field xpath="@BASIC_RATEPLAN"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SPECIALDAY_LNK_ForeignKey_50" refer="IFW_RATEPLAN_PrimaryKey_1">
+					<xs:selector xpath="IFW_SPECIALDAY_LNK"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_NETWORKMODEL" type="TableType_IFW_NETWORKMODEL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_NETWORKMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_NETWORKMODEL"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+				</xs:key>
+				<xs:keyref name="IFW_ICPRODUCT_GRP_ForeignKey_1" refer="IFW_NETWORKMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_GRP"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_ICPRODUCT_RATE_ForeignKey_5" refer="IFW_NETWORKMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_RATE"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NO_BILLRUN_ForeignKey_2" refer="IFW_NETWORKMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_NO_BILLRUN"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_POIAREA_LNK_ForeignKey_1" refer="IFW_NETWORKMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_POIAREA_LNK"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TRUNK_CNF_ForeignKey_2" refer="IFW_NETWORKMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK_CNF"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_ICPRODUCT_CNF_ForeignKey_50" refer="IFW_NETWORKMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_CNF"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_NO_BILLRUN" type="TableType_IFW_NO_BILLRUN" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_NO_BILLRUN_PrimaryKey_1">
+					<xs:selector xpath="IFW_NO_BILLRUN"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@BILLRUN"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_POI" type="TableType_IFW_POI" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_POI_PrimaryKey_1">
+					<xs:selector xpath="IFW_POI"/>
+					<xs:field xpath="@POI"/>
+				</xs:key>
+				<xs:keyref name="IFW_POIAREA_LNK_ForeignKey_2" refer="IFW_POI_PrimaryKey_1">
+					<xs:selector xpath="IFW_POIAREA_LNK"/>
+					<xs:field xpath="@POI"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TRUNK_CNF_ForeignKey_4" refer="IFW_POI_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK_CNF"/>
+					<xs:field xpath="@POI"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_POIAREA_LNK" type="TableType_IFW_POIAREA_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_POIAREA_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_POIAREA_LNK"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+					<xs:field xpath="@POI"/>
+					<xs:field xpath="@VALID_FROM"/>
+					<xs:field xpath="@AREACODE"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SELECTOR_RULE" type="TableType_IFW_SELECTOR_RULE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SELECTOR_RULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_RULE"/>
+					<xs:field xpath="@SELECTOR_RULE"/>
+				</xs:key>
+				<xs:keyref name="IFW_SELECTOR_RULE_LNK_ForeignKey_3" refer="IFW_SELECTOR_RULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_RULE_LNK"/>
+					<xs:field xpath="@SELECTOR_RULE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SELECTOR_RULESET_ForeignKey_2" refer="IFW_SELECTOR_RULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_RULESET"/>
+					<xs:field xpath="@SELECTOR_RULE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SEQCHECK" type="TableType_IFW_SEQCHECK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SEQCHECK_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEQCHECK"/>
+					<xs:field xpath="@SEQUENCE_NAME"/>
+					<xs:field xpath="@KEY_ID"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SEQLOG_IN" type="TableType_IFW_SEQLOG_IN" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SEQLOG_IN_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEQLOG_IN"/>
+					<xs:field xpath="@STREAMNAME"/>
+					<xs:field xpath="@CHECK_KEY"/>
+					<xs:field xpath="@ORIG_SEQNO"/>
+					<xs:field xpath="@RECYCLING"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SEQLOG_OUT" type="TableType_IFW_SEQLOG_OUT" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SEQLOG_OUT_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEQLOG_OUT"/>
+					<xs:field xpath="@STREAMNAME_IN"/>
+					<xs:field xpath="@GENERATION_KEY"/>
+					<xs:field xpath="@ORIG_SEQNO"/>
+					<xs:field xpath="@RECYCLING"/>
+					<xs:field xpath="@SEQUENCE_NAME"/>
+					<xs:field xpath="@NEW_SEQNO"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SOCIALNUMBER" type="TableType_IFW_SOCIALNUMBER" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SOCIALNUMBER_PrimaryKey_1">
+					<xs:selector xpath="IFW_SOCIALNUMBER"/>
+					<xs:field xpath="@SOCIALNUMBER"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SWITCH" type="TableType_IFW_SWITCH" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SWITCH_PrimaryKey_1">
+					<xs:selector xpath="IFW_SWITCH"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@SWITCH"/>
+				</xs:key>
+				<xs:keyref name="IFW_TRUNK_CNF_ForeignKey_9" refer="IFW_SWITCH_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK_CNF"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@SWITCH"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TRUNK_ForeignKey_9" refer="IFW_SWITCH_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@SWITCH"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_TRUNK" type="TableType_IFW_TRUNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TRUNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@SWITCH"/>
+					<xs:field xpath="@TRUNK"/>
+				</xs:key>
+				<xs:keyref name="IFW_TRUNK_CNF_ForeignKey_99" refer="IFW_TRUNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK_CNF"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@SWITCH"/>
+					<xs:field xpath="@TRUNK"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_ICPRODUCT_GRP" type="TableType_IFW_ICPRODUCT_GRP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_ICPRODUCT_GRP_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_GRP"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+					<xs:field xpath="@ICPRODUCT_GROUP"/>
+				</xs:key>
+				<xs:keyref name="IFW_ICPRODUCT_CNF_ForeignKey_2" refer="IFW_ICPRODUCT_GRP_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_CNF"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+					<xs:field xpath="@ICPRODUCT_GROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TRUNK_CNF_ForeignKey_3" refer="IFW_ICPRODUCT_GRP_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK_CNF"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+					<xs:field xpath="@ICPRODUCT_GROUP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_TRUNK_CNF" type="TableType_IFW_TRUNK_CNF" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TRUNK_CNF_PrimaryKey_1">
+					<xs:selector xpath="IFW_TRUNK_CNF"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@SWITCH"/>
+					<xs:field xpath="@TRUNK"/>
+					<xs:field xpath="@DIRECTION"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_CLASS_LNK" type="TableType_IFW_CLASS_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_CLASS_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASS_LNK"/>
+					<xs:field xpath="@CLASS_ID"/>
+					<xs:field xpath="@CLASSITEM_ID"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_ALIAS_MAP" type="TableType_IFW_ALIAS_MAP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_ALIAS_MAP_PrimaryKey_1">
+					<xs:selector xpath="IFW_ALIAS_MAP"/>
+					<xs:field xpath="@EDRC_DESC"/>
+					<xs:field xpath="@REFERENCE"/>
+					<xs:field xpath="@KEY_ID"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SELECTOR_DETAIL" type="TableType_IFW_SELECTOR_DETAIL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SELECTOR_DETAIL_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_DETAIL"/>
+					<xs:field xpath="@SELECTOR_DETAIL"/>
+				</xs:key>
+				<xs:keyref name="IFW_SELECTOR_BLOCK_LNK_ForeignKey_3" refer="IFW_SELECTOR_DETAIL_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_BLOCK_LNK"/>
+					<xs:field xpath="@SELECTOR_DETAIL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SELECTOR_RULE_LNK_ForeignKey_2" refer="IFW_SELECTOR_DETAIL_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_RULE_LNK"/>
+					<xs:field xpath="@SELECTOR_DETAIL"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SELECTOR_BLOCK" type="TableType_IFW_SELECTOR_BLOCK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SELECTOR_BLOCK_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_BLOCK"/>
+					<xs:field xpath="@SELECTOR_BLOCK"/>
+				</xs:key>
+				<xs:keyref name="IFW_SELECTOR_BLOCK_LNK_ForeignKey_1" refer="IFW_SELECTOR_BLOCK_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_BLOCK_LNK"/>
+					<xs:field xpath="@SELECTOR_BLOCK"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SELECTOR_BLOCK_LNK_ForeignKey_2" refer="IFW_SELECTOR_BLOCK_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_BLOCK_LNK"/>
+					<xs:field xpath="@SELECTOR_SUB_BLOCK"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SELECTOR_RULE_LNK_ForeignKey_1" refer="IFW_SELECTOR_BLOCK_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_RULE_LNK"/>
+					<xs:field xpath="@SELECTOR_BLOCK"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SELECTOR_RULE_LNK" type="TableType_IFW_SELECTOR_RULE_LNK" minOccurs="0" maxOccurs="unbounded">
+                                <xs:key name="IFW_SELECTOR_RULE_LNK_PrimaryKey_1">
+                                        <xs:selector xpath="IFW_SELECTOR_RULE_LNK"/>
+                                        <xs:field xpath="@SELECTOR_RULE"/>
+                                        <xs:field xpath="@SELECTOR_DETAIL"/>
+                                </xs:key>
+                        </xs:element>
+			<xs:element name="IFW_HOLIDAY" type="TableType_IFW_HOLIDAY" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_HOLIDAY_PrimaryKey_1">
+					<xs:selector xpath="IFW_HOLIDAY"/>
+					<xs:field xpath="@CALENDAR"/>
+					<xs:field xpath="@HOLIDAY"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SELECTOR_BLOCK_LNK" type="TableType_IFW_SELECTOR_BLOCK_LNK" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="IFW_PIPELINE" type="TableType_IFW_PIPELINE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_PIPELINE_PrimaryKey_1">
+					<xs:selector xpath="IFW_PIPELINE"/>
+					<xs:field xpath="@PIPELINE"/>
+				</xs:key>
+				<xs:keyref name="IFW_DISCARDING_ForeignKey_1" refer="IFW_PIPELINE_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCARDING"/>
+					<xs:field xpath="@PIPELINE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SPLITTING_TYPE_ForeignKey_1" refer="IFW_PIPELINE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SPLITTING_TYPE"/>
+					<xs:field xpath="@PIPELINE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_UOM" type="TableType_IFW_UOM" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_UOM_PrimaryKey_1">
+					<xs:selector xpath="IFW_UOM"/>
+					<xs:field xpath="@UOM"/>
+				</xs:key>
+				<xs:keyref name="IFW_RUMGROUP_LNK_ForeignKey_3" refer="IFW_UOM_PrimaryKey_1">
+					<xs:selector xpath="IFW_RUMGROUP_LNK"/>
+					<xs:field xpath="@UOM"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_UOM_MAP_ForeignKey_2" refer="IFW_UOM_PrimaryKey_1">
+					<xs:selector xpath="IFW_UOM_MAP"/>
+					<xs:field xpath="@FROM_UOM"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_UOM_MAP_ForeignKey_3" refer="IFW_UOM_PrimaryKey_1">
+					<xs:selector xpath="IFW_UOM_MAP"/>
+					<xs:field xpath="@TO_UOM"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RESOURCE" type="TableType_IFW_RESOURCE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RESOURCE_PrimaryKey_1">
+					<xs:selector xpath="IFW_RESOURCE"/>
+					<xs:field xpath="@RESOURCE_NAME"/>
+				</xs:key>
+				<xs:keyref name="IFW_PRICEMDL_STEP_ForeignKey_9" refer="IFW_RESOURCE_PrimaryKey_1">
+					<xs:selector xpath="IFW_PRICEMDL_STEP"/>
+					<xs:field xpath="@RESOURCE_NAME"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_TAXCODE" type="TableType_IFW_TAXCODE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TAXCODE_PrimaryKey_1">
+					<xs:selector xpath="IFW_TAXCODE"/>
+					<xs:field xpath="@TAXCODE"/>
+				</xs:key>
+				<xs:keyref name="IFW_GLACCOUNT_ForeignKey_1" refer="IFW_TAXCODE_PrimaryKey_1">
+					<xs:selector xpath="IFW_GLACCOUNT"/>
+					<xs:field xpath="@TAXCODE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TAX_ForeignKey_2" refer="IFW_TAXCODE_PrimaryKey_1">
+					<xs:selector xpath="IFW_TAX"/>
+					<xs:field xpath="@TAXCODE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_TAX" type="TableType_IFW_TAX" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TAX_PrimaryKey_1">
+					<xs:selector xpath="IFW_TAX"/>
+					<xs:field xpath="@TAXGROUP"/>
+					<xs:field xpath="@TAXCODE"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_GLACCOUNT" type="TableType_IFW_GLACCOUNT" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_GLACCOUNT_PrimaryKey_1">
+					<xs:selector xpath="IFW_GLACCOUNT"/>
+					<xs:field xpath="@GLACCOUNT"/>
+				</xs:key>
+				<xs:keyref name="IFW_PRICEMDL_STEP_ForeignKey_1" refer="IFW_GLACCOUNT_PrimaryKey_1">
+					<xs:selector xpath="IFW_PRICEMDL_STEP"/>
+					<xs:field xpath="@GLACCOUNT"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SERVICE_ForeignKey_1" refer="IFW_GLACCOUNT_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICE"/>
+					<xs:field xpath="@DEF_GLACCOUNT"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_REVENUEGROUP" type="TableType_IFW_REVENUEGROUP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_REVENUEGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_REVENUEGROUP"/>
+					<xs:field xpath="@REVENUEGROUP"/>
+				</xs:key>
+				<xs:keyref name="IFW_PRICEMDL_STEP_ForeignKey_2" refer="IFW_REVENUEGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_PRICEMDL_STEP"/>
+					<xs:field xpath="@REVENUEGROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SERVICE_ForeignKey_2" refer="IFW_REVENUEGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICE"/>
+					<xs:field xpath="@DEF_REVENUEGROUP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RUM" type="TableType_IFW_RUM" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RUM_PrimaryKey_1">
+					<xs:selector xpath="IFW_RUM"/>
+					<xs:field xpath="@RUM"/>
+				</xs:key>
+				<xs:keyref name="IFW_PRICEMDL_STEP_ForeignKey_4" refer="IFW_RUM_PrimaryKey_1">
+					<xs:selector xpath="IFW_PRICEMDL_STEP"/>
+					<xs:field xpath="@RUM"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RUMGROUP_LNK_ForeignKey_2" refer="IFW_RUM_PrimaryKey_1">
+					<xs:selector xpath="IFW_RUMGROUP_LNK"/>
+					<xs:field xpath="@RUM"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_UOM_MAP_ForeignKey_1" refer="IFW_RUM_PrimaryKey_1">
+					<xs:selector xpath="IFW_UOM_MAP"/>
+					<xs:field xpath="@RUM"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RUMGROUP" type="TableType_IFW_RUMGROUP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RUMGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_RUMGROUP"/>
+					<xs:field xpath="@RUMGROUP"/>
+				</xs:key>
+				<xs:keyref name="IFW_RUMGROUP_LNK_ForeignKey_1" refer="IFW_RUMGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_RUMGROUP_LNK"/>
+					<xs:field xpath="@RUMGROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SERVICE_ForeignKey_3" refer="IFW_RUMGROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICE"/>
+					<xs:field xpath="@RUMGROUP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RUMGROUP_LNK" type="TableType_IFW_RUMGROUP_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RUMGROUP_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_RUMGROUP_LNK"/>
+					<xs:field xpath="@RUMGROUP"/>
+					<xs:field xpath="@RUM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SERVICE" type="TableType_IFW_SERVICE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SERVICE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICE"/>
+					<xs:field xpath="@SERVICECODE"/>
+				</xs:key>
+				<xs:keyref name="IFW_GEO_ZONE_ForeignKey_3" refer="IFW_SERVICE_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEO_ZONE"/>
+					<xs:field xpath="@SERVICECODE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_2" refer="IFW_SERVICE_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@SERVICECODE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SERVICE_ForeignKey_4" refer="IFW_SERVICE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICE"/>
+					<xs:field xpath="@PARENT_SERVICE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SERVICE_MAP_ForeignKey_1" refer="IFW_SERVICE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICE_MAP"/>
+					<xs:field xpath="@INT_SERVICECODE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SERVICECLASS_ForeignKey_1" refer="IFW_SERVICE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICECLASS"/>
+					<xs:field xpath="@SERVICECODE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_STANDARD_ZONE_ForeignKey_3" refer="IFW_SERVICE_PrimaryKey_1">
+					<xs:selector xpath="IFW_STANDARD_ZONE"/>
+					<xs:field xpath="@SERVICECODE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SERVICECLASS" type="TableType_IFW_SERVICECLASS" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SERVICECLASS_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICECLASS"/>
+					<xs:field xpath="@SERVICECODE"/>
+					<xs:field xpath="@SERVICECLASS"/>
+				</xs:key>
+				<xs:keyref name="IFW_RSC_MAP_ForeignKey_9" refer="IFW_SERVICECLASS_PrimaryKey_1">
+					<xs:selector xpath="IFW_RSC_MAP"/>
+					<xs:field xpath="@NEW_SERVICECODE"/>
+					<xs:field xpath="@NEW_SERVICECLASS"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_REF_MAP" type="TableType_IFW_REF_MAP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_REF_MAP_PrimaryKey_1">
+					<xs:selector xpath="IFW_REF_MAP"/>
+					<xs:field xpath="@ID"/>
+					<xs:field xpath="@REF_OBJ"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_MAP_GROUP" type="TableType_IFW_MAP_GROUP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_MAP_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_MAP_GROUP"/>
+					<xs:field xpath="@MAP_GROUP"/>
+				</xs:key>
+				<xs:keyref name="IFW_NOSP_ForeignKey_1" refer="IFW_MAP_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOSP"/>
+					<xs:field xpath="@MAP_GROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SERVICE_MAP_ForeignKey_2" refer="IFW_MAP_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICE_MAP"/>
+					<xs:field xpath="@MAP_GROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_USAGECLASS_MAP_ForeignKey_1" refer="IFW_MAP_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_USAGECLASS_MAP"/>
+					<xs:field xpath="@MAP_GROUP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SERVICE_MAP" type="TableType_IFW_SERVICE_MAP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SERVICE_MAP_PrimaryKey_1">
+					<xs:selector xpath="IFW_SERVICE_MAP"/>
+					<xs:field xpath="@MAP_GROUP"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_USAGECLASS" type="TableType_IFW_USAGECLASS" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_USAGECLASS_PrimaryKey_1">
+					<xs:selector xpath="IFW_USAGECLASS"/>
+					<xs:field xpath="@USAGECLASS"/>
+				</xs:key>
+				<xs:keyref name="IFW_USAGECLASS_MAP_ForeignKey_2" refer="IFW_USAGECLASS_PrimaryKey_1">
+					<xs:selector xpath="IFW_USAGECLASS_MAP"/>
+					<xs:field xpath="@INT_USAGECLASS"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_USAGECLASS_MAP" type="TableType_IFW_USAGECLASS_MAP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_USAGECLASS_MAP_PrimaryKey_1">
+					<xs:selector xpath="IFW_USAGECLASS_MAP"/>
+					<xs:field xpath="@MAP_GROUP"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_USC_GROUP" type="TableType_IFW_USC_GROUP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_USC_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_USC_GROUP"/>
+					<xs:field xpath="@USC_GROUP"/>
+				</xs:key>
+				<xs:keyref name="IFW_SLA_ForeignKey_3" refer="IFW_USC_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_SLA"/>
+					<xs:field xpath="@USC_GROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_USC_MAP_ForeignKey_5" refer="IFW_USC_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_USC_MAP"/>
+					<xs:field xpath="@USC_GROUP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RSC_GROUP" type="TableType_IFW_RSC_GROUP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RSC_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_RSC_GROUP"/>
+					<xs:field xpath="@RSC_GROUP"/>
+				</xs:key>
+				<xs:keyref name="IFW_RSC_MAP_ForeignKey_1" refer="IFW_RSC_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_RSC_MAP"/>
+					<xs:field xpath="@RSC_GROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SLA_ForeignKey_2" refer="IFW_RSC_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_SLA"/>
+					<xs:field xpath="@RSC_GROUP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_APN_GROUP" type="TableType_IFW_APN_GROUP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_APN_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_APN_GROUP"/>
+					<xs:field xpath="@APN_GROUP"/>
+				</xs:key>
+				<xs:keyref name="IFW_APN_MAP_ForeignKey_1" refer="IFW_APN_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_APN_MAP"/>
+					<xs:field xpath="@APN_GROUP"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_ZONEMODEL_ForeignKey_1" refer="IFW_APN_GROUP_PrimaryKey_1">
+					<xs:selector xpath="IFW_ZONEMODEL"/>
+					<xs:field xpath="@APN_GROUP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_ZONEMODEL" type="TableType_IFW_ZONEMODEL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_ZONEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_ZONEMODEL"/>
+					<xs:field xpath="@ZONEMODEL"/>
+				</xs:key>
+				<xs:keyref name="IFW_GEO_ZONE_ForeignKey_4" refer="IFW_ZONEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEO_ZONE"/>
+					<xs:field xpath="@ZONEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_GEO_ZONE_ForeignKey_5" refer="IFW_ZONEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEO_ZONE"/>
+					<xs:field xpath="@ALT_ZONEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_VER_ForeignKey_1" refer="IFW_ZONEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_VER"/>
+					<xs:field xpath="@ZONEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SEGZONE_LNK_ForeignKey_1" refer="IFW_ZONEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEGZONE_LNK"/>
+					<xs:field xpath="@ZONEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_STANDARD_ZONE_ForeignKey_4" refer="IFW_ZONEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_STANDARD_ZONE"/>
+					<xs:field xpath="@ZONEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_STANDARD_ZONE_ForeignKey_5" refer="IFW_ZONEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_STANDARD_ZONE"/>
+					<xs:field xpath="@ALT_ZONEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_USC_MAP_ForeignKey_3" refer="IFW_ZONEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_USC_MAP"/>
+					<xs:field xpath="@ZONEMODEL"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_IMPACT_CAT" type="TableType_IFW_IMPACT_CAT" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_IMPACT_CAT"/>
+					<xs:field xpath="@IMPACT_CATEGORY"/>
+				</xs:key>
+				<xs:keyref name="IFW_APN_MAP_ForeignKey_2" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_APN_MAP"/>
+					<xs:field xpath="@NEW_ZONE_WS"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_APN_MAP_ForeignKey_3" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_APN_MAP"/>
+					<xs:field xpath="@NEW_ZONE_RT"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_GEO_ZONE_ForeignKey_1" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEO_ZONE"/>
+					<xs:field xpath="@ZONE_WS"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_GEO_ZONE_ForeignKey_2" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEO_ZONE"/>
+					<xs:field xpath="@ZONE_RT"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NOPRODUCT_CNF_ForeignKey_1" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT_CNF"/>
+					<xs:field xpath="@IMPACT_CATEGORY"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_1" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@IMPACT_CATEGORY"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_STANDARD_ZONE_ForeignKey_1" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_STANDARD_ZONE"/>
+					<xs:field xpath="@ZONE_WS"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_STANDARD_ZONE_ForeignKey_2" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_STANDARD_ZONE"/>
+					<xs:field xpath="@ZONE_RT"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_USC_MAP_ForeignKey_1" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_USC_MAP"/>
+					<xs:field xpath="@IMPACT_CATEGORY_WS"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_USC_MAP_ForeignKey_2" refer="IFW_IMPACT_CAT_PrimaryKey_1">
+					<xs:selector xpath="IFW_USC_MAP"/>
+					<xs:field xpath="@IMPACT_CATEGORY_RT"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_GEO_ZONE" type="TableType_IFW_GEO_ZONE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_GEO_ZONE_PrimaryKey_1">
+					<xs:selector xpath="IFW_GEO_ZONE"/>
+					<xs:field xpath="@ZONEMODEL"/>
+					<xs:field xpath="@DISTANCE"/>
+					<xs:field xpath="@SERVICECODE"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_STANDARD_ZONE" type="TableType_IFW_STANDARD_ZONE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_STANDARD_ZONE_PrimaryKey_1">
+					<xs:selector xpath="IFW_STANDARD_ZONE"/>
+					<xs:field xpath="@ZONEMODEL"/>
+					<xs:field xpath="@ORIGIN_AREACODE"/>
+					<xs:field xpath="@DESTIN_AREACODE"/>
+					<xs:field xpath="@SERVICECODE"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_USAGETYPE" type="TableType_IFW_USAGETYPE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_USAGETYPE_PrimaryKey_1">
+					<xs:selector xpath="IFW_USAGETYPE"/>
+					<xs:field xpath="@USAGETYPE"/>
+				</xs:key>
+				<xs:keyref name="IFW_USC_MAP_ForeignKey_4" refer="IFW_USAGETYPE_PrimaryKey_1">
+					<xs:selector xpath="IFW_USC_MAP"/>
+					<xs:field xpath="@NEW_USAGETYPE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_USC_MAP" type="TableType_IFW_USC_MAP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_USC_MAP_PrimaryKey_1">
+					<xs:selector xpath="IFW_USC_MAP"/>
+					<xs:field xpath="@USC_GROUP"/>
+					<xs:field xpath="@ZONEMODEL"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_APN_MAP" type="TableType_IFW_APN_MAP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_APN_MAP_PrimaryKey_1">
+					<xs:selector xpath="IFW_APN_MAP"/>
+					<xs:field xpath="@APN_GROUP"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_DISCARDING" type="TableType_IFW_DISCARDING" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DISCARDING_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCARDING"/>
+					<xs:field xpath="@PIPELINE"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_DAYCODE" type="TableType_IFW_DAYCODE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DAYCODE_PrimaryKey_1">
+					<xs:selector xpath="IFW_DAYCODE"/>
+					<xs:field xpath="@DAYCODE"/>
+				</xs:key>
+				<xs:keyref name="IFW_TIMEMODEL_LNK_ForeignKey_1" refer="IFW_DAYCODE_PrimaryKey_1">
+					<xs:selector xpath="IFW_TIMEMODEL_LNK"/>
+					<xs:field xpath="@DAYCODE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_TIMEINTERVAL" type="TableType_IFW_TIMEINTERVAL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TIMEINTERVAL_PrimaryKey_1">
+					<xs:selector xpath="IFW_TIMEINTERVAL"/>
+					<xs:field xpath="@INTERVAL"/>
+				</xs:key>
+				<xs:keyref name="IFW_TIMEMODEL_LNK_ForeignKey_2" refer="IFW_TIMEINTERVAL_PrimaryKey_1">
+					<xs:selector xpath="IFW_TIMEMODEL_LNK"/>
+					<xs:field xpath="@INTERVAL"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_TIMEZONE" type="TableType_IFW_TIMEZONE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TIMEZONE_PrimaryKey_1">
+					<xs:selector xpath="IFW_TIMEZONE"/>
+					<xs:field xpath="@TIMEZONE"/>
+				</xs:key>
+				<xs:keyref name="IFW_NOPRODUCT_CNF_ForeignKey_3" refer="IFW_TIMEZONE_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT_CNF"/>
+					<xs:field xpath="@TIMEZONE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_8" refer="IFW_TIMEZONE_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@TIMEZONE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TIMEMODEL_LNK_ForeignKey_4" refer="IFW_TIMEZONE_PrimaryKey_1">
+					<xs:selector xpath="IFW_TIMEMODEL_LNK"/>
+					<xs:field xpath="@TIMEZONE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_TIMEMODEL" type="TableType_IFW_TIMEMODEL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TIMEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_TIMEMODEL"/>
+					<xs:field xpath="@TIMEMODEL"/>
+				</xs:key>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_7" refer="IFW_TIMEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@TIMEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_TIMEMODEL_LNK_ForeignKey_3" refer="IFW_TIMEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_TIMEMODEL_LNK"/>
+					<xs:field xpath="@TIMEMODEL"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_TIMEMODEL_LNK" type="TableType_IFW_TIMEMODEL_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_TIMEMODEL_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_TIMEMODEL_LNK"/>
+					<xs:field xpath="@TIMEMODEL"/>
+					<xs:field xpath="@DAYCODE"/>
+					<xs:field xpath="@INTERVAL"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_PRICEMODEL" type="TableType_IFW_PRICEMODEL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_PRICEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_PRICEMODEL"/>
+					<xs:field xpath="@PRICEMODEL"/>
+				</xs:key>
+				<xs:keyref name="IFW_PRICEMDL_STEP_ForeignKey_3" refer="IFW_PRICEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_PRICEMDL_STEP"/>
+					<xs:field xpath="@PRICEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_4" refer="IFW_PRICEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@PRICEMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_5" refer="IFW_PRICEMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@ALT_PRICEMODEL"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_PRICEMDL_STEP" type="TableType_IFW_PRICEMDL_STEP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_PRICEMDL_STEP_PrimaryKey_1">
+					<xs:selector xpath="IFW_PRICEMDL_STEP"/>
+					<xs:field xpath="@PRICEMODEL"/>
+					<xs:field xpath="@VALID_FROM"/>
+					<xs:field xpath="@RESOURCE_NAME"/>
+					<xs:field xpath="@RUM"/>
+					<xs:field xpath="@STEP"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_DSCTRIGGER" type="TableType_IFW_DSCTRIGGER" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DSCTRIGGER_PrimaryKey_1">
+					<xs:selector xpath="IFW_DSCTRIGGER"/>
+					<xs:field xpath="@DISCOUNTTRIGGER"/>
+				</xs:key>
+				<xs:keyref name="IFW_DSCCONDITION_ForeignKey_1" refer="IFW_DSCTRIGGER_PrimaryKey_1">
+					<xs:selector xpath="IFW_DSCTRIGGER/IFW_DSCCONDITION"/>
+					<xs:field xpath="@DISCOUNTTRIGGER"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_DSCMDL_CNF_ForeignKey_2" refer="IFW_DSCTRIGGER_PrimaryKey_1">
+					<xs:selector xpath="IFW_DSCTRIGGER/IFW_DSCMDL_CNF"/>
+					<xs:field xpath="@DISCOUNTTRIGGER"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_DISCOUNTMASTER" type="TableType_IFW_DISCOUNTMASTER" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DISCOUNTMASTER_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTMASTER"/>
+					<xs:field xpath="@DISCOUNTMASTER"/>
+				</xs:key>
+				<xs:keyref name="IFW_DISCOUNTDETAIL_ForeignKey_1" refer="IFW_DISCOUNTMASTER_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTDETAIL"/>
+					<xs:field xpath="@DISCOUNTMASTER"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_DISCOUNTRULE_ForeignKey_1" refer="IFW_DISCOUNTMASTER_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTRULE"/>
+					<xs:field xpath="@DISCOUNTMASTER"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_DISCOUNTRULE" type="TableType_IFW_DISCOUNTRULE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DISCOUNTRULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTRULE"/>
+					<xs:field xpath="@DISCOUNTRULE"/>
+				</xs:key>
+				<xs:keyref name="IFW_DISCOUNTSTEP_ForeignKey_1" refer="IFW_DISCOUNTRULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTSTEP"/>
+					<xs:field xpath="@DISCOUNTRULE"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_DSCMDL_CNF_ForeignKey_1" refer="IFW_DISCOUNTRULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTRULE/IFW_DSCMDL_CNF"/>
+					<xs:field xpath="@DISCOUNTRULE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_DISCOUNTMODEL" type="TableType_IFW_DISCOUNTMODEL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DISCOUNTMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTMODEL"/>
+					<xs:field xpath="@DISCOUNTMODEL"/>
+				</xs:key>
+				<xs:keyref name="IFW_DSCMDL_VER_ForeignKey_1" refer="IFW_DISCOUNTMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_DSCMDL_VER"/>
+					<xs:field xpath="@DISCOUNTMODEL"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_DSCMDL_CNF_ForeignKey_50" refer="IFW_DISCOUNTMODEL_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTMODEL/IFW_DSCMDL_CNF"/>
+					<xs:field xpath="@DISCOUNTMODEL"/>
+				</xs:keyref>
+                                <xs:keyref name="IFW_SELECTOR_RULESET_ForeignKey_3" refer="IFW_DISCOUNTMODEL_PrimaryKey_1">
+                                       <xs:selector xpath="IFW_SELECTOR_RULESET"/>
+                                       <xs:field xpath="@MODEL"/>
+                                </xs:keyref>
+
+			</xs:element>
+			<xs:element name="IFW_DSCMDL_VER" type="TableType_IFW_DSCMDL_VER" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DSCMDL_VER_PrimaryKey_1">
+					<xs:selector xpath="IFW_DSCMDL_VER"/>
+					<xs:field xpath="@DISCOUNTMODEL"/>
+					<xs:field xpath="@VERSION"/>
+				</xs:key>
+				<xs:keyref name="IFW_DSCMDL_CNF_ForeignKey_9" refer="IFW_DSCMDL_VER_PrimaryKey_1">
+					<xs:selector xpath="IFW_DSCMDL_VER/IFW_DSCMDL_CNF"/>
+					<xs:field xpath="@DISCOUNTMODEL"/>
+					<xs:field xpath="@VERSION"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RATEPLAN_VER" type="TableType_IFW_RATEPLAN_VER" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RATEPLAN_VER_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_VER"/>
+					<xs:field xpath="@RATEPLAN"/>
+					<xs:field xpath="@VERSION"/>
+				</xs:key>
+				<xs:keyref name="IFW_RATEADJUST_ForeignKey_1" refer="IFW_RATEPLAN_VER_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEADJUST"/>
+					<xs:field xpath="@RATEPLAN"/>
+					<xs:field xpath="@VERSION"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_CNF_ForeignKey_6" refer="IFW_RATEPLAN_VER_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@RATEPLAN"/>
+					<xs:field xpath="@VERSION"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RATEPLAN_VER_ForeignKey_3" refer="IFW_RATEPLAN_VER_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_VER"/>
+					<xs:field xpath="@BASIC_RATEPLAN"/>
+					<xs:field xpath="@BASIC_VERSION"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SPECIALDAY_LNK_ForeignKey_1" refer="IFW_RATEPLAN_VER_PrimaryKey_1">
+					<xs:selector xpath="IFW_SPECIALDAY_LNK"/>
+					<xs:field xpath="@RATEPLAN"/>
+					<xs:field xpath="@VERSION"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RATEADJUST" type="TableType_IFW_RATEADJUST" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RATEADJUST_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEADJUST"/>
+					<xs:field xpath="@RATEPLAN"/>
+					<xs:field xpath="@VERSION"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_DISCOUNTDETAIL" type="TableType_IFW_DISCOUNTDETAIL" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DISCOUNTDETAIL_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTDETAIL"/>
+					<xs:field xpath="@DISCOUNTMASTER"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_DISCOUNTSTEP" type="TableType_IFW_DISCOUNTSTEP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_DISCOUNTSTEP_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTSTEP"/>
+					<xs:field xpath="@DISCOUNTSTEP"/>
+				</xs:key>
+				<xs:keyref name="IFW_DSCBALIMPACT_ForeignKey_1" refer="IFW_DISCOUNTSTEP_PrimaryKey_1">
+					<xs:selector xpath="IFW_DISCOUNTSTEP/IFW_DSCBALIMPACT"/>
+					<xs:field xpath="@DISCOUNTSTEP"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RATEPLAN_CNF" type="TableType_IFW_RATEPLAN_CNF" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RATEPLAN_CNF_PrimaryKey_1">
+					<xs:selector xpath="IFW_RATEPLAN_CNF"/>
+					<xs:field xpath="@RATEPLAN"/>
+					<xs:field xpath="@VERSION"/>
+					<xs:field xpath="@SERVICECODE"/>
+					<xs:field xpath="@SERVICECLASS"/>
+					<xs:field xpath="@IMPACT_CATEGORY"/>
+					<xs:field xpath="@TIMEMODEL"/>
+					<xs:field xpath="@TIMEZONE"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SPECIALDAYRATE" type="TableType_IFW_SPECIALDAYRATE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SPECIALDAYRATE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SPECIALDAYRATE"/>
+					<xs:field xpath="@SPECIALDAYRATE"/>
+				</xs:key>
+				<xs:keyref name="IFW_SPECIALDAY_LNK_ForeignKey_2" refer="IFW_SPECIALDAYRATE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SPECIALDAY_LNK"/>
+					<xs:field xpath="@SPECIALDAYRATE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SPECIALDAY_LNK" type="TableType_IFW_SPECIALDAY_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SPECIALDAY_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_SPECIALDAY_LNK"/>
+					<xs:field xpath="@RATEPLAN"/>
+					<xs:field xpath="@VERSION"/>
+					<xs:field xpath="@SPECIALDAYRATE"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_UOM_MAP" type="TableType_IFW_UOM_MAP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_UOM_MAP_PrimaryKey_1">
+					<xs:selector xpath="IFW_UOM_MAP"/>
+					<xs:field xpath="@RUM"/>
+					<xs:field xpath="@FROM_UOM"/>
+					<xs:field xpath="@TO_UOM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_EXCHANGE_RATE" type="TableType_IFW_EXCHANGE_RATE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_EXCHANGE_RATE_PrimaryKey_1">
+					<xs:selector xpath="IFW_EXCHANGE_RATE"/>
+					<xs:field xpath="@FROM_CURRENCY"/>
+					<xs:field xpath="@VALID_FROM"/>
+					<xs:field xpath="@TO_CURRENCY"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_RSC_MAP" type="TableType_IFW_RSC_MAP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RSC_MAP_PrimaryKey_1">
+					<xs:selector xpath="IFW_RSC_MAP"/>
+					<xs:field xpath="@RSC_GROUP"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_RULE" type="TableType_IFW_RULE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_RULE"/>
+					<xs:field xpath="@RULE_ID"/>
+				</xs:key>
+				<xs:keyref name="IFW_RULEITEM_ForeignKey_1" refer="IFW_RULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_RULEITEM"/>
+					<xs:field xpath="@RULE_ID"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_RULESETLIST_ForeignKey_2" refer="IFW_RULE_PrimaryKey_1">
+					<xs:selector xpath="IFW_RULESETLIST"/>
+					<xs:field xpath="@RULE_ID"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_RULEITEM" type="TableType_IFW_RULEITEM" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RULEITEM_PrimaryKey_1">
+					<xs:selector xpath="IFW_RULEITEM"/>
+					<xs:field xpath="@RULE_ID"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_RULESETLIST" type="TableType_IFW_RULESETLIST" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_RULESETLIST_PrimaryKey_1">
+					<xs:selector xpath="IFW_RULESETLIST"/>
+					<xs:field xpath="@RULESET"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SLA" type="TableType_IFW_SLA" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SLA_PrimaryKey_1">
+					<xs:selector xpath="IFW_SLA"/>
+					<xs:field xpath="@SLA_CODE"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SPLITTING_TYPE" type="TableType_IFW_SPLITTING_TYPE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SPLITTING_TYPE_PrimaryKey_1">
+					<xs:selector xpath="IFW_SPLITTING_TYPE"/>
+					<xs:field xpath="@PIPELINE"/>
+					<xs:field xpath="@RANK"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_ICPRODUCT" type="TableType_IFW_ICPRODUCT" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_ICPRODUCT_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT"/>
+					<xs:field xpath="@ICPRODUCT"/>
+				</xs:key>
+				<xs:keyref name="IFW_ICPRODUCT_CNF_ForeignKey_1" refer="IFW_ICPRODUCT_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_CNF"/>
+					<xs:field xpath="@ICPRODUCT"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_ICPRODUCT_RATE_ForeignKey_2" refer="IFW_ICPRODUCT_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_RATE"/>
+					<xs:field xpath="@ICPRODUCT"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_NOPRODUCT_CNF_ForeignKey_2" refer="IFW_ICPRODUCT_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT_CNF"/>
+					<xs:field xpath="@ICPRODUCT"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_ICPRODUCT_CNF" type="TableType_IFW_ICPRODUCT_CNF" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_ICPRODUCT_CNF_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_CNF"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+					<xs:field xpath="@ICPRODUCT_GROUP"/>
+					<xs:field xpath="@RANK"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_ICPRODUCT_RATE" type="TableType_IFW_ICPRODUCT_RATE" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_ICPRODUCT_RATE_PrimaryKey_1">
+					<xs:selector xpath="IFW_ICPRODUCT_RATE"/>
+					<xs:field xpath="@NETWORKMODEL"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@ICPRODUCT"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_NOPRODUCT" type="TableType_IFW_NOPRODUCT" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_NOPRODUCT_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@PRODUCTCODE"/>
+				</xs:key>
+				<xs:keyref name="IFW_NOPRODUCT_CNF_ForeignKey_9" refer="IFW_NOPRODUCT_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT_CNF"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@PRODUCTCODE"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_NOPRODUCT_CNF" type="TableType_IFW_NOPRODUCT_CNF" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_NOPRODUCT_CNF_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOPRODUCT_CNF"/>
+					<xs:field xpath="@ICPRODUCT"/>
+					<xs:field xpath="@TIMEZONE"/>
+					<xs:field xpath="@IMPACT_CATEGORY"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_NOSP" type="TableType_IFW_NOSP" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_NOSP_PrimaryKey_1">
+					<xs:selector xpath="IFW_NOSP"/>
+					<xs:field xpath="@MAP_GROUP"/>
+					<xs:field xpath="@RANK"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SEGMENT" type="TableType_IFW_SEGMENT" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SEGMENT_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEGMENT"/>
+					<xs:field xpath="@SEGMENT"/>
+				</xs:key>
+				<xs:keyref name="IFW_SEGRATE_LNK_ForeignKey_2" refer="IFW_SEGMENT_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEGRATE_LNK"/>
+					<xs:field xpath="@SEGMENT"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_SEGZONE_LNK_ForeignKey_2" refer="IFW_SEGMENT_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEGZONE_LNK"/>
+					<xs:field xpath="@SEGMENT"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_SEGRATE_LNK" type="TableType_IFW_SEGRATE_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SEGRATE_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEGRATE_LNK"/>
+					<xs:field xpath="@SEGMENT"/>
+					<xs:field xpath="@VALID_FROM"/>
+					<xs:field xpath="@RATEPLAN"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SEGZONE_LNK" type="TableType_IFW_SEGZONE_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SEGZONE_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_SEGZONE_LNK"/>
+					<xs:field xpath="@SEGMENT"/>
+					<xs:field xpath="@VALID_FROM"/>
+					<xs:field xpath="@ZONEMODEL"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_CIBER_OCC" type="TableType_IFW_CIBER_OCC" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_CIBER_OCC_PrimaryKey_1">
+					<xs:selector xpath="IFW_CIBER_OCC"/>
+					<xs:field xpath="@NO"/>
+					<xs:field xpath="@VALID_FROM"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_GROUPING" type="TableType_IFW_GROUPING" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_GROUPING_PrimaryKey_1">
+					<xs:selector xpath="IFW_GROUPING"/>
+					<xs:field xpath="@GROUPING_ID"/>
+				</xs:key>
+				<xs:keyref name="IFW_GROUPING_CNF_ForeignKey_2" refer="IFW_GROUPING_PrimaryKey_1">
+					<xs:selector xpath="IFW_GROUPING_CNF"/>
+					<xs:field xpath="@GROUPING_ID"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_GROUPING_CNF" type="TableType_IFW_GROUPING_CNF" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_GROUPING_CNF_PrimaryKey_1">
+					<xs:selector xpath="IFW_GROUPING_CNF"/>
+					<xs:field xpath="@GROUPING_CNF_ID"/>
+				</xs:key>
+				<xs:keyref name="IFW_CLASSCON_ForeignKey_1" refer="IFW_GROUPING_CNF_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASSCON"/>
+					<xs:field xpath="@NODE_GRPG_CNF_ID"/>
+				</xs:keyref>
+				<xs:keyref name="IFW_CLASSCON_ForeignKey_2" refer="IFW_GROUPING_CNF_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASSCON"/>
+					<xs:field xpath="@NEXT_GRPG_CNF_ID"/>
+				</xs:keyref>
+			</xs:element>
+			<xs:element name="IFW_CLASSCON" type="TableType_IFW_CLASSCON" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_CLASSCON_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASSCON"/>
+					<xs:field xpath="@CLASSCON_ID"/>
+				</xs:key>
+				<xs:keyref name="IFW_CLASSCON_LNK_ForeignKey_1" refer="IFW_CLASSCON_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASSCON_LNK"/>
+					<xs:field xpath="@CLASSCON_ID"/>
+				</xs:keyref>
+			</xs:element>			
+			<xs:element name="IFW_CLASSCON_LNK" type="TableType_IFW_CLASSCON_LNK" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_CLASSCON_LNK_PrimaryKey_1">
+					<xs:selector xpath="IFW_CLASSCON_LNK"/>
+					<xs:field xpath="@CLASSCON_ID"/>
+					<xs:field xpath="@CLASSITEM_ID"/>
+				</xs:key>
+			</xs:element>
+			<xs:element name="IFW_SELECTOR_RULESET" type="TableType_IFW_SELECTOR_RULESET" minOccurs="0" maxOccurs="unbounded">
+				<xs:key name="IFW_SELECTOR_RULESET_PrimaryKey_1">
+					<xs:selector xpath="IFW_SELECTOR_RULESET"/>
+					<xs:field xpath="@MODEL_SELECTOR"/>
+					<xs:field xpath="@SELECTOR_RULE"/>
+				</xs:key>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="RecordSet" type="IfwSchema"/>
+	<xs:element name="IFW">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="RecordSet" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

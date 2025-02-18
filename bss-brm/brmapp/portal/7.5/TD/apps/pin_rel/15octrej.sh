@@ -1,0 +1,11 @@
+pin_rel test_TEL_037394_20151015085932.out.bc
+pin_rel test_TEL_037395_20151015085954.out.bc
+pin_rel test_TEL_037396_20151015090002.out.bc
+pin_rel test_TEL_037397_20151015090003.out.bc
+pin_rel test_TEL_037398_20151015090024.out.bc
+pin_rel test_TEL_037403_20151015090125.out.bc
+pin_rel test_TEL_037404_20151015090144.out.bc
+pin_rel test_TEL_037405_20151015090155.out.bc
+pin_rel test_VAS_037481_20151015110017.out.bc
+pin_rel test_VAS_037482_20151015110058.out.bc
+pin_rel test_VAS_037484_20151015110148.out.bc

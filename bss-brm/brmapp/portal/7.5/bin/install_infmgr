@@ -1,0 +1,79 @@
+#!/bin/sh
+#
+#	@(#) % %
+#
+#       Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# install the INFMGR startup stuff into the /etc/*rc files
+# ASSUMES: INFMGR files already loaded on machine
+# ASSUMES: running as root
+#
+# to run:
+# * sh -x ./install_infmgr
+# * verify no obvious errors
+# * edit pin.conf in /brmapp/portal/7.5/sys/infmgr
+# * start INFMGR by /brmapp/portal/7.5/bin/start_infmgr
+#
+# NOTE: Must Manually fixup pin.conf file as desired
+#
+VERSION=7.5
+
+PINDIR=/brmapp/portal/7.5
+INFMGR=infmgr
+INFMGRDIR=${PINDIR}/sys/${INFMGR}
+
+
+
+#
+# hook up to startup from init
+#
+
+os=`uname -r`
+case ${os} in
+5*)	# Solaris, add /etc/init.d/pin.${INFMGR}
+	if [ -f /etc/init.d/pin.${INFMGR} ]; then
+		rm -f /etc/init.d/pin.${INFMGR}
+	fi
+	cp ${INFMGRDIR}/init-d.pin.${INFMGR} /etc/init.d/pin.${INFMGR}
+	chown root /etc/init.d/pin.${INFMGR}
+	chgrp staff /etc/init.d/pin.${INFMGR}
+	chmod 755 /etc/init.d/pin.${INFMGR}
+	ln /etc/init.d/pin.${INFMGR} /etc/rc2.d/S96pin.${INFMGR}
+	ln /etc/init.d/pin.${INFMGR} /etc/rc2.d/K04pin.${INFMGR}
+	echo ""
+	echo "Solaris startup script installed in /etc/init.d, /etc/rc2.d"
+	echo ""
+	;;
+4*)		# SunOS 4.1.{3,4,...}X, add to /etc/rc.local
+	# check to see if already there
+	if grep start_${INFMGR} /etc/rc.local ; then
+		echo ""
+		echo "start_${INFMGR} already in /etc/rc.local"
+		echo " exiting"
+		exit 0
+	fi
+
+	# add to rc.local
+	cat << "XXX" >> /etc/rc.local
+INFMGR_DIR=${PINDIR}/bin
+if [ -x ${INFMGR_DIR}/start_${INFMGR} ]; then
+	${INFMGR_DIR}/start_${INFMGR} ; echo "${INFMGR} "
+fi
+XXX
+	;;
+*)
+	echo "ERROR: bad uname -r ???"
+	exit 1
+	;;
+esac
+
+echo "remember to fix up the ${INFMGRDIR}/pin.conf file and chmod 400 it"
+# chmod 400 ${INFMGRDIR}/pin.conf
+
+exit 0

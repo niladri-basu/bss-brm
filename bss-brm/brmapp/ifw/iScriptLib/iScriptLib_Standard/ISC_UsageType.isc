@@ -1,0 +1,223 @@
+//==============================================================================
+//
+//      Copyright (c) 2003 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+// Block: ISC_UsageType
+//-------------------------------------------------------------------------------
+// Module Description:
+//  
+// Contains functions generally required to be used by the Usage Type Iscript
+// Can be used to add new functions required during 
+//
+// This script must be adapted based on customer needs and the ERA/indicator 
+// that are not used must be removed from this iScript to achieve better performance.
+
+
+include "./iScriptLib/iScriptLib_Standard/ISC_UsageTypeFunctions.isc";
+
+
+
+String isRoaming = "N";
+String isInternational = "N";
+String isHomeRegion = "N";
+String isCustomerToCustomer = "N";
+String isSameClosedUserGroup = "N";
+String isSameCorporateAgreement = "N";
+String isSameCustomer = "N";
+String isSameSystemBrand = "N";
+String isSameSegment = "N";
+String isSameRateplan = "N";
+String isSameDiscountModel = "N";
+String isSameBillcycle = "N";
+String isBirthdayCall = "N";
+String isFriendsAndFamily = "N";
+String isHomeCell = "N";
+
+String aIndexStr;
+String bIndexStr;
+Long positionSeparator;
+
+
+String profileNameHomeRegion;
+String profileNameHomeCell;
+String profileNameFriendsFamily;
+String profileNameCorporate;
+String profileNameDatawarehouse;
+String profileNameSpecialDay;
+String profileNameClosedUserGroup;
+String profileNameSameDiscountModel;
+String profileNameSameRateplan;
+
+
+function BEGIN
+{
+  profileNameHomeRegion = "HOME_REGION";
+  profileNameHomeCell = "HOME_CELL";
+  profileNameFriendsFamily = "FRIENDS_FAMILY";
+  profileNameCorporate = "CORPORATE";
+  profileNameDatawarehouse = "DATAWAREHOUSE";
+  profileNameSpecialDay = "SPECIAL_DAY";
+  profileNameClosedUserGroup = "CLOSEDUSERGROUP";
+  profileNameSameDiscountModel = "DISCOUNTMODEL";
+  profileNameSameRateplan = "RATEPLAN";
+}
+
+
+//==============================================================================
+// Container Processing
+//==============================================================================
+
+Long purchaseProdIndex = edrLong(DETAIL.CUST_A.INTERN_FOUND_PP_INDEX, 0);
+String serviceType = edrString(DETAIL.CUST_A.PRODUCT.SERVICE_TYPE,0, 
+                                purchaseProdIndex);
+
+
+//------------------------------------------------------------------------------
+// Roaming determination
+//------------------------------------------------------------------------------
+if (edrString(DETAIL.USAGE_DIRECTION) == "2" or 
+    edrString(DETAIL.USAGE_DIRECTION) == "3")
+{
+  isRoaming = "Y";
+}
+
+//------------------------------------------------------------------------------
+// International determination
+//------------------------------------------------------------------------------
+if (edrString(DETAIL.CONNECT_SUB_TYPE) == "04")
+{
+  isInternational = "Y";	
+}
+
+//------------------------------------------------------------------------------
+// Customer to Customer determination (found CUST_A and CUST_B)
+//------------------------------------------------------------------------------
+if  (edrNumDatablocks( DETAIL.CUST_A) > 0 and  
+     edrNumDatablocks(DETAIL.CUST_B) > 0)
+{
+  isCustomerToCustomer = "Y";
+}
+
+//------------------------------------------------------------------------------
+// Customer internal determination (A# and B# of CUST_A)
+//------------------------------------------------------------------------------
+if ( isCustomerToCustomer == "Y")
+{
+  if (edrString(DETAIL.CUST_A.ACCOUNT_ID,0) == 
+      edrString(DETAIL.CUST_B.ACCOUNT_ID,0))
+  {
+    isSameCustomer = "Y";
+  }
+}
+
+//------------------------------------------------------------------------------
+// Same System Brand Determination (same for CUST_A and CUST_B)
+//------------------------------------------------------------------------------
+if ( isCustomerToCustomer == "Y")
+{
+  if (edrString(DETAIL.CUST_A.SYSTEM_BRAND,0) == 
+      edrString(DETAIL.CUST_B.SYSTEM_BRAND,0))
+   {
+     isSameSystemBrand = "Y";
+   }
+}
+
+//------------------------------------------------------------------------------
+// Same Billcycle Determination (same for CUST_A and CUST_B)
+//------------------------------------------------------------------------------
+if ( isCustomerToCustomer == "Y")
+{
+  if (edrString(DETAIL.CUST_A.BILL_CYCLE,0) == 
+      edrString(DETAIL.CUST_B.BILL_CYCLE,0))
+  {
+    isSameBillcycle = "Y";
+  }
+}
+
+//------------------------------------------------------------------------------
+// Home Region Call determination
+//------------------------------------------------------------------------------
+isHomeRegion = compareProductERAforProfileAttributes (profileNameHomeRegion,
+               "NUMBER", edrString(DETAIL.B_NUMBER), serviceType, PREFIX_MATCH);
+
+//------------------------------------------------------------------------------
+// Home Region Call determination
+//------------------------------------------------------------------------------
+isHomeCell = compareProductERAforProfileAttributes (profileNameHomeCell,
+             "CELL_ID", edrString(DETAIL.ASS_GSMW_EXT.CELL_ID,0), 
+              serviceType, EXACT_MATCH);
+
+//------------------------------------------------------------------------------
+// Friends and Family Determination
+//------------------------------------------------------------------------------
+isFriendsAndFamily = compareProductERAforProfileAttributes 
+                 (profileNameFriendsFamily,"NUMBER", 
+                  edrString(DETAIL.B_NUMBER), serviceType, EXACT_MATCH);
+
+//------------------------------------------------------------------------------
+// Same Corporate agreeement determination (CUST_A and CUST_B have the same one)
+//------------------------------------------------------------------------------
+
+isSameCorporateAgreement = compareABCustEraPaValues(profileNameCorporate,
+            "AGREEMENT", EXACT_MATCH);
+   
+//------------------------------------------------------------------------------
+// Same Closed Usergroup determination (CUST_A and CUST_B have the same one)
+//------------------------------------------------------------------------------
+
+isSameClosedUserGroup = compareABClosedUserGroup(profileNameClosedUserGroup);
+
+//------------------------------------------------------------------------------
+// Same Rateplan determination (CUST_A and CUST_B have the same one)
+//
+// The search algorithm compares just one possible value out of three:
+// the comparison is done on the field:
+// DETAIL.CUST_<A|B>.PRODUCT.RATEPLAN_NAME
+// The comparision of other fields is not implemented.
+//------------------------------------------------------------------------------
+
+
+Long bPpIndexCounter=0;
+
+while (bPpIndexCounter<edrNumDatablocks(DETAIL.CUST_B.PRODUCT,0) and 
+       isSameRateplan=="N")
+{
+   if (edrString(DETAIL.CUST_A.PRODUCT.RATEPLAN_NAME,0,purchaseProdIndex) == 
+       edrString(DETAIL.CUST_B.PRODUCT.RATEPLAN_NAME,0,bPpIndexCounter))
+   {
+      isSameRateplan="Y";
+   }
+   bPpIndexCounter=bPpIndexCounter+1;
+}
+
+//------------------------------------------------------------------------------
+// Same Discount Model determination (CUST_A and CUST_B have the same one)
+// Note  : this is only just one possibility value out of several Models:
+//	DISCOUNT_MODEL (deprecated with 6.7?)
+//	DISCOUNT_BUNDLE
+//	DISCOUNT_MODEL from the selected rate plan
+
+//------------------------------------------------------------------------------
+isSameDiscountModel = compareABProductEraPaValues (profileNameSameDiscountModel, 
+                         "INTEGRATE", purchaseProdIndex, serviceType, 0 );
+
+//------------------------------------------------------------------------------
+// Birthday Call determination
+//------------------------------------------------------------------------------
+
+// date Format of Portal: "YYYY.MM.DD" --> requires format change!
+String strCallDate = dateToStr (edrDate(DETAIL.CHARGING_START_TIMESTAMP));   
+String strCallDay = substr(strCallDate, 6, 2);
+String strCallMonth = substr(strCallDate, 4, 2);
+
+// e.g. ".12.31"
+String strCallCombineYearMonth = "." + strCallMonth + "." + strCallDay; 
+
+isBirthdayCall = compareCustERAforProfileAttributes (
+                  profileNameSpecialDay,"BIRTHDAY",strCallCombineYearMonth, 2); 

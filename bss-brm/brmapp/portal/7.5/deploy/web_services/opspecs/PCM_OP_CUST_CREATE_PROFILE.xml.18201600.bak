@@ -1,0 +1,216 @@
+<Opcode name="PCM_OP_CUST_CREATE_PROFILE"
+    visibility="public"
+    transaction="required"
+    component="fm_cust"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>This opcodes creates a new profile object.</Doc>
+  <Input>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required"
+          mode="typeonly">
+        <Doc>Routing poid. Note that this POID contains the object sub-type.</Doc>
+        <ClassRef>obj://profile</ClassRef>
+      </Poid>
+      <Timestamp name="PIN_FLD_START_T" use="optional">
+        <Doc>Start time - Effective start timestamp of creation of this profile 
+	on an external system (System Time).</Doc>
+      </Timestamp>
+      <Timestamp name="PIN_FLD_END_T" use="optional">
+        <Doc>End time - Effective end timestamp of creation of this profile on 
+	an external system (System Time).</Doc>
+      </Timestamp>
+      <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+          mode="complete">
+        <Doc>The poid of the account to which this profile is attached.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+          mode="complete">
+        <Doc>The poid of the service to which this profile is attached.</Doc>
+        <ClassRef>obj://service</ClassRef>
+      </Poid>
+      <String name="PIN_FLD_NAME" use="optional"
+          maxlen="255">
+        <Doc>The name of the profile object. If not provided, the profile gets
+     	created with the default name "PIN Profile Object".</Doc>
+      </String>
+      <Array name="PIN_FLD_PROFILES" use="optional" elemIdMode="ignored"
+             iterationOrder="undefined" minElements="0" maxElements="1">
+        <Doc>This Profile array is a container for PIN_FLD_INHERITED_INFO.
+	     Only one element can be present in this array. More than one
+	     element if provided, are ignored.
+        </Doc>
+        <Fields>
+          <Poid name="PIN_FLD_PROFILE_OBJ" use="required" mode="complete">
+            <Doc>Partial poid of profile object to create. This is same as
+		 PIN_FLD_POID at the zeroth level.
+            </Doc>
+            <ClassRef>obj://profile</ClassRef>
+          </Poid>
+      	  <Substruct name="PIN_FLD_INHERITED_INFO" use="optional"
+            isRecursive="false">
+            <Doc>All inherited fields for the profile object are included in 
+	         this substruct.
+	    </Doc>
+            <Fields>
+              <Any name="PIN_FLD_INHERITED" use="optional" mode="allFields"
+                baseClassName="obj://profile"
+                classNameRef="#in.PROFILES.PROFILE_OBJ">
+                <Doc>This container is used to specify any fields for the
+                     profile.</Doc>
+              </Any>
+	    </Fields>
+          </Substruct>
+	</Fields>
+      </Array>
+    </Fields>
+  </Input>
+  <Output>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required"
+          mode="typeonly">
+        <Doc> Poid from the input flist.</Doc>
+        <ClassRef>obj://profile</ClassRef>
+      </Poid>
+      <Array name="PIN_FLD_RESULTS" use="required"
+          elemIdMode="ignored" iterationOrder="undefined"
+          minElements="1" maxElements="1"
+          minElemId="0"
+          isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+          isRecursive="false" allowedElemIds="0">
+        <Doc>This field is returned when the operation is successful.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required"
+              mode="complete">
+            <Doc>The poid of the profile object created. This poid contains the 
+	    object sub-type. </Doc>
+            <ClassRef>obj://profile</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+      <Enum name="PIN_FLD_RESULT" use="optional">
+        <Doc>The result of validation tests, if error.</Doc>
+        <Values>
+          <Value>0</Value>
+          <Doc>PIN_CUST_VERIFY_FAILED: This indicates that the validation is failed.</Doc>
+        </Values>
+        <Values>
+          <Value>1</Value>
+          <Doc>PIN_CUST_VERIFY_PASSED: This indicates that the validation is 
+	  successful.</Doc>
+        </Values>
+      </Enum>
+      <Array name="PIN_FLD_FIELD" use="optional"
+          elemIdMode="ignored" iterationOrder="undefined"
+          minElements="1"
+          minElemId="0"
+          isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+          isRecursive="true" allowedElemIds="0">
+        <Doc>Validation error fields array. Each element describes a field that 
+	failed validation. Element-id is not significant.</Doc>
+        <Fields>
+          <Enum name="PIN_FLD_FIELD_NUM" use="required">
+            <Doc>The field that failed.</Doc>
+          </Enum>
+          <Int name="PIN_FLD_ELEMENT_ID" use="optional">
+            <Doc>The element-id of the field that failed(if an array element).</Doc>
+          </Int>
+          <Enum name="PIN_FLD_RESULT" use="required">
+            <Doc>The validation error code.</Doc>
+            <Values>
+              <Value>0</Value>
+              <Doc>PIN_CUST_VAL_ERR_SYSTEM - System Error.</Doc>
+            </Values>
+	    <Values>
+              <Value>1</Value>
+              <Doc>PIN_CUST_VAL_ERR_MISSING - Required Field Missing.</Doc>
+            </Values>
+	    <Values>
+              <Value>2</Value>
+              <Doc>PIN_CUST_VAL_ERR_MIN_LEN - Field Length less than the permitted 
+	      value.</Doc>
+            </Values>
+	    <Values>
+              <Value>3</Value>
+              <Doc>PIN_CUST_VAL_ERR_MAX_LEN - Field Length more than the permitted 
+	      value.</Doc>
+            </Values>
+	    <Values>
+              <Value>4</Value>
+              <Doc>PIN_CUST_VAL_ERR_TYPE - Error.</Doc>
+            </Values>
+	    <Values>
+              <Value>5</Value>
+              <Doc>PIN_CUST_VAL_ERR_DUPE - Duplicate Value.</Doc>
+            </Values>
+	    <Values>
+              <Value>6</Value>
+              <Doc>PIN_CUST_VAL_ERR_INVALID - Unsupported Argument.</Doc>
+            </Values>
+	    <Values>
+              <Value>7</Value>
+              <Doc>PIN_CUST_VAL_ERR_REJECT - Not a valid operation.</Doc>
+            </Values>
+	    <Values>
+              <Value>8</Value>
+              <Doc>PIN_CUST_VAL_ERR_MAX - Exceeding max value.</Doc>
+            </Values>
+	    <Values>
+              <Value>9</Value>
+              <Doc>PIN_CUST_VAL_ERR_MIN - Less than min allowed value.</Doc>
+            </Values>
+	    <Values>
+              <Value>10</Value>
+              <Doc>PIN_CUST_VAL_ERR_INCL - Match for domain not found and inclusive 
+	      flag set.</Doc>
+            </Values>
+	    <Values>
+              <Value>11</Value>
+              <Doc>PIN_CUST_VAL_ERR_EXCL - Match for domain found and inclusive 
+	      flag not set.</Doc>
+            </Values>
+	    <Values>
+              <Value>12</Value>
+              <Doc>PIN_CUST_VAL_ERR_FORMAT - Format check failed.</Doc>
+            </Values>      
+          </Enum>
+          <String name="PIN_FLD_DESCR" use="optional"
+              maxlen="255">
+            <Doc>The validation error message.</Doc>
+          </String>
+          <Array name="PIN_FLD_FIELD" use="optional"
+              elemIdMode="ignored" iterationOrder="undefined"
+              minElements="0"
+              minElemId="0"
+              isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+              isRecursive="false" allowedElemIds="0">
+            <Doc>For FIELD array elements that do not contain a nested FIELD array, 
+	    the field that failed (as defined by PIN_FLD_FIELD_NUM) is included 
+	    here on the flist. This field is MANDATORY in this case and its value 
+	    represents either the bad value specified or a suggested replacement 
+	    value for the field. In cases where this FIELD element does contain 
+	    a nested FIELD array, the field defined by PIN_FLD_ is not included 
+	    in the output flist. For the following values of PIN_FLD_RESULT, the 
+	    field value will be NULL : PIN_CUST_VAL_ERR_MISSING. For the following 
+	    values of PIN_FLD_RESULT, the field value contains the bad value that 
+	    was specified: PIN_CUST_VAL_ERR_MIN_LEN, PIN_CUST_VAL_ERR_MAX_LEN, 
+	    PIN_CUST_VAL_ERR_FORMAT, PIN_CUST_VAL_ERR_INVALID. For the following 
+	    values of PIN_FLD_RESULT, the field value contains a suggested 
+	    replacement value for the field: PIN_CUST_VAL_ERR_DUPE. If field that 
+	    failed was in a sub-flist, the fields arrays are nested to provide an 
+	    absolute path to the exact field that failed. This nesting can be to 
+	    any depth to reflect multi-level sub-flists. NOTE: If more than one 
+	    field on the same sub-flist failed validation then more than one element 
+	    of the FIELD array will be included with the nesting to reflect the 
+	    fields that failed. Nested Fields arrays have the same fields in each 
+	    element as the main array.</Doc>
+            <Fields></Fields>
+          </Array>
+        </Fields>
+      </Array>
+    </Fields>
+  </Output>
+</Opcode>

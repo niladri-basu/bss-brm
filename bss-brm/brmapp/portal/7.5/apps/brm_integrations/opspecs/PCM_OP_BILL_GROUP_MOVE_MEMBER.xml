@@ -1,0 +1,108 @@
+<Opcode name="PCM_OP_BILL_GROUP_MOVE_MEMBER"
+visibility="public"
+transaction="required"
+component="financial"
+xmlns:h="http://www.w3.org/1999/xhtml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>
+This opcode moves the specified account to (or out from) the group. 
+In particular, it can move a member-account from one group to other.
+</Doc>
+<Input>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Poid of account to be moved</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_PARENT" use="optional"
+mode="complete">
+<Doc> Poid of account to be moved to (target).  
+If it is not presented then the movement is provided out of the group.
+</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+ <Int name="PIN_FLD_FLAGS" use="optional">
+    <Doc>This flags is used to add validation which checks if any of the billinfo of input Account (to be moved) is member of Collections Group. Valid values are : PIN_COLL_GRP_VALIDATE (1) and PIN_COLL_DELETE_AND_MOVE (2)
+        PIN_COLL_GRP_VALIDATE (1): If billinfo of input account (to be moved) is a member of collections group, return Collections group details. In this case, input account is not moved into Billing Hierarchy.  
+	PIN_COLL_DELETE_AND_MOVE (2): Delete member billinfo from Collections Group (if present) and continue with bill move member flow </Doc>
+ </Int>
+<Timestamp name="PIN_FLD_WHEN_T" use="optional">
+<Doc> 
+This field is used in order to provide a differed movement by creation of 
+the schedule object (so, the real movement will not be done by the opcode at 
+this time). This field indicates the time when the deferred movement should 
+be executed.
+</Doc>
+</Timestamp>
+<String name="PIN_FLD_DESCR" use="optional"
+maxlen="255">
+<Doc> 
+This field should be used only if PIN_FLD_WHEN_T is specified. 
+It may contain an arbitrary text which describes the deferred movement.
+</Doc>
+</String>
+</Fields>
+</Input>
+<Output>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Poid of account that was moved.</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_GROUP_OBJ" use="optional"
+mode="complete">
+<Doc> 
+Poid of group that account was moved to (target).
+If account is moved out of the group (so, there is no target), 
+then this is a group that account was moved out (source).
+</Doc>
+<ClassRef>obj://group</ClassRef>
+</Poid>
+<Array name="PIN_FLD_RESULTS" use="optional"
+                     elemIdMode="ignored" iterationOrder="undefined"
+                     minElements="0"
+                     minElemId="0"
+                     isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                     isRecursive="false">
+                     <Doc>For each billinfo one results array is created.
+                      If billinfo is parent then total of pending receivable, name,
+                      and the details of the members with their pending receivables are provided..
+		     </Doc>
+             <Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+                        	mode="complete">
+                        	<Doc> The collections group poid</Doc>
+                        	<ClassRef>obj://group</ClassRef>
+                        </Poid>
+                        <Int name="PIN_FLD_BOOLEAN" use="required">
+                               <Doc>this field specifies whether its part of group or not
+                                    Values are 0 or 1.
+                                    0 - means not part of collections group.
+                                    1 - means part of collections group.</Doc>
+                       </Int>
+                       <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional"
+                               mode="complete">
+                               <Doc> The collections group members poid</Doc>
+                               <ClassRef>obj://billinfo</ClassRef>
+                       </Poid>
+                       <Poid name="PIN_FLD_PARENT" use="optional"
+                               mode="complete">
+                               <Doc> The collections group parent poid</Doc>
+                               <ClassRef>obj://billinfo</ClassRef>
+                       </Poid>
+                       <Decimal
+                               name="PIN_FLD_PENDING_RECV"
+                               use="optional">
+                               <Doc> Pending receivable of group member.
+                                     using the primary currency. </Doc>
+                       </Decimal>
+	    </Fields>
+</Array>
+</Fields>
+</Output>
+</Opcode>

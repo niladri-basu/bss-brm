@@ -1,0 +1,40 @@
+
+############################################################
+TD_BULK_ADJUSTMENT started at Thu Mar 17 08:22:57 NZDT 2016
+############################################################
+
+Reading the input file /brmapp/portal/7.5/2d/apps/td_bulk_adjustment/INPUT_DIR/bulk_adjustment_c17Mar.csv
+
+Loading the adjustment file
+pin_apply_bulk_adjustment -v -f /brmapp/portal/7.5/2d/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20160317.csv
+	pin_mta_init_app error: End Time is invalid at line 1 for account 0.0.0.1 /account 1006071799 0
+
+	pin_mta_init_app error: Input file is empty or all records are invalid.
+
+
+	Initializing the application.
+
+	Opening the input file: /brmapp/portal/7.5/2d/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20160317.csv
+
+	Opening the file pin_mta_search.flist for writing
+
+	Opening the file pin_mta_failed.csv for writing Invalid Records
+
+	Reading the input file: /brmapp/portal/7.5/2d/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20160317.csv
+
+	pin_mta_init_app: Read 1 record(s) from the CSV file, out of which 1 was/were erroneous.
+
+	pin_mta_init_search: Distributing the task among the worker threads...
+
+	Opening the input file: /brmapp/portal/7.5/2d/apps/td_bulk_adjustment/ADJ_DIR/pin_initial_bulk_adjust_20160317.csv
+
+	Opening the file pin_mta_failed.csv for writing Invalid Records
+
+	No. of records successfully processed = 0
+	No. of records failed to process      = 1
+	Total No. of records processed        = 1
+Completed
+
+############################################################
+TD_BULK_ADJUSTMENT finished at Thu Mar 17 08:22:57 NZDT 2016
+############################################################

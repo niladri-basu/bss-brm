@@ -1,0 +1,51 @@
+<RECORD 4470> 
+ Record format not proper. 
+  1  select
+<RECORD 4471> 
+ Record format not proper. 
+  2  pur_prod.account_obj_id0||'|'||
+<RECORD 4472> 
+ Record format not proper. 
+  3  rate_plan.currency||'|'||
+<RECORD 4473> 
+ Record format not proper. 
+  4  (cycle_fee.charged_to_t-1) ||'|'||
+<RECORD 4474> 
+ Record format not proper. 
+  5  (cycle_fee.charged_to_t-1) ||'|'||
+<RECORD 4475> 
+ Record format not proper. 
+  6  pur_prod.poid_id0||'|' ||
+<RECORD 4476> 
+ Record format not proper. 
+  7  service.bal_grp_obj_id0 value
+<RECORD 4477> 
+ Record format not proper. 
+  8  from
+<RECORD 4478> 
+ Record format not proper. 
+  9  purchased_product_t pur_prod, product_t prod, rate_plan_t rate_plan, purchased_product_cycle_fees_t cycle_fee, service_t service
+<RECORD 4479> 
+ Record format not proper. 
+ 10  where pur_prod.product_obj_id0=prod.poid_id0
+<RECORD 4480> 
+ Record format not proper. 
+ 11  and rate_plan.product_obj_id0=prod.poid_id0
+<RECORD 4481> 
+ Record format not proper. 
+ 12  and rate_plan.event_type='/event/billing/product/fee/cycle/cycle_arrear'
+<RECORD 4482> 
+ Record format not proper. 
+ 13  and rate_plan.currency = 554
+<RECORD 4483> 
+ Record format not proper. 
+ 14  and pur_prod.status=1
+<RECORD 4484> 
+ Record format not proper. 
+ 15  and cycle_fee.obj_id0=pur_prod.poid_id0
+<RECORD 4485> 
+ Record format not proper. 
+ 16  and service.poid_id0=pur_prod.service_obj_id0
+<RECORD 4486> 
+ Record format not proper. 
+ 17* --and pur_prod.account_obj_id0 in (1172418856, 1160170594)

@@ -1,0 +1,42 @@
+##
+## This is a sample command file for containerDescLoader.pl
+## The processing is done from the top to the bottom.
+##
+##
+## database connect
+## TYPES = Oracle|SqlServer
+## SERVER = Name of the server where SqlServer db is running (used only in case of SqlServer db).
+##
+TYPE=Oracle
+SOURCE=ifwdb2
+USER=ifwdb2
+PASS=ifwdb2
+SERVER=blrcauvery
+##
+## show sql statements and other versatile comments
+##
+DEBUG=FALSE
+##
+## optional command processing
+##
+##RUN=touch my_test_file
+##
+## initialization (deleting tables)
+##
+INIT=TRUE
+#ECHO=###################################
+#ECHO=# no initialization of ifw_edrc_field and ifw_edrc_desc
+#ECHO=###################################
+#INIT=FALSE
+
+# container description file
+##EDRC_DESC_FILE=/home/mgresens/products/integrate/Implementation/FMD/Portal/containerDesc.dsc
+EDRC_DESC_FILE=./containerDesc.dsc
+
+# pipeline name as specified in the registry 
+# filled into IFW_EDRC_DESC.EDRC_DESC and IFW_EDRC_FIELD.EDRC_DESC
+EDRC_DESC='MY_IFW'
+
+# additional description
+# filled into IFW_EDRC_DESC.NAME
+EDRC_DESCRIPTION='MY_IFW container description'

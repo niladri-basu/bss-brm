@@ -1,0 +1,40 @@
+=================================================================================
+FCT_FirstUsageNotify
+---------------------------------------------------------------------------------
+Module Release Notes 
+---------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.FCT_FirstUsageNotify,v $
+
+=================================================================================
+Module Version: 10006  DaVinci  15-Sep-2006
+PRSF00233139: service_obj is not passed in the input flist hence set_validity 
+              event servce_obj is set to NULL.
+=================================================================================
+Module Version: 10005  DaVinci  18-July-2006
+PRSF00219262: Da Vincii Code Clean Up: set isValidDetail false when you set error. 
+=================================================================================
+Module Version: 10004  DaVinci  27-Jun-2006
+PRSF00218581: Removed the ASS_SUSPENSE_EXT block creation.
+
+=================================================================================
+
+Module Version: 10003  DaVinci  23-May-2006
+PRSF00214235: Fixed the issues found during integration testing.
+
+=================================================================================
+
+Module Version: 10002  DaVinci  05-May-2006
+PRSF00209530: Windows : build break.
+
+=================================================================================
+Module Version: 10001  DaVinci  04-May-2006
+PRSF00209382: Solving the Windows NT build breaker.
+
+=================================================================================
+
+Module Version: 10000  DaVinci  10-Apr-2006
+PRSF00202268: Added a new Pipeline Plugin FCT::FirstUsageNotify. This Pluging is 
+              responsible to identify & inform the DAT Account about the used 
+              first usage Product or Discount.
+
+=================================================================================

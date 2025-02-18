@@ -1,0 +1,16 @@
+pin_rel test_DAT_030210_20150930094308.out.bc
+pin_rel test_SMS_030222_20150930094520.out.bc
+pin_rel test_SMS_030223_20150930094539.out.bc
+pin_rel test_TEL_030208_20150930094248.out.bc
+pin_rel test_TEL_030209_20150930094308.out.bc
+pin_rel test_TEL_030211_20150930094317.out.bc
+pin_rel test_TEL_030214_20150930094348.out.bc
+pin_rel test_TEL_030215_20150930094409.out.bc
+pin_rel test_TEL_030218_20150930094440.out.bc
+pin_rel test_TEL_030219_20150930094449.out.bc
+pin_rel test_TEL_030222_20150930094520.out.bc
+pin_rel test_TEL_030225_20150930094549.out.bc
+pin_rel test_TEL_030226_20150930094609.out.bc
+pin_rel test_TEL_030227_20150930094620.out.bc
+pin_rel test_TEL_030232_20150930094710.out.bc
+pin_rel test_TEL_030233_20150930094729.out.bc

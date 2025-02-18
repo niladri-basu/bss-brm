@@ -1,0 +1,82 @@
+=====================
+DAT_ConnectionPool
+-------------------------------------------------------------------
+Module Release Notes
+-------------------------------------------------------------------
+===================================================================
+Actual Version : 10014 / Date : 13-Dec-2010
+----------------
+Solved Bug : 10306655 - P-9109350 MISTAKE IN SETTING DEFAULT EMPTYQUEUETIMEOUT
+===================================================================
+Actual Version : 10013 / Date : 11-Nov-2010
+----------------
+Solved Bug : 10077369 - ECR: PARALLEL LOADING IN THE PIPELINE ENGINE 
+===================================================================
+Actual Version : 10012 / Date : 19-Aug-2010
+----------------
+Solved Bug : 8928219 - P-8821742 AAA GATEWAY CONNECTION PROBLEM IN PRODUCTION 
+
+===================================================================
+Actual Version : 10011 / Date : 21-Jul-2010
+----------------
+Solved Bug : 9133204 - AAAGW BRANDING : AAA GATEWAY START-UP PROBLEM 
+                       WITH BRANDING
+
+===================================================================
+Actual Version : 10010 / Date : 17-Sep-2009
+----------------
+Solved PR : 8358661 - FUNCTION "OPCODEEXECUTE" RETURNS TRUE EVEN WHEN CM CONNECTION IS DOWN
+
+===================================================================
+Actual Version : 10009 / Date : 20-Jun-2006
+----------------
+Solved PR : PRSF00213705 - Reasoning: R-060323-0090  Null Pointer Dereference 
+
+===================================================================
+Actual Version : 10008 / Date : 11-Apr-2006
+----------------
+Solved PR : PRSF00201499 - Remove usage of pin.conf.
+            PRSF00202120 -  Add rebalance connection support
+
+===================================================================
+Actual Version : 10007 / Date : 20-Sep-2005
+----------------
+Solved PR : PRSF00182458 - Login flist always uses hardcoded db#
+
+===================================================================
+Actual Version : 10006 / Date : 31-May-2005
+----------------
+Solved PR : PRSF00168468 - Propagation of CO 170150/166778 to 7.2.
+            PRSF00170150 - AAA GW ConnectionPool instrument enhancement.
+            PRSF00166778 - Added socket time out.
+===================================================================
+Actual Version : 10005 / Date : 6-May-2005
+----------------
+
+Solved PR : PRSF00167007 - AAA GW won't start if no CM is running.
+  PRSF00167000 - AAA GW is able to start w/o pin.conf and dd file.
+===================================================================
+Actual Version : 10004 / Date : 20-Apr-2005
+----------------
+
+Solved PR : PRSF00164007 Fix unknown exception error in Connection 
+Manager thread.
+
+===================================================================
+Actual Version : 10003 / Date : 21-Apr-2005
+----------------
+
+Solved PR : PRSF00165066 Add Web instrumentation for ConnectionPool.
+===================================================================
+Actual Version : 10002 / Date : 09-Apr-2005
+----------------
+
+Solved PR : PRSF00162427"AAA GW: Counter in CM Connection Pool 
+ doesn't work as expected"
+===================================================================
+Actual Version : 10001 / Date : 11-Feb-2005
+----------------
+
+Solved PR :PRSF00150654  jyadav   "Implement CM connection pool in AAA Gw"
+===================================================================
+

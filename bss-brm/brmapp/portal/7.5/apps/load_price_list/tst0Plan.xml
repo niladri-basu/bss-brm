@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<price_list version="7.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="price_list.xsd">
+<product partial="no" type="subscription">
+<product_name>$20 Plan</product_name>
+<product_code>$20 Carryover Plan</product_code>
+<priority>0.0</priority>
+<description>PLAN: $20 Plan, MINUTES: Unlimited Calls to NZ &amp; Aussie, TEXTS: Unlimited Text to NZ &amp; Aussie, DATA: Shared</description>
+<permitted>/service/telco/gsm</permitted>
+<event_rating_map incr_unit="none" min_unit="none" rounding_rule="nearest" timezone_mode="event" tod_mode="start_time">
+<event_type>/event/billing/product/fee/cycle/cycle_arrear</event_type>
+<rum_name>Occurrence</rum_name>
+<min_quantity>1.0</min_quantity>
+<incr_quantity>1.0</incr_quantity>
+<rate_plan_name>Monthly Cycle Arrear Event</rate_plan_name>
+<rate_plan_code>Monthly Cycle Arrear Event</rate_plan_code>
+<rate_plan advance_billing_unit="day" tax_when="now">
+<rate_plan_name>Monthly Cycle Arrear Event</rate_plan_name>
+<rate_plan_code>Monthly Cycle Arrear Event</rate_plan_code>
+<currency_id>554</currency_id>
+<event_type>/event/billing/product/fee/cycle/cycle_arrear</event_type>
+<tax_code>GST</tax_code>
+<advance_billing_offset>0</advance_billing_offset>
+<cycle_fee_flags>0</cycle_fee_flags>
+<rate_tier date_range_type="absolute">
+<rate_tier_name>Tier 1</rate_tier_name>
+<priority>0.0</priority>
+<rate prorate_first="prorate" prorate_last="prorate" step_type="total_quantity_rated" type="default">
+<description>Rate 1</description>
+<step_resource_id>0</step_resource_id>
+<quantity_tier>
+<balance_impact flag="discountable proratable" scaled_unit="none">
+<resource_id>554</resource_id>
+<glid>200200459</glid>
+<fixed_amount>0.0</fixed_amount>
+<scaled_amount>20.0</scaled_amount>
+</balance_impact>
+</quantity_tier>
+</rate>
+</rate_tier>
+</rate_plan>
+</event_rating_map>
+</product>
+</price_list>

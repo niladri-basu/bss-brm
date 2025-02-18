@@ -1,0 +1,1449 @@
+<Opcode name="PCM_OP_SUBSCRIPTION_SERVICE_BALGRP_TRANSFER" visibility="public" transaction="required" component="fm_subscription"
+xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>
+PCM_OP_SUBSCRIPTION_SERVICE_BALGRP_TRANSFER opcode is used to transfer service from one balgrp
+to another balgrp or repoint a balgrp from one billinfo to another billinfo. All services that are being transferred 
+should belong to same bal_grp and can be transferred to one bal_grp only.
+If the transfer of service is across accounts, only one service/subscription service can be transferred and the target bal_grp
+has to be created.
+</Doc>
+<!--PCM_OP_SUBSCRIPTION_SERVICE_BALGRP_TRANSFER INPUT SPECIFICATION -->
+<Input>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required" mode="complete">
+      <Doc> The account object from which the services are transferred.</Doc>
+      <ClassRef>obj://account</ClassRef>
+    </Poid>
+    <Poid name="PIN_FLD_TO_OBJ" use="required" mode="complete">
+      <Doc> The account object to which the services are transferred.
+        If poid and to_object are different it indicates transfer of
+        services across account.
+      </Doc>
+      <ClassRef>obj://account</ClassRef>
+    </Poid>
+    <Poid name="PIN_FLD_TO_BAL_GRP_OBJ" use="required" mode="typeonly">
+      <Doc> This is the balance_group object to which the services are getting transferred. If id is -1 indicates
+       balance_group needs to be created. If id is -1 BAL_INFO needs to be provided.
+      </Doc>
+      <ClassRef>obj://balance_group</ClassRef>
+    </Poid>
+    <Poid name="PIN_FLD_FROM_BAL_GRP_OBJ" use="optional" mode="complete">
+      <Doc> This is the balance_group from which the services are getting transferred. If this field is not passed 
+	opcode will find out from_bal_grp obj from the services. However all the services passed should point
+	to same from_bal_grp otherwise error will be raised.
+	If from_bal_grp_obj and to_bal_grp_obj are same it means repointing of balance_group from one billinfo to another.
+      </Doc>
+      <ClassRef>obj://balance_group</ClassRef>
+    </Poid>
+    <String name="PIN_FLD_PROGRAM_NAME" use="required" maxlen="60">
+        <Doc> Identifies calling program</Doc>
+    </String>
+    <Timestamp name="PIN_FLD_START_T" use="optional">
+        <Doc> Timestamp of when the event started.</Doc>
+    </Timestamp>
+    <Timestamp name="PIN_FLD_END_T" use="optional">
+        <Doc> Timestamp of when the event ended.
+        </Doc>
+    </Timestamp>
+    <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+     <Doc>event description - free text </Doc>
+    </String>
+    <Array name="PIN_FLD_SERVICES" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+      <Doc> Array of services to be transferred between from and to bal_grp.
+        If from and to bal_grp are same this array has no significance.
+      </Doc>
+      <Fields>
+        <Poid name="PIN_FLD_SERVICE_OBJ" use="required" mode="complete">
+          <Doc> Poid of the service object</Doc>
+          <ClassRef>obj://service</ClassRef>
+        </Poid>
+        <Array name="PIN_FLD_DEALS" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+          <Doc>Array of deals to be purchased for the service after the transfer.</Doc>
+          <Fields>
+           <Substruct name="PIN_FLD_DEAL_INFO" use="required" isRecursive="false">
+            <Doc>Deal substructure.
+                 The DEAL_INFO should have the PIN_FLD_DEAL_OBJ poid and
+                 PIN_FLD_PLAN_OBJ optional. This PIN_FLD_DEAL_INFO substruct is for
+                 standard deal purchase.
+                 Sometimes we may purchase deal customized. So, the
+                 DEAL_INFO has the entire deal object (the products and discounts in the
+                 deal should be passed) in the PIN_FLD_DEAL_INFO sub-structure.</Doc>
+            <Fields>
+             <Poid name="PIN_FLD_DEAL_OBJ" use="optional" mode="complete">
+              <Doc>Deal Object .Present only if a non customized deal is to be
+                   purchased</Doc>
+              <ClassRef>obj://deal</ClassRef>
+             </Poid>
+             <Poid name="PIN_FLD_PLAN_OBJ" use="optional" mode="complete">
+             <Doc>Plan Object - plan thru which deal is being purchased</Doc>
+         <ClassRef>obj://plan</ClassRef>
+        </Poid>
+        <Poid name="PIN_FLD_POID" use="optional" mode="complete">
+         <Doc>Poid for the deal object. Present only if a customized deal is to be
+              purchased.</Doc>
+         <ClassRef>obj://deal</ClassRef>
+        </Poid>
+        <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+         <Doc>Name of the object.Present only if a customized deal is to be
+              purchased</Doc>
+        </String>
+        <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+         <Doc>Deal description - free text for application to describe
+              product.Present only if a customized deal is to be purchased.</Doc>
+        </String>
+        <Timestamp name="PIN_FLD_START_T" use="optional">
+         <Doc>Valid start time - defines valid period for deal object (inclusive)
+              Stored as desired time in server timezone.Present only if a
+              customized deal is to be purchased</Doc>
+        </Timestamp>
+        <Timestamp name="PIN_FLD_END_T" use="optional">
+         <Doc>Valid end time - defines valid period for deal object (non-inclusive)
+              Stored as desired time in server timezone. If end time is zero, valid
+              period does not expire.Present only if a customized deal is to be
+              purchased</Doc>
+        </Timestamp>
+        <Int name="PIN_FLD_FLAGS" use="optional">
+         <Doc>Flag to indicate on demand bill at the deal level and has value
+              PIN_DEAL_FLG_BILL_ON_DEMAND for on demand billing.Present only if a
+              customized deal is to be purchased</Doc>
+        </Int>
+        <Array name="PIN_FLD_PRODUCTS" use="optional" elemIdMode="index"
+               iterationOrder="insertionOrder">
+         <Doc>Products Array - array of products to purchase for the deal. If this
+              is a base product, the element-id of this product is referred by the
+              override product. Present only if a customized deal is to be
+              purchased</Doc>
+         <Fields>
+          <Poid name="PIN_FLD_PRODUCT_OBJ" use="required" mode="complete">
+           <Doc>Poid of product to purchase</Doc>
+           <ClassRef>obj://product</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_OVERRIDDEN_OBJ" use="optional" mode="complete">
+           <Doc>Poid of base purchased product</Doc>
+           <ClassRef>obj://purchased_product</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_PRODUCTS" use="optional" elemIdMode="index"
+                 iterationOrder="insertionOrder">
+           <Doc>Array element of base purchased product.</Doc>
+          </Array>
+          <Substruct name="PIN_FLD_INHERITED_INFO" use="optional"
+                     isRecursive="false">
+           <Doc>The contents of this will be used to invoke
+                PCM_OP_PRICE_SET_PRICE_LIST.</Doc>
+          </Substruct>
+          <Decimal name="PIN_FLD_QUANTITY" use="required">
+           <Doc>Quantity to purchase</Doc>
+          </Decimal>
+          <Enum name="PIN_FLD_STATUS" use="required">
+           <Doc>
+            Status of this subscription product. Possible values are
+            <h:ul>
+             <h:li>NOT_SET(0)</h:li>
+             <h:li>ACTIVE(1)</h:li>
+             <h:li>INACTIVE(2)</h:li>
+             <h:li>CANCELLED(3)</h:li>
+            </h:ul>
+           </Doc>
+           <Values>
+            <Value>0</Value>
+            <Doc>NOT_SET</Doc>
+           </Values>
+           <Values>
+            <Value>1</Value>
+            <Doc>ACTIVE</Doc>
+           </Values>
+           <Values>
+            <Value>2</Value>
+            <Doc>INACTIVE</Doc>
+           </Values>
+           <Values>
+            <Value>3</Value>
+            <Doc>CANCELLED</Doc>
+           </Values>
+  </Enum>
+  <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+   <Doc>
+    Inital status flags. The possible values are: -
+    <h:ul>
+     <h:li>PIN_PROD_STATUS_FLAGS_OVERRIDE_PURCHASE_FEE(0x01000000) </h:li>
+     <h:li>PIN_PROD_STATUS_FLAGS_OVERRIDE_CYCLE_FEE(0x02000000)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Timestamp name="PIN_FLD_PURCHASE_START_T" use="required">
+   <Doc>Purchase start time - seconds into the future relative to purchase
+	time that product activates (0 means immediately).</Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_PURCHASE_START_UNIT" use="optional">
+   <Doc>
+    For first usage start the start_unit will be -1. The start date can be
+    specified in relative units if it is not set for first usage. The
+    values can be
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_PURCHASE_START_OFFSET" use="optional">
+   <Doc>For first usage start the start_offset will be 0 and relative
+	offset can be specified for purchase if first usage option is not
+	marked. To be used in conjunction with unit to calculate
+	purchase_start_t with reference to the event time.</Doc>
+  </Int>
+  <Timestamp name="PIN_FLD_PURCHASE_END_T" use="required">
+   <Doc>Purchase end time - seconds into the future relative to purchase
+	time that product expires (0 means that product does not expire)
+   </Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_PURCHASE_END_UNIT" use="optional">
+   <Doc>
+    Relative Unit for Purchase can be
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul> 
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_PURCHASE_END_OFFSET" use="optional">
+   <Doc>Relative offset for Purchase to be used in conjunction with unit to
+	calculate purchase end_t.</Doc>
+  </Int>
+  <Decimal name="PIN_FLD_PURCHASE_DISCOUNT" use="optional">
+   <Doc>Purchase discount - percentage discount applied to purchase/cancel
+	rates of product. Mutually exclusive to PIN_FLD_PURCHASE_DISC_AMT 
+	field.</Doc>
+  </Decimal>
+  <Decimal name="PIN_FLD_PURCHASE_DISC_AMT" use="optional">
+   <Doc>Fixed amount discount for purchase fees amount of discount applied
+	to purchase/cancel rates of product. Mutually exclusive to
+	PIN_FLD_PURCHASE_DISCOUNT field.</Doc>
+  </Decimal>
+  <Decimal name="PIN_FLD_PURCHASE_FEE_AMT" use="optional">
+   <Doc>Purchase fee to be applied for this product. Amount specified here
+	will override the price specified in the /rate object</Doc>
+  </Decimal>
+  <Timestamp name="PIN_FLD_CYCLE_START_T" use="required">
+   <Doc>Cycle fee start time - seconds into the future relative to purchase
+	time that cycle fees begin for this product (0 means immediately)
+   </Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_CYCLE_START_UNIT" use="optional">
+   <Doc>
+    For first usage start the start_unit will be -1. The start date can be
+    specified in relative units if it is not set for first usage. The
+    values can be
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_CYCLE_START_OFFSET" use="optional">
+   <Doc>For first usage start the start_offset will be 0 and relative
+	offset can be specified for cycle if first Usage option is not
+	marked. To be used in conjunction with unit to calculate
+	cycle_start_t with reference to the event time.</Doc>
+  </Int>
+  <Timestamp name="PIN_FLD_CYCLE_END_T" use="required">
+   <Doc>Cycle fee end time - seconds into the future relative to purchase
+	time that cycle fees are no longer applied for this product (0
+	means always applied).</Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_CYCLE_END_UNIT" use="optional">
+   <Doc>
+    Relative Unit for Cycle can be
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_CYCLE_END_OFFSET" use="optional">
+   <Doc>Relative offset for Cycle to be used in conjunction with unit to
+	calculate cycle end_t.</Doc>
+  </Int>
+  <Decimal name="PIN_FLD_CYCLE_DISCOUNT" use="optional">
+   <Doc>Cycle fee discount - percent discount applied to cycle rates of
+	product. Mutually exclusive to PIN_FLD_CYCLE_DISC_AMT field.</Doc>
+  </Decimal>
+  <Decimal name="PIN_FLD_CYCLE_DISC_AMT" use="optional">
+   <Doc>Fixed amount discount applied to cycle rates of product. Mutually
+	exclusive to PIN_FLD_CYCLE_DISCOUNT field.</Doc>
+  </Decimal>
+  <Decimal name="PIN_FLD_CYCLE_FEE_AMT" use="optional">
+   <Doc>Cycle fee (both forward and arrears) to be applied for this
+	product. Amount specified here will override the price specified in
+	the /rate object.</Doc>
+  </Decimal>
+  <Timestamp name="PIN_FLD_USAGE_START_T" use="required">
+   <Doc>Usage fee start time - seconds into the future relative to purchase
+	time that usage fees begin for this product (0 means immediately)
+   </Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_USAGE_START_UNIT" use="optional">
+   <Doc>
+    For first usage start, this field is -1. Otherwise the start date is a
+    relative offset, with the unit specified in this field as:
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_USAGE_START_OFFSET" use="optional">
+   <Doc>For first usage, this field is 0. Otherwise, the start date is a
+	relative offset, which is specified by a combination of this field
+	and the start unit field.</Doc>
+  </Int>
+  <Timestamp name="PIN_FLD_USAGE_END_T" use="required">
+   <Doc>Usage fee end time - seconds into the future relative to purchase
+	time that usage fees are no longer applied for this product (0
+	means always applied).</Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_USAGE_END_UNIT" use="optional">
+   <Doc>
+    Relative unit for Usage can be
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_USAGE_END_OFFSET" use="optional">
+   <Doc>Relative offset for usage to be used in conjunction with unit to
+	calculate usage end_t.</Doc>
+  </Int>
+  <Decimal name="PIN_FLD_USAGE_DISCOUNT" use="required">
+   <Doc>Usage fee discount - percent discount applied to usage rates of
+	product</Doc>
+  </Decimal>
+  <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+   <Doc>Description on a per product basis for CSR to add comments</Doc>
+  </String>
+  <String name="PIN_FLD_PRICE_LIST_NAME" use="optional" maxlen="255">
+   <Doc>Price list name associated with this offering.</Doc>
+  </String>  
+ </Fields>
+</Array>
+<Array name="PIN_FLD_DISCOUNTS" use="optional" elemIdMode="ignored"
+       iterationOrder="undefined">
+ <Doc>Discounts Array - array of discounts to purchase for the deal.
+      Element-id is not significant.Present only if a customized deal is to
+      be purchased</Doc>
+ <Fields>
+  <Poid name="PIN_FLD_DISCOUNT_OBJ" use="required" mode="complete">
+   <Doc>Poid of discount to purchase</Doc>
+   <ClassRef>obj://discount</ClassRef>
+  </Poid>
+  <Decimal name="PIN_FLD_QUANTITY" use="required">
+   <Doc>Quantity to purchase</Doc>
+  </Decimal>
+  <Enum name="PIN_FLD_STATUS" use="required">
+   <Doc>
+     Status of this subscription discount. Possible values are
+     <h:ul>
+      <h:li>NOT_SET(0)</h:li>
+      <h:li>ACTIVE(1)</h:li>
+      <h:li>INACTIVE(2)</h:li>
+      <h:li>CANCELLED(3)</h:li>
+     </h:ul>
+   </Doc>
+   <Values>
+    <Value>0</Value>
+    <Doc>NOT_SET</Doc>
+   </Values>
+   <Values>
+    <Value>1</Value>
+    <Doc>ACTIVE</Doc>
+   </Values>
+   <Values>
+    <Value>2</Value>
+    <Doc>INACTIVE</Doc>
+   </Values>
+   <Values>
+    <Value>3</Value>
+    <Doc>CANCELLED</Doc>
+   </Values>
+  </Enum>
+  <Timestamp name="PIN_FLD_PURCHASE_START_T" use="required">
+   <Doc>Purchase start time - seconds into the future relative to purchase
+	time that discount activates</Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_PURCHASE_START_UNIT" use="optional">
+   <Doc>
+    For first usage start the start_unit will be -1. The start date can be
+    specified in relative units if it is not set for first usage. The
+    values can be
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_PURCHASE_START_OFFSET" use="optional">
+   <Doc>For first usage start the start_offset will be 0 and relative
+	offset can be specified for purchase if first usage option is not
+	marked. To be used in conjunction with unit to calculate
+	purchase_start_t with reference to the event time.</Doc>
+  </Int>
+  <Timestamp name="PIN_FLD_PURCHASE_END_T" use="required">
+   <Doc>Purchase end time - seconds into the future relative to purchase
+	time that discount expires (0 means that discount does not expire)
+   </Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_PURCHASE_END_UNIT" use="optional">
+   <Doc>
+    Relative Unit for Purchase can be
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_PURCHASE_END_OFFSET" use="optional">
+   <Doc>Relative offset for Purchase to be used in conjunction with unit to
+	calculate purchase end_t.</Doc>
+  </Int>
+  <Timestamp name="PIN_FLD_CYCLE_START_T" use="required">
+   <Doc>Cycle fee start time - seconds into the future relative to purchase
+	time that cycle fees begin for this discount (0 means immediately)
+   </Doc>
+  </Timestamp>
+  <Int name="PIN_FLD_CYCLE_START_UNIT" use="optional">
+   <Doc>
+    For first usage start the start_unit will be -1. The start date can be
+    specified in relative units if it is not set for first usage. The
+    values can be
+    <h:ul>
+     <h:li>Seconds(1)</h:li>
+     <h:li>Minutes(2)</h:li>
+     <h:li>Hours(3)</h:li>
+     <h:li>Days(4)</h:li>
+     <h:li>Months(5)</h:li>
+     <h:li>Act Cycles(8)</h:li>
+    </h:ul>
+   </Doc>
+  </Int>
+  <Int name="PIN_FLD_CYCLE_START_OFFSET" use="optional">
+   <Doc>For first usage start the start_offset will be 0 and relative
+	offset can be specified for purchase if first usage option is not
+	marked. To be used in conjunction with unit to calculate
+	cycle_start_t with reference to the event time.</Doc>
+       </Int>
+       <Timestamp name="PIN_FLD_CYCLE_END_T" use="required">
+	<Doc>Cycle fee end time - seconds into the future relative to purchase
+	     time that cycle fees are no longer applied for this discount (0
+	     means always applied).</Doc>
+       </Timestamp>
+       <Int name="PIN_FLD_CYCLE_END_UNIT" use="optional">
+	<Doc>
+	 Relative unit for Cycle can be
+	 <h:ul>
+	  <h:li>Seconds(1)</h:li>
+	  <h:li>Minutes(2)</h:li>
+	  <h:li>Hours(3)</h:li>
+	  <h:li>Days(4)</h:li>
+	  <h:li>Months(5)</h:li>
+	  <h:li>Act Cycles(8)</h:li>
+	 </h:ul>
+	</Doc>
+       </Int>
+       <Int name="PIN_FLD_CYCLE_END_OFFSET" use="optional">
+	<Doc>Relative offset for Cycle to be used in conjunction with unit to
+	     calculate Cycle end_t.</Doc>
+       </Int>
+       <Timestamp name="PIN_FLD_USAGE_START_T" use="required">
+	<Doc>Usage fee start time - seconds into the future relative to purchase
+	     time that usage fees begin for this discount (0 means immediately)
+	</Doc>
+       </Timestamp>
+       <Int name="PIN_FLD_USAGE_START_UNIT" use="optional">
+	<Doc>
+	 For first usage start, this field is -1. Otherwise the start date is a
+	 relative offset, with the unit specified in this field as:
+	 <h:ul>
+	  <h:li>Seconds(1)</h:li>
+	  <h:li>Minutes(2)</h:li>
+	  <h:li>Hours(3)</h:li>
+	  <h:li>Days(4)</h:li>
+	  <h:li>Months(5)</h:li>
+	  <h:li>Act Cycles(8)</h:li>
+	 </h:ul>
+	</Doc>
+       </Int>
+       <Int name="PIN_FLD_USAGE_START_OFFSET" use="optional">
+	<Doc>For first usage, this field is 0. Otherwise, the start date is a
+	     relative offset, which is specified by a combination of this field
+	     and the start unit field.</Doc>
+       </Int>
+       <Timestamp name="PIN_FLD_USAGE_END_T" use="required">
+	<Doc>Usage fee end time - seconds into the future relative to purchase
+	     time that usage fees are no longer applied for this discount (0
+	     means always applied).</Doc>
+       </Timestamp>
+       <Int name="PIN_FLD_USAGE_END_UNIT" use="optional">
+	<Doc>
+	 Relative unit for Usage can be
+	 <h:ul>
+	  <h:li>Seconds(1)</h:li>
+	  <h:li>Minutes(2)</h:li>
+	  <h:li>Hours(3)</h:li>
+	  <h:li>Days(4)</h:li>
+	  <h:li>Months(5)</h:li>
+	  <h:li>Act Cycles(8)</h:li>
+	 </h:ul>
+	</Doc>
+       </Int>
+       <Int name="PIN_FLD_USAGE_END_OFFSET" use="optional">
+	<Doc>Relative offset for Usage to be used in conjunction with unit to
+     calculate Usage end_t on First Usage.</Doc>
+       </Int>
+       <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+	<Doc>Description on a per discount basis for CSR to add comments</Doc>
+       </String>      
+      </Fields>
+     </Array>
+     <Array name="PIN_FLD_PERMITTEDS" use="optional" elemIdMode="ignored">
+      <Doc>Permitted array - contains type strings for account and service
+	   object types that are permitted to purchase this deal. Each entry is
+	   implicitly appended with a wildcard for checking, so account and
+	   service types that were inherited from a permitted type are also
+	   permitted themselves. No entries implies any account or service type
+	   is permitted to purchase the deal. Element-id is not significant.
+      </Doc>
+      <Fields>
+       <String name="PIN_FLD_OBJ_TYPE" use="required">
+	<Doc>Object type - identifies an allowed account or service object type.
+	</Doc>
+       </String>
+      </Fields>
+     </Array>
+    </Fields>
+   </Substruct>
+  </Fields>
+</Array>
+</Fields>
+</Array>
+<Array name="PIN_FLD_BAL_INFO" use="required"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="1" maxElements="1"
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="true"
+isRecursive="false">
+<Doc>Array of balance group fields. There can only be one element.
+     Element-id is not significant. This array is passed only when
+     creation of bal_grp is requested.
+ </Doc>
+<Fields>
+  <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+    <Doc>Balance group name. Optional if the balance group is being
+	 created, else mandatory if the balance group is being
+	 modified. </Doc>
+  </String>	
+  <Array name="PIN_FLD_LIMIT" use="optional"
+    elemIdMode="index" iterationOrder="undefined"
+    minElements="0"
+    isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+    isRecursive="false">
+    <Doc>Array of credit limits for each resource in the balance
+	 group. More than one element can appear in this array.
+	 The element-id matches the balance element whose limit
+	 is to be set.</Doc>
+    <Fields>
+      <Decimal name="PIN_FLD_CREDIT_LIMIT" use="optional">
+	<Doc>Limit for this resource. Current balance cannot exceed this
+	     limit unless affected by a limit override rate, or manually
+	     adjusted by a CSR. By default, the limit is set to 0.
+	</Doc>
+      </Decimal>
+      <Decimal name="PIN_FLD_CREDIT_FLOOR" use="optional">
+	<Doc>Baseline for calculating percentage for threshold triggers.
+	     Credit limit minus credit floor is 100% of measured range.
+	     Credit floor does NOT enforce any limit on current balance.
+	</Doc>
+      </Decimal>
+      <Int name="PIN_FLD_CREDIT_THRESHOLDS" use="optional">
+	<Doc>Bit flags for triggering when resource balance crosses a
+	     boundary when increasing in value.
+	</Doc>
+      </Int>
+    </Fields>
+  </Array>
+  <Array name="PIN_FLD_RULES" use="optional"
+    elemIdMode="index" iterationOrder="undefined"
+    minElements="0"
+    isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+    isRecursive="false">
+    <Doc>Consumption Rule array. Array of consumption rules for each
+	 currency resource in the balance group. The element-id is
+	 the resource Id for which this consumption rule applies.</Doc>
+    <Fields>
+      <Enum name="PIN_FLD_CONSUMPTION_RULE" use="optional">
+	<Doc>Consumption rule to be applied on the resource. Possible
+	     values are: (1) EST, (2) LST, (3) EET, (4) LET,
+	     (5) ESTLET, (6) ESTEET, (7) LSTEET, (8) LSTLET,
+	     (9) EETEST, (10) EETLST, (11) LETEST, and (12) LETLST.
+	</Doc>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_UNDEFINED(0)</Value>
+	  <Doc>The consumption rule is not defined.</Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_EST(1)</Value>
+	  <Doc>Earliest start time. Consume the sub-balance with the
+	    earliest validity start time (earliest valid_from) first.
+	  </Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_LST(2)</Value>
+	  <Doc>Latest start time. Consume the sub-balance with the
+	    latest validity start time (latest valid_from) first.</Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_EET(3)</Value>
+	  <Doc>Earliest expiration time. Consume the sub-balance that
+	    expires first (earliest valid_to.)</Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_LET(4)</Value>
+	  <Doc>Latest expiration time. Consume the sub-balance that
+	    expires last (latest valid_to.)</Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_ESTLET(5)</Value>
+	  <Doc>Earliest start time and latest expiration time. Consume
+	    the sub-balance with the earliest valid_from first. If more
+	    than one sub-balances has the same valid_from, consume the
+	    one with the latest valid_to first. </Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_ESTEET(6)</Value>
+	  <Doc>Earliest start time and earliest expiration time. Consume
+	    the sub-balance with the earliest valid_from first. If more
+	    than one sub-balances has the same valid_from, consume the
+	    one with the earliest valid_to first.</Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_LSTEET(7)</Value>
+	  <Doc>Latest start time and earliest expiration time. Consume
+	    the sub-balance with the latest sub-balance first. If more
+	    than one sub-balances has the same valid_from, consume the
+	    one with the earliest expired sub-balance first. </Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_LSTLET(8)</Value>
+	  <Doc>Latest start time and latest expiration time. Consume the
+	    sub-balance with the latest valid_from first. If more than
+	    one sub-balances has the same valid_from, consume the one
+	    with the latest valid_to first. </Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_EETEST(9)</Value>
+	  <Doc>Earliest expiration time and earliest start time. Consume
+	    the sub-balance with the earliest valid_to first. If more
+	    than one sub-balances has the same valid_to, consume the
+	    one with the earliest valid_from first.</Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_EETLST(10)</Value>
+	  <Doc>Earliest expiration time and latest start time. Consume
+	    the sub-balance with the earliest valid_to first. If more
+	    than one sub-balances has the same valid_to, consume the
+	    one with the latest valid_from first. </Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_LETEST(11)</Value>
+	  <Doc>Latest expiration time and earliest start time. Consume
+	    the sub-balance with the latest valid_to first. If more than
+	    one sub-balances has the same valid_to, use the one with the
+	    earliest valid_from first. </Doc>
+	</Values>
+	<Values>
+	  <Value>PIN_CONSUMPTION_RULE_LETLST(12)</Value>
+	  <Doc>Latest expiration time and latest start time. Consume the
+	    sub-balance with the latest valid_to first. If more than one
+	    sub-balances has the same valid_to, use the one with the
+	    latest valid_from first. </Doc>
+	</Values>
+      </Enum>
+    </Fields>
+  </Array>
+</Fields>
+</Array>
+<Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+<Doc>Billinfo object for "to balance group". If provided the 
+"to balance_group" will point to this billinfo obj
+else PIN_FLD_BILLINFO array needs to be provided. This 
+field will be used only when PIN_FLD_POID is type_only
+or "to balance_group" and "from balance_group" is same .
+</Doc>
+<ClassRef>obj://billinfo</ClassRef>
+</Poid>
+<Array name="PIN_FLD_BILLINFO" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+<Doc>This array is mandatory if a new BILLINFO object is to be created. Billinfo can be
+created only when PIN_FLD_POID is type_only or if "to balance_group" 
+and "from balance_group" is same  .
+</Doc>
+<Fields>
+  <Poid name="PIN_FLD_POID" use="optional" mode="typeonly">
+    <Doc>Type-only poid of the billinfo.</Doc>
+    <ClassRef>obj://billinfo</ClassRef>
+  </Poid>
+  <Poid name="PIN_FLD_BUSINESS_PROFILE_OBJ" use="optional"
+	mode="complete">
+    <Doc>Business profile poid. Pointer to the Business profile poid to
+	 which this billinfo belongs.</Doc>
+    <ClassRef>obj://config.business_profile</ClassRef>
+  </Poid>
+  <String name="PIN_FLD_BILLINFO_ID" use="optional" maxlen="60">
+    <Doc>Billinfo Id. Identifies the billinfo by name.
+	 Mandatory on creation of the billinfo.</Doc>
+  </String>
+  <Enum name="PIN_FLD_BILLING_STATUS" use="optional">
+    <Doc>Indicates the billing status for this billinfo. Valid
+	 values are: (0) Active, (1) Inactive, (2) Accounting only,
+	 and (3) Error. </Doc>
+    <Values>
+      <Value>0</Value>
+      <Doc>PIN_BILL_ACTIVE. Indicates that billing should be provided
+	for the account in a standard (regular) way.  This is the
+	default value.</Doc>
+    </Values>
+    <Values>
+      <Value>1</Value>
+      <Doc>PIN_BILL_INACTIVE. Indicates that the billing should be
+	suspended for the billinfo.</Doc>
+    </Values>
+    <Values>
+      <Value>3</Value>
+      <Doc>PIN_BILL_ERROR. Indicates that an error occurred when the
+	billing application tried to bill this billinfo. If an error
+	occurs for a subordinate billinfo, the parent billinfo's status
+	will also be set to PIN_BILL_ERROR. </Doc>
+    </Values>
+    </Enum>
+          <Int name="PIN_FLD_BILLING_STATUS_FLAGS" use="optional">
+            <Doc>Indicates a reason for setting of the given billing status.
+              Valid values are: (0x01) Due to Stop Billing of Closed Account,
+              (0x02) Due to Resuming of Billing, and (0x04) Error.</Doc>
+          </Int>
+          <Enum name="PIN_FLD_STATUS" use="optional">
+            <Doc>Status of the billinfo object. Valid values are:
+              (10100) Active, (10102) Inactive, or (10103) Closed.</Doc>
+            <Values>
+              <Value>10100</Value>
+              <Doc>PIN_STATUS_ACTIVE. Indicates an active billinfo.</Doc>
+            </Values>
+            <Values>
+              <Value>10102</Value>
+              <Doc>PIN_STATUS_INACTIVE. Indicates an inactive billinfo.</Doc>
+            </Values>
+            <Values>
+              <Value>10103</Value>
+              <Doc>PIN_STATUS_CLOSED. Indicates a closed billinfo.</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+            <Doc>Indicates a reason for setting of the given status. Valid
+              values are: (0x1) Activate in Future, (0x2) Debt, (0x4) Manual,
+              (0x10) Due to Parent, and (0x20) PO exhausted.</Doc>
+          </Int>
+          <Int name="PIN_FLD_ACTG_FUTURE_DOM" use="optional">
+            <Doc>Indicates a billing day of month.
+                 Valid values are 1-28.</Doc>
+          </Int>
+          <Int name="PIN_FLD_BILL_WHEN" use="optional">
+            <Doc>Indicates the billing frequency in terms of accounting
+                 cycles.  For example: monthly = 1, quarterly = 3,
+                 annual = 12, etc. </Doc>
+          </Int>
+          <Enum name="PIN_FLD_BILLING_SEGMENT" use="optional">
+            <Doc>Indicates the Billing Segment ID for the billinfo.
+                  For example, 101, 102, 103.  The values are defined in
+                  the pin_billing_segment.xml file.
+            </Doc>
+            <Values>
+              <Value>101</Value>
+              <Doc>First Billing Segment.</Doc>
+            </Values>
+            <Values>
+              <Value>102</Value>
+              <Doc>Second Billing Segment.</Doc>
+            </Values>
+	    <Values>
+              <Value>103</Value>
+              <Doc>Third Billing Segment.</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_SPONSOR_FLAGS" use="optional">
+            <Doc>Indicates whether this billinfo has a sponsoree billinfo.
+              This field will be used to see if there is a need to walk
+              through the sponsorees in the case of triggering of billing.</Doc>
+          </Int>
+          <Int name="PIN_FLD_SPONSOREE_FLAGS" use="optional">
+            <Doc>Indicates whether this billinfo has a sponsor billinfo.
+              This field will be used by the pin_bill_accts application to
+              select only sponsorees billinfo for billing.</Doc>
+          </Int>
+          <Poid name="PIN_FLD_AR_BILLINFO_OBJ" use="optional" mode="complete">
+            <Doc>Link to the AR billinfo for the given billinfo.  For a
+              single billinfo there is no AR; in this case this field is
+              the same as the billinfo poid.  This field is used for picking
+              up subordinate billinfos during billing.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_PARENT_BILLINFO_OBJ" use="optional"
+                mode="complete">
+            <Doc>Indicates the immediate (one level up) parent for the given
+              billinfo.  Note that this billinfo is not necessarily a
+              subordinate. The parent field may reflect just child-parent
+              relation. It should be mandatory if moving to the new parent
+              is provided.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Int name="PIN_FLD_CURRENCY" use="optional">
+            <Doc>The primary currency for the billinfo.
+                 Mandatory on creation of billinfo.</Doc>
+          </Int>
+          <Int name="PIN_FLD_CURRENCY_SECONDARY" use="optional">
+            <Doc>The secondary currency for the billinfo.
+                 Mandatory on creation of billinfo.</Doc>
+          </Int>
+          <Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+            <Doc>Effective time. Effective Timestamp for this operation.</Doc>
+          </Timestamp>
+          <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional" mode="complete">
+            <Doc> Payinfo object for the billinfo being created. This is a
+              required field if you want to use an existing payinfo object
+              from the account to which the subscription is being transferred.
+              Alternatively, you  can create a new payinfo object for the
+              billinfo by passing the<h:a h:href="#in.PAYINFO"> PAYINFO
+              array</h:a> instead.
+              </Doc>
+              <ClassRef>obj://payinfo</ClassRef>
+          </Poid>
+          <Enum name="PIN_FLD_PAY_TYPE" use="optional">
+            <Doc> Type of payment method  Mandatory on creation of billinfo</Doc>
+	      <Values>
+               <Value>10001</Value>
+               <Doc>Indicates invoice type(PIN_PAY_TYPE_INVOICE).</Doc>
+              </Values>
+              <Values>
+               <Value>10003</Value>
+               <Doc>Indicates credit card type(PIN_PAY_TYPE_CC).</Doc>
+              </Values>
+              <Values>
+               <Value>10005</Value>
+               <Doc>Indicates US/Canadian Direct Debit type(PIN_PAY_TYPE_DD).</Doc>
+              </Values>
+              <Values>
+               <Value>10007</Value>
+               <Doc>Indicates charge roll up to parent account(PIN_PAY_TYPE_SUBORD).</Doc>
+              </Values>
+          </Enum>
+          <Array name="PIN_FLD_PAYINFO" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+            <Doc> This array is mandatory if a new PAYINFO object is to be created
+              for the new billinfo for the subscription in the account to which it is being
+              transferred to. The opcode <h:a h:href="op://PCM_OP_CUST_SET_PAYINFO">
+              PCM_OP_CUST_SET_PAYINFO</h:a> is invoked passing in this array as PIN_FLD_PAYINFO.
+            </Doc>
+            <Fields>
+              <Poid name="PIN_FLD_POID" use="required" mode="typeonly">
+                <Doc>Type-only poid of the payinfo object.</Doc>
+                <ClassRef>obj://payinfo</ClassRef>
+              </Poid>
+              <Enum name="PIN_FLD_PAY_TYPE" use="required">
+                <Doc> Payment type. </Doc>
+                <Values>
+                  <Value>0</Value>
+                  <Doc>PIN_PAY_TYPE_UNDEFINED.
+                    Invalid type. Used during account creation.</Doc>
+                </Values>
+                <Values>
+                  <Value>10000</Value>
+                  <Doc>PIN_PAY_TYPE_PREPAID.
+                    Prepaid to keep negative balance.</Doc>
+                  </Values>
+                <Values>
+                  <Value>10001</Value>
+                  <Doc>PIN_PAY_TYPE_INVOICE. Invoiced monthly.</Doc>
+                </Values>
+                <Values>
+                  <Value>10002</Value>
+                  <Doc>PIN_PAY_TYPE_DEBIT. Checking account debit.</Doc>
+                </Values>
+                <Values>
+                  <Value>10003</Value>
+                  <Doc>PIN_PAY_TYPE_CC. Credit Card.</Doc>
+                </Values>
+                <Values>
+                  <Value>10005</Value>
+                  <Doc>PIN_PAY_TYPE_DD. US/Canadian Direct Debit.</Doc>
+                </Values>
+                <Values>
+		<Value>10005</Value>
+                  <Doc>PIN_PAY_TYPE_DD. US/Canadian Direct Debit.</Doc>
+                </Values>
+                <Values>
+                  <Value>10006</Value>
+                  <Doc>PIN_PAY_TYPE_SMARTC. Smartcard.</Doc>
+                </Values>
+                <Values>
+                  <Value>10007</Value>
+                  <Doc>PIN_PAY_TYPE_SUBORD. Roll-up to parent account.</Doc>
+                </Values>
+                <Values>
+                  <Value>10011</Value>
+                  <Doc>PIN_PAY_TYPE_CASH. Cash payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10012</Value>
+                  <Doc>PIN_PAY_TYPE_CHECK. Check payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10013</Value>
+                  <Doc>PIN_PAY_TYPE_WTRANSFER.
+                    Wire transfer payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10014</Value>
+                  <Doc>PIN_PAY_TYPE_PAYORDER.
+                    Inter-bank payment order payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10015</Value>
+                  <Doc>PIN_PAY_TYPE_POSTALORDER.
+                    Postal order payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10016</Value>
+                  <Doc>PIN_PAY_TYPE_VOUCHER. Voucher payments.</Doc>
+                </Values>
+                <Values>
+                  <Value>10017</Value>
+                  <Doc>PIN_PAY_TYPE_FAILED. Failed payment.</Doc>
+                </Values>
+              </Enum>
+              <Enum name="PIN_FLD_INV_TYPE" use="optional">
+                <Doc>Invoice Type. Values are (0x01) detailed, (0x02) summary,
+                   (0x04) regular, (0x08) subordinate, (0x10) parent,
+                   (0x20) hierarcy, (0x40) trial, and (0x18) parent with
+                   subordinates.</Doc>
+                <Values>
+                  <Value>0x01</Value>
+                  <Doc>PIN_INV_TYPE_DETAIL. Detailed invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x02</Value>
+                  <Doc>PIN_INV_TYPE_SUMMARY. Summary invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x04</Value>
+                  <Doc>PIN_INV_TYPE_REGULAR. Regular invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x08</Value>
+                  <Doc>PIN_INV_TYPE_SUBORDINATE. Subordinate invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x10</Value>
+                  <Doc>PIN_INV_TYPE_PARENT. Parent invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x20</Value>
+                  <Doc>PIN_INV_TYPE_HIERARCHY. Hierarchy invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x40</Value>
+                  <Doc>PIN_INV_TYPE_TRIAL_INVOICE. Trial invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x18</Value>
+                  <Doc>PIN_INV_TYPE_PARENT_WITH_SUBORDS. Parent with
+                   subordinates invoice. </Doc>
+                </Values>
+              </Enum>
+              <Poid name="PIN_FLD_PARENT" use="optional" mode="complete">
+                  <Doc>Parent account. This is only present if this opcode is called
+                   during account creation, and the account being created is
+                   subordinate It is there so we can correctly insert it into the
+                   payinfo object rather than waiting until the end of the
+                   transaction</Doc>
+                  <ClassRef>obj://account</ClassRef>
+              </Poid>
+              <Int name="PIN_FLD_CURRENCY" use="optional">
+                  <Doc>Currency information. This is only present if this opcode is
+                   called during account creation, and the account being created
+                   is a subordinate. It is there so we can correctly validate the
+                   information in the payinfo object (i.e. the currencies match).
+                  </Doc>
+              </Int>
+              <Enum name="PIN_FLD_PAYMENT_TERM" use="optional">
+                  <Doc> Payment term identifier. Defines which payment term will be
+                  used in the payment due date calculation.</Doc>
+              </Enum>
+              <Int name="PIN_FLD_FLAGS" use="optional">
+                  <Doc>Partial Flag. This enables the opcode to treat some fields                              
+                  from the input flist as optional.  Values are (0) mandatory,            
+                  or (1) optional.  The fields affected are:
+                  PIN_FLD_DEBIT_NUM, PIN_FLD_DEBIT_EXP, PIN_FLD_BANK_NO,
+                  PIN_FLD_CITY, PIN_FLD_STATE, PIN_FLD_ZIP and PIN_FLD_COUNTRY.
+                  </Doc>
+              </Int>
+              <Substruct name="PIN_FLD_INHERITED_INFO" use="required"
+                  isRecursive="false">
+                  <Doc> Inherited info for the specified object.  For invoices,
+                  the substruct PIN_INV_INFO should be added to the
+                  PIN_FLD_INHERITED_INFO substruct when an account with the
+                  invoice bill type is created, or when the invoice
+                  information for a payinfo object needs to be changed.
+                  For credit cards, the substruct PIN_FLD_CC_INFO should be
+                  added to the PIN_FLD_INHERITED_INFO substruct when an
+                  account with the credit bill type is created, or when credit
+                  card information for a payinfo object needs to be changed.
+                  For direct debits, the substruct PIN_FLD_DD_INFO should be
+                  added to the PIN_FLD_INHERITED_INFO substruct when an
+                  account with the direct debit bill type is created, or when
+                  direct debit information for a payinfo object needs to be
+                  changed.
+                  </Doc>
+                  <Fields>
+                    <Array name="PIN_FLD_INV_INFO" use="optional"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="0" maxElements="1"
+                      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                      isRecursive="false">
+                      <Doc> Inherited fields are added to the flist here. This is a
+                      pay type specific substruct. For this type of payinfo,
+                      the substruct is PIN_FLD_INV_INFO, and contains the
+                      following:
+                      </Doc>
+                      <Fields>
+			<String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                          <Doc>Street address. This is typically the same as the
+                          billing contact address. But this is not necessarily true
+                          always if the contact person is not the one responsible
+                          for payments.</Doc>
+                        </String>
+                        <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                          <Doc>City portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                        </String>
+                        <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                          <Doc>Country portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                        </String>
+                        <String name="PIN_FLD_DELIVERY_DESCR" use="optional"
+                        maxlen="255">
+                        <Doc>Delivery description.  This can be a fax number, email
+                          address, or printer name.  The contents depend on the
+                          delivery mechanism specified in #in.DELIVERY_PREFER.</Doc>
+                        </String>
+                        <Enum name="PIN_FLD_DELIVERY_PREFER" use="optional">
+                        <Doc> Prefered delivery method. Values can be (0) email,
+                          (1) postal, or (2) fax.</Doc>
+                        <Values>
+                          <Value>0</Value>
+                          <Doc>PIN_INV_EMAIL_DELIVERY. Delivery via email.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>1</Value>
+                          <Doc>PIN_INV_USP_DELIVERY. Delivery via postal
+                            service.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>2</Value>
+                          <Doc>PIN_INV_FAX_DELIVERY. Delivery via fax.</Doc>
+                        </Values>
+                        </Enum>
+                        <String name="PIN_FLD_EMAIL_ADDR" use="optional" maxlen="255">
+                        <Doc>Email address to which invoices will be delivered
+                          to</Doc>
+                        </String>
+                        <String name="PIN_FLD_INV_INSTR" use="optional" maxlen="1023">
+                        <Doc>Comments to appear on each invoice.</Doc>
+                        </String>
+                        <Enum name="PIN_FLD_INV_TERMS" use="optional">
+                        <Doc>Used for invoice terms to be printed on the
+                          invoice.</Doc>
+                        </Enum>
+                        <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                        <Doc>Name of party responsible for the payment.</Doc>
+                        </String>
+                        <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                        <Doc>State or province. This is typically the same as in
+                          the billing contact.</Doc>
+			</String>
+                        <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                        <Doc>Zipcode. This is typically the same as in
+                          the billing contact.</Doc>
+                        </String>
+                      </Fields>
+                    </Array>
+                    <Array name="PIN_FLD_CC_INFO" use="optional"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="0" maxElements="1"
+                      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                      isRecursive="false">
+                    <Doc> Inherited fields are added to the flist here. This is a
+                      credit card specific substruct. For this type of payinfo,
+                      the substruct is PIN_FLD_CC_INFO, and contains the following:
+                    </Doc>
+                    <Fields>
+                      <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                        <Doc>Street Address. This is typically the same as the
+                          billing contact address. But this is not necessarily true
+                          always if the contact person is not the one responsible
+                          for payments.</Doc>
+                      </String>
+                      <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                        <Doc>City portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                        <Doc>Country portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_DEBIT_EXP" use="optional" maxlen="128">
+                        <Doc>Credit card expiration date (mmyy).</Doc>
+                      </String>
+                      <String name="PIN_FLD_DEBIT_NUM" use="optional" maxlen="255">
+                        <Doc>Credit card number.</Doc>
+                      </String>
+                      <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                        <Doc>Name as it appears on the credit card.</Doc>
+                      </String>
+                      <String name="PIN_FLD_SECURITY_ID" use="optional" maxlen="30">
+                        <Doc>Security ID. Used for credit card fraud prevention.
+                         This field stores the 3 digit CVV2 for Visa and
+                         4 digit CID for AMEX.</Doc>
+                      </String>
+                      <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                        <Doc>State or province. This is typically the same as in
+                          the billing contact.</Doc>
+                      </String>
+		      <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                        <Doc>Zipcode. This is typically the same as in
+                          the billing contact.</Doc>
+                      </String>
+                    </Fields>
+                    </Array>
+                    <Array name="PIN_FLD_DD_INFO" use="optional"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="0" maxElements="1"
+                      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                      isRecursive="false">
+                    <Doc>Inherited fields are added to the flist here. This is a
+                      direct debit specific substruct.  For this type of payinfo,
+                      the substruct is PIN_FLD_DD_INFO, and contains the following:
+                    </Doc>
+                    <Fields>
+                      <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                        <Doc>Street Address. This is typically the same as the
+                          billing contact address. But this is not necessarily true
+                          always if the contact person is not the one responsible
+                          for payments.</Doc>
+                      </String>
+                      <String name="PIN_FLD_BANK_NO" use="optional" maxlen="30">
+                        <Doc>RDFI/Bank ID used for routing transactions.</Doc>
+                      </String>
+                      <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                        <Doc>City portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                        <Doc>Country portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_DEBIT_NUM" use="optional" maxlen="255">
+                        <Doc>Customer's bank account number.</Doc>
+                      </String>
+                      <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                        <Doc>Name as it appears on the bank account.</Doc>
+                      </String>
+                      <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                        <Doc>State or province. This is typically the same as in
+                          the billing contact.</Doc>
+                      </String>
+		      <Enum name="PIN_FLD_TYPE" use="optional">
+                        <Doc>Bank account type. The enumeration is defined in the
+                          pin_bill.h header file. The values can be (0) None,
+                          (1) Checking, (2) Savings, or (3) Corporate.</Doc>
+                        <Values>
+                          <Value>0</Value>
+                          <Doc>PIN_ACCOUNT_TYPE_NONE. None.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>1</Value>
+                          <Doc>PIN_ACCOUNT_TYPE_CHECKING. Checking Account.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>2</Value>
+                          <Doc>PIN_ACCOUNT_TYPE_SAVINGS. Savings Account.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>3</Value>
+                          <Doc>PIN_ACCOUNT_TYPE_CORPORATE. Corporate Account.</Doc>
+                        </Values>
+                      </Enum>
+                      <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                        <Doc>Zipcode. This is typically the same as in
+                          the billing contact.</Doc>
+                      </String>
+                    </Fields>
+                  </Array>
+                  <Array name="PIN_FLD_SUBORD_INFO" use="optional"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="0" maxElements="1"
+                      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                      isRecursive="false">
+                    <Doc>Subordinate info.</Doc>
+                    <Fields>
+                      <Poid name="PIN_FLD_AR_ACCOUNT_OBJ" use="optional"
+                        mode="complete">
+                        <Doc>Poid of AR account that collects charges.</Doc>
+                        <ClassRef>obj://account</ClassRef>
+                      </Poid>
+                    </Fields>
+                  </Array>
+                </Fields>
+              </Substruct>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>   
+  </Fields>
+</Input>
+ <!-- OUTPUT SPEC -->
+<Output>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+     <Doc>The event poid for /event/audit/service_balgrp_transfer
+	Only one event per opcode call will be generated.
+	If transfer is across accounts line transfer information is also captured.
+     </Doc>
+     <ClassRef>obj://event.audit.service_balgrp_transfer</ClassRef>
+   </Poid>
+   <Array name="PIN_FLD_RESULTS" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+     <Doc> Array of results information.
+	Results array will be created for each service that is transferred.
+	In case of bal_grp repointing results array will be created for each of the services that
+	is part of "from" and "to" bal_grp.
+     </Doc>
+     <Fields>
+     <Poid name="PIN_FLD_SERVICE_OBJ" use="required" mode="complete">
+      <Doc> the service object that gets transferred.</Doc>
+      <ClassRef>obj://billinfo</ClassRef>
+    </Poid>
+     <Poid name="PIN_FLD_BAL_GRP_OBJ" use="required" mode="complete">
+      <Doc>The newly created/modified bal_grp object. This is the balance_group to which
+	the service gets transferred. 
+      </Doc>
+      <ClassRef>obj://balance_group</ClassRef>
+     </Poid>
+     <Poid name="PIN_FLD_BILLINFO_OBJ" use="required" mode="complete">
+      <Doc>The newly created/modified billinfo object. This is the billinfo under which 
+       the service is transferred. 
+      </Doc>
+      <ClassRef>obj://billinfo</ClassRef>
+    </Poid>
+    <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional" mode="complete">
+      <Doc>This will be published only if payinfo creation is requested.</Doc>
+      <ClassRef>obj://payinfo</ClassRef>
+    </Poid>
+	<Array name="PIN_FLD_RESULTS" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+		<Doc>Array of all member services including the subscription service for the given line.
+			This array will be present only when the transfer is done with
+			RecreateDuringSubscriptionTransfer business parameter as enabled.</Doc>
+		<Fields>
+			<Substruct name="PIN_FLD_FROM_SERVICE" use="optional" isRecursive="false">
+				<Doc>This will carry information of objects related to source service.</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_POID" use="required" mode="complete">
+				  		<Doc> The source service for which the transfer is done.</Doc>
+				 		<ClassRef>obj://service</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+					  	<Doc> balance group of the source service.</Doc>
+					  	<ClassRef>obj://balance_group</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+					  	<Doc> billinfo of the source service.</Doc>
+					  	<ClassRef>obj://billinfo</ClassRef>
+					</Poid>
+					</Fields>
+			</Substruct>
+			<Substruct name="PIN_FLD_TO_SERVICE" use="optional" isRecursive="false">
+				<Doc>This will carry information of objects related to target service.</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_POID" use="required" mode="complete">
+					  	<Doc> The target service created during transfer.</Doc>
+					  	<ClassRef>obj://service</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+					  	<Doc> balance group of the target service.</Doc>
+					  	<ClassRef>obj://balance_group</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+					  	<Doc> billinfo of the target service.</Doc>
+					  	<ClassRef>obj://billinfo</ClassRef>
+					</Poid>
+				</Fields>
+			</Substruct>
+			<Array name="PIN_FLD_PROFILES" use="optional">
+				<Doc>source and target profile information.</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_PROFILE_OBJ" use="required" mode="complete">
+						<Doc>poid of source profile object.</Doc>
+						<ClassRef>obj://profile</ClassRef>
+					</Poid>
+                        	        <Poid name="PIN_FLD_TO_PROFILE_OBJ" use="required" mode="complete">
+                	                	<Doc>poid of target profile object.</Doc>
+		                                <ClassRef>obj://profile</ClassRef>
+                        	        </Poid>
+				</Fields>
+			</Array>
+			<Array name="PIN_FLD_ACTION_INFO" use="optional" elemIdMode="index"
+			          iterationOrder="undefined" minElements="2" maxElements="2"
+			          minElemId="0" maxElemId="1">
+			        <Doc>Action Info array has the offerings poid before and after the
+			            transfer.ElemId 1 will have the poid of new offerings.
+			            ElemId 0 will have the poid of old offerings. </Doc>
+			        <Fields>
+					<Array name="PIN_FLD_OFFER" use="required" elemIdMode="ignored"
+			              		iterationOrder="undefined" minElements="1" maxElements="256"
+			              		minElemId="1" maxElemId="256">
+						<Doc>Array of Offering poids. 
+							PIN_FLD_OFFER array index id x in PIN_FLD_ACTION_INFO with array index 1, 
+							is the new offerings created for PIN_FLD_OFFER array index id x 
+							in PIN_FLD_ACTION_INFO with array index 0.
+						</Doc>
+						<Fields>
+							<Poid name="PIN_FLD_POID" use="required" mode="complete">
+								<Doc>Purchased product or Purchased discount poids. </Doc>
+								<ClassRef>obj://purchased_product</ClassRef>
+								<ClassRef>obj://purchased_discount</ClassRef>
+							</Poid>
+						</Fields>
+					</Array>
+				</Fields>
+			</Array>
+		</Fields>
+	</Array>
+    <Array name="PIN_FLD_DEALS" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+      <Doc>Output of Deals purchased</Doc> 
+      <Fields>
+        <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>Account object passed into call.</Doc>
+    <ClassRef>obj://account</ClassRef>
+   </Poid>
+   <Array name="PIN_FLD_PRODUCTS" use="optional">
+    <Doc>Products Array - array of products purchased in this deal.</Doc>
+    <Fields>
+     <Poid name="PIN_FLD_PRODUCT_OBJ" use="optional" mode="complete">
+      <Doc>Poid of pricing product</Doc>
+      <ClassRef>obj://product</ClassRef>
+     </Poid>
+     <Poid name="PIN_FLD_OFFERING_OBJ" use="optional" mode="complete">
+      <Doc>Poid of purchased product</Doc>
+      <ClassRef>obj://purchased_product</ClassRef>
+     </Poid>
+     <Int name="PIN_FLD_PACKAGE_ID" use="optional">
+      <Doc>PACKAGE_ID is common for all products/discounts purchased as
+           part of deal purchase and is used to identify the instances
+           associated with any given deal purchased.</Doc>
+     </Int>
+    </Fields>
+   </Array>
+   <Array name="PIN_FLD_DISCOUNTS" use="optional">
+    <Doc>Discounts Array - array of discounts purchased in this deal.</Doc>
+    <Fields>
+     <Poid name="PIN_FLD_DISCOUNT_OBJ" use="optional" mode="complete">
+      <Doc>Poid of pricing discount</Doc>
+      <ClassRef>obj://discount</ClassRef>
+     </Poid>
+     <Poid name="PIN_FLD_OFFERING_OBJ" use="optional" mode="complete">
+      <Doc>Poid of purchased discount</Doc>
+      <ClassRef>obj://purchased_discount</ClassRef>
+     </Poid>
+     <Int name="PIN_FLD_PACKAGE_ID" use="optional">
+      <Doc>PACKAGE_ID is common for all products/discounts purchased as
+           part of deal purchase and is used to identify the instances
+           associated with any given deal purchased.</Doc>
+     </Int>
+    </Fields>
+   </Array>
+   <Array name="PIN_FLD_RESULTS" use="required" elemIdMode="ignored">
+    <Doc>Array of results information. Since only one event object is created by
+         this call, only one element will be returned. The element-id is not
+         significant. Additional event object fields are added to the return
+         flist here. If the PCM_OPFLG_READ_RESULT flag is set for the operation,
+         all the fields in the event object are returned on the output flist,
+         not just the poid.If the PCM_OPFLG_CALC_ ONLY flag is set, no fields in
+         the database are changed and the event object is not actually created,
+         but the fields that would have been used to create the event object are
+         returned to the caller on the output flist.</Doc>
+    <Fields>
+     <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+      <Doc>Poid of the account object.</Doc>
+      <ClassRef>obj://account</ClassRef>
+     </Poid>
+     <Array name="PIN_FLD_BAL_IMPACTS" use="optional" elemIdMode="ignored"
+           iterationOrder="undefined" isElemIdAssignAllowed="true"
+           isElemIdAnyAllowed="true" isRecursive="true" allowedElemIds="256">
+      <Doc>PIN_FLD_BAL_IMPACTS from rating the event.</Doc>
+     </Array>
+     <Substruct name="PIN_FLD_CYCLE_INFO" use="optional"
+       isRecursive="false">
+       <Doc> Cycle information </Doc>
+     </Substruct>
+     <Poid name="PIN_FLD_POID" use="required" mode="complete">
+      <Doc>Poid of the event object created for event</Doc>
+     </Poid>
+     <Any name="EVT_FLDS" use="optional" mode="other"
+          baseClassName="obj://event" classNameRef="#out.RESULTS.POID">
+       <Doc> Fields of the event object</Doc>
+     </Any>
+    </Fields>
+   </Array>
+      </Fields>
+    </Array>
+   </Fields>
+   </Array>
+  </Fields>
+</Output>
+</Opcode>

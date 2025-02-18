@@ -1,0 +1,11 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+statistic | 1 | statisticGroup | Throughput Statistics | NotSpecified | Group |
+statisticGroup | 1 | totalEdrCount | Total EDR Count (real-time)| ReadOnly | Integer |
+statisticGroup | 2 | totalTxnEdrCount | Total EDR Count (after transaction ended) | ReadOnly | Integer |
+statisticGroup | 3 | totalProcTime | Accumulated Txn Processing Time (sec) | ReadOnly | Integer |
+statisticGroup | 4 | totalTxnCount | Total Txn Count | ReadOnly | Integer |
+statistic | 2 | statisticTable | Last Throughputs | NotSpecified | Table |
+statisticTable | 1 | statisticEntry | Throughput Table Entry | NotSpecified | Group |
+statisticEntry | 1 | statisticTableIndex | Index | ReadOnly | Integer |
+statisticEntry | 2 | throughput | Throughput (edrs/sec) | ReadOnly | Integer |
+statisticEntry | 3 | throughputTimestamp | Timestamp | ReadOnly | String |

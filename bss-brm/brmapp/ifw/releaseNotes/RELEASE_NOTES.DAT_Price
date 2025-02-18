@@ -1,0 +1,504 @@
+========================================================================================
+DAT_Price
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Module Version: 10023 7.5  25-Sep-2014
+bug19684084 : Random core dump while starting pipeline
+Issue Description:
+------------------
+Core Dump is observed when DAT_Rateplan and DAT_PriceModel tries to register
+events with listener at the same time during initialization.
+Solution:
+---------
+Registering the events before initialization; event processing is skipped if
+not required.
+================================================================================
+Module Version: 10022 7.5  04-Aug-2014
+bug19334711 : CRITICAL Error in pipeline invalid state change; RWReadersWriterLock
+acquireRead
+Issue Description:
+------------------
+Lock on derived rateplans were not getting released.
+Solution:
+---------
+1. Derived rateplans locks are released properly.
+2. Using business params to skip locking completely, if TailorMade feature is
+not being used.
+==============================================================================
+Module Version: 10021 7.4  20-Jul-2011
+BUG12683317: P-12635376 PIPELINE SCHEMA CHANGE FOR PDC IN CHRONUS
+==============================================================================
+Module Version : 7.4 10020
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+Module Version: 10019 7.3  11-Sep-2007
+BUG6362392: Reasoning: Fixes for memory leak and uninitialized variable in
+Rateplan and Price PlugIns
+==============================================================================
+Module Version: 10018 7.3  24-July-2007
+BUG6166726: DATA DUMP INTERFACE IMPLEMENTATION FOR PIPELINEDATADUMP.
+==============================================================================
+Module Version: 10017 7.3  01-Feb-2007
+BUG5845304: REGRESSION: IFW CORE DUMP DURING "TAILORMADEPRODUCTMODIFY"
+Added code to guard against core dump when there is a misconfiguration.
+================================================================================
+Module Version: 10016 Davinci  24-Aug-2006
+PRSF00230128: Misleading warning message was shown in process log, eventhough the
+new DAT_Price semaphore was correct. Set the workedOn = true to solve this.
+================================================================================
+Module Version: 10015  New_Pipeline_Velocity  07-Aug-2006
+PRSF00227749: Add checking of the price pointer before acquiring or releasing
+lock
+==============================================================================
+Module Version: 10014  New_Pipeline_Velocity  07-July-2006
+PRSF00222084: Add facility to log events in the process log and to dump data 
+using semaphore
+==============================================================================
+Module Version: 10013  New_Pipeline_Velocity  28-June-2006
+PRSF00221740: FT_IT_TailormadePlan rating fails for IT 9
+Changes made to set thresholdTo to max decimal value if it is null in the 
+event flist
+==============================================================================
+Module Version: 10012  New_Pipeline_Velocity  27-June-2006
+PRSF00221575: FT_IT_TailormadePlan pipeline DAT Price &  DAT Rate plan 
+issues retrieving optional fields
+Changes made to fix array indices.
+==============================================================================
+Module Version: 10011  New_Pipeline_Velocity  13-June-2006
+PRSF00216278: TailormadePlan:Changes to handle PIN_FLD_SEQUENCE_NUM field in
+event flist.
+
+==============================================================================
+Module Version: 10010  New_Pipeline_Velocity  04-Apr-2006
+PRSF00201490: TailormadePlan:DAT_Price changes
+Change DAT_Price to enable it to listen to Tailormade product info change
+events and update the cache accordingly.
+
+==============================================================================
+Module Version: 10009  New_Pipeline_Velocity  20-Apr-2005
+PRSF00163714: WIN + Itanium: Pipeline is crashing while reading the bulk data of int64 type.
+              Replaced the RWDBTBuffer class with BAS::DBTBuffer class for int64 type.
+
+==============================================================================
+Module Version: 10008  6.7_FP2  28-Apr-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+Module Version: 10007  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+==============================================================================
+
+
+Actual Version : v6.7_FP2   / Date : 05-Feb-2004
+----------------
+Module Version : 10006     / Date : 05-Feb-2004
+----------------
+Solved PRs/CRs :
+----------------
+
+PRSF00090515 EBF02240 failed IfwBAT on rating results validation
+PRSF00089145 To Fix Datatypes of beat, charge and minimumCharge delivered through CO 86539
+PRSF00088828 To improve the load time performance of PriceModel
+
+==============================================================================
+Module Version: 10005  6.7_FP1  09-Jan-2004
+PRSF00085356:   Fixed In itialization of minimum charge to lowest decimal value instead of zero 
+
+==============================================================================
+Module Version: 10004  Apollo  21-Oct-2003
+PRSF00072997:   IntegRate cores dump during the startup if the BEAT in the  IFW_PRICEMDL_STEP is <=0 
+
+========================================================================================
+
+
+
+========================================================================================
+
+Module Version: 10003  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+========================================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+- PETS # 28863 Added Thread trace info for rating modules
+
+=======================================================================================
+
+
+Actual Version : v6.4.1 / Date : 06-Aug-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF000wwwww decimal beats for rating
+
+========================================================================================
+
+Actual Version : v6.3.2 / Date : 17-Jul-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00014374 Minimum Charge in IFW_PRICEMODEL required.
+
+========================================================================================
+
+Actual Version : v4-30-08 / Date : 31-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38593 DB2 Port.
+
+========================================================================================
+
+Actual Version : v4-30-07 / Date : 21-Dec-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #41122 Rounding enhancements for DAT_Price.
+
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 06-Nov-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #41296 Store charge base aside to charge and beat to avoid calculation
+            in DAT_Price.
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 27-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38645 Checked erroneous error messages.
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 23-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+- PETS #37618 Code Review. Revised remarks.
+- PETS #38435 FCT_MainRating: wrong message ERR_PRICEMODEL_NOT_FOUND 
+              if pricemodel step not available
+              Pricemodels w/o entries in IFW_PRICEMODEL_STEP will not be loaded.
+              Create warning message that a PM has not been loaded because of
+              missing entries in IFW_PRICEMODEL_STEP.
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 05-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro AIX Port.
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 23-Jul-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #37354 Reload fails. Resource map wasnt deleted before reload.
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 05-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 13-Jun-2001
+----------------
+
+New Features   :
+----------------
+
+Support for new database version v4-30
+
+========================================================================================
+
+Actual Version : v4-10-02 / Date : 17-Jan-2001
+----------------
+
+New Features   :
+----------------
+
+Check THRESHOLD_TO for overflow. Add Warning and proceed with default if so.
+Check THRESHOLD_FROM for overflow. Add Error if so.
+
+Solved PRs/CRs :
+----------------
+
+#2989# Added additional value checking for thresholds.
+
+========================================================================================
+
+Actual Version : v4-10-01 / Date : 23-Nov-2000
+----------------
+
+New Features   :
+----------------
+
+Allow THRESHOLD_TO to be {null}.
+
+Solved PRs/CRs :
+----------------
+
+#2605# Added additional value check during loading.
+
+========================================================================================
+
+Actual Version : v4-04-00 / Date : 31-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+- Call to BAS_String::convert() for AIX changed (size_t cast added).
+
+New Features   :
+----------------
+
+- Database version check added.
+
+========================================================================================
+
+Actual Version : v4-03-00 / Date : 18-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+CodeReview remarks revised.
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+ - Support for AIX compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 24-May-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Read new INT_PRICEMODEL_STEP field VALID_FROM.
+Changed interface. More functionality will be hidden.
+Needs FCT_MainRating v4-03-00 or higher.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-26-00 / Date : 22-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+Read new INT_PRICEMODEL_STEP fields CHARGE_ITEM and CHARGE_BASE.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-25-01 / Date : 23-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+Add rwdbCast( ..., "CHAR" ) to convert charge into string to avoid 
+exponential view of charge-field.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-25-00 / Date : 13-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Reload events added.
+
+  After receiving a reload command the module generates one of the
+  following events :
+
+  EVT_RELOAD_SUCCESSFUL : The reload was successful.
+  EVT_RELOAD_FAILED     : The reload failed.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-24-00 / Date : 11-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Constructor for BAS_Decimal(double) removed.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-00 / Date : 29-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+check all code revies marks.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-00 / Date : 21-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+change the DB-Access from DAT_Database to DBC
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

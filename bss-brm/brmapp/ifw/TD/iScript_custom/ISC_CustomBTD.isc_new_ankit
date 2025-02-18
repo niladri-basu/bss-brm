@@ -1,0 +1,578 @@
+//-----------------------------------------------------------------------------
+// 1. iScript to validate discount status and fetch discount percentage
+//    based on account's owner
+// 2. iScript to fetch count of valid connections for a /billinfo
+//
+// - Gurvinder Minhas
+//-----------------------------------------------------------------------------
+
+use IXT_Db;
+
+//Global Variables
+
+Bool DEBUG = true;
+
+
+/**********************************************************************************
+ * isValidDiscount - Validates Discount is applicable based on Owner Account Profile
+ **********************************************************************************/
+
+function Decimal isValidDiscount 
+{ 
+
+//logPipeline("isValidDiscount() " +"\n");
+String query="";
+String q="";
+String q1="";
+String a_pdp="";
+String t_a_pdp="";
+String d_status; 
+String d_percent;
+String s_pdp = edrString(DETAIL.OPERATOR_SPECIFIC_INFO);
+String owner_id="";
+
+Long dpIndex;
+Long dpCounter;
+Long subIndex;
+Long subCounter;
+Long c_di=0;
+Long d_Counter=0;
+String t_o_pdp="";
+String o_pdp="";
+
+String ListArray[]; 
+Long nbElem=0;
+
+t_a_pdp = edrString(DETAIL.CUST_A.ACCOUNT_ID,0);
+a_pdp = strReplace(t_a_pdp , 0, 2, "");
+logFormat( "Account Poid: " + a_pdp + "   Service Poid:" + s_pdp + "  \n" );
+
+
+ Long cntt; 
+   cntt = 0;
+   //Decimal cntt = 0; 
+Decimal tm;
+
+   
+if ( dbDataConnection( "ifw.DataPool.LoginInfranet.Module" ) == false ) 
+   { 
+      logFormat( "dbDataConnection() failed: " + dbError() ); 
+   } 
+   else 
+   { 
+      Long con = dbConnection(); 
+      
+      if ( con == INVALID_CONNECTION ) 
+      { 
+        logFormat( "DB-ERROR: " + dbError() ); 
+      }  
+      else 
+      { 
+	//----------------------------------------------
+
+	subIndex = edrNumDatablocks(DETAIL.CUST_A.SUBCYCLE_PL,0);
+	for(subCounter=0;subCounter<subIndex;subCounter=subCounter+1)
+        {	
+	   c_di = edrLong(DETAIL.CUST_A.SUBCYCLE_PL.DL.CURRENT_DISC_INDEX,0,subCounter,0);
+
+	
+	   t_o_pdp = edrString(DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.OFFERING_POID,0,subCounter,0,c_di);
+	   if ( t_o_pdp != "")
+	   {
+	   
+	   logFormat( "Using C_DI -> Discount Poid : " +  t_o_pdp );
+	   o_pdp = strReplace(t_o_pdp , 0, 2, "");
+           Long nbElem = strSplit( ListArray, o_pdp, " ");
+           o_pdp =  ListArray[0];
+           logFormat( "Discount Poid : " +  o_pdp );
+
+	//----------------------------------------------
+	/*
+		query = "select 1, 2 from dual";
+	*/
+
+	q = "select po.status, pod.value from profile_t pr, profile_offer_details_t po, profile_offer_details_data_t pod,(select  max(case when b.name='OWNER_ID'  then b.value end) value_1, max(case when b.name='OWNER_ACCOUNT'  then b.value end) value_2 from  profile_t a, profile_offer_details_t x, profile_offer_details_data_t b where a.poid_id0=b.obj_id0 and a.poid_id0=x.obj_id0 and  a.account_obj_id0 = " + a_pdp + " and a.service_obj_id0 = " + s_pdp + "  and x.offering_obj_id0 = " + o_pdp + "  ) c";
+q1 = " where pr.poid_id0=po.obj_id0  and po.obj_id0=pod.obj_id0 and  pr.account_obj_id0=to_number(REGEXP_SUBSTR(c.value_2,'[^ ]+', 1, 3 )) and pr.poid_id0 in (select obj_id0 from profile_offer_details_data_t where name='OWNER_ID' and value=c.value_1) and pod.name='DISCOUNT_PERCENT'";
+
+         query = q + q1;
+	 logFormat( "Query : " +  query );
+
+	 Long res = dbExecute( con, query);
+  
+         if ( res == INVALID_RESULT ) 
+         { 
+            logFormat( "DB-ERROR: " + dbError() ); 
+         } 
+         else 
+         { 
+            Long   ret; 
+            Long   num; 
+	    d_status=""; 
+            d_percent="";
+            do  
+            { 
+               //Long ret;
+               num = 0; 
+ 
+               while ( (ret = dbNextRow( res, d_status, d_percent)) == NEXT_ROW ) 
+               { 
+                  logFormat( "Discount Status = " + d_status + " Percent = " + d_percent); 
+ 
+                   num = num + 1; 
+               } 
+
+               if ( ret != NO_MORE_ROWS ) 
+               { 
+                  logFormat( "DB-ERROR: dbNextRow() failed: " + dbError() ); 
+               } 
+               else 
+               { 
+                  logFormat( "INFO: " + longToStr( num ) + " BTDCount Read "); 
+               } 
+               
+            } while ( (ret = dbNextResult( res )) == NEXT_RESULT ); 
+
+            if ( ret != NO_MORE_RESULTS ) 
+            { 
+                logFormat( "ERROR: dbNextResult() failed: " + dbError() ); 
+            } 
+
+            dbCloseResult( res ); 
+         
+         } // End of else part
+
+	} 	
+       } //End of for loop - SubCycle
+        
+      } // End of else part
+
+  	//Close Connection
+        Bool db_res  = dbCloseConnection (con);
+        if ( db_res == false )
+        {
+                logFormat( "ERROR: failed to close a connection: " +   dbError() );
+        } 
+
+
+    } // End of else part
+
+
+   if ( d_status == "1")
+   {
+	edrString(DETAIL.DESCRIPTION) = d_percent;
+	return 1.0;
+   }
+   else
+   {
+	return 0.0;
+   }
+
+  
+
+}
+
+function Decimal getDiscPercent
+{ 
+ Decimal d_percent = 0.0;
+ String  d_p = "";
+Long dpIndex;
+Long dpCounter;
+
+ d_p = edrString(DETAIL.DESCRIPTION);
+
+ if (d_p != "")
+ { 
+   d_percent = strToDecimal(d_p);
+   d_percent = (d_percent/100.00);
+
+   logFormat( "Discount Percentage: " + decimalToStr(d_percent) + " \n" );   
+   return d_percent;
+
+ }
+ else
+ {
+   return 0.0;
+ }
+
+}
+
+
+/**********************************************************************************
+ * getLineCnt - Fetches count of valid connections for a /billinfo
+ **********************************************************************************/
+
+function Decimal getLineCnt
+{
+
+//logPipeline("getLineCnt() \n" );
+String query="";
+String bi_pdp="";
+
+bi_pdp = edrString(DETAIL.INTERN_SERVICE_BILL_INFO_ID);
+bi_pdp = strReplace(bi_pdp , 0, 2, "") ;
+//logFormat( "BillInfo Obj: " + bi_pdp + "\n" );
+
+
+String a_pdp="";
+a_pdp = edrString(DETAIL.CUST_A.ACCOUNT_ID,0);
+a_pdp = strReplace(a_pdp , 0, 2, "") ;
+//logFormat( "Account Poid: " + a_pdp + "\n" );
+
+Decimal cur_bal;
+
+Long cntt;
+cntt = 0;
+
+if ( dbDataConnection( "ifw.DataPool.LoginInfranet.Module" ) == false )
+   {
+      logFormat( "dbDataConnection() failed: " + dbError() );
+   }
+   else
+   {
+      Long con = dbConnection();
+
+      if ( con == INVALID_CONNECTION )
+      {
+        logFormat( "DB-ERROR: " + dbError() );
+      }
+      else
+      {
+       //query = "select bgs.current_bal from bal_grp_t bg, bal_grp_sub_bals_t bgs, billinfo_t bi where bg.poid_id0=bgs.obj_id0 and bg.billinfo_obj_id0=bi.poid_id0 and bi.bal_grp_obj_id0=bg.poid_id0 and bg.account_obj_id0= " + a_pdp + " and bg.billinfo_obj_id0= " + bi_pdp + " and bgs.rec_id2=1000103";
+       query = "select sum(current_bal) from bal_grp_t bg, bal_grp_sub_bals_t bgs, billinfo_t bi where bg.poid_id0=bgs.obj_id0 and bg.billinfo_obj_id0=bi.poid_id0 and bg.billinfo_obj_id0= " + bi_pdp + " and bg.account_obj_id0= " + a_pdp + " and rec_id2=1000103 and valid_from<bi.next_bill_t";
+
+         //logFormat( "Query : " +  query );
+
+         Long res = dbExecute( con, query);
+
+         if ( res == INVALID_RESULT )
+         {
+            logFormat( "DB-ERROR: " + dbError() );
+         }
+         else
+         {
+            Long   ret;
+            Long   num;
+            //cur_bal = 0;
+
+            do
+            {
+               //Long ret;
+               num = 0;
+
+               while ( (ret = dbNextRow( res, cur_bal)) == NEXT_ROW )
+               {
+                  //logFormat( "Balance = " + decimalToStr(cur_bal));
+
+                   num = num + 1;
+               }
+
+               if ( ret != NO_MORE_ROWS )
+               {
+                  logFormat( "DB-ERROR: dbNextRow() failed: " + dbError() );
+               }
+               else
+               {
+                  //logFormat( "INFO: " + longToStr( num ) + " BTDCount Read ");
+               }
+
+            } while ( (ret = dbNextResult( res )) == NEXT_RESULT );
+
+            if ( ret != NO_MORE_RESULTS )
+	    {
+                logFormat( "ERROR: dbNextResult() failed: " + dbError() );
+            }
+
+            dbCloseResult( res );
+
+         } // End of else part
+
+      } // End of else part
+
+  	//Close Connection
+   	Bool db_res  = dbCloseConnection (con);
+   	if ( db_res == false ) 
+   	{ 
+     		logFormat( "ERROR: failed to close a connection: " +   dbError() ); 
+   	} 
+
+
+    } // End of else part
+
+	
+
+   if ( cur_bal > 0.0 )
+   {
+      return cur_bal;
+   }
+   else
+   {
+      return 0.0;
+   }
+
+	
+
+}
+
+
+/**********************************************************************************
+ * validFCNDisc - Validates Discount 
+ **********************************************************************************/
+function Decimal validFCNDisc 
+{ 
+
+  if ( edrString(DETAIL.OPERATOR_SPECIFIC_INFO) == "GSM - Discard Discount" )
+  {
+    return 999999.0;
+  }
+  else 
+  {
+    return 0.0;
+  }
+
+}
+
+
+
+
+/**********************************************************************************
+ * getPlan149Cnt - Fetches count of valid Plan 149 connections for a /billinfo
+ **********************************************************************************/
+
+function Decimal getPlan149Cnt
+{
+
+//logPipeline("getPlan149Cnt() \n" );
+String query="";
+String bi_pdp="";
+
+bi_pdp = edrString(DETAIL.INTERN_SERVICE_BILL_INFO_ID);
+bi_pdp = strReplace(bi_pdp , 0, 2, "") ;
+//logFormat( "BillInfo Obj: " + bi_pdp + "\n" );
+
+
+String a_pdp="";
+a_pdp = edrString(DETAIL.CUST_A.ACCOUNT_ID,0);
+a_pdp = strReplace(a_pdp , 0, 2, "") ;
+//logFormat( "Account Poid: " + a_pdp + "\n" );
+
+Decimal cur_bal;
+
+Long cntt;
+cntt = 0;
+
+if ( dbDataConnection( "ifw.DataPool.LoginInfranet.Module" ) == false )
+   {
+      logFormat( "dbDataConnection() failed: " + dbError() );
+   }
+   else
+   {
+      Long con = dbConnection();
+
+      if ( con == INVALID_CONNECTION )
+      {
+        logFormat( "DB-ERROR: " + dbError() );
+      }
+      else
+      {
+
+       query = "select sum(current_bal) from bal_grp_t bg, bal_grp_sub_bals_t bgs where bg.poid_id0=bgs.obj_id0 and bg.billinfo_obj_id0= " + bi_pdp + " and bg.account_obj_id0= " + a_pdp + " and bgs.rec_id2=1000107";
+
+        //logFormat( "Query : " +  query );
+
+         Long res = dbExecute( con, query);
+
+         if ( res == INVALID_RESULT )
+         {
+            logFormat( "DB-ERROR: " + dbError() );
+         }
+         else
+         {
+            Long   ret;
+            Long   num;
+            //cur_bal = 0;
+
+            do
+            {
+               //Long ret;
+               num = 0;
+
+               while ( (ret = dbNextRow( res, cur_bal)) == NEXT_ROW )
+               {
+                  //logFormat( "Plan 149 Count = " + decimalToStr(cur_bal));
+
+                   //num = num + 1;
+               }
+
+               if ( ret != NO_MORE_ROWS )
+               {
+                  logFormat( "DB-ERROR: dbNextRow() failed: " + dbError() );
+               }
+               else
+               {
+                  //logFormat( "INFO: " + longToStr( num ) + " Plan149Cnt Read ");
+               }
+
+            } while ( (ret = dbNextResult( res )) == NEXT_RESULT );
+
+            if ( ret != NO_MORE_RESULTS )
+	    {
+                logFormat( "ERROR: dbNextResult() failed: " + dbError() );
+            }
+
+            dbCloseResult( res );
+
+         } // End of else part
+
+      } // End of else part
+
+  	//Close Connection
+   	Bool db_res  = dbCloseConnection (con);
+   	if ( db_res == false ) 
+   	{ 
+     		logFormat( "ERROR: failed to close a connection: " +   dbError() ); 
+   	} 
+
+
+    } // End of else part
+
+
+   if ( cur_bal > 0.0 )
+   {
+      return cur_bal;
+   }
+   else
+   {
+      return 0.0;
+   }
+
+	
+
+}
+
+
+// Test function - Please remove this block
+
+function Decimal getDiscountString
+{
+logPipeline("getDiscountString() \n" );
+logFormat( "This is inside getDiscountString ");
+
+//
+
+ String query="";
+ String q1="";
+ String q2="";
+
+
+ String d_status="";
+ Decimal d_percent = 0.0;
+ String  d_p = "";
+
+
+String a_pdp="";
+a_pdp = edrString(DETAIL.CUST_A.ACCOUNT_ID,0);
+a_pdp = strReplace(a_pdp , 0, 2, "") ;
+
+logFormat( "Account Poid: " + a_pdp + "\n" );
+
+
+
+if ( dbDataConnection( "ifw.DataPool.LoginInfranet.Module" ) == false )
+   {
+      logFormat( "dbDataConnection() failed: " + dbError() );
+   }
+   else
+   {
+      Long con = dbConnection();
+
+      if ( con == INVALID_CONNECTION )
+      {
+        logFormat( "DB-ERROR: " + dbError() );
+      }
+      else
+      {
+//       query = "select sum(current_bal) from bal_grp_t bg, bal_grp_sub_bals_t bgs, billinfo_t bi where bg.poid_id0=bgs.obj_id0 and bg.billinfo_obj_id0=bi.poid_id0 and bg.billinfo_obj_id0= " + bi_pdp + " and bg.account_obj_id0= " + a_pdp + " and rec_id2=1000103 and valid_from<bi.next_bill_t";
+
+
+	q1 = "select case when a.status= 3 then 'Inactive' end d_status  FROM pin.purchased_product_t a, pin.account_t b, pin.billinfo_t bi, pin.product_t c, pin.service_alias_list_t d, pin.bal_grp_t e, pin.service_t f WHERE a.account_obj_id0 = b.poid_id0 AND d.obj_id0 = f.poid_id0 AND f.bal_grp_obj_id0 = e.poid_id0 $AND e.billinfo_obj_id0 = bi.poid_id0  AND a.product_obj_id0 = c.poid_id0 AND bi.pay_type <> 10000 AND f.poid_id0 = a.service_obj_id0 and a.account_obj_id0= " + a_pdp + " and a.NODE_LOCATION='MRC Flat Discount'";
+
+	q2 = " and a.status=3 and months_between(TO_DATE(trunc(pin.TD_UNIX_TO_NZ(cycle_end_t) ),'dd/mm/yyyy'),TO_DATE(trunc(pin.TD_UNIX_TO_NZ(cycle_start_t) ),'dd/mm/yyyy') ) < months_between(TO_DATE(trunc(pin.TD_UNIX_TO_NZ(next_bill_t) ),'dd/mm/yyyy'),TO_DATE(trunc(pin.TD_UNIX_TO_NZ(cycle_start_T) ),'dd/mm/yyyy'))";
+
+
+	query = q1 + q2 ;
+
+
+         logFormat( "Query : " +  query );
+
+         Long res = dbExecute( con, query);
+
+
+         if ( res == INVALID_RESULT ) 
+         { 
+            logFormat( "DB-ERROR: " + dbError() ); 
+         } 
+         else 
+         { 
+            Long   ret; 
+            Long   num; 
+	    d_status=""; 
+            d_percent="";
+            do  
+            { 
+               //Long ret;
+               num = 0; 
+ 
+               while ( (ret = dbNextRow( res, d_status)) == NEXT_ROW ) 
+               { 
+                  logFormat( "Discount Status = " + d_status ); 
+ 
+                   num = num + 1; 
+               } 
+
+               if ( ret != NO_MORE_ROWS ) 
+               { 
+                  logFormat( "DB-ERROR: dbNextRow() failed: " + dbError() ); 
+               } 
+               else 
+               { 
+                  logFormat( "INFO: " + longToStr( num ) + " BTDCount Read "); 
+               } 
+               
+            } while ( (ret = dbNextResult( res )) == NEXT_RESULT ); 
+
+            if ( ret != NO_MORE_RESULTS ) 
+            { 
+                logFormat( "ERROR: dbNextResult() failed: " + dbError() ); 
+            } 
+
+            dbCloseResult( res ); 
+         
+         } // End of else part
+
+	} 	
+       } //End of for loop - SubCycle
+        
+      } // End of else part
+
+  	//Close Connection
+        Bool db_res  = dbCloseConnection (con);
+        if ( db_res == false )
+        {
+                logFormat( "ERROR: failed to close a connection: " +   dbError() );
+        } 
+
+
+    } // End of else part
+
+
+   if ( d_status == "Inactive")
+   {
+	d_percent = "1.0"
+	return strToDecimal(d_percent);
+   }
+   else
+   {
+	return 0.0;
+   }
+
+}

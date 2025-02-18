@@ -1,0 +1,1931 @@
+<Opcode name="PCM_OP_CUST_UPDATE_CUSTOMER" visibility="public"
+        transaction="required" component="fm_cust"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes 
+        opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>The opcode PCM_OP_CUST_UPDATE_CUSTOMER can be used to update the customer
+       information. The input data is partitioned in logical buckets namely
+       account information, contact information, balance groups, bill units,
+       payment methods, locale, profiles and topup details.</Doc>
+  <Input>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required" mode="complete">
+        <Doc>This is the account poid, used for opening transaction if required.
+        </Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="complete">
+        <Doc>This is the poid of the account which needs to be updated.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <String name="PIN_FLD_PROGRAM_NAME" use="required" maxlen="60">
+        <Doc>The program name identifies calling program.</Doc>
+      </String>
+      <Int name="PIN_FLD_VERSION" use="optional">
+        <Doc>The version flag indicates if the flist confers to the current
+             specification or legacy specification. The values could be
+             PIN_PORTAL_VERSION_CURRENT or PIN_PORTAL_VERSION_LEGACY. If legacy
+             is specified a conversion function will be invoked. Default is
+             legacy.</Doc>
+      </Int>
+      <Array name="PIN_FLD_NAMEINFO" use="optional" elemIdMode="index"
+             minElements="0" minElemId="0">
+        <Doc>This represents name and address information. The element-id of the
+             element defines the contact type for some predefined values. The
+             element-id of 1 indicates Billing Contact. Other values are
+             undefined, and the contact_type string describes the type of
+             contact.</Doc>
+        <Fields>
+          <String name="PIN_FLD_SALUTATION" use="optional" maxlen="75">
+            <Doc>Mr. or Mrs. or Ms.</Doc>
+          </String>
+          <String name="PIN_FLD_LAST_NAME" use="optional" maxlen="90">
+            <Doc>Last name.</Doc>
+          </String>
+          <String name="PIN_FLD_FIRST_NAME" use="optional" maxlen="90">
+            <Doc>First name.</Doc>
+          </String>
+          <String name="PIN_FLD_MIDDLE_NAME" use="optional" maxlen="90">
+            <Doc>Middle name.</Doc>
+          </String>
+          <String name="PIN_FLD_TITLE" use="optional" maxlen="90">
+            <Doc>Job title.</Doc>
+          </String>
+          <String name="PIN_FLD_COMPANY" use="optional" maxlen="90">
+            <Doc>Company affiliation.</Doc>
+          </String>
+          <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+            <Doc>Street address.</Doc>
+          </String>
+          <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+            <Doc>City.</Doc>
+          </String>
+          <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+            <Doc>State / Province.</Doc>
+          </String>
+          <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+            <Doc>Zip / Postal code.</Doc>
+          </String>
+          <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+            <Doc>Country.</Doc>
+          </String>
+          <String name="PIN_FLD_EMAIL_ADDR" use="optional" maxlen="1023">
+            <Doc>Email address for this person.</Doc>
+          </String>
+          <String name="PIN_FLD_CONTACT_TYPE" use="optional" maxlen="255">
+            <Doc>Contact type comment for this person (for undefined
+                 element-ids).</Doc>
+          </String>
+          <Array name="PIN_FLD_PHONES" use="optional" elemIdMode="ignored">
+            <Doc>Phone array.</Doc>
+            <Fields>
+              <Enum name="PIN_FLD_TYPE" use="optional">
+                <Doc>Phone Type. The possible values are unknown(0),home(1),
+                     work(2), fax(3), pager(4), portable(5), POP(6) and
+                     Support(7).</Doc>
+                <Values>
+                  <Value>0</Value>
+                  <Doc>Unknown type(PIN_PHONE_TYPE_UNKNOWN).</Doc>
+                </Values>
+                <Values>
+                  <Value>1</Value>
+                  <Doc>Home phone number(PIN_PHONE_TYPE_HOME).</Doc>
+                </Values>
+                <Values>
+                  <Value>2</Value>
+                  <Doc>Work phone number(PIN_PHONE_TYPE_WORK).</Doc>
+                </Values>
+                <Values>
+                  <Value>3</Value>
+                  <Doc>Fax phone(PIN_PHONE_TYPE_FAX).</Doc>
+                </Values>
+                <Values>
+                  <Value>4</Value>
+                  <Doc>Pager phone(PIN_PHONE_TYPE_PAGER).</Doc>
+                </Values>
+                <Values>
+                  <Value>5</Value>
+                  <Doc>Portable type of phone(PIN_PHONE_TYPE_PORTABLE).</Doc>
+                </Values>
+                <Values>
+                  <Value>6</Value>
+                  <Doc>POP type(PIN_PHONE_TYPE_POP).</Doc>
+                </Values>
+                <Values>
+                  <Value>7</Value>
+                  <Doc>Support type(PIN_PHONE_TYPE_SUPPORT).</Doc>
+                </Values>
+              </Enum>
+              <String name="PIN_FLD_PHONE" use="required" maxlen="75">
+                <Doc>Phone Number.</Doc>
+              </String>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_ACCTINFO" use="optional" elemIdMode="ignored"
+             iterationOrder="undefined" minElements="0" maxElements="1"
+             allowedElemIds="0">
+        <Doc>The information to be stored in the account object will be passed
+             in the acctinfo.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>The account POID.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_BAL_INFO" use="optional" elemIdMode="key"
+                 iterationOrder="undefined" minElements="0" minElemId="0">
+            <Doc>Account level balance group indicator. Here the array does not
+                 contain anything but the element-id is significant. This
+                 indicates the balance group element in the input that needs to
+                 be associated at the account level.</Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+            <Doc>The balance group object for the account. Either
+                 PIN_FLD_BAL_INFO or PIN_FLD_BAL_GRP_OBJ must be specified. If
+                 PIN_FLD_BAL_INFO is passed in, this field will be ignored.
+            </Doc>
+            <ClassRef>obj://balance_group</ClassRef>
+          </Poid>
+          <Enum name="PIN_FLD_ACTG_TYPE" use="optional">
+      	    <Doc>Accounting type of the billinfo. This field is moved under
+           	 PIN_FLD_BILLINFO array. If this field is still passed under
+           	 PIN_FLD_ACCTINFO array, it will be copied to all PIN_FLD_BILLINFO
+           	 arrays and dropped from ACCTINFO. This backward compatibility 
+           	 support is provided only if PIN_FLD_VERSION is legacy. If 
+           	 PIN_FLD_BILLINFO already defines this field, the value passed  
+           	 here is ignored and dropped.</Doc>
+            <Values>
+              <Value>1</Value>
+              <Doc>This represents "open items" type of accounting. With open
+                   item accounting customer's bill does not include amounts from
+                   previous bill, if not paid(PIN_ACTG_TYPE_OPEN_ITEMS).</Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>This represents "balance forward" type of accounting. With
+                   balance forward accounting customer's bill will include
+                   amounts from previous bill, if not paid
+                  (PIN_ACTG_TYPE_BALANCE_FORWARD).</Doc>
+            </Values>
+          </Enum>
+          <String name="PIN_FLD_GL_SEGMENT" use="optional" maxlen="255">
+            <Doc>Account's General Ledger segment. Used in G/L reporting.</Doc>
+          </String>
+          <Int name="PIN_FLD_CURRENCY" use="optional">
+            <Doc>The primary currency of the account. Also this acts as
+                 element-id of primary balance element for accounting roll-up.
+                 If not provided the default account currency information will
+                 be read from CM's pin.conf.</Doc>
+          </Int>
+          <Int name="PIN_FLD_CURRENCY_SECONDARY" use="optional">
+            <Doc>The secondary currency of the account. Also this acts as
+                 element-id of secondary balance element for accounting roll-up.
+            </Doc>
+          </Int>
+          <Enum name="PIN_FLD_ACCOUNT_TYPE" use="optional">
+            <Doc>This represents the type of account. This can be either a brand
+                 account or a standard account.</Doc>
+            <Values>
+              <Value>1</Value>
+              <Doc>Indicates a standard account(PIN_ACCOUNT_TYPE_STANDARD).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>Indicates a brand account(PIN_ACCOUNT_TYPE_BRAND).</Doc>
+            </Values>
+          </Enum>
+          <String name="PIN_FLD_ACCESS_CODE1" use="optional" maxlen="30">
+            <Doc>Access codes - for voice verification.</Doc>
+          </String>
+          <String name="PIN_FLD_ACCESS_CODE2" use="optional" maxlen="30">
+            <Doc>Access codes - for voice verification.</Doc>
+          </String>
+          <String name="PIN_FLD_CUSTOMER_SEGMENT_LIST" use="optional"
+                  maxlen="4000">
+            <Doc>Customer Segment List - a string list of customer segments
+                 separated by '|'. Example: For segments 1, 4, 6 the string is
+                 "1|4|6".</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_ACCESS" use="optional" maxlen="60">
+            <Doc>Client identification fields. Access method - admin, meccad,
+                 etc.</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_SOURCE" use="optional" maxlen="60">
+            <Doc>Source address - ANI, X121, IP addr, etc.</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_VENDOR" use="optional" maxlen="60">
+            <Doc>ID String for client software vendor.</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_PACKAGE" use="optional" maxlen="60">
+            <Doc>ID String for client package.</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_PROMO_CODE" use="optional" maxlen="60">
+            <Doc>Promotional code for client package - generally set by vendor.
+            </Doc>
+          </String>
+          <String name="PIN_FLD_AAC_SERIAL_NUM" use="optional" maxlen="60">
+            <Doc>Serial number for specific copy of client.</Doc>
+          </String>
+        </Fields>
+      </Array>
+      <Timestamp name="PIN_FLD_END_T" use="optional">
+        <Doc>This field represents the timestamp at which the event ends.
+             Effective time of the update to this account, on an external
+             system. If this field is not specified, then current time on the
+             BRM server will be considered.</Doc>
+      </Timestamp>
+      <Timestamp name="PIN_FLD_START_T" use="optional">
+        <Doc>This would be the timestamp to be used to generate events. If not
+             specified, the current time on the BRM server will be considered.
+        </Doc>
+      </Timestamp>
+      <Array name="PIN_FLD_BAL_INFO" use="optional" elemIdMode="index"
+             iterationOrder="undefined" minElements="0" minElemId="0">
+        <Doc>The Balance Group array. List of balance groups that need to be
+             created or updated.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>The partial poid of the balance group to be created. During
+                 monitor creation/update, Poid type of /balance_group/monitor is
+                 used. To modify an existing balance group, specify the full
+                 POID.</Doc>
+            <ClassRef>obj://balance_group</ClassRef>
+          </Poid>
+          <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+            <Doc>Balance Group name</Doc>
+          </String>
+          <Array name="PIN_FLD_BILLINFO" use="optional" elemIdMode="key"
+                 iterationOrder="undefined" minElements="0" minElemId="0">
+            <Doc>The billinfo array element. Here the contents are not
+                 significant. The element id will determine the billinfo in the
+                 input that will be associated with this balance group. if not
+                 specified then the first billinfo that the system finds will be
+                 associated with this balance group.</Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+            <Doc>The POID of Billinfo that this balance group will be associated
+                 with. The fields PIN_FLD_BILLINFO and PIN_FLD_BILLINFO_OBJ are
+                 mutually exclusive. If PIN_FLD_BILLINFO is available then
+                 PIN_FLD_BILLINFO_OBJ will be ignored.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_LIMIT" use="optional" elemIdMode="index"
+                 iterationOrder="undefined" minElements="0" minElemId="0">
+            <Doc>This an optional array to set the credit limit parameters. The
+                 element id is significant and indicates the resource id for
+                 which the limit is being set.</Doc>
+            <Fields>
+              <Decimal name="PIN_FLD_CREDIT_LIMIT" use="optional">
+                <Doc>Limit for this resource. Current balance cannot exceed this
+                     limit unless affected by a limit override rate or manually
+                     adjusted by a CSR.</Doc>
+              </Decimal>
+              <Decimal name="PIN_FLD_CREDIT_FLOOR" use="optional">
+                <Doc>Baseline for calculating percentage for threshold triggers.
+                     Credit limit minus credit floor is 100% of measured range.
+                     Credit floor does NOT enforce any limit on current balance.
+                </Doc>
+              </Decimal>
+              <Int name="PIN_FLD_CREDIT_THRESHOLDS" use="optional">
+                <Doc>Bit flags for triggering when resource balance crosses a
+                     boundary when increasing in value.</Doc>
+              </Int>
+              <Array name="PIN_FLD_THRESHOLDS" use="optional"
+                elemIdMode="ignored" iterationOrder="undefined"
+                isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                isRecursive="false">
+                <Doc> Array of fixed threshold values. </Doc>
+                <Fields>
+                  <Int name="PIN_FLD_THRESHOLD" use="required">
+                    <Doc>Fixed threshold value.</Doc>
+                  </Int>
+                </Fields>
+              </Array>
+            </Fields>
+          </Array>
+          <Array name="PIN_FLD_RULES" use="optional" elemIdMode="index"
+                 iterationOrder="undefined" minElements="0" minElemId="0">
+            <Doc>This is an optional array to set the consumption rules for a
+                 resource. The element id is significant and indicates a
+                 resource id for which the limit as well as consumption rules
+                 are set.</Doc>
+            <Fields>
+              <Enum name="PIN_FLD_CONSUMPTION_RULE" use="optional">
+                <Doc>Consumption rule to be applied on the resource.</Doc>
+                <Values>
+                  <Value>0</Value>
+                  <Doc>The consumption rule is not defined
+                       (PIN_CONSUMPTION_RULE_NOT_DEFINED).</Doc>
+                </Values>
+                <Values>
+                  <Value>1</Value>
+                  <Doc>Earliest start time. Consume the sub-balance with the
+                       earliest validity start time (earliest valid_from) first.
+                       (PIN_CONSUMPTION_RULE_EST)</Doc>
+                </Values>
+                <Values>
+                  <Value>2</Value>
+                  <Doc>Latest start time. Consume the sub-balance with the
+                       latest validity start time (latest valid_from) first
+                       (PIN_CONSUMPTION_RULE_LST).</Doc>
+                </Values>
+                <Values>
+                  <Value>3</Value>
+                  <Doc>Earliest expiration time. Consume the sub-balance that
+                       expires first (earliest valid_to.)
+                       (PIN_CONSUMPTION_RULE_EET)</Doc>
+                </Values>
+                <Values>
+                  <Value>4</Value>
+                  <Doc>Latest expiration time. Consume the sub-balance that
+                       expires last (latest valid_to.)
+                       (PIN_CONSUMPTION_RULE_LET)</Doc>
+                </Values>
+                <Values>
+                  <Value>5</Value>
+                  <Doc>Earliest start time and latest expiration time. Consume
+                       the sub-balance with the earliest valid_from first. If
+                       more than one sub-balances has the same valid_from,
+                       consume the one with the latest valid_to first
+                       (PIN_CONSUMPTION_RULE_ESTLET).</Doc>
+                </Values>
+                <Values>
+                  <Value>6</Value>
+                  <Doc>Earliest start time and earliest expiration time. Consume
+                       the sub-balance with the earliest valid_from first. If
+                       more than one sub-balances has the same valid_from,
+                       consume the one with the earliest valid_to first
+                       (PIN_CONSUMPTION_RULE_ESTEET).</Doc>
+                </Values>
+                <Values>
+                  <Value>7</Value>
+                  <Doc>Latest start time and earliest expiration time. Consume
+                       the sub-balance with the latest sub-balance first. If
+                       more than one sub-balances has the same valid_from,
+                       consume the one with the earliest expired sub-balance
+                       first(PIN_CONSUMPTION_RULE_LSTEET).</Doc>
+                </Values>
+                <Values>
+                  <Value>8</Value>
+                  <Doc>Latest start time and latest expiration time. Consume the
+                       sub-balance with the latest valid_from first. If more
+                       than one sub-balances has the same valid_from, consume
+                       the one with the latest valid_to first
+                       (PIN_CONSUMPTION_RULE_LSTLET).</Doc>
+                </Values>
+                <Values>
+                  <Value>9</Value>
+                  <Doc>Earliest expiration time and earliest start time. Consume
+                       the sub-balance with the earliest valid_to first. If more
+                       than one sub-balances has the same valid_to, consume the
+                       one with the earliest valid_from first
+                       (PIN_CONSUMPTION_RULE_EETEST).</Doc>
+                </Values>
+                <Values>
+                  <Value>10</Value>
+                  <Doc>Earliest expiration time and latest start time. Consume
+                       the sub-balance with the earliest valid_to first. If more
+                       than one sub-balances has the same valid_to, consume the
+                       one with the latest valid_from first
+                       (PIN_CONSUMPTION_RULE_EETLST).</Doc>
+                </Values>
+                <Values>
+                  <Value>11</Value>
+                  <Doc>Latest expiration time and earliest start time. Consume
+                       the sub-balance with the latest valid_to first. If more
+                       than one sub-balances has the same valid_to, use the one
+                       with the earliest valid_from first
+                       (PIN_CONSUMPTION_RULE_LETEST).</Doc>
+                </Values>
+                <Values>
+                  <Value>12</Value>
+                  <Doc>Latest expiration time and latest start time. Consume the
+                       sub-balance with the latest valid_to first. If more than
+                       one sub-balances has the same valid_to, use the one with
+                       the latest valid_from first
+                       (PIN_CONSUMPTION_RULE_LETLST).</Doc>
+                </Values>
+              </Enum>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_BILLINFO" use="optional" elemIdMode="index"
+             iterationOrder="undefined" minElements="0" minElemId="0">
+        <Doc>This represents the array of Billing info's. The element id is
+             significant as it behaves as a key, in other objects like balance
+             groups (bal_info array) to be created during this operation, to
+             identify which billinfo element to associate with.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>The type only billinfo poid to create the billinfo. To update
+                 the existing billinfo, specify the complete billinfo poid.
+            </Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_BUSINESS_PROFILE_OBJ" use="optional"
+                mode="complete">
+            <Doc>Business profile poid. Pointer to the Business profile poid to
+                 which this billinfo belongs.</Doc>
+            <ClassRef>obj://config.business_profile</ClassRef>
+          </Poid>
+          <String name="PIN_FLD_BILLINFO_ID" use="required" maxlen="60">
+            <Doc>This field identifies the billinfo by name.</Doc>
+          </String>
+          <Array name="PIN_FLD_PAYINFO" use="optional" elemIdMode="key"
+                 iterationOrder="undefined">
+            <Doc>The Payinfo array. The element-id is significant, but not the
+                 contents. The element-id will be used to identify which payinfo
+                 array to use from the input. If it is not present then the
+                 payment method is considered either as transient or voucher.
+            </Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional" mode="complete">
+            <Doc>The payinfo poid that this billinfo is associated with. If
+                 PIN_FLD_PAYINFO is specified, this field will be ignored.</Doc>
+            <ClassRef>obj://payinfo</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_BAL_INFO" use="optional" elemIdMode="key"
+                 iterationOrder="undefined">
+            <Doc>The balance group info array. The element-id is significant,
+                 but not the contents. The element-id will be used to identify
+                 which balance group array to use from the input. If it is not
+                 present and this is a new billinfo to be created, a default
+                 balance group will be created for the billinfo.</Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+            <Doc>The balance group that this billinfo is associated with. If
+                 PIN_FLD_BAL_INFO is specified, this field will be ignored.
+            </Doc>
+            <ClassRef>obj://balance_group</ClassRef>
+          </Poid>
+          <Enum name="PIN_FLD_PAY_TYPE" use="required">
+            <Doc>This represents the type of billing for user.</Doc>
+            <Values>
+              <Value>10001</Value>
+              <Doc>Indicates invoice type(PIN_PAY_TYPE_INVOICE).</Doc>
+            </Values>
+            <Values>
+              <Value>10003</Value>
+              <Doc>Indicates credit card type(PIN_PAY_TYPE_CC).</Doc>
+            </Values>
+            <Values>
+              <Value>10005</Value>
+              <Doc>Indicates US/Canadian Direct Debit type(PIN_PAY_TYPE_DD).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>10007</Value>
+              <Doc>Indicates charge roll up to parent account
+                   (PIN_PAY_TYPE_SUBORD).</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_PARENT_FLAGS" use="optional">
+            <Doc>This field indicates if this billinfo has subordinates or not.
+                 The value of 0 indicates that it does not have subordinates and
+                 the value of 1 indicates that it has subordinates.</Doc>
+          </Int>
+          <Int name="PIN_FLD_BILL_WHEN" use="optional">
+            <Doc>Anniversary billing slot.</Doc>
+          </Int>
+          <Int name="PIN_FLD_ACTG_FUTURE_DOM" use="optional">
+            <Doc>New Accounting Close day-of-month (1-31).</Doc>
+          </Int>
+          <Enum name="PIN_FLD_ACTG_TYPE" use="optional">
+            <Doc>Accounting type of the billinfo. Possible values are
+                 PIN_ACTG_TYPE_OPEN_ITEMS(1) and PIN_ACTG_TYPE_BALANCE_FORWARD(2).This
+                 field is used to allocate items for payment. If not specified, the
+                 configuration entry actg_type is read from pin.conf of CM. If CM's
+                 pin.conf does not have actg_type entry active, then default
+                 accounting type will be balance forward type.</Doc>
+            <Values>
+              <Value>1</Value>
+              <Doc>This represents "open items" type of accounting. With open item
+                   accounting customer's bill does not include amounts from previous
+                   bill, if not paid(PIN_ACTG_TYPE_OPEN_ITEMS).</Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>This represents "balance forward" type of accounting. With balance
+                   forward accounting customer's bill will include amounts from
+                   previous bill, if not paid(PIN_ACTG_TYPE_BALANCE_FORWARD).</Doc>
+            </Values>
+          </Enum>
+          <Enum name="PIN_FLD_BILLING_STATUS" use="optional">
+            <Doc>Indicates whether the billinfo should be billed or it should be
+                 suspended for billing.</Doc>
+            <Values>
+              <Value>0</Value>
+              <Doc>Indicates billing status is active(PIN_BILL_ACTIVE).</Doc>
+            </Values>
+            <Values>
+              <Value>1</Value>
+              <Doc>Indicates billing status is inactive(PIN_BILL_INACTIVE).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>Indicates billing status to be accounting only
+                   (PIN_BILL_ACCOUNTING_ONLY).</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_BILLING_STATUS_FLAGS" use="optional">
+            <Doc>Indicates a reason for setting of the given billing status.
+            </Doc>
+          </Int>
+          <Enum name="PIN_FLD_STATUS" use="optional">
+            <Doc>Status of the billinfo: active, inactive, or closed.</Doc>
+            <Values>
+              <Value>10100</Value>
+              <Doc>Indicates an active billinfo(PIN_STATUS_ACTIVE).</Doc>
+            </Values>
+            <Values>
+              <Value>10102</Value>
+              <Doc>Indicates an inactive billinfo(PIN_STATUS_INACTIVE).</Doc>
+            </Values>
+            <Values>
+              <Value>10103</Value>
+              <Doc>Indicates a closed billinfo(PIN_STATUS_CLOSED).</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+            <Doc>Indicates a reason for setting of the given status.</Doc>
+          </Int>
+          <Int name="PIN_FLD_SPONSOR_FLAGS" use="optional">
+            <Doc>It indicates whether this billinfo has a sponsoree.</Doc>
+          </Int>
+          <Int name="PIN_FLD_SPONSOREE_FLAGS" use="optional">
+            <Doc>It indicates whether this billinfo has a sponsor.</Doc>
+          </Int>
+          <Poid name="PIN_FLD_AR_BILLINFO_OBJ" use="optional" mode="complete">
+            <Doc>It indicates the AR billinfo for the given billinfo. It can be
+                 present only for a subodinate billinfo.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_PARENT_BILLINFO_OBJ" use="optional"
+                mode="complete">
+            <Doc>It indicates the immediate (one level up) parent. Note that the
+                 given billinfo is not necessary a subordinate. The parent field
+                 may reflect just child-parent relation It should be mandatory
+                 if moving to the new parent.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Int name="PIN_FLD_CURRENCY" use="optional">
+            <Doc>During account creation these values will be derived from the
+                 account. In future when an account can have multiple
+                 currencies, the value specified here will be used.</Doc>
+          </Int>
+          <Int name="PIN_FLD_CURRENCY_SECONDARY" use="optional">
+            <Doc>During account creation these values will be derived from the
+                 account. In future when an account can have multiple
+                 currencies, the value specified here will be used.</Doc>
+          </Int>
+          <Enum name="PIN_FLD_BILLING_SEGMENT" use="optional">
+            <Doc>It indicates the Billing Segment.</Doc>
+          </Enum>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_PAYINFO" use="optional" elemIdMode="index"
+             iterationOrder="undefined" minElements="1">
+        <Doc>This is an array of payment methods to be associated with this
+             account.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>The partial poid of payinfo to be created. In case of an update
+                 to an existing payinfo, specifiy the actual payinfo poid.</Doc>
+            <ClassRef>obj://payinfo</ClassRef>
+          </Poid>
+          <Enum name="PIN_FLD_PAY_TYPE" use="required">
+            <Doc>This represents the type of billing for user.</Doc>
+            <Values>
+              <Value>10001</Value>
+              <Doc>Indicates invoice type(PIN_PAY_TYPE_INVOICE).</Doc>
+            </Values>
+            <Values>
+              <Value>10003</Value>
+              <Doc>Indicates credit card type(PIN_PAY_TYPE_CC).</Doc>
+            </Values>
+            <Values>
+              <Value>10005</Value>
+              <Doc>Indicates US/Canadian Direct Debit type(PIN_PAY_TYPE_DD).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>10007</Value>
+              <Doc>Indicates charge roll up to parent account
+                   (PIN_PAY_TYPE_SUBORD).</Doc>
+            </Values>
+          </Enum>
+          <Enum name="PIN_FLD_PAYMENT_TERM" use="optional">
+            <Doc>Payment term ID defines which payment term will be used in the
+                 payment due date calculation.</Doc>
+          </Enum>
+          <Int name="PIN_FLD_PAYMENT_OFFSET" use="optional">
+            <Doc>Payment Offset.</Doc>
+          </Int>
+          <Enum name="PIN_FLD_INV_TYPE" use="optional">
+            <Doc>Indicates the type of invoice to be generated.</Doc>
+            <Values>
+              <Value>0x00000001</Value>
+              <Doc>Indicates detail invoice(PIN_INV_TYPE_DETAIL).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000002</Value>
+              <Doc>Indicates summary invoice(PIN_INV_TYPE_SUMMARY).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000004</Value>
+              <Doc>Indicates regular invoice(PIN_INV_TYPE_REGULAR).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000008</Value>
+              <Doc>Indicates subordinate invoice(PIN_INV_TYPE_SUBORDINATE).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>0x00000010</Value>
+              <Doc>Indicates parent invoice(PIN_INV_TYPE_PARENT).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000018</Value>
+              <Doc>Indicates parent with subordinates invoice
+                  (PIN_INV_TYPE_PARENT_WITH_SUBORDS).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000020</Value>
+              <Doc>Indicates hierarchy invoice(PIN_INV_TYPE_HIERARCHY).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000040</Value>
+              <Doc>Indicates trial invoice(PIN_INV_TYPE_TRIAL_INVOICE).</Doc>
+            </Values>
+          </Enum>
+     	  <Int name="PIN_FLD_FLAGS" use="optional">
+       	      <Doc>Partial Flag. This enables the opcode to treat some fields
+            	   from the input flist as optional.  Values are (0) mandatory,
+            	   or (1) optional.  The fields affected are:
+            	   PIN_FLD_DEBIT_NUM, PIN_FLD_DEBIT_EXP, PIN_FLD_BANK_NO,
+            	   PIN_FLD_CITY, PIN_FLD_STATE, PIN_FLD_ZIP and PIN_FLD_COUNTRY.
+       	      </Doc>
+     	  </Int>
+          <Substruct name="PIN_FLD_INHERITED_INFO" use="optional">
+            <Doc>All subclass fields for the payinfo object are included in this
+                 substruct. The subclass depends on the pay_type. If pay_type is
+                 invoice then this array element will have PIN_FLD_INV_INFO, 
+                 etc.</Doc>
+            <Fields>
+              <Array name="PIN_FLD_INV_INFO" use="optional" elemIdMode="ignored"
+                     iterationOrder="undefined" minElements="0">
+                <Doc>This array element has fields related to invoice type of
+                     payment method. There will be only one element and element
+                     id is not significant.</Doc>
+                <Fields>
+                  <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                    <Doc>Street address.</Doc>
+                  </String>
+                  <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                    <Doc>City.</Doc>
+                  </String>
+                  <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                    <Doc>Country.</Doc>
+                  </String>
+                  <String name="PIN_FLD_DELIVERY_DESCR" use="optional"
+                          maxlen="255">
+                    <Doc>Delivery mechanism.</Doc>
+                  </String>
+                  <Enum name="PIN_FLD_DELIVERY_PREFER" use="optional">
+                    <Doc>Prefered delivery method email(0), postal(1) and 
+                         fax(3).</Doc>
+                    <Values>
+                      <Value>0</Value>
+                      <Doc>Indicates email delivery(PIN_INV_EMAIL_DELIVERY).
+                      </Doc>
+                    </Values>
+                    <Values>
+                      <Value>1</Value>
+                      <Doc>Indicates mail delivery(PIN_INV_USP_DELIVERY).</Doc>
+                    </Values>
+                    <Values>
+                      <Value>3</Value>
+                      <Doc>Indicates fax delivery(PIN_INV_FAX_DELIVERY).</Doc>
+                    </Values>
+                  </Enum>
+                  <String name="PIN_FLD_INV_INSTR" use="optional" maxlen="1023">
+                    <Doc>Comments to appear on each invoice.</Doc>
+                  </String>
+                  <Enum name="PIN_FLD_INV_TERMS" use="optional">
+                    <Doc>Used for invoice terms to be printed on the invoice.
+                    </Doc>
+                  </Enum>
+                  <String name="PIN_FLD_EMAIL_ADDR" use="optional" maxlen="255">
+                    <Doc>Email address to which invoice be delivered.</Doc>
+                  </String>
+                  <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                    <Doc>Name of party responsible for payment.</Doc>
+                  </String>
+                  <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                    <Doc>State or province.</Doc>
+                  </String>
+                  <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                    <Doc>Zip/Postal code.</Doc>
+                  </String>
+                </Fields>
+              </Array>
+              <Array name="PIN_FLD_CC_INFO" use="optional" elemIdMode="ignored">
+                <Doc>This array element has fields related to credit card type
+                     of payment method. There will be only one element and
+                     element id is not significant.</Doc>
+                <Fields>
+                  <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                    <Doc>Street Address.</Doc>
+                  </String>
+                  <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                    <Doc>City.</Doc>
+                  </String>
+                  <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                    <Doc>Country.</Doc>
+                  </String>
+                  <String name="PIN_FLD_DEBIT_EXP" use="optional" maxlen="128">
+                    <Doc>Credit card expiration date (mmyy).</Doc>
+                  </String>
+                  <String name="PIN_FLD_DEBIT_NUM" use="optional" maxlen="255">
+                    <Doc>Credit card number.</Doc>
+                  </String>
+                  <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                    <Doc>Name as it appears on the credit card.</Doc>
+                  </String>
+                  <String name="PIN_FLD_SECURITY_ID" use="optional" maxlen="30">
+                    <Doc>Security ID. Used for credit card fraud prevention.
+                         This field stores the 3 digit CVV2 for Visa and 4 digit
+                         CID for amex.</Doc>
+                  </String>
+                  <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                    <Doc>State or province.</Doc>
+                  </String>
+                  <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                    <Doc>Zip/Postal code.</Doc>
+                  </String>
+                </Fields>
+              </Array>
+              <Array name="PIN_FLD_DD_INFO" use="optional" elemIdMode="ignored">
+                <Doc>This array element has fields related to direct debit type
+                     of payment method. There will be only one element and
+                     element id is not significant.</Doc>
+                <Fields>
+                  <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                    <Doc>Street Address.</Doc>
+                  </String>
+                  <String name="PIN_FLD_BANK_NO" use="optional" maxlen="30">
+                    <Doc>RDFI/Bank ID used for routing transactions.</Doc>
+                  </String>
+                  <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                    <Doc>City.</Doc>
+                  </String>
+                  <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                    <Doc>Country.</Doc>
+                  </String>
+                  <String name="PIN_FLD_DEBIT_NUM" use="optional" maxlen="255">
+                    <Doc>Customer's bank account number.</Doc>
+                  </String>
+                  <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                    <Doc>Name as it appears on the card.</Doc>
+                  </String>
+                  <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                    <Doc>State or province.</Doc>
+                  </String>
+                  <Enum name="PIN_FLD_TYPE" use="optional">
+                    <Doc>Bank account type- Checking(1), savings(2) or
+                         corporate(3).</Doc>
+                    <Values>
+                      <Value>1</Value>
+                      <Doc>Checking Account type(PIN_ACCOUNT_TYPE_CHECKING).
+                      </Doc>
+                    </Values>
+                    <Values>
+                      <Value>2</Value>
+                      <Doc>Savings Account type(PIN_ACCOUNT_TYPE_SAVINGS).</Doc>
+                    </Values>
+                    <Values>
+                      <Value>3</Value>
+                      <Doc>Corporate Account type(PIN_ACCOUNT_TYPE_CORPORATE).
+                      </Doc>
+                    </Values>
+                  </Enum>
+                  <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                    <Doc>Zip/Postal code.</Doc>
+                  </String>
+                </Fields>
+              </Array>
+            </Fields>
+          </Substruct>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_LOCALES" use="optional" elemIdMode="ignored"
+             minElements="0" maxElements="1" minElemId="1" allowedElemIds="1">
+        <Doc>The locale information. There can only be one element in this
+             array. The element id must be 1.</Doc>
+        <Fields>
+          <String name="PIN_FLD_LOCALE" use="required" maxlen="255">
+            <Doc>New locale.</Doc>
+          </String>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_PROFILES" use="optional" elemIdMode="ignored"
+             iterationOrder="undefined" minElements="0">
+        <Doc>This represents Profile array to be associated with the account.
+        </Doc>
+        <Fields>
+          <Poid name="PIN_FLD_PROFILE_OBJ" use="required" mode="complete">
+            <Doc>Partial poid of profile object to create. The 'type' and
+                 'database' sub-fields are used in the creation. The other
+                 sub-fields are ignored. In case of modification to an existing
+                 profile, specify the actual poid of the profile.</Doc>
+            <ClassRef>obj://profile</ClassRef>
+          </Poid>
+          <Substruct name="PIN_FLD_INHERITED_INFO" use="optional"
+                     isRecursive="false">
+            <Doc>Inherited info for profile object.</Doc>
+            <Fields>
+              <Any name="PIN_FLD_INHERITED" use="optional" mode="allFields"
+                   baseClassName="obj://profile"
+                   classNameRef="#in.PROFILES.PROFILE_OBJ">
+                <Doc>This container is used to specify any fields for the
+                     profile.</Doc>
+              </Any>
+            </Fields>
+          </Substruct>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_TOPUP_INFO" use="optional" elemIdMode="ignored"
+             iterationOrder="undefined" minElements="0">
+        <Doc>Topup array.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>Topup poid. This will be type-only for creation.</Doc>
+            <ClassRef>obj://topup</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+            <Doc>Account poid.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_PARENT" use="optional" mode="complete">
+            <Doc>Parent's account poid. This field is mandatory in case of
+                 sponsored topup.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_PAYINFO" use="required" elemIdMode="key"
+                 iterationOrder="undefined" minElements="1">
+            <Doc>The element-id is significant. Contents are not significant.
+                 The element id points to the payinfo array element in the input
+                 flist to be used for top-up.</Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional" mode="complete">
+            <Doc>The payinfo object that this topup is associated with. If
+                 PIN_FLD_PAYINFO is passed in, this field will be ignored. If
+                 PIN_FLD_PAYINFO is not passed in, this becomes a mandatory
+                 field.</Doc>
+            <ClassRef>obj://payinfo</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_BILLINFO" use="required" elemIdMode="key"
+                 iterationOrder="undefined" minElements="1">
+            <Doc>The element-id is significant. Contents are not significant.
+                 The element id points to the billinfo array element in the
+                 input flist to be used for top-up.</Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+            <Doc>The POID of Billinfo that this topup is associated with. If
+                 PIN_FLD_BILLINFO is passed in, this field will be ignored. If
+                 PIN_FLD_BILLINFO is not passed in, this becomes a mandatory
+                 field.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Decimal name="PIN_FLD_TOPUP_AMT" use="required">
+            <Doc>This represents Topup amount. In case of auto-topups this will
+                 indicate the amount to topup with.</Doc>
+          </Decimal>
+          <Decimal name="PIN_FLD_TOPUP_CAP" use="optional">
+            <Doc>Topup cap indicates the max topup that can be done for a given
+                 cycle. The cycle is driven by the cycle information set-up in
+                 the billinfo. A values of 0 means no cap.</Doc>
+          </Decimal>
+          <Decimal name="PIN_FLD_CYCLE_TOPPED_AMT" use="optional">
+            <Doc>This indicates the total topped up amount during the given
+                 cycle. This amount will be populated only if the cap is set.
+            </Doc>
+          </Decimal>
+          <Timestamp name="PIN_FLD_LAST_TOPUP_T" use="optional">
+            <Doc>This indicates the when the last topup happened.</Doc>
+          </Timestamp>
+          <Array name="PIN_FLD_GROUP_TOPUP_INFO" use="optional"
+                 elemIdMode="ignored" iterationOrder="undefined"
+                 minElements="0">
+            <Doc>The field represents sponsored topup. The array contains fields
+                 related to Sponsored topup only.</Doc>
+            <Fields>
+              <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                <Doc>The /group/topup poid. Poid of sponsored topup group
+                     involved in the creation/modification of member account. If
+                     the object instance exists, the poid is complete poid with
+                     valid poid number. If no object instance exists, the poid
+                     is type only poid.</Doc>
+                <ClassRef>obj://group.topup</ClassRef>
+              </Poid>
+              <Poid name="PIN_FLD_PARENT" use="optional" mode="complete">
+                <Doc>Parent's account poid. This field is mandatory in case of
+                     sponsored topup.</Doc>
+                <ClassRef>obj://account</ClassRef>
+              </Poid>
+              <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                <Doc>The Name of the /group/topup. This helps to identify the
+                     group.</Doc>
+              </String>
+              <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+                <Doc>Balance Group of the parent/payer of the /group/topup.
+                </Doc>
+                <ClassRef>obj://balance_group</ClassRef>
+              </Poid>
+              <Array name="PIN_FLD_GROUP_TOPUP_LIMITS" use="optional"
+                     elemIdMode="ignored" iterationOrder="undefined"
+                     minElements="0">
+                <Doc>Represents /group/topup financial properties per resource
+                     id.</Doc>
+                <Fields>
+                  <Int name="PIN_FLD_RESOURCE_ID" use="optional">
+                    <Doc>Resource id of topup operation.</Doc>
+                  </Int>
+                  <Decimal name="PIN_FLD_TOPUP_AMT" use="required">
+                    <Doc>Topup amount is used in automatic sponsored topup.
+                    </Doc>
+                  </Decimal>
+                  <Decimal name="PIN_FLD_TOPUP_CAP" use="optional">
+                    <Doc>Topup cap is used as a maximum limit of topup for
+                         particular topup group during cycle.</Doc>
+                  </Decimal>
+                </Fields>
+              </Array>
+              <Array name="PIN_FLD_GROUP_TOPUP_MEMBERS" use="optional"
+                     elemIdMode="ignored" iterationOrder="undefined"
+                     minElements="0">
+                <Doc>Represents members' properties of the /group/topup.</Doc>
+                <Fields>
+                  <Array name="PIN_FLD_BAL_INFO" use="optional" elemIdMode="key"
+                         iterationOrder="undefined" minElements="0"
+                         minElemId="0" maxElements="1">
+                    <Doc>The member's topup balance group indicator. Here the
+                         array does not contain anything but the element id is
+                         significant. It indicates which balance group element
+                         in the input is for topup level.</Doc>
+                    <Fields></Fields>
+                  </Array>
+                  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+                        mode="complete">
+                    <Doc>Balance Group of a member of the /group/topup. If in
+                         this array, PIN_FLD_BAL_INFO is not passed in, this
+                         field becomes mandatory. If PIN_FLD_BAL_INFO is passed
+                         in, this field will be ignored.</Doc>
+                    <ClassRef>obj://balance_group</ClassRef>
+                  </Poid>
+                  <Int name="PIN_FLD_TOPUP_INTERVAL" use="optional">
+                    <Doc>This indicates the interval at which automatic
+                         sponsored topup occur.</Doc>
+                  </Int>
+                  <String name="PIN_FLD_PIN" use="optional" maxlen="60">
+                    <Doc>The PIN which will be used for authentication during
+                         Ad-Hoc topup.</Doc>
+                  </String>
+                  <Enum name="PIN_FLD_STATUS" use="optional">
+                    <Doc>The status of the member (active/inactive/closed).
+                    </Doc>
+                    <Values>
+                      <Value>10100</Value>
+                      <Doc>Indicates an active member(PIN_STATUS_ACTIVE).</Doc>
+                    </Values>
+                    <Values>
+                      <Value>10102</Value>
+                      <Doc>Indicates an inactive member(PIN_STATUS_INACTIVE).
+                      </Doc>
+                    </Values>
+                    <Values>
+                      <Value>10103</Value>
+                      <Doc>Indicates a closed member(PIN_STATUS_CLOSED).</Doc>
+                    </Values>
+                  </Enum>
+                </Fields>
+              </Array>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>
+    </Fields>
+  </Input>
+  <Output>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required" mode="complete">
+        <Doc>Account object passed into call.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Array name="PIN_FLD_ACCTINFO" use="optional" elemIdMode="ignored"
+             iterationOrder="undefined" minElements="0">
+        <Doc>The information to be stored in the account object will be passed
+             in the acctinfo.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>The account POID.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_BAL_INFO" use="optional" elemIdMode="key"
+                 iterationOrder="undefined" minElements="0" minElemId="0">
+            <Doc>Account level balance group indicator. Here the array does not
+                 contain anything but the element-id is significant. It
+                 indicates which balance group element in the input is account
+                 level. It is recommended to pass in the PIN_FLD_BAL_INFO. If
+                 not passed then a default balance group will be created.</Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+            <Doc>The balance group object for the account. Either
+                 PIN_FLD_BAL_INFO or PIN_FLD_BAL_GRP_OBJ must be specified. If
+                 PIN_FLD_BAL_INFO is passed in, this field will be ignored.
+            </Doc>
+            <ClassRef>obj://balance_group</ClassRef>
+          </Poid>
+          <String name="PIN_FLD_GL_SEGMENT" use="optional" maxlen="255">
+            <Doc>Account's General Ledger segment. Used in G/L reporting.</Doc>
+          </String>
+          <Int name="PIN_FLD_CURRENCY" use="required">
+            <Doc>The primary currency of the account. Also this acts as
+                 element-id of primary balance element for accounting roll-up.
+                 If not provided the default account currency information will
+                 be read from CM's pin.conf.</Doc>
+          </Int>
+          <Int name="PIN_FLD_CURRENCY_SECONDARY" use="required">
+            <Doc>The secondary currency of the account. Also this acts as
+                 element-id of secondary balance element for accounting roll-up.
+            </Doc>
+          </Int>
+          <Enum name="PIN_FLD_ACCOUNT_TYPE" use="optional">
+            <Doc>This represents the type of account. This can be either a brand
+                 account or a standard account.</Doc>
+            <Values>
+              <Value>1</Value>
+              <Doc>Indicates a standard account(PIN_ACCOUNT_TYPE_STANDARD).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>Indicates a brand account(PIN_ACCOUNT_TYPE_BRAND).</Doc>
+            </Values>
+          </Enum>
+          <String name="PIN_FLD_ACCESS_CODE1" use="optional" maxlen="30">
+            <Doc>Access codes - for voice verification.</Doc>
+          </String>
+          <String name="PIN_FLD_ACCESS_CODE2" use="optional" maxlen="30">
+            <Doc>Access codes - for voice verification.</Doc>
+          </String>
+          <String name="PIN_FLD_CUSTOMER_SEGMENT_LIST" use="optional"
+                  maxlen="4000">
+            <Doc>Customer Segment List - a string list of customer segments
+                 separated by '|'. Example: For segments 1, 4, 6 the string is
+                 "1|4|6".</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_ACCESS" use="optional" maxlen="60">
+            <Doc>Client identification fields. Access method - admin, meccad,
+                 etc.</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_SOURCE" use="optional" maxlen="60">
+            <Doc>Source address - ANI, X121, IP addr, etc.</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_VENDOR" use="optional" maxlen="60">
+            <Doc>ID String for client software vendor.</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_PACKAGE" use="optional" maxlen="60">
+            <Doc>ID String for client package.</Doc>
+          </String>
+          <String name="PIN_FLD_AAC_PROMO_CODE" use="optional" maxlen="60">
+            <Doc>Promotional code for client package - generally set by vendor.
+            </Doc>
+          </String>
+          <String name="PIN_FLD_AAC_SERIAL_NUM" use="optional" maxlen="60">
+            <Doc>Serial number for specific copy of client.</Doc>
+          </String>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_BAL_INFO" use="optional" elemIdMode="index"
+             iterationOrder="undefined" minElements="0" minElemId="0">
+        <Doc>The Balance Group array. List of balance groups that was to be
+             created or updated in this operation.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>The balance group POID. </Doc>
+            <ClassRef>obj://balance_group</ClassRef>
+          </Poid>
+          <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+            <Doc>Balance Group name.</Doc>
+          </String>
+          <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+            <Doc>The POID of Billinfo that this balance group is associated 
+                 with.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+            <Doc>The account object that this bal-info is associated with.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_SERVICE_OBJ" use="optional" mode="complete">
+            <Doc>The service object that this bal-info is associated with.</Doc>
+            <ClassRef>obj://service</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_LIMIT" use="optional" elemIdMode="index"
+                 iterationOrder="undefined" minElements="0" minElemId="0">
+            <Doc>This an optional array to set the credit limit parameters. The
+                 element id is significant and indicates the resource id for
+                 which the limit is being set.</Doc>
+            <Fields>
+              <Decimal name="PIN_FLD_CREDIT_LIMIT" use="optional">
+                <Doc>Limit for this resource. Current balance cannot exceed this
+                     limit unless affected by a limit override rate or manually
+                     adjusted by a CSR.</Doc>
+              </Decimal>
+              <Decimal name="PIN_FLD_CREDIT_FLOOR" use="optional">
+                <Doc>Baseline for calculating percentage for threshold triggers.
+                     Credit limit minus credit floor is 100% of measured range.
+                     Credit floor does NOT enforce any limit on current balance.
+                </Doc>
+              </Decimal>
+              <Int name="PIN_FLD_CREDIT_THRESHOLDS" use="optional">
+                <Doc>Bit flags for triggering when resource balance crosses a
+                     boundary when increasing in value.</Doc>
+              </Int>
+              <Array name="PIN_FLD_THRESHOLDS" use="optional"
+                elemIdMode="ignored" iterationOrder="undefined"
+                isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                isRecursive="false">
+                <Doc> Array of fixed threshold values. </Doc>
+                <Fields>
+                  <Int name="PIN_FLD_THRESHOLD" use="required">
+                    <Doc>Fixed threshold value.</Doc>
+                  </Int>
+                </Fields>
+              </Array>
+            </Fields>
+          </Array>
+          <Array name="PIN_FLD_RULES" use="optional" elemIdMode="index"
+                 iterationOrder="undefined" minElements="0" minElemId="0">
+            <Doc>This is an optional array to set the consumption rules for a
+                 resource. The element id is significant and indicates a
+                 resource id for which the limit as well as consumption rules
+                 are set.</Doc>
+            <Fields>
+              <Enum name="PIN_FLD_CONSUMPTION_RULE" use="optional">
+                <Doc>Consumption rule to be applied on the resource.</Doc>
+                <Values>
+                  <Value>0</Value>
+                  <Doc>The consumption rule is not defined
+                       (PIN_CONSUMPTION_RULE_UNDEFINED).</Doc>
+                </Values>
+                <Values>
+                  <Value>1</Value>
+                  <Doc>Earliest start time. Consume the sub-balance with the
+                       earliest validity start time (earliest valid_from) first
+                       (PIN_CONSUMPTION_RULE_EST).</Doc>
+                </Values>
+                <Values>
+                  <Value>2</Value>
+                  <Doc>Latest start time. Consume the sub-balance with the
+                       latest validity start time (latest valid_from) first
+                       (PIN_CONSUMPTION_RULE_LST).</Doc>
+                </Values>
+                <Values>
+                  <Value>3</Value>
+                  <Doc>Earliest expiration time. Consume the sub-balance that
+                       expires first (earliest valid_to)
+                       (PIN_CONSUMPTION_RULE_EET).</Doc>
+                </Values>
+                <Values>
+                  <Value>4</Value>
+                  <Doc>Latest expiration time. Consume the sub-balance that
+                       expires last (latest valid_to.)
+                       (PIN_CONSUMPTION_RULE_LET)</Doc>
+                </Values>
+                <Values>
+                  <Value>5</Value>
+                  <Doc>Earliest start time and latest expiration time. Consume
+                       the sub-balance with the earliest valid_from first. If
+                       more than one sub-balances has the same valid_from,
+                       consume the one with the latest valid_to first
+                       (PIN_CONSUMPTION_RULE_ESTLET).</Doc>
+                </Values>
+                <Values>
+                  <Value>6</Value>
+                  <Doc>Earliest start time and earliest expiration time. Consume
+                       the sub-balance with the earliest valid_from first. If
+                       more than one sub-balances has the same valid_from,
+                       consume the one with the earliest valid_to first
+                       (PIN_CONSUMPTION_RULE_ESTEET).</Doc>
+                </Values>
+                <Values>
+                  <Value>7</Value>
+                  <Doc>Latest start time and earliest expiration time. Consume
+                       the sub-balance with the latest sub-balance first. If
+                       more than one sub-balances has the same valid_from,
+                       consume the one with the earliest expired sub-balance
+                       first(PIN_CONSUMPTION_RULE_LSTEET).</Doc>
+                </Values>
+                <Values>
+                  <Value>8</Value>
+                  <Doc>Latest start time and latest expiration time. Consume the
+                       sub-balance with the latest valid_from first. If more
+                       than one sub-balances has the same valid_from, consume
+                       the one with the latest valid_to first.
+                       (PIN_CONSUMPTION_RULE_LSTLET)</Doc>
+                </Values>
+                <Values>
+                  <Value>9</Value>
+                  <Doc>Earliest expiration time and earliest start time. Consume
+                       the sub-balance with the earliest valid_to first. If more
+                       than one sub-balances has the same valid_to, consume the
+                       one with the earliest valid_from first
+                       (PIN_CONSUMPTION_RULE_EETEST).</Doc>
+                </Values>
+                <Values>
+                  <Value>10</Value>
+                  <Doc>Earliest expiration time and latest start time. Consume
+                       the sub-balance with the earliest valid_to first. If more
+                       than one sub-balances has the same valid_to, consume the
+                       one with the latest valid_from first
+                       (PIN_CONSUMPTION_RULE_EETLST).</Doc>
+                </Values>
+                <Values>
+                  <Value>11</Value>
+                  <Doc>Latest expiration time and earliest start time. Consume
+                       the sub-balance with the latest valid_to first. If more
+                       than one sub-balances has the same valid_to, use the one
+                       with the earliest valid_from first
+                       (PIN_CONSUMPTION_RULE_LETEST).</Doc>
+                </Values>
+                <Values>
+                  <Value>12</Value>
+                  <Doc>Latest expiration time and latest start time. Consume the
+                       sub-balance with the latest valid_to first. If more than
+                       one sub-balances has the same valid_to, use the one with
+                       the latest valid_from first(PIN_CONSUMPTION_RULE_LETLST).
+                  </Doc>
+                </Values>
+              </Enum>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_PAYINFO" use="optional" elemIdMode="index"
+             iterationOrder="undefined" minElements="1">
+        <Doc>Array of payment methods associated with this account.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>The POID of the payinfo object created or updated.</Doc>
+            <ClassRef>obj://payinfo</ClassRef>
+          </Poid>
+          <Enum name="PIN_FLD_PAY_TYPE" use="required">
+            <Doc>This represents the type of billing for user.</Doc>
+            <Values>
+              <Value>10001</Value>
+              <Doc>Indicates invoice type(PIN_PAY_TYPE_INVOICE).</Doc>
+            </Values>
+            <Values>
+              <Value>10003</Value>
+              <Doc>Indicates credit card type(PIN_PAY_TYPE_CC).</Doc>
+            </Values>
+            <Values>
+              <Value>10005</Value>
+              <Doc>Indicates US/Canadian Direct Debit type(PIN_PAY_TYPE_DD).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>10007</Value>
+              <Doc>Indicates charge roll up to parent account
+                   (PIN_PAY_TYPE_SUBORD).</Doc>
+            </Values>
+          </Enum>
+          <Enum name="PIN_FLD_PAYMENT_TERM" use="optional">
+            <Doc>Payment term ID defines which payment term will be used in the
+                 payment due date calculation.</Doc>
+          </Enum>
+          <Int name="PIN_FLD_PAYMENT_OFFSET" use="optional">
+            <Doc>Payment Offset</Doc>
+          </Int>
+          <Enum name="PIN_FLD_INV_TYPE" use="optional">
+            <Doc>Indicates the type of invoice to be generated.</Doc>
+            <Values>
+              <Value>0x00000001</Value>
+              <Doc>Indicates detail invoice(PIN_INV_TYPE_DETAIL).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000002</Value>
+              <Doc>Indicates summary invoice(PIN_INV_TYPE_SUMMARY).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000004</Value>
+              <Doc>Indicates regular invoice(PIN_INV_TYPE_REGULAR).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000008</Value>
+              <Doc>Indicates subordinate invoice(PIN_INV_TYPE_SUBORDINATE).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>0x00000010</Value>
+              <Doc>Indicates parent invoice(PIN_INV_TYPE_PARENT).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000018</Value>
+              <Doc>Indicates parent with subordinates invoice
+                   (PIN_INV_TYPE_PARENT_WITH_SUBORDS).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000020</Value>
+              <Doc>Indicates hierarchy invoice(PIN_INV_TYPE_HIERARCHY).</Doc>
+            </Values>
+            <Values>
+              <Value>0x00000040</Value>
+              <Doc>Indicates trial invoice(PIN_INV_TYPE_TRIAL_INVOICE).</Doc>
+            </Values>
+          </Enum>
+          <Substruct name="PIN_FLD_INHERITED_INFO" use="optional"
+                     isRecursive="false">
+            <Doc>All subclass fields for the payinfo object are included in this
+                 substruct. The subclass depends on the pay_type. If pay_type is
+                 invoice then this array element will have PIN_FLD_INV_INFO, 
+                 etc.</Doc>
+            <Fields>
+              <Array name="PIN_FLD_INV_INFO" use="optional" elemIdMode="ignored"
+                     iterationOrder="undefined" minElements="0">
+                <Doc>This array element has fields related to invoice type of
+                     payment method. There will be only one element and element
+                     id is not significant.</Doc>
+                <Fields>
+                  <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                    <Doc>Street address.</Doc>
+                  </String>
+                  <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                    <Doc>City.</Doc>
+                  </String>
+                  <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                    <Doc>Country.</Doc>
+                  </String>
+                  <String name="PIN_FLD_DELIVERY_DESCR" use="optional"
+                          maxlen="255">
+                    <Doc>Delivery mechanism.</Doc>
+                  </String>
+                  <Enum name="PIN_FLD_DELIVERY_PREFER" use="optional">
+                    <Doc>Prefered delivery method email(0), postal(1) and 
+                         fax(3).</Doc>
+                    <Values>
+                      <Value>0</Value>
+                      <Doc>Indicates email delivery(PIN_INV_EMAIL_DELIVERY).
+                      </Doc>
+                    </Values>
+                    <Values>
+                      <Value>1</Value>
+                      <Doc>Indicates mail delivery(PIN_INV_USP_DELIVERY).</Doc>
+                    </Values>
+                    <Values>
+                      <Value>2</Value>
+                      <Doc>Indicates fax delivery(PIN_INV_FAX_DELIVERY).</Doc>
+                    </Values>
+                  </Enum>
+                  <String name="PIN_FLD_INV_INSTR" use="optional" maxlen="1023">
+                    <Doc>Comments to appear on each invoice.</Doc>
+                  </String>
+                  <Enum name="PIN_FLD_INV_TERMS" use="optional">
+                    <Doc>Used for invoice terms to be printed on the invoice.
+                    </Doc>
+                  </Enum>
+                  <String name="PIN_FLD_EMAIL_ADDR" use="optional" maxlen="255">
+                    <Doc>Email address to which invoice be delivered.</Doc>
+                  </String>
+                  <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                    <Doc>Name of the party responsible for payment.</Doc>
+                  </String>
+                  <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                    <Doc>State or province.</Doc>
+                  </String>
+                  <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                    <Doc>Zip/Postal code.</Doc>
+                  </String>
+                </Fields>
+              </Array>
+              <Array name="PIN_FLD_CC_INFO" use="optional" elemIdMode="ignored">
+                <Doc>This array element has fields related to credit card type
+                     of payment method. There will be only one element and
+                     element id is not significant.</Doc>
+                <Fields>
+                  <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                    <Doc>Street Address.</Doc>
+                  </String>
+                  <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                    <Doc>City.</Doc>
+                  </String>
+                  <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                    <Doc>Country.</Doc>
+                  </String>
+                  <String name="PIN_FLD_DEBIT_EXP" use="optional" maxlen="128">
+                    <Doc>Credit card expiration date (mmyy).</Doc>
+                  </String>
+                  <String name="PIN_FLD_DEBIT_NUM" use="optional" maxlen="255">
+                    <Doc>Credit card number.</Doc>
+                  </String>
+                  <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                    <Doc>Name as it appears on the credit card.</Doc>
+                  </String>
+                  <String name="PIN_FLD_SECURITY_ID" use="optional" maxlen="30">
+                    <Doc>Security ID. Used for credit card fraud prevention.
+                         This field stores the 3 digit CVV2 for Visa and 4 digit
+                         CID for amex.</Doc>
+                  </String>
+                  <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                    <Doc>State or province.</Doc>
+                  </String>
+                  <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                    <Doc>Zip/Postal code.</Doc>
+                  </String>
+                </Fields>
+              </Array>
+              <Array name="PIN_FLD_DD_INFO" use="optional" elemIdMode="ignored">
+                <Doc>This array element has fields related to direct debit type
+                     of payment method. There will be only one element and
+                     element id is not significant.</Doc>
+                <Fields>
+                  <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                    <Doc>Street Address.</Doc>
+                  </String>
+                  <String name="PIN_FLD_BANK_NO" use="optional" maxlen="30">
+                    <Doc>RDFI/Bank ID used for routing transactions.</Doc>
+                  </String>
+                  <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                    <Doc>City.</Doc>
+                  </String>
+                  <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                    <Doc>Country.</Doc>
+                  </String>
+                  <String name="PIN_FLD_DEBIT_NUM" use="optional" maxlen="255">
+                    <Doc>Customer's bank account number.</Doc>
+                  </String>
+                  <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                    <Doc>Name as it appears on the card.</Doc>
+                  </String>
+                  <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                    <Doc>State or province.</Doc>
+                  </String>
+                  <Enum name="PIN_FLD_TYPE" use="optional">
+                    <Doc>Bank account type. Checking(1), savings(2) or
+                         corporate(3).</Doc>
+                    <Values>
+                      <Value>1</Value>
+                      <Doc>Checking Account type(PIN_ACCOUNT_TYPE_CHECKING).
+                      </Doc>
+                    </Values>
+                    <Values>
+                      <Value>2</Value>
+                      <Doc>Savings Account type(PIN_ACCOUNT_TYPE_SAVINGS).</Doc>
+                    </Values>
+                    <Values>
+                      <Value>3</Value>
+                      <Doc>Corporate Account type(PIN_ACCOUNT_TYPE_CORPORATE).
+                      </Doc>
+                    </Values>
+                  </Enum>
+                  <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                    <Doc>Zip/Postal code.</Doc>
+                  </String>
+                </Fields>
+              </Array>
+            </Fields>
+          </Substruct>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_BILLINFO" use="optional" elemIdMode="index"
+             iterationOrder="undefined" minElements="0" minElemId="0">
+        <Doc>This represents the array of Billing info's specified. </Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>The POID of billinfo.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_BUSINESS_PROFILE_OBJ" use="optional"
+                mode="complete">
+            <Doc>Business profile poid. Pointer to the Business profile poid to
+                 which this billinfo belongs.</Doc>
+            <ClassRef>obj://config.business_profile</ClassRef>
+          </Poid>
+          <String name="PIN_FLD_BILLINFO_ID" use="required" maxlen="60">
+            <Doc>This field identifies the billinfo by name.</Doc>
+          </String>
+          <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional" mode="complete">
+            <Doc>The payinfo object that this billinfo is associated with.</Doc>
+            <ClassRef>obj://payinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+            <Doc>The balance group object that this billinfo is associated with.
+            </Doc>
+            <ClassRef>obj://balance_group</ClassRef>
+          </Poid>
+          <Enum name="PIN_FLD_PAY_TYPE" use="required">
+            <Doc>This represents the type of billing for user.</Doc>
+            <Values>
+              <Value>10001</Value>
+              <Doc>Indicates invoice type(PIN_PAY_TYPE_INVOICE)</Doc>
+            </Values>
+            <Values>
+              <Value>10003</Value>
+              <Doc>Indicates credit card type(PIN_PAY_TYPE_CC)</Doc>
+            </Values>
+            <Values>
+              <Value>10005</Value>
+              <Doc>Indicates US/Canadian Direct Debit type(PIN_PAY_TYPE_DD)
+              </Doc>
+            </Values>
+            <Values>
+              <Value>10007</Value>
+              <Doc>Indicates charge roll up to parent account
+                   (PIN_PAY_TYPE_SUBORD)</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_PARENT_FLAGS" use="optional">
+            <Doc>This field indicates if this billinfo has subordinates or not.
+                 The value of 0 indicates that it does not have subordinates and
+                 the value of 1 indicates that it has subordinates.</Doc>
+          </Int>
+          <Int name="PIN_FLD_BILL_WHEN" use="optional">
+            <Doc>Anniversary billing slot.</Doc>
+          </Int>
+          <Int name="PIN_FLD_ACTG_FUTURE_DOM" use="optional">
+            <Doc>New Accounting Close day-of-month (1-31).</Doc>
+          </Int>
+          <Enum name="PIN_FLD_ACTG_TYPE" use="optional">
+            <Doc>Accounting type of the billinfo. Possible values are
+                 PIN_ACTG_TYPE_OPEN_ITEMS(1) and PIN_ACTG_TYPE_BALANCE_FORWARD(2).This
+                 field is used to allocate items for payment. If not specified, the
+                 configuration entry actg_type is read from pin.conf of CM. If CM's
+                 pin.conf does not have actg_type entry active, then default
+                 accounting type will be balance forward type.</Doc>
+            <Values>
+              <Value>1</Value>
+              <Doc>This represents "open items" type of accounting. With open item
+                   accounting customer's bill does not include amounts from previous
+                   bill, if not paid(PIN_ACTG_TYPE_OPEN_ITEMS).</Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>This represents "balance forward" type of accounting. With balance
+                   forward accounting customer's bill will include amounts from
+                   previous bill, if not paid(PIN_ACTG_TYPE_BALANCE_FORWARD).</Doc>
+            </Values>
+          </Enum>
+          <Enum name="PIN_FLD_BILLING_STATUS" use="optional">
+            <Doc>Indicates whether the billinfo should be billed or it should be
+                 suspended for billing.</Doc>
+            <Values>
+              <Value>0</Value>
+              <Doc>Indicates billing status is active(PIN_BILL_ACTIVE).</Doc>
+            </Values>
+            <Values>
+              <Value>1</Value>
+              <Doc>Indicates billing status is inactive(PIN_BILL_INACTIVE).
+              </Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>Indicates billing status to be accounting only
+                   (PIN_BILL_ACCOUNTING_ONLY).</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_BILLING_STATUS_FLAGS" use="optional">
+            <Doc>Indicates a reason for setting of the given billing status.
+            </Doc>
+          </Int>
+          <Enum name="PIN_FLD_STATUS" use="optional">
+            <Doc>Status of the billinfo: active, inactive, or closed.</Doc>
+            <Values>
+              <Value>10100</Value>
+              <Doc>Indicates an active billinfo(PIN_STATUS_ACTIVE).</Doc>
+            </Values>
+            <Values>
+              <Value>10102</Value>
+              <Doc>Indicates an inactive billinfo(PIN_STATUS_INACTIVE).</Doc>
+            </Values>
+            <Values>
+              <Value>10103</Value>
+              <Doc>Indicates a closed billinfo(PIN_STATUS_CLOSED).</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+            <Doc>It indicates a reason for setting of the given status.</Doc>
+          </Int>
+          <Int name="PIN_FLD_SPONSOR_FLAGS" use="optional">
+            <Doc>It indicates whether this billinfo has a sponsoree.</Doc>
+          </Int>
+          <Int name="PIN_FLD_SPONSOREE_FLAGS" use="optional">
+            <Doc>It indicates whether this billinfo has a sponsor.</Doc>
+          </Int>
+          <Poid name="PIN_FLD_AR_BILLINFO_OBJ" use="optional" mode="complete">
+            <Doc>It indicates the AR billinfo for the given billinfo. It can be
+                 present only for a subodinate billinfo.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_PARENT_BILLINFO_OBJ" use="optional"
+                mode="complete">
+            <Doc>It indicates the immediate (one level up) parent. Note that the
+                 given billinfo is not necessary a subordinate. The parent field
+                 may reflect just child-parent relation It should be mandatory
+                 if moving to the new parent.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Int name="PIN_FLD_CURRENCY" use="optional">
+            <Doc>Primary curreny. </Doc>
+          </Int>
+          <Int name="PIN_FLD_CURRENCY_SECONDARY" use="optional">
+            <Doc>Secondary currency.</Doc>
+          </Int>
+          <Enum name="PIN_FLD_BILLING_SEGMENT" use="optional">
+            <Doc>It indicates the Billing Segment. The billing segment is a user
+                 defined category that controls accounting DOMs to which a bill
+                 unit can be assigned.</Doc>
+          </Enum>
+          <Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+            <Doc>This field represents the timestamp of effective time of the
+                 update to this billinfo. If not specified, the current time on
+                 the BRM server will be used.</Doc>
+          </Timestamp>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_TOPUP_INFO" use="optional" elemIdMode="ignored"
+             iterationOrder="undefined" minElements="0">
+        <Doc>Topup array.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc>Topup poid.</Doc>
+            <ClassRef>obj://topup</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+            <Doc>Account poid.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_PAYINFO" use="required" elemIdMode="key"
+                 iterationOrder="undefined" minElements="1">
+            <Doc>The element-id is significant. Contents are not significant.
+                 The element id points to the payinfo array element in the input
+                 flist to be used for top-up.</Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional" mode="complete">
+            <Doc>The payinfo object that this topup is associated with. If
+                 PIN_FLD_PAYINFO is passed in, this field will be ignored. If
+                 PIN_FLD_PAYINFO is not passed in, this becomes a mandatory
+                 field.</Doc>
+            <ClassRef>obj://payinfo</ClassRef>
+          </Poid>
+          <Array name="PIN_FLD_BILLINFO" use="required" elemIdMode="key"
+                 iterationOrder="undefined" minElements="1">
+            <Doc>The element-id is significant. Contents are not significant.
+                 The element id points to the billinfo array element in the
+                 input flist to be used for top-up.</Doc>
+            <Fields></Fields>
+          </Array>
+          <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+            <Doc>The POID of Billinfo that this topup is associated with. If
+                 PIN_FLD_BILLINFO is passed in, this field will be ignored. If
+                 PIN_FLD_BILLINFO is not passed in, this becomes a mandatory
+                 field.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Decimal name="PIN_FLD_TOPUP_AMT" use="required">
+            <Doc>Topup amount. In case of auto-topups this will indicate the
+                 amount to topup with.</Doc>
+          </Decimal>
+          <Decimal name="PIN_FLD_TOPUP_CAP" use="optional">
+            <Doc>Topup cap. This amount indicates the max topup that can be done
+                 for a given cycle. The cycle is driven by the cycle information
+                 set-up in the billinfo. A values of 0 means no cap.</Doc>
+          </Decimal>
+          <Decimal name="PIN_FLD_CYCLE_TOPPED_AMT" use="optional">
+            <Doc>This indicates the total topped up amount during the given
+                 cycle. This amount will be populated only if the cap is set.
+            </Doc>
+          </Decimal>
+          <Timestamp name="PIN_FLD_LAST_TOPUP_T" use="optional">
+            <Doc>This indicates the when the last topup happened.</Doc>
+          </Timestamp>
+          <Array name="PIN_FLD_GROUP_TOPUP_INFO" use="optional"
+                 elemIdMode="ignored" iterationOrder="undefined"
+                 minElements="0">
+            <Doc>The field represents sponsored topup. The array contains fields
+                 related to Sponsored topup only.</Doc>
+            <Fields>
+              <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                <Doc>The /group/topup poid. Poid of sponsored topup group
+                     involved in the creation/modification of member account.
+                </Doc>
+                <ClassRef>obj://group.topup</ClassRef>
+              </Poid>
+              <Poid name="PIN_FLD_PARENT" use="optional" mode="complete">
+                <Doc>Parent's account poid.</Doc>
+                <ClassRef>obj://account</ClassRef>
+              </Poid>
+              <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                <Doc>The Name of the /group/topup. This helps to identify the
+                     group.</Doc>
+              </String>
+              <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional" mode="complete">
+                <Doc>Balance Group of the parent/payer of the /group/topup.
+                </Doc>
+                <ClassRef>obj://balance_group</ClassRef>
+              </Poid>
+              <Array name="PIN_FLD_GROUP_TOPUP_LIMITS" use="optional"
+                     elemIdMode="ignored" iterationOrder="undefined"
+                     minElements="0">
+                <Doc>Represents /group/topup financial properties per resource
+                     id.</Doc>
+                <Fields>
+                  <Int name="PIN_FLD_RESOURCE_ID" use="optional">
+                    <Doc>Resource id of topup operation.</Doc>
+                  </Int>
+                  <Decimal name="PIN_FLD_TOPUP_AMT" use="required">
+                    <Doc>Topup amount is used in automatic sponsored topup.
+                    </Doc>
+                  </Decimal>
+                  <Decimal name="PIN_FLD_TOPUP_CAP" use="optional">
+                    <Doc>Topup cap is used as a maximum limit of topup for
+                         particular topup group during cycle.</Doc>
+                  </Decimal>
+                </Fields>
+              </Array>
+              <Array name="PIN_FLD_GROUP_TOPUP_MEMBERS" use="optional"
+                     elemIdMode="ignored" iterationOrder="undefined"
+                     minElements="0">
+                <Doc>Represents members' properties of the /group/topup.</Doc>
+                <Fields>
+                  <Array name="PIN_FLD_BAL_INFO" use="optional" elemIdMode="key"
+                         iterationOrder="undefined" minElements="0"
+                         minElemId="0" maxElements="1">
+                    <Doc>The member's topup balance group indicator. Here the
+                         array does not contain anything but the element id is
+                         significant. It indicates which balance group element
+                         in the input is for topup level.</Doc>
+                    <Fields></Fields>
+                  </Array>
+                  <Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+                        mode="complete">
+                    <Doc>Balance Group of a member of the /group/topup.</Doc>
+                    <ClassRef>obj://balance_group</ClassRef>
+                  </Poid>
+                  <Int name="PIN_FLD_TOPUP_INTERVAL" use="optional">
+                    <Doc>This indicates the interval at which automatic
+                         sponsored topup occur.</Doc>
+                  </Int>
+                  <String name="PIN_FLD_PIN" use="optional" maxlen="60">
+                    <Doc>The PIN which will be used for authentication during
+                         Ad-Hoc topup.</Doc>
+                  </String>
+                  <Enum name="PIN_FLD_STATUS" use="optional">
+                    <Doc>The status of the member (active/inactive/closed).
+                    </Doc>
+                    <Values>
+                      <Value>10100</Value>
+                      <Doc>Indicates an active member(PIN_STATUS_ACTIVE).</Doc>
+                    </Values>
+                    <Values>
+                      <Value>10102</Value>
+                      <Doc>Indicates an inactive member(PIN_STATUS_INACTIVE).
+                      </Doc>
+                    </Values>
+                    <Values>
+                      <Value>10103</Value>
+                      <Doc>Indicates a closed member(PIN_STATUS_CLOSED).</Doc>
+                    </Values>
+                  </Enum>
+                </Fields>
+              </Array>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>
+      <Array name="PIN_FLD_FIELD" use="optional" elemIdMode="ignored"
+             isRecursive="true">
+        <Doc>This array will appear in the output only if there is an ebuf 
+             error.</Doc>
+        <Fields>
+          <Enum name="PIN_FLD_FIELD_NUM" use="required">
+            <Doc>Field that failed.</Doc>
+          </Enum>
+          <Int name="PIN_FLD_ELEMENT_ID" use="optional">
+            <Doc>Element-id of field that failed (if an array element).</Doc>
+          </Int>
+          <Enum name="PIN_FLD_RESULT" use="required">
+            <Doc>Field validation error code. The enumerated type is defined in
+                 the pin_cust.h header file. The values can be: (0)
+                 PIN_CUST_VAL_ERR_SYSTEM, (1) PIN_CUST_VAL_ERR_MISSING, (2)
+                 PIN_CUST_VAL_ERR_MIN_LEN, (3) PIN_CUST_VAL_ERR_MAX_LEN, (4)
+                 PIN_CUST_VAL_ERR_TYPE, (5) PIN_CUST_VAL_ERR_DUPE, (6)
+                 PIN_CUST_VAL_ERR_INVALID, (7) PIN_CUST_VAL_ERR_REJECT, (8)
+                 PIN_CUST_VAL_ERR_MAX, (9) PIN_CUST_VAL_ERR_MIN, (10)
+                 PIN_CUST_VAL_ERR_INCL, (11) PIN_CUST_VAL_ERR_EXCL, and (12)
+                 PIN_CUST_VAL_ERR_FORMAT.</Doc>
+            <Values>
+              <Value>0</Value>
+              <Doc>PIN_CUST_VAL_ERR_SYSTEM. System error.</Doc>
+            </Values>
+            <Values>
+              <Value>1</Value>
+              <Doc>PIN_CUST_VAL_ERR_MISSING. Field is missing.</Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>PIN_CUST_VAL_ERR_MIN_LEN. Minimum length error.</Doc>
+            </Values>
+            <Values>
+              <Value>3</Value>
+              <Doc>PIN_CUST_VAL_ERR_MAX_LEN. Maximum length error.</Doc>
+            </Values>
+            <Values>
+              <Value>4</Value>
+              <Doc>PIN_CUST_VAL_ERR_TYPE. Invalid type.</Doc>
+            </Values>
+            <Values>
+              <Value>5</Value>
+              <Doc>PIN_CUST_VAL_ERR_DUPE. Duplicate field.</Doc>
+            </Values>
+            <Values>
+              <Value>6</Value>
+              <Doc>PIN_CUST_VAL_ERR_INVALID. Invalid value.</Doc>
+            </Values>
+            <Values>
+              <Value>7</Value>
+              <Doc>PIN_CUST_VAL_ERR_REJECT. Field was rejected.</Doc>
+            </Values>
+            <Values>
+              <Value>8</Value>
+              <Doc>PIN_CUST_VAL_ERR_MAX. Maximum value error.</Doc>
+            </Values>
+            <Values>
+              <Value>9</Value>
+              <Doc>PIN_CUST_VAL_ERR_MIN. Minimum value error.</Doc>
+            </Values>
+            <Values>
+              <Value>10</Value>
+              <Doc>PIN_CUST_VAL_ERR_INCL. Value should be inclusive.</Doc>
+            </Values>
+            <Values>
+              <Value>11</Value>
+              <Doc>PIN_CUST_VAL_ERR_EXCL. Value should be exclusive.</Doc>
+            </Values>
+            <Values>
+              <Value>12</Value>
+              <Doc>PIN_CUST_VAL_ERR_FORMAT. Format error in regular expression.
+              </Doc>
+            </Values>
+          </Enum>
+          <String name="PIN_FLD_DESCR" use="required" maxlen="255">
+            <Doc>The validation error message.</Doc>
+          </String>
+          <Array name="PIN_FLD_FIELD" use="optional" elemIdMode="ignored"
+                 iterationOrder="undefined" minElements="0" minElemId="0"
+                 isRecursive="true">
+            <Doc>For FIELDS array elements that do *not* contain a nested FIELDS
+                 array, the field that failed (as defined by PIN_FLD_FIELD_NUM)
+                 is included here on the flist. This field is MANDATORY in this
+                 case and its value represents either the bad value specified or
+                 a suggested replacement value for the field. In cases where
+                 this FIELDS element does contain a nested FIELDS array, the
+                 field defined by PIN_FLD_FIELD_NUM is *not* included in the
+                 output flist. For the following values of PIN_FLD_RESULT, the
+                 field value will be NULL: PIN_CUST_VAL_ERR_MISSING. For the
+                 following values of PIN_FLD_RESULT, the field value contains
+                 the bad value that was specified: PIN_CUST_VAL_ERR_MIN_LEN,
+                 PIN_CUST_VAL_ERR_MAX_LEN, PIN_CUST_VAL_ERR_FORMAT,
+                 PIN_CUST_VAL_ERR_INVALID. For the following values of
+                 PIN_FLD_RESULT, the field value contains a suggested
+                 replacement value for the field: PIN_CUST_VAL_ERR_DUPE. If
+                 field that failed was in a sub-flist, the fields arrays are
+                 nested to provide an absolute path to the exact field that
+                 failed. This nesting can be to any depth to reflect multi-level
+                 sub-flists. NOTE: if more than one field on the same sub-flist
+                 failed validation, then more than one element of the FIELDS
+                 array will be included within the nesting to reflect the fields
+                 that failed. Nested Fields arrays have the same fields in each
+                 element as the main array.</Doc>
+            <Fields></Fields>
+          </Array>
+        </Fields>
+      </Array>
+    </Fields>
+  </Output>
+</Opcode>

@@ -1,0 +1,3783 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved.
+
+        This material is the confidential property of Oracle Corporation or
+        its licensors and may be used, reproduced, stored or transmitted only
+        in accordance with a valid Oracle license or sublicense agreement.-->
+   <xsd:include schemaLocation="profile.xsd"/>
+   <xsd:include schemaLocation="service.xsd"/>
+   <xsd:include schemaLocation="profile.xsd"/>
+   <xsd:include schemaLocation="profile.xsd"/>
+   <xsd:include schemaLocation="service.xsd"/>
+   <xsd:include schemaLocation="profile.xsd"/>
+   <xsd:element name="PCM_OP_CUST_MODIFY_CUSTOMER_inputFlist">
+      <xsd:complexType>
+         <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="ACCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="ACCTINFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="ACCTINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1216">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="BAL_INFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1219">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="BILLINFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1218">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PAYINFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12110">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(plan)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PROFILES" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="PROFILES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12111">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="PROGRAM_NAME" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="60"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="SERVICES" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="SERVICES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="TOPUP_INFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="TOPUP_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12112">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:choice>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="ACCTINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1216">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121623">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CURRENCY" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CURRENCY_SECONDARY" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="DEAL_INFO" type="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_121622" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(deal)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121623">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_121622">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12162227">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PERMITTEDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12162228">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12162226">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12162226">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CYCLE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRICE_LIST_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRODUCT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12162227">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12162228">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="OBJ_TYPE" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="SERVICES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ALIAS_LIST" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="ALIAS_LIST_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121728">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121725">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DEALS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DEALS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217213">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DEAL_INFO" type="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1217212" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(deal)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEVICES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DEVICES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217217">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="INHERITED_INFO" type="serviceExtensionType" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="LOGIN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PASSWD_CLEAR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PASSWD_STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PROFILES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PROFILES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217215">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SERVICE_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SERVICE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUSES" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="STATUSES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217214">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SUBSCRIPTION_INDEX" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="SUBSCRIPTION_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121725">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="ALIAS_LIST_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121728">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="128"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEALS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217213">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DEAL_INFO" type="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_121721323" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(deal)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_121721323">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12172132327">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PERMITTEDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12172132328">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12172132326">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12172132326">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CYCLE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRODUCT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12172132327">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12172132328">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="OBJ_TYPE" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="STATUSES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217214">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CLOSE_WHEN_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="10100"/>
+                  <xsd:enumeration value="10102"/>
+                  <xsd:enumeration value="10103"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PROFILES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217215">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="INHERITED_INFO" type="profileExtensionType" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PROFILE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(profile)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_121721522">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element ref="profileExtension"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEVICES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1217217">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DEVICE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(device)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1217212">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121721227">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PERMITTEDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121721228">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121721226">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121721226">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CYCLE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRICE_LIST_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRODUCT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121721227">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121721228">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="OBJ_TYPE" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1217216">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element ref="serviceExtension"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1218">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ACTG_FUTURE_DOM" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ACTG_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="AR_BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121826">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="BILLINFO_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLING_SEGMENT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLING_STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLING_STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="BILL_WHEN" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="BUSINESS_PROFILE_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(config/business_profile)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CURRENCY_SECONDARY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PARENT_BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PARENT_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PAYINFO" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121824">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PAYINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(payinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAY_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="10001"/>
+                  <xsd:enumeration value="10003"/>
+                  <xsd:enumeration value="10005"/>
+                  <xsd:enumeration value="10007"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SPONSOREE_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="SPONSOR_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="10100"/>
+                  <xsd:enumeration value="10102"/>
+                  <xsd:enumeration value="10103"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121824">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121826">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1219">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BILLINFO" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121923">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="LIMIT" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="LIMIT_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121925">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RULES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RULES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121926">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121923">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="LIMIT_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121925">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CREDIT_FLOOR" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_LIMIT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_THRESHOLDS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="THRESHOLDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="THRESHOLDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12192524">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="THRESHOLDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12192524">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="AMOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="THRESHOLD" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RULES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121926">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CONSUMPTION_RULE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+                  <xsd:enumeration value="4"/>
+                  <xsd:enumeration value="5"/>
+                  <xsd:enumeration value="6"/>
+                  <xsd:enumeration value="7"/>
+                  <xsd:enumeration value="8"/>
+                  <xsd:enumeration value="9"/>
+                  <xsd:enumeration value="10"/>
+                  <xsd:enumeration value="11"/>
+                  <xsd:enumeration value="12"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12110">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="INHERITED_INFO" type="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1211027" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="INV_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0x01"/>
+                  <xsd:enumeration value="0x02"/>
+                  <xsd:enumeration value="0x04"/>
+                  <xsd:enumeration value="0x08"/>
+                  <xsd:enumeration value="0x10"/>
+                  <xsd:enumeration value="0x18"/>
+                  <xsd:enumeration value="0x20"/>
+                  <xsd:enumeration value="0x40"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAYMENT_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PAYMENT_TERM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAY_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="10001"/>
+                  <xsd:enumeration value="10003"/>
+                  <xsd:enumeration value="10005"/>
+                  <xsd:enumeration value="10007"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(payinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1211027">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CC_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="CC_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121102722">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DD_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DD_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121102723">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="INV_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="INV_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121102721">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SEPA_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SEPA_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121102724">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INV_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121102721">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CITY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COUNTRY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DELIVERY_DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DELIVERY_PREFER" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="EMAIL_ADDR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="INV_INSTR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1023"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="INV_TERMS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ZIP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="CC_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121102722">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CITY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COUNTRY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEBIT_EXP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="128"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEBIT_NUM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SECURITY_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="30"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ZIP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DD_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121102723">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BANK_NO" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="30"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CITY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COUNTRY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEBIT_NUM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ZIP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="SEPA_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_121102724">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BIC" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="11"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CREDITOR_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CREDITOR_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEBTOR_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DEBTOR_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12110272427">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="IBAN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="34"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MANDATE_CONTRACT_DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MANDATE_CONTRACT_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MANDATE_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MANDATE_UNIQUE_REFERENCE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="35"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEBTOR_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12110272427">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CITY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COUNTRY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="IDENTIFICATION_CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="REF_PARTY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="REF_PARTY_ID_CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ZIP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PROFILES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12111">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="INHERITED_INFO" type="profileExtensionType" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PROFILE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(profile)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1211122">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element ref="profileExtension"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="TOPUP_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12112">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLINFO" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1211225">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_TOPPED_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="GROUP_TOPUP_INFO" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="GROUP_TOPUP_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12112211">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LAST_TOPUP_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAYINFO" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1211223">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PAYINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(payinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(topup)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TOPUP_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="TOPUP_CAP" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1211223">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1211225">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="GROUP_TOPUP_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_12112211">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="GROUP_TOPUP_LIMITS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="GROUP_TOPUP_LIMITS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1211221125">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GROUP_TOPUP_MEMBERS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="GROUP_TOPUP_MEMBERS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1211221126">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PARENT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(group/topup)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="GROUP_TOPUP_LIMITS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1211221125">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="TOPUP_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="TOPUP_CAP" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="GROUP_TOPUP_MEMBERS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1211221126">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PIN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="10100"/>
+                  <xsd:enumeration value="10102"/>
+                  <xsd:enumeration value="10103"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TOPUP_INTERVAL" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_CUST_MODIFY_CUSTOMER_outputFlist">
+      <xsd:complexType>
+         <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="ACCTINFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="ACCTINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1316">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="BAL_INFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1319">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="BILLINFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1318">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PAYINFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13110">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(plan)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PROFILES" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="PROFILES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13111">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="PROGRAM_NAME" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="60"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="SERVICES" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="SERVICES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="TOPUP_INFO" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="TOPUP_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13112">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:choice>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="ACCTINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1316">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131624">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CURRENCY" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CURRENCY_SECONDARY" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="DEAL_INFO" type="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_131623" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(deal)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131624">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_131623">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13162327">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PERMITTEDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13162328">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13162326">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13162326">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CYCLE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PRICE_LIST_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRODUCT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13162327">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13162328">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="OBJ_TYPE" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="SERVICES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ALIAS_LIST" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="ALIAS_LIST_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131728">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="BAL_INFO" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131726">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEALS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DEALS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317212">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DEAL_INFO" type="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1317211" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(deal)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEVICES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DEVICES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317216">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="INHERITED_INFO" type="serviceExtensionType" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="LOGIN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PASSWD_STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PROFILES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PROFILES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317214">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SERVICE_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SERVICE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUSES" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="STATUSES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317213">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SUBSCRIPTION_INDEX" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="SUBSCRIPTION_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131726">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="ALIAS_LIST_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131728">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="128"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEALS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317212">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DEAL_INFO" type="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_131721223" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(deal)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_131721223">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13172122327">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PERMITTEDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13172122328">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13172122326">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13172122326">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CYCLE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PRICE_LIST_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRODUCT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13172122327">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13172122328">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="OBJ_TYPE" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="STATUSES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317213">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CLOSE_WHEN_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="10100"/>
+                  <xsd:enumeration value="10102"/>
+                  <xsd:enumeration value="10103"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PROFILES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317214">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="INHERITED_INFO" type="profileExtensionType" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PROFILE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(profile)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_131721422">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEVICES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1317216">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DEVICE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(device)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEAL_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1317211">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131721127">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PERMITTEDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131721128">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131721126">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131721126">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="CYCLE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PRICE_LIST_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PRODUCT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_DISC_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_FEE_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_DISCOUNT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131721127">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CYCLE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CYCLE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DISCOUNT_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="OFFERING_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_discount)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PURCHASE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PURCHASE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="QUANTITY" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_END_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_END_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="USAGE_START_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="USAGE_START_UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PERMITTEDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131721128">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="OBJ_TYPE" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1317215">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1318">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ACTG_FUTURE_DOM" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ACTG_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="AR_BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLINFO_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLING_SEGMENT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLING_STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLING_STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="BILL_WHEN" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="BUSINESS_PROFILE_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(config/business_profile)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CURRENCY_SECONDARY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="EFFECTIVE_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PARENT_BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PARENT_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PAYINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(payinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAY_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="10001"/>
+                  <xsd:enumeration value="10003"/>
+                  <xsd:enumeration value="10005"/>
+                  <xsd:enumeration value="10007"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SPONSOREE_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="SPONSOR_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="10100"/>
+                  <xsd:enumeration value="10102"/>
+                  <xsd:enumeration value="10103"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BAL_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1319">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="LIMIT" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="LIMIT_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131926">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="RULES" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="RULES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131927">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="LIMIT_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131926">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CREDIT_FLOOR" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_LIMIT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="CREDIT_THRESHOLDS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="THRESHOLDS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="THRESHOLDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13192624">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="THRESHOLDS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13192624">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="THRESHOLD" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="RULES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131927">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CONSUMPTION_RULE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+                  <xsd:enumeration value="4"/>
+                  <xsd:enumeration value="5"/>
+                  <xsd:enumeration value="6"/>
+                  <xsd:enumeration value="7"/>
+                  <xsd:enumeration value="8"/>
+                  <xsd:enumeration value="9"/>
+                  <xsd:enumeration value="10"/>
+                  <xsd:enumeration value="11"/>
+                  <xsd:enumeration value="12"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13110">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="INHERITED_INFO" type="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1311026" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="INV_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0x01"/>
+                  <xsd:enumeration value="0x02"/>
+                  <xsd:enumeration value="0x04"/>
+                  <xsd:enumeration value="0x08"/>
+                  <xsd:enumeration value="0x10"/>
+                  <xsd:enumeration value="0x18"/>
+                  <xsd:enumeration value="0x20"/>
+                  <xsd:enumeration value="0x40"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAYMENT_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PAYMENT_TERM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAY_TYPE" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="10001"/>
+                  <xsd:enumeration value="10003"/>
+                  <xsd:enumeration value="10005"/>
+                  <xsd:enumeration value="10007"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(payinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1311026">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="CC_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="CC_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131102622">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DD_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DD_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131102623">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="INV_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="INV_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131102621">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SEPA_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="SEPA_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131102624">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INV_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131102621">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CITY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COUNTRY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DELIVERY_DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DELIVERY_PREFER" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="EMAIL_ADDR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="INV_INSTR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1023"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="INV_TERMS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ZIP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="CC_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131102622">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CITY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COUNTRY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEBIT_EXP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="128"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEBIT_NUM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="SECURITY_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="30"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ZIP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DD_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131102623">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BANK_NO" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="30"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CITY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COUNTRY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEBIT_NUM" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="1"/>
+                  <xsd:enumeration value="2"/>
+                  <xsd:enumeration value="3"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ZIP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="SEPA_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_131102624">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BIC" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="11"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CREDITOR_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CREDITOR_NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="DEBTOR_INFO" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="DEBTOR_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13110262427">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="IBAN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="34"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MANDATE_CONTRACT_DESCR" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MANDATE_CONTRACT_ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MANDATE_TYPE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="0"/>
+                  <xsd:enumeration value="1"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="MANDATE_UNIQUE_REFERENCE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="35"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="DEBTOR_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13110262427">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CITY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="90"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="COUNTRY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="IDENTIFICATION_CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="REF_PARTY" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="REF_PARTY_ID_CODE" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ZIP" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PROFILES_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13111">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="INHERITED_INFO" type="profileExtensionType" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="PROFILE_OBJ" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(profile)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="INHERITED_INFO_SUBSTRUCT_PCM_OP_CUST_MODIFY_CUSTOMER_1311122">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="TOPUP_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13112">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="BILLINFO" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1311225">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="CYCLE_TOPPED_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="GROUP_TOPUP_INFO" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="GROUP_TOPUP_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13112211">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LAST_TOPUP_T" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:dateTime"/>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PAYINFO" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1311223">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PAYINFO_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(payinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(topup)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TOPUP_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="TOPUP_CAP" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="PAYINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1311223">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="BILLINFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1311225">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded"/>
+   </xsd:complexType>
+   <xsd:complexType name="GROUP_TOPUP_INFO_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_13112211">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="GROUP_TOPUP_LIMITS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="GROUP_TOPUP_LIMITS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1311221125">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="GROUP_TOPUP_MEMBERS" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:complexContent>
+                  <xsd:extension base="GROUP_TOPUP_MEMBERS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1311221126">
+                     <xsd:attribute name="elem" type="xsd:string"/>
+                  </xsd:extension>
+               </xsd:complexContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="NAME" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PARENT" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(group/topup)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="GROUP_TOPUP_LIMITS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1311221125">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="RESOURCE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="TOPUP_AMT" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="TOPUP_CAP" type="UNION_PCM_OP_CUST_MODIFY_CUSTOMER" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="GROUP_TOPUP_MEMBERS_ARRAY_PCM_OP_CUST_MODIFY_CUSTOMER_1311221126">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(balance_group)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  <xsd:pattern value=""/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="PIN" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="STATUS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="10100"/>
+                  <xsd:enumeration value="10102"/>
+                  <xsd:enumeration value="10103"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="TOPUP_INTERVAL" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>
+   </xsd:complexType>
+   <xsd:complexType name="BUFFER_PCM_OP_CUST_MODIFY_CUSTOMER">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:hexBinary">
+            <xsd:attribute name="flags" type="xsd:string" use="optional"/>
+            <xsd:attribute name="size" type="xsd:string" use="optional"/>
+            <xsd:attribute name="offset" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:simpleType name="EMPTY_PCM_OP_CUST_MODIFY_CUSTOMER">
+      <xsd:restriction base="xsd:string">
+         <xsd:length value="0"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="UNION_PCM_OP_CUST_MODIFY_CUSTOMER">
+      <xsd:union memberTypes="xsd:decimal EMPTY_PCM_OP_CUST_MODIFY_CUSTOMER"/>
+   </xsd:simpleType>
+</xsd:schema>

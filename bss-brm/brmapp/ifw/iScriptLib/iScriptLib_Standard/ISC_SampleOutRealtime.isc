@@ -1,0 +1,63 @@
+//==============================================================================
+//
+// Copyright (c) 2009, Oracle and/or its affiliates. All rights reserved. 
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_SampleOutRealtime
+//------------------------------------------------------------------------------
+// Module Description:
+//   This is a sample iScript for OUTRealtime.It shows how to customize the Output
+//   of the OUT_Realtime.You need to use fList functions to modify in the OUT_Realtime
+//   flist.Please see the documentation "Flist manipulation functions" for a 
+//   complete list of functions available. 
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// $RCSfile: ISC_SampleOutRealtime.isc $
+// $Revision: /cgbubrm_7.3.2.pipeline/1 $
+// $Author: subdash $
+// $Date: 2009/05/27 02:11:33 $
+// $Locker:  $
+//------------------------------------------------------------------------------
+//==============================================================================
+use EXT_FList;
+
+Bool debug = false;             /* Change this to true if you want the debug output */
+/*----------------------------------------------------------------------------+
+ | Function     : Main
+ |
+ | Description  : Main script ...
+ |
+ |                NOTE: All functions should be defined BEFORE they are used!
+ |
+ | Input        : None
+ |
+ | Return       : None
+ +----------------------------------------------------------------------------*/
+{
+        /* This script is configured on OUT_Reatime and used for some proof of concepts */
+	
+	//Logging the flist at the Console
+	if (debug) {
+		String outFlist = fListToString();
+	        logStdout((outFlist) + "\n" );
+	}
+
+        //Adding a new field in the OUT Realtime output flist
+        fListSetString("PIN_FLD_NAME", "OUT_RealTime");
+
+        //Modifying a field in the output flist
+        Decimal net_qty = fListDecimal("PIN_FLD_NET_QUANTITY");
+        net_qty = net_qty*10;
+        fListDropFld("PIN_FLD_NET_QUANTITY");
+        fListSetDecimal("PIN_FLD_NET_QUANTITY",net_qty);
+}

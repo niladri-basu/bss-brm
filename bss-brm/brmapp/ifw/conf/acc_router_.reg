@@ -1,0 +1,595 @@
+#version 7.4.0 1.48
+# @(#)$Id: acc_router_.reg /cgbubrm_main.pipeline/2 2011/07/04 04:28:49 sknanda Exp $
+ifw
+{
+  Active              = TRUE
+  ProcessLoopTimeout  = 10
+  QueueRequestTimeout = 0
+
+  ParallelLoadManager
+  {
+    Active = TRUE
+    NumberOfThreads = 20
+  }
+
+  Instrumentation
+  {
+    #-----------------------------------------------------------
+    # ProbeBroker registry entries.
+    #    ProbeInfoFilePath - The path that contains all probe
+    #                        info files used by instrumented objects.
+    #-----------------------------------------------------------
+    ProbeBroker
+    {
+      ProbeInfoFilePath = ./instrumentation
+    }
+
+    #-----------------------------------------------------------
+    # SnmpServer registry entries. (Optional)
+    #    Port - The SNMP AgentX port number.
+    #    ProcessDescription - The description of this process.
+    #                         If not specified, the process description
+    #                         has format as follows:
+    #                         <<user>>:<<process_name>>::<<registry_filename>>
+    #-----------------------------------------------------------
+    #SnmpServer
+    #{
+    #  Port = < SNMP AgentX Port >
+    #  ProcessDescription = ifw
+    #}
+
+    #-----------------------------------------------------------
+    # HttpServer registry entries. (Optional)
+    #    Port - The Http port number.
+    #    StyleSheetFile - The full path name of style sheet file.
+    #    PortalLogoFile - The full path name of Portal logo file.
+    #-----------------------------------------------------------
+    HttpServer
+    {
+      Port = < HTTP Port >
+      StyleSheetFile = ./instrumentation/portal_omf.xsl
+      PortalLogoFile = ./instrumentation/portal_omf.gif
+    }
+  }
+
+  DiagnosticDataHandler   
+  {
+    DiagnosticFilePath = ./log
+    DiagnosticFileName = diagnostic.dat      
+  }
+
+  LogMessageTable
+  {
+    MessageFilePath   = ./etc
+    MessageFileSuffix = .msg
+  }
+
+  Semaphore
+  {
+    FilePath = ./semaphore
+    FileName = semaphore.reg
+  }
+
+  Registry
+  {
+    FilePath           = ./info
+    FileName           = infoWIRELESS.reg
+    NiceFormatFileName = infoNiceWIRELESS.reg
+    Buffer
+    {
+      Size = 100
+    }
+  }
+
+  ProcessLog
+  {
+    ModuleName = LOG
+    Module
+    {
+      ITO
+      {
+        WriteMessageKey  = True
+        FilePath          = ./log/process
+        FileName          = processWIRELESS
+        FileSuffix        = .log
+        ProcessName       = ifw
+        MessageGroup      = IFW
+        ShowOriginator    = TRUE
+      }
+      Buffer
+      {
+        Size = 1000
+      }
+    }
+  }
+ 
+  MemoryMonitor
+  {
+    ScaleUnit = P
+    WarningFreeMemLimit = 10
+    ShutdownFreeMemLimit = 5
+  }
+
+  DataPool
+  {
+    #-----------------------------------------------------------
+    # Database Connection IntegRate
+    #-----------------------------------------------------------
+    Login
+    {
+      ModuleName = DBC
+      Module
+      {
+        # Common
+	UserName           = <IntegRate db-user>
+        PassWord           = <encrypted password>
+        DatabaseName       = <IntegRate db-sid>
+        AccessLib          = oci10g72
+	Connections        = 5
+        #ConvertToUpperCase = False
+        #UsableCheckTable   = IFW_DBVERSION
+      }
+    }
+
+    #-----------------------------------------------------------
+    # Database Connection Infranet
+    #-----------------------------------------------------------
+    LoginInfranet 
+    { 
+      ModuleName = DBC 
+      Module 
+      {
+        # Common
+	UserName           = <IntegRate db-user>
+        PassWord           = <encrypted password>
+        DatabaseName       = <IntegRate db-sid>
+        AccessLib          = oci10g72
+        Connections        = 5
+        #ConvertToUpperCase = False
+        #UsableCheckTable   = IFW_DBVERSION
+      } 
+    }  
+
+    #-----------------------------------------------------------
+    # Database Connection Queue
+    #-----------------------------------------------------------
+    LoginQueue
+    {
+      ModuleName = DBC
+      Module
+      {
+        # Common
+	UserName           = <IntegRate db-user>
+        PassWord           = <encrypted password>
+        DatabaseName       = <IntegRate db-sid>
+        AccessLib          = oci10g72
+        Connections        = 5
+        #ConvertToUpperCase = False
+        #UsableCheckTable   = IFW_DBVERSION
+      }
+    }
+
+    #--------------------------------------------------------
+    # PortalConfig Data Module
+    #-----------------------------------------------------------
+    PortalConfigDataModule
+    {
+      ModuleName = DAT_PortalConfig
+      Module
+      {
+      # ReuseOnFailure = True
+        InfranetConnection = ifw.DataPool.LoginInfranet
+      }
+    }
+
+    #-----------------------------------------------------------
+    # Infranet Listener
+    #-----------------------------------------------------------
+    Listener 
+    { 
+      ModuleName = DAT_Listener 
+      Module 
+      { 
+        InfranetConnection = ifw.DataPool.LoginQueue
+        QueueName = IFW_SYNC_QUEUE
+        LogEvents = TRUE
+        QueueLibrary = OracleQueue
+
+#       AckQueueName = AMT_QUEUE
+#        EventThreadAllocation
+#        {
+#  	   RecycleRequest = 1
+#          OpenNewAcctCycle = 2
+#          RecycleJob = 1
+#        }
+#       EnableInterLeavingStatistics = false
+#       ProcessAllEvents             = true
+#       InterleavingReqd             = false
+#       MaxNumEvents                 = 900   # suggested min. value 900
+#       MinNumEvents                 = 300   # suggested min. value 300
+#       CheckInterval                = 60    # suggested min. value 60 [sec]
+#       MaxEventProcessTime          = 60    # suggested min. value 60 [sec]
+#       MaxCDRProcessTime            = 300   # suggested min. value 300 [sec]
+      } 
+    }
+
+    #-----------------------------------------------------------
+    # Infranet Customer Data
+    #-----------------------------------------------------------
+    CustomerData
+    {
+      ModuleName = DAT_AccountBatch
+      Module
+      {
+        IntegrateConnection = ifw.DataPool.Login
+        InfranetConnection  = ifw.DataPool.LoginInfranet
+        PortalConfigDataModule = ifw.DataPool.PortalConfigDataModule
+        LogEvents           = False
+        Connections         = 8    
+        InitialLoading      = True    
+        AddAliasList        = False    
+        ReadAccountBalances = False    
+        Threads             = 8
+        UseAsRouter         = True  
+        LoadLogins          = True
+        Listener            = ifw.DataPool.Listener
+	
+	## TimesTenEnabled should be set to True for TimesTen Enabled Installations in non router cases
+	TimesTenEnabled     = False
+	}
+    }
+
+  } # end of data pool
+  
+  TransactionIdController
+  { 
+    Source = File
+    
+    Generator
+    {
+      FileName = ./tam/TransactionIDsWIRELESS.dat
+      Increment = 200
+    }
+  }
+
+  SequencerPool
+  {
+  }
+
+  Pipelines
+  {
+    ALL_RATE
+    {
+      Active                      = TRUE
+      MobileCountryCode           = 262
+      NationalAccessCode          = 0
+      InternationalAccessCode     = 00
+      InternationalAccessCodeSign = +
+      NetworkDestinationCode      = 172
+      RejectStream                = DevNull
+      RejectStream = RejectOutput
+      
+      TransactionManager
+      {
+        RedoEnabled = True #False
+        SingleTransaction = False
+        WriteToLogEnabled = True
+        BinaryLogFileName = ./tam/binaryLogFileACC_ROUTER.dat
+      }
+      #---------------------------------
+      EdrFactory
+      {
+        DataConnection = ifw.DataPool.Login
+        Description = ./formatDesc/Portal/containerDesc.dsc
+        UsageStatistic = ./log/statistic/edrStatisticACC_ROUTER.txt
+        EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+      }
+      #---------------------------------
+      DataDescription  
+      {
+        Standard
+        {
+          ModuleName = Standard
+          Module
+          {
+            StreamFormats
+            {
+              SIMPLESAMPLE = ./formatDesc/Formats/Sample/SIMPLESAMPLE_v1.dsc
+              SOL42_SUSPENSE = ./formatDesc/Formats/Solution42/SOL42_V670_REL.dsc
+            }
+            InputMapping
+            {
+              SIMPLESAMPLE = ./formatDesc/Formats/Sample/SIMPLESAMPLE_v1_InMap.dsc
+            }
+            OutputMapping
+            {
+              EDR_OUTPUT = ./formatDesc/Formats/Solution42/SOL42_V670_REL_OutMap.dsc
+            }
+          }
+        }
+      }
+
+      #---------------------------------
+      # Pipeline Log Section
+      #---------------------------------
+      PipelineLog
+      {
+        ModuleName = LOG
+        Module
+        {
+          ITO
+          {
+            FilePath = ./log/pipeline
+            FileName = pipeline_ACC_ROUTER.log
+            ProcessName = ifw
+            MessageGroup = IFW
+            ShowOriginator = True
+            SuppressErrors
+            {
+              ERR_SPEC_VERSION_INVALID
+              ERR_RELEASE_VERSION_INVALID
+       
+            }
+          }
+
+          Buffer
+          {
+            Size = 1000
+          }
+        }
+       }# Pipeline log
+     InputBuffer
+      {
+        Size = 100
+      }
+
+      OutputBuffer
+      {
+        Size = 100
+      }
+
+      #---------------------------------
+      # Input section
+      #---------------------------------
+      Input
+      {
+        UnitsPerTransaction = 1
+
+        InputModule
+        {
+          ModuleName = INP_GenericStream
+          Module
+          {
+            DefaultOutput = EdrOutput1
+            Grammar = ./formatDesc/Formats/Sample/SIMPLESAMPLE_v1_InGrammar.dsc
+
+            InputStream
+            {
+              ModuleName = EXT_InFileManager
+              Module
+              {
+                InputPath = ./data/in
+                InputPrefix = test
+                InputSuffix     = .edr
+
+                DonePath = ./data/done
+                DonePrefix = test_ACC_ROUTER
+                DoneSuffix = .done
+
+                ErrorPath = ./data/error
+                ErrorPrefix = test_ACC_ROUTER
+                ErrorSuffix = .err
+
+                TempPrefix = tmp_ACC_ROUTER
+                Replace = True
+                InputDirEmptyTimeout = 60
+              }
+            }
+          }
+        }
+      }
+
+      #---------------------------------
+      # Functions Section
+      #---------------------------------
+      Functions
+      {
+        Standard
+        {
+          FunctionPool
+          {
+            #--------------------------------------------------
+            # Rejection
+            #--------------------------------------------------
+            Rejection
+            {
+              ModuleName = FCT_Reject
+              Module
+              {
+                Active          = True
+                NotifyOnReject  = True
+                UseRejectStream = True
+                StreamMap
+                {
+                }
+
+              }
+            }
+
+            AccountRouter
+            {
+              ModuleName = FCT_AccountRouter
+              Module
+              {
+                Active         = True
+                DataModule = ifw.DataPool.CustomerData
+                Mode       = Router
+                Streams
+                  {
+                     #Infranet DB instance ID = The assoc. pinRate output stream name.
+                     1 = EdrOutput1
+                     2 = EdrOutput2
+                  }
+              }
+            }
+ 	   } # end FunctionPool
+        } # end Standard
+      } # end Functions
+
+      #---------------------------------
+      # Output Section
+      #---------------------------------
+      Output
+      {
+        ChargePrecision = 3
+        WriteDefaultEdr = False
+        SpecificationVersionNumber = 2
+        SequenceGeneration = Unit
+        #Unit - Transaction
+
+        MaxErrorRates
+        {
+          INF_EDR_REJECTED = 90
+          ERR_CUST_NOT_FOUND = 55
+          ERR_CHARGED_ZONE_NOT_FOUND = 55
+        }
+
+        #---------------------------------
+        OutputCollection 
+        {
+        #----------------------------------------------
+        # The DevNull stream
+        #---------------------------------------------------
+        DevNull
+        {
+          ModuleName = OUT_DevNull
+          Module
+          {
+        }
+        } # end of DevNull
+
+        ##--------------------------------------------------------------------
+        ## Output stream for rejected events
+        ##--------------------------------------------------------------------
+        RejectOutput
+        {
+          ModuleName = OUT_Reject
+          Module
+          {
+            DeleteEmptyStream = TRUE # defaults to TRUE
+            OutputStream
+            {
+              ModuleName = EXT_OutFileManager
+              Module
+              {
+                OutputPath = ./data/reject
+                OutputPrefix = test_ACC_ROUTER
+                OutputSuffix = .data
+                TempPrefix   = tmp_ACC_ROUTER
+                TempDataPath    = ./data/reject
+                TempDataPrefix  = pre.tmp.
+                TempDataSuffix  = .pre
+                Replace = TRUE
+              }
+            }
+          }
+        } # end of RejectOutput
+
+        #-----------------------------
+        EdrOutput1
+        {
+          ModuleName = OUT_GenericStream
+#          ProcessType = ACC_ROUTER_PIPELINE
+          Module
+          {
+            Grammar = ./formatDesc/Formats/Solution42/SOL42_V670_REL_OutGrammar.dsc
+            DeleteEmptyStream = True
+            OutputStream
+            {
+              ModuleName = EXT_OutFileManager
+              Module
+              {
+                OutputPath = ./schema1/data/in
+                OutputPrefix = test
+                OutputSuffix = .edr
+                TempPrefix = tmp_ACC_ROUTER
+                TempDataPath = ./schema1/data/in
+                TempDataPrefix = new.tmp.
+                TempDataSuffix = .edr
+                Replace = True
+                AppendSequenceNumber = False
+              }
+            }
+          }
+        } # end of EdrOutput1
+
+	#-----------------------------
+        EdrOutput2
+        {
+          ModuleName = OUT_GenericStream
+#          ProcessType = ACC_ROUTER_PIPELINE
+          Module
+          {
+            Grammar = ./formatDesc/Formats/Solution42/SOL42_V670_REL_OutGrammar.dsc
+            DeleteEmptyStream = True
+            OutputStream
+            {
+              ModuleName = EXT_OutFileManager
+              Module
+              {
+                OutputPath = ./schema2/data/in
+                OutputPrefix = test
+                OutputSuffix = .edr
+                TempPrefix = tmp_ACC_ROUTER
+                TempDataPath = ./schema2/data/in
+                TempDataPrefix = new.tmp.
+                TempDataSuffix = .edr
+                Replace = True
+                AppendSequenceNumber = False
+              }
+            }
+          }
+        } # end of EdrOutput
+	
+
+        } # end of OutputCollection
+
+        #-------------------------------
+        OutputLog
+        {
+          FilePath = ./log/stream
+          FileName = stream
+          FilePrefix = log_
+          FileSuffix = .log
+          SuppressErrors
+          {
+            ERR_SPEC_VERSION_INVALID
+            ERR_RELEASE_VERSION_INVALID
+          }
+        } # end of OutputLog
+
+        #-------------------------------
+        EdrTraceEnabled = False
+    	EdrTrace
+    	{
+            TraceLog
+            {
+                 FilePath   = ./log/edrLog
+                 FileName   = edrTraceLog
+                 FilePrefix = log_
+                 FileSuffix = .log
+            }
+
+            TraceStartPoint =  Input
+            TraceEndPoint   = Output
+
+    	} # END EdrTrace
+
+      } # END Output
+    } # END AccRouterPipeline
+
+    #-----------------------------------
+
+  } # END Pipelines
+
+} # END ifw

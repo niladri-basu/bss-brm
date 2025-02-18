@@ -1,0 +1,51 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!-- Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+   <xsd:element name="customOpActInfo">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="CUSTOM_OP_ACT_INFO_Request" type="CUSTOM_OP_ACT_INFO_RequestType"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="CUSTOM_OP_ACT_INFO_RequestType">
+      <xsd:sequence>
+         <xsd:element name="flags" type="xsd:int"/>
+         <xsd:element name="CUSTOM_OP_ACT_INFO_inputFlist">
+            <xsd:complexType>
+                 <xsd:sequence>
+                    <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+						<xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                           <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(payinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                           <xsd:pattern value=""/>
+                        </xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:element>
+                 </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="CUSTOM_OP_ACT_INFO_outputFlist">
+      <xsd:complexType>
+	  <xsd:sequence>
+			<xsd:element name="NAME_ADDRESS" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="4000"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+         <xsd:element name="ID" minOccurs="0" maxOccurs="1">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:element>
+		 </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+</xsd:schema>

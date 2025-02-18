@@ -1,0 +1,661 @@
+================================================================================
+FCT_Account
+
+================================================================================
+Module Version : 7.4 10044
+----------------
+Date : 19-Sep-2011
+----------------
+Change Order :  bug12969218
+----------------
+Problem : 
+---------
+Usage occurring at beginning of cycle being assigned a wrong Item.
+
+Solution :
+--------
+Changed the code to select proper Item for the usage.
+================================================================================
+Module Version : 7.4 10043
+----------------
+Date : 02-Dec-2010
+----------------
+Change Order :  bug10358934
+----------------
+Short Description :
+-------------------
+Changes were made to avoid the b-number search from over-writing the balance-group data populated by a-number search.
+================================================================================
+Module Version : 7.4 10042
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in
+parallel.
+================================================================================
+Module Version : 7.4 10041
+----------------
+Date : 23-Aug-2010
+----------------
+Change Order :  bug10036873 
+----------------
+Short Description :
+-------------------
+Incase of failure of login search, the incomplete search data is not getting released.
+Changes are incorporated to support reading all the products related to an account. 
+=================================================================================
+Module Version : 7.4 10040
+----------------
+Date : 23-Jul-2010
+----------------
+Change Order :  bug9898796  
+----------------
+Short Description :
+-------------------
+Function mapProfile is changed to call a function which will internally validate ERA
+under the profile against the time.
+================================================================================
+Module Version : 7.4 10039
+----------------
+Date : 02-Jul-2010
+----------------
+Change Order :  bug9780676 
+----------------
+Short Description :
+-------------------
+disableratingproductcheck (for customersearch module) does not work as expected
+================================================================================
+Module Version : 7.4 10038
+----------------
+Date : 20-May-2010
+----------------
+Change Order :  bug9718521 
+----------------
+Short Description :
+-------------------
+Populate event type from EDR into CustomerSearchArgs and pass it to DAT_Account search
+================================================================================
+Module Version : 7.4 10037
+----------------
+Date : 25-May-2010
+----------------
+Change Order :  bug9743097 
+----------------
+Short Description :
+-------------------
+Vector in not intialized inside the function mapProfile before assigning values.
+================================================================================
+Module Version : 7.4 10036
+----------------
+Date : 14-Apr-2010
+----------------
+Change Order :  bug9413687 
+----------------
+Short Description :
+-------------------
+Era was added to last purchased product due to incorrect vector positioning.
+================================================================================
+Module Version : 7.4 10035
+----------------
+Date : 06-Apr-2010
+----------------
+Change Order :  bug9294112
+----------------
+Short Description :
+-------------------
+Unused prameter Offset removed from FCT_Account.
+================================================================================
+Module Version : 7.4 10034
+----------------
+Date : 10-Sep-2009
+----------------
+Change Order :  bug8807278
+----------------
+Short Description :
+-------------------
+Mapper is changed to support partial discount quantity in purchased discount
+block.
+================================================================================
+Module Version : 7.4 10033
+----------------
+Date : 29-Apr-2009
+----------------
+Change Order :  bug8364805
+----------------
+Short Description :
+-------------------
+Extra argument "disableRatingProductCheck" removed from DAT::Account:search() argument list and embeded inside serchArgs.
+================================================================================
+Module Version : 7.4 10032
+----------------
+Date : 19-Feb-2009
+----------------
+Change Order :  bug8256883
+----------------
+Short Description :
+-------------------
+Tailormade product was not getting rated correctly due to interRatingPPIndex was always set to 0.
+================================================================================
+Module Version : 7.4 10031
+----------------
+Date : 15-Nov-2008
+----------------
+Change Order :  bug7636282
+----------------
+Short Description :
+-------------------
+Read the registry parameter "DisableRatingProductCheck" and pass it to search
+================================================================================
+Module Version : 7.4 10030
+----------------
+Date : 27-Aug-2008
+----------------
+Change Order :  bug7312564
+----------------
+Short Description :
+-------------------
+Add a new registry parameter "DisableRatingProductCheck" and pass it to search
+================================================================================
+Module Version : 7.3 10029
+----------------
+Date : 28-Aug-2006
+----------------
+Change Order :  PRSF00230157
+----------------
+Short Description :
+-------------------
+Revert back to non-exception based DAT_Account::search() failure.
+This is neccesary for optimal performance when LOGIN_NOT_FOUND error occur.
+================================================================================
+Module Version : 7.3 10028
+----------------
+Date : 24-Aug-2006
+----------------
+Change Order :  PRSF00229041
+----------------
+Short Description :
+-------------------
+Perf improvements to the AccountDataParser.
+================================================================================
+Module Version : 7.3 10027
+----------------
+Date : 11-Aug-2006
+----------------
+Change Order :  PRSF00228483
+----------------
+Short Description :
+-------------------
+Avoid the double throw from DAT_Account.
+================================================================================
+Module Version : 7.3 10026
+----------------
+Date : 03-Aug-2006
+----------------
+Change Order :  PRSF00215442
+----------------
+Short Description :
+-------------------
+Instrumentation in pipeline log need to display the Module Name.
+================================================================================
+Module Version : 7.3 10025
+----------------
+
+Date : 29-May-2006
+----------------
+
+Change Order :  PRSF00
+----------------
+
+Short Description :
+-------------------
+Changes for TailorMadePlan Feature.
+Added new field DETAIL.CUST_A.PRODUCT.OVERRIDDEN_OFFERING_POID.
+================================================================================
+Module Version : 7.3 10024
+----------------
+
+Date : 22-Apr-2006
+----------------
+
+Change Order :  PRSF00205697
+----------------
+
+Short Description :
+-------------------
+Changes for Configurable Validity Feature.
+
+================================================================================
+Module Version : 7.3 10023
+----------------
+
+Date : 11-Apr-2006
+----------------
+
+Change Order :  PRSF00194075
+----------------
+
+Short Description :
+-------------------
+FCT::Account changes for Friends and Family Shared List Feature.
+================================================================================
+Module Version : 7.3 10022
+----------------
+
+Date : 31-Mar-2006
+----------------
+
+Change Order :  PRSF00191243
+----------------
+
+Short Description :
+-------------------
+DAT::AccountBatch changes for Billing changes of Best Pricing.
+
+================================================================================
+Module Version : 7.3 10021
+----------------
+
+Date : 19-Jan-2006
+----------------
+
+Change Order :  PRSF00187903
+----------------
+
+Short Description :
+-------------------
+Changes to DAT::Account::search() function parameter list.
+
+================================================================================
+Module Version : 7.2 10020
+----------------
+
+Date : 29-AUG-2005
+----------------
+
+Change Order :  PRSF00179707
+----------------
+
+Short Description :
+-------------------
+Change atoi() and atol() to atoi64() for 64-bit Poid Compatibility.
+================================================================================
+Module Version : New_Pipeline_Velocity 10019
+----------------
+
+Date : 20-JUN-2005
+----------------
+
+Change Order :  PRSF00169966
+----------------
+
+Short Description :
+-------------------
+Fix warning messages in the Windows 32-bit build displays that really should be treated as errors
+================================================================================
+Module Version : Velocity 10018
+----------------
+
+Date : 08-APR-2005
+----------------
+
+Change Order :  PRSF00162821
+
+Short Description :
+-------------------
+ifw startup query optimization, DAT_AccountBatch (propagation from 7.0EBF)
+================================================================================
+
+Module Version : Velocity 10017
+----------------
+
+Date : 24-MARCH-2005
+----------------
+
+Change Order :  PRSF00157761
+----------------
+
+Short Description :
+-------------------
+Skip parsing certain fields for B Customer.
+
+================================================================================
+Module Version : Velocity 10016
+----------------
+
+Date : 10-Mar-2005
+----------------
+
+Change Order :  PRSF00157748
+----------------
+
+Short Description :
+-------------------
+change the column name from KEY to KEY_ID for table IFW_ALIAS_MAP
+================================================================================
+Module Version : Velocity 10015
+----------------
+
+Date : 15-FEB-2005
+----------------
+
+Change Order :  PRSF00153312
+----------------
+
+Short Description :
+-------------------
+BMON: Unit and integration test bug fixes
+
+================================================================================
+Module Version : 6.7_FP2 10014
+----------------
+
+Date : 11-JAN-2005
+----------------
+
+Change Order :  PRSF00149789
+----------------
+
+Short Description :
+-------------------
+BMON: container mapping mismatch
+================================================================================
+Module Version : 6.7_FP2 10013
+----------------
+
+Date : 7-JAN-2005
+----------------
+
+Change Order :  PRSF00148237
+----------------
+
+Short Description :
+-------------------
+Headline: Support for Balance Group Monitor Functionality as in Functional Specs Release 1
+================================================================================
+
+Module Version : 6.7_FP2 10012
+----------------
+
+Date : 30-SEP-2004
+----------------
+
+Change Order :  PRSF00123593
+----------------
+
+Short Description :
+-------------------
+DAT_Account Performance improvement :
+  Evaluate the performance impact of using the parser in FCT_Account
+================================================================================
+
+Module Version : 6.7_FP2 10011
+----------------
+
+Date : 30-JUNE-2004
+----------------
+
+Change Order :  PRSF00118611
+----------------
+
+Short Description :
+-------------------
+[Pipeline] changes for Re-Rating feature.
+================================================================================
+Module Version : Apollo 10010
+----------------
+
+Date : 26-APR-2004
+----------------
+
+Change Order :  PRSF00105697
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  NT build failure fixed for FCT_Account.
+
+================================================================================
+Module Version : 6.7_FP2 10009
+----------------
+
+Date : 28-May-2004
+----------------
+
+Change Order :  PRSF00110944
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+For MS-SQL compatibility  IFW_ALIAS_MAP["KEY"] changed to IFW_ALIAS_MAP["\"KEY\""]
+================================================================================
+Module Version : 6.7_FP2 10008
+----------------
+
+Date : 24-May-2004
+----------------
+
+Change Order :  PRSF00112638
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+regression : The error messages do not have the correct error message
+================================================================================
+Module Version : 6.7_FP2 10007
+----------------
+
+Date : 14-May-2004
+----------------
+
+Change Order :  PRSF00102999
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  
+Preallocate the searchResult Vector with a default size of 100 to get better
+processing performance.
+
+
+================================================================================
+Module Version : 6.5 FP3 EBF 10006
+----------------
+
+Date : 10-May-2004
+-------------------
+
+Change Order :  PRSF00049658
+----------------------------
+
+Short Description :
+-------------------
+Customer Login Not Found Error is now made configurable.
+In some situation this is not a serious error and EDR should be valid.
+================================================================================
+Module Version : Apollo 10006
+----------------
+
+Date : 27-MAY-2004
+----------------
+
+Change Order :  PRSF00104073
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription: Changes for Flexible Item Assignment feature.
+
+================================================================================
+Module Version : Apollo 10005
+----------------
+
+Date : 22-APR-2004
+----------------
+
+Change Order :  PRSF00106166
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: ERR_CUSTOMER_EDR_PARSING from FCT_Account module
+Add printing of search result if parsing fails
+
+================================================================================
+
+Module Version : Apollo 10004
+----------------
+
+Date : 19-APR-2004
+----------------
+
+Change Order :  PRSF00086920
+----------------
+
+Short Description :
+-------------------
+[Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Module Version : Apollo 10003
+----------------
+
+Date : 16-OCT-2003
+----------------
+
+Change Order :  PRSF00071706
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Message Numbers for Plugin 
+
+================================================================================
+Module Version : Apollo 10002
+----------------
+
+Date : 29-Sep-2003
+----------------
+
+Change Order :  PRSF00065789
+----------------
+
+Short Description :
+-------------------
+Need DAT_Cust type functionality back in 6.5 (Improving Error Values)
+
+================================================================================
+
+Module Version : 6.5 SP2 10001
+----------------
+
+Date : 05-May-2003
+----------------
+
+Change Order :  PRSF00039740
+----------------
+
+Short Description :
+-------------------
+Rename FCT_Account plugin class.
+
+================================================================================
+
+Module Version : 6.5 SP2 10000
+----------------
+
+Date : 29-April-2003
+----------------
+
+Change Order :  PRSF00039296
+----------------
+
+Short Description :
+-------------------
+Port FCT_Account to use namespaces.
+
+================================================================================
+
+Module Version : 6.5 SP1 10003
+----------------
+
+Date : 18-Mar-2003
+----------------
+
+Change Order :  PRSF00035140
+----------------
+
+Short Description :
+-------------------
+Update accountSearch to use BAS_SimpleString.
+
+================================================================================
+Module Version : 6.5 SP1 10002
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+
+================================================================================
+
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 03-Feb-2003
+----------------
+
+Change Order :  PRSF00028908
+----------------
+
+Short Description :
+-------------------
+Changed the Grammar and description file to set the INTERN_FOUND_PP_INDEX field
+for the B Customer
+================================================================================
+$RCSfile: RELEASE_NOTES.FCT_Account $
+$Revision: /cgbubrm_main.pipeline/1 $
+$Author: sajajain $
+$Date: 2011/09/22 03:31:59 $
+$Revision: /st_cgbubrm_asranjan_bug-10036873/1
+$Author: sajajain $
+$Date: 2011/09/22 03:31:59 $
+================================================================================
+
+Actual Version : v4-30-02 / Date : 05-Dec-2001
+----------------
+
+PETS #42253 The rated EDR from Integrate doesn't get loaded into Infranet 
+            because the output rated edr doesn't contain the item poid.
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 22-Oct-2001
+----------------
+
+Check for an empty service -> edr field mapping table added.
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 19-OCT-2001
+----------------
+
+Registry entries:
+
+- DataConnection   reference to IntegRate db module
+- DataModule       reference to DAT_Infranet module
+- DataDescription  data description file
+- Grammar          grammar file
+- Offset           offset between DOM and billrun

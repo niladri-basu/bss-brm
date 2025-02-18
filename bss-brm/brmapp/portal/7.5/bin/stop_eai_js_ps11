@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+#
+#  @(#) %full_filespec: stop_js.sh~5:shsrc:1 %
+#
+# Copyright (c) 1998, 2014, Oracle and/or its affiliates. All rights reserved.
+# or its licensors and may be used,reproduced, stored or transmitted only in accordance with a valid Oracle license or sublicense 
+# agreement.
+#
+# stop_js
+#
+#
+VERSION=7.5
+
+LOGDIR=/brmapp/portal/7.5/var/eai_js
+JSPID=${LOGDIR}/eai_js.pid
+
+me=$0
+
+if [ ! -f ${JSPID} ]; then
+	echo "${me}: ERROR: no pid file: ${JSPID}, cannot kill \"${JS}\""
+        exit 1
+fi
+
+if [ "1" = "2" ]; then
+	echo "dummy code added to support overlay"
+fi       
+
+kill `cat ${JSPID}`
+rc=$?
+if [ ${rc} -ne 0 ]; then
+	echo "${me}: ERROR: kill ${JS} `cat ${JSPID}` FAILED"
+	exit ${rc}
+else
+	rm ${JSPID}
+fi
+
+exit 0

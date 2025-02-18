@@ -1,0 +1,29 @@
+--
+-- @(#)payinfo_cc_t.ctl 3
+--
+-- Copyright (c) 2004, 2014, Oracle and/or its affiliates. All rights reserved.
+--
+--     This material is the confidential property of Oracle Corporation
+--     or its licensors and may be used, reproduced, stored or transmitted 
+--     only in accordance with a valid Oracle license or sublicense agreement.
+--
+--
+--
+LOAD DATA
+APPEND
+   INTO TABLE PAYINFO_CC_T
+   (
+	OBJ_ID0                 INTEGER EXTERNAL TERMINATED BY ',',
+	REC_ID                  INTEGER EXTERNAL TERMINATED BY ',',
+	ADDRESS                 CHAR TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"',
+	CITY                    CHAR TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"',
+	COUNTRY                 CHAR TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"',
+	DEBIT_EXP               CHAR TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"',
+	DEBIT_NUM               CHAR TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"',
+	CARD_TYPE               INTEGER EXTERNAL TERMINATED BY ',',
+	NAME                    CHAR TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"',
+	STATE                   CHAR TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"',
+	ZIP                     CHAR TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+-- These fields will be entered as NULL
+
+    )

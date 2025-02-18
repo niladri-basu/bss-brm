@@ -1,0 +1,103 @@
+#! /u01/app/oracle/product/11.2.0/client_1/perl/bin/perl
+#use strict;
+use Getopt::Std;
+use DBI;
+
+sub usage()
+{
+        print << "EOF";
+        $0 [-u <DB username> -p <DB password> -a <DB alias>
+EOF
+
+        die ("successfully terminated". "\n");
+}
+
+
+my %opts;
+
+getopts ("u:p:a:h", \%opts);
+usage() if ((!defined $opts{u} or !defined $opts{p} or !defined $opts{a}));
+usage() if $opts{h};
+
+my ($dd, $mm, $yyyy) = (localtime)[3..5];
+$mm=$mm+1;
+$yyyy=$yyyy+1900;
+
+$file_date="$yyyy$mm$dd";
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
+    my $nice_timestamp = sprintf ( "%04d%02d%02d%02d%02d%02d",
+                                   $year+1900,$mon+1,$mday,$hour,$min,$sec);
+	my $db_conn;
+	my $sql_query;
+	my $sql_stmt;
+
+	my $db_user=$opts{u};
+	my $db_pwd=$opts{p};
+	my $db_alias=$opts{a};
+	my $file_name;
+	my $statement;
+
+	$db_conn = DBI->connect("dbi:Oracle:${db_alias}", "${db_user}", "${db_pwd}");
+
+
+	######## Get the list of scenarios ################
+
+	 $sql_query = "SELECT
+    a.poid_id0
+     || ','
+     || a.purchase_end_t
+     || ','
+     || CAST(from_tz(
+        CAST(TO_DATE('19700101','YYYYMMDD') + ceil(a.purchase_end_t / 86400) AS TIMESTAMP),
+        'GMT'
+    ) AT TIME ZONE 'NZ' AS DATE)
+     || ','
+     || b.account_no
+     || ','
+     || e.bill_info_id
+     || ','
+     || a.product_obj_id0
+     || ','
+     || f.name
+     || ','
+     || 'Delete'
+FROM
+    purchased_product_t a,
+    account_t b,
+    service_t c,
+    bal_grp_t d,
+    billinfo_t e,
+    product_t f
+WHERE
+        a.account_obj_id0 = b.poid_id0
+    AND
+        a.service_obj_id0 = c.poid_id0
+    AND
+        c.bal_grp_obj_id0 = d.poid_id0
+    AND
+        d.billinfo_obj_id0 = e.poid_id0
+    AND
+        a.purchase_end_t != 0
+    AND
+        a.status IN (
+            1,2
+        )
+    AND
+        a.product_obj_id0 = f.poid_id0";
+
+	$sql_stmt = $db_conn->prepare($sql_query);
+	$sql_stmt->execute();
+
+	open my $OUTFILE, '>', "INPUT_DIR/purchased_product_cancel_$nice_timestamp.csv" or die;
+
+	while (  my @fetch_value = $sql_stmt->fetchrow_array() )
+	{
+
+		print $OUTFILE @fetch_value, "\n";
+
+	}
+
+	close $OUTFILE;
+
+	$sql_stmt->finish();
+

@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# @(#) %full_filespec: stop_rel_daemon.sh~6:shsrc:2 %
+#
+# Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved. 
+#      This material is the confidential property of Oracle Corporation
+#      or its licensors and may be used, reproduced, stored
+#      or transmitted only in accordance with a valid Oracle license
+#      or sublicense agreement.
+#
+
+PINDIR=/brmapp/portal/7.5
+PATH=/usr/bin:/bin
+
+LOGDIR=${PINDIR}/apps/pin_rel
+REL_DAEMON_PID=${LOGDIR}/RelDaemon.pid
+
+me=$0
+
+if [ ! -f ${REL_DAEMON_PID} ]; then
+	echo "${me}: ERROR: ${REL_DAEMON_PID}: No such file or directory"
+	echo "${me}: ERROR: Cannot kill \"RelDaemon\""
+        exit 1
+fi       
+
+kill `cat ${REL_DAEMON_PID}`
+rc=$?
+if [ ${rc} -ne 0 ]; then
+	echo "${me}: ERROR: RelDaemon: kill `cat ${REL_DAEMON_PID}` FAILED"
+	exit ${rc}
+else
+	echo "${me}: BatchController: kill `cat ${REL_DAEMON_PID}` SUCCEEDED"
+	rm ${REL_DAEMON_PID}
+fi
+
+exit 0

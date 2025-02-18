@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SUBSCRIPTION" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_CHANGE_DEAL.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_SET_PRODINFO.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_SET_BUNDLE.xsd"/>
+            <include schemaLocation="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION.xsd"/>
+        </schema>
+    </types>
+    <message name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_PRODINFO_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_SET_PRODINFO_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_PRODINFO_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_SET_PRODINFO_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_BUNDLE_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_SET_BUNDLE_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_SET_BUNDLE_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_SET_BUNDLE_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_outmsg">
+        <part name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_response" type="xsd:string"/>
+    </message>
+    <portType name="BRMSUBSCRIPTIONService_ptt">
+        <operation name="PcmOpSubscriptionTransferSubscription">
+            <input message="brm:PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_inmsg" name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_outmsg" name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionPurchaseDeal">
+            <input message="brm:PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_inmsg" name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_outmsg" name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionChangeDeal">
+            <input message="brm:PCM_OP_SUBSCRIPTION_CHANGE_DEAL_inmsg" name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_CHANGE_DEAL_outmsg" name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionSetProductStatus">
+            <input message="brm:PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_inmsg" name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_outmsg" name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionSetProdinfo">
+            <input message="brm:PCM_OP_SUBSCRIPTION_SET_PRODINFO_inmsg" name="PCM_OP_SUBSCRIPTION_SET_PRODINFO_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_SET_PRODINFO_outmsg" name="PCM_OP_SUBSCRIPTION_SET_PRODINFO_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionCancelProduct">
+            <input message="brm:PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_inmsg" name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_outmsg" name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionCancelDiscount">
+            <input message="brm:PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_inmsg" name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_outmsg" name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionSetDiscountStatus">
+            <input message="brm:PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_inmsg" name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_outmsg" name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionSetDiscountinfo">
+            <input message="brm:PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_inmsg" name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_outmsg" name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionGetPurchasedOfferings">
+            <input message="brm:PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_inmsg" name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_outmsg" name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionSetBundle">
+            <input message="brm:PCM_OP_SUBSCRIPTION_SET_BUNDLE_inmsg" name="PCM_OP_SUBSCRIPTION_SET_BUNDLE_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_SET_BUNDLE_outmsg" name="PCM_OP_SUBSCRIPTION_SET_BUNDLE_outmsg"/>
+        </operation>
+        <operation name="PcmOpSubscriptionCancelSubscription">
+            <input message="brm:PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_inmsg" name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_inmsg"/>
+            <output message="brm:PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_outmsg" name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="BRMSUBSCRIPTIONService_binding" type="brm:BRMSUBSCRIPTIONService_ptt">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PcmOpSubscriptionTransferSubscription">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionPurchaseDeal">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_PURCHASE_DEAL_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionChangeDeal">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_CHANGE_DEAL_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionSetProductStatus">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_SET_PRODUCT_STATUS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionSetProdinfo">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_SET_PRODINFO_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_SET_PRODINFO_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionCancelProduct">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_CANCEL_PRODUCT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionCancelDiscount">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_CANCEL_DISCOUNT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionSetDiscountStatus">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_SET_DISCOUNT_STATUS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionSetDiscountinfo">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_SET_DISCOUNTINFO_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionGetPurchasedOfferings">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionSetBundle">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_SET_BUNDLE_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_SET_BUNDLE_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpSubscriptionCancelSubscription">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SUBSCRIPTION_CANCEL_SUBSCRIPTION_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="BRMSUBSCRIPTIONService">
+        <port binding="brm:BRMSUBSCRIPTIONService_binding" name="BRMSUBSCRIPTIONService_pt">
+            <soap:address location="http://localhost:8080/brm/BRMWSSUBSCRIPTIONServices"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="BRMService_plt">
+        <plt:role name="BRMService_role">
+            <plt:portType name="brm:BRMSUBSCRIPTIONService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

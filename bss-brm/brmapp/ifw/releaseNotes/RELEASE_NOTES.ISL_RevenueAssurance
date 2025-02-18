@@ -1,0 +1,44 @@
+========================================================================================
+ISL_RevenueAssurance
+----------------------------------------------------------------------------------------
+Module Release Notes
+----------------------------------------------------------------------------------------
+$RCSfile: ISL_RevenueAssurance,v $
+$Revision: 1.0 $
+$Author: kamal $
+$Date: 2004/01/06 15:15:35 $
+========================================================================================
+
+Release        : 7.3.1.0.0
+Date           : 01-Aug-2007
+ChangeOrder    : bug6242296
+Title          : Add RevenueAssurance changes.
+Description    : New IScripts for Revenue Assurance Rel 4. This script resets the value
+                 of DETAIL.INTERN_PROCESS_STATUS to Normal (0). This IScript can be added
+                 as the last function plugin.
+========================================================================================
+
+Release        : 7.3 MODULAR
+Date           : 16-APR-2007
+ChangeOrder    : Bug 5963269
+Title          : Revenue Assurance Changes for VF-PAC
+Description    : VFPAC RA PROPOGATION: MODIFY RA ISCRIPT AND GROUPING SCENARIOS
+========================================================================================
+
+Release        : 6.7_FP2
+Date           : 22-JUNE-2004
+ChangeOrder    : PRSF00117622
+Title          : Revenue Assurance Rel 3
+Description    : Changes to the Revenue Assurance IScripts for Rel 3
+
+1. ISC_SetDiscountValue is obsolete now and is replaced with ISC_SetRevenueFigures
+2. Changes to ISC_SetAndValidateBatchInfo for Suspended_From Batch Id
+
+========================================================================================
+
+Release        : 6.5_FP3_EBF
+Date           : 06-JAN-2004
+ChangeOrder    : PRSF00084161
+Title          : Add RevenueAssurance changes.
+Description    : New IScripts for Revenue Assurance Rel 2.
+========================================================================================

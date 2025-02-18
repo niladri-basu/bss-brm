@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by JP Krishnamoorthy (Portal) -->
+<xs:schema targetNamespace="http://www.portal.com/schemas/BusinessOpcodes" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://www.portal.com/schemas/BusinessOpcodes" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="Opcode">
+    <xs:annotation>
+      <xs:documentation>
+Opcode is the root element of the opcode spec file.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Doc"/>
+        <xs:element name="Flags" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+              <xs:element name="Flag" maxOccurs="unbounded">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="lockObj"/>
+                    <xs:enumeration value="calcOnly"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Policies" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Policy" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="htmltext.type">
+                      <xs:attribute name="opRef" type="oplink.type" use="required"/>
+                    </xs:extension>
+                  </xs:complexContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Events" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Event" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="htmltext.type">
+                      <xs:attribute name="objRef" type="objlink.type" use="required"/>
+                    </xs:extension>
+                  </xs:complexContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="SeeAlso" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Item" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:complexContent>
+                    <xs:extension base="htmltext.type">
+                      <xs:attribute name="href" type="xs:anyURI" use="required"/>
+                    </xs:extension>
+                  </xs:complexContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Input">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Doc" minOccurs="0"/>
+              <xs:element ref="Fields"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Output">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Doc" minOccurs="0"/>
+              <xs:element ref="Fields"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="opname.type" use="required"/>
+      <xs:attribute name="component" type="xs:string" use="required"/>
+      <xs:attribute name="visibility" use="required">
+        <xs:annotation>
+          <xs:documentation>
+"public":     This is a recommended opcode. Portal will strive to keep the interface intact.
+"private":    This opcode should only be called if absolutely necessary. The opcode may change from release to release.   
+"deprecated": This opcode is deprecated. Either the functionality is being discontinued or 
+              other opcodes may provide equivalent or better functionality.
+"obsolete":   This opcode is obsolete and should no longer be used and it is no longer supported.
+
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="public"/>
+            <xs:enumeration value="private"/>
+            <xs:enumeration value="deprecated"/>
+            <xs:enumeration value="obsolete"/>
+<!-- These values below are obsoleted and should not be used. Added to prevent build breakers and will be removed -->
+            <xs:enumeration value="limited"/>
+            <xs:enumeration value="internal"/>
+<!-- End of obsoleted values -->
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="transaction" use="required">
+        <xs:annotation>
+          <xs:documentation>
+ The attribute describes how the opcode manages the transaction on the context. 
+ A transaction may or may not be in pogress when this opcode is called.
+ "required":     Reuses current transaction or creates a new transaction that 
+                 has the same lifespan as that of this opcode.
+ "requires_new": If a transaction is not in progress, creates a new transaction 
+                 that has the same lifespan as that of this opcode; else, errors out.
+ "supports":     Reuses current transaction if present.
+	  </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="required"/>
+            <xs:enumeration value="supports"/>
+            <xs:enumeration value="requires_new"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="deprecatedSince" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>
+Provide the release in which this opcode is deprecated.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="opSpecSchemaVersion" type="xs:string" use="optional" fixed="1.0"/>
+      <xs:attribute name="inputSample" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="opname.type">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="255"/>
+      <xs:pattern value="[A-Z][A-Z\d_]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="fldname.type">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="255"/>
+      <xs:pattern value="[A-Z][A-Z\d_]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="fldgrpname.type">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="255"/>
+      <xs:pattern value="[a-zA-Z][a-zA-Z\d_]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="objname.type">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="255"/>
+      <xs:pattern value="[a-z][a-z_]*(\.[a-z][a-z_\d]*)*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="oplink.type">
+    <xs:annotation>
+      <xs:documentation>
+Examples for oplink.type:
+op:///#out.ABC.DEF
+op://fm_cust/PCM_OP_CUST_SET_LOGIN
+op://fm_cust/PCM_OP_CUST_SET_LOGIN#in.ABC.DEF
+op://fm_cust/PCM_OP_CUST_SET_LOGIN#in.PIN_FLD_ABC.PIN_FLD_DEF
+
+pattern ::== op://(COMP?)/(OP)?(#(in|out)\.(FLD(\.FLD)*))?
+pattern ::== op://(/|(COMP/OP))(#(in|out)\.(FLD(\.FLD)*))?
+
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="op://(/|([A-Za-z][A-Za-z\d_]+)/([A-Z][A-Z\d_]+))(#(in|out)\.([A-Z][A-Z\d_]+(\.[A-Z][A-Z\d_]+)*))?"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="objlink.type">
+    <xs:annotation>
+      <xs:documentation>
+Examples for objlink.type:
+obj://account
+obj://service.email
+obj://service.email#ABC.DEF
+obj://service.email#PIN_FLD_ABC.PIN_FLD_DEF
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="obj://([a-z][a-z_\d]*(\.[a-z][a-z_0-9]*)*)(#([A-Z][A-Z0-9_]*)(\.[A-Z][A-Z0-9_]*)*)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="objoroplink.type">
+    <xs:annotation>
+      <xs:documentation>
+This type allows either obj or op hyperlinks.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:union memberTypes="oplink.type objlink.type"/>
+  </xs:simpleType>
+  <xs:simpleType name="fldlink.type">
+    <xs:annotation>
+      <xs:documentation>
+This type is used to hold links to fields within the document (opcode).
+Examples:
+#in.ABC
+#out.ABC.DEF
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="#(in|out).([A-Za-z][A-Za-z0-9_]*)(.[A-Za-z][A-Za-z0-9_]*)*"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="anycontent.type">
+    <xs:complexContent>
+      <xs:extension base="htmltext.type"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="htmltext.type" mixed="true">
+    <xs:sequence>
+      <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Doc" type="htmltext.type"/>
+  <xs:complexType name="field.type">
+    <xs:sequence>
+      <xs:element ref="Doc" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="fldname.type" use="required"/>
+    <xs:attribute name="ref" type="objoroplink.type" use="optional"/>
+    <xs:attribute name="use" use="required">
+    <!-- xs:attribute name="use" use="optional" default="required" -->
+      <xs:annotation>
+        <xs:documentation>
+"required": This field is required
+"optional": This field may or may not be present
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="required"/>
+          <xs:enumeration value="optional"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="order" type="xs:double" use="required">
+      <xs:annotation>
+        <xs:documentation>
+This schema forces one to group the various field definitions within the opcode by the 
+type. This is not the way one would want to present the spec to the user. This order
+attribute, which accepts positive or negative double values, is used to sort the fields
+on display. For example, one may want POID, START_T, END_T, ACCOUNT_OBJ in the 
+display format, while they will be forced to list POID, ACCOUNT_OBJ, START_T, END_T
+in the XML opcode spec.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="sample" type="xs:string" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="fieldlist.type">
+    <xs:sequence minOccurs="0">
+      <xs:element name="Poid" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="field.type">
+              <xs:sequence>
+                <xs:element name="ClassRef" type="objlink.type" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+              <xs:attribute name="mode" use="required">
+                <xs:annotation>
+                  <xs:documentation>
+About attribute "mode":
+"dbonly:          Only the db piece of the POID is relevant.
+"typeonly:        The db and type pieces of the POID are relevant.
+"complete:        The db, type and id pieces of the POID are relevant.
+"completeWithRev: The rev piece of the POID is relevant in addition to the rest.
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="dbonly"/>
+                    <xs:enumeration value="typeonly"/>
+                    <xs:enumeration value="complete"/>
+                    <xs:enumeration value="completeWithRev"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Int" type="field.type" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Enum" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="field.type">
+              <xs:sequence minOccurs="0">
+                <xs:element name="Values" minOccurs="0" maxOccurs="unbounded">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="Value" type="xs:string"/>
+                      <xs:element ref="Doc"/>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Decimal" type="field.type" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Timestamp" type="field.type" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="String" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="field.type">
+              <xs:attribute name="maxlen" type="xs:positiveInteger" use="optional" default="255"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Binstr" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="field.type">
+              <xs:attribute name="maxlen" type="xs:positiveInteger" use="required"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Buf" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="field.type">
+              <xs:attribute name="maxlen" type="xs:positiveInteger" use="required"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Array" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="field.type">
+              <xs:sequence minOccurs="0">
+                <xs:element ref="Fields"/>
+              </xs:sequence>
+              <xs:attribute name="elemIdMode" use="optional">
+                <xs:annotation>
+                  <xs:documentation>
+"ignored":  the element id is ignored
+"index" :   the element id is relevant
+"key":      the element id is relevant and in addition, is used elsewhere in this opcode
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="ignored"/>
+                    <xs:enumeration value="index"/>
+                    <xs:enumeration value="key"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+              <xs:attribute name="iterationOrder" use="optional">
+                <xs:annotation>
+                  <xs:documentation>
+About attribute "iterationOrder":
+"undefined":        order of iteration is not important
+"sortedById":       the element are processed in order of element id
+"insertionOrder" :  the elements are processed in the order of appearance in the flist
+"other":            arbitrary iteration order; other fields might dictate order
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="undefined"/>
+                    <xs:enumeration value="sortedById"/>
+                    <xs:enumeration value="insertionOrder"/>
+                    <xs:enumeration value="other"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+              <xs:attribute name="minElements" type="xs:int" use="optional"/>
+              <xs:attribute name="maxElements" type="xs:int" use="optional"/>
+              <xs:attribute name="minElemId" type="xs:nonNegativeInteger" use="optional"/>
+              <xs:attribute name="maxElemId" type="xs:nonNegativeInteger" use="optional"/>
+              <xs:attribute name="isElemIdAssignAllowed" type="xs:boolean" use="optional"/>
+              <xs:attribute name="isElemIdAnyAllowed" type="xs:boolean" use="optional"/>
+              <xs:attribute name="isRecursive" type="xs:boolean" use="optional"/>
+              <xs:attribute name="allowedElemIds" use="optional">
+                <xs:simpleType>
+                  <xs:list itemType="xs:nonNegativeInteger"/>
+                </xs:simpleType>
+              </xs:attribute>
+              <xs:attribute name="sampleElemId" type="xs:nonNegativeInteger" use="optional"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Substruct" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="field.type">
+              <xs:sequence minOccurs="0">
+                <xs:element ref="Fields"/>
+              </xs:sequence>
+              <xs:attribute name="isRecursive" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Choice" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            This element is to group all the different choices for input/output fields. This construct is provided ONLY for existing opcode specifications and should be sparingly used for new opcodes. 
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Doc" minOccurs="0"/>
+            <xs:element name="FieldGroup" minOccurs="1" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:documentation>
+                  This element is define a group of fields for a particular choice. 
+                </xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="Doc" minOccurs="0"/>
+                  <xs:element ref="Fields"/>
+                </xs:sequence>
+                <xs:attribute name="name" type="fldgrpname.type" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="sampleFldGrpName" type="fldgrpname.type" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                This attribute references one of the field group name. The fields in the specified field group will be displayed in the sample flist. 
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="use" use="required">
+            <xs:annotation>
+              <xs:documentation>
+"required": One of the fieldgroups is required
+"optional": One of the fieldgroups may or maynot be present
+              </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="required"/>
+                <xs:enumeration value="optional"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="order" type="xs:double" use="required"/>
+        </xs:complexType>
+        <xs:unique name="uniqueFieldGroupNames">
+          <xs:annotation>
+            <xs:documentation>
+              This uniqueness constraint ensures that, at a given choice element, the field groups names appear only once.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:selector xpath="*"/>
+          <xs:field xpath="@name"/>
+        </xs:unique>
+      </xs:element>
+      <xs:element name="Any" minOccurs="0">
+        <xs:complexType>
+          <xs:annotation>
+            <xs:documentation>
+This is a pseudo-field. There is no equivalent field type. This container is used to describe
+scenarios where the content varies based on context. Some examples are:
+1. The base opcodes supported by the DM (like CREATE_OBJ) accept fields in the input depending
+on the type of object being created. The actual restrictions are enforced by the Data Dictionary
+(object specification).
+2. Quite often, opcodes are written to work with a class of objects. The container (flist) based 
+interfaces to opcodes forces us to pass fields that belong to "subclasses" in substruct fields like
+PIN_FLD_EXTENDED_INFO. The content within this substruct depends on the actual subclass
+being created.
+3. In certain situations, there is no structure implied by external schema. For example, the
+result-set specification in the SEARCH opcode is truly dynamic.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexContent>
+            <xs:extension base="field.type">
+              <xs:attribute name="mode" use="required">
+                <xs:annotation>
+                  <xs:documentation>
+"subclassFields": This "any" container holds extended fields that belong to the subclasses
+"allFields":      This "any" container holds any fields belonging to a class
+"other":          This "any" container holds that may or may not belong to a class
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="subclassFields"/>
+                    <xs:enumeration value="allFields"/>
+                    <xs:enumeration value="other"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+              <xs:attribute name="baseClassName" type="objlink.type" use="optional">
+                <xs:annotation>
+                  <xs:documentation>
+When the "mode" attribute is "subclassFields" or "allFields", the name of the base class from 
+which the fields are picked can be specified here.
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+              <xs:attribute name="classNameRef" type="fldlink.type" use="optional">
+                <xs:annotation>
+                  <xs:documentation>
+When the "mode" attribute is "subclassFields" or "allFields", this attribute points to 
+a field in this opcode which holds the the name of base class from which the fields 
+are picked.
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+              <xs:attribute name="subclassNameRef" type="fldlink.type" use="optional">
+                <xs:annotation>
+                  <xs:documentation>
+When the "mode" attribute is "subclassFields" or "allFields", this attribute points to 
+a field in this opcode which holds the the name of sub class from which the fields 
+are picked. For example, if the class being referred to is "/service/email", the field
+pointed to by this attribute might hold the string with the value "email".
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Fields" type="fieldlist.type">
+    <xs:unique name="uniqueFieldNames">
+      <xs:annotation>
+        <xs:documentation>
+This uniqueness constraint ensures that, at any given level in the flist, the fields
+names appear only once.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:selector xpath="./*"/>
+      <xs:field xpath="@name"/>
+    </xs:unique>
+  </xs:element>
+</xs:schema>

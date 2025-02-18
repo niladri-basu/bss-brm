@@ -1,0 +1,244 @@
+/*************************************************************************************
+ *  fm_2d_op_view_payments.c
+ *  This custom opcode is to view payments of an account for 2d
+ *  Calls PCM_OP_AR_GET_ACCT_ACTION_ITEMS opcode internally.
+ * Author: Dev /Sukanya
+ * Date :23-04-14
+ *------------------------------------------------------------------------------------
+ * Input flist for the opcode
+ *------------------------------------------------------------------------------------
+  0 PIN_FLD_POID           POID [0] 0.0.0.1 /account  287464  0
+  0 PIN_FLD_BILLINFO           POID [0] 0.0.0.1 /billinfo 287208 0
+  0 PIN_FLD_INCLUDE_CHILDREN  INT [0] 0
+
+ *------------------------------------------------------------------------------------
+ ************************************************************************************/
+
+#ifndef lint
+static char Sccs_id[] = "@(#)$Id: fm_2d_op_view_payments.c 6922 2013-08-11 %";
+#endif
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "pcm.h"
+#include "pcm_ops.h"
+#include "cm_fm.h"
+#include "pin_errs.h"
+#include "pin_os_random.h"
+#include "pin_pymt.h"
+#include "pin_bill.h"
+#include "pin_cust.h"
+#include  "ops/pymt.h"
+#include "ops/ar.h"
+#include "ops/cust.h"
+
+//#include "custom_flds.h"
+//#include "custom_consts.h"
+#include "custom_opcodes.h"
+
+
+EXPORT_OP
+void op_2d_view_payments (
+    cm_nap_connection_t *connp,
+    int32               opcode,
+    int32               flags,
+    pin_flist_t         *i_flistp,
+    pin_flist_t         **r_flistpp,
+    pin_errbuf_t        *ebufp);
+
+static void
+fm_2d_op_view_payments (
+    pcm_context_t       *ctxp,
+    pin_flist_t         *i_flistp,
+    pin_flist_t         **r_flistpp,
+    pin_errbuf_t        *ebufp);
+
+/*******************************************************************
+ * Main routine for the NZ_OP_AR_VIEW_PAYMENTS  opcode
+ *******************************************************************/
+
+void
+op_2d_view_payments(
+    cm_nap_connection_t     *connp,
+    int32               opcode,
+    int32               flags,
+    pin_flist_t         *i_flistp,
+    pin_flist_t         **r_flistpp,
+    pin_errbuf_t        *ebufp)
+{
+ 	pcm_context_t   *ctxp = connp->dm_ctx;
+ 	pin_flist_t	*r_flistp = NULL;
+
+ 	if (PIN_ERR_IS_ERR(ebufp))
+                return;
+
+ 	/***********************************************************
+      	* Insanity check.
+ 	***********************************************************/
+        if (opcode != NZ_OP_AR_VIEW_PAYMENTS ) {
+                pin_set_err(ebufp, PIN_ERRLOC_FM, PIN_ERRCLASS_SYSTEM_DETERMINATE,
+                        PIN_ERR_BAD_OPCODE, 0, 0, opcode);
+                PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+                        "op_2d_view_payments opcode error", ebufp);
+
+                return;
+        }
+ 	/***********************************************************
+         * Debug what we got.
+ 	***********************************************************/
+   	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG,
+          	"op_2d_view_payments input flist", i_flistp);
+
+  	/***********************************************************
+         * Main routine for this opcode
+   	***********************************************************/
+        fm_2d_op_view_payments(ctxp,i_flistp, &r_flistp, ebufp);
+
+	/***********************************************************
+         * Error?
+    	***********************************************************/
+        if (PIN_ERR_IS_ERR(ebufp)) {
+                PIN_FLIST_DESTROY_EX(r_flistpp, ebufp);
+                PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+                        "op_2d_view_payments error", ebufp);
+        }
+
+	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG,"op_2d_view_payments output flist", r_flistp);
+
+	*r_flistpp = r_flistp;
+
+    return;
+}
+
+/*******************************************************************
+ * fm_2d_op_view_payments()
+ *******************************************************************/
+static void
+fm_2d_op_view_payments(
+    pcm_context_t       *ctxp,
+    pin_flist_t         *i_flistp,
+    pin_flist_t         **r_flistpp,
+    pin_errbuf_t        *ebufp )
+{
+	u_int64        	    db = 0;
+
+	pin_flist_t         *get_act_rflistp = NULL;
+	pin_flist_t         *copy_rflistp = NULL;
+	pin_flist_t         *res_flistp = NULL;
+	pin_flist_t         *pymt_res_flistp = NULL;
+	pin_flist_t         *search_inp_flistp = NULL;
+	pin_flist_t         *search_output_flistp = NULL;
+	pin_flist_t         *arg_flistp1 = NULL;
+	pin_flist_t         *result_search1 = NULL;
+	pin_flist_t         *result_search2 = NULL;
+	pin_flist_t         *result_search = NULL;
+	pin_cookie_t        cookie = NULL;
+	int32               elem_id = 0;
+
+	poid_t              *create_poid = NULL;
+	poid_t              *acc_poid = NULL;
+	poid_t              *it_poid = NULL;
+
+//	char		    *descr = NULL;
+	char                *it_pymt = NULL;
+	int32               flag1 = SRCH_EXACT;
+	char                *template = " select X from /event where F1 = V1 and event_t.poid_type like '/event/billing/payment%' ";
+
+
+
+
+	if (PIN_ERR_IS_ERR(ebufp)){
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,"fm_2d_op_view_payments error", ebufp);
+		return;
+	}
+
+	PIN_FLIST_FLD_PUT(i_flistp, PIN_FLD_POID_TYPE,"/item/payment", ebufp);
+	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, "fm_2d_op_view_payments: input flist", i_flistp);
+
+	/* Call the OOB opcode PCM_OP_AR_GET_ACCT_ACTION_ITEMS with the input
+	 * 0 PIN_FLD_POID               POID [0] 0.0.0.1 /account  777792  0
+	 * 0 PIN_FLD_BILLINFO_OBJ       POID [0] 0.0.0.1 /billinfo 777792 0
+	 * 0 PIN_FLD_POID_TYPE		 STR [0] "/item/payment"
+	 * 0 PIN_FLD_INCLUDE_CHILDREN    INT [0] 0
+	*/
+	PCM_OP(ctxp,PCM_OP_AR_GET_ACCT_ACTION_ITEMS, 0, i_flistp, &get_act_rflistp, ebufp);
+
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR, "Error on calling PCM_OP_AR_GET_ACCT_ACTION_ITEMS", ebufp);
+		return;
+	}
+	copy_rflistp = PIN_FLIST_COPY(get_act_rflistp, ebufp);
+
+	elem_id = 0;
+	cookie = NULL;
+
+	it_poid = (poid_t *)PIN_FLIST_FLD_GET(get_act_rflistp, PIN_FLD_POID, 0, ebufp);
+	db = PIN_POID_GET_DB(it_poid);
+	it_poid = NULL;
+	//Search the EVENT_T table for the item POID value
+	search_inp_flistp = PIN_FLIST_CREATE(ebufp);
+	create_poid = PIN_POID_CREATE(db, "/search", -1, ebufp);
+	PIN_FLIST_FLD_SET(search_inp_flistp, PIN_FLD_POID, create_poid, ebufp);
+	PIN_FLIST_FLD_SET(search_inp_flistp, PIN_FLD_FLAGS, (void *)&flag1, ebufp);
+	PIN_FLIST_FLD_SET(search_inp_flistp, PIN_FLD_TEMPLATE,(void *)template, ebufp);
+
+	//Loop to traverse all the indexes of the results array.
+	while ((res_flistp = PIN_FLIST_ELEM_GET_NEXT(copy_rflistp, PIN_FLD_RESULTS, &elem_id, 1, &cookie, ebufp))
+															!= (pin_flist_t *) NULL)
+	{
+		PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG,
+							"fm_2d_op_view_payments: inside while loop",res_flistp);
+
+		it_poid = PIN_FLIST_FLD_GET(res_flistp, PIN_FLD_POID, 0, ebufp);
+//		it_pymt = PIN_POID_GET_TYPE(it_poid);
+//		if(it_pymt = "/item/payment")
+//		{
+			arg_flistp1 = PIN_FLIST_ELEM_ADD(search_inp_flistp, PIN_FLD_ARGS, 1, ebufp);
+			PIN_FLIST_FLD_SET(arg_flistp1, PIN_FLD_ITEM_OBJ, it_poid, ebufp);
+			
+
+			//Setting Results
+			result_search = PIN_FLIST_ELEM_ADD(search_inp_flistp, PIN_FLD_RESULTS, PIN_ELEMID_ANY, ebufp);
+			PIN_FLIST_FLD_SET(result_search, PIN_FLD_DESCR, (void *)NULL, ebufp);
+			result_search2 = PIN_FLIST_SUBSTR_ADD(result_search, PIN_FLD_PAYMENT, ebufp);
+			PIN_FLIST_FLD_SET(result_search2,PIN_FLD_CHANNEL_ID,0,ebufp);
+			PIN_FLIST_FLD_SET(result_search2,PIN_FLD_TRANS_ID,NULL,ebufp);
+
+			PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, "fm_2d_op_view_payments: PCM_OP_SEARCH input flist", search_inp_flistp);
+			PCM_OP(ctxp, PCM_OP_SEARCH, 0, search_inp_flistp, &search_output_flistp, ebufp);
+			PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, "fm_2d_op_view_payments: PCM_OP_SEARCH output flist", search_output_flistp);
+
+			result_search1 = PIN_FLIST_ELEM_GET(search_output_flistp, PIN_FLD_RESULTS, PIN_ELEMID_ANY, 1, ebufp);
+			if(result_search1 != NULL)
+			{
+				PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, "fm_2d_op_view_payments: res_flistp before adding fields", res_flistp);
+				PIN_FLIST_FLD_COPY(result_search1, PIN_FLD_DESCR, res_flistp, PIN_FLD_DESCR, ebufp);
+				//descr = PIN_FLIST_FLD_GET(result_search1, PIN_FLD_DESCR, 1, ebufp);
+				//PIN_FLIST_FLD_SET(res_flistp, PIN_FLD_DESCR, descr, ebufp);
+
+
+				pymt_res_flistp = (pin_flist_t*) PIN_FLIST_SUBSTR_GET(result_search1, PIN_FLD_PAYMENT, 0, ebufp);
+				PIN_FLIST_FLD_COPY(pymt_res_flistp, PIN_FLD_CHANNEL_ID, res_flistp, PIN_FLD_CHANNEL_ID, ebufp);
+				PIN_FLIST_FLD_COPY(pymt_res_flistp, PIN_FLD_TRANS_ID, res_flistp, PIN_FLD_TRANS_ID, ebufp);
+				PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, "fm_2d_op_view_payments: res_flistp after adding fields", res_flistp);
+			}
+//		}
+	}
+
+
+	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, "output of PCM_OP_AR_GET_ACCT_ACTION_ITEMS",copy_rflistp);
+
+	*r_flistpp = copy_rflistp;
+
+
+	PIN_FLIST_DESTROY_EX(&search_inp_flistp,NULL);
+	//PIN_FLIST_DESTROY_EX(&copy_rflistp,NULL);
+	PIN_POID_DESTROY(create_poid,NULL);
+
+}
+
+
+

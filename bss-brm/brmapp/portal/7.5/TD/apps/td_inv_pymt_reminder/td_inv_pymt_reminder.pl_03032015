@@ -1,0 +1,407 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+##----------------------------------------------------------------------
+##
+##  Author                 :  Dev Sharma
+##  Date                   :  15-01-15
+##  Script	           :  Pre-bill due date reminder Script
+##  Description            :  To execute on business days and on  
+##                            consequetive days either holiday or weekend.
+##----------------------------------------------------------------------
+use POSIX;
+use pcmif;
+my $PATH;
+
+
+#sub get_holiday($,$,$);
+#=========================================#
+# Database number
+#=========================================#
+my $ebufp;
+my $profile_id;
+my @days_after_a;
+my @profile_id_ar;
+my $days_after;
+my $sysdate;
+my $wk;
+sub get_flist_fld_value($);
+
+$DB_NO="0.0.0.1";
+
+
+print "Started @ : ";
+print scalar localtime()."\n";
+
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+
+$mon = $mon + 1;
+$year = $year + 1900;
+print "Today's date: $mday-$mon-$year:$hour:$min:$sec\n";
+#=========================================================# 
+$ebufp = pcmif::pcm_perl_new_ebuf();
+$db_no='0.0.0.1';
+$pcm_ctxp = pcmif::pcm_perl_connect($db_no, $ebufp);
+
+if (pcmif::pcm_perl_is_err($ebufp)) {
+        print LOG_FILE "FAILED to Connect to Infranet\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        #display_date("finished");
+        print "\nLog File $log_file\n\n";
+        close(LOG_FILE);
+        exit(1);
+}
+
+my $template = "select X from /config/td_collections_profile where F1.type = V1 ";
+my $s_in_flist=<<"XXX";
+                0 PIN_FLD_POID        POID [0] $DB_NO /search -1 0
+                0 PIN_FLD_FLAGS       INT [0] 256
+                0 PIN_FLD_TEMPLATE     STR [0] "$template"
+                0 PIN_FLD_RESULTS    ARRAY [*] allocated 1, used 1
+                1        PIN_FLD_PROFILES          ARRAY [0] allocated 1, used 1
+		2                PIN_FLD_PROFILE_ID   STR [0] NULL
+                2                PIN_FLD_DAYS   INT [0] 0
+                0 PIN_FLD_ARGS                     ARRAY [1] allocated 1, used 1
+                1     PIN_FLD_POID                  POID [0] 0.0.0.1 /config/td_collections_profile -1 0
+XXX
+my $search_in_flistp = pcmif::pin_perl_str_to_flist($s_in_flist,$DB_NO,$ebufp);
+my $flag = 0;
+my $search_out_flistp = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_SEARCH",$flag, $search_in_flistp, $ebufp);
+if( pcmif::pcm_perl_is_err($ebufp) )
+	{
+        	pcmif::pcm_perl_print_ebuf($ebufp);
+                pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+                print "\nLog File $log_file\n\n";
+                close(LOG_FILE);
+                close(IN_FILE);
+                closedir(INPUT_DIR);
+                exit(1);
+        }
+my $search_oflist = pcmif::pin_perl_flist_to_str($search_out_flistp, $ebufp);
+#print " output : $search_oflist";
+
+my @value = split(/\n/, $search_oflist);
+my ($val_array_element);
+my $i =1;
+my $j =1;
+my $k=1;
+my $cnt=1;
+my $lcnt=1;
+foreach my $val_array_element(@value){
+	chomp($val_array_element);
+	$lcnt=$lcnt+1;
+        if ($val_array_element=~ /PIN_FLD_DAYS/i)
+       	{	
+		$i=$i+1;
+		#print "\n i value: ".$i;
+ 	     	@days_after_a = get_flist_fld_value($val_array_element);
+		#my $d =$days_after_a[i];
+		#print"\n days : $d\n";
+		$cnt=$lcnt;
+        }
+	if ($val_array_element=~ /PIN_FLD_PROFILE_ID/i)
+        {
+		
+		$j=$j+1;
+		#print "\n j value: ".$j;
+               @profile_id_ar = get_flist_fld_value_id($val_array_element);
+		#my $p = $profile_id_ar[j];
+		#print"\n profile : $p\n";
+        }
+#	++$i;
+#	++$k;
+#	my $d =$days_after_a[i];
+#	my $p = $profile_id_ar[i];
+#	print"\n days : $d\n";
+#        print"\n profile : $p\n";
+#	$i=$i+1;
+	 #++$i;
+ #       ++$k;
+#}
+ 
+#$i=0;
+
+($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+
+$mon = $mon + 1;
+$year = $year + 1900;
+#print "Today's date: $mday-$mon-$year:$hour:$min:$sec\n";
+#=========================================================#
+
+if ($i==$j && $i!=1 && $cnt == $lcnt) {
+	print "Loop: ".$k;        
+	$days_after = $days_after_a[i];
+	$profile_id = $profile_id_ar[i];
+
+	chomp($days_after);
+	chomp($profile_id);
+
+		print"\n days_after :$days_after\n";
+		print" profile_id :$profile_id\n";
+#my $profile_id = $profile_id_ar[$i];
+#++$i;
+#	if (($days_after ne '')&&($profile_id ne '')){		
+################################################################################
+#	Subroutine to get Weekend/Weekday for sysdate
+################################################################################
+#		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+		
+#		$mon = $mon + 1;
+#		$year = $year + 1900;
+#		print "Today's date: $mday-$mon-$year:$hour:$min:$sec\n";
+		$wk = is_weekend($wday);
+		print "In main Weekend/Weekday : $wk";
+
+################################################################################
+#	Subroutine to check the date is either weekend/holiday
+################################################################################
+		my $flag = 0;
+		my $file = "tmp.data";
+
+		$flag = is_holiday($mday,$mon,$year,$wk);
+
+		if ($flag == 0)
+		{
+			print "Exited becuase holiday\n";
+			exit;
+		}
+		else
+		{
+			$mon -=1;
+			$year -= 1900;
+			$sec = 0;
+			$min = 0;
+			$hour = 0;
+			$sysdate = mktime ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday);
+                        $mon = $mon + 1;
+                        $year = $year + 1900;
+
+			print "\nSysdate $mday-$mon-$year:$hour:$min:$sec Unixtime $sysdate";
+
+			#Generate due_date
+			my $due_date = $sysdate + ($days_after * 86400);
+
+			($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($due_date);
+			$mon = $mon + 1;
+			$year = $year + 1900;
+			print "\nDuedate $mday-$mon-$year:$hour:$min:$sec Unixtime $due_date\n";
+
+			################################################################################
+			open (MYFILE, ">$file")|| die "couldnt open file.txt: $!";
+			$concat = "$due_date".":"."$profile_id";
+			#print "data...........:$concat\n";
+			#print MYFILE "$due_date\n";
+			print MYFILE "$concat\n";
+			close (MYFILE);
+################################################################################
+# Invoke pymt_reminder mta
+################################################################################
+			system(td_inv_pymt_reminder_mta);
+			print "\nInvoked pymt_reminder mta\n";
+			################################################################################
+
+
+		open (MYFILE, ">$file")|| die "couldnt open file.txt: $!";
+
+		while (1){
+			#$mday +=1;
+			#$sysdate = mktime ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday);
+			$sysdate = $sysdate + (1 * 86400);
+			($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($sysdate);
+	                $mon = $mon + 1;
+                        $year = $year + 1900;
+
+			print "\nSysdate+1: $mday-$mon-$year:$hour:$min:$sec Unixtime: $sysdate";
+
+			$wk = is_weekend($wday);
+			print "\n+++++++++++++++++Weekend/Weekday++++++++++ : $wk";
+
+			$flag = 0;
+			$flag = is_holiday($mday,$mon,$year,$wk);
+
+			if ($flag == 0 ){
+				#open (MYFILE, ">$file")|| die "couldnt open file.txt: $!";
+				#Generate due_date
+			        $due_date = $sysdate + ($days_after * 86400);
+				($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($due_date);
+			        print "\nDuedate $mday-$mon-$year:$hour:$min:$sec Unixtime $due_date\n";
+				print MYFILE "$due_date\n";
+				#close (MYFILE);
+		        ################################################################################
+        		# Invoke pymt_reminder mta
+		        ################################################################################
+				system(td_inv_pymt_reminder_mta);
+				print "\nInvoked pymt_reminder mta\n";
+			}	
+			else{
+				print "Exited\n";
+				last;
+			}
+		}#while
+		close (MYFILE);
+#system(td_inv_pymt_reminder_mta);
+	 $k=$k+1; 
+   }
+}
+
+}
+
+print "\nFinished @ : ";
+print scalar localtime()."\n";
+
+
+
+
+
+
+#============================================#
+# Subroutine to Check Holiday
+#============================================#
+sub is_holiday($,$,$,$){
+
+#print "\nin get holiday()\n";
+
+my @dom = (0,0,0,0,0,0,0,0,0,0);
+my @moy = (0,0,0,0,0,0,0,0,0,0);
+my @year = (0,0,0,0,0,0,0,0,0,0);
+
+my $i = 0;
+my $j = 0;
+my $k = 0;
+
+print "\nDate $mday-$mon-$year is $wk and NOT Holiday in Calendar\n";
+$ebufp = pcmif::pcm_perl_new_ebuf();
+$pcm_ctxp = pcmif::pcm_perl_connect($db_no, $ebufp);
+
+my $cal_name ="td_collections_calendar";
+my $template = "select X from /config/calendar where F1 = V1 ";
+my $f1=<<"XXX";
+        0 PIN_FLD_POID        POID [0] $DB_NO /search -1 0
+        0 PIN_FLD_FLAGS       INT [0] 256
+        0 PIN_FLD_TEMPLATE     STR [0] "$template"
+        0 PIN_FLD_RESULTS    ARRAY [0] allocated 1, used 1
+        1        PIN_FLD_POID   POID [0] NULL
+        1 PIN_FLD_CALENDAR_DATE  ARRAY [*] allocated 20, used 3
+        2     PIN_FLD_CALENDAR_DOM    INT [0] 0
+        2     PIN_FLD_CALENDAR_MOY    INT [0] 0
+        2     PIN_FLD_CALENDAR_YEAR    INT [0] 0
+        0 PIN_FLD_ARGS          ARRAY [1] allocated 1, used 1
+        1        PIN_FLD_NAME   STR [0] "$cal_name"
+XXX
+
+#print ("Input flist:\n$f1\n");
+my $search_iflist = pcmif::pin_perl_str_to_flist($f1, $DB_NO, $ebufp);
+
+my $search_oflist = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_SEARCH", 0, $search_iflist, $ebufp);
+my $search_out = pcmif::pin_perl_flist_to_str($search_oflist, $ebufp);
+
+if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "\n Error processing input flist, please check logs...";
+}
+else{
+#print ("Output flist:\n$search_out\n");
+
+my @value = split(/\n/,$search_out);
+$value_count = $#value;
+       foreach $val_array_element(@value)
+                {       chomp($val_array_element);
+
+                        if ( $val_array_element =~ "PIN_FLD_CALENDAR_DOM" )
+                        {       #print "\n i value: $i";
+                                #print "\n Line:\n       $val_array_element";
+                                my @return_value = split(/\s/, $val_array_element);
+                                $dom[$i] = $return_value[$#return_value];
+                                #print "\n Calendar DOM $i: $dom[$i]\n";
+                                $i++;
+                        }
+                        if ( $val_array_element =~ "PIN_FLD_CALENDAR_MOY" )
+                        {
+                                #print "\n Line:\n       $val_array_element";
+                                my @return_value = split(/\s/, $val_array_element);
+                                $moy[$j] = $return_value[$#return_value];
+                                #print "\n Calendar MOY: $moy[$j]\n";
+                                $j++;
+                        }
+                        if ( $val_array_element =~ "PIN_FLD_CALENDAR_YEAR" )
+                        {
+                                #print "\n Line:\n       $val_array_element";
+                                my @return_value = split(/\s/, $val_array_element);
+                                $year[$k] = $return_value[$#return_value];
+                                #print "\n Calendar YEAR: $year[$k]\n";
+                                $k++;
+                        }
+
+
+                }
+}
+
+#print "\nDate: $mday-$mon-$year Weekday/end: $wk\n";
+
+$i = $i - 1;
+while($i > -1){
+
+        if (( $wk eq "weekend") || ( $mday == $dom[$i] && $mon == $moy[$i] && $year == $year[$i] )){
+                print "\nDate $mday-$mon-$year is $wk and $dom[$i]-$moy[$i]-$year[$i] is Holiday in Calendar\n";
+                #print "Exiting...........\n";
+                $flag = 0;
+		return $flag;
+		#last;
+                #exit;
+        }
+$i = $i - 1;
+$flag = 1;
+
+print "\nDate $mday-$mon-$year is $wk and NOT Holiday in Calendar\n";
+return $flag;
+
+}
+}
+#################################################################################
+# Subroutine is_weekend to get weekend or weekday
+#################################################################################
+sub is_weekend{
+
+my $wday = @_;
+$wk = $wday >= 1 && $wday <= 5 ? "weekday" : "weekend";
+
+#$mon +=1;
+#$year += 1900;
+
+#print "\nIn is_weekend() Date passed: $mday-$mon-$year \n";
+return $wk
+}
+###########################################
+# Subroutine to get field value from flist
+###########################################
+sub get_flist_fld_value($)
+{
+         my $out_flist_string_row = shift;
+         my @return_value = split(/\s/, $out_flist_string_row);
+         my $temp_value = $return_value[$#return_value];
+         if ($temp_value =~ /\"/){
+                my @temp_array = split(/\"/, $temp_value);
+                $temp_value = $temp_array[1];
+         }
+#	print "value : $temp_value\n";
+        my $ret_flist_fld_value = $temp_value;
+
+}
+
+sub get_flist_fld_value_id($)
+{
+         my $out_flist_string_row = shift;
+         my @return_value = split(/\s/, $out_flist_string_row);
+         my $temp_value = $return_value[$#return_value-1];
+	 my $temp_value1 = $return_value[$#return_value];
+
+         if ($temp_value =~ /\"/){
+                my @temp_array = split(/\"/, $temp_value);
+                $temp_value = $temp_array[1];
+         }
+	if ($temp_value1 =~ /\"/){
+                my @temp_array1 = split(/\"/, $temp_value1);
+                $temp_value1 = $temp_array1[0];
+         }
+
+        $temp_value = "$temp_value"." $temp_value1";
+        my $ret_flist_fld_value = $temp_value;
+
+}

@@ -1,0 +1,539 @@
+// @(#)% %
+//==============================================================================
+//
+// Copyright (c) 2004, 2012, Oracle and/or its affiliates. 
+// All rights reserved. 
+//
+//       This material is the confidential property of Oracle Corporation
+//       or its licensors and may be used, reproduced, stored or transmitted
+//       only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: FMD
+//------------------------------------------------------------------------------
+// Module Description:
+//   Generic I/O output grammar file for the EVENT_LOADER V6.70 CDR format 
+//   with Unix timestamps
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+
+//==============================================================================
+// The initial iScript code
+//==============================================================================
+iScript
+{
+  Long    i;
+  Long    j;
+  Long    k;
+  Long    records;
+  Long    packets;
+  Long    subpackets;
+  Long    taxjurpackets;
+  Long    tjRecordNumber;
+  Long    recordNumber;
+  Long    sbiRecordNumber;
+  Long    msbiRecordNumber;
+  Long    totalNumBasics;
+  Date    firstCall;
+  String  firstUtcOffset;
+  Date    lastCall;
+  String  lastUtcOffset;
+  Decimal totalRetailCharge;
+  Decimal totalWholesaleCharge;
+  String  nodeName;
+  String  addInvoiceData;
+  Bool    addInvoiceDataBool;
+  String  originalEventPoid;
+  String  processType;
+  String  objectCacheTypeName;
+
+  //----------------------------------------------------------------------------
+  // Check if the file contains only HEADER and TRAILER
+  //----------------------------------------------------------------------------
+  function Bool streamIsEmpty
+  {
+    if ( recordNumber <= 2 )
+    {
+      // Only HEADER and TRAILER
+      return true;
+    }
+    else
+    {
+      // At least one DETAIL
+      return false;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Only do this once per Integrate session per pipeline per output module,
+  //   so neglectable overhead
+  //----------------------------------------------------------------------------
+  function BEGIN
+  {
+    nodeName = registryNodeName();
+    // note that making ".Module.AddInvoiceData" a constant would be nicer but somehow it
+    // does not work, it seems that you can only init a value inside a function, not at
+    // the "declaration" area
+    addInvoiceData = regString(nodeName + ".Module.AddInvoiceData");
+
+    if (strToUpper(addInvoiceData) == "TRUE")
+    {
+      addInvoiceDataBool = true;
+    }
+    else
+    {
+      addInvoiceDataBool = false;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Apply the UTC_TIME_OFFSET to a date to correct output AscDateUnix values
+  //----------------------------------------------------------------------------
+  function Date dateToUTC( Date origDate, String utcOffset )
+  {
+    Long offset = strToLong( utcOffset );
+
+    Long hours =  - offset / 100;
+    Long minutes =  - offset % 100;
+
+    Date result = dateAdd( origDate, 0, 0, 0, hours, minutes );
+    return result;
+  }
+}
+
+//==============================================================================
+// The definition of the grammar
+//==============================================================================
+Grammar
+{
+  //----------------------------------------------------------------------------
+  // The EDR stream
+  //----------------------------------------------------------------------------
+  edr_stream:
+      HEADER
+        { 
+          recordNumber         = 1;
+          firstCall            = MAX_DATE;
+          firstUtcOffset       = "";
+          lastCall             = MIN_DATE;
+          lastUtcOffset        = "";
+          totalNumBasics       = 0;
+          totalWholesaleCharge = 0.0;
+          totalRetailCharge    = 0.0;
+          // 2 spaces between the first 0 and 2nd 0 
+          originalEventPoid    = "0  0 0";
+
+          edrLong( HEADER.RECORD_NUMBER ) = recordNumber;
+
+          //--------------------------------------------------------------------
+          // Get the creation process tag, and the event type for the output
+          // file.  Need this information
+          //--------------------------------------------------------------------
+          processType = regString( registryNodeName() + "." + "ProcessType" );
+          edrString( HEADER.CREATION_PROCESS ) = processType;
+
+          edrString( HEADER.EVENT_TYPE ) =
+            regString( registryNodeName() + "." + "EventType" );
+
+          objectCacheTypeName = strToUpper(
+            regString( registryNodeName() + "." + "ObjectCacheType" ));
+          if( objectCacheTypeName == "CONVERGENT")
+          {
+            edrLong( HEADER.OBJECT_CACHE_TYPE ) = 0;
+          }
+          else
+          {
+            edrLong( HEADER.OBJECT_CACHE_TYPE ) = 2;
+          }
+
+          edrOutputMap( "V670_EVENT_LOADER.HEADER.STD_MAPPING" );
+        }
+      details
+      TRAILER
+        {
+          recordNumber = recordNumber + 1;
+          edrLong( TRAILER.RECORD_NUMBER )           = recordNumber;
+          edrLong( TRAILER.TOTAL_NUMBER_OF_RECORDS ) = totalNumBasics;
+          edrDate( TRAILER.FIRST_START_TIMESTAMP )   = firstCall;
+          edrString( TRAILER.FIRST_CHARGING_UTC_TIME_OFFSET ) = 
+            firstUtcOffset;
+          edrDate( TRAILER.LAST_START_TIMESTAMP )    = lastCall;
+          edrString( TRAILER.LAST_CHARGING_UTC_TIME_OFFSET ) = 
+            lastUtcOffset;
+          edrDecimal( TRAILER.TOTAL_RETAIL_CHARGED_VALUE ) = 
+            totalRetailCharge;
+          edrDecimal( TRAILER.TOTAL_WHOLESALE_CHARGED_VALUE ) = 
+            totalWholesaleCharge;
+
+          edrOutputMap( "V670_EVENT_LOADER.TRAILER.STD_MAPPING" );
+        }
+    ;
+
+  //----------------------------------------------------------------------------
+  // A list of DETAIL records
+  //----------------------------------------------------------------------------
+  details: 
+      details 
+      DETAIL
+        {
+          //--------------------------------------------------------------------
+          // Write the DETAIL
+          //--------------------------------------------------------------------
+          recordNumber   = recordNumber + 1;
+          sbiRecordNumber   = 0;
+	  msbiRecordNumber   = 0;
+          tjRecordNumber   = 0;
+          totalNumBasics = totalNumBasics + 1;
+          edrLong( DETAIL.RECORD_NUMBER ) = recordNumber;
+
+          switch ( edrString( DETAIL.CALL_COMPLETION_INDICATOR ) )
+          {
+          case "C":
+          case "T":
+            edrString( DETAIL.CALL_COMPLETION_INDICATOR ) = "00";
+            break;
+
+          case "D":
+            edrString( DETAIL.CALL_COMPLETION_INDICATOR ) = "04";
+            break;
+          }
+
+          //--------------------------------------------------------------------
+          // Apply the UTC_TIME_OFFSET to CHARGING_START_TIMESTAMP and
+          // CHARGING_END_TIMESTAMP to convert output value to UTC.
+          //--------------------------------------------------------------------
+          // Adjust if UTC_TIME_OFFSET is set
+          if ( edrInputState( DETAIL.UTC_TIME_OFFSET ) == EDR_INPUT_OTHER )
+          {
+            if ( edrInputState( DETAIL.CHARGING_START_TIMESTAMP ) == EDR_INPUT_OTHER )
+            {
+              edrDate( DETAIL.CHARGING_START_TIMESTAMP ) =
+                dateToUTC( edrDate( DETAIL.CHARGING_START_TIMESTAMP ),
+                  edrString( DETAIL.UTC_TIME_OFFSET ));
+            }
+
+            if ( edrInputState( DETAIL.CHARGING_END_TIMESTAMP ) == EDR_INPUT_OTHER )
+            {
+              edrDate( DETAIL.CHARGING_END_TIMESTAMP ) =
+                dateToUTC( edrDate( DETAIL.CHARGING_END_TIMESTAMP ),
+                  edrString( DETAIL.UTC_TIME_OFFSET ));
+            }
+          }
+          
+          edrOutputMap( "V670_EVENT_LOADER.DETAIL.STD_MAPPING" );
+
+          //--------------------------------------------------------------------
+          // Write the ASSOCIATED_GRPS_EXTENSION record
+          //--------------------------------------------------------------------
+          if ( edrNumDatablocks( DETAIL.ASS_GPRS_EXT ) > 0 )
+          {
+            edrString( DETAIL.INTERN_TERMINATING_SWITCH_IDENTIFICATION ) = 
+            edrString( DETAIL.ASS_GPRS_EXT.TERMINATING_SWITCH_IDENTIFICATION, 0 );
+
+            recordNumber = recordNumber + 1;
+            edrLong( DETAIL.ASS_GPRS_EXT.RECORD_NUMBER, 0 ) = recordNumber;
+            edrOutputMap( "V670_EVENT_LOADER.ASSOCIATED_GPRS.STD_MAPPING", 0 );
+          }
+
+          //--------------------------------------------------------------------
+          // Write the ASSOCIATED_WAP_EXTENSION record
+          //--------------------------------------------------------------------
+          if ( edrNumDatablocks( DETAIL.ASS_WAP_EXT ) > 0 )
+          {
+            recordNumber = recordNumber + 1;
+            edrLong( DETAIL.ASS_WAP_EXT.RECORD_NUMBER, 0 ) = recordNumber;
+            edrOutputMap( "V670_EVENT_LOADER.ASSOCIATED_WAP.STD_MAPPING", 0 );
+          }
+
+	  //--------------------------------------------------------------------
+          // Write the ASSOCIATED_LTE_EXTENSION record
+          //--------------------------------------------------------------------
+          if ( edrNumDatablocks( DETAIL.ASS_LTE_EXT ) > 0 )
+          {
+            recordNumber = recordNumber + 1;
+            edrLong( DETAIL.ASS_LTE_EXT.RECORD_NUMBER, 0 ) = recordNumber;
+            edrOutputMap( "V670_EVENT_LOADER.ASSOCIATED_LTE.STD_MAPPING", 0 );
+          }
+		  
+          //--------------------------------------------------------------------
+          // Write the ASSOCIATED_GSMW_EXTENSION record
+          //--------------------------------------------------------------------
+          if ( edrNumDatablocks( DETAIL.ASS_GSMW_EXT ) > 0 )
+          {
+            edrString( DETAIL.INTERN_TERMINATING_SWITCH_IDENTIFICATION ) = 
+            edrString( DETAIL.ASS_GSMW_EXT.TERMINATING_SWITCH_IDENTIFICATION, 0 );
+
+            recordNumber = recordNumber + 1;
+            packets      = edrNumDatablocks( DETAIL.ASS_GSMW_EXT.SS_PACKET, i );
+
+            edrLong( DETAIL.ASS_GSMW_EXT.RECORD_NUMBER, 0 ) = recordNumber;
+            edrLong( DETAIL.ASS_GSMW_EXT.NUMBER_OF_SS_PACKETS, 0 ) = packets;
+
+            edrOutputMap( "V670_EVENT_LOADER.ASSOCIATED_GSMW.STD_MAPPING", 0 );
+
+            for ( j = 0; j < packets; j = j+1 )
+            {
+              recordNumber = recordNumber + 1;
+              
+              edrLong( DETAIL.ASS_GSMW_EXT.SS_PACKET.RECORD_NUMBER, 0, j ) = recordNumber;
+              
+              edrOutputMap( "V670_EVENT_LOADER.SS_EVENT_PACKET.STD_MAPPING", 0, j );
+            }
+          }
+
+          //--------------------------------------------------------------------
+          // Write the RUM_MAP record
+          //--------------------------------------------------------------------
+          records = edrNumDatablocks( DETAIL.ASS_CBD );
+          for ( i = 0; i < records; i = i+1 )
+          {
+            packets      = edrNumDatablocks( DETAIL.ASS_CBD.RM, i );
+
+            for ( j = 0; j < packets; j = j+1 )
+            {
+              recordNumber = recordNumber + 1;
+
+              edrLong( DETAIL.ASS_CBD.RM.RECORD_NUMBER, i, j ) = recordNumber;
+              
+              edrOutputMap( "V670_EVENT_LOADER.RUM_MAP.STD_MAPPING", i, j );
+            }
+          }
+
+          //--------------------------------------------------------------------
+          // Write the ASSOCIATED_INFRANET_BILLING records
+          //--------------------------------------------------------------------
+          records = edrNumDatablocks( DETAIL.ASS_PIN );
+          for ( i = 0; i < records; i = i+1 )
+          {
+            recordNumber = recordNumber + 1;
+            packets      = edrNumDatablocks( DETAIL.ASS_PIN.BP, i );
+
+            edrLong( DETAIL.ASS_PIN.RECORD_NUMBER, i ) = recordNumber;
+            edrLong( DETAIL.ASS_PIN.NUMBER_OF_BALANCE_PACKETS, i ) = packets;
+
+            // In the case of RERATING, the originalEventPoid will be set to
+            // the DETAIL.ASS_PIN.ORIGINAL_EVENT_POID of the backout event.
+            if ( processType == "RERATING_PIPELINE" )
+            {
+              if ( edrString( DETAIL.ASS_PIN.ORIGINAL_EVENT_POID, i ) != "" )
+              {
+                 //cache the original event poid
+                 originalEventPoid =
+                   edrString( DETAIL.ASS_PIN.ORIGINAL_EVENT_POID, i );
+              }
+            }
+
+            if ( edrString( DETAIL.ASS_PIN.ORIGINAL_EVENT_POID, i ) == "" )
+            {
+               //set the rerated DETAIL.ASS_PIN.ORIGINAL_EVENT_POID field
+               edrString( DETAIL.ASS_PIN.ORIGINAL_EVENT_POID, i ) = 
+                 originalEventPoid;
+
+            }
+
+            edrOutputMap( "V670_EVENT_LOADER.ASSOCIATED_INFRANET.STD_MAPPING", i );
+
+            for ( j = 0; j < packets; j = j+1 )
+            {
+                edrString( DETAIL.ASS_PIN.BP.PIN_GL_ID , i, j ) = edrString( DETAIL.ASS_CI.GL_ID, 0 );
+                edrDecimal( DETAIL.ASS_PIN.BP.PIN_QUANTITY , i, j ) =  edrDecimal( DETAIL.ACTUAL_QUANTITY);
+		edrString( DETAIL.ASS_PIN.BP.PIN_TAX_CODE , i, j ) = edrString( DETAIL.ASS_CI.GST, 0 );
+            }
+
+            if (addInvoiceDataBool == true)
+            {
+              //--------------------------------------------------------------------
+              // Write the ASSOCIATED_INVOICE_DATA records
+              //--------------------------------------------------------------------
+              edrAddDatablock(DETAIL.ASS_INVOICE_DATA);
+              edrOutputMap("V670_EVENT_LOADER.ASSOCIATED_INVOICE_DATA.STD_MAPPING");
+
+		outputWrite("<");
+
+              //--------------------------------------------------------------------
+              // Write the BALANCE_IMPACT packets
+              //--------------------------------------------------------------------
+              for ( j = 0; j < packets; j = j+1 )
+              {
+                edrAddDatablock(DETAIL.ASS_INVOICE_DATA.BAL_IMPACT);
+                edrOutputMap("V670_EVENT_LOADER.BALANCE_IMPACT.STD_MAPPING", i, j);
+              }
+
+
+		outputWrite(">#<");
+
+
+              //--------------------------------------------------------------------
+              // GSM - Write the CUSTOM _INVOICE_DATA records
+              //--------------------------------------------------------------------
+              edrAddDatablock(DETAIL.ASS_INVOICE_DATA.INV_CUST_INFO);
+              edrOutputMap("V670_EVENT_LOADER.INV_CUST_INFO.STD_MAPPING",0);
+
+
+		outputWrite(">#<");
+
+              for ( j = 0; j < edrNumDatablocks( DETAIL.ASS_CI.ASS_BRI, 0 ); j = j + 1 )
+              {
+                 edrAddDatablock(DETAIL.ASS_INVOICE_DATA.INV_NCR_INFO);
+                 edrOutputMap( "V670_EVENT_LOADER.INV_NCR_INFO.STD_MAPPING", 0 , j);
+              }
+
+
+              //--------------------------------------------------------------------
+              // Write the INVOICE_DATA_TERMINATOR
+              //--------------------------------------------------------------------
+              edrAddDatablock(DETAIL.ASS_INVOICE_DATA.INVOICE_DATA_TERMINATOR);
+              edrString(DETAIL.ASS_INVOICE_DATA.INVOICE_DATA_TERMINATOR.TERMINATOR, i, 0) = ">";
+              edrOutputMap("V670_EVENT_LOADER.INVOICE_DATA_TERMINATOR.STD_MAPPING", i, 0);
+
+
+
+            }
+            else
+            {
+              outputWrite("\n");
+            }
+
+            //---------------------------------------------------------------------
+            // Write the BALANCE_PACKET packets
+            //---------------------------------------------------------------------
+            for ( j = 0; j < packets; j = j+1 )
+            {
+		recordNumber = recordNumber + 1;
+		edrLong( DETAIL.ASS_PIN.BP.RECORD_NUMBER, i, j ) = recordNumber;
+                // Doing a strip to filter any arbitrary no. of spaces
+                if ( strStrip(edrString( DETAIL.ASS_PIN.BP.PIN_OFFERING_POID, i, j )) == "" )
+                {
+                  edrString( DETAIL.ASS_PIN.BP.PIN_OFFERING_POID, i, j ) = "   ";
+                }
+
+		edrOutputMap( "V670_EVENT_LOADER.BALANCE_PACKET.STD_MAPPING", i, j );
+
+		taxjurpackets = edrNumDatablocks( DETAIL.ASS_PIN.BP.TJ, i,j );
+		for ( k = 0; k < taxjurpackets; k = k+1 )
+		{
+			tjRecordNumber = tjRecordNumber + 1;
+			edrLong( DETAIL.ASS_PIN.BP.TJ.RECORD_NUMBER, i, j, k ) = tjRecordNumber;
+			edrOutputMap( "V670_EVENT_LOADER.TAX_JURISDICTION.STD_MAPPING", i, j, k );
+		}
+            }
+
+	    // deal with the SUB_BAL_IMPACT
+            packets      = edrNumDatablocks( DETAIL.ASS_PIN.SBI, i );
+            for ( j = 0; j < packets; j = j+1 )
+            {
+              	edrLong( DETAIL.ASS_PIN.SBI.RECORD_NUMBER, i, j ) = sbiRecordNumber;
+				sbiRecordNumber = sbiRecordNumber + 1;
+              	edrOutputMap( "V670_EVENT_LOADER.SUB_BAL_IMPACT.STD_MAPPING", i, j );
+            	subpackets      = edrNumDatablocks( DETAIL.ASS_PIN.SBI.SB, i,j );
+            	for ( k = 0; k < subpackets; k = k+1 )
+            	{
+              	   edrOutputMap( "V670_EVENT_LOADER.SUB_BAL.STD_MAPPING", i, j, k );
+            	}
+            }
+
+            //---------------------------------------------------------------------
+            // Write the MONITOR_PACKET packets
+            //---------------------------------------------------------------------
+            packets      = edrNumDatablocks( DETAIL.ASS_PIN.MP, i );
+            for ( j = 0; j < packets; j = j+1 )
+            {
+                recordNumber = recordNumber + 1;
+                edrLong( DETAIL.ASS_PIN.MP.RECORD_NUMBER, i, j ) = recordNumber;
+                edrOutputMap( "V670_EVENT_LOADER.MONITOR_PACKET.STD_MAPPING", i, j );
+            }
+
+            // deal with the MONITOR_SUB_BAL_IMPACT
+            packets      = edrNumDatablocks( DETAIL.ASS_PIN.MSBI, i );
+            for ( j = 0; j < packets; j = j+1 )
+            {
+                edrLong( DETAIL.ASS_PIN.MSBI.RECORD_NUMBER, i, j ) = msbiRecordNumber;
+                msbiRecordNumber = msbiRecordNumber + 1;
+                edrOutputMap( "V670_EVENT_LOADER.MONITOR_SUB_BAL_IMPACT.STD_MAPPING", i, j );
+                subpackets      = edrNumDatablocks( DETAIL.ASS_PIN.MSBI.MSB, i,j );
+                for ( k = 0; k < subpackets; k = k+1 )
+                {
+                   edrOutputMap( "V670_EVENT_LOADER.MONITOR_SUB_BAL.STD_MAPPING", i, j, k);
+                }
+            }
+          }
+
+          //--------------------------------------------------------------------
+          // Write the PROFILE_EVENT_ORDERING record
+          //--------------------------------------------------------------------
+          records = edrNumDatablocks( DETAIL.EVT_ORDER);
+          for ( j = 0; j < records; j = j +1 )
+          {
+            	recordNumber = recordNumber + 1;
+             	edrLong( DETAIL.EVT_ORDER.RECORD_NUMBER, 0 ) = recordNumber;
+           	edrOutputMap( "V670_EVENT_LOADER.PROFILE_EVENT_ORDERING.STD_MAPPING", j );
+	  }
+	  
+          //--------------------------------------------------------------------
+          // GSM - Write the CUSTOM_INFO record
+          //--------------------------------------------------------------------
+          if ( edrNumDatablocks( DETAIL.ASS_CI) > 0 )
+          {
+            recordNumber = recordNumber + 1;
+            edrOutputMap( "V670_EVENT_LOADER.ASS_CI_MAPPING.STD_MAPPING", 0 );
+          }
+
+	  for ( i = 0; i < edrNumDatablocks( DETAIL.ASS_CI.ASS_BRI, 0 ); i = i + 1 ) 
+          {
+            recordNumber = recordNumber + 1;
+            edrOutputMap( "V670_EVENT_LOADER.ASS_BRI_MAPPING.STD_MAPPING", 0 , i);
+          }
+
+
+          if ( edrNumDatablocks( DETAIL.ASS_CI.ASS_TEL, 0) > 0 )
+          {
+           recordNumber = recordNumber + 1;
+           edrOutputMap( "V670_EVENT_LOADER.ASS_TEL_MAPPING.STD_MAPPING", 0 , 0);
+          }
+
+	  if ( edrNumDatablocks( DETAIL.ASS_CI.ASS_SMS, 0) > 0 )
+          {
+           recordNumber = recordNumber + 1;
+           edrOutputMap( "V670_EVENT_LOADER.ASS_SMS_MAPPING.STD_MAPPING", 0 , 0);
+          }
+
+	  if ( edrNumDatablocks( DETAIL.ASS_CI.ASS_DAT, 0) > 0 )
+          {
+           recordNumber = recordNumber + 1;
+           edrOutputMap( "V670_EVENT_LOADER.ASS_DAT_MAPPING.STD_MAPPING", 0 , 0);
+          }
+
+	  if ( edrNumDatablocks( DETAIL.ASS_CI.ASS_VV, 0) > 0 )
+          {
+           recordNumber = recordNumber + 1;
+           edrOutputMap( "V670_EVENT_LOADER.ASS_VV_MAPPING.STD_MAPPING", 0 , 0);
+          }
+			
+
+          //--------------------------------------------------------------------
+          // Update the statistic
+          //--------------------------------------------------------------------
+          if ( edrDate( DETAIL.CHARGING_START_TIMESTAMP ) < firstCall )
+          {
+            firstCall = edrDate( DETAIL.CHARGING_START_TIMESTAMP );
+            firstUtcOffset = edrString( DETAIL.UTC_TIME_OFFSET );
+          }
+          if ( edrDate( DETAIL.CHARGING_START_TIMESTAMP ) > lastCall )
+          {
+            lastCall = edrDate( DETAIL.CHARGING_START_TIMESTAMP );
+            lastUtcOffset = edrString( DETAIL.UTC_TIME_OFFSET );
+          }
+          totalRetailCharge = totalRetailCharge + 
+            edrDecimal( DETAIL.RETAIL_CHARGED_AMOUNT_VALUE );
+          totalWholesaleCharge = totalWholesaleCharge + 
+            edrDecimal( DETAIL.WHOLESALE_CHARGED_AMOUNT_VALUE );
+	    
+        }
+    | /* EMPTY */
+    ;
+}

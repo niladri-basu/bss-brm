@@ -1,0 +1,54 @@
+//===============================================================================
+//
+//      Copyright (c) 2004 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//===============================================================================
+// Block: IRL_LeastCostPerEDR.irl
+//-------------------------------------------------------------------------------
+// Module Description:
+//   This module is to be used to identify the Customer market Segment.
+//   If it gets the desired Customer Market segment, and the highest
+//   product priority satisfy the condition specified in the datafile,
+//   then turn ON/OFF the CUST_A.LEAST_COST in the EDR container by 
+//   seting the value supplied by the data file, otherwise turn it OFF.
+//
+//   Attention: the rulesets within the ".data"-file
+//   have to be used in a well defined order, to avoid
+//   that one rules overrides another if this is not
+//   wanted!
+//
+//===============================================================================
+//
+//
+// Responsible: Ashwani Kumar
+//
+// $RCSfile: IRL_LeastCostPerEDR.irl,v $
+// $Revision: 1.0 $
+// $Author: akumar $
+// $Date: 2004/06/17 11:06:07 $
+// $Locker:  $
+//
+// $Log: IRL_LeastCostPerEDR.irl,v $
+// Revision 1.0  2004/06/17 11:06:07  akumar
+// iRules files for ISC_LeastCostPerEDR.isc
+//                                                                                                                
+//===============================================================================
+
+RULE: LeastCostCheck
+SOURCE: File
+FILE: ./iScriptLib/iScriptLib_Standard/IRL_LeastCostPerEDR.data
+
+INIT_SCRIPT:
+include "./iScriptLib/iScriptLib_Standard/ISC_LeastCostPerEDR.isc";
+
+CONDITION:
+setLeastCostDefault();
+${1};
+
+
+RESULT:
+edrLong( DETAIL.CUST_A.LEAST_COST ) = ${2};

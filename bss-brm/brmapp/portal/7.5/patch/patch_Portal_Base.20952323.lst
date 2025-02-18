@@ -1,0 +1,29 @@
+-----------------IMPORTANT-------------------
+# The following files will be installed 
+# with this patch 
+---------------------------------------------
+$INSTALL_HOME/jars/rel.jar
+---------------------------------------------
+# The following files were packaged with 
+# this patch, However only the applicable 
+# files will be installed 
+---------------------------------------------
+$PATCH_HOME/sys/dm_oracle/dm_oracle11g64.so
+$PATCH_HOME/jars/rel.jar
+---------------------------------------------
+# The following files will not be installed
+# because the latest version exists in the 
+# system 
+---------------------------------------------
+sys/dm_oracle/dm_oracle11g64.so
+---------------------------------------------
+# The following files will not be installed
+# because the prerequisite product is not
+# installed in the system 
+---------------------------------------------
+
+---------------------------------------------
+# The following are the new files were 
+# packaged with this patch 
+---------------------------------------------
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE template SYSTEM "template61.dtd">
+<template>
+	<version>6.1</version>
+	<name>FirstUsageResources</name>
+	<start_line>1</start_line>
+	<loading_controls group_by="none"></loading_controls>
+	<file_type>Text</file_type>
+	<file_format>Delimited</file_format>
+	<global_record_info>
+<record_delimiter>
+</record_delimiter>
+		<ignore_record_types></ignore_record_types>
+	</global_record_info>
+	<global_field_info>
+		<trim_white_space>false</trim_white_space>
+		<field_delimiter>	</field_delimiter>
+		<consecutive_delimiters_is_one>false</consecutive_delimiters_is_one>
+	</global_field_info>
+	<records>
+		<record name="data record" event_class="/event" service_class="/service"
+			event_opcode_name="PCM_OP_BAL_CHANGE_VALIDITY_FROM_STRING" event_opcode_num="3714"
+			user_info_opcode_name="PCM_OP_ACT_FIND_FROM_STRING" user_info_opcode_num="178">
+			<field_definitions>
+				<field name="A" position="0"></field>
+				<field name="B" position="1"></field>
+				<field name="C" position="2"></field>
+			</field_definitions>
+			<user_mapping_info>
+				<field position="0" inf_data_type="StrField" inf_data_type_num="5" 
+					inf_field_name="FldAccountPoidStr" inf_field_num="9631"></field>
+				<field position="1" inf_data_type="StrField" inf_data_type_num="5" 
+					inf_field_name="FldServicePoidStr" inf_field_num="9632" default_value="0.0.0.1 /service -1 0"></field>
+			</user_mapping_info>
+			<event_mapping_info>
+				<field position="2" inf_data_type="StrField" inf_data_type_num="5" 
+					inf_field_name="FldString" inf_field_num="1893"></field>
+			</event_mapping_info>
+			<filters></filters>
+		</record>
+	</records>
+</template>
+

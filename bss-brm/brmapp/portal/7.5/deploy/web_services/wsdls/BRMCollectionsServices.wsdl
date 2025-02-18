@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="COLLECTIONS" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="PCM_OP_COLLECTIONS_SET_ACTION_STATUS.xsd"/>
+        </schema>
+    </types>
+    <message name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS_outmsg">
+        <part name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS_response" type="xsd:string"/>
+    </message>
+    <portType name="BRMCOLLECTIONSService_ptt">
+        <operation name="PcmOpCollectionsSetActionStatus">
+            <input message="brm:PCM_OP_COLLECTIONS_SET_ACTION_STATUS_inmsg" name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS_inmsg"/>
+            <output message="brm:PCM_OP_COLLECTIONS_SET_ACTION_STATUS_outmsg" name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="BRMCOLLECTIONSService_binding" type="brm:BRMCOLLECTIONSService_ptt">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PcmOpCollectionsSetActionStatus">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="BRMCOLLECTIONSService">
+        <port binding="brm:BRMCOLLECTIONSService_binding" name="BRMCOLLECTIONSService_pt">
+            <soap:address location="http://localhost:8080/brm/BRMWSCOLLECTIONSServices"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="BRMService_plt">
+        <plt:role name="BRMService_role">
+            <plt:portType name="brm:BRMCOLLECTIONSService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

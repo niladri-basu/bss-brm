@@ -1,0 +1,34 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" 
+            elementFormDefault="qualified" 
+            xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" 
+            xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved. This material
+                   is the confidential property of Oracle Corporation or its
+                   licensors and may be used, reproduced, stored or transmitted
+                   only in accordance with a valid Oracle license or sublicense
+                   agreement.-->
+   <xsd:include schemaLocation="account.xsd"/>
+   <xsd:include schemaLocation="billinfo.xsd"/>
+   <xsd:element name="PCM_OP_READ_OBJ_inputFlist">
+      <xsd:complexType>
+         <xsd:sequence>   
+           <xsd:choice>
+             <xsd:element ref="accountExtension" minOccurs="0" maxOccurs="unbounded"/>
+             <xsd:element ref="billinfoExtension" minOccurs="0" maxOccurs="unbounded"/>
+           </xsd:choice>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="PCM_OP_READ_OBJ_outputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+           <xsd:choice>
+             <xsd:element ref="accountExtension" minOccurs="0" maxOccurs="unbounded"/>
+             <xsd:element ref="billinfoExtension" minOccurs="0" maxOccurs="unbounded"/>
+           </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+</xsd:schema>

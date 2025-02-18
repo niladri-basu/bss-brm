@@ -1,0 +1,391 @@
+#!/brmapp/portal/Thirdparty/perl/5.8.0/bin/perl
+#
+#       @(#) % %
+#
+#       Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# Script: load_batch_suspense_info.pl
+#
+# Description:
+#   This script is used to load suspended batch records to portal database
+#
+# Revision: 2006-03-29
+#
+
+use pcmif;
+require "getopts.pl";
+
+#
+# Define debug and verbose flag
+#
+my $debug = 0;
+use Time::Local;
+
+my $currTime = time(); 
+
+#
+# Define all the constants required for processing suspended batch file
+#
+my $deli = "\t";                   # field delimiter
+my $headerRecType = "010";         # header record type
+my $createDetailRecType = "020";   # create detail record type
+my $updateDetailRecType = "030";   # update detail record type
+#
+
+# global variables
+my $DB_NO;
+my $storableClass;
+my $searchFlist;
+my $ebufp;
+my $pcm_ctxp;
+my $transFlist;
+
+#
+# Parse command line flags.
+#
+&Getopts('df:');
+if (!defined $opt_f) {
+        &usage;
+}
+if (defined $opt_d) {
+        $debug = 1;
+}
+
+my $inFile = $opt_f;
+
+print "$0: input file name : $inFile\n" if $debug;
+
+#
+# Initialize some constants
+#
+init();   # initialize pcm connetion
+
+#
+# Open the input file
+#
+print "$0: opening input file\n" if $debug; 
+if(!open(IN_FILE, $inFile)) {
+   print "$0 unable to open input file: $inFile\n";
+   exit(1);
+}
+print "$0: input file $inFile opened\n" if $debug; 
+
+#
+# Process each record in the file.
+#
+
+my $line = <IN_FILE>;
+while ( $line ) {
+   chomp($line);
+
+   if ($line =~ m/^$createDetailRecType/o) {
+      print "CreateDetailRec : $line\n" if $debug;
+      my @createRecord = split($deli, $line);
+      my $pointOfOrigin = $createRecord[1];
+      my $batchId = $createRecord[2];
+      my $sequenceNumber = $createRecord[3];
+      my $batchName = $createRecord[4];
+      my $suspendedBatchPath = $createRecord[5];
+      my $suspendedBatchName = $createRecord[6];
+      my $pipelineName = $createRecord[7];
+      my $pipelineCategory = $createRecord[8];
+      my $pipelineErrorCode = $createRecord[9];
+      my $suspenseReason = $createRecord[10];
+      my $suspensionTime = $createRecord[11];
+      my $tapInfo = $createRecord[12];
+      my $createFlistStr = <<"XXX"
+0 PIN_FLD_POID                      POID [0] $DB_NO $storableClass -1
+0 PIN_FLD_ACCOUNT_OBJ               POID [0] $DB_NO /account 1 0
+0 PIN_FLD_BATCH_ID                  STR [0] "$batchId"
+0 PIN_FLD_SEQUENCE_NUM              INT [0] $sequenceNumber
+0 PIN_FLD_INPUT_FILE_NAME           STR [0] "$batchName"
+0 PIN_FLD_DIRECTORY                 STR [0] "$suspendedBatchPath"
+0 PIN_FLD_FILENAME                  STR [0] "$suspendedBatchName"
+0 PIN_FLD_NUM_RESUBMISSIONS         INT [0] 0
+0 PIN_FLD_SUSPENSION_T              TSTAMP [0] ($suspensionTime)
+0 PIN_FLD_RESUBMIT_T                TSTAMP [0] (0)
+0 PIN_FLD_PIPELINE_NAME             STR [0] "$pipelineName"
+0 PIN_FLD_PIPELINE_CATEGORY         STR [0] "$pipelineCategory"
+0 PIN_FLD_POINT_OF_ORIGIN           STR [0] "$pointOfOrigin"
+0 PIN_FLD_TAP_INFO                  STR [0] "$tapInfo"
+0 PIN_FLD_SUSPENSE_REASON           ENUM [0] $suspenseReason
+0 PIN_FLD_PIPELINE_ERROR_CODE       INT [0]  $pipelineErrorCode
+0 PIN_FLD_STATUS                    ENUM [0] 0
+XXX
+;
+
+my $searchFlistStr = <<"XXX"
+0 PIN_FLD_POID                 POID [0] $DB_NO /search -1 0
+0 PIN_FLD_TEMPLATE             STR [0] "select X from $storableClass where F1 = V1 and F2 = V2 "
+0 PIN_FLD_FLAGS                INT [0] 256
+0 PIN_FLD_ARGS                 ARRAY [1]
+1     PIN_FLD_INPUT_FILE_NAME  STR [0] "$batchName"
+0 PIN_FLD_ARGS                 ARRAY [2]
+1     PIN_FLD_PIPELINE_NAME    STR [0] "$pipelineName"
+0 PIN_FLD_RESULTS              ARRAY [1]
+1       PIN_FLD_POID            POID [0] NULL
+XXX
+;
+      $searchFlist = pcmif::pin_perl_str_to_flist($searchFlistStr, $DB_NO, $ebufp);
+      if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "$0 failed while converting string to flist::\n$searchFlistStr\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        abortTrans();
+        exit(1);
+      }
+      if ($debug) {
+        print "opcode PCM_OP_SEARCH : inputflist\n";
+        print "$searchFlistStr\n";
+      }
+
+      my $out_flist = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_SEARCH",
+                             "", $searchFlist, $ebufp);
+      if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "$0 failed while searching the $storableClass object\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        abortTrans();
+        exit(1);
+      }
+      my $out = pcmif::pin_perl_flist_to_str($out_flist, $ebufp);
+
+      if ($debug) {
+        print "opcode PCM_OP_SEARCH : outputflist\n";
+        print "$out\n";
+      }
+
+      pcmif::pin_flist_destroy($searchFlist);
+      pcmif::pin_flist_destroy($out_flist);
+
+      # parse the result to construct following flist
+      my @outLines = split("\n", $out);
+      my $outLineCount = @outLines;
+      if($outLineCount != 2) {
+        print "THE FILE \"$inFile\" WAS PREVIOUSLY LOADED SUCCESSFULLY, WILL NOT BE LOADED AGAIN\n";
+        abortTrans();
+        exit(1);
+      }
+      
+      my $createFlist = pcmif::pin_perl_str_to_flist($createFlistStr, $DB_NO, $ebufp);
+      if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "$0 failed while converting string to flist::\n$createFlistStr\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        abortTrans();
+        exit(1);
+      }
+      
+      if ($debug) {
+        print "opcode PCM_OP_CREATE_OBJ : inputflist\n";
+        print "$createFlistStr\n";
+      }
+
+      $out_flist = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_CREATE_OBJ", 
+                           "", $createFlist, $ebufp);
+      if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "$0 failed in PCM_OP_CREATE_OBJ\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        abortTrans();
+        exit(1);
+      }
+      pcmif::pin_flist_destroy($createFlist);
+      pcmif::pin_flist_destroy($out_flist);
+   }
+   elsif ($line =~ m/^$updateDetailRecType/o) {
+      print "UpdateDetailRecord : $line\n" if $debug;
+      my @updateRecord = split($deli, $line);
+      my $batchName = $updateRecord[1];
+      my $pipelineName = $updateRecord[2];
+      my $status = $updateRecord[3];
+      my $pipelineErrorCode = $updateRecord[4];
+      my $suspenseReason = $updateRecord[5];      
+      # build search flist
+      my $searchFlistStr = <<"XXX"
+0 PIN_FLD_POID                 POID [0] $DB_NO /search -1 0
+0 PIN_FLD_TEMPLATE             STR [0] "select X from $storableClass where F1 = V1 and F2 = V2 "
+0 PIN_FLD_FLAGS                INT [0] 256
+0 PIN_FLD_ARGS                 ARRAY [1]
+1     PIN_FLD_INPUT_FILE_NAME  STR [0] "$batchName"
+0 PIN_FLD_ARGS                 ARRAY [2] 
+1     PIN_FLD_PIPELINE_NAME    STR [0] "$pipelineName"
+0 PIN_FLD_RESULTS              ARRAY [1]
+1       PIN_FLD_POID            POID [0] NULL
+1       PIN_FLD_NUM_RESUBMISSIONS    INT [0] 0
+XXX
+;
+      $searchFlist = pcmif::pin_perl_str_to_flist($searchFlistStr, $DB_NO, $ebufp);
+      if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "$0 failed while converting string to flist::\n$searchFlistStr\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        abortTrans();
+        exit(1);
+      }
+
+      if ($debug) {
+        print "opcode PCM_OP_SEARCH : inputflist\n";
+        print "$searchFlistStr\n";
+      }
+
+      my $out_flist = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_SEARCH", 
+                             "", $searchFlist, $ebufp);
+      if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "$0 failed while searching the $storableClass object\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        abortTrans();
+        exit(1);
+      }
+      my $out = pcmif::pin_perl_flist_to_str($out_flist, $ebufp);
+
+      if ($debug) {
+        print "opcode PCM_OP_SEARCH : outputflist\n";
+        print "$out\n";
+      }
+
+      pcmif::pin_flist_destroy($searchFlist);
+      pcmif::pin_flist_destroy($out_flist);
+
+      # parse the result to construct following flist
+      my @outLines = split("\n", $out);
+      my $outLineCount = @outLines;
+
+      if($outLineCount == 2) {
+        print "$0: record doesn't exists for given Batch:$batchName and Pipeline:$pipelineName.\n";
+        abortTrans();
+        exit(1);
+      }
+      else {
+      my @poid = split(" ", $outLines[3]);
+      my @num = split(" ", $outLines[4]);
+      my $updateNum = $num[4] + 1;
+      my $updateFlistStr = <<"XXX"
+0 PIN_FLD_POID                  POID [0] $DB_NO $storableClass $poid[6]
+0 PIN_FLD_STATUS                ENUM [0] $status
+0 PIN_FLD_PIPELINE_ERROR_CODE   INT [0] $pipelineErrorCode
+0 PIN_FLD_SUSPENSE_REASON       ENUM [0] $suspenseReason
+0 PIN_FLD_RESUBMIT_T            TSTAMP [0] ($currTime)
+0 PIN_FLD_NUM_RESUBMISSIONS     INT [0] $updateNum
+XXX
+;
+      my $updateFlist = pcmif::pin_perl_str_to_flist($updateFlistStr, $DB_NO, $ebufp);
+
+      if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "$0 failed while converting string to flist::\n$updateFlistStr\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        abortTrans();
+        exit(1);
+      }
+
+      if ($debug) {
+        print "opcode PCM_OP_WRITE_FLDS : inputflist\n";
+        print "$updateFlistStr\n";
+      }
+
+      my $out_flist = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_WRITE_FLDS", 
+                              "", $updateFlist, $ebufp);
+      if (pcmif::pcm_perl_is_err($ebufp)) {
+        print "$0 failed while updating the $storableClass object\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        abortTrans();
+        exit(1);
+      }
+      pcmif::pin_flist_destroy($updateFlist);
+      pcmif::pin_flist_destroy($out_flist);
+      }
+   }
+   elsif ($line =~ m/^$headerRecType/o) {
+      print "HeaderRecord : $line\n" if $debug;
+      my @headerRecord = split($deli, $line);
+      $storableClass = $headerRecord[1];
+      print "$0: loading into $storableClass\n" if $debug;
+   }
+   $line = <IN_FILE>;
+}
+print "$0: file $inFile processed successfully\n" if $debug; 
+
+close( IN_FILE);
+
+## Success, commit the transaction
+my $dummyFlist;
+my $output = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_TRANS_COMMIT", 0, $transFlist, $ebufp);
+if (pcmif::pcm_perl_is_err($ebufp)) {
+  print "$0: Unable to commit the transaction\n";
+  pcmif::pcm_per_print_ebuf($ebufp);
+}
+
+pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+pcmif::pcm_perl_destroy_ebuf($ebufp);
+
+sub init {
+  #make connection and initialize flist
+  ## note the "pcmif::" prefix - this is a class prefix, meaning that the
+  ## function "pcm_perl_new_ebuf()" is from the package/class "pcmif".
+  ##
+  ## first thing, get an ebuf for error reporting.
+  $ebufp = pcmif::pcm_perl_new_ebuf();
+
+  ## 2nd, do a pcm_connect(), $DB_NO is a return.
+  print "$0: opening pcm_connection\n" if $debug;
+  $pcm_ctxp = pcmif::pcm_perl_connect($DB_NO, $ebufp);
+
+  ## check for errors - best to always do this.
+  if (pcmif::pcm_perl_is_err($ebufp)) {
+    pcmif::pcm_perl_print_ebuf($ebufp);
+    exit(1);
+  } else {
+    print "$0: pcm_connection open\n" if $debug;
+  }
+
+  ##Open a pcm transaction
+  my $transFlistStr = <<"XXX"
+0 PIN_FLD_POID               POID [0] $DB_NO /account 1 0
+XXX
+;
+
+  $transFlist = pcmif::pin_perl_str_to_flist($transFlistStr, $DB_NO, $ebufp);
+  if (pcmif::pcm_perl_is_err($ebufp)) {
+     print "$0 failed while converting string to flist::\n$transFlistStr\n";
+     pcmif::pcm_perl_print_ebuf($ebufp);
+     exit(1);
+  }
+  
+  my $out_flist = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_TRANS_OPEN", 
+                              0x10000, $transFlist, $ebufp);
+
+  if (pcmif::pcm_perl_is_err($ebufp)) {
+    print "$0 failed while opening transaction\n";
+    pcmif::pcm_perl_print_ebuf($ebufp);
+    exit(1);
+  }
+
+}
+
+## Abort the current transaction
+sub abortTrans()
+{
+  ## Abort the current transaction.
+  $output = pcmif::pcm_perl_op($pcm_ctxp, "PCM_OP_TRANS_ABORT", 0, $transFlist, $ebufp);
+  print "Transaction aborted\n" if $debug;
+  pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+  pcmif::pcm_perl_destroy_ebuf($ebufp);
+}
+
+sub usage()
+{
+    print STDERR << "EOF";
+
+    usage: $0 [-d] [-f file]
+     -d        : print debugging messages to stderr
+     -f file   : file containig suspended batch records 
+    
+    example: $0 -d -f file
+
+EOF
+        exit;
+}
+
+
+

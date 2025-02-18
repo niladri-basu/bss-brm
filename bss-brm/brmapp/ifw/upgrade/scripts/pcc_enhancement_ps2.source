@@ -1,0 +1,96 @@
+-------------------------------------------------------------------------------
+--
+-- Copyright (c) 2011, 2012, Oracle and/or its affiliates. 
+-- All rights reserved. 
+--
+-- This material is the confidential property of Oracle Corporation
+-- or its licensors and may be used, reproduced, stored or transmitted
+-- only in accordance with a valid Oracle license or sublicense agreement.
+--
+--------------------------------------------------------------------------------
+-- Block: Database
+--------------------------------------------------------------------------------
+-- Module Description:
+-- Update script for DB version
+--------------------------------------------------------------------------------
+-- Responsible: Saurabh Jain
+--------------------------------------------------------------------------------
+DECLARE
+
+        v_ddl_stmt VARCHAR2(4000);
+
+        PRIMARY_KEY_UPDATE CONSTANT NUMBER := -20001;
+
+        SOME_OTHER_EXCEPTION  CONSTANT NUMBER := -20002;
+
+        v_errmsg VARCHAR2(200);
+
+BEGIN
+
+IF (pin_upg_common.table_exists('IFW_SERVICE',v_errmsg)) THEN
+
+                BEGIN
+
+                v_ddl_stmt := 'alter table IFW_SERVICE drop constraint FK_IFW_SRV_RGR';
+
+                EXECUTE IMMEDIATE v_ddl_stmt;
+
+                EXCEPTION
+
+                 WHEN OTHERS THEN
+
+                  RAISE_APPLICATION_ERROR(PRIMARY_KEY_UPDATE,'Primay Key dropping failed due to ||SQLERRM',TRUE);
+
+                END;
+
+                BEGIN
+
+                v_ddl_stmt := 'alter table ifw_service add constraint fk_ifw_srv_rgr foreign key (rumgroup) REFERENCES IFW_RUMGROUP(RUMGROUP) DEFERRABLE INITIALLY DEFERRED';
+
+                EXECUTE IMMEDIATE v_ddl_stmt;
+
+                EXCEPTION
+
+                 WHEN OTHERS THEN
+
+                  RAISE_APPLICATION_ERROR(PRIMARY_KEY_UPDATE,'Primay Key creation failed due to ||SQLERRM',TRUE);
+
+                END;
+
+END IF;
+
+END;
+/
+
+DECLARE
+
+        v_ddl_stmt VARCHAR2(4000);
+
+        v_param_name user_constraints.CONSTRAINT_NAME%type;
+
+        PRIMARY_KEY_UPDATE CONSTANT NUMBER := -20001;
+
+        SOME_OTHER_EXCEPTION  CONSTANT NUMBER := -20002;
+
+        v_errmsg VARCHAR2(200);
+
+BEGIN
+
+        select CONSTRAINT_NAME into v_param_name from user_constraints where CONSTRAINT_NAME='FK_IFW_UMM_FUOM' ;
+
+                v_ddl_stmt := 'alter table ifw_uom_map drop constraint FK_IFW_UMM_FUOM';
+
+                EXECUTE IMMEDIATE v_ddl_stmt;
+
+EXCEPTION
+
+WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('foreign Key does not exist ,moving ahead');
+
+WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(SOME_OTHER_EXCEPTION,'foreign Key dropping failed due to ||SQLERRM',TRUE);
+
+END;
+/
+
+commit;

@@ -1,0 +1,432 @@
+========================================================================================
+FCT_CustomerRating
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Module Version: 10017  7.4  11-Nov-2010
+BUG10077369: ECR: PARALLEL LOADING IN THE PIPELINE ENGINE 
+================================================================================
+Module Version: 10016  DaVinci 20-Jul-2006
+PRSF00213711: Fixed memory leaks and uninitialized variable access.
+==============================================================================
+Module Version: 10015  DaVinci 05-July-2006
+PRSF00219258: Set isValidDetail false when set an error.
+==============================================================================
+Module Version: 10014  7.2_PATCH 12-Sep-2005
+PRSF00182363:change atol to atoi64 to avoid long truncation
+==============================================================================
+Module Version: 10013 7.0_EBF  05-Sep-2005
+PRSF00181578:CustomerRating module is slower compared to 67fp1
+Short Description :
+-------------------
+Some string manupulation has been changed to make it faster.Also some rearrangement
+of the code has been done for single rating product
+==============================================================================
+Module Version: 10012 New_Pipeline_Velocity 11-Apr-2005  Ashwani Kumar
+PRSF00163202: W2_PPL_PKH+ Promotional Overlay doesnt work as described in FNS.
+Short Description :
+-------------------
+Modified the code to support the Overlay Promotion for VF-PAC.
+==============================================================================
+Module Version: 10011 Apollo  11-Nov-2004
+PRSF00124350: Memory leak in FCT_CustomerRating 
+Short Description :
+-------------------
+Fixed the leak in CustomerRating. The leak was because the ratePlanCodeList was
+not being cleared after each EDR processing.
+==============================================================================
+Module Version: 10010 Apollo  29-Oct-2004
+PRSF00138478:  Revert Instrumentation to debug memory leak in FCT_CustomerRating (CO 124350) 
+Short Description :
+-------------------
+Revert Instrumentation to debug memory leak in FCT_CustomerRating. 
+Tests were done with the instrumentation and there was no memory leak found
+in FCT_CustomerRating.
+
+==============================================================================
+Module Version: 10009  Apollo  04-Oct-2004
+PRSF00134120:  Intrumentation to debug memory leak in FCT_CustomerRating (CO 124350) 
+Short Description :
+-------------------
+Instrumentation to debug memory leak in FCT_CustomerRating. This problem is
+seen by the performance team using ifw-nmalloc. Adding some debug code so that the 
+libraries can be built in the same environment. Once the root cause is found, the
+changes made in this CO will be reverted
+
+==============================================================================
+Module Version: 10008  Apollo  07-Aug-2004
+PRSF00123232:   Implemented the CR046 related changes.
+Short Description :
+-------------------
+Implimented the functionality of CR046.
+
+==============================================================================
+Module Version: 10007  Apollo  30-Jul-2004
+PRSF00123962:   Customer Rating throws exception if number of product increases.
+Short Description :
+-------------------
+Increased the limit of index_priority_list from 8 to 256 to hold the larg number of 
+product index & priority.
+
+==============================================================================
+Module Version: 10006  Apollo  28-May-2004
+PRSF00097158:   Changes done for Product Catalog PRD REQ#3.1.1 
+                (Overlay Promotion & Least Cost Rating).
+
+Short Description :
+-------------------
+Modify the processEdrContainer function to check all available purchaced product 
+for the service type  and sort the Rate Plans according to the priority of the 
+RatePlan from high to low & set the coma seperated sorted Rate Plan code into the 
+EDR container. Aslo check that if the Least Cost Rating is on, then creat seperate 
+Charge BreakDown & Charge Packet for each Rateplan.
+
+==============================================================================
+
+Module Version: 10005  6.7_FP2  30-Apr-2004
+PRSF00108146: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10004  Apollo  19-Apr-2004
+PRSF00086920:  [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+========================================================================================
+
+Module Version: 10003  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+========================================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+========================================================================================
+
+
+Actual Version : v6.3.3 / Date : 26-Jun-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00013153  FCT_CustomerRating shall set CP.INTERN_DISCOUNT_ACCOUNT only if related
+              ERA is present
+
+========================================================================================
+
+Actual Version : v6.3.2 / Date : 17-Jun-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00012577  FCT_CustomerRating does not order multiple RATEPLAN-ERA contents by rank.
+
+========================================================================================
+
+Actual Version : v6.3.1 / Date : 12-Jun-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+ECR Discount: modifications for new Discount features.
+- new ERAs DISCOUNTBUNDLE and DISCOUNTOWNER
+- set DETAIL.DISCOUNT_KEY with CUST_A.ACCOUNT_PARENT_ID
+
+========================================================================================
+
+Actual Version : v4-30-07 / Date : 31-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38593 DB2 Port.
+
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 15-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42843 Reset BAS_String member with ""-assignment instead of resize(0).
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 09-Nov-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #41102 Implemented some small performance enhancements.
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 26-Sep-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #39057 FCT_MainRating v4-30-05 does not fill all necessary fields 
+            in ChargePacket
+            => FCT_CustomerRating tried to fill ASS_CBD.CP.
+               CHARGING_START_TIMESTAMP with setString. That did not work.
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 28-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38645 Fixed erroneous error messages.
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 23-Jul-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #37339 Customer rating bugs.
+Check if rateplan defined for customer account and add error if not.
+Fix "stripping-error".
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 28-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+Support for new EDR-C v4-30.
+Read customer data from new EDR-C customer datablock.
+Merge with FCT_SegmentRating => new Mode Reg.-Param.
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 21-Nov-2000
+----------------
+
+New Features   :
+----------------
+
+Supports new DAT_Cust v4-10-00.
+
+========================================================================================
+
+Actual Version : v4-04-02 / Date : 21-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+Retrieve billCycle from contractHist instead of contract.
+Requires DAT_Cust v4-02-01.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-04-01 / Date : 19-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#2245# Update "DETAIL.NUMBER_ASSOCIATED_RECORDS" and 
+       "ASSOCIATED_CHARGE.NUMBER_OF_CHARGE_PACKETS".
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-03-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Port to AIX.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 10-May-2000
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Optional Registry parameter DefaultTariffmodel added.
+This TM will be used if a-customer has not been found.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 29-Feb-2000
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Support EDR_Container-vector as processEdrContainer parameter.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 10-Feb-2000
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Support new EDR-C v4.0.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-02 / Date : 26-NOV-1999
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 
+----------------
+
+Fill the 'iNumZone'-fields in the ChargePackets with 'a'- and 'bNumZone' values.
+Set EDR_ChargePacket.chargeType field to 'N'.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-01 / Date : 21-OCT-1999
+----------------
+
+Notes          : 
+----------------
+
+21-OCT-1999  Updated isUsable() function with log-messages
+             to fit the requirements.
+
+
+New Features   : 
+----------------
+
+14-OCT-1999  Implementation of isUsable() function.
+ 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

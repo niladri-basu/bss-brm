@@ -1,0 +1,214 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+
+#############################################################################
+# @(#)$Id: create_svr_wallet_cert.pl /cgbubrm_7.5.0.rwsmod/1 2013/10/21 09:56:51 gdehshat Exp $
+#       
+# Copyright (c) 1996, 2013, Oracle and/or its affiliates. All rights reserved.
+#       
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+#############################################################################
+# This script creates server certificate from the signed by sample root CA 
+# shipped with root wallet. A wallet is created for server/CM and the created 
+# certificate is added to it. This wallet is auto-login wallet. 
+# 
+#
+# The created wallet is placed at $PIN_HOME/wallet/server location.
+#
+#############################################################################
+
+use strict;
+
+use Getopt::Long;
+use POSIX;
+
+########## Global variables ##########
+
+my $g_SUCCESS = 0;
+my $g_FAILURE = 1;
+my $me;
+my $usage_all;
+my $i;
+
+my $server_wallet_loc =  "$ENV{'PIN_HOME'}/wallet/server";
+my $server_wallet_pwd = "Welcome1";
+my $root_wallet_loc =  "$ENV{'PIN_HOME'}/wallet/root";
+my $pin_bin  = "$ENV{'PIN_HOME'}/bin";
+
+
+# $me is the name of executable used to print usage.
+($me = $0) =~ s,.*/,,;
+
+$usage_all =
+"\nUsage: $me\n
+	-pwd <password>  - Password to be given to server wallet.
+	-ppwd		 - Prompt for server wallet password. This is ignored if -pwd 
+			   is mentioned. 
+			   If both pwd and ppwd options are not specified Welcome1 is 
+			   used.
+	-h|--help 	 - Displays the syntax and parameter for this utility
+
+NOTE: source source.me.csh or source.me.sh based on the shell before execting this script.\n
+";
+
+############################################################################
+# Here the execution starts
+############################################################################
+
+# process command line options
+&process_command_line();
+
+
+# Following are the commands 
+my @cmds = ( 
+
+[ "$pin_bin/orapki", "-nologo", "wallet",  "create",  "-wallet",  $server_wallet_loc,  "-auto_login", "-pwd", $server_wallet_pwd ],
+
+["$pin_bin/orapki", "-nologo", "wallet", "add", "-wallet", "$server_wallet_loc", "-keysize", "1024", "-dn", "cn=test_server,dc=us,dc=oracle,dc=com", "-pwd", $server_wallet_pwd ],
+
+[ "$pin_bin/orapki", "-nologo", "wallet", "export", "-wallet", "$server_wallet_loc", "-dn", "cn=test_server,dc=us,dc=oracle,dc=com", "-request", "$server_wallet_loc/screq.txt", "-pwd", $server_wallet_pwd ],
+
+[ "$pin_bin/orapki", "-nologo", "cert", "create", "-wallet", $root_wallet_loc, "-request", "$server_wallet_loc/screq.txt", "-cert", "$server_wallet_loc/scert.txt", "-validity", "3650", "-pwd", "Welcome1" ],
+
+["$pin_bin/orapki", "-nologo", "wallet", "export_trust_chain", "-wallet", "$root_wallet_loc", "-certchain", "$root_wallet_loc/trust_chain.txt", "-dn", "cn=brm_sample_CA,dc=us,dc=oracle,dc=com", "-pwd", "Welcome1"],
+
+[ "$pin_bin/orapki", "-nologo", "wallet", "add", "-wallet", $server_wallet_loc, "-trusted_cert", "-cert", "$root_wallet_loc/trust_chain.txt", "-pwd", $server_wallet_pwd ],
+
+[ "$pin_bin/orapki", "-nologo", "wallet", "add", "-wallet", $server_wallet_loc, "-user_cert", "-cert", "$server_wallet_loc/scert.txt", "-pwd", $server_wallet_pwd ]
+
+);
+
+# exit if root dir or wallet doesnot exist.
+if ( ! -d $root_wallet_loc)  {
+	print "Err: root wallet location($root_wallet_loc) doesnot exist.\n";
+	exit (-1);
+}
+
+if( ! -e "$root_wallet_loc/ewallet.p12") {
+        print "Err: Root wallet($root_wallet_loc/ewallet.p12) not found.\n";
+        exit (-1);
+}
+
+# Create default dir where server wallet resides.
+&execute_cmd(["mkdir", "-p", "$server_wallet_loc"]);
+
+# Execute orapki commands to create server wallet.
+for $i ( 0 .. $#cmds ) {
+	&execute_cmd($cmds[$i]);
+}
+
+
+cleanup_exit(0);
+
+############################################################################
+# Subroutines start
+############################################################################
+# Execute the commands passed in array
+############################################################################
+sub execute_cmd() {
+	my $cmd = shift ;
+	my $ret;
+	my $exit_code;
+
+	print_cmd(@$cmd);
+		
+	$ret = `@$cmd`;
+
+	if ($? != 0) {
+		$exit_code = $?>>8;
+		print "Error:$exit_code\n";
+		print "$ret\n";
+		&cleanup_exit($ret);
+	}
+
+	print "\n";
+}
+
+sub print_cmd() {
+	my @cmd = @_;
+
+	for ( $i = 0; $i < $#_; $i++) {
+		print( "$cmd[$i] ");
+	}
+	print ("\n");
+}
+
+
+# Remove the files created @ exit
+############################################################################
+sub cleanup_exit() {
+	my $ret = shift;
+
+	if(-e "$server_wallet_loc/screq.txt") {
+		unlink("$server_wallet_loc/screq.txt");
+	}
+
+	if( -e "$root_wallet_loc/trust_chain.txt") {
+		unlink("$root_wallet_loc/trust_chain.txt");
+	}
+
+	if( -e "$server_wallet_loc/scert.txt") {
+		unlink("$server_wallet_loc/scert.txt");
+	}
+		
+	exit($ret);
+
+}
+
+############################################################################
+# Processes command line parameters, do some error handling and set some
+# globals
+#############################################################################
+sub process_command_line() {
+	my $help_option;
+	my $prompt_pwd_option;
+	my $pwd_option;
+
+	GetOptions(
+		'h|help'	=> \$help_option,
+		'pwd=s'		=> \$pwd_option,
+		'ppwd'		=> \$prompt_pwd_option
+	) or &print_usage($g_FAILURE); 
+
+	#print ("-pwd = $pwd_option\n) if $pwd_option;
+	if( defined $pwd_option ) {
+		$server_wallet_pwd = $pwd_option;
+	} else {
+		# Need to prompt for pwd ?
+		$server_wallet_pwd = &get_pwd() if $prompt_pwd_option;	
+	}
+	# If requested help, print help and EXIT
+        &print_usage($g_SUCCESS) if $help_option; 
+
+}
+
+############################################################################
+# Prompt for server wallet password. 
+############################################################################
+sub get_pwd() {
+	print ("Server wallet password:");
+	my $input = <STDIN>;
+	chomp($input);
+	return $input;
+}
+
+
+############################################################################
+# Print how to use this utility
+############################################################################
+sub print_usage {
+        my $exit_code = shift;
+
+        if ($exit_code == $g_FAILURE) {
+                print STDERR
+                        "TYPE '$me -help' FOR PROGRAM USAGE INFORMATION\n";
+                exit $exit_code;
+        }
+
+        print $usage_all;
+
+        exit $exit_code;
+} # end print_usage
+

@@ -1,0 +1,228 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+
+use File::Copy;
+use lib '.' ;
+use pcmif;
+use Sys::Hostname;
+use File::Basename;
+use File::Path;
+use strict;
+use warnings;
+use Cwd;
+
+#my $ebufp = pcmif::pcm_perl_new_ebuf();
+#my $db_no='0.0.0.1';
+
+
+my $script = "TD_BULK_ADJUSTMENT";
+my $INPUT_DIR;
+my $INPUT_FINAL_DIR;
+my $ARCHIVE_DIR;
+my $LOG_DIR;
+my $LOG_FILE;
+
+#######################################
+# Reading Configaration File
+#######################################
+print "-----Reading Config File------ \n";
+print "Reading Configuration File \n\n";
+my %ConfVarTable;
+my $conf = "config.conf";
+#readConfigFile();
+
+if ( -e $conf )
+{
+   $INPUT_DIR = `grep '^-' $conf | grep INPUT_DIR | awk '{print \$NF}'`;
+   $ARCHIVE_DIR = `grep '^-' $conf | grep ARCHIVE_DIR | awk '{print \$NF}'`;
+   $LOG_DIR = `grep '^-' $conf | grep LOG_DIR | awk '{print \$NF}'`;
+    chomp($INPUT_DIR);
+    chomp($ARCHIVE_DIR);
+    chomp($LOG_DIR);
+
+}
+else
+{
+    print "\n$script: $conf configuration file not found!\n\n";
+    exit(1);
+}
+
+########################################
+# Create log file
+########################################
+my ($dd, $mm, $yyyy) = (localtime)[3..5];
+$mm=$mm+1;
+$yyyy=$yyyy+1900;
+my $date="$mm/$dd/$yyyy";
+my $file_date="$yyyy$mm$dd";
+
+my $log_file = "bulk_adjustment_$file_date.log";
+$log_file = "$LOG_DIR"."/$log_file";
+open(LOG_FILE,">> $log_file") or die "Could not open log file";
+
+
+######################################
+# Get context and create error buffer
+######################################
+my $ebufp = pcmif::pcm_perl_new_ebuf();
+my $db_no="0.0.0.1";
+#print $db_no ;
+my $pcm_ctxp = pcmif::pcm_perl_connect($db_no, $ebufp);
+
+if (pcmif::pcm_perl_is_err($ebufp)) {
+        print LOG_FILE "FAILED to Connect to Infranet\n";
+        pcmif::pcm_perl_print_ebuf($ebufp);
+        #display_date("finished");
+        print "\nLog File $log_file\n\n";
+        close(LOG_FILE);
+        exit(1);
+}
+my $DB_NO = $db_no;
+
+###################################
+# Process the files in input folder
+###################################
+opendir(INPUT_DIR, $INPUT_DIR) or die "Could not open the input directory";
+my ($file, $in_file);
+
+my $adj_file="pin_initial_bulk_adjust_$file_date.csv";
+open(ADJ_FILE,">$adj_file") or die "Could not open initial bulk adjustment file";
+close(ADJ_FILE);
+
+#my $in_final_file = "bulk_adjustment_final_input_$file_date.csv";
+while ($file = readdir(INPUT_DIR))
+{
+    $in_file="$INPUT_DIR/$file";
+
+    # Skip directories and swap files
+    next if(-d $in_file || $in_file =~ /\/\./);
+
+    # Open input file
+    open(IN_FILE,"<$in_file") or die ("Could not open input file");
+    print("\nProcessing $in_file\n");
+    print LOG_FILE "\nReading the input file $in_file\n";
+
+    # Read all the records from the input file into array
+    my @all_adj_records = <IN_FILE>;
+    foreach my $adj_record (@all_adj_records)
+    {
+        # Process each record
+        process_records($adj_record);
+    }
+
+    # Close input file
+    close(IN_FILE);
+
+    # Archive the input file
+    move("$in_file","$ARCHIVE_DIR") or die ("Could not archive the input file");
+    print("Archived $in_file\n");
+
+}
+
+# Close input directory
+closedir(INPUT_DIR);
+
+
+# Close the context
+
+pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+if( -s $adj_file )
+{
+    print "\n\nLoading adjustment file...\n";
+    print "pin_apply_bulk_adjustment -v -f $adj_file\n";
+    print LOG_FILE "\nLoading the adjustment file\n";
+    print LOG_FILE "pin_apply_bulk_adjustment -v -f $adj_file\n";
+
+    `pin_apply_bulk_adjustment -v -f $adj_file >> $log_file 2>&1`;
+
+    if( $? != 0 )
+    {
+        print LOG_FILE "Utility pin_apply_bulk_adjustment failed\n";
+    }
+    else
+    {
+        print "Completed\n";
+        print LOG_FILE "Completed\n";
+    }
+
+}
+else
+{
+    print "\n\nAdjustment file is empty. Exiting.\n";
+    print LOG_FILE "\n\nAdjustment file is empty. Exiting.\n";
+}
+
+display_date("finished");
+
+# Print log file name
+print "\nLog File $log_file\n\n";
+close(LOG_FILE);
+
+
+#--------------------------------------------------------------------------------------------------------------#
+
+sub display_date($){
+    print LOG_FILE "\n";
+    print LOG_FILE "#" x 60;
+    print LOG_FILE "\n$script $_[0] at ".`date`;
+    print LOG_FILE "#" x 60;
+    print LOG_FILE "\n";
+
+    print "\n";
+    print "#" x 60;
+    print "\n$script $_[0] at ".`date`;
+    print "#" x 60;
+    print "\n";
+}
+
+##########################################
+# Subroutine to process adjustment records
+##########################################
+sub process_records($)
+{
+ print "\n in process records \n ";
+my $adj_record = $_[0];
+    
+	print "$_[0] \n";
+    if ($adj_record =~ /^([\d\w]+[^, ]*),([+-]?\d+[^, ]*),([^,]*),([^,]*),(.*)$/)
+    {
+
+        my ($acct_poid ,$bal_poid ,$amount ,$flag ,$reasom_code_domain ,$reason_code ,$description)=($1,$2,$3,$4,$5,$6,$7);
+	
+	my $account_poid = "0.0.0.1 \/account $acct_poid 0";
+	my $bal_grp_poid = "0.0.0.1 \/balance_group $bal_poid 0";
+	#print "Account poid $acct \n";
+
+	my $resource = 840 ;
+	if ( $bal_poid == 0)
+	{
+	    print LOG_FILE "Balance group not found \n";
+	}
+	else {
+	    
+	    if ( $flag eq 'Credit')
+	    {
+      		  my $adj_amount = -$amount;
+	         	
+                  open(ADJ_FILE,">>$adj_file");
+                print ADJ_FILE "$account_poid ,$adj_amount,$bal_grp_poid,,,,$resource,,,,\n";
+
+		   close(ADJ_FILE);
+	    }
+	    else
+	    {
+                  my $adj_amount = $amount;
+
+                  open(ADJ_FILE,">>$adj_file");
+                  print ADJ_FILE "$account_poid,$adj_amount,$bal_grp_poid,1,,,634,$date,$reasom_code_domain,$reason_code,\"$description\"\n";
+                  close(ADJ_FILE);
+            }
+
+	} #end of bal grp else
+    }
+    else
+    {
+        print LOG_FILE "Invalid record --> $adj_record";
+    }
+
+}
+

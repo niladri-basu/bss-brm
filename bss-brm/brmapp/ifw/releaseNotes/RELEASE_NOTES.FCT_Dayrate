@@ -1,0 +1,255 @@
+========================================================================================
+FCT_Dayrate
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+========================================================================================
+Module Version: 10004  6.7_FP2  07-Jun-2004
+PRSF00110488:  percentage amount inconsistency, remove divide by 100 for
+               for percentage calculation.
+
+==============================================================================
+
+
+Module Version: 10003  6.7_FP2  30-Apr-2004
+PRSF00108146: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+=========================================================================================
+
+
+Actual Version : v4-30-02 / Date : 01-Feb-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #43183 Inexact result messages on AIX.
+            Add Inexact result handler to module (only for AIX).
+========================================================================================
+Actual Version : v4-30-01 / Date : 19-Sep-2001
+----------------
+
+Notes		:
+----------------
+
+  - PETS#39639 fixed special dayrate percentage discount calculation.
+
+========================================================================================
+Actual Version : v4-30-00 / Date : 14-Jun-2001
+----------------
+
+Notes		:
+----------------
+
+  - Support for v4-30 Framework. No functional changes.
+
+========================================================================================
+Actual Version : v4-10-00 / Date : 01-Nov-2000
+----------------
+
+Notes		:
+----------------
+
+  - Support for database v4-10-00.
+
+========================================================================================
+Actual Version : v4-02-05 / Date : 05-Oct-2000
+----------------
+
+Notes		:
+----------------
+
+  - Small (internal) changes to support the new edr container interface.
+
+========================================================================================
+Actual Version : v4-02-04 / Date : 26-Sep-2000
+----------------
+
+Notes		:
+----------------
+
+New Features   :
+----------------
+
+  - EDR recycler support added.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+
+========================================================================================
+Actual Version : v4-02-02 / Date : 27-Jul-2000
+----------------
+
+Notes		:
+----------------
+
+New Features   :
+----------------
+
+  - Check code reviews remarks and correct them.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+ - Support for AIX compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 28-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implementation changed to support the new edr container list (framework version 4.x).
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 10-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implementation changed to support the new edr container (framework version 4.x).
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-24-01 / Date : 12-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Use BAS_Decimal type instead of double.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v1-23-00 / Date : 09-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+check all code reviews marks and correct them.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-00 / Date : 07-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+  - Usability check added.
+  - Implementation changed to support the egcs release 1.1.2 compiler
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

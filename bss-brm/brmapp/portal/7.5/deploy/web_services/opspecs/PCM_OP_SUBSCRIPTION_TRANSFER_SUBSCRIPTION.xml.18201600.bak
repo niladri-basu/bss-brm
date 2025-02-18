@@ -1,0 +1,640 @@
+  <Opcode name="PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION" visibility="public" transaction="required" component="fm_subscription" 
+   xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd" 
+   xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>
+    PCM_OP_SUSBCRIPTION_TRANSFER_SUBSCRIPTION input and output flist specifications.
+    This opcode transfers a subscription service from one account to another.
+  </Doc>
+<!-- PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION INPUT SPECIFICATION -->
+  <Input>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required" mode="complete">
+        <Doc> The service object for the subscription service that is 
+           being transferred from one account to another.  </Doc>
+        <ClassRef>obj://service</ClassRef>
+      </Poid>
+      <Poid name="PIN_FLD_FROM_OBJ" use="required" mode="complete">
+        <Doc> The account object from which the subscription is transferred.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <Poid name="PIN_FLD_TO_OBJ" use="required" mode="complete">
+        <Doc> The account object to which the subscription is transferred.</Doc>
+        <ClassRef>obj://account</ClassRef>
+      </Poid>
+      <String name="PIN_FLD_PROGRAM_NAME" use="required" maxlen="60">
+        <Doc> Identifies calling program</Doc>
+      </String>
+      <Timestamp name="PIN_FLD_START_T" use="optional">
+        <Doc> Timestamp of when the event started.</Doc>
+      </Timestamp>
+      <Timestamp name="PIN_FLD_END_T" use="optional">
+        <Doc> Timestamp of when the event ended.  
+          This field is used to determine which billing cycle the event is part of.
+        </Doc>
+      </Timestamp>
+      <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+        <Doc> Billinfo object for the subscription being transferred. This is a required 
+          field if you want to use an existing billinfo object from the account 
+          to which the subscription is being transferred. Alternatively, you  can create 
+          a new billinfo object for the subscription by passing the
+          <h:a h:href="#in.BILLINFO"> BILLINFO array</h:a> instead.</Doc>
+        <ClassRef>obj://billinfo</ClassRef>
+      </Poid>
+      <Array name="PIN_FLD_BILLINFO" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+        <Doc> This array is mandatory if a new BILLINFO object is to be created 
+          for the subscription in the account to which it is being transferred to. The 
+          opcode <h:a h:href="op://PCM_OP_CUST_SET_BILLINFO">PCM_OP_CUST_SET_BILLINFO</h:a> 
+          is invoked. </Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="optional" mode="typeonly">
+            <Doc>Type-only poid of the billinfo.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_BUSINESS_PROFILE_OBJ" use="optional"
+                mode="complete">
+            <Doc>Business profile poid. Pointer to the Business profile poid to
+                 which this billinfo belongs.</Doc>
+            <ClassRef>obj://config.business_profile</ClassRef>
+          </Poid>
+          <String name="PIN_FLD_BILLINFO_ID" use="optional" maxlen="60">
+            <Doc>Billinfo Id. Identifies the billinfo by name.
+                 Mandatory on creation of the billinfo.</Doc>
+          </String>
+          <Enum name="PIN_FLD_BILLING_STATUS" use="optional">
+            <Doc>Indicates the billing status for this billinfo. Valid
+                 values are: (0) Active, (1) Inactive, (2) Accounting only,
+                 and (3) Error. </Doc>
+            <Values>
+              <Value>0</Value>
+              <Doc>PIN_BILL_ACTIVE. Indicates that billing should be provided
+                for the account in a standard (regular) way.  This is the
+                default value.</Doc>
+            </Values>
+            <Values>
+              <Value>1</Value>
+              <Doc>PIN_BILL_INACTIVE. Indicates that the billing should be
+                suspended for the billinfo.</Doc>
+            </Values>
+            <Values>
+              <Value>2</Value>
+              <Doc>PIN_BILL_ACCOUNTING_ONLY. indicates that billing should be
+                provided in some limited way without generation of bills.</Doc>
+            </Values>
+            <Values>
+              <Value>3</Value>
+              <Doc>PIN_BILL_ERROR. Indicates that an error occurred when the
+                billing application tried to bill this billinfo. If an error
+                occurs for a subordinate billinfo, the parent billinfo's status
+                will also be set to PIN_BILL_ERROR. </Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_BILLING_STATUS_FLAGS" use="optional">
+            <Doc>Indicates a reason for setting of the given billing status.
+              Valid values are: (0x01) Due to Stop Billing of Closed Account,
+              (0x02) Due to Resuming of Billing, and (0x04) Error.</Doc>
+          </Int>
+          <Enum name="PIN_FLD_STATUS" use="optional">
+            <Doc>Status of the billinfo object. Valid values are:
+              (10100) Active, (10102) Inactive, or (10103) Closed.</Doc>
+            <Values>
+              <Value>10100</Value>
+              <Doc>PIN_STATUS_ACTIVE. Indicates an active billinfo.</Doc>
+            </Values>
+            <Values>
+              <Value>10102</Value>
+              <Doc>PIN_STATUS_INACTIVE. Indicates an inactive billinfo.</Doc>
+            </Values>
+            <Values>
+              <Value>10103</Value>
+              <Doc>PIN_STATUS_CLOSED. Indicates a closed billinfo.</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+            <Doc>Indicates a reason for setting of the given status. Valid
+              values are: (0x1) Activate in Future, (0x2) Debt, (0x4) Manual,
+              (0x10) Due to Parent, and (0x20) PO exhausted.</Doc>
+          </Int>
+          <Int name="PIN_FLD_ACTG_FUTURE_DOM" use="optional">
+            <Doc>Indicates a billing day of month.
+                 Valid values are 1-28.</Doc>
+          </Int>
+          <Int name="PIN_FLD_BILL_WHEN" use="optional">
+            <Doc>Indicates the billing frequency in terms of accounting
+                 cycles.  For example: monthly = 1, quarterly = 3,
+                 annual = 12, etc. </Doc>
+          </Int>
+          <Enum name="PIN_FLD_BILLING_SEGMENT" use="optional">
+            <Doc>Indicates the Billing Segment ID for the billinfo.
+                  For example, 101, 102, 103.  The values are defined in
+                  the pin_billing_segment.xml file.
+            </Doc>
+            <Values>
+              <Value>101</Value>
+              <Doc>First Billing Segment.</Doc>
+            </Values>
+            <Values>
+              <Value>102</Value>
+              <Doc>Second Billing Segment.</Doc>
+            </Values>
+            <Values>
+              <Value>103</Value>
+              <Doc>Third Billing Segment.</Doc>
+            </Values>
+          </Enum>
+          <Int name="PIN_FLD_SPONSOR_FLAGS" use="optional">
+            <Doc>Indicates whether this billinfo has a sponsoree billinfo.
+              This field will be used to see if there is a need to walk
+              through the sponsorees in the case of triggering of billing.</Doc>
+          </Int>
+          <Int name="PIN_FLD_SPONSOREE_FLAGS" use="optional">
+            <Doc>Indicates whether this billinfo has a sponsor billinfo.
+              This field will be used by the pin_bill_accts application to
+              select only sponsorees billinfo for billing.</Doc>
+          </Int>
+          <Poid name="PIN_FLD_AR_BILLINFO_OBJ" use="optional" mode="complete">
+            <Doc>Link to the AR billinfo for the given billinfo.  For a
+              single billinfo there is no AR; in this case this field is
+              the same as the billinfo poid.  This field is used for picking
+              up subordinate billinfos during billing.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid name="PIN_FLD_PARENT_BILLINFO_OBJ" use="optional"
+                mode="complete">
+            <Doc>Indicates the immediate (one level up) parent for the given
+              billinfo.  Note that this billinfo is not necessarily a
+              subordinate. The parent field may reflect just child-parent
+              relation. It should be mandatory if moving to the new parent
+              is provided.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Int name="PIN_FLD_CURRENCY" use="optional">
+            <Doc>The primary currency for the billinfo.
+                 Mandatory on creation of billinfo.</Doc>
+          </Int>
+          <Int name="PIN_FLD_CURRENCY_SECONDARY" use="optional">
+            <Doc>The secondary currency for the billinfo.
+                 Mandatory on creation of billinfo.</Doc>
+          </Int>
+          <Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+            <Doc>Effective time. Effective Timestamp for this operation.</Doc>
+          </Timestamp>
+          <Poid name="PIN_FLD_PAYINFO_OBJ" use="optional" mode="complete">
+            <Doc> Payinfo object for the billinfo being created. This is a 
+              required field if you want to use an existing payinfo object 
+              from the account to which the subscription is being transferred. 
+              Alternatively, you  can create a new payinfo object for the 
+              billinfo by passing the<h:a h:href="#in.PAYINFO"> PAYINFO 
+              array</h:a> instead.
+              </Doc>
+              <ClassRef>obj://payinfo</ClassRef>
+          </Poid>
+          <Enum name="PIN_FLD_PAY_TYPE" use="optional">
+            <Doc> Type of payment method  Mandatory on creation of billinfo</Doc>
+	      <Values>
+	       <Value>10001</Value>
+	       <Doc>Indicates invoice type(PIN_PAY_TYPE_INVOICE).</Doc>
+	      </Values>
+	      <Values>
+	       <Value>10003</Value>
+	       <Doc>Indicates credit card type(PIN_PAY_TYPE_CC).</Doc>
+	      </Values>
+	      <Values>
+	       <Value>10005</Value>
+	       <Doc>Indicates US/Canadian Direct Debit type(PIN_PAY_TYPE_DD).</Doc>
+	      </Values>
+	      <Values>
+	       <Value>10007</Value>
+	       <Doc>Indicates charge roll up to parent account(PIN_PAY_TYPE_SUBORD).</Doc>
+	      </Values>
+          </Enum>
+          <Array name="PIN_FLD_PAYINFO" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+            <Doc> This array is mandatory if a new PAYINFO object is to be created 
+              for the new billinfo for the subscription in the account to which it is being
+              transferred to. The opcode <h:a h:href="op://PCM_OP_CUST_SET_PAYINFO">
+              PCM_OP_CUST_SET_PAYINFO</h:a> is invoked passing in this array as PIN_FLD_PAYINFO.
+            </Doc>
+            <Fields>
+              <Poid name="PIN_FLD_POID" use="required" mode="typeonly">
+                <Doc>Type-only poid of the payinfo object.</Doc>
+                <ClassRef>obj://payinfo</ClassRef>
+              </Poid>
+              <Enum name="PIN_FLD_PAY_TYPE" use="required">
+                <Doc> Payment type. </Doc>
+                <Values>
+                  <Value>0</Value>
+                  <Doc>PIN_PAY_TYPE_UNDEFINED.
+                    Invalid type. Used during account creation.</Doc>
+                </Values>
+                <Values>
+                  <Value>10000</Value>
+                  <Doc>PIN_PAY_TYPE_PREPAID.
+                    Prepaid to keep negative balance.</Doc>
+                  </Values>
+                <Values>
+                  <Value>10001</Value>
+                  <Doc>PIN_PAY_TYPE_INVOICE. Invoiced monthly.</Doc>
+                </Values>
+                <Values>
+                  <Value>10002</Value>
+                  <Doc>PIN_PAY_TYPE_DEBIT. Checking account debit.</Doc>
+                </Values>
+                <Values>
+                  <Value>10003</Value>
+                  <Doc>PIN_PAY_TYPE_CC. Credit Card.</Doc>
+                </Values>
+                <Values>
+                  <Value>10005</Value>
+                  <Doc>PIN_PAY_TYPE_DD. US/Canadian Direct Debit.</Doc>
+                </Values>
+                <Values>
+                  <Value>10006</Value>
+                  <Doc>PIN_PAY_TYPE_SMARTC. Smartcard.</Doc>
+                </Values>
+                <Values>
+                  <Value>10007</Value>
+                  <Doc>PIN_PAY_TYPE_SUBORD. Roll-up to parent account.</Doc>
+                </Values>
+                <Values>
+                  <Value>10011</Value>
+                  <Doc>PIN_PAY_TYPE_CASH. Cash payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10012</Value>
+                  <Doc>PIN_PAY_TYPE_CHECK. Check payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10013</Value>
+                  <Doc>PIN_PAY_TYPE_WTRANSFER.
+                    Wire transfer payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10014</Value>
+                  <Doc>PIN_PAY_TYPE_PAYORDER.
+                    Inter-bank payment order payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10015</Value>
+                  <Doc>PIN_PAY_TYPE_POSTALORDER.
+                    Postal order payments for Payment Tool.</Doc>
+                </Values>
+                <Values>
+                  <Value>10016</Value>
+                  <Doc>PIN_PAY_TYPE_VOUCHER. Voucher payments.</Doc>
+                </Values>
+                <Values>
+                  <Value>10017</Value>
+                  <Doc>PIN_PAY_TYPE_FAILED. Failed payment.</Doc>
+                </Values>
+              </Enum>
+              <Enum name="PIN_FLD_TYPE" use="optional">
+                <Doc>Type of payinfo. It can be (0) PIN_PAYINFO_TYPE_PRIMARY or
+                   (1) PIN_PAYINFO_TYPE_SECONDARY. If this is not provided,
+                   then the default is PIN_PAYINFO_TYPE_PRIMARY.</Doc>
+                <Values>
+                  <Value>0</Value>
+                  <Doc>PIN_PAYINFO_TYPE_PRIMARY. Primary payinfo type.</Doc>
+                </Values>
+                <Values>
+                  <Value>1</Value>
+                  <Doc>PIN_PAYINFO_TYPE_SECONDARY. Secondary payinfo type.</Doc>
+                </Values>
+              </Enum>
+              <Enum name="PIN_FLD_INV_TYPE" use="optional">
+                <Doc>Invoice Type. Values are (0x01) detailed, (0x02) summary,
+                   (0x04) regular, (0x08) subordinate, (0x10) parent,
+                   (0x20) hierarcy, (0x40) trial, and (0x18) parent with
+                   subordinates.</Doc>
+                <Values>
+                  <Value>0x01</Value>
+                  <Doc>PIN_INV_TYPE_DETAIL. Detailed invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x02</Value>
+                  <Doc>PIN_INV_TYPE_SUMMARY. Summary invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x04</Value>
+                  <Doc>PIN_INV_TYPE_REGULAR. Regular invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x08</Value>
+                  <Doc>PIN_INV_TYPE_SUBORDINATE. Subordinate invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x10</Value>
+                  <Doc>PIN_INV_TYPE_PARENT. Parent invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x20</Value>
+                  <Doc>PIN_INV_TYPE_HIERARCHY. Hierarchy invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x40</Value>
+                  <Doc>PIN_INV_TYPE_TRIAL_INVOICE. Trial invoice. </Doc>
+                </Values>
+                <Values>
+                  <Value>0x18</Value>
+                  <Doc>PIN_INV_TYPE_PARENT_WITH_SUBORDS. Parent with
+                   subordinates invoice. </Doc>
+                </Values>
+              </Enum>
+              <Poid name="PIN_FLD_PARENT" use="optional" mode="complete">
+                  <Doc>Parent account. This is only present if this opcode is called
+                   during account creation, and the account being created is
+                   subordinate It is there so we can correctly insert it into the
+                   payinfo object rather than waiting until the end of the
+                   transaction</Doc>
+                  <ClassRef>obj://account</ClassRef>
+              </Poid>
+              <Int name="PIN_FLD_CURRENCY" use="optional">
+                  <Doc>Currency information. This is only present if this opcode is
+                   called during account creation, and the account being created
+                   is a subordinate. It is there so we can correctly validate the
+                   information in the payinfo object (i.e. the currencies match).
+                  </Doc>
+              </Int>
+              <Enum name="PIN_FLD_PAYMENT_TERM" use="optional">
+                  <Doc> Payment term identifier. Defines which payment term will be
+                  used in the payment due date calculation.</Doc>
+              </Enum>
+              <Int name="PIN_FLD_FLAGS" use="optional">
+                  <Doc>Partial Flag. This enables the opcode to treat some fields
+                  from the input flist as optional.  Values are (0) mandatory,
+                  or (1) optional. The fields affected are:
+                  PIN_FLD_DEBIT_NUM, PIN_FLD_DEBIT_EXP, PIN_FLD_BANK_NO,
+                  PIN_FLD_CITY, PIN_FLD_STATE, PIN_FLD_ZIP and PIN_FLD_COUNTRY.
+                  </Doc>
+              </Int>
+              <Substruct name="PIN_FLD_INHERITED_INFO" use="required"
+                  isRecursive="false">
+                  <Doc> Inherited info for the specified object.  For invoices,
+                  the substruct PIN_INV_INFO should be added to the
+                  PIN_FLD_INHERITED_INFO substruct when an account with the
+                  invoice bill type is created, or when the invoice
+                  information for a payinfo object needs to be changed.
+                  For credit cards, the substruct PIN_FLD_CC_INFO should be
+                  added to the PIN_FLD_INHERITED_INFO substruct when an
+                  account with the credit bill type is created, or when credit
+                  card information for a payinfo object needs to be changed.
+                  For direct debits, the substruct PIN_FLD_DD_INFO should be
+                  added to the PIN_FLD_INHERITED_INFO substruct when an
+                  account with the direct debit bill type is created, or when
+                  direct debit information for a payinfo object needs to be
+                  changed.
+                  </Doc>
+                  <Fields>
+                    <Array name="PIN_FLD_INV_INFO" use="optional"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="0" maxElements="1"
+                      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                      isRecursive="false">
+                      <Doc> Inherited fields are added to the flist here. This is a
+                      pay type specific substruct. For this type of payinfo,
+                      the substruct is PIN_FLD_INV_INFO, and contains the
+                      following:
+                      </Doc>
+                      <Fields>
+                        <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                          <Doc>Street address. This is typically the same as the
+                          billing contact address. But this is not necessarily true
+                          always if the contact person is not the one responsible
+                          for payments.</Doc>
+                        </String>
+                        <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                          <Doc>City portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                        </String>
+                        <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                          <Doc>Country portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                        </String>
+                        <String name="PIN_FLD_DELIVERY_DESCR" use="optional"
+                        maxlen="255">
+                        <Doc>Delivery description.  This can be a fax number, email
+                          address, or printer name.  The contents depend on the
+                          delivery mechanism specified in #in.DELIVERY_PREFER.</Doc>
+                        </String>
+                        <Enum name="PIN_FLD_DELIVERY_PREFER" use="optional">
+                        <Doc> Prefered delivery method. Values can be (0) email,
+                          (1) postal, or (2) fax.</Doc>
+                        <Values>
+                          <Value>0</Value>
+                          <Doc>PIN_INV_EMAIL_DELIVERY. Delivery via email.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>1</Value>
+                          <Doc>PIN_INV_USP_DELIVERY. Delivery via postal
+                            service.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>2</Value>
+                          <Doc>PIN_INV_FAX_DELIVERY. Delivery via fax.</Doc>
+                        </Values>
+                        </Enum>
+                        <String name="PIN_FLD_EMAIL_ADDR" use="optional" maxlen="255">
+                        <Doc>Email address to which invoices will be delivered
+                          to</Doc>
+                        </String>
+                        <String name="PIN_FLD_INV_INSTR" use="optional" maxlen="1023">
+                        <Doc>Comments to appear on each invoice.</Doc>
+                        </String>
+                        <Enum name="PIN_FLD_INV_TERMS" use="optional">
+                        <Doc>Used for invoice terms to be printed on the
+                          invoice.</Doc>
+                        </Enum>
+                        <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                        <Doc>Name of party responsible for the payment.</Doc>
+                        </String>
+                        <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                        <Doc>State or province. This is typically the same as in
+                          the billing contact.</Doc>
+                        </String>
+                        <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                        <Doc>Zipcode. This is typically the same as in
+                          the billing contact.</Doc>
+                        </String>
+                      </Fields>
+                    </Array>
+                    <Array name="PIN_FLD_CC_INFO" use="optional"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="0" maxElements="1"
+                      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                      isRecursive="false">
+                    <Doc> Inherited fields are added to the flist here. This is a
+                      credit card specific substruct. For this type of payinfo,
+                      the substruct is PIN_FLD_CC_INFO, and contains the following:
+                    </Doc>
+                    <Fields>
+                      <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                        <Doc>Street Address. This is typically the same as the
+                          billing contact address. But this is not necessarily true
+                          always if the contact person is not the one responsible
+                          for payments.</Doc>
+                      </String>
+                      <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                        <Doc>City portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                        <Doc>Country portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_DEBIT_EXP" use="optional" maxlen="128">
+                        <Doc>Credit card expiration date (mmyy).</Doc>
+                      </String>
+                      <String name="PIN_FLD_DEBIT_NUM" use="optional" maxlen="255">
+                        <Doc>Credit card number.</Doc>
+                      </String>
+                      <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                        <Doc>Name as it appears on the credit card.</Doc>
+                      </String>
+                      <String name="PIN_FLD_SECURITY_ID" use="optional" maxlen="30">
+                        <Doc>Security ID. Used for credit card fraud prevention.
+                         This field stores the 3 digit CVV2 for Visa and
+                         4 digit CID for AMEX.</Doc>
+                      </String>
+                      <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                        <Doc>State or province. This is typically the same as in
+                          the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                        <Doc>Zipcode. This is typically the same as in
+                          the billing contact.</Doc>
+                      </String>
+                    </Fields>
+                    </Array>
+                    <Array name="PIN_FLD_DD_INFO" use="optional"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="0" maxElements="1"
+                      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                      isRecursive="false">
+                    <Doc>Inherited fields are added to the flist here. This is a
+                      direct debit specific substruct.  For this type of payinfo,
+                      the substruct is PIN_FLD_DD_INFO, and contains the following:
+                    </Doc>
+                    <Fields>
+                      <String name="PIN_FLD_ADDRESS" use="optional" maxlen="255">
+                        <Doc>Street Address. This is typically the same as the
+                          billing contact address. But this is not necessarily true
+                          always if the contact person is not the one responsible
+                          for payments.</Doc>
+                      </String>
+                      <String name="PIN_FLD_BANK_NO" use="optional" maxlen="30">
+                        <Doc>RDFI/Bank ID used for routing transactions.</Doc>
+                      </String>
+                      <String name="PIN_FLD_CITY" use="optional" maxlen="90">
+                        <Doc>City portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_COUNTRY" use="optional" maxlen="60">
+                        <Doc>Country portion of the address. This is typically the
+                          same as the billing contact.</Doc>
+                      </String>
+                      <String name="PIN_FLD_DEBIT_NUM" use="optional" maxlen="255">
+                        <Doc>Customer's bank account number.</Doc>
+                      </String>
+                      <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                        <Doc>Name as it appears on the bank account.</Doc>
+                      </String>
+                      <String name="PIN_FLD_STATE" use="optional" maxlen="90">
+                        <Doc>State or province. This is typically the same as in
+                          the billing contact.</Doc>
+                      </String>
+                      <Enum name="PIN_FLD_TYPE" use="optional">
+                        <Doc>Bank account type. The enumeration is defined in the
+                          pin_bill.h header file. The values can be (0) None,
+                          (1) Checking, (2) Savings, or (3) Corporate.</Doc>
+                        <Values>
+                          <Value>0</Value>
+                          <Doc>PIN_ACCOUNT_TYPE_NONE. None.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>1</Value>
+                          <Doc>PIN_ACCOUNT_TYPE_CHECKING. Checking Account.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>2</Value>
+                          <Doc>PIN_ACCOUNT_TYPE_SAVINGS. Savings Account.</Doc>
+                        </Values>
+                        <Values>
+                          <Value>3</Value>
+                          <Doc>PIN_ACCOUNT_TYPE_CORPORATE. Corporate Account.</Doc>
+                        </Values>
+                      </Enum>
+                      <String name="PIN_FLD_ZIP" use="optional" maxlen="60">
+                        <Doc>Zipcode. This is typically the same as in
+                          the billing contact.</Doc>
+                      </String>
+                    </Fields>
+                  </Array>
+                  <Array name="PIN_FLD_SUBORD_INFO" use="optional"
+                      elemIdMode="ignored" iterationOrder="undefined"
+                      minElements="0" maxElements="1"
+                      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+                      isRecursive="false">
+                    <Doc>Subordinate info.</Doc>
+                    <Fields>
+                      <Poid name="PIN_FLD_AR_ACCOUNT_OBJ" use="optional"
+                        mode="complete">
+                        <Doc>Poid of AR account that collects charges.</Doc>
+                        <ClassRef>obj://account</ClassRef>
+                      </Poid>
+                    </Fields>
+                  </Array>
+                </Fields>
+              </Substruct>
+            </Fields>
+          </Array>
+        </Fields>
+      </Array>
+    </Fields>
+  </Input>
+
+<!-- PCM_OP_SUBSCRIPTION_TRANSFER_SUBSCRIPTION OUTPUT SPECIFICATION -->
+  <Output>
+    <Fields>
+      <Poid name="PIN_FLD_POID" use="required" mode="complete">
+        <Doc> Poid of the subscription object being transferred.</Doc>
+        <ClassRef>obj://service</ClassRef>
+      </Poid>
+      <Array name="PIN_FLD_ACTION_INFO" use="required" elemIdMode="index"
+          iterationOrder="undefined" minElements="2" maxElements="2"
+          minElemId="0" maxElemId="1"> 
+    	<Doc>Action Info array has the offerings poid before and after the 
+            line transfer.ElemId 1 will have the poid of new offerings.
+	    ElemId 0 will have the poid of old offerings. </Doc>
+	<Fields>
+	  <Array name="PIN_FLD_OFFER" use="required" elemIdMode="ignored"
+              iterationOrder="undefined" minElements="1" maxElements="256"
+              minElemId="1" maxElemId="256"> 
+            <Doc>Array of Offering poids. </Doc>
+ 	      <Fields>
+		<Poid name="PIN_FLD_POID" use="required" mode="complete">
+		  <Doc>Purchased product or Purchased discount poids. </Doc>
+		  <ClassRef>obj://purchased_product</ClassRef>
+		  <ClassRef>obj://purchased_discount</ClassRef>
+		</Poid>
+	      </Fields>
+	  </Array>
+	</Fields>
+      </Array>
+      <Array name="PIN_FLD_RESULTS" use="optional" elemIdMode="ignored" iterationOrder="undefined">
+        <Doc> Array of results information.</Doc>
+        <Fields>
+          <Poid name="PIN_FLD_POID" use="required" mode="complete">
+            <Doc> Poid of the subscription transfer audit event object created</Doc>
+          </Poid>
+          <Any name="EVT_FLDS" use="optional" mode="other"
+             baseClassName="obj://event.audit.subscription.transfer" classNameRef="#out.RESULTS.POID">
+            <Doc> Fields of the event object</Doc>
+          </Any>
+          <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="complete">
+            <Doc> Poid of the account object from which the subscription was transferred.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+    </Fields>
+  </Output>
+</Opcode>

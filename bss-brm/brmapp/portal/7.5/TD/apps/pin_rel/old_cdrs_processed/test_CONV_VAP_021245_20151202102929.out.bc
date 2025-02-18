@@ -1,0 +1,11 @@
+010	1			64	64	1449052170	1449052170	1449052170		0	0				00	974	RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/valuepack			0
+020	2							228015627	00		300MB Aussie Roaming Pack	0	17	01	VAP			00	S	+1300	0.0	0.0	1	NORM	Roaming value packs	0	0	1449005336	1449005337	1
+520	3		228015627	0
+900	4	1 /account 526609692 0	1 /service/telco/gsm 526621880 0	1 /item/usage_niltax 295020960719326157 0	0  0 0	;;;;[228015627,2,0]|;;;;[228015627,2,0]|;;;;[228015627,2,0]|;;;;[,2,0]		1	@INTEGRATE#228015627##VAP#1#1#Roaming value packs#0#300MB Aussie Roaming Pack#Data Pack#<1 /item/usage_niltax 295020960719326157 0#554#1##10.00#450100602#NILGST|>#<#0###|>#<General Cash#10.00#5.00|>
+600	5	1 /account 526609692 0	1 /balance_group 526620120 0	1 /item/usage_niltax 295020960719326157 0	554	0	ALL	258	1 /product 1090734 0	450100602	0	NILGST			1 /purchased_product 526621560 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 526620120 0	554
+607	0	10.00	1449005372	0			0	0
+888	5	10808875	FLATRT	0	0											FLATRT	FLATRT				202117799	20151201212856	57481	57828				
+890	General Cash	10.00	5.00
+894		300MB Aussie Roaming Pack																	Data Pack
+090	9			64	64	1	1449005336	+1300	1449005336	+1300	0.0	10.00

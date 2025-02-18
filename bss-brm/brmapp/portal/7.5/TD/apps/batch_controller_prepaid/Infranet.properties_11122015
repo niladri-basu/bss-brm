@@ -1,0 +1,267 @@
+# @(#)SampleBatchControllerInfranet.properties 1 Tue May 16 14:32:27 2000
+# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved. 
+#       This material is the confidential property of Oracle Corporation
+#       or its licensors and may be used, reproduced, stored
+#       or transmitted only in accordance with a valid Oracle license
+#       or sublicense agreement.
+# =========================================================================
+# Infranet-related Configuration 
+# =========================================================================
+# infranet.connection           UserID, password and address to connect
+#                               to the Infranet CM.  The batch controller
+#                               will log on as this specified user.
+#                               This is a required entry.
+#
+# infranet.login.type           Login type.  One of:
+#                                 1: use userID and password
+#                                 0: use userID only.
+#                               This is a required entry.
+#
+# infranet.log.file             Full pathname of log file.
+#                               This is a required entry.
+#
+# infranet.log.level            Logging level.  One of:
+#                                 1: minimal
+#                                 2: normal
+#                                 3: copious logging
+#                               This is a required entry.
+#
+# infranet.log.logallebuf       Toggle to print stack trace of
+#                               runtime exceptions.
+#                               This is an optional entry.
+# =========================================================================
+infranet.connection   =  pcp://root.0.0.0.1:&aes|08|0D5E11BFDD97D2769D9B0DBFBD1BBF7E5D40C305EDF3D77DF111AAB8F781E92122@exlhamuatbrm:11960/0.0.0.1 /service/admin_client 1
+infranet.login.type     =        1
+infranet.log.file      = /var/portal/batch_controller_prepaid/batch_controller_prepaid.pinlog
+infranet.log.level      =        1
+# infranet.log.logallebuf       true
+
+
+
+# =========================================================================
+# Controller configuration entries
+# =========================================================================
+# batch.lock.socket.addr        Socket number to lock upon.  If in
+#                               doubt, check with your system admin
+#                               for the number of an unused socket
+#                               that can be used exclusively by this
+#                               application.
+#                               This is a required entry.
+#
+# batch.check.interval          Number of seconds between checks for
+#                               events.
+#                               This is a required entry.
+#
+# batch.start.highload.time     Time when high load time starts (hhmmss).
+#                               High load time is when the host computer
+#                               is most busy.  Typically, fewer handlers
+#                               are run during the high load period to
+#                               reduce the total load imposed on the
+#                               host's resources.
+#                               This is a required entry.
+#
+# batch.end.highload.time       Time when high load time ends (hhmmss).
+#                               This is a required entry.
+#
+# batch.handler.start.wait      Number of seconds allowed for the handler
+#                               to update its own object status to
+#                               STARTED.  If the handler fails to do
+#                               so in this time, it is assumed that
+#                               the handler failed to start its run
+#                               successfully.
+#                               This is a required entry.
+#
+# batch.handler.end.wait        Number of seconds allowed for the handler
+#                               to finish its run and update its own
+#                               object status from STARTED to something
+#                               else.  If the handler fails to do so
+#                               in this time, it is assumed that the
+#                               handler failed to complete its run.  
+#                               This is a required entry.
+# =========================================================================
+batch.check.interval =        30
+batch.file.rename.extension = .bc
+batch.start.highload.time =   83000
+batch.end.highload.time =     211500
+batch.handler.start.wait =    60
+batch.handler.end.wait =      5000
+batch.lock.socket.addr =      11972
+
+
+
+# =========================================================================
+# Event segregation entries
+# =========================================================================
+# batch.timed.events            List of events of Time type, comma separated.
+#
+# batch.random.events           List of events of File-arrival type, comma
+#                               separated.
+#
+#                               One of these two entries must be specified;
+#                               both may be specified.  Neither one may be
+#                               specified without an associated eventname.
+# =========================================================================
+# batch.timed.events            <eventname>[, <eventname>, ...]
+batch.random.events          =   cdrTelEvent_PP,cdrSMSEvent_PP,cdrMMSEvent_PP,cdrVOMEvent_PP,cdrVASEvent_PP,cdrVAPEvent_PP,cdrDATEvent_PP,PPSuspenseEvent
+
+
+
+
+# =========================================================================
+# Event and handler mapping entries
+# One set of configuration entries for every eventname listed in the
+# batch.timed.events and batch.random.events entries is required.
+# =========================================================================
+# Entries common to all events:
+# -----------------------------
+cdrTelEvent_PP.name          =     cdrTelEvent_PP
+cdrSMSEvent_PP.name          =     cdrSMSEvent_PP
+cdrMMSEvent_PP.name          =     cdrMMSEvent_PP
+cdrVOMEvent_PP.name          =     cdrVOMEvent_PP
+cdrVASEvent_PP.name          =     cdrVASEvent_PP
+cdrVAPEvent_PP.name          =     cdrVAPEvent_PP
+cdrDATEvent_PP.name          =     cdrDATEvent_PP
+#                               This is an optional entry.
+#
+cdrTelEvent_PP.handlers    =       telHandlerpp
+cdrSMSEvent_PP.handlers	=		smsHandlerpp
+cdrMMSEvent_PP.handlers	=		mmsHandlerpp
+cdrVOMEvent_PP.handlers	=		vomHandlerpp
+cdrVASEvent_PP.handlers	=		vasHandlerpp
+cdrVAPEvent_PP.handlers	=		vapHandlerpp
+cdrDATEvent_PP.handlers	=		datHandlerpp
+#
+# Entries for File-arrival Type events only:
+# ------------------------------------------
+cdrTelEvent_PP.file.location  =   /cdrapp_prepaid/out/telephony
+cdrSMSEvent_PP.file.location  =   /cdrapp_prepaid/out/sms
+cdrMMSEvent_PP.file.location  =   /cdrapp_prepaid/out/mms
+cdrVOMEvent_PP.file.location  =   /cdrapp_prepaid/out/voicemail
+cdrVASEvent_PP.file.location  =   /cdrapp_prepaid/out/vas
+cdrVAPEvent_PP.file.location  =   /cdrapp_prepaid/out/vap
+cdrDATEvent_PP.file.location  =   /cdrapp_prepaid/out/data
+#                               This is a required entry.
+#
+cdrTelEvent_PP.file.pattern =     test*.out
+cdrSMSEvent_PP.file.pattern =     test*.out
+cdrMMSEvent_PP.file.pattern =     test*.out
+cdrVOMEvent_PP.file.pattern =     test*.out
+cdrVASEvent_PP.file.pattern =     test*.out
+cdrVAPEvent_PP.file.pattern =     test*.out
+cdrDATEvent_PP.file.pattern =     test*.out
+
+#                               represents zero or more characters
+#                               in the filename.
+#                               This is a required entry.
+#
+# Entries for Scheduled Time type events only:
+# --------------------------------------------
+# <eventname>.at                Hard specification of when to trigger
+#                               associated handlers (comma separated
+#                               hhmmss entries).
+#                               This is a required entry.
+#
+# Entries for Metronomic Time type events only:
+# ---------------------------------------------
+# <eventname>.interval          Frequency with which to trigger the
+#                               associated handler (seconds)
+#                               This is a required entry.
+#
+# <eventname>.start             When should the first alarm be set for
+#                               this event (hhmmss).
+#                               This is an optional entry.  If this is
+#                               not specified, midnight is assumed.
+#
+# <eventname>.count             Stop after how many occurrences.
+#                               This is an optional entry.  If this is
+#                               not specified, alarms will occur at the
+#                               defined interval unendingly.
+# =========================================================================
+# <eventname>.name              <eventlabel>
+# <eventname>.handlers          <handlername>[, <handlername>, ...]
+# <eventname>.file.location     <full_path_to_directory>
+# <eventname>.file.pattern      <filepattern>
+#
+# <eventname>.name              <eventlabel>
+# <eventname>.handlers          <handlername>[, <handlername>, ...]
+# <eventname>.at                <hhmmss>[, <hhmmss>, ...]
+#
+# <eventname>.name              <eventlabel>
+# <eventname>.handlers          <handlername>[, <handlername>, ...]
+# <eventname>.interval          <#seconds>
+# <eventname>.start             <hhmmss>
+# <eventname>.count             <#occurrences>
+
+
+
+# =========================================================================
+# Handler configuration entries for the use of the controller
+# =========================================================================
+# <handlername>.name                  Name of the handler.
+#                                     This is an optional entry.
+#
+# <handlername>.max.at.highload.time  Maximum number of instances of this
+#                                     handler permitted to run simultaneously
+#                                     at high load time.
+#                                     This is an optional entry.
+#
+# <handlername>.max.at.lowload.time   Maximum number of instances of this
+#                                     handler permitted to run simultaneously.
+#                                     This is an optional entry.
+#
+# <handlername>.start.string          Command line to start this handler.
+#                                     This must include the full pathname to
+#                                     the handler and can include any
+#                                     handler-specific options and parameters.
+#                                     This is a required entry.
+# =========================================================================
+telHandlerpp.name                =   td_TelHandlerpp
+telHandlerpp.max.at.highload.time  = 10
+telHandlerpp.max.at.lowload.time   = 5
+telHandlerpp.start.string          = /brmapp/portal/7.5/TD/apps/pin_rel/prepaid/telephony/td_TelHandler.pl 
+
+smsHandlerpp.name                =   td_SMSHandlerpp
+smsHandlerpp.max.at.highload.time  = 10
+smsHandlerpp.max.at.lowload.time   = 5
+smsHandlerpp.start.string          = /brmapp/portal/7.5/TD/apps/pin_rel/prepaid/sms/td_SMSHandler.pl 
+
+mmsHandlerpp.name                =   td_MMSHandlerpp
+mmsHandlerpp.max.at.highload.time  = 10
+mmsHandlerpp.max.at.lowload.time   = 5
+mmsHandlerpp.start.string          = /brmapp/portal/7.5/TD/apps/pin_rel/prepaid/mms/td_MMSHandler.pl 
+
+vomHandlerpp.name                =   td_VOMHandlerpp
+vomHandlerpp.max.at.highload.time  = 10
+vomHandlerpp.max.at.lowload.time   = 5
+vomHandlerpp.start.string          = /brmapp/portal/7.5/TD/apps/pin_rel/prepaid/voicemail/td_VOMHandler.pl 
+
+vasHandlerpp.name                =   td_VASHandlerpp
+vasHandlerpp.max.at.highload.time  = 10
+vasHandlerpp.max.at.lowload.time   = 5
+vasHandlerpp.start.string          = /brmapp/portal/7.5/TD/apps/pin_rel/prepaid/vas/td_VASHandler.pl 
+
+vapHandlerpp.name                =   td_VAPHandlerpp
+vapHandlerpp.max.at.highload.time  = 10
+vapHandlerpp.max.at.lowload.time   = 5
+vapHandlerpp.start.string          = /brmapp/portal/7.5/TD/apps/pin_rel/prepaid/vap/td_VAPHandler.pl 
+
+datHandlerpp.name                =   td_DATHandlerpp
+datHandlerpp.max.at.highload.time  = 10
+datHandlerpp.max.at.lowload.time   = 5
+datHandlerpp.start.string          = /brmapp/portal/7.5/TD/apps/pin_rel/prepaid/data/td_DATHandler.pl 
+
+
+#===============================================================================
+#for Suspense Events
+#===============================================================================
+
+#prepaid
+PPSuspenseEvent.name =             PPSuspenseEvent
+PPSuspenseEvent.handlers =         PPSuspenseHandler
+PPSuspenseEvent.file.location =    /cdrapp_prepaid/reject
+PPSuspenseEvent.file.pattern =     suspense*.out
+
+PPSuspenseHandler.name =                 PPSuspenseRelHandler
+PPSuspenseHandler.max.at.highload.time = 10
+PPSuspenseHandler.max.at.lowload.time =  5
+PPSuspenseHandler.start.string =  /brmapp/portal/7.5/TD/apps/pin_rel/prepaid/suspense/td_Sushandler.pl

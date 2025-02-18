@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:simpleType name="VARCHAR_4000">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="256"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ConstraintType">
+		<xs:attribute name="RegExFields" type="VARCHAR_4000"/>
+		<xs:attribute name="AddDependingTable" type="VARCHAR_4000"/>
+		<xs:attribute name="AddDependingTableMapping" type="VARCHAR_4000"/>
+		<xs:attribute name="DependingTableNames" type="VARCHAR_4000"/>
+	</xs:complexType>
+	<xs:element name="IFW">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="IFW_AGGREGATION" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_ALIAS_MAP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_APN_GROUP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_APN_MAP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CALENDAR" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CIBER_OCC" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CLASS" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CLASSCON" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CLASSCON_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CLASSITEM" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CLASS_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CONDITION" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_CURRENCY" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DAYCODE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DBVERSION" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DESTINDESC" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DICTIONARY" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DISCARDING" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DISCOUNTDETAIL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DISCOUNTMASTER" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DISCOUNTMODEL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DISCOUNTRULE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DISCOUNTSTEP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DSCBALIMPACT" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DSCCONDITION" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DSCMDL_CNF" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DSCMDL_VER" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_DSCTRIGGER" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_EDRC_DESC" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_EDRC_FIELD" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_EXCHANGE_RATE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_GEOAREA_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_GEO_MODEL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_GEO_ZONE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_GLACCOUNT" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_GROUPING" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_GROUPING_CNF" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_HOLIDAY" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_ICPRODUCT" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_ICPRODUCT_CNF" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_ICPRODUCT_GRP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_ICPRODUCT_RATE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_IMPACT_CAT" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_ISCRIPT" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_MAP_GROUP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_MODEL_SELECTOR" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_NETWORKMODEL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_NETWORKOPER" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_NOPRODUCT" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_NOPRODUCT_CNF" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_NOSP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_NO_BILLRUN" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_PIPELINE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_POI" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_POIAREA_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_PRICEMDL_STEP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_PRICEMODEL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_QUEUE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RATEADJUST" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RATEPLAN" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RATEPLAN_CNF" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RATEPLAN_VER" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_REF_MAP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RESOURCE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_REVENUEGROUP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RSC_GROUP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RSC_MAP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RULE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RULEITEM" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RULESET" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RULESETLIST" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RUM" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RUMGROUP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_RUMGROUP_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SCENARIO" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SEGMENT" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SEGRATE_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SEGZONE_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SELECTOR_BLOCK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SELECTOR_BLOCK_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SELECTOR_DETAIL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SELECTOR_RULE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SELECTOR_RULESET" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SELECTOR_RULE_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SEQCHECK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SEQLOG_IN" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SEQLOG_OUT" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SERVICE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SERVICECLASS" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SERVICE_MAP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SLA" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SOCIALNUMBER" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SPECIALDAYRATE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SPECIALDAY_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SPLITTING_TYPE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_STANDARD_ZONE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SWITCH" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SYNC" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_SYSTEM_BRAND" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TAX" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TAXCODE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TAXGROUP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TIMEINTERVAL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TIMEMODEL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TIMEMODEL_LNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TIMEZONE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TRUNK" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_TRUNK_CNF" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_UOM" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_UOM_MAP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_USAGECLASS" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_USAGECLASS_MAP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_USAGETYPE" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_USC_GROUP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_USC_MAP" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="IFW_ZONEMODEL" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

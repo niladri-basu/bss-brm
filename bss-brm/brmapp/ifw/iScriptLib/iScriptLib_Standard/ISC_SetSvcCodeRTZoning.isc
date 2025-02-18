@@ -1,0 +1,43 @@
+//==============================================================================
+//
+// Copyright (c) 2009, Oracle and/or its affiliates. All rights reserved. 
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_SetSvcCodeRTZoning
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module finds the service type of the current EDR and updates the DETAIL.INTERN_SERVICE_CODE
+//   with the customized servicecode value.
+//
+//   This iScript is needed only if different service codes are mapped to the same service type
+//   in pipeline database and specific service code is used in the zoning table instead of *.
+//   Otherwise this is not required.
+//
+// Customization:
+//   In order to customize the iScript for different servicecodes please update the
+//   DETAIL.INTERN_SERVICE_CODE with customized servicecode in onDetail function.
+//
+//   For Ex: Assume the service type /service/telco/gsm/telephony is mapped to two
+//   different service codes TEL and TEL1 in the pipeline database. Suppose we want 
+//   to act on the service with servicecode TEL1, then make changes as below in 
+//   the onDetail function.
+//------------------------------------------------------------------------------
+//
+// @(#)% %
+
+function onDetailEdr
+{
+
+  // Find the type of service of the current EDR.
+  String edrServiceType = edrString(DETAIL.INTERN_SERVICE_CODE);
+
+  if (edrServiceType == "/service/telco/gsm/telephony" )
+  {
+    edrString(DETAIL.INTERN_SERVICE_CODE) = "TEL1";
+  }
+
+}

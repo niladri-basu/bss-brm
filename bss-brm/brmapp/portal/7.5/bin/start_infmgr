@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+#	@(#) % %
+#
+#       Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# start_infmgr
+#
+# The underlying database (if any) must already be started
+# when this script runs.
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/infmgr
+
+INFMGR=${PINDIR}/bin/infmgr
+
+INFMGRDIR=${PINDIR}/sys/infmgr
+INFMGRLOG=${LOGDIR}/infmgr.log
+INFMGRPID=${LOGDIR}/infmgr.pid
+
+if [ ! -x ${INFMGR} ]; then
+        echo "HELP: executable \"${INFMGR}\" not found!"
+        exit 1
+fi       
+
+if [ ! -d ${INFMGRDIR} ]; then
+        echo "HELP: infmgr dir \"${INFMGRDIR}\" not found!"
+        exit 1
+fi
+
+if [ ! -d ${LOGDIR} ]; then
+	mkdir -p ${LOGDIR}
+	if [ $? -ne 0 ]; then
+		echo "HELP: problems making INFMGR LOGDIR \"${LOGDIR}\"!"
+		exit 1
+	fi
+fi       
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${INFMGRDIR} ;
+  echo "started INFMGR at..." >> ${INFMGRLOG}
+  date >> ${INFMGRLOG}
+  ${INFMGR} >> ${INFMGRLOG} 2>&1 &
+  echo $! > ${INFMGRPID} ;
+  chmod 664 ${INFMGRLOG} ;
+  chmod 664 ${INFMGRPID} )
+
+# use rc from infmgr startup
+exit $?

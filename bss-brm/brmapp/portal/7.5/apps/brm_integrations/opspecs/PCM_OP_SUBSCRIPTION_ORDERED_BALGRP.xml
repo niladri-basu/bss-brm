@@ -1,0 +1,121 @@
+<Opcode name="PCM_OP_SUBSCRIPTION_ORDERED_BALGRP"
+visibility="public"
+transaction="required"
+component="financial"
+xmlns:h="http://www.w3.org/1999/xhtml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>
+</Doc>
+<Input>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Account instance poid.</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+mode="complete">
+<Doc> Service instance poid.</Doc>
+<ClassRef>obj://service</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_ORDERED_BALGRP_OBJ" use="optional"
+mode="complete">
+<Doc> If the action is to Modify/Delete/List then the following field is   mandatory. The action will be performed on the input Ordered Balance  Group Object.</Doc>
+<ClassRef>obj://ordered_balgrp</ClassRef>
+</Poid>
+<String name="PIN_FLD_PROGRAM_NAME" use="required"
+maxlen="60">
+<Doc> Program name - identifies calling program</Doc>
+</String>
+<String name="PIN_FLD_ACTION" use="required"
+maxlen="255">
+<Doc> Action to be performed on the /ordered_balgrp object.  Possible values are defined in pin_bill.h.  	PIN_SUBS_ORDERED_BALGRP_ACTION_CREATE	"Create" 	FM_SUBS_ORDERED_BALGRP_ACTION_MODIFY	"Modify" 	FM_SUBS_ORDERED_BALGRP_ACTION_DELETE	"Delete" 	FM_SUBS_ORDERED_BALGRP_ACTION_LIST	"List"</Doc>
+</String>
+<Timestamp name="PIN_FLD_EFFECTIVE_T" use="optional">
+<Doc> Effective time - Used by rating engine in the audit table (Portal Time)</Doc>
+</Timestamp>
+<Array name="PIN_FLD_ORDERED_BALGROUPS" use="optional"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="0" maxElements="256"
+minElemId="0" maxElemId="256"
+isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+isRecursive="true" allowedElemIds="256">
+<Doc>  List of Balance groups.  This defines the order of consumption. If an account/service   instance has a balance group and it is a member of   /group/sharing/discounts, /group/sharing/charges, /group/sharing/profiles and /group/sharing/monitors groups then all the entries are listed here except /group/sharing/monitors and for each entry there is a rank/priority which defines the order in which the   corresponding balance group (/group/sharing/... object reference  BALANCE_GROUP) should be used/consumed/impacted.The rank/priority has no meaning or significance for /group/sharing/monitors and /group/sharing/profiles. The array element id is important as it determines the priority   order in which the Sharing group object will be evaluated for events.  If action is to modify, the input ORDERED_BALGROUPS array will be modified   or created, if not already there. If action is to delete, the input   ORDERED_BALGROUPS array will be deleted. </Doc>
+<Fields>
+<Poid name="PIN_FLD_GROUP_OBJ" use="required"
+mode="complete">
+<Doc> /group/sharing/... object reference.</Doc>
+<ClassRef>obj://group</ClassRef>
+</Poid>
+<Int name="PIN_FLD_FLAGS" use="optional">
+<Doc> If flag is set to 0 then PCM_OP_SUBSCRIPTION_MONITORS_UPDATE opcode is not called. If flags is passed and set to a non zero va
+lue or if flag is not passed then PCM_OP_SUBSCRIPTION_MONITORS_UPDATE opcode will be called. </Doc>
+</Int>
+</Fields>
+</Array>
+</Fields>
+</Input>
+<Output>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Poid of the ordered balance group object.</Doc>
+<ClassRef>obj://ordered_balgrp</ClassRef>
+</Poid>
+<Array name="PIN_FLD_RESULTS" use="optional"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="0" maxElements="256"
+minElemId="0" maxElemId="256"
+isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+isRecursive="true" allowedElemIds="256">
+<Doc> Array of results information.</Doc>
+<Fields>
+<Poid name="PIN_FLD_POID" use="optional"
+mode="complete">
+<Doc> /ordered_balgrp object poid or event poid  If the input action is to 'List', then no events are recorded.The following entries are returned. For other actions, the following entries are not returned.</Doc>
+<ClassRef>obj://ordered_balgrp</ClassRef>
+<ClassRef>obj://event</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+mode="complete">
+<Doc> account object of the ordered balance group.</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+mode="complete">
+<Doc> service object of the ordered balance group, if the service is the owner.</Doc>
+<ClassRef>obj://service</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_CREATED_T" use="optional"
+mode="complete">
+<Doc> Created time of the ordered balance group.</Doc>
+<ClassRef>obj://ordered_balgrp</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_MOD_T" use="optional"
+mode="complete">
+<Doc> Time the ordered balance group was last modified.</Doc>
+<ClassRef>obj://ordered_balgrp</ClassRef>
+</Poid>
+</Fields>
+</Array>
+<Array name="PIN_FLD_ORDERED_BALGROUPS" use="optional"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="0" maxElements="256"
+minElemId="0" maxElemId="256"
+isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+isRecursive="true" allowedElemIds="256">
+<Doc> List of "Sharing Group Object" references.  The array element id is important as it determines the order in  which the Sharing group objects will be evaluated for events.</Doc>
+<Fields>
+<Poid name="PIN_FLD_GROUP_OBJ" use="required"
+mode="complete">
+<Doc> /group/sharing/... object reference.</Doc>
+<ClassRef>obj://group</ClassRef>
+</Poid>
+</Fields>
+</Array>
+</Fields>
+</Output>
+</Opcode>

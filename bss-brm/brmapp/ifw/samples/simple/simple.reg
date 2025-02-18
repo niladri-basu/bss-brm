@@ -1,0 +1,435 @@
+ifw
+{ 
+  Active = TRUE
+
+  ProcessLoopTimeout  = 10
+
+  QueueRequestTimeout = 0
+
+  Instrumentation
+  {
+    #-----------------------------------------------------------
+    # ProbeBroker registry entries.
+    #    ProbeInfoFilePath - The path that contains all probe
+    #                        info files used by instrumented objects.
+    #-----------------------------------------------------------
+    ProbeBroker
+    {
+      ProbeInfoFilePath = ./instrumentation
+    }
+
+    #-----------------------------------------------------------
+    # SnmpServer registry entries. (Optional)
+    #    Port - The SNMP AgentX port number.
+    #    ProcessDescription - The description of this process.
+    #                         If not specified, the process description
+    #                         has format as follows:
+    #                         <<user>>:<<process_name>>::<<registry_filename>>
+    #-----------------------------------------------------------
+    #SnmpServer
+    #{
+    #  Port = < SNMP AgentX Port >
+    #  ProcessDescription = ifw
+    #}
+
+    #-----------------------------------------------------------
+    # HttpServer registry entries. (Optional)
+    #    Port - The Http port number.
+    #    StyleSheetFile - The full path name of style sheet file.
+    #    PortalLogoFile - The full path name of Portal logo file.
+    #-----------------------------------------------------------
+    HttpServer
+    {
+      Port = < HTTP Port >
+      StyleSheetFile = ./instrumentation/portal_omf.xsl
+      PortalLogoFile = ./instrumentation/portal_omf.gif
+    }
+  }
+
+  DiagnosticDataHandler
+  {
+    DiagnosticFilePath = ./log
+    DiagnosticFileName = diagnostic.dat
+  }
+
+  LogMessageTable
+  {
+    MessageFilePath   = ./etc
+    MessageFileSuffix = .msg
+  }
+
+  Semaphore 
+  {  
+    FilePath = ./semaphore
+    FileName = semaphore.reg
+  } 
+
+  Registry 
+  { 
+    FilePath           = ./info
+    FileName           = infoSIMPLE.reg
+    NiceFormatFileName = infoNiceSIMPLE.reg
+
+    Buffer 
+    { 
+      Size = 1000
+    } 
+  } 
+
+  ProcessLog 
+  { 
+    ModuleName = LOG
+    Module 
+    { 
+      ITO 
+      { 
+        FilePath          = ./log
+        FileName          = processSIMPLE
+        FileSuffix        = .log
+        ProcessName       = ifw
+        MessageGroup      = IFW
+        ShowOriginator    = TRUE
+      } 
+
+      Buffer 
+      { 
+        Size = 1000
+      } 
+    } 
+  } 
+  EventHandler
+  {
+    ModuleName = EVT
+    Module
+    {
+      Events
+      {
+      }
+      Buffer
+      {
+        Size = 1000
+      }
+    }
+  } 
+
+  DataPool 
+  {
+    #-----------------------------------
+#    Login
+#    {
+#      ModuleName = DBC
+#      Module
+#      {
+#        UserName        = INTEGRATOR
+#        PassWord        = 595EAFD4FBD3D6CDB49CD1D40600180F07750A60
+#        DatabaseName    = IFWDB
+#        AccessLib       = or852
+#        Connections     = 5
+#
+#        # IBM DB2
+#        #ConvertToUpperCase = False
+#        #AccessLib          = db252
+#        #UsableCheckTable   = IFW_DBVERSION
+#      }
+#    }
+
+    PrefixDescData 
+    { 
+      ModuleName = DAT_PrefixDesc 
+      Module 
+      { 
+        Source = File 
+
+#        Source = Database
+#        DataConnection = ifw.DataPool.Login
+
+        ReuseOnFailure = false 
+        CLIBase = 10 
+        PrefixDesc 
+        { 
+          File = ./samples/simple/prefixdesc.dat 
+        } 
+      } 
+    }
+        
+  }  
+ 
+  TransactionIdController
+  {
+    Source = File
+
+    Generator
+    {
+      #DataConnection = Login
+      FileName = ./samples/simple/data/TAM/TamTransId.dat
+      Increment = 10
+    }
+  }
+
+  SequencerPool
+  {
+  }
+
+  Pipelines
+  {  
+    #-----------------------------------
+    TestPipeline
+    {
+      Active = TRUE
+
+      RejectStream = RejectOutput
+
+      TransactionManager
+      {
+        RedoEnabled = False
+        SingleTransaction = False
+
+        BinaryLogFileName = ./samples/simple/data/TAM/binaryLogFile.dat
+      }
+
+      EdrFactory
+      {
+        Description = ./formatDesc/Portal/containerDesc.dsc
+        #DataConnection = Login
+      }
+
+      DataDescription
+      {
+        Standard
+        {
+          ModuleName = Standard
+          Module
+          {
+            StreamFormats
+            {
+              Format1 = ./formatDesc/Formats/Solution42/SOL42_V670.dsc
+            }
+            InputMapping 
+            { 
+              Mapping1 = ./formatDesc/Formats/Solution42/SOL42_V670_InMap.dsc
+            }
+            OutputMapping 
+            {
+              Mapping1 = ./formatDesc/Formats/Solution42/SOL42_V670_OutMap.dsc
+            }
+          }
+        }
+      }
+
+      #---------------------------------
+      # Pipeline Log Section
+      #---------------------------------
+      PipelineLog
+      {
+        ModuleName  = LOG
+        Module
+        {
+          ITO
+          {
+            FilePath          = ./samples/simple/data/log/pipeline
+            FileName          = testpipeline.log
+            ProcessName       = ifw
+            MessageGroup      = IFW
+            ShowOriginator    = TRUE
+            SuppressErrors
+            {
+              ERR_SPEC_VERSION_INVALID
+              ERR_RELEASE_VERSION_INVALID
+            }
+          }
+
+          Buffer
+          {
+            Size = 1000
+          }
+        }
+      }
+
+      InputBuffer
+      {
+        Size = 100
+      }
+
+      OutputBuffer
+      {
+        Size = 100
+      }
+
+      Input
+      {
+        UnitsPerTransaction = 1
+
+        InputModule
+        {
+          ModuleName  = INP_GenericStream
+          Module
+          {
+            DefaultOutput              = EdrOutput
+            Grammar                    = ./formatDesc/Formats/Solution42/SOL42_V670_InGrammar.dsc
+
+            InputStream
+            {
+              ModuleName = EXT_InFileManager
+              Module
+              {
+                InputPath   = ./samples/simple/data/in
+                InputPrefix = testpipeline
+                InputSuffix = .edr
+ 
+                DonePath    = ./samples/simple/data/done
+                DonePrefix  = testpipeline
+                DoneSuffix  = .done
+           
+                ErrorPath   = ./samples/simple/data/err
+                ErrorPrefix = testpipeline
+                ErrorSuffix = .err
+
+                TempPrefix  = tmp
+  
+                Replace     = TRUE
+
+                InputDirEmptyTimeout = 60
+              }
+            }
+          }
+        }
+      }
+ 
+      #---------------------------------
+      # Functions Section
+      #---------------------------------
+      Functions
+      {
+        Standard
+        {
+          FunctionPool
+          {
+            PrefixDesc 
+            { 
+              ModuleName = FCT_PrefixDesc 
+              Module 
+              { 
+                Active           = True 
+                PrefixDataModule = PrefixDescData 
+              } 
+            }
+          }
+        }
+      }
+
+      #---------------------------------
+      # Output Section
+      #---------------------------------
+      Output
+      {
+        ChargePrecision              = 3
+        WriteDefaultEdr              = False
+        SpecificationVersionNumber   = 2
+
+        SequenceGeneration           = Unit
+        #Unit - Transaction
+
+        MaxErrorRates
+        {
+          INF_EDR_REJECTED           = 70
+          ERR_CUST_NOT_FOUND         = 55
+          ERR_CHARGED_ZONE_NOT_FOUND = 55
+        }
+
+        OutputCollection
+        {
+          EdrOutput 
+          {
+            ModuleName = OUT_GenericStream
+            Module
+            { 
+              Grammar  = ./formatDesc/Formats/Solution42/SOL42_V670_OutGrammar.dsc
+              DeleteEmptyStream      = TRUE
+
+              OutputStream
+              {
+                ModuleName = EXT_OutFileManager
+                Module
+                {
+                  OutputPath      = ./samples/simple/data/out
+                  OutputPrefix    = Sol42_
+                  OutputSuffix    = .out
+                  TempPrefix      = tmp
+
+                  TempDataPath    = ./samples/simple/data/out
+                  TempDataPrefix  = out.tmp.
+                  TempDataSuffix  = .data
+
+                  Replace              = TRUE
+                  AppendSequenceNumber = TRUE
+                }
+              }
+            } 
+          }
+
+          RejectOutput
+          {
+            ModuleName = OUT_Reject
+            Module
+            {
+              DeleteEmptyStream      = TRUE
+
+              OutputStream
+              {
+                ModuleName = EXT_OutFileManager
+                Module
+                {
+                  OutputPath   = ./samples/simple/data/rej
+                  OutputPrefix = testpipeline
+                  OutputSuffix = .rej
+                  TempPrefix   = tmp
+
+                  TempDataPath    = ./samples/simple/data/rej
+                  TempDataPrefix  = rej.tmp.
+                  TempDataSuffix  = .data
+
+                  Replace              = TRUE 
+                  AppendSequenceNumber = FALSE
+                }
+              }
+            }
+          }
+
+        }
+
+        OutputLog
+        {
+          FilePath        = ./samples/simple/data/log/stream
+          FileName        = stream
+          FilePrefix      = log_
+          FileSuffix      = .log
+
+          SuppressErrors
+          {
+            ERR_SPEC_VERSION_INVALID
+            ERR_RELEASE_VERSION_INVALID
+          }
+        }
+
+        #-------------------------------
+        EdrTraceEnabled = False
+        EdrTrace
+        {
+            TraceLog
+            {
+                 FilePath   = ./samples/simple/data/log/edrLog
+                 FileName   = edrTraceLog
+                 FilePrefix = log_
+                 FileSuffix = .log
+            }
+
+            TraceStartPoint =  Input
+            TraceEndPoint   = Output
+
+        } # END EdrTrace
+
+      }
+    }
+  }  # END pipelines
+}  # END integrate
+ 

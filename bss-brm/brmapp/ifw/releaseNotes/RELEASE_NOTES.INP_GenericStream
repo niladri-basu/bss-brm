@@ -1,0 +1,77 @@
+========================================================================================
+INP_GenericStream
+----------------------------------------------------------------------------------------
+Module Release Notes 
+
+===============================================================================
+Version     : 10006
+Release     : 7.4
+Date        : 04 Jul 2011
+Changeorder : Bug 11815646
+Notes       : P-10434779 phase ii changes for pipeline parallel loading ecr.
+
+===============================================================================
+Version     : 10005
+Release     : 7.4
+Date        : 15 Jul 2009
+Changeorder : Bug 8683761
+Notes       : P-7722542 MBI PIPELINE GENERATES HUGE NUMBER OF LOG FILES IN STREAM DIRECTORY.
+
+===============================================================================
+Version     : 10004
+Release     : 7.2_PATCH
+Date        : 16 Aug 2005
+Changeorder : PRSF00179348
+Notes       : error message of parse error on corrupt input files not reliable
+
+===============================================================================
+Version     : 10003
+Release     : 6.5_FP3
+Date        : 02 Sep 2003
+Changeorder : PRSF00060673
+Notes       : The ERR_PARSE_ERROR_STREAM message identifier already exists in
+	      Framework.msg, so rename it here.
+
+===============================================================================
+
+Actual Version : 10002 6.5_SP2 / Date: 01-May-2003
+----------------
+
+PRSF00039576: Update to use namespaces
+
+===============================================================================
+Actual Version : 10001 / Date: 21-Feb-2003
+----------------
+
+PRSF00032419: Implement a thread trace
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 10-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #36559 SourcePro AIX Port
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 10-Aug-2001
+----------------
+
+Notes          :
+----------------
+                 - Just new
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+

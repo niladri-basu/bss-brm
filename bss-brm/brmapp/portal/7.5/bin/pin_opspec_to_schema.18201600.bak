@@ -1,0 +1,160 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+
+use Getopt::Std;
+use File::Basename;
+
+####################################################################
+#-------------------------------------------------------------------
+#
+#  @(#)% %
+#
+# Copyright (c) 2007, 2008, Oracle and/or its affiliates. All rights reserved.
+#	
+#	This material is the confidential property of Oracle Corporation
+#	or its licensors and may be used, reproduced, stored or transmitted
+#	only in accordance with a valid Oracle license or sublicense agreement.
+#
+#-------------------------------------------------------------------
+####################################################################
+
+####################################################################
+#-------------------------------------------------------------------
+#
+# Script To Generate schema files for opcodes from opcode specs
+#
+# Generates schema files using the opcode specs and stylesheet.
+# 
+# Options for the tool: 
+#	-i <opcode spec> Opcode XML spec file.
+#	-o <opcode schema> Opcode XML schema file.
+#	-p <property file> Properties file
+#	-h, print the help information.
+#
+# By default, uses the properties file 'ptransformer_schema.config' 
+# in $PIN_HOME/apps/brm_integrations/config
+#-------------------------------------------------------------------
+####################################################################
+
+#BRM home
+$PINDIR='/brmapp/portal/7.5';
+
+#if($^O eq "Windows_NT")
+if(($^O eq "Windows_NT" ) || ($^O eq "MSWin32"))  
+{
+	$PINDIR=~s/\//\\/g;
+	$LOGDIR=$PINDIR."\\apps\\brm_integrations\\schemas";
+	$CNFDIR=$PINDIR."\\apps\\brm_integrations\\config";
+	$XSLFILE=$PINDIR."\\apps\\brm_integrations\\stylesheets\\pin_opspec_to_schema.xsl";
+}
+else
+{
+	$LOGDIR=$PINDIR."/apps/brm_integrations/schemas";
+	$CNFDIR=$PINDIR."/apps/brm_integrations/config";
+	$XSLFILE=$PINDIR."/apps/brm_integrations/stylesheets/pin_opspec_to_schema.xsl";
+}
+
+#Java executable
+$JAVACMD='$BRM_JRE/bin/java';
+
+# MAIN
+# Program name
+($ME = $0) =~ s,.*/,,;
+
+$USAGE = "$ME \n"
+        ."\t\t-i <opcode spec>, opcode XML spec file \n"
+        ."\t\t[-p <xsl file>], stylesheet file, "
+		."defaults to $XSLFILE \n"
+        ."\t\t[-o <output file>], output XSD filename, "
+		."defaults to opcode_spec.xsd \n"
+        ."\t\t[-h(help)], print this message \n";
+
+# parse command line arguments
+getopts("hi:o:p:", \%opt); 
+if ($opt{'h'})
+{
+        print $USAGE;
+        exit 0;
+}
+
+# Options
+foreach my $key (keys %opt)
+{
+        $opt{$key} =~ s/[ \t]//g;
+        if (($opt{$key} eq "") || ($opt{$key} =~ /^-/))
+        {
+                print "ERROR: invalid argument '$opt{$key}' " .
+                        "for command line option '$key'.\n";
+                if ($key eq "i")
+                {
+                        die "ERROR: A valid op spec file must be specified "
+                                ."for command line option '$key'.\n";
+                }
+                elsif ($key eq "o")
+                {
+                        die "ERROR: A valid output filename must be specified "
+                                ."for command line option '$key'.\n";
+                }
+                elsif ($key eq "p")
+                {
+                        die "ERROR: A valid property file must be specified "
+                                ."for command line option '$key'.\n";
+                }
+        }
+}
+
+$arg = " ";
+if ($opt{'i'})
+{
+        $arg .= "\"$opt{'i'}\"";
+}
+else {
+        print "ERROR: A valid XML opcode spec file must be specified \n";
+	die $USAGE;
+}
+
+$arg .= " ";
+if ($opt{'p'})
+{
+        $arg .= "\"$opt{'p'}\"";
+}
+else {
+        $arg .= "$XSLFILE"; 
+}
+
+$arg .= " ";
+if ($opt{'o'})
+{
+        $arg .= "\"$opt{'o'}\"";
+}
+else {
+	$outfile = basename($opt{'i'});
+	@out = split(/\./, $outfile);
+
+        $arg .= "\"$out[0].xsd\"";
+}
+
+#if($^O eq "Windows_NT")
+if(($^O eq "Windows_NT" ) || ($^O eq "MSWin32")) 
+{
+        #$JAVACMD = ~s/\//\\/g;
+        $cmd = "$JAVACMD"." -client -classpath \"$PINDIR\\jars\\xmlparserv2.jar\""
+                ." oracle.xml.parser.v2.oraxsl ".$arg;
+}
+else {
+        $cmd = $JAVACMD." -client -classpath \".:$PINDIR/jars/xmlparserv2.jar\""
+                ." oracle.xml.parser.v2.oraxsl ".$arg;
+}
+
+print $cmd;
+system($cmd);
+$exit_val  = $? >> 8;
+
+if ($exit_val != 0) {
+        print "\nError, running pin_opspec_to_schema, err: $exit_val \n";
+        exit $exit_val;
+}
+
+print "\nSchema generated succesfully.\n";
+print "\nSchema file generated, pls generate schema extensions "
+	."if needed, using pin_dd_to_schema.\n";
+exit 0;

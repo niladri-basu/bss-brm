@@ -1,0 +1,111 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" 
+            elementFormDefault="qualified" 
+            xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" 
+            xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved. This material
+                   is the confidential property of Oracle Corporation or its
+                   licensors and may be used, reproduced, stored or transmitted
+                   only in accordance with a valid Oracle license or sublicense
+                   agreement.-->
+   <xsd:element name="PCM_OP_SEARCH_inputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="ARGS" minOccurs="1" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="ARGS_ARRAY_1214">
+                        <xsd:attribute name="elem" type="xsd:int"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+((/)*(search)*)((/)*([a-zA-Z]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="RESULTS" minOccurs="1" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="RESULTS_ARRAY_1216">
+                        <xsd:attribute name="elem" type="xsd:int"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="RESULTS_LIMIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="TEMPLATE" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:maxLength value="256"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="ARGS_ARRAY_1214">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded"
+                             namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+                             processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="RESULTS_ARRAY_1216">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded"
+                             namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+                             processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_SEARCH_outputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="EXTRA_RESULTS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="EXTRA_RESULTS_ARRAY_1313">
+                        <xsd:attribute name="elem" type="xsd:int"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+((/)*(search)*)((/)*([a-zA-Z]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="RESULTS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="RESULTS_ARRAY_1312">
+                        <xsd:attribute name="elem" type="xsd:int"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="RESULTS_ARRAY_1312">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded"
+                             namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+                             processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="EXTRA_RESULTS_ARRAY_1313">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded"
+                             namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+                             processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>

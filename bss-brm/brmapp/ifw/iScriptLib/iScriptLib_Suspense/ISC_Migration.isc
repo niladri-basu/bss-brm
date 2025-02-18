@@ -1,0 +1,54 @@
+//==============================================================================
+//
+//      Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+//      
+//      This material is the confidential property of Oracle Corporation or its
+//      licensors and may be used, reproduced, stored or transmitted only in
+//      accordance with a valid Oracle license or sublicense agreement.
+//
+//-------------------------------------------------------------------------------
+// Block: ISC_Migration
+//-------------------------------------------------------------------------------
+// Module Description:
+//    This script is used in a re-suspend pipeline to re-suspend recycling EDRs
+//    if the account is being migrated. It unconditionally set ERR_JOB_AMT_MIGRATION
+//    error for all EDRs (except those has ERR_INVALID_OUTPUT_STREAM error) coming 
+//    to this pipeline.
+//
+
+//------------------------------------------------------------------------------
+// Responsible: Siyu Chen
+//
+// $RCSfile: ISC_Migration.isc,v $
+// $Revision: 1.00 $
+// $Author: sd $
+// $Date: 2004/06/8 08:02:55 $
+// $Locker:  $
+//------------------------------------------------------------------------------
+// $Log: ISC_Migration.isc,v $
+//==============================================================================
+
+function onDetailEdr
+{ 
+        Long blockEntries;
+
+        edrSetIsValidDetail (false);
+
+        blockEntries = edrNumDatablocks(DETAIL.ASS_SUSPENSE_EXT);
+        if (blockEntries == 0)
+        {
+                edrAddError("ERR_ASS_SUSPENSE_EXT_MISSING", 3);
+        }
+        else
+        {
+		if ( edrLong(DETAIL.ASS_SUSPENSE_EXT.ERROR_CODE, 0) == 30011 )
+                {
+                        edrAddError ("ERR_INVALID_OUTPUT_STREAM", 3);
+                }
+                else
+                {
+                        edrAddError ("ERR_JOB_AMT_MIGRATION", 3);
+                }
+        }
+} // end onDetailEdr + end iScript
+

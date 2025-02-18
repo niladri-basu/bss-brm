@@ -1,0 +1,106 @@
+================================================================================
+FCT_APN_Map
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+==============================================================================
+Module Version: 10010  7.5 11-Aug-2014 
+Bug 19344829:   P-19021196 Reloading data in apn_map using semaphore
+                Even though APN_MAP data was reloaded, APN_Map search result was
+                refering to the old data. Modified the reload flow to reset (discard)
+                the old data held by APN_Map and form a search tree having only the 
+                reloaded (latest) data.
+==============================================================================
+Module Version: 10009  7.4 27-Apr-2009
+BUG8361553:     registry entry APNGroup is not getting processed in the registryUpdate method
+
+==============================================================================
+Module Version: 10008  7.2_PATCH 31-Aug-2005 
+PRSF00181397:   FCT_APN_MAP in "after zoning mode" has an iterator reset problem
+                which is exposed when TAP file CBD comes into the pipeline.
+                Iterator reset problem has been fixed in this co. 
+==============================================================================
+
+Module Version: 10007  6.7_FP2  04-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10006  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Module Version: 10005  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+================================================================================
+
+Module Version: 10004  6.5_SP2  05-May-2003
+PRSF00039853:   Fix namespace forward declarations.
+		
+================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10000
+----------------
+
+Date : 30-Apr-2003
+----------------
+
+Change Order :  PRSF00039300
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+================================================================================
+
+Actual Version : v4-30-01 / Date : 18-OCT-2001 
+----------------
+
+Notes          :
+----------------
+
+- PETS#40646 Fix.
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 13-JUN-2001 
+----------------
+
+Notes          :
+----------------
+
+- APN mapping for the v4-30 framework and database structure.
+
+================================================================================
+
+Actual Version : v4-10-00 / Date : 02-NOV-2000 
+----------------
+
+Notes          :
+----------------
+
+- Module for the implementation of the Access Point Name mapping functionality.
+
+================================================================================

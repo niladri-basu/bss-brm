@@ -1,0 +1,92 @@
+<Opcode name="PCM_OP_BILL_MAKE_BILL_NOW" visibility="public" transaction="required" component="financial" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes         opspec.xsd" xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>
+This opcode is used to produce Bill Now for the specified billinfo object, 
+for account, or for the list of pending items.
+  </Doc>
+  <Input>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required" mode="complete">
+      <Doc> 
+      </Doc>
+      <ClassRef>obj://account</ClassRef>
+    </Poid>
+    <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional"
+        mode="complete">
+      <Doc>Poid of billinfo for which Bill Now is produced.  If it is not presented then Bill Now will be produced  for each billinfo for the given account</Doc>
+      <ClassRef>obj://billinfo</ClassRef>
+    </Poid>
+    <String name="PIN_FLD_PROGRAM_NAME" use="required"
+        maxlen="60">
+      <Doc> Program name - identifies calling program</Doc>
+    </String>
+    <Timestamp name="PIN_FLD_END_T" use="optional">
+      <Doc> Time of producing Bill Now. If it is not presented, then the 
+            current time is used.
+      </Doc>
+    </Timestamp>
+    <Int name="PIN_FLD_FLAGS" use="optional">
+      <Doc> This field may contain two flags (bits):  
+  1. PIN_BILL_FLG_APPLY_FOLDS (value is 0x10). This flag indicates
+     to apply folds for Bill Now.  
+  2. PIN_BILL_FLG_APPLY_DISCOUNTS (value is 0x20). This indicates
+     to apply billing time discounts for Bill Now.
+     </Doc>
+    </Int>
+    <Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+        mode="complete">
+      <Doc> This poid specifies the subscription. 
+     If the account_poid for this service is the same as poid from the input 
+     flist, then the Bill_Now will be produced for this subscription.
+     Otherwise, the Bill_Now will be produced for the sponsor which is defined 
+     by poid, but it will include charges only from this subscription.
+	  </Doc>
+      <ClassRef>obj://service</ClassRef>
+    </Poid>
+    <Array name="PIN_FLD_ITEMS" use="optional"
+        elemIdMode="ignored" iterationOrder="undefined"
+        minElements="0" minElemId="0">
+      <Doc>List of pending items to be included into the Bill_Now</Doc>
+      <Fields>
+        <Poid name="PIN_FLD_ITEM_OBJ" use="required"
+            mode="complete">
+          <Doc>Item poid from the ITEMS array</Doc>
+          <ClassRef>obj://item</ClassRef>
+        </Poid>
+      </Fields>
+    </Array>
+  </Fields>
+  </Input>
+  <Output>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required"
+        mode="complete">
+      <Doc> Account object passed into call.</Doc>
+      <ClassRef>obj://account</ClassRef>
+    </Poid>
+    <Array name="PIN_FLD_RESULTS" use="required"
+     elemIdMode="ignored" iterationOrder="undefined"
+     minElements="1"
+     minElemId="0">
+     <Doc> Results array contains info for each produced Bill Now object.
+     </Doc>
+        <Fields>	
+    	<Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+        	mode="complete">
+      	<Doc>Poid of billinfo for which Bill Now is produced.
+        </Doc>
+      	<ClassRef>obj://billinfo</ClassRef>
+    	</Poid>
+    	<Poid name="PIN_FLD_LAST_BILL_OBJ" use="required"
+        	mode="complete">
+      	<Doc>Poid of the created bill object (which is Bill Now)</Doc>
+      	<ClassRef>obj://bill</ClassRef>
+    	</Poid>
+    	<Decimal name="PIN_FLD_PENDING_RECV" use="required">
+      	<Doc>Value of Bill Now totals.
+        </Doc>
+    	</Decimal>
+        </Fields>
+     </Array>
+  </Fields> 
+  </Output>
+</Opcode>

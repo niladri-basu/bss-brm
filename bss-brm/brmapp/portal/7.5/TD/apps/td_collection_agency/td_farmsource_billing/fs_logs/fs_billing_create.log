@@ -1,0 +1,72 @@
+DECLARE
+*
+ERROR at line 1:
+ORA-01013: user requested cancel of current operation
+ORA-06512: at line 177
+
+
+
+DECLARE
+*
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+ORA-06512: at line 177
+
+
+DECLARE
+*
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+ORA-06512: at line 176
+
+
+DECLARE
+*
+ERROR at line 1:
+ORA-00957: duplicate column name
+ORA-06512: at line 161
+
+
+DECLARE
+*
+ERROR at line 1:
+ORA-01858: a non-numeric character was found where a numeric was expected
+ORA-06512: at line 221
+
+
+DECLARE
+*
+ERROR at line 1:
+ORA-01858: a non-numeric character was found where a numeric was expected
+ORA-06512: at line 221
+
+
+ERROR:
+ORA-01013: user requested cancel of current operation
+
+
+DECLARE
+*
+ERROR at line 1:
+ORA-01858: a non-numeric character was found where a numeric was expected
+ORA-06512: at line 221
+
+
+and ebi.ITEM_OBJ_TYPE like '%payment%'
+                            *
+ERROR at line 61:
+ORA-06550: line 61, column 29:
+PLS-00103: Encountered the symbol "%" when expecting one of the following:
+* & = - + ; < / > at in is mod remainder not rem
+<an exponent (**)> <> or != or ~= >= <= <> and or like like2
+like4 likec between || multiset member submultiset
+
+
+ERROR:
+ORA-01756: quoted string not properly terminated
+
+
+ERROR:
+ORA-01756: quoted string not properly terminated
+
+

@@ -1,0 +1,16 @@
+#=================================================================
+# Portal Pipeline Server Framework Messages
+#
+# Number Range: 10101-10200
+#----------------------------------------------------------------
+# Note: Add only numbers inside the allocated range.
+#       Do not change existing numbers.
+#=================================================================
+# 05-Aug-2003: Introduction of error number ranges
+#=================================================================
+
+ERR_ERROR_FILE_NOT_EXIST       | Jobfile '%s' doesn't exist for rollback.                             | 10101
+ERR_READING_DATA_FROM_DATABASE | Error reading data from database -> do data from database and no eof.| 10102
+INF_STREAM_OPENED              | Jobfile '%s' opened for inputstream from database.                   | 10103
+WRN_FILE_NOT_MOVED             | Jobfile couldn't moved to actual temp-file.                          | 10104
+INF_BLOB_RESIZE_REQUIRED       | Blob resize required. Transaction will be rolled back.               | 10105

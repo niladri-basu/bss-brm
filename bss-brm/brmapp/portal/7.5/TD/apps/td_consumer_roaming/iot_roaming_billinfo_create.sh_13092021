@@ -1,0 +1,136 @@
+#!/usr/bin/ksh
+LOGINSQL=`egrep -v "#" login.cfg | grep "DB_LOGIN" |cut -d'=' -f2`
+outfile=`egrep -v "#" login.cfg | grep "OUTFILE_DIR" |cut -d'=' -f2 |sed -e 's/$/\/iot_roaming_billinfo_create.log/'`
+actg_dom=$1;
+echo $LOGINSQL
+$ORACLE_HOME/bin/sqlplus -s $LOGINSQL>>$outfile<<EOF
+SET WRAP ON
+set heading off;
+set feedback off;
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS ON VERIFY OFF;
+set linesize 200
+set serveroutput on size 2000
+
+DECLARE
+        v_ddl_stmt VARCHAR2(4000);
+        v_errmsg VARCHAR2(200);
+        v_count number(5) := 0;
+
+BEGIN
+
+        select count(1) into v_count from user_tables where table_name='IOT_CONSUMER_BILLINFO_T';
+        if v_count <> 1
+        then
+v_ddl_stmt := 'CREATE TABLE IOT_CONSUMER_BILLINFO_T (item_poid_id0, billinfo_poid_id0,bill_info_id,pay_type, CONSTRAINT pk_iot_consumer_billinfo_x PRIMARY KEY(item_poid_id0)) 
+ORGANIZATION INDEX 
+as
+select it.poid_id0, bi.poid_id0,bi.bill_info_id,bi.pay_type
+from billinfo_t bi, item_t it
+where bi.poid_id0=it.billinfo_obj_id0
+and bi.next_bill_t=(select pin.td_nz_to_unix(to_date(''$actg_dom'', ''YYYYMMDD'')) from dual)
+and bi.billing_status<>1
+and it.status=1
+and bi.pay_type not in (10000,10007)';
+
+        EXECUTE IMMEDIATE v_ddl_stmt;
+        end if;
+
+        select count(1) into v_count from user_tables where table_name='TMP_MISTAKEN_PURCHASE_T';
+
+        if v_count <> 1
+        then
+
+v_ddl_stmt := 'create table tmp_mistaken_purchase_t  
+as 
+select  /*+ full(iot) full(et) full(st) full(es) parallel(iot,4) parallel(et,4) parallel(st,4) parallel(es,4)*/
+count(1) as count,es.calling_from as name, et.account_obj_id0,et.item_obj_id0, TO_DATE(TRUNC(td_unix_to_nz(et.start_t))) as start_date
+from pin.IOT_CONSUMER_BILLINFO_T iot,pin.event_t et,pin.service_alias_list_t st,pin.event_dlay_sess_tlcs_t es
+where et.descr = ''$7 Daily Roaming'' 
+and et.poid_id0=es.obj_id0
+and et.service_obj_id0=st.obj_id0
+and iot.item_poid_id0=et.item_obj_id0
+and et.poid_type=''/event/delayed/session/telco/gsm/valuepack''
+and et.poid_id0>(select to_number(to_char((to_date(sysdate-60) - to_date(''1-Jan-1970'') + 1)*power(2,44)) + power(2,60)) from dual)
+group by es.calling_from,et.account_obj_id0,et.item_obj_id0, TO_DATE(TRUNC(td_unix_to_nz(et.start_t))) 
+having count(1)>=1';
+
+        EXECUTE IMMEDIATE v_ddl_stmt;
+
+v_ddl_stmt := 'create index td_startdate_idx on tmp_mistaken_purchase_t(start_date) nologging parallel 4';
+	EXECUTE IMMEDIATE v_ddl_stmt;
+v_ddl_stmt := 'create index td_name_idx on tmp_mistaken_purchase_t(name) nologging parallel 4';
+	EXECUTE IMMEDIATE v_ddl_stmt;	
+v_ddl_stmt := 'create index td_itemobj_idx on tmp_mistaken_purchase_t(item_obj_id0) nologging parallel 4';
+	EXECUTE IMMEDIATE v_ddl_stmt;	
+        end if;
+
+       select count(1) into v_count from user_tables where table_name='TMP_SHARES_MSISDN_T';
+
+        if v_count <> 1
+        then
+
+v_ddl_stmt := 'create table TMP_SHARES_MSISDN_T nologging parallel 4
+as
+select /*+ full(e) full(ecs) full(tmp) parallel(e,4) parallel(ecs,4) parallel(tmp,4)*/ distinct ecs.SHARERS_MSISDN from pin.event_t e, pin.EVENT_DLYD_SESSION_CUSTOM_T ecs ,pin.tmp_mistaken_purchase_t tmp
+where e.poid_id0=ecs.obj_id0 
+and tmp.name =ecs.SHARERS_MSISDN
+and ecs.SHARERS_MSISDN is not null 
+and e.start_t > td_nz_to_unix(tmp.START_DATE)
+and e.start_t < td_nz_to_unix((tmp.START_DATE)+1)';
+
+        EXECUTE IMMEDIATE v_ddl_stmt;
+        end if;
+
+		 select count(1) into v_count from user_tables where table_name='TMP_VALUEPACKS_MSISDN_FOUND_T';
+
+        if v_count <> 1
+        then
+v_ddl_stmt := 'create table tmp_valuepacks_msisdn_found_t nologging parallel 4
+as
+
+select 
+/*+ full(e) full(tmp) full(a) full(st) full(act) full(eb) full(es) parallel(iot,4) parallel(et,4) parallel(st,4) parallel(es,4) parallel(iot,4) parallel(et,4)*/
+count(1)as count, st.name as MSISDN,act.FIRST_NAME ,act.LAST_NAME , act.EMAIL_ADDR ,a.account_no ,iot.bill_info_id ,TO_DATE(TRUNC(td_unix_to_nz(e.start_t))) as Start_date,eb.amount ,tmp.ACCOUNT_OBJ_ID0,tmp.item_OBJ_ID0,iot.pay_type 
+from pin.event_t e,pin.TMP_MISTAKEN_PURCHASE_t tmp,pin.account_t a, pin.service_alias_list_t st,pin.account_nameinfo_t act,
+pin.event_bal_impacts_t eb,pin.event_dlay_sess_tlcs_t es,pin.IOT_CONSUMER_BILLINFO_T iot--,pin.tmp_shares_msisdn_t tmm--,pin.item_t i,pin.billinfo_t b
+where 
+e.ACCOUNT_OBJ_ID0 = tmp.ACCOUNT_OBJ_ID0 
+and e.ITEM_OBJ_ID0 = tmp.item_obj_id0
+and e.poid_id0=es.obj_id0
+and e.start_t >= td_nz_to_unix(tmp.START_DATE)
+and e.start_t <= td_nz_to_unix((tmp.START_DATE)+1)
+and st.obj_id0=e.service_obj_id0
+and iot.item_poid_id0=e.item_obj_id0
+and a.poid_id0=e.account_obj_id0
+and act.obj_id0=a.poid_id0
+and eb.obj_id0=e.poid_id0
+and tmp.name not in (select NVL((SELECT SHARERS_MSISDN FROM pin.tmp_shares_msisdn_t),''2020200200'') as SHARERS_MSISDN from dual)
+and (e.poid_type=''/event/delayed/session/telco/gsm/valuepack'' 
+and e.POID_TYPE not in (''/event/delayed/session/telco/gsm/voice'',''/event/delayed/session/telco/gsm/sms'',''/event/delayed/session/telco/gsm/voicemail'',''/event/delayed/session/telco/gsm/data'')
+)
+and e.descr = ''$7 Daily Roaming''
+and not exists (select tmp1.name from pin.event_t e1,pin.TMP_MISTAKEN_PURCHASE_t tmp1 where 
+ e1.ITEM_OBJ_ID0 = tmp1.item_obj_id0 
+and tmp.ACCOUNT_OBJ_ID0 = tmp1.ACCOUNT_OBJ_ID0 
+and tmp1.ITEM_OBJ_ID0 = tmp.item_obj_id0
+and tmp1.count =1
+and e1.start_t >= td_nz_to_unix(tmp.START_DATE)
+and e1.start_t <= td_nz_to_unix((tmp.START_DATE)+1)
+and e1.POID_TYPE  in 
+(''/event/delayed/session/telco/gsm/voice'',''/event/delayed/session/telco/gsm/sms'',''/event/delayed/session/telco/gsm/voicemail'',''/event/delayed/session/telco/gsm/data'')
+)
+group by st.name,act.FIRST_NAME,act.LAST_NAME,act.EMAIL_ADDR,a.account_no,iot.bill_info_id,TO_DATE(TRUNC(td_unix_to_nz(e.start_t))),eb.amount,tmp.ACCOUNT_OBJ_ID0,tmp.item_OBJ_ID0,iot.pay_type';
+
+
+        EXECUTE IMMEDIATE v_ddl_stmt;
+		
+		
+v_ddl_stmt := 'create index td_startdate_tmvf_idx on tmp_valuepacks_msisdn_found_t(start_date) nologging parallel 4';
+	EXECUTE IMMEDIATE v_ddl_stmt;
+end if;
+		
+END;
+/
+
+exit;
+EOF

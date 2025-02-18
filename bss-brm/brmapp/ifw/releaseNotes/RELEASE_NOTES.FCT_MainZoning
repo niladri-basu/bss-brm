@@ -1,0 +1,250 @@
+================================================================================
+FCT_MainZoning
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+=======================================================================
+Module Version: 10005  DaVinci  18-July-2006
+PRSF00219262: Da Vincii Code Clean Up: set isValidDetail false when you set error. 
+=======================================================================
+Module Version : 6.7_FP2  10004
+----------------
+
+Date : 21-May-2004
+------
+
+Change Order :  PRSF00105998
+--------------
+
+Short Description :
+-------------------
+PRSF00105998: NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+=======================================================================
+Module Version : 6.7_SP1  10003
+----------------
+
+Date : 23-Jan-2004
+------
+
+Change Order :  PRSF00079303
+--------------
+
+Short Description :
+-------------------
+Standard Zone & USC Map: Support for a Label/Description for each entry in 
+the zoning and impact category configuration
+
+=====================================================================================
+================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP1 10002
+----------------
+
+Date : 03-Apr-2003
+----------------
+
+Change Order :  PRSF00036697
+----------------
+
+Short Description :
+-------------------
+  Destination Description for a given Service Code, Impact Cat
+  Zone Entry Name is extracted from the IFW_STANDARD_ZONE [and/or File] by the DAT_Zone
+  Plugin and this Function Plugin uses that value to write into the EDR container.
+  The New field added to the Edr container is:
+     DETAIL.ASS_ZBD.ZP.ZONE_ENTRY_NAME
+
+========================================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+=================================================================================
+
+Actual Version : v4-30-03 / Date : 02-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42574 Modified for LERG updated DAT_Zone.
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 28-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38645 Fixed erroneous error messages.
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 21-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+Migration to new EDR-C v4-30.
+
+================================================================================
+
+Actual Version : v4-10-00 / Date : 26-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+Works only with DAT_Zone v4-10-00 or newer.
+
+================================================================================
+
+Actual Version : v4-02-02 / Date : 05-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+Modfied for new EDR recycler interface.
+
+================================================================================
+
+Actual Version : v4-02-01 / Date : 22-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+Added recycler support.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-01-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Port to AIX.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-00-00 / Date : 03-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implemented support for new EDR-C v4.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-22-03 / Date : 18-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+Conversion of zone-values not necessary due to changes in DAT_Zone plugin.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v1-21-01 / Date : 21-OCT-1999
+----------------
+
+Notes          :
+----------------
+
+21-OCT-1999  Updated isUsable() function with log-messages
+             to fit the requirements.
+
+
+New Features   :
+----------------
+
+14-OCT-1999  Implementation of isUsable() function.
+ 
+ 
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+

@@ -1,0 +1,667 @@
+========================================================================================
+DB_IFW
+----------------------------------------------------------------------------------------
+Module Release Notes 
+==========================================================================================================================
+Actual Version : 7.4 / Date : 20-Jul-2011
+----------------
+BUG12683317 : Schema changes for the tables IFW_APN_GROUP, IFW_APN_MAP, IFW_CALENDAR, IFW_CURRENCY, IFW_DAYCODE,
+IFW_DISCOUNTMASTER, IFW_DISCOUNTMODEL, IFW_DISCOUNTRULE, IFW_DISCOUNTSTEP, IFW_DSCTRIGGER, IFW_EXCHANGE_RATE
+IFW_GEOAREA_LNK, IFW_GEO_MODEL, IFW_GEO_ZONE, IFW_GLACCOUNT, IFW_IMPACT_CAT, IFW_NETWORKMODEL, IFW_NETWORKOPER
+IFW_NOPRODUCT, IFW_NOPRODUCT_CNF, IFW_PRICEMDL_STEP, IFW_RATEPLAN, IFW_RATEPLAN_CNF, IFW_RESOURCE, IFW_RUM
+IFW_RUMGROUP_LNK, IFW_SERVICE, IFW_SLA, IFW_STANDARD_ZONE, IFW_TAX, IFW_TAXCODE, IFW_TIMEINTERVAL, IFW_TIMEMODEL
+IFW_TIMEZONE, IFW_UOM, IFW_UOM_MAP, IFW_USC_GROUP, IFW_USC_MAP and IFW_ZONEMODEL
+==========================================================================================================================
+Actual Version : 7.4.0.3.0 / Date : 25-Feb-2010
+----------------
+BUG9353040     : Wrong SQL in DuplicateCheck Stored Procedure in the "ifw_Create.sql" file 
+                 Grant Statements should be after the "/" command.
+==========================================================================================================================
+Actual Version : 7.4 / Date : 29-Sep-2009
+----------------
+BUG8801013: Added new fields to the Primary key of tables IC_DAILY and IC_DAILY_ALTERNATE
+==========================================================================================================================
+Actual Version : 7.4 / Date : 09-Jun-2009
+----------------
+BUG8582970: Added grant & Synonym  for the DUPCHK procedures and removed creation of the table IFW_LERG_DATA. 
+For this change ER Studio is not used , ifw_Create.sql in maunally generated.
+==========================================================================================================================
+Actual Version : 7.4 / Date : 27-Mar-2009
+----------------
+BUG:8360358: Removed quota allocation on TEMP in the files ifw_Roles.sql and JSA_Roles.sql 
+=======================================================================================================================
+Actual Version : 7.4 / Date : 13-Mar-2009
+----------------
+BUG:8329569: Removed Fields ENTRYBY, ENTRYDATE,MODIFBY,MODIFDATE,MODIFIED and RECVER. From the tables  IC_DAILY
+ IC_DAILY_ALTERNATE,IFW_CSAUDIT,IFW_CSLOCK,IFW_CSREFERENCE,IFW_CSSTATE,IFW_DUPLICATECHECK,IFW_TAMIFW_TAM of ifw_Create.sql
+=======================================================================================================================
+Actual Version : 7.4 / Date : 17-Aug-2008
+----------------
+BUG:7270859: Added Fields ENTRYBY, ENTRYDATE,MODIFBY,MODIFDATE,MODIFIED and RECVER. To the tables  IC_DAILY
+ IC_DAILY_ALTERNATE,IFW_CIBER_OCC,IFW_CLASS_LNK,IFW_CLASSCON,IFW_CLASSCON_LNK,IFW_CSAUDIT,IFW_CSLOCK
+ IFW_CSREFERENCE,IFW_CSSTATE,IFW_DBVERSION,IFW_DESTINDESC,IFW_DSCMDL_CNF,IFW_DUPLICATECHECK,IFW_GEO_ZONE
+ IFW_GEOAREA_LNK,IFW_GROUPING_CNF,IFW_ICPRODUCT_CNF,IFW_POIAREA_LNK,IFW_RATEPLAN_CNF,IFW_SEQLOG_IN
+ IFW_SEQLOG_OUT,IFW_SOCIALNUMBER,IFW_STANDARD_ZONE,IFW_TAM of ifw_Create.sql        
+=======================================================================================================================
+Actual Version : 7.3.2 / Date : 21-July-2008
+----------------
+BUG7212735 : Created public synonym for IFW_DSCBALIMPACT, IFW_SEQ_CHANGESET, IFW_SEQ_CSAUDIT and IFW_SEQ_DISCOUNTBALIMPACT 
+=======================================================================================================================
+Actual Version : 7.3.2 / Date : 01-Apr-2008
+----------------
+
+bug6362378 : New index added for tables : IFW_DSCBALIMPACT, IFW_DSCCONDITION, IFW_SELECTOR_RULE_LNK .
+=======================================================================================================================
+Actual Version : Da Vinci/ Date : 22-June-2006
+----------------
+
+PRSF00221155:New index is added on servicecode column of ifw_rateplan_cnf table
+========================================================================================
+Actual Version : Da Vinci/ Date : 06-June-2006
+----------------
+
+PRSF00217755:Additional Tailor made feature related Database changes done here
+========================================================================================
+Actual Version : Da Vinci/ Date : 11-May-2006
+----------------
+
+PRSF00210499:Validity and Tailor made feature related Database changes done here
+========================================================================================
+Actual Version : Da Vincii/ Date : 25-APR-2006
+----------------
+
+PRSF00206890:Model Selector: Discount Model Selector Rule doesn't get deleted.
+========================================================================================
+Actual Version : Da Vinci / Date : 12-APR-2006
+----------------
+
+PRSF00202683:Model Selector : Cannot create a new Model Selector Rule
+========================================================================================
+Actual Version : Da Vinci / Date : 23-MAR-2006
+----------------
+
+PRSF00195399:Model Selector : Discount Model Selector Rule doesn't get deleted.
+========================================================================================
+Actual Version : v7.2.6 / Date : 17-Feb-2006
+----------------
+
+PRSF00192762:There are couple of changes gone in this co.
+             1. IFW_NETWORKOPER table is changed
+========================================================================================
+Actual Version : v7.2.5 / Date : 01-Dec-2005
+----------------
+
+PRSF00187785:There are couple of changes gone in this co.
+             1. Model Selector related tables are introduced
+             2. ifw_rateplan_cnf table has been changed
+========================================================================================
+Actual Version : v7.2.4 / Date : 09-June-2005
+----------------
+
+PRSF00171802:impact_category,glid,taxcode columns of ifw_dscbalimpact table needs to be changed to varchar from number
+========================================================================================
+
+========================================================================================
+Actual Version : v7.2.3 / Date : 24-May-2005
+----------------
+
+PRSF00169632:change some of the columns to numeric(28,6) to avoid truncation problem in sqlserver
+========================================================================================
+Actual Version : v7.2.2 / Date : 07-Apr-2005
+----------------
+
+PRSF00162552:Remove one blank line in script update_v6.7.8_v7.0.1.sql
+========================================================================================
+Actual Version : v7.2.1 / Date : 06-Apr-2005
+----------------
+
+Packaging Changes PRSF00162451:Change build.spec so that it stops publishing DB2 Scripts as well as DB2 documentation
+========================================================================================
+Actual Version : v6.7.10 / Date : 08-March-2005
+----------------
+
+Packaging Changes:one file is added in build.spec for publishing the file update_v6.7.2_v6.7.3.sql from DB2 Scripts
+PRSF00157041 RE_Pipeline_Velocity nt_ia64: Pipeline Packaging (Data Model files missing) 
+PRSF00111322
+========================================================================================
+Actual Version : v6.7.9 / Date : 23-Mar-2005
+----------------
+
+Database Changes:
+PRSF00111322 SQLServer support has been introduced.All existing models are now created thru 
+             ER Studio tool.Ceratin column names have been modified for existing oracle scripts. 
+             There will be single model for both oracle as well as SQLServer.
+             Following are the column name changes:--- 
+             1. IFW_ALIAS_MAP--KEY to KEY_ID
+             2. IFW_AGGREGATION-- PRECISION to PRECISIONDIGITS
+             3. IFW_AGGREGATION--FUNCTION to FUNC
+             4. IFW_SEQCHECK-----KEY to KEY_ID
+             5. IFW_DICTIONARY--KEY to KEY_ID
+             6. IFW_RULE--RULE to RULE_ID
+             7. IFW_RULEITEM--RULE to RULE_ID
+             8. IFW_RULESETLIST--RULE to RULE_ID
+======================================================================================== 
+Actual Version : v6.7.8 / Date : 15 - Oct -2004
+----------------
+
+Database Changes:
+PRSF00128698 Discount Balance Impact: EBAL default value should be null
+========================================================================================
+
+Actual Version : v6.7.7 / Date : 30 - Sept -2004
+----------------
+
+Database Changes:Added unique contraint for IFW_DSCTRIGGER
+PRSF00047463 no unique contraint checking for Discount Trigger
+========================================================================================
+
+Actual Version : v6.7.6 / Date : 11-Aug-2004
+----------------
+PRSF00124446 Sequencer problem: ORA-00904: "PROCESSEDBY_PPL": invalid identifier
+========================================================================================
+
+Actual Version : v6.7.5 / Date : 15-June-2004
+----------------
+
+Database Changes: Change the constraint on IFW_AGGREGATION to allow values 'M' and 'X'
+PRSF00114365 Server side dependency for Revence Assurance related Smacc works...
+======================================================================================== 
+Actual Version : v6.7.4 / Date : 10-March-2004
+----------------
+
+Database Changes: Change the constraint on IFW_DSCMDL_CNF to allow sequential mode
+PRSF000PRSF00098150 Changes for Sequential Discounting - JP1004
+========================================================================================
+Actual Version : v6.7.0 / Date : 10-Sep-2003
+----------------
+
+Database Changes: Update Discount Model for Apollo
+PRSF00062370  "Updated Apollo Discount Data Model"
+========================================================================================
+Actual Version : v6.5.3 / Date : 16-Feb-2003
+----------------
+
+Database Changes: Add IFW_DISCOUNTSTEP.RECURRING field into the database.
+PRSF00031676 PDM Model Graph needs to be updated for "One Time Free Minutes" 
+             Discount changes
+PRSF00028509 Free Minutes Granted One-Time, good for a Certain Period of time 
+
+========================================================================================
+
+========================================================================================
+
+Actual Version : v6.5.2 / Date : 23-Oct-2002
+----------------
+
+PRSF00020915 database update scripts for IFW are not clear- they say 6.4 
+             should be 6.5, unclear how to move from 6.2-6.5 or 6.3-6.5 
+PRSF00020495 Change DATE to EDR_DATE for IFW_DUPLICATECHECK
+PRSF00018728 Add new table IFW_DUPLICATECHECK for duplicate detection
+
+========================================================================================
+
+Actual Version : v6.5.1 / Date : 17-Sep-2002
+----------------
+
+Database changes for Athena
+- PRSF00015806 Cegetel: Adjust table- and column names to 18 length
+- PRSF00013465 Sequencer
+- PRSF00016445 Decimal Beats for rating
+- PRSF00017981 "Revenue Group" not available in 6.3 which was part of the 
+               Rate Plan configuration 
+- PRSF00018585 update script update_v6.3.4_v6.4.1.sql contains a misstype 
+
+========================================================================================
+
+Actual Version : v6.3.4 / Date : 17-Jul-2002
+----------------
+
+PRSF00014374 Minimum Charge in IFW_PRICEMODEL required
+
+========================================================================================
+
+Actual Version : v6.3.3 / Date : 10-Jul-2002
+----------------
+
+PRSF00013738 Add UsageClass/-Type to IFW_DISCOUNTDETAIL
+
+========================================================================================
+
+Actual Version : v6.3.2 / Date : 10-Jun-2002
+----------------
+
+a) PETS #44871: some errors in update_v4-30-12_v6-30-00.sql
+b) ECR_Roaming
+  - IC_DAILY: remove ACCOUNT_POID and replace by PIN_LOGIN_ALIAS
+  - IC_DAILY: add column and agg.attribute GLACCOUNT
+  - IC_DAILY: Pk for DB2 contains due to database limitations only these fields:
+      NETWORKMODEL, NETWORK_OPERATOR, DAY, BILLRUN, TRUNK, ICPRODUCT, BILL_DIRECTION, 
+      SERVICECODE, IMPACT_CATEGORY, TIMEMODEL, TIMEZONE, GLACCOUNT, RESOURCE_NAME, 
+      RUM, ENTRY_TYPE and ENTRY_TYPE_SEQ
+  - IFW_NETWORKOPERATOR: remove ACCOUNT_POID
+  - IFW_ICPRODUCT_RATE: add column PIN_LOGIN_ALIAS
+c) PETS #39719
+  - add column SEQ_GAPNUMBERS to IFW_SEQCHECK.
+  - add columns STATUS, PROCESSED to IFW_SEQLOG_IN
+  - add column NUM_REC_OUT to IFW_SEQLOG_OUT
+  - drop column STATUS from IFW_SEQLOG_OUT
+
+========================================================================================
+
+Actual Version : v6.3.1 / Date : 27-May-2002
+----------------
+
+a) PETS #39719 Sequencer can't handle files from different senders.
+  - Move SEQ columns for Sequencer from IFW_PIPELINE into 
+    new table IFW_EDRSEQCHECK.
+  - Split IFW_EDRSEQLOG into IFW_SEQLOG_IN and IFW_SEQLOG_OUT
+  -> PLG_Sequencer
+b) ECR_Roaming
+  - Add Account Poid to IFW_NETWORKOPERATOR
+  - Add Account Poid to IC_DAILY tables
+  -> DAT_InterConnect, FCT_CarrierIcRating, Smacc
+c) ECR_Roaming
+  - Add DESCRIPTION field to IFW_RULESET
+  - Enlarge PK fields for Scripting tables from 10 to 50
+  -> Smacc
+  - Move GLACCOUNT and REVENUEGROUP from Rateplan-Config to 
+    Pricemodel-Step level
+  -> DAT_Rateplan, DAT_Price, FCT_MainRating, Smacc
+d) ECR_Discount
+  - Add Rollover-Discount flags
+  - Add shareable resource flag
+  - Add cascading discounts flag
+  -> DAT_Discount, FCT_Discount, Smacc
+e) Drop table IFW_SEMAPHORE (was never used)
+  -> Smacc
+f) Alter Check Constraint CKC_ICR_ZONE_DIR: remove redundancies 
+  (0=none, 1=A->POI/Inroute, 2=POI->B/Outroute, 3=POI->C, 
+  4=A->B/Standard, 5=A->C, 6=B->C, 7=POI-In->POI-Out/Transit)
+  -> Smacc
+g) Drop table IFW_SUBS_ACCOUNT
+  -> Smacc?
+
+========================================================================================
+
+Actual Version : v4-30-12 / Date : 20-Feb-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #43397 Missing right parenthesis in script update_v4-30-11_v4-30-12.sql
+
+PETS #43001 Enhance discarding by destination
+- Add STREAM column DESTIN_NETWORK to IFW_DISCARDING
+
+PETS #40834 Enhance TimeZone Splitting
+- Alter type of IFW_RATEPLAN.SPLITTING to CHAR(1)
+- Possible value are from now on: 
+  . 0 - NO-Splitting based on StartTime
+  . 1 - CONSECUTIVE-Splitting based on Start-Time
+  . 2 - NO-Splitting based on EndTime
+  . 3 - ISOLATED-Splitting based on Start-Time
+
+========================================================================================
+
+Actual Version : v4-30-11 / Date : 14-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #37924 Add IC_DAILY.ENTRY_TYPE to PK. Add 'S' to Check-Constraint for Storno. 
+            Add IC_DAILY.ENTRY_TYPE_SEQ as "Identifirer for more than one correction"
+
+PETS #42764 Column comment contains &-Sign which causes trouble with sqlplus.
+
+========================================================================================
+
+Actual Version : v4-30-10 / Date : 21-Dec-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42574 LERG database extension.
+            - new table: IFW_LERG_DATA
+            - new ModelType 'L' in IFW_ZONEMODEL.MODELTYPE
+            - new column ruleset in IFW_GEOGRAPHICAL_MODEL
+            - new columns valid_from, valid_to in IFW_GEOAREACODE_LNK
+PETS #41122 Pricemodel rounding rules-database extension.
+            - new columns rounding_method, decimal_places in IFW_PRICEMODEL 
+
+========================================================================================
+
+Actual Version : v4-30-09 / Date : 10-Dec-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #42412 IFW_DISCARDING.MODIFIED disappeared accidently in ifw_Create.sql from
+            v4-30-05 on. Column has been re-added.
+
+========================================================================================
+
+Actual Version : v4-30-08 / Date : 09-Nov-2001
+----------------
+
+Notes          :
+----------------
+
+IFW_REF_MAP.REF_COL needs to be null allowed (not mandatory).
+
+Solved PRs/CRs :
+----------------
+
+PETS #41288 IFW_RULESETLIST.MODIFBY changed from varchar2(2000) to number(9).
+
+========================================================================================
+
+Actual Version : v4-30-07 / Date : 31-Oct-2001
+----------------
+
+Notes          :
+----------------
+
+Create all indices in index tablespaces (PK_IFW_SAC: INTEGRATE_TS_2_IDX, 
+PK_IFW_ASM: INTEGRATE_TS_1_IDX)
+
+Solved PRs/CRs :
+----------------
+
+PETS #40892 valid from in ifw_discountmdl_ver allows NULL, which is a bug
+
+PETS #41081 Documentation bug for THRESHOLD columns in IFW_PRICEMODEL_STEP
+
+========================================================================================
+
+Actual Version : v4-30-06 / Date : 21-Sep-2001
+----------------
+
+Notes          :
+----------------
+
+IC_DAILY/-_ALTERNATE: renamed column RESSOURCE to RESOURCE_NAME
+
+Solved PRs/CRs :
+----------------
+
+PETS #38593 adapt model for smoother transition to db2
+  - shorten some index codes (\\ham1fp1eu\solsrv\user\engelbrecht peter\private\pd_v6\db2\CheckModelMessages.txt)
+  - replace / from 'end script' with ';'
+
+PETS #39276 obsolete tables in model
+  - remove table IFW_USAGETYPE_MAP. The related function module is replaced by
+    an iRule/iScript combo.
+
+PETS #38885 script update_v4-10-04_v4-30-01_CreateCopy.sql
+  - Updated calls to renamed scripts in update_v4-10-04_v4-30-01_CreateCopy.sql and
+    update_v4-10-04_v4-30-01_Drop.sql
+
+PETS #38886 database update script to v4-30-01 failed because no insert into   IFW_NETWORKMODEL is possible
+  - Create dummy NO and TAXGROUP for IC migration purposes. Link all new entries
+    of IFW_NETWORKMODEL to this dummy NO.
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 30-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+- Updates on some comment fields.
+
+- Added check constraints for: 
+  . IFW_ICPRODUCT_RATE ZONE_DIRECTION, ZONE_TYPE and BILL_DIRECTION and 
+  . IC_DAILY/_ALTERNATE BILL_DIRECTION.
+
+Solved PRs/CRs :
+----------------
+
+PETS #38201 Name for CURRENCY 'ISK' contains special char! Causes trouble in Smacc.
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 26-Jul-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #37420 ifw with carriericrating cored while processing a cdr file.
+  - IFW_NETWORKMODEL.NO has to be mandatory.
+
+PETS #37527 Small database corrections/enhancements
+  - IFW_EDRC_FIELD: add check constraint to allow only distinct values 
+    (Block, Date, Decimal, Integer, String) for TYPE. 
+  - NAME columns, check if all are VARCHAR2(255)!
+    Modified IFW_RATEADJUST, IFW_UOM, IFW_DISCOUNTTRIGGER, IFW_RATESERVICE_MAP, IFW_RATEPLAN
+  - IFW_TIMEINTERVAL
+    TimeFrom/To need to be mandatory.
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 17-Jul-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #36857 naming of ifw db-scripts still integRate. 
+            All database related files starting with integRate renamed to ifw.
+
+PETS #37073 create user 'integrate' fails because SOL tablespaces are referenced.
+            Removed quota for SOL tablespaces.
+
+PETS #37113 passthrough in rateplan configuration just allowes 1 or 0
+            Updated check constraint.
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 10-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36809 Add new column REF_PARAM to IFW_REF_MAP.
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36686 Create a database migration script from v4-10-04 to v4-30-00.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 28-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+all changes for ZAPHOD...
+
+========================================================================================
+
+Actual Version : v4-10-03 / Date : 14-Feb-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#2980# Tablespaces that are not created by default wont be used for user quotas.
+#2997# update_v4-10-01_v4-10-02.sql now creates a log-file.
+
+========================================================================================
+
+Actual Version : v4-10-02 / Date : 30-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+- domain of INT_SUBS_CLI.CLI changed to CLI
+- domain of INT_UOM.MODIFIED changed to MODIFIED
+- domain of INT_UOM.MO lnandi     07/21/08 - 
+- default value of domain STREAM changed to '.*' for new FSM
+- drop tables SOL_REGISTRY and SOL_SECTION
+- drop tables AGG_EDRFORMAT, AGG_EDRFORMAT_CNF, AGG_EDRFORMAT_SCN
+  (generation disabled)
+- in table AGG_EDRCFIELD drop columns EDRC_TYPE and INTERNAL_FIELD_ID
+- in table AGG_SCENARIO drop columns VALID_FROM and VALID_TO
+- modify view AGG_FORMAT_MAP_COLUMNS
+- delete INT_SEQ_ZONE, its needless
+- new Check Constraint INT_PRICEMODEL_STEP.CHARGE_BASE > 0
+- add missing foreign key constraints
+
+Solved PRs/CRs :
+----------------
+
+#2542# All ';' in some column comments have been removed.
+
+========================================================================================
+
+Actual Version : v4-10-01 / Date : 12-Oct-2000
+----------------
+
+New Features   :
+----------------
+v4-10-01 / bn / 2000-10-12
+1 Database Changes in v4-10-00
+1.1 ZONE from NUMBER(5) to VARCHAR2(5)
+1.2 CLI from VARCHAR2(24) to VARCHAR2(40)
+1.3 INT_AREACODE_MAP object deleted
+1.4 All FSM Fields enlarged from VARCHAR2(255) to VARCHAR2(2000)
+1.5 INT_TARIFFSERVICECLASS new FSM Fields and new PK
+1.6 INT_CLASSTYPEZONE_MAP new FSM Fields and new PK
+1.7 New table INT_MAP_GROUP
+1.8 INT_CALLTYPE_MAP new PK
+1.9 INT_CALLCLASS_MAP new PK
+1.10  INT_NOSP new PK
+1.11  INT_SERVICECODE_MAP new PK and new FSM result field
+1.12  INT_SERVICE new Fields added
+1.13  INT_UOM new table
+1.14  INT_UOM_MAP new table
+1.15  INT_TARIFFDISCOUNT_LNK new FSM Field
+1.16  INT_RESELLER_LNK deleted and INT_ICPRODUCT_CNF 
+  new FSM Fields INT_NETWORKMODEL new MODELTYPE
+1.17  INT_SPECIALISTSYSTEM renamed to INT_SYSTEM_BRAND
+1.18  INT_TARIFFMODEL field TAXRATE removed
+1.19  INT_TARIFFMODEL_CNF new fields
+1.20  INT_REVENUEGROUP new table
+1.21  INT_GLACCOUNT new table
+1.22  INT_TAXCODE new table
+1.23  INT_TAX new table
+1.24  INT_TAXGROUP new table
+1.25  INT_SUBS_CONTRACT new fields added
+1.26  INT_SUBS_CONTRACT_HIST new fields added
+1.27  INT_CURRENCY new table
+1.28  INT_EXCHANGE_RATE new table
+1.29  INT_ZONEMODEL new field added
+1.30  INT_APN_GROUP new table
+1.31  INT_APN_MAP new table
+1.32  INT_SUBS_ACCOUNT new field added
+1.33  INT_DISCOUNTSTEP new field added
+1.34  INT_NOPRODUCT new fields added
+1.35  INT_ICPRODUCT new fields added
+1.36  INT_NOPRODUCT_CNF new fields added
+1.37  INT_ICNO_LNK new table
+1.38  INT_ICPRODUCT_CNF new fields added
+1.39  INT_SWITCH, INT_POI, INT_TRUNK new field added
+1.40  new table INT_TRUNK_CNF and INT_ICPRODUCT_GROUP
+1.41  new foreign key INT_TMD_CUR
+1.42  sequences overworked
+2 Functional Changes for v4-10-00
+2.1 Support for sol42_v4 Format
+2.2 Normalization of IPv4 and IPv6 addresses
+2.3 Zoning of IPv4 and IPv6 addresses
+2.4 EDR Field References for every Module within the Registry
+2.5 Unit-of-Measurement (UoM) Handling and Mapping
+2.6 Enhanced Taxation Support
+2.7 Enhanced Currency Support
+2.8 APN Mapping
+
+Solved PRs/CRs :
+----------------
+
+#2476# JSA and integRate database scripts have been unified. The database
+       setup is now described in HowToInstall.html
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-05-00 / Date : 31-July-2000
+----------------
+
+Notes          :
+----------------
+
+Fixed update scripts.
+Finalized prepare script.
+Merged aggreGate PDM into integRate PDM.
+
+========================================================================================
+
+Actual Version : v4-04-02 / Date : 20-July-2000
+----------------
+
+Notes          :
+----------------
+
+Moved BILLCYCLE from INT_SUBS_CONTRACT to INT_SUBS_CONTRACT_HIST.
+
+========================================================================================
+
+Actual Version : v4-04-01 / Date : 12-July-2000
+----------------
+
+Notes          :
+----------------
+
+Extend INT_SUBSTARIFF_MAP.SUBS_TARIFFMODEL to 30.
+Extend INT_SUBS_CONTRACT_HIST.TARIFFMODEL to 30.
+Add Index for TARIFFMODEL on INT_SUBS_CONTRACT_HIST.
+
+========================================================================================
+
+Actual Version : v4-04-00 / Date : 19-June-2000
+----------------
+
+Notes          :
+----------------
+
+new tariffIC table IC_DAILY and IC_DAILY_ALTERNATE added
+
+========================================================================================
+
+Actual Version : v4-03-03 / Date : 09-June-2000
+----------------
+
+Notes          :
+----------------
+1) table INT_CLASSTYPEZONE_MAP changed:
+   new columns MIN_AOC_AMOUNT, MAX_AOC_AMOUNT (number, null) added 
+2) role definition changed (due to modified def-file):
+   now used INTEGRATE_ROLE_SEL and INTEGRATE_ROLE_SEL
+
+========================================================================================
+
+Actual Version : v4-03-02 / Date : 31-May-2000
+----------------
+
+Notes          :
+----------------
+
+These are the first release notes for the integRate Database.
+
+========================================================================================

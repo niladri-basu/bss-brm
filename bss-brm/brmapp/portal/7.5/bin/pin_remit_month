@@ -1,0 +1,109 @@
+#!/bin/sh
+#!/bin/sh
+#
+# @(#)$Id: pin_remit_month.sh /cgbubrm_7.3.2.rwsmod/1 2009/05/22 10:38:53 mcb Exp $
+#
+# Copyright (c) 2000, 2009, Oracle and/or its affiliates. All rights reserved. 
+#
+#	This material is the confidential property of Oracle Corporation or its
+#	licensors and may be used, reproduced, stored or transmitted only in
+#	accordance with a valid Oracle license or sublicense agreement.
+#
+
+VERSION=7.5
+
+####################################################################
+#-------------------------------------------------------------------
+#
+# Monthly Remittance Script
+#
+#       This script will collect remittance, bill and generate invoices
+#       for remittance accounts.
+#
+#	It is assumed that this script is run (in the background)
+#	by cron once a month, via a crontab entry something like the
+#	following (which will run the script at 12:05 am):
+#
+#		5 0 1 * * /opt/portal/7.5/bin/pin_remit_month &
+#
+#       It's recommended to run this script after pin_bill_day, pin_bill_week
+#       and pin_bill_month
+#-------------------------------------------------------------------
+####################################################################
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/pin_billd
+
+CNFDIR=${PINDIR}/apps/pin_billd
+INVDIR=${PINDIR}/apps/pin_inv
+
+PATH=/usr/bin:/bin:${PINDIR}/bin
+
+cd ${CNFDIR}
+
+#-------------------------------------------------------------------
+# Remittance Collection     			(pin_remittance)
+#       collect remittance for all remittance accounts
+#
+#-------------------------------------------------------------------
+pin_remittance -b
+
+#-------------------------------------------------------------------
+# Bill Generation			(pin_bill_accts)
+#
+#	We do the bill creation as two (parrallel) batches,
+#	the active accounts and the closed/inactive accounts.
+#
+#	Run the closed/inactive accounts in the background
+#	since they'll finish up first. then check the error
+#	on the active account run (in our foreground).
+#
+#	IMPORTANT: Must finish before next step.
+#
+#-------------------------------------------------------------------
+pin_bill_accts -inactive -remit only &
+pin_bill_accts -close -remit only &
+
+pin_bill_accts -active -remit only
+err=$?
+if [ $err != 0 ]; then
+	exit $err;
+fi
+
+wait
+
+#-------------------------------------------------------------------
+# Invoice Generation		(pin_inv_accts -pay_type 10001)
+#
+#	Generate the invoices and store them in the database.
+#	Payment types are defined as follows:
+#			<id>  meaning
+#			----- -------
+#		        10000 prepaid
+#		        10001 invoice
+#		        10002 debit
+#		        10003 credit card
+#		        10004 French direct debit
+#		        10005 US/Canadian direct debit
+#		        10006 smart card
+#		        10007 subordinate 
+#		        10008 beta
+#		        10009 internal
+#		        10010 guest
+#		        10011 cash
+#		        10012 check
+#		        10013 wtransfer
+#		        10014 payorder
+#		        10015 postal order
+#
+# 	If you want to invoice all the bills, 
+#	you can simply put "pin_inv_accts" instead. Also
+#	"pin_inv_accts -regen" provide a way to regenerate invoices.
+#-------------------------------------------------------------------
+cd ${INVDIR}
+
+pin_inv_accts -pay_type 10001
+
+exit 0
+
+

@@ -1,0 +1,171 @@
+<Opcode name="PCM_OP_CUST_GET_NOTE" visibility="public" transaction="required"
+        component="fm_cust" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+     <Doc>The opcode PCM_OP_CUST_GET_NOTE is used to fetch notes based on
+          input parameters.</Doc>
+     <Input>
+          <Fields>
+               <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                    <Doc>This is the note POID. If the poid is complete
+			 the given note object will be returned.</Doc>
+                    <ClassRef>obj://note</ClassRef>
+               </Poid>
+               <Timestamp name="PIN_FLD_START_T" use="optional">
+                    <Doc>Note entry with timetamp greater than
+			 or equal to this timestamp will be fetched.</Doc>
+               </Timestamp>
+               <Timestamp name="PIN_FLD_END_T" use="optional">
+                    <Doc>Note entry with timetamp less than
+			 this timestamp will be fetched.</Doc>
+               </Timestamp>
+               <Poid name="PIN_FLD_ITEM_OBJ" use="optional" mode="complete">
+                    <Doc>Item associated with the note.</Doc>
+                    <ClassRef>obj://item</ClassRef>
+               </Poid>
+               <Poid name="PIN_FLD_EVENT_OBJ" use="optional" mode="complete">
+                    <Doc>Event associated with the note.</Doc>
+                    <ClassRef>obj://event</ClassRef>
+               </Poid>
+               <Poid name="PIN_FLD_SERVICE_OBJ" use="optional" mode="complete">
+                    <Doc>Service associated with the note.</Doc>
+                    <ClassRef>obj://service</ClassRef>
+               </Poid>
+               <Poid name="PIN_FLD_BILLINFO_OBJ" use="optional" mode="complete">
+                    <Doc>Billinfo associated with the note.</Doc>
+                    <ClassRef>obj://billinfo</ClassRef>
+               </Poid>
+               <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="complete">
+                    <Doc>Account associated with the note.</Doc>
+                    <ClassRef>obj://account</ClassRef>
+               </Poid>
+	       <Enum name="PIN_FLD_NOTE_TYPE" use="optional">				 	
+                    <Doc>Type of the note object.</Doc>
+               </Enum>
+	       <Enum name="PIN_FLD_NOTE_SUB_TYPE" use="optional">				 	
+                    <Doc>Sub Type of the note object.</Doc>
+               </Enum>
+	       <Enum name="PIN_FLD_STATUS" use="optional">				 	
+                    <Doc>Status of the note object.</Doc> 
+               </Enum>
+          </Fields>
+     </Input>
+     <Output>
+          <Fields>
+               <Poid name="PIN_FLD_POID" use="required" mode="complete">
+                    <Doc>POID from input.</Doc>
+                    <ClassRef>obj://note</ClassRef>
+               </Poid>
+	       <Array name="PIN_FLD_RESULTS" use="required"
+                          elemIdMode="ignored" iterationOrder="undefined"
+                          minElements="1" 
+                          minElemId="0"
+                          isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+                          isRecursive="false" allowedElemIds="0">
+                   <Doc>This field is returned when the operation is successful.</Doc>
+                   <Fields>
+		       <Poid name="PIN_FLD_POID" use="required" mode="complete">
+			    <Doc>POID of the note object.</Doc>
+			    <ClassRef>obj://note</ClassRef>
+		       </Poid>
+		       <Timestamp name="PIN_FLD_CREATED_T" use="required">
+                            <Doc> Time the object was created.</Doc>
+                       </Timestamp>
+                       <Timestamp name="PIN_FLD_MOD_T" use="optional">
+                            <Doc> Time the object was last modified.</Doc>
+                       </Timestamp>
+                       <String name="PIN_FLD_READ_ACCESS" use="required" maxlen="255">
+                            <Doc>Read Access level for object. Valid values are S(Self), 
+				 G(Global), L(BrandLineage), B(BrandGroup), A(Ancestral).</Doc>
+                       </String>
+                       <String name="PIN_FLD_WRITE_ACCESS" use="required" maxlen="255">
+                            <Doc>Write Access level for object. Valid values are S(Self), 
+				 G(Global), L(BrandLineage), B(BrandGroup), A(Ancestral).</Doc>
+                       </String>
+		       <String name="PIN_FLD_HEADER_STR" use="required" maxlen="255">
+			    <Doc>Conversation header. Summarizes the reason for the
+				 given conversation.</Doc>
+		       </String>
+		       <Timestamp name="PIN_FLD_CLOSED_T" use="required">
+			    <Doc>Resolution timestamp.</Doc>
+		       </Timestamp>
+		       <Timestamp name="PIN_FLD_EFFECTIVE_T" use="required">
+			    <Doc>Effective time of note creation.</Doc>
+		       </Timestamp>
+		       <Decimal name="PIN_FLD_AMOUNT" use="required">
+			    <Doc>Amount associated with the note.</Doc>
+		       </Decimal>
+		       <Int name="PIN_FLD_REASON_DOMAIN_ID" use="required">
+			    <Doc>Reason info for A/R action.</Doc>
+		       </Int>
+		       <Int name="PIN_FLD_REASON_ID" use="required">
+			    <Doc>Reason code for A/R action.</Doc>
+		       </Int>
+		       <Poid name="PIN_FLD_ITEM_OBJ" use="required" mode="complete">
+			    <Doc>Item associated with the note.</Doc>
+			    <ClassRef>obj://item</ClassRef>
+		       </Poid>
+		       <Poid name="PIN_FLD_EVENT_OBJ" use="required" mode="complete">
+			    <Doc>Event associated with the note.</Doc>
+			    <ClassRef>obj://event</ClassRef>
+		       </Poid>
+		       <Poid name="PIN_FLD_SERVICE_OBJ" use="required" mode="complete">
+			    <Doc>Service associated with the note.</Doc>
+			    <ClassRef>obj://service</ClassRef>
+		       </Poid>
+		       <Poid name="PIN_FLD_BILLINFO_OBJ" use="required" mode="complete">
+			    <Doc>Billinfo associated with the note.</Doc>
+			    <ClassRef>obj://billinfo</ClassRef>
+		       </Poid>
+		       <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="complete">
+			    <Doc>Account associated with the note.</Doc>
+			    <ClassRef>obj://account</ClassRef>
+		       </Poid>
+		       <Enum name="PIN_FLD_NOTE_TYPE" use="required">				 	
+			    <Doc>Type of the note object. The values are validated 
+				 against the configured entries.</Doc>
+		       </Enum>
+		       <Enum name="PIN_FLD_NOTE_SUB_TYPE" use="required">				 	
+			    <Doc>Sub Type of the note object. The values are validated 
+				 against the configured entries.</Doc>
+		       </Enum>
+		       <Enum name="PIN_FLD_STATUS" use="required">				 	
+			    <Doc>Status of the note object. The values are validated 
+				 against the configured entries.</Doc>
+		       </Enum>
+		       <Int name="PIN_FLD_COUNT" use="required">
+			    <Doc>Number of note entries.</Doc>
+		       </Int>
+		       <Array name="PIN_FLD_DATA_ARRAY" use="required"
+		       elemIdMode="ignored" iterationOrder="undefined"
+		       minElements="1"
+		       isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+ 		       isRecursive="false">						 		 					
+                          <Fields>
+		               <Timestamp name="PIN_FLD_ENTRY_T" use="required">
+                                     <Doc> Time the entry was created.</Doc>
+                               </Timestamp>
+		               <Poid name="PIN_FLD_CSR_ACCOUNT_OBJ" use="required" mode="complete">
+			             <Doc>CSR account for the entry.</Doc>
+			             <ClassRef>obj://account</ClassRef>
+		               </Poid>
+		               <String name="PIN_FLD_TRACKING_ID" use="required" maxlen="255">
+			             <Doc>External System Identifier.</Doc>
+		               </String>
+		               <String name="PIN_FLD_NOTE_STR" use="required" maxlen="4000">
+			             <Doc>Description for note.</Doc>
+		               </String>
+		         </Fields>	
+		     </Array>	
+                   </Fields>
+               </Array>
+	  </Fields>
+     </Output>
+</Opcode>
+
+
+
+
+
+

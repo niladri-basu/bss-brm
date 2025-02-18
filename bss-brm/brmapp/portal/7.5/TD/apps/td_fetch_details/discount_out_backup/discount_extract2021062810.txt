@@ -1,0 +1,6 @@
+select act.ACCOUNT_NO||'*'||bill.BILL_INFO_ID||'*'||bill.ACTG_CYCLE_DOM||'*'||salt.NAME||'*'||podd.name||'*'||(select PDD.VALUE
+*
+ERROR at line 1:
+ORA-01789: query block has incorrect number of result columns
+
+

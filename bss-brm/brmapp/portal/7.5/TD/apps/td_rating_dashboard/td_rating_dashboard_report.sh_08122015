@@ -1,0 +1,144 @@
+#####################################################################
+# Descr  : Script to generate rating reports from BIP
+# Exec   : td_rating_dashboard_report.sh 
+####################################################################
+
+#!/bin/bash
+
+LOGINSQL=`egrep -v "#" login.cfg | grep "DB_LOGIN" |cut -d'=' -f2`
+BIPLOGINSQL=`egrep -v "#" login.cfg | grep "BIP_LOGIN" |cut -d'=' -f2`
+outfile=`egrep -v "#" login.cfg | grep "OUTFILE_DIR" |cut -d'=' -f2 |sed -e 's/$                                                                                        /\/rating_dashboard.log/'`
+DST_VAL=`egrep -v "#" login.cfg | grep "DST_VALUE" |cut -d'=' -f2`
+PIPE_POSTPAID_INPUT_PATH=`egrep -v "#" td_rating_dashboard.cfg | grep "PIPE_POSTPAID_INPUT_PATH" |cut -d'=' -f2`
+PIPE_POSTPAID_FILE_PREFIX=`egrep -v "#" td_rating_dashboard.cfg | grep "PIPE_POSTPAID_FILE_PREFIX" |cut -d'=' -f2`
+PIPE_PREPAID_INPUT_PATH=`egrep -v "#" td_rating_dashboard.cfg | grep "PIPE_PREPAID_INPUT_PATH" |cut -d'=' -f2`
+PIPE_PREPAID_FILE_PREFIX=`egrep -v "#" td_rating_dashboard.cfg | grep "PIPE_PREPAID_FILE_PREFIX" |cut -d'=' -f2`
+REL_POSTPAID_INPUT_PATH=`egrep -v "#" td_rating_dashboard.cfg | grep "REL_POSTPAID_INPUT_PATH" |cut -d'=' -f2`
+REL_POSTPAID_FILE_PREFIX=`egrep -v "#" td_rating_dashboard.cfg | grep "REL_POSTPAID_FILE_PREFIX" |cut -d'=' -f2`
+REL_PREPAID_INPUT_PATH=`egrep -v "#" td_rating_dashboard.cfg | grep "REL_PREPAID_INPUT_PATH" |cut -d'=' -f2`
+REL_PREPAID_FILE_PREFIX=`egrep -v "#" td_rating_dashboard.cfg | grep "REL_PREPAID_FILE_PREFIX" |cut -d'=' -f2`
+POSTPAID_ERROR=`egrep -v "#" td_rating_dashboard.cfg | grep "POSTPAID_ERROR" |cut -d'=' -f2`
+POSTPAID_REJECT=`egrep -v "#" td_rating_dashboard.cfg | grep "POSTPAID_REJECT" |cut -d'=' -f2`
+PREPAID_ERROR=`egrep -v "#" td_rating_dashboard.cfg | grep "PREPAID_ERROR" |cut -d'=' -f2`
+PREPAID_REJECT=`egrep -v "#" td_rating_dashboard.cfg | grep "PREPAID_REJECT" |cut -d'=' -f2`
+PREPAID_DUP=`egrep -v "#" td_rating_dashboard.cfg | grep "PREPAID_DUP" |cut -d'=' -f2`
+POSTPAID_DUP=`egrep -v "#" td_rating_dashboard.cfg | grep "POSTPAID_DUP" |cut -d'=' -f2`
+report=0
+num_of_err_records=0
+sus_err_records=0
+function mainLogic (){
+
+	age=0
+	records=0
+	files=0
+	echo $1
+	echo $2
+	last_file=$(ls -1t $1*.$2|tail -1)
+
+	if [ "$last_file" == "" ]
+		then
+			age=0
+		else
+			age=$(( ($(date +%s) - $(date +%s -r $(ls -1t $last_file|tail -1))) / 60 ))
+	fi
+
+	if [[ "$1" == *"pin_rel"* ]]
+		then
+			records=$(cd $1 ;grep ^020 *.$2  | wc -l)
+			echo "pinrel "
+			echo $records
+		else
+			records=$(cd $1 ;find .  -maxdepth 1 -name "*.$2" -exec wc -l {} \; | awk '{ SUM += $0} END { print SUM }')
+			echo "non pinrel "
+			echo $records
+	fi
+
+	files=$(ls $1*.$2|wc -l)
+
+	#Change made by Dev Sharma for defects 1707 and defect 1709 on 22/05/2015
+	report="Unprocessed files : $files Unprocessed Records : $records Age of oldest file in minutes : $age"
+	echo $report
+}
+ 
+function calcNumOfErrorRecords () {
+	echo $cd $1
+	sus_err_records=$(cd $1 ;grep ^020 *.out.bc  | wc -l)
+	num_of_err_records=$(cd $1 ;find .  -maxdepth 1 \( -name '*.err' -o -name '*.dup' -o -name '*.rej' \) -exec wc -l {} \; | awk '{ SUM += $0} END { print SUM }')
+}
+
+
+#while true; do
+	sus_err_records=0
+	num_of_err_records=0
+	total_prepay_err_records=0
+	total_postpay_err_records=0
+
+	mainLogic $PIPE_POSTPAID_INPUT_PATH $PIPE_POSTPAID_FILE_PREFIX
+	pipe_postpaid_report=$report
+	mainLogic $PIPE_PREPAID_INPUT_PATH $PIPE_PREPAID_FILE_PREFIX
+	pipe_prepaid_report=$report
+	mainLogic $REL_POSTPAID_INPUT_PATH $REL_POSTPAID_FILE_PREFIX
+	rel_postpaid_report=$report
+	mainLogic $REL_PREPAID_INPUT_PATH $REL_PREPAID_FILE_PREFIX
+	rel_prepaid_report=$report
+
+	calcNumOfErrorRecords $POSTPAID_ERROR
+	total_postpay_err_records=$(( $num_of_err_records + $total_postpay_err_records + $sus_err_records))
+	
+	echo $total_postpay_err_records
+	calcNumOfErrorRecords $POSTPAID_REJECT
+	total_postpay_err_records=$(( $num_of_err_records + $total_postpay_err_records + $sus_err_records))
+	
+	echo $total_postpay_err_records
+	calcNumOfErrorRecords $POSTPAID_DUP
+	total_postpay_err_records=$(( $num_of_err_records + $total_postpay_err_records + $sus_err_records))	
+	
+	echo $total_postpay_err_records
+	calcNumOfErrorRecords $PREPAID_ERROR
+	total_prepay_err_records=$(( $num_of_err_records + $total_prepay_err_records + $sus_err_records))
+
+	echo $total_prepay_err_records
+	calcNumOfErrorRecords $PREPAID_REJECT
+	total_prepay_err_records=$(( $num_of_err_records + $total_prepay_err_records + $sus_err_records))
+	
+	echo $total_prepay_err_records
+	calcNumOfErrorRecords $PREPAID_DUP
+	total_prepay_err_records=$(( $num_of_err_records + $total_prepay_err_records + $sus_err_records))
+	echo $total_prepay_err_records
+	
+
+$ORACLE_HOME/bin/sqlplus -s $BIPLOGINSQL>$outfile<<EOF
+SET WRAP ON
+--
+set heading off;
+set feedback off;
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS ON VERIFY OFF;
+--
+set linesize 200
+set serveroutput on size 2000
+
+insert into BIP_BRM_REPORT values (sysdate, 'CDR Upload Rejects-Number of Reject Records in Prepay', '$total_prepay_err_records', 'N');
+insert into BIP_BRM_REPORT values (sysdate, 'CDR Upload Rejects-Number of Reject Records in Post Pay', '$total_postpay_err_records', 'N');
+insert into BIP_BRM_REPORT values (sysdate, 'Dashboard - Rating-Pre-Pay Rating Queues  Waiting', '$pipe_prepaid_report', 'N');
+insert into BIP_BRM_REPORT values (sysdate, 'Dashboard - Rating-Pre-Pay Rating Queues  In Processing', '$rel_prepaid_report', 'N');
+insert into BIP_BRM_REPORT values (sysdate, 'Dashboard - Rating-Post-Pay Rating Queues  Waiting', '$pipe_postpaid_report', 'N');
+insert into BIP_BRM_REPORT values (sysdate, 'Dashboard - Rating-Post-Pay Rating Queues  In Processing', '$rel_postpaid_report', 'N');
+commit;
+
+exit;
+EOF
+
+	IS_ERROR=`grep ORA- ${outfile}|wc -l`
+					if [ $IS_ERROR -gt 0 ];
+							then
+							echo "ORACLE ERROR"
+							cat ${outfile}
+							exit 0
+					fi
+
+	echo "Rating Report Generation Process completed at: " `date`
+
+#		sleep 900
+
+#done
+

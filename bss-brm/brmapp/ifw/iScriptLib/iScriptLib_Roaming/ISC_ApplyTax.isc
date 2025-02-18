@@ -1,0 +1,122 @@
+//==============================================================================
+//
+//      Copyright (c) 2005 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_ApplyTaxMtc.isc
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module decides whether incoming TAP taxamount need to be
+//   passed to the subscriber or not
+//
+//------------------------------------------------------------------------------
+// Responsible: Archan Misra
+//
+//------------------------------------------------------------------------------
+//==============================================================================
+// include the OpFlag Extension interface
+use IXT_OpFlag;
+
+
+//==============================================================================
+//
+// This function make the chargeamount in CP 0 if the taxpacket is there.Because
+// tax packet cann't stand alone.In case taxpacket is not there which means there is
+// no need of the ASS_CBD block as CP amount or TP amount doesn't need to pass to
+// the subscriber
+//============================================================================
+
+function adjustASS_CBDCPAmount
+{
+  Long tpEntries;
+  Long cpEntries;
+  Long cpIndex;
+
+  tpEntries = edrNumDatablocks( DETAIL.ASS_CBD.TP,0);
+
+  if(tpEntries > 0)
+  {
+    cpEntries = edrNumDatablocks( DETAIL.ASS_CBD.CP,0);
+
+    for(cpIndex = 0; cpIndex < cpEntries ; cpIndex = cpIndex + 1)
+    {
+      edrDecimal( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE, 0, cpIndex ) = 0.0;
+    }
+  }
+  else
+  {
+    if (edrDeleteDatablock( DETAIL.ASS_CBD , 0) == false )
+    {
+      String Msg = "ERROR:Failed to delete the ASS_CBD block";
+      edrAddError("ERR_DELETION_ASS_CBD_FAILURE", 3, Msg);
+      edrSetIsValidDetail( false );
+    }
+  }
+} // end function adjustASS_CBDCPAmount
+//==============================================================================
+// BEGIN Container
+//==============================================================================
+function BEGIN
+{
+  //----------------------------------------------------------------------------
+  // Connect the extension with the DAT_InterConnect plugin
+  //----------------------------------------------------------------------------
+  if (setDAT_InterConnectModule("ifw.DataPool.ICDataModule.Module") == true )
+  {
+    logPipeline( "INFO: Roaming Ic Module set \n",0);
+  }
+  else
+  {
+    logPipeline( "ERROR: Could not set Ic Module \n",4);
+    scriptUsable( false ); 
+  }
+}
+
+function onDetailEdr
+{
+  String senderPLMN;
+  String taxflag;
+  String Msg;
+
+  //----------------------------------------------------------------------------
+  // check the value of taxation flag for the incoming PLMN 
+  //----------------------------------------------------------------------------
+  senderPLMN = edrString(DETAIL.ASS_ROAMING_EXT.SENDER,0);
+  taxflag = getTaxationFlag(senderPLMN);
+
+  if(taxflag == "")
+  {
+    Msg = "ERROR: taxflag value not found for this sender PLMN" + senderPLMN ;
+    edrAddError("ERR_PLMN_NOT_FOUND", 3, Msg);
+    edrSetIsValidDetail( false ); 
+    return;
+  }
+
+  //----------------------------------------------------------------------------
+  // check whether any incoming TAP charge has come or not
+  //----------------------------------------------------------------------------
+  Long blockEntries = edrNumDatablocks( DETAIL.ASS_CBD);
+
+  if(blockEntries > 0) 
+  {
+    if(taxflag == "N")
+    {
+      if (edrDeleteDatablock( DETAIL.ASS_CBD,0) == false )
+      {
+        Msg = "ERROR:Failed to delete the ASS_CBD  block";
+        edrAddError("ERR_DELETION_ASS_CBD_FAILURE", 3, Msg);
+        edrSetIsValidDetail( false ); 
+        return;
+      } 
+    }
+    else
+    {
+      adjustASS_CBDCPAmount();
+    }
+  }
+      
+} // end onDetailEdr + end iScript

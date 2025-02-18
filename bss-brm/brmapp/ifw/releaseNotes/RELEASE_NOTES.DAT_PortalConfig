@@ -1,0 +1,107 @@
+================================================================================
+PortalConfig
+--------------------------------------------------------------------------------
+Module Release Notes
+================================================================================
+Version : 7.5 10016 / Date: 19-Dec-2014
+----------------
+Notes    20231022   pei zhou 
+Bug 20231022 - 75PS11:BOIM_QEPart2 : Pipeline is crashing while starting  
+When processing EDR, pipeline crashes if /billinfo contain /config/business_profile obj, but
+that /config/business_profile does not contain "Item_Configuration".
+Fixed by checking if the retrival returns NULL.
+================================================================================
+Version : 7.5 10015 / Date: 23-Sep-2014
+----------------
+Notes   19661641    pei zhou 
+Bug 19661641 - 75 Main Reg : SIGSEGV caught while executing stop_ifw in 75Mainline latest build
+When /config/business_profile empty, junk data in map. Add a check not to insert junk in map.
+================================================================================
+Version : 7.5 10014 / Date: 23-Mar-2014
+----------------
+Notes   bug118460750    pei zhou 
+Bug 18460750 - Single-Item Pipeline changes to utilize /config/business_profile in Item Assign 
+Load/reload /config/business_profile into DAT_PortalConfig
+================================================================================
+Version : 7.4 10013 / Date: 08-JUL-2011
+----------------
+Notes   bug12717600    asranjan 
+bug12717600 : WRN_SEMAPHORE_NOT_PROCESSED message during reload semaphore operation.
+During semaphore operation CBPReload{}, the following message comes in the pipeline 
+log: WRN_SEMAPHORE_NOT_PROCESSED | Semaphore was not processed; check spelling 
+================================================================================
+Version : 7.4 10012 / Date: 11-Nov-2010
+----------------
+Notes   bug10077369    Chetan 
+bug10220978: ECR: PARALLEL LOADING IN THE PIPELINE ENGINE 
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+Version : 10011 / Date: 15-Apr-2010
+----------------
+Notes   bug9509252     rpradyum
+bug9509252 : P-9461333 OOD CONFIGURATION ON DB AND PIPELINE
+	     Multiple PROFILE_EVENT_ORDERING records were added to the pipeline
+	     output as OOd criteria parameters were wrongly stored in hashmap as
+	     multiple singleMap criteria instead of a single dualMap/multiMap.
+================================================================================
+Version : 10010 / Date: 16-Sep-2009
+----------------
+Notes   bug8807250      rpradyum
+bug8807250 : "No out-of-order rerating triggered for sharing group."
+             getCriteriaNames() has been modified to accept an extra parameter
+	     that tells if it is a sharing group case and act accordingly.
+================================================================================
+Version : 10009 / Date: 03-Apr-2009
+----------------
+Notes	bug8362790	smalviya 
+bug8362790 : Introduced semaphore parameter OODPrintData and changed PrintData functionality 
+to print all the data. Changed parameter name Reload to OODReload. 
+================================================================================
+Version : 10008 / Date: 11-DEC-2008
+----------------
+Notes	bug7157495	kmahunta 
+bug7157495 : Pipeline was not comming up when OOD enabled on linux
+================================================================================
+Version : 10007 / Date: 04-DEC-2008
+----------------
+Notes	bug7606172	animkuma 
+bug7606172 : 7.4 CCANE: XML FILE IS NOT GETTING GENERATED WHEN CREDIT FLOOR IS NULL
+DESCR : "Portal Config has been modified to leave Credit Limit and Floor Value to NULL
+	if DB contains NULL for them. Earlier it was populating it with 0 (Zero)
+================================================================================
+Version : 10006 / Date: 28-AUG-2008
+----------------
+Notes	bug7361542	armisra 
+bug7361542: CREDIT CONTROL AND NOTIFICATION - DAT PORTALCONFIG CHANGES
+DESCR : "Portal Config has been modified to read /config/credit_profile entries
+        which required during threshold check process. It is also capable of 
+	loading the profiles on-demand."
+================================================================================
+Version : 10005 / Date: 16-Mar-2007
+----------------
+Notes	BUG5940177	jsharma 
+BUG5940177: DAT_PortalConfig changes to provide bus_param apis
+================================================================================
+Version : 10004 / Date: 24-July-2006
+----------------
+Notes	PRSF00225355	pzhou 
+PRSF00225355: Perf fixes in FCT_EventOrder and DAT_Portalconfig
+================================================================================
+Version : 10003 / Date: 08-July-2006
+----------------
+Notes	PRSF00220309	pzhou 
+PRSF00220309: batch rating throughput drops by 10-20% w/ FCT_EventOrder added
+================================================================================
+Version : 10002 / Date: 08-Apr-2006
+----------------
+Notes	PRSF00193571	pzhou 
+PRSF00193571: new plugin FCT_EventOrder to process out-of-order events. 
+Make registry item "ReuseOnFailure" as optional.
+================================================================================
+Original Version : 10000 / Date: 10-Feb-2006
+----------------
+Notes          PRSF00193155  usha 
+"Create a DAT plugin to load the /config/event_order_criteria object in the pipeline" 
+
+================================================================================
+

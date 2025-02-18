@@ -1,0 +1,213 @@
+========================================================================================
+FCT_GlobalRating
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+========================================================================================
+
+Module Version: 10003  6.7_FP2  30-Apr-2004
+PRSF00108146: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+=========================================================================================
+
+Actual Version :  v4-30-03 / Date : 15-Jan-2002
+----------------
+
+Notes          :
+----------------
+
+PETS #42843 Set recordType with predefined value instead of calculated one.
+
+================================================================================
+========
+
+Actual Version :  v4-30-02 / Date : 24-Sep-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #39640 Wrong pipeline message text.
+            Modify tariff model to rateplan.
+
+========================================================================================
+
+Actual Version :  v4-30-01 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+========================================================================================
+
+Actual Version :  v4-30-00 / Date : 16-May-2001
+----------------
+
+New Features   :
+----------------
+
+- Modified for new EDR-C v4-30
+- Retrieve EDR-C field indices via IFW_ALIAS_MAP. Use hard-coded and documented 
+  defaults only if mapping fails.
+
+========================================================================================
+
+Actual Version :  v4-03-01 / Date : 19-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#2245# Update "DETAIL.NUMBER_ASSOCIATED_RECORDS" and
+       "ASSOCIATED_CHARGE.NUMBER_OF_CHARGE_PACKETS".
+       
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version :  v4-02-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+ - Support for AIX compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version :  v4-01-00 / Date : 29-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Support EDR_Container-vector as paramter for processEdrContainer.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version :  v4-00-00 / Date : 03-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Support new EDR-Container v4.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version :  v1-21-03 / Date : 26-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+- Fill the 'iNumZone'-fields in the ChargePackets with 'a'- and 'bNumZone' values.
+- Set EDR_ChargePacket.chargeType field to 'N'.
+- RegistryUpdate now replaces the EdrTariffModels Section instead of appending the
+  new values to the existing.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version :  v1-21-01 / Date : 21-OCT-1999
+----------------
+
+Notes          :
+----------------
+
+21-OCT-1999  Updated isUsable() function with log-messages
+             to fit the requirements.
+
+
+New Features   :
+----------------
+
+14-OCT-1999  Implementation of isUsable() function.
+ 
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

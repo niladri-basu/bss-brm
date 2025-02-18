@@ -1,0 +1,5 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+numberPortability | 1 | numberPortabilityGroup | NumberPortability Plugin | NotSpecified | Group |
+numberPortabilityGroup | 1 | reload | Re-load Connection | ReadWrite | String |
+numberPortabilityGroup | 2 | deltaLoad | Delta Load data | ReadWrite | String |
+numberPortabilityGroup | 3 | printData | Print Data | ReadWrite | String |

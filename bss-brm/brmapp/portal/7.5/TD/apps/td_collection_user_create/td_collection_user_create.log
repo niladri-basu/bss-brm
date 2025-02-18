@@ -1,0 +1,546 @@
+PCM_OP_CREATE_CUSTOMER input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /plan -1 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 4
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo -1 0
+1     PIN_FLD_BILLINFO_ID     STR [0] "Default Bill Unit"
+1     PIN_FLD_PAY_TYPE       ENUM [0] 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_ACCTINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /account -1 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_NAMEINFO      ARRAY [1] allocated 20, used 7
+1     PIN_FLD_LAST_NAME       STR [0] "brm"
+1     PIN_FLD_COUNTRY         STR [0] "india"
+1     PIN_FLD_FIRST_NAME      STR [0] "brm"
+1     PIN_FLD_ZIP             STR [0] "712246"
+1     PIN_FLD_STATE           STR [0] "WB"
+1     PIN_FLD_CITY            STR [0] "kol"
+1     PIN_FLD_ADDRESS         STR [0] "kol"
+0 PIN_FLD_BAL_INFO      ARRAY [0] allocated 20, used 3
+1     PIN_FLD_NAME            STR [0] "Default Balance Group"
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /balance_group -1 0
+1     PIN_FLD_BILLINFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_SERVICES      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.1 /service/admin_client -1 0
+1     PIN_FLD_PASSWD_CLEAR    STR [0] "brm12345"
+1     PIN_FLD_PASSWD_STATUS   ENUM [0] 0
+1     PIN_FLD_LOGIN           STR [0] "brm12345"
+1     PIN_FLD_DEAL_OBJ       POID [0] 0.0.0.0 / 0 0
+
+PCM_OP_CUST_CREATE_CUSTOMER output flist: 
+# number of field entries allocated 20, used 10
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /plan -1 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 7
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 21139805 0
+1     PIN_FLD_BILLINFO_ID     STR [0] "Default Bill Unit"
+1     PIN_FLD_PAY_TYPE       ENUM [0] 0
+1     PIN_FLD_CURRENCY        INT [0] 554
+1     PIN_FLD_CURRENCY_SECONDARY    INT [0] 0
+1     PIN_FLD_EFFECTIVE_T  TSTAMP [0] (1426507263) Tue 17 Mar 2015 01:01:03 AM NZDT
+1     PIN_FLD_BAL_GRP_OBJ    POID [0] 0.0.0.1 /balance_group 21142365 0
+0 PIN_FLD_ACCTINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /account -1 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_NAMEINFO      ARRAY [1] allocated 20, used 15
+1     PIN_FLD_ADDRESS         STR [0] "kol"
+1     PIN_FLD_CANON_COUNTRY    STR [0] "IN"
+1     PIN_FLD_CITY            STR [0] "kol"
+1     PIN_FLD_COMPANY         STR [0] ""
+1     PIN_FLD_CONTACT_TYPE    STR [0] ""
+1     PIN_FLD_COUNTRY         STR [0] "india"
+1     PIN_FLD_ELEMENT_ID      INT [0] 1
+1     PIN_FLD_EMAIL_ADDR      STR [0] ""
+1     PIN_FLD_FIRST_NAME      STR [0] "brm"
+1     PIN_FLD_LAST_NAME       STR [0] "brm"
+1     PIN_FLD_MIDDLE_NAME     STR [0] ""
+1     PIN_FLD_SALUTATION      STR [0] ""
+1     PIN_FLD_STATE           STR [0] "WB"
+1     PIN_FLD_TITLE           STR [0] ""
+1     PIN_FLD_ZIP             STR [0] "712246"
+0 PIN_FLD_BAL_INFO      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_NAME            STR [0] "Default Balance Group"
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /balance_group 21142365 0
+1     PIN_FLD_BILLINFO_OBJ   POID [0] 0.0.0.1 /billinfo 21139805 0
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 21141085 0
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.0  0 0
+0 PIN_FLD_SERVICES      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.1 /service/admin_client 21140701 0
+1     PIN_FLD_PASSWD_STATUS   ENUM [0] 0
+1     PIN_FLD_LOGIN           STR [0] "brm12345"
+1     PIN_FLD_DEAL_OBJ       POID [0] 0.0.0.0 / 0 0
+1     PIN_FLD_BILLINFO_OBJ   POID [0] 0.0.0.1 /billinfo 21139805 0
+0 PIN_FLD_START_T      TSTAMP [0] (1426507263) Tue 17 Mar 2015 01:01:03 AM NZDT
+0 PIN_FLD_END_T        TSTAMP [0] (1426507263) Tue 17 Mar 2015 01:01:03 AM NZDT
+0 PIN_FLD_GROUP_INFO   SUBSTRUCT [0] allocated 0, used 0
+0 PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 21141085 0
+
+service_obj: 21140701
+PCM_OP_CREATE_SERVICE input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client -1 0
+0 PIN_FLD_NAME            STR [0] "Collection Center"
+0 PIN_FLD_PASSWD_CLEAR    STR [0] "XXXX"
+0 PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1 0
+0 PIN_FLD_LOGIN           STR [0] "ROLE-<Collection Center>CollectionsMgr12345"
+0 PIN_FLD_INHERITED_INFO SUBSTRUCT [0] allocated 20, used 16
+1     PIN_FLD_SERVICE_ADMINCLIENT SUBSTRUCT [0] allocated 20, used 2
+2         PIN_FLD_DESCR           STR [0] "CollectionsMgr"
+2         PIN_FLD_PROFILE         INT [0] 1
+1     PIN_FLD_PERMITTEDS    ARRAY [0] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/accounttool/collections/agent"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [1] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/accounttool/collections/manager"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [2] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/appcenter/collectioncenter"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [3] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/actionhistory"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [4] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/assign"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [5] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/changestatus"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [6] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/chargeCC"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [7] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/exempt"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [8] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/insert"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [9] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/maskcarddetails"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [10] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/newcard"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [11] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/promisetopay"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [12] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/removeexempt"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [13] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/reschedule"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [14] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/updatepayment"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+0 PIN_FLD_STATUS         ENUM [0] 10102
+0 PIN_FLD_START_T      TSTAMP [0] (0) 
+0 PIN_FLD_END_T        TSTAMP [0] (0)
+
+PCM_OP_CUST_CREATE_SERVICE output flist: 
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 21140001 0
+0 PIN_FLD_LOGIN           STR [0] "ROLE-<Collection Center>CollectionsMgr12345"
+
+profile: 21140001
+PCM_OP_CUST_MODIFY_SERVICE input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 21140701 0
+0 PIN_FLD_INHERITED_INFO SUBSTRUCT [0] allocated 20, used 1
+1     PIN_FLD_ROLE          ARRAY [assign] allocated 20, used 2
+2         PIN_FLD_APPLICATION     STR [0] "Collection Center"
+2         PIN_FLD_PROFILE_OBJ    POID [0] 0.0.0.1 /service/admin_client 21140001 0
+
+PCM_OP_CUST_MODIFY_SERVICE output flist: 
+# number of field entries allocated 20, used 1
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 21140701 0
+PCM_OP_CREATE_CUSTOMER input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /plan -1 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 4
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo -1 0
+1     PIN_FLD_BILLINFO_ID     STR [0] "Default Bill Unit"
+1     PIN_FLD_PAY_TYPE       ENUM [0] 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_ACCTINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /account -1 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_NAMEINFO      ARRAY [1] allocated 20, used 7
+1     PIN_FLD_LAST_NAME       STR [0] "brm"
+1     PIN_FLD_COUNTRY         STR [0] "india"
+1     PIN_FLD_FIRST_NAME      STR [0] "brm"
+1     PIN_FLD_ZIP             STR [0] "712246"
+1     PIN_FLD_STATE           STR [0] "WB"
+1     PIN_FLD_CITY            STR [0] "kol"
+1     PIN_FLD_ADDRESS         STR [0] "kol"
+0 PIN_FLD_BAL_INFO      ARRAY [0] allocated 20, used 3
+1     PIN_FLD_NAME            STR [0] "Default Balance Group"
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /balance_group -1 0
+1     PIN_FLD_BILLINFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_SERVICES      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.1 /service/admin_client -1 0
+1     PIN_FLD_PASSWD_CLEAR    STR [0] "brm"
+1     PIN_FLD_PASSWD_STATUS   ENUM [0] 0
+1     PIN_FLD_LOGIN           STR [0] "brm"
+1     PIN_FLD_DEAL_OBJ       POID [0] 0.0.0.0 / 0 0
+
+PCM_OP_CUST_CREATE_CUSTOMER output flist: 
+# number of field entries allocated 20, used 10
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /plan -1 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 7
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 6062908 0
+1     PIN_FLD_BILLINFO_ID     STR [0] "Default Bill Unit"
+1     PIN_FLD_PAY_TYPE       ENUM [0] 0
+1     PIN_FLD_CURRENCY        INT [0] 840
+1     PIN_FLD_CURRENCY_SECONDARY    INT [0] 0
+1     PIN_FLD_EFFECTIVE_T  TSTAMP [0] (1426513718) Tue 17 Mar 2015 02:48:38 AM NZDT
+1     PIN_FLD_BAL_GRP_OBJ    POID [0] 0.0.0.1 /balance_group 6064316 0
+0 PIN_FLD_ACCTINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /account -1 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_NAMEINFO      ARRAY [1] allocated 20, used 15
+1     PIN_FLD_ADDRESS         STR [0] "kol"
+1     PIN_FLD_CANON_COUNTRY    STR [0] "IN"
+1     PIN_FLD_CITY            STR [0] "kol"
+1     PIN_FLD_COMPANY         STR [0] ""
+1     PIN_FLD_CONTACT_TYPE    STR [0] ""
+1     PIN_FLD_COUNTRY         STR [0] "india"
+1     PIN_FLD_ELEMENT_ID      INT [0] 1
+1     PIN_FLD_EMAIL_ADDR      STR [0] ""
+1     PIN_FLD_FIRST_NAME      STR [0] "brm"
+1     PIN_FLD_LAST_NAME       STR [0] "brm"
+1     PIN_FLD_MIDDLE_NAME     STR [0] ""
+1     PIN_FLD_SALUTATION      STR [0] ""
+1     PIN_FLD_STATE           STR [0] "WB"
+1     PIN_FLD_TITLE           STR [0] ""
+1     PIN_FLD_ZIP             STR [0] "712246"
+0 PIN_FLD_BAL_INFO      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_NAME            STR [0] "Default Balance Group"
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /balance_group 6064316 0
+1     PIN_FLD_BILLINFO_OBJ   POID [0] 0.0.0.1 /billinfo 6062908 0
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 6063420 0
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.0  0 0
+0 PIN_FLD_SERVICES      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.1 /service/admin_client 6063804 0
+1     PIN_FLD_PASSWD_STATUS   ENUM [0] 0
+1     PIN_FLD_LOGIN           STR [0] "brm"
+1     PIN_FLD_DEAL_OBJ       POID [0] 0.0.0.0 / 0 0
+1     PIN_FLD_BILLINFO_OBJ   POID [0] 0.0.0.1 /billinfo 6062908 0
+0 PIN_FLD_START_T      TSTAMP [0] (1426513718) Tue 17 Mar 2015 02:48:38 AM NZDT
+0 PIN_FLD_END_T        TSTAMP [0] (1426513718) Tue 17 Mar 2015 02:48:38 AM NZDT
+0 PIN_FLD_GROUP_INFO   SUBSTRUCT [0] allocated 0, used 0
+0 PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 6063420 0
+
+service_obj: 6063804
+PCM_OP_CREATE_SERVICE input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client -1 0
+0 PIN_FLD_NAME            STR [0] "Collection Center"
+0 PIN_FLD_PASSWD_CLEAR    STR [0] "XXXX"
+0 PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1 0
+0 PIN_FLD_LOGIN           STR [0] "ROLE-<Collection Center>CollectionsMgr"
+0 PIN_FLD_INHERITED_INFO SUBSTRUCT [0] allocated 20, used 16
+1     PIN_FLD_SERVICE_ADMINCLIENT SUBSTRUCT [0] allocated 20, used 2
+2         PIN_FLD_DESCR           STR [0] "CollectionsMgr"
+2         PIN_FLD_PROFILE         INT [0] 1
+1     PIN_FLD_PERMITTEDS    ARRAY [0] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/accounttool/collections/agent"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [1] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/accounttool/collections/manager"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [2] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/appcenter/collectioncenter"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [3] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/actionhistory"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [4] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/assign"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [5] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/changestatus"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [6] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/chargeCC"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [7] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/exempt"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [8] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/insert"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [9] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/maskcarddetails"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [10] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/newcard"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [11] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/promisetopay"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [12] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/removeexempt"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [13] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/reschedule"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [14] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/updatepayment"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+0 PIN_FLD_STATUS         ENUM [0] 10102
+0 PIN_FLD_START_T      TSTAMP [0] (0) 
+0 PIN_FLD_END_T        TSTAMP [0] (0)
+
+PCM_OP_CUST_CREATE_SERVICE output flist: 
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 6067956 0
+0 PIN_FLD_LOGIN           STR [0] "ROLE-<Collection Center>CollectionsMgr"
+
+profile: 6067956
+PCM_OP_CUST_MODIFY_SERVICE input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 6063804 0
+0 PIN_FLD_INHERITED_INFO SUBSTRUCT [0] allocated 20, used 1
+1     PIN_FLD_ROLE          ARRAY [assign] allocated 20, used 2
+2         PIN_FLD_APPLICATION     STR [0] "Collection Center"
+2         PIN_FLD_PROFILE_OBJ    POID [0] 0.0.0.1 /service/admin_client 6067956 0
+
+PCM_OP_CUST_MODIFY_SERVICE output flist: 
+# number of field entries allocated 20, used 1
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 6063804 0
+PCM_OP_CREATE_CUSTOMER input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /plan -1 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 4
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo -1 0
+1     PIN_FLD_BILLINFO_ID     STR [0] "Default Bill Unit"
+1     PIN_FLD_PAY_TYPE       ENUM [0] 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_ACCTINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /account -1 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_NAMEINFO      ARRAY [1] allocated 20, used 7
+1     PIN_FLD_LAST_NAME       STR [0] "brm"
+1     PIN_FLD_COUNTRY         STR [0] "india"
+1     PIN_FLD_FIRST_NAME      STR [0] "brm"
+1     PIN_FLD_ZIP             STR [0] "712246"
+1     PIN_FLD_STATE           STR [0] "WB"
+1     PIN_FLD_CITY            STR [0] "kol"
+1     PIN_FLD_ADDRESS         STR [0] "kol"
+0 PIN_FLD_BAL_INFO      ARRAY [0] allocated 20, used 3
+1     PIN_FLD_NAME            STR [0] "Default Balance Group"
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /balance_group -1 0
+1     PIN_FLD_BILLINFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_SERVICES      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.1 /service/admin_client -1 0
+1     PIN_FLD_PASSWD_CLEAR    STR [0] "brm"
+1     PIN_FLD_PASSWD_STATUS   ENUM [0] 0
+1     PIN_FLD_LOGIN           STR [0] "brm"
+1     PIN_FLD_DEAL_OBJ       POID [0] 0.0.0.0 / 0 0
+
+PCM_OP_CUST_CREATE_CUSTOMER output flist: 
+# number of field entries allocated 20, used 10
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /plan -1 0
+0 PIN_FLD_BILLINFO      ARRAY [0] allocated 20, used 7
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /billinfo 58837 0
+1     PIN_FLD_BILLINFO_ID     STR [0] "Default Bill Unit"
+1     PIN_FLD_PAY_TYPE       ENUM [0] 0
+1     PIN_FLD_CURRENCY        INT [0] 840
+1     PIN_FLD_CURRENCY_SECONDARY    INT [0] 0
+1     PIN_FLD_EFFECTIVE_T  TSTAMP [0] (1428755733) Sun 12 Apr 2015 12:35:33 AM NZST
+1     PIN_FLD_BAL_GRP_OBJ    POID [0] 0.0.0.1 /balance_group 59349 0
+0 PIN_FLD_ACCTINFO      ARRAY [0] allocated 20, used 2
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /account -1 0
+1     PIN_FLD_BAL_INFO      ARRAY [0]     NULL array ptr
+0 PIN_FLD_NAMEINFO      ARRAY [1] allocated 20, used 15
+1     PIN_FLD_ADDRESS         STR [0] "kol"
+1     PIN_FLD_CANON_COUNTRY    STR [0] "IN"
+1     PIN_FLD_CITY            STR [0] "kol"
+1     PIN_FLD_COMPANY         STR [0] ""
+1     PIN_FLD_CONTACT_TYPE    STR [0] ""
+1     PIN_FLD_COUNTRY         STR [0] "india"
+1     PIN_FLD_ELEMENT_ID      INT [0] 1
+1     PIN_FLD_EMAIL_ADDR      STR [0] ""
+1     PIN_FLD_FIRST_NAME      STR [0] "brm"
+1     PIN_FLD_LAST_NAME       STR [0] "brm"
+1     PIN_FLD_MIDDLE_NAME     STR [0] ""
+1     PIN_FLD_SALUTATION      STR [0] ""
+1     PIN_FLD_STATE           STR [0] "WB"
+1     PIN_FLD_TITLE           STR [0] ""
+1     PIN_FLD_ZIP             STR [0] "712246"
+0 PIN_FLD_BAL_INFO      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_NAME            STR [0] "Default Balance Group"
+1     PIN_FLD_POID           POID [0] 0.0.0.1 /balance_group 59349 0
+1     PIN_FLD_BILLINFO_OBJ   POID [0] 0.0.0.1 /billinfo 58837 0
+1     PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 59861 0
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.0  0 0
+0 PIN_FLD_SERVICES      ARRAY [0] allocated 20, used 5
+1     PIN_FLD_SERVICE_OBJ    POID [0] 0.0.0.1 /service/admin_client 58421 0
+1     PIN_FLD_PASSWD_STATUS   ENUM [0] 0
+1     PIN_FLD_LOGIN           STR [0] "brm"
+1     PIN_FLD_DEAL_OBJ       POID [0] 0.0.0.0 / 0 0
+1     PIN_FLD_BILLINFO_OBJ   POID [0] 0.0.0.1 /billinfo 58837 0
+0 PIN_FLD_START_T      TSTAMP [0] (1428755733) Sun 12 Apr 2015 12:35:33 AM NZST
+0 PIN_FLD_END_T        TSTAMP [0] (1428755733) Sun 12 Apr 2015 12:35:33 AM NZST
+0 PIN_FLD_GROUP_INFO   SUBSTRUCT [0] allocated 0, used 0
+0 PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 59861 0
+
+service_obj: 58421
+PCM_OP_CREATE_SERVICE input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client -1 0
+0 PIN_FLD_NAME            STR [0] "Collection Center"
+0 PIN_FLD_PASSWD_CLEAR    STR [0] "XXXX"
+0 PIN_FLD_ACCOUNT_OBJ    POID [0] 0.0.0.1 /account 1 0
+0 PIN_FLD_LOGIN           STR [0] "ROLE-<Collection Center>CollectionsMgr"
+0 PIN_FLD_INHERITED_INFO SUBSTRUCT [0] allocated 20, used 16
+1     PIN_FLD_SERVICE_ADMINCLIENT SUBSTRUCT [0] allocated 20, used 2
+2         PIN_FLD_DESCR           STR [0] "CollectionsMgr"
+2         PIN_FLD_PROFILE         INT [0] 1
+1     PIN_FLD_PERMITTEDS    ARRAY [0] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/accounttool/collections/agent"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [1] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/accounttool/collections/manager"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [2] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/appcenter/collectioncenter"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [3] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/actionhistory"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [4] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/assign"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [5] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/changestatus"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [6] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/chargeCC"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [7] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/exempt"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [8] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/insert"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [9] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/maskcarddetails"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [10] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/newcard"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [11] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/promisetopay"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [12] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/removeexempt"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [13] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/reschedule"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+1     PIN_FLD_PERMITTEDS    ARRAY [14] allocated 20, used 4
+2         PIN_FLD_ACTION          STR [0] "/collectionapps/collections/updatepayment"
+2         PIN_FLD_MAXIMUM      DECIMAL [0] 0
+2         PIN_FLD_MINIMUM      DECIMAL [0] 0
+2         PIN_FLD_TYPE           ENUM [0] 2
+0 PIN_FLD_STATUS         ENUM [0] 10102
+0 PIN_FLD_START_T      TSTAMP [0] (0) 
+0 PIN_FLD_END_T        TSTAMP [0] (0)
+
+PCM_OP_CUST_CREATE_SERVICE output flist: 
+# number of field entries allocated 20, used 2
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 57910 0
+0 PIN_FLD_LOGIN           STR [0] "ROLE-<Collection Center>CollectionsMgr"
+
+profile: 57910
+PCM_OP_CUST_MODIFY_SERVICE input flist: 
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 58421 0
+0 PIN_FLD_INHERITED_INFO SUBSTRUCT [0] allocated 20, used 1
+1     PIN_FLD_ROLE          ARRAY [assign] allocated 20, used 2
+2         PIN_FLD_APPLICATION     STR [0] "Collection Center"
+2         PIN_FLD_PROFILE_OBJ    POID [0] 0.0.0.1 /service/admin_client 57910 0
+
+PCM_OP_CUST_MODIFY_SERVICE output flist: 
+# number of field entries allocated 20, used 1
+0 PIN_FLD_POID           POID [0] 0.0.0.1 /service/admin_client 58421 0

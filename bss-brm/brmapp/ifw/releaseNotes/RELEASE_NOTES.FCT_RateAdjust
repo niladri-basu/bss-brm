@@ -1,0 +1,102 @@
+================================================================================
+
+FCT_RateAdjust
+
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+================================================================================
+Module Version: 10010  7.4  27-Apr-2009
+BUG8361553: Semaphore update not reflected in infoWireless.reg for registry entry "RateAdjustFile". 
+
+================================================================================
+Module Version: 10009  7.3.1  27-Sep-2007
+bug6454774: pipeline_rating fail with error " The text "EDR::Iterator" is unexpected " on RateAdjustMap.hpp
+================================================================================
+Module Version: 10008  7.2_PATCH 12-Sep-2005
+PRSF00182363:change atol to atoi64 to avoid long truncation
+================================================================================
+Module Version: 10007  Velocity 22-Mar-2005
+PRSF00156126:FCT_Rateadjust plugin is not working for the field quantity value
+
+==============================================================================
+
+Module Version: 10006  6.7_FP2  03-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10005  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+
+Module Version: 10004  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+================================================================================
+
+Module Version: 10003  6.5_SP2  05-May-2003
+PRSF00039853:   Update to use namespaces.
+
+================================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+=================================================================================
+
+Actual Version : v4-30-04 / Date : 01-Feb-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #43183 Inexact result messages on AIX.
+            Add Inexact result handler to module (only for AIX).
+
+================================================================================
+========
+
+Actual Version : v4-30-03 / Date : 12-Sep-2001
+----------------
+
+Solved PETS    :
+----------------
+
+PETS #39220 - FCT_RateAdjust uses wrong Rateplan type
+              Convert value of DETAIL.ASS_CBD.CP.INTERN_RATEPLAN to long value.
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 29-Aug-2001
+----------------
+
+Solved PETS    :
+----------------
+
+PETS #38158 - FCT_RateAdjust uses old INT_RATEADJUST_TABLE
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 28-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+Former module FCT_TariffDiscount renamed to FCT_RateAdjust.
+
+================================================================================

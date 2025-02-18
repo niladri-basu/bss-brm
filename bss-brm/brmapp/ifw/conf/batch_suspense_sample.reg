@@ -1,0 +1,517 @@
+#version 7.3 1.2
+#Sample registry for batch suspense configuration.
+#DAT_ResubmitBatch and FCT_BatchSuspense needs to be taken from
+#this registry and applied to the main registry as per the requirement
+ifw
+{
+  Active              = TRUE
+  ProcessLoopTimeout  = 10
+  QueueRequestTimeout = 0
+
+  Instrumentation
+  {
+    #-----------------------------------------------------------
+    # ProbeBroker registry entries.
+    #    ProbeInfoFilePath - The path that contains all probe
+    #                        info files used by instrumented objects.
+    #-----------------------------------------------------------
+    ProbeBroker
+    {
+      ProbeInfoFilePath = ./instrumentation
+    }
+
+    #-----------------------------------------------------------
+    # SnmpServer registry entries. (Optional)
+    #    Port - The SNMP AgentX port number.
+    #    ProcessDescription - The description of this process.
+    #                         If not specified, the process description
+    #                         has format as follows:
+    #                         <<user>>:<<process_name>>::<<registry_filename>>
+    #-----------------------------------------------------------
+    #SnmpServer
+    #{
+    #  Port = < SNMP AgentX Port >
+    #  ProcessDescription = ifw
+    #}
+
+    #-----------------------------------------------------------
+    # HttpServer registry entries. (Optional)
+    #    Port - The Http port number.
+    #    StyleSheetFile - The full path name of style sheet file.
+    #    PortalLogoFile - The full path name of Portal logo file.
+    #-----------------------------------------------------------
+    HttpServer
+    {
+      Port = < HTTP Port >
+      StyleSheetFile = ./instrumentation/portal_omf.xsl
+      PortalLogoFile = ./instrumentation/portal_omf.gif
+    }
+  }
+
+  DiagnosticDataHandler   
+  {
+    DiagnosticFilePath = ./log
+    DiagnosticFileName = diagnostic.dat      
+  }
+
+  LogMessageTable
+  {
+    MessageFilePath   = ./etc
+    MessageFileSuffix = .msg
+  }
+
+  Semaphore
+  {
+    FilePath = ./semaphore
+    FileName = semaphore.reg
+  }
+
+  Registry
+  {
+    FilePath           = ./info
+    FileName           = infoWIRELESS.reg
+    NiceFormatFileName = infoNiceWIRELESS.reg
+    Buffer
+    {
+      Size = 100
+    }
+  }
+
+  ProcessLog
+  {
+    ModuleName = LOG
+    Module
+    {
+      ITO
+      {
+        WriteMessageKey  = True
+        MessageFilePath   = ./etc
+        MessageFileSuffix = .msg
+        FilePath          = ./log/process
+        FileName          = processWIRELESS
+        FileSuffix        = .log
+        ProcessName       = ifw
+        MessageGroup      = IFW
+        ShowOriginator    = TRUE
+      }
+      Buffer
+      {
+        Size = 1000
+      }
+    }
+  }
+
+  EventHandler
+  {
+    ModuleName                          = EVT
+    Module
+    {
+      Events
+      {
+      }
+      Buffer
+      {
+        Size                            = 1000
+      }
+    }
+  }
+ 
+  MemoryMonitor
+  {
+    ScaleUnit = P
+    WarningFreeMemLimit = 10
+    ShutdownFreeMemLimit = 5
+  }
+
+  DataPool
+  {
+    #-----------------------------------------------------------
+    # Database Connection IntegRate
+    #-----------------------------------------------------------
+    Login
+    {
+      ModuleName = DBC
+      Module
+      {
+        # Common
+        UserName           = <IntegRate db-user>
+        PassWord           = <encrypted password>
+        DatabaseName       = <IntegRate db-sid>
+        AccessLib          = oci10g72
+        Connections        = 5
+
+        #ConvertToUpperCase = False
+        #UsableCheckTable   = IFW_DBVERSION
+      }
+    }
+
+    #-----------------------------------------------------------
+    # Database Connection Infranet
+    #-----------------------------------------------------------
+    LoginInfranet 
+    { 
+      ModuleName = DBC 
+      Module 
+      {
+        # Common
+        UserName           = <Infranet db-user>
+        PassWord           = <encrypted password>
+        DatabaseName       = <Infranet db-sid>
+        AccessLib          = oci10g72
+        Connections        = 5
+
+        #ConvertToUpperCase = False
+        #UsableCheckTable   = IFW_DBVERSION
+      } 
+    }  
+
+    #-----------------------------------------------------------
+    # Database Connection Queue
+    #-----------------------------------------------------------
+    LoginQueue
+    {
+      ModuleName = DBC
+      Module
+      {
+        # Common
+        UserName           = <Infranet db-user>
+        PassWord           = <encrypted password>
+        DatabaseName       = <Infranet db-sid>
+        AccessLib          = oci10g72
+        Connections        = 5
+
+        #ConvertToUpperCase = False
+        #UsableCheckTable   = IFW_DBVERSION
+      }
+    }
+
+    #-----------------------------------------------------------
+    # Infranet Listener
+    #-----------------------------------------------------------
+    Listener
+    {
+      ModuleName = DAT_Listener
+      Module
+      {
+        InfranetConnection = ifw.DataPool.LoginQueue
+        QueueName =IFW_SYNC_QUEUE
+        LogEvents = TRUE
+        QueueLibrary = OracleQueue
+
+#       AckQueueName = AMT_QUEUE
+        EventThreadAllocation
+        {
+           RecycleRequest = 1
+#          OpenNewAcctCycle = 2
+#          RecycleJob = 1
+        }
+#       EnableInterLeavingStatistics = false
+#       ProcessAllEvents             = true
+#       InterleavingReqd             = false
+#       MaxNumEvents                 = 900   # suggested min. value 900
+#       MinNumEvents                 = 300   # suggested min. value 300
+#       CheckInterval                = 60    # suggested min. value 60 [sec]
+#       MaxEventProcessTime          = 60    # suggested min. value 60 [sec]
+#       MaxCDRProcessTime            = 300   # suggested min. value 300 [sec]
+      }
+    }
+    #-----------------------------------------------------------
+    # Resubmit Batch Data module
+    #-----------------------------------------------------------
+
+    ResubmitBatch
+    {
+       ModuleName = DAT_ResubmitBatch
+       Module
+       {
+         LogEvents                 = True
+         Listener                  = ifw.DataPool.Listener
+         DataConnection            = ifw.DataPool.LoginInfranet
+         QueueFileName             = ResubmitJobs.dat
+         QueueFilePath             = ./data/resubmit
+         PipelineCategory          = CDRPipeline
+         TempDirectoryPath         = ./data/resubmitTmp
+         QueueFileCleanUpThreshold = 50
+       }
+    }
+
+  } # end of data pool
+  
+  TransactionIdController
+  { 
+    Source = File
+    
+    Generator
+    {
+      FileName = ./tam/TransactionIDsWIRELESS.dat
+      Increment = 200
+    }
+  }
+
+  SequencerPool
+  {
+  }
+
+  Pipelines
+  {
+    PreProcessPipeline
+    {
+      Active = True
+      RejectStream = DevNull
+      TransactionManager
+      {
+        RedoEnabled = False
+        SingleTransaction = False
+        BinaryLogFileName = ./tam/binaryLogFilePREPROCESS.dat
+      }
+      #---------------------------------
+      EdrFactory
+      {
+        Description = ./formatDesc/Portal/containerDesc.dsc
+        EdrVersionDataConnection = ifw.DataPool.LoginInfranet
+      }
+      #---------------------------------
+      DataDescription
+      {
+        Standard
+        {
+          ModuleName = Standard
+          Module
+          {
+            StreamFormats
+            {
+              SIMPLESAMPLE = ./formatDesc/Formats/Sample/SIMPLESAMPLE_v1.dsc
+              SOL42_FORINPUT = ./formatDesc/Formats/Solution42/SOL42_V670_REL_FORINPUT.dsc
+              SOL42 = ./formatDesc/Formats/Solution42/SOL42_V670_REL.dsc
+            }
+            InputMapping
+            {
+              SIMPLESAMPLE = ./formatDesc/Formats/Sample/SIMPLESAMPLE_v1_InMap.dsc
+              #SOL42 = ./formatDesc/Formats/Solution42/SOL42_V670_REL_InMap.dsc
+            }
+            OutputMapping
+            {
+              EDR_OUTPUT = ./formatDesc/Formats/Solution42/SOL42_V670_REL_OutMap.dsc
+            }
+          }
+        }
+      }
+      #---------------------------------
+      # Pipeline Log Section
+      #---------------------------------
+      PipelineLog
+      {
+        ModuleName = LOG
+        Module
+        {
+          ITO
+          {
+            FilePath = ./log/pipeline
+            FileName = pipeline.log
+            ProcessName = ifw
+            MessageGroup = IFW
+            ShowOriginator = True
+            SuppressErrors
+            {
+              ERR_SPEC_VERSION_INVALID
+              ERR_RELEASE_VERSION_INVALID
+            }
+          }
+
+          Buffer
+          {
+            Size = 1000
+          }
+        }
+      }
+
+      InputBuffer
+      {
+        Size = 100
+      }
+
+      OutputBuffer
+      {
+        Size = 100
+      }
+
+
+      #---------------------------------
+      # Input section
+      #---------------------------------
+      Input
+      {
+        UnitsPerTransaction = 2
+        InputModule
+        {
+          ModuleName = INP_GenericStream
+          Module
+          {
+            DefaultOutput = EdrOutput
+            #Grammar = ./formatDesc/Formats/Solution42/SOL42_V670_REL_InGrammar.dsc
+            Grammar = ./formatDesc/Formats/Sample/SIMPLESAMPLE_v1_InGrammar.dsc
+
+	    InputStream
+            {
+              ModuleName = EXT_InFileManager
+              Module
+              {
+                InputPath = ./data/in
+                #InputPrefix = testpipeline
+                InputPrefix = test
+                InputSuffix     = .edr
+		DonePath = ./data/done
+                DonePrefix = testpipeline
+                DoneSuffix = .done
+                ErrorPath = ./data/err
+                ErrorPrefix = testpipeline
+                ErrorSuffix = .err
+                TempPrefix = tmp
+                Replace = True
+                InputDirEmptyTimeout = 60
+              }
+            }
+          }
+        }
+      }
+
+      #---------------------------------
+      # Functions Section
+      #---------------------------------
+      Functions
+      {
+        Standard
+        {
+          FunctionPool
+          {
+            #---------------------------
+            # EDR Dump
+            #---------------------------
+            EdrDump_PreBatchSuspense
+            {
+              ModuleName = FCT_EdrDump
+              Module
+              {
+                Active = TRUE
+                FileName = ./data/dump/preFCTBatchSuspense.dump
+              }
+            }
+            #---------------------------
+            # Batch Suspense
+            #---------------------------
+
+            BatchSuspense
+            {
+              ModuleName = FCT_BatchSuspense
+              Module
+              {
+                Active = True
+                DataConnection = ifw.DataPool.LoginInfranet
+                ResubmitDataModule = ifw.DataPool.ResubmitBatch
+                PipelineCategory = CDRPipeline
+                StorableClass = /suspended_batch/cdr
+                SuspenseFile {
+                  Path = ./data/suspended_batch
+                  Prefix = suspended_batch
+                  Suffix = .out
+                  TempDataPrefix = batch.suspense.tmp.
+                }
+              }
+            }
+            #---------------------------
+            # EDR Dump
+            #---------------------------
+            EdrDump_PostBatchSuspense
+            {
+              ModuleName = FCT_EdrDump
+              Module
+              {
+                Active = TRUE
+                FileName = ./data/dump/postFCTBatchSuspense.dump
+              }
+            }
+          } # end FunctionPool
+        } # end Standard
+      } # end Functions
+
+
+      #---------------------------------
+      # Output Section
+      #---------------------------------
+      Output
+      {
+        ChargePrecision = 3
+        WriteDefaultEdr = False
+        SpecificationVersionNumber = 2
+
+        SequenceGeneration = Unit
+        #Unit - Transaction
+
+        MaxErrorRates
+        {
+        #  INF_EDR_REJECTED = 90
+        #  ERR_CUST_NOT_FOUND = 55
+        #  ERR_CHARGED_ZONE_NOT_FOUND = 55
+        }
+
+        OutputCollection
+        {
+        #----------------------------------------------
+        # The DevNull stream
+        #---------------------------------------------------
+        DevNull
+          {
+            ModuleName = OUT_DevNull
+            Module
+            {
+            }
+          } # end of DevNull
+
+          EdrOutput
+          {
+            ModuleName = OUT_GenericStream
+            Module
+            {
+              DeleteEmptyStream = True
+              Grammar = ./formatDesc/Formats/Solution42/SOL42_V670_REL_OutGrammar.dsc
+              OutputStream
+              {
+                ModuleName = EXT_OutFileManager
+                Module
+                {
+                  OutputPath = ./data/edr
+                  OutputPrefix = test
+                  OutputSuffix = .edr
+                  TempPrefix = tmp
+
+                  TempDataPath = ./data/in
+                  TempDataPrefix = new.tmp.
+                  TempDataSuffix = .edr
+
+                  Replace = True
+                  AppendSequenceNumber = False
+                }
+              }
+            }
+          } # end of EdrOutput
+        } # end of OutputCollection
+
+        OutputLog
+        {
+          #FilePath = ./data/log/stream
+          FilePath = ./log/stream
+          FileName = stream
+          FilePrefix = log_
+          FileSuffix = .log
+          SuppressErrors
+          {
+            ERR_SPEC_VERSION_INVALID
+            ERR_RELEASE_VERSION_INVALID
+          }
+        } # end of OutputLog
+      } # END Output
+    } # END PreProcessPipeline
+
+  } # END Pipelines
+
+} # END ifw

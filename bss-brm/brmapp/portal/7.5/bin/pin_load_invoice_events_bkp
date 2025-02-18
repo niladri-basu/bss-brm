@@ -1,0 +1,594 @@
+#!/tools/CGBU/contrib/DO/BRM/7.5.0.TP.TOOL.R1/tools_vob/tools/linux/perl_5_18_2/perl/bin/perl
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#############################################################################
+# @(#)pin_load_invoice_events.pl
+#
+#       Copyright (c) 2000-2007 Oracle. All rights reserved.
+#
+#       This material is the confidential property of Oracle Corporation
+#       or its licensors and may be used, reproduced, stored or transmitted
+#       only in accordance with a valid Oracle license or sublicense agreement.
+#############################################################################
+
+  #---------------------------------------------------------------------#
+  #  This script loads brand specifc /config/invoice_events object      #
+  #  into the Infranet Database						#
+  #---------------------------------------------------------------------#
+
+use Getopt::Long;
+use pcmif;
+
+
+$ME = $0;
+my ($DB_NO, $config_object);
+
+  GetOptions('brand=s', \$opt_brand, 'eventfile=s', \$opt_eventfile,
+	     'reload!', \$opt_reload, 'debug!', \$opt_debug,
+	     'logfile=s', \$opt_logfile , 'help', \$opt_help);
+  &Usage() if (!$opt_brand || !$opt_eventfile);
+  $DEBUG = 1 if $opt_debug;
+
+  $opt_logfile = ($opt_logfile?$opt_logfile:"pin_load_invoice_events.log");
+  open (LOGFILE, ">$opt_logfile") ||
+		die "$ME:  Could not open logfile\n";
+
+    #-------------------------------------------------------------
+    #  Connect to Infranet
+    #-------------------------------------------------------------
+	&pin_init();
+
+    #-------------------------------------------------------------
+    #  Verification 
+    # 	  1.  Verify whether Brand exists and is actually a brand
+    #     2.  Check whether config object exists for the brand
+    #     3.  Read in the event file and verify all the event types
+    #-------------------------------------------------------------
+	&Verify_Brand ($opt_brand) || 
+		die "$ME: *ERROR* Brand <$opt_brand> Verification Failed.  Please check Log File.\n";
+
+					# check whether config object exists
+	$config_object = &Verify_Config_Object ($opt_brand);
+	die "$ME: *ERROR* Config object for Brand <$opt_brand> does not exist.  Reload option is Invalid.  Please check Log File.\n" if !$config_object && $opt_reload;
+	die "$ME: *ERROR* Config object for Brand <$opt_brand> exists.  Please  specify Reload Option.  Please check Log File.\n" if $config_object && !$opt_reload;
+
+	$eventref = &Verify_Event_File ($opt_eventfile); 
+	die "$ME: *ERROR* Invalid Events in <$opt_eventfile>.  Please check Log File.\n" if !$eventref;
+	
+    #-------------------------------------------------------------
+    #  Construct and Load a /config/invoice_events object
+    #-------------------------------------------------------------
+	$config_object = &Load_Invoice_Events ($opt_brand, $eventref, $config_object);
+ 	if ($config_object) {
+	  print ("$ME: Config object <$config_object> created/updated successfully!\n");
+	} else {
+	  print ("$ME: *ERROR* In creating/updating /config/invoice_events object. Please check Log File.\n");
+ 	}
+	
+    #-------------------------------------------------------------
+    #  Disconnet from Infranet
+    #-------------------------------------------------------------
+	&pin_exit();
+
+	
+  close (LOGFILE);
+
+exit (0);
+
+#---------------------------------------------------------------------#
+#  This subroutine verifies that the given Brand POID is valid	      #
+#  and belongs to a Brand Account				      #
+#---------------------------------------------------------------------#
+sub Verify_Brand {
+  my ($brand) = @_;
+
+  my ($input_flist, $opcode, $flags, $output_flist);
+  my ($INFRANET);
+
+  &pin_write_log_message ("$ME: Verifying Brand POID <$brand>\n");
+
+  $input_flist = <<"END"
+0       PIN_FLD_POID    POID [0] $brand
+0       PIN_FLD_BRAND_OBJ       POID [0] NULL
+0       PIN_FLD_ACCOUNT_TYPE    ENUM [0] 0
+END
+  ;
+  $opcode = "PCM_OP_READ_FLDS";
+  $flags = 0;
+
+  &pin_write_log_message ("Verify_Brand: $opcode Input Flist:\n$input_flist\n") if $DEBUG;
+  $output_flist = &pin_read_flist ($opcode, $flags, \$input_flist);
+  &pin_write_log_message ("Verify_Brand: $opcode Output Flist:\n$$output_flist\n") if $DEBUG;
+
+  $INFRANET = &pin_str_flist_to_hash($output_flist);
+
+  if ($INFRANET->{"main.PIN_FLD_ACCOUNT_TYPE"} == "2") {
+  	&pin_write_log_message ("\tVerify_Brand: Brand Exists!\n");
+  	return (1);
+  } else {
+  	&pin_write_log_message ("\tVerify_Brand: Brand does not Exist!\n");
+	return (0);
+  }
+}
+
+#---------------------------------------------------------------------#
+#  This subroutine verifies that a config object exists for the       #
+#  given brand							      #
+#---------------------------------------------------------------------#
+sub Verify_Config_Object {
+  my ($brand) = @_;
+
+  my ($input_flist, $opcode, $flags, $output_flist);
+  my ($INFRANET);
+
+  &pin_write_log_message ("\n$ME: Verifying Config Object for <$brand>\n");
+
+  $input_flist = <<"END"
+0 PIN_FLD_POID                      POID [0] $DB_NO /search -1 0
+0 PIN_FLD_FLAGS                      INT [0] 256
+0 PIN_FLD_ARGS                     ARRAY [1] 
+1     PIN_FLD_ACCOUNT_OBJ           POID [0] $brand
+0 PIN_FLD_TEMPLATE                   STR [0] "select X from /config/invoice_events where F1 = V1 and poid_type = '/config/invoice_events'"
+0 PIN_FLD_RESULTS                  ARRAY [1] 
+1  PIN_FLD_POID                     POID [0] NULL
+END
+  ;
+
+  $opcode = "PCM_OP_SEARCH";
+  $flags = 0;
+  &pin_write_log_message ("Verify_Config_Object: $opcode Input Flist:\n$input_flist\n") if $DEBUG;
+  $output_flist = &pin_read_flist ($opcode, $flags, \$input_flist);
+  &pin_write_log_message ("Verify_Config_Object: $opcode Output Flist:\n$$output_flist\n") if $DEBUG;
+
+  $INFRANET = &pin_str_flist_to_hash($output_flist);
+
+  if ($INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"}) {
+    &pin_write_log_message ("\tVerify_Config_Object: Config object <" . 
+	$INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"} . "> found\n");
+    return ($INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"});
+  } else {
+    &pin_write_log_message ("\tVerify_Config_Object: Config object not found\n");
+    return (0);
+  }
+}
+
+#---------------------------------------------------------------------#
+#  This subroutine verifies that the events specified in the event    #
+#  file are valid						      #
+#---------------------------------------------------------------------#
+sub Verify_Event_File {
+  my ($eventfile) = @_;
+
+  my ($input_flist, $opcode, $flags, $output_flist);
+  my ($eventtype, $result);
+  my ($INFRANET);
+  my (@outevents);
+
+  &pin_write_log_message ("\n$ME: Verifying Event File <$eventfile>\n");
+
+  open (EVENTFILE, "<$eventfile") ||
+    die "$ME:  Could not open Event file <$eventfile>\n";
+
+  $result = 1;				# presumed success
+  while (<EVENTFILE>) {
+    $eventtype = $_;
+    $eventtype =~ s/^\s*(.*?)\s*$/$1/;
+
+					# ignore comments and empty lines
+    next if ($eventtype eq "" || $eventtype =~ /^\#/);
+
+    $input_flist = <<"END"
+0       PIN_FLD_POID    POID [0] $DB_NO /dd/objects 0
+0       PIN_FLD_OBJ_DESC ARRAY [0]
+1               PIN_FLD_NAME    STR [0] "$eventtype"
+END
+  ;
+
+    $opcode = "PCM_OP_GET_DD";
+    $flags = 0;
+
+    &pin_write_log_message ("Verify_Event_File <$eventtype>: $opcode Input Flist:\n$input_flist\n") if $DEBUG;
+    $output_flist = &pin_read_flist ($opcode, $flags, \$input_flist);
+    &pin_write_log_message ("Verify_Event_File <$eventtype>: $opcode Output Flist:\n$$output_flist\n") if $DEBUG;
+
+    $INFRANET = &pin_str_flist_to_hash($output_flist);
+
+					# for successfull GET_DD we get
+					# more than one element in the
+					# return flist
+    if (scalar(keys %$INFRANET) > 1) {
+      push @outevents, $eventtype;
+      &pin_write_log_message ("\tEvent: <$eventtype> is valid.\n");
+    } else {
+      $result = 0;
+      &pin_write_log_message ("\tEvent: <$eventtype> is invalid.  Not found\n");
+    }
+
+  } # while
+
+  close (EVENTFILE);
+  return ($result?\@outevents:$result);
+}
+
+#---------------------------------------------------------------------#
+#  This subroutine constructs the brand specific 		      #
+#  /config/invoice_events object and loads it into the Infranet db    #
+#---------------------------------------------------------------------#
+sub Load_Invoice_Events {
+  my ($brand, $eventref, $config_object) = @_;
+
+  my ($input_flist, $opcode, $flags, $output_flist);
+  my ($eventtype, $i);
+  my ($INFRANET);
+
+  &pin_write_log_message ("\n$ME: Loading /config/invoice_events object\n");
+
+  if ($config_object)  {
+    &pin_write_log_message ("\tLoad_Invoice_Events : Reloading Config Object <$config_object>\n");
+				# Zap the invoice events array
+    &Delete_Invoice_Events($config_object) ||
+	die "Load_Invoice_Events: Could not delete events array for <$config_object>\n";
+    $opcode = "PCM_OP_WRITE_FLDS";
+    $flags = 32;			# PCM_OPFLG_ADD_ENTRY
+  } else {
+    $opcode = "PCM_OP_CREATE_OBJ";
+    $config_object = "$DB_NO /config/invoice_events";
+  }
+
+  $input_flist = <<"END"
+0       PIN_FLD_POID    POID [0] $config_object
+0       PIN_FLD_ACCOUNT_OBJ POID [0] $brand
+0	PIN_FLD_HOSTNAME STR [0] "-"
+0	PIN_FLD_NAME	 STR [0] "Eventtypes"
+0	PIN_FLD_PROGRAM_NAME STR [0] "-"
+END
+  ;
+  
+  $i = 0;
+  for $eventtype (@$eventref) {
+    $input_flist .= "0\tPIN_FLD_EVENTS\tARRAY [$i]\n1\t\tPIN_FLD_TYPE_STR\tSTR [0] \"$eventtype\"\n";
+    $i++;
+  }
+    &pin_write_log_message ("Load_Invoice_Events <$config_object>: $opcode Input Flist:\n$input_flist\n") if $DEBUG;
+    $output_flist = &pin_read_flist ($opcode, $flags, \$input_flist);
+    &pin_write_log_message ("Load_Invoice_Events <$config_object>: $opcode Output Flist:\n$$output_flist\n") if $DEBUG;
+
+    $INFRANET = &pin_str_flist_to_hash($output_flist);
+					# for successfull write fields or 
+					# create object we should get a POID
+					# back
+    if ($INFRANET->{'main.PIN_FLD_POID'}) {
+      &pin_write_log_message("\tLoad_Invoice_Events: Config object <" . 
+		$INFRANET->{'main.PIN_FLD_POID'} . "> created/updated successfully\n");
+      return ($INFRANET->{'main.PIN_FLD_POID'});
+    } else {
+      &pin_write_log_message("\tLoad_Invoice_Events: Config object <$config_object> create/update failed\n");
+      return (0);
+    }
+
+}
+
+#---------------------------------------------------------------------#
+#  This subroutine deletes the Events array of the 		      #
+#  /config/invoice_events object to get ready for re-loading	      #
+#---------------------------------------------------------------------#
+sub Delete_Invoice_Events {
+  my ($config_object) = @_;
+
+  my ($input_flist, $opcode, $flags, $output_flist);
+  my ($INFRANET);
+
+  &pin_write_log_message ("\n$ME: Deleting /config/invoice_events object event array\n") if $DEBUG;
+
+  $input_flist = <<"END"
+0       PIN_FLD_POID    POID [0] $config_object
+0       PIN_FLD_EVENTS  ARRAY [*] NULL
+END
+ ;
+
+  $opcode = "PCM_OP_DELETE_FLDS";
+  $flags  = 0;
+
+  &pin_write_log_message ("Delete_Invoice_Events <$config_object>: $opcode Input Flist:\n$input_flist\n") if $DEBUG;
+  $output_flist = &pin_read_flist ($opcode, $flags, \$input_flist);
+  &pin_write_log_message ("Delete_Invoice_Events <$config_object>: $opcode Output Flist:\n$$output_flist\n") if $DEBUG;
+
+  $INFRANET = &pin_str_flist_to_hash($output_flist);
+
+# The REV number of a poid might change.  The comparison must ignore it.
+  $config_object =~ s/(.*)\s\d+$/$1/g;
+  if ($INFRANET->{"main.PIN_FLD_POID"} =~ $config_object) {
+    &pin_write_log_message ("\tDelete_Invoice_Events: Successfull!\n");
+    return (1);
+  } else {
+    &pin_write_log_message ("\tDelete_Invoice_Events: Not Successfull!\n");
+    return (0);
+  }
+
+}
+
+
+#---------------------------------------------------------------------#
+#  This subroutine prints the Usage information for this script       #
+#---------------------------------------------------------------------#
+sub Usage {
+  print "Usage: pin_load_invoice_events.pl -brand \"<brand poid>\" -eventfile <file>\n";
+  print "\t\t\t\t [ -logfile <file> ] [ -reload ] [ -debug ] [ -help ]\n";
+  print "\t -brand \t- Specify the brand poid \n";
+  print "\t -eventfile \t- Specify the location of event file.\n";
+  print "\t -logfile \t- Specify the location where logfile is to be written.\n";
+  print "\t -reload \t- Reload already existing Config object for a brand.\n";
+  print "\t -debug \t- Log flists and detailed messages in the log file.\n";
+  print "\t -help \t\t- Displays the syntax and parameters for this utility.\n";
+  exit(1);
+}
+
+##############################################################################
+#  U T I L I T Y   S U B  R O U T I N E S
+##############################################################################
+
+##############################################################################
+#
+# pin_init():
+#       This routine initializes a connection to CM and
+#       initializes some options to their defaults.
+#
+##############################################################################
+sub pin_init {
+
+        my ($ebufp);
+        my ($sec);
+        my ($min);
+        my ($hour);
+        my ($mday);
+        my ($mon);
+        my ($year);
+        my ($wday);
+        my ($yday);
+        my ($isdst);
+
+        ######################################################################
+        # Set autoflushing on stdout.
+        ######################################################################
+        # $| = 1;
+
+        ######################################################################
+        # Initialize defaults.
+        ######################################################################
+        if ( $^O =~ /win/i ) {
+                $cwd = `cd`;
+                $cwd =~ s,\\,/,g;
+        } else {
+                $cwd = `pwd`;
+        }
+        chop($cwd);
+
+        $logdir = "$cwd"."/log_dir";
+
+        if (!(defined $printer)) {
+                $printer = $ENV{"PRINTER"};
+        }
+
+        ######################################################################
+        # Make connection to CM.
+        ######################################################################
+
+        $DB_NO = pin_make_cm_connection($dump);
+
+        return;
+}
+
+##############################################################################
+#
+# pin_str_flist_to_hash()
+#       This routine splits the string form flist and converts
+#       that to a hash.  This handles arrays and buffers cleanly
+#
+##############################################################################
+sub pin_str_flist_to_hash {
+    my ($strflist) = @_;
+
+    my (@struct) =  ("main");                   # to keep track of the
+                                                # level
+
+    my $INFRANET = {};                          # output hash
+
+    my (@flistlines) = split("\n", $$strflist);
+
+    while ($line=(shift @flistlines)) {
+
+        next if $line =~ /^\#/;                 # ignore comments
+
+        ($level, $fldname, $fldtype, $element, $value) =
+                split(/\s+/, $line, 5);
+
+                                                # adjust levels
+        while (@struct > $level+1) {
+           pop (@struct);
+        }
+
+        if ($fldtype =~ /ARRAY/) {
+           push @struct, $fldname . $element;
+        } elsif ($fldtype =~ /BUF/) {           # whole can of worms!
+           $key = join('.',@struct) . ".$fldname";
+
+                                                # ignore the first line
+                                                # it does'nt contain any data
+           $line = shift @flistlines;
+
+           do {
+
+             @buflines = split(/\s+/,$line);
+             $buflines[1] =~ s/([0-9a-fA-F][0-9a-fA-F])/pack("C", hex($1))/ieg;
+             $INFRANET->{$key} .= $buflines[1];
+             $line = shift @flistlines;
+
+           } while ($line  =~ /^x/);
+
+           unshift (@flistlines, $line) if $line;
+
+        } else {
+           $key = join('.',@struct) . ".$fldname";
+           $INFRANET->{$key} = $value;
+        }
+    }
+
+    return $INFRANET;
+}
+
+#############################################################################
+#
+# pin_read_flist()
+#       sub-routine to process the FList output data
+#
+#############################################################################
+sub pin_read_flist {
+        my ($pcm_op, $flags, $in_flist_str) = @_;
+        my ($flistp);
+        my ($ebufp);
+        my ($ebuf_str);
+
+        #####################################################################
+        ## note the "pcmif::" prefix - this is a class prefix, meaning that the
+        ## function "pcm_perl_new_ebuf()" is from the package/class "pcmif".
+        ##
+        ##
+        ## first thing, get an ebuf for error reporting.
+        #####################################################################
+        $ebufp = pcmif::pcm_perl_new_ebuf();
+
+        #####################################################################
+        ## here is how one converts an ebuf to a printable string.
+        #####################################################################
+        $ebuf_str = pcmif::pcm_perl_ebuf_to_str($ebufp);
+
+        #####################################################################
+        # ALWAYS remember to put $DB_NO in your POID!
+        # ~~~~~~
+        # Note: Array type is NOT -1, as with Testnap (sometimes).
+        #
+        #####################################################################
+
+        $flistp = pcmif::pin_perl_str_to_flist($$in_flist_str, $DB_NO, $ebufp);
+
+        if (pcmif::pcm_perl_is_err($ebufp)) {
+            pin_write_log_message (
+                "pin_read_flist(): flist conversion to check failed:\n" .
+                "$$in_flist_str\n");
+            pcmif::pcm_perl_print_ebuf($ebufp);
+            pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+            carp;
+            exit(1);
+        }
+        #####################################################################
+        # Execute the opcode.
+        #####################################################################
+        $out_flistp = pcmif::pcm_perl_op($pcm_ctxp, $pcm_op,
+                        $flags, $flistp, $ebufp);
+
+        if (pcmif::pcm_perl_is_err($ebufp)) {
+            pin_write_log_message ("pin_read_flist(): $pcm_op failed!\n");
+            pcmif::pcm_perl_print_ebuf($ebufp);
+            pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+            carp;
+            exit(1);
+        }
+        #####################################################################
+        # Set the out variable and return.
+        #####################################################################
+        $out = pcmif::pin_perl_flist_to_str($out_flistp, $ebufp);
+
+        #####################################################################
+        # Cleanup
+        #####################################################################
+
+        pcmif::pin_flist_destroy($flistp);
+        pcmif::pin_flist_destroy($out_flistp);
+        pcmif::pcm_perl_destroy_ebuf($ebufp);
+
+        #####################################################################
+        # Return
+        #####################################################################
+        return \$out;
+}
+
+
+#############################################################################
+#
+# pin_make_cm_connection
+#       sub-routine to connect to infranet
+#
+#############################################################################
+sub pin_make_cm_connection {
+        my ($dump) = @_;
+
+        ######################################################################
+        # Initialize the ebufp.
+        ######################################################################
+        $ebufp = pcmif::pcm_perl_new_ebuf();
+
+        ######################################################################
+        # Make connection to CM.
+        ######################################################################
+        $pcm_ctxp = pcmif::pcm_perl_connect($DB_NO, $ebufp);
+
+        ######################################################################
+        # check for errors - best to always do this.
+        ######################################################################
+        if (pcmif::pcm_perl_is_err($ebufp)) {
+            pin_write_log_message (
+                "pin_make_cm_connection(): Connect to CM failed\n");
+                pcmif::pcm_perl_print_ebuf($ebufp);
+                pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+                carp;
+                exit(1);
+        }
+
+        ######################################################################
+        # Cleanup
+        ######################################################################
+        pcmif::pcm_perl_destroy_ebuf($ebufp);
+        return $DB_NO;
+}
+
+
+##############################################################################
+#
+# pin_exit():
+#       This routine disconnects from the CM and does misc cleanup.
+#
+##############################################################################
+sub pin_exit {
+        my ($ebufp);
+
+        ######################################################################
+        # Initialize the ebufp.
+        ######################################################################
+        $ebufp = pcmif::pcm_perl_new_ebuf();
+
+        ######################################################################
+        # Disconnect from CM.
+        ######################################################################
+        pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+
+        ######################################################################
+        # check for errors - best to always do this.
+        ######################################################################
+        if (pcmif::pcm_perl_is_err($ebufp)) {
+                pin_write_log_message ("pin_exit(): Disconnect to CM failed\n");
+                pcmif::pcm_perl_print_ebuf($ebufp);
+                carp;
+                exit(1);
+        }
+}
+
+##############################################################################
+#
+# pin_write_log_message():
+#       This routine writes messages to the log file
+#
+##############################################################################
+sub pin_write_log_message {
+        my ($msg) = @_;
+
+        print LOGFILE $msg;
+}

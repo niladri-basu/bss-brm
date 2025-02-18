@@ -1,0 +1,33 @@
+#! /bin/ksh
+LOGINSQL=`egrep -v "#" login.cfg | grep "DB_LOGIN" |cut -d'=' -f2`
+outfile='/brmapp/portal/7.5/TD/apps/td_farmsource_billing/fs_logs/fs_billing_create.log'
+csvfile='/brmapp/portal/7.5/TD/apps/td_farmsource_billing/farmsource.csv'
+echo $actg_dom
+echo $LOGINSQL
+$ORACLE_HOME/bin/sqlplus -s $LOGINSQL>>$outfile<<EOF
+SET WRAP OFF
+set heading off;
+set feedback off;
+set linesize 
+set trimout on
+set trimspool on
+set serveroutput on size 2000
+SET PAGESIZE 50000
+SET COLSEP ","
+SPOOL $csvfile
+
+SELECT FS_ACCOUNT_NO || ',' ||
+       FS_ACCOUNT_NAME || ',' ||
+       ACCOUNT_NO || ',' ||
+       INVOICE_NO || ',' ||
+       TRANSACTION_DATE || ',' ||
+       TAG || ',' ||
+       ARTICLE_CODE || ',' ||
+       NET_AMOUNT || ',' ||
+	   GST_AMOUNT || ',' ||
+       TOTAL_AMT_INCL_GST 
+FROM   td_fs_billing_file_ext_t1;
+SPOOL OFF
+
+exit;
+EOF

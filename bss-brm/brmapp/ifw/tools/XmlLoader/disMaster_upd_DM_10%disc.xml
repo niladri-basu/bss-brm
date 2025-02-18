@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IFW xsi:noNamespaceSchemaLocation="LoadIfwConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<RecordSet>
+<IFW_DISCOUNTMASTER CODE ="DM_10%disc" DISCOUNTMASTER ="DM_10%disc" NAME ="DM_10%disc" />
+<IFW_DISCOUNTDETAIL DISCOUNTMASTER ="DM_10%disc" GLID ="20020002[0-9]" IMPACT_CATEGORY =".*" PRICEMODEL =".*" RANK ="67" RATE_PLAN =".*" RATE_TAG =".*" RECORDTYPE =".*" RESSOURCE =".*" RUM =".*" SERVICECLASS =".*" SERVICECODE =".*" TIMEMODEL =".*" TIMEZONE =".*" USAGECLASS =".*" USAGETYPE =".*" VALID_FROM ="20220101" ZONEMODEL =".*" />
+<IFW_DISCOUNTDETAIL DISCOUNTMASTER ="DM_10%disc" GLID ="10020440[6-7]" IMPACT_CATEGORY =".*" PRICEMODEL =".*" RANK ="68" RATE_PLAN =".*" RATE_TAG =".*" RECORDTYPE =".*" RESSOURCE =".*" RUM =".*" SERVICECLASS =".*" SERVICECODE =".*" TIMEMODEL =".*" TIMEZONE =".*" USAGECLASS =".*" USAGETYPE =".*" VALID_FROM ="20220101" ZONEMODEL =".*" />
+
+
+</RecordSet>
+</IFW>

@@ -1,0 +1,5188 @@
+DAT_AccountBatch
+================================================================================
+Module Version : 7.5PS11 10320
+-------------------
+Date : 18-July-2018
+-----------------
+Change Order : Bug 27830211 - Suspense CDRs with error as "Customer has no valid products for account  
+
+Short Description :
+----------------
+Whenever there is a subscription transfer back and forth between two different accounts, rating pipeline on startup is associating login with old account.
+
+Solution:
+---------
+Propagated code change of Bug22900599 
+Issue occurs when two accounts involved in subscription transfer (back and forth) are loaded in different threads during pipeline startup. This is because of 
+incomplete data captured while the accounts are loaded. As part of fix, additional data is captured while individual accounts are loaded (in threads) so that 
+correct account can be associated to login while data from multiple threads are resolved.
+================================================================================
+Module Version : 7.5PS11 10319
+-------------------
+Date : 20-Apr-2016
+-----------------
+Change Order : Bug 23130237
+
+Short Description :
+----------------
+Pipeline does not come up on restarting pipeline after account creation
+
+Solution :
+--------
+During pipeline startup (while data loading) a vector was accessed out of bound because of improper use of
+type variable. This caused an exception thrown by Roguewave library which made pipeline not to come up.
+Correct variable type is used now which is solving this issue.
+======================================================================================
+Module Version : 7.5PS11 10318
+-------------------
+Date : 12-Apr-2016
+-----------------
+Change Order : Bug 23043754
+
+Short Description :
+----------------
+Pipeline Performance Has Degraded Severely
+
+Solution :
+--------
+In a scenario of a corporate/large account's where we would have large number of services and associated 
+balance groups, CDR processing throughput was very bad. In order to improve CDR rating performance in such 
+scenario's underlying data structures have been modified accordingly.
+======================================================================================
+Module Version : 7.5PS11 10317
+-------------------
+Date : 04-Dec-2015
+-----------------
+Change Order : Bug 22119641 
+
+Short Description :
+----------------
+Post service transfer when a usage is rated with timestamp after service
+transfer, old item (belonging to previous account) is getting picked up
+
+Solution :
+--------
+Post service transfer, on receiving LineTransfer event service object was not
+set dirty. Service object is now made dirty so that correct item is fetched/assigned
+when the usage is rated.
+======================================================================================
+Module Version : 7.5 10316
+-------------------
+Date : 07-Sep-2014
+-----------------
+Change Order : Bug 17347803 
+
+Short Description :
+----------------
+Pipeline startup processing time is calculated properly by removing the query time and 
+data tranasfer time
+
+Solution :
+--------
+The new formula used is total time = querytime + data transfer time + processing time
+======================================================================================
+
+Module Version : 7.5 10315
+-------------------
+Date : 22-Aug-2014
+-----------------
+Change Order : Bug 19445804
+
+Short Description :
+----------------
+Performance queries raised with the AWR report
+
+Solution :
+--------
+Unnecessary outer joins while loading deleted profiles are removed.
+================================================================================
+Module Version : 7.5 10314
+-------------------
+Date : 10-July-2014
+-----------------
+Change Order : Bug 19170129
+
+Short Description :
+----------------
+Own Discounts not getting picked up for services for which the OBG has been deleted
+Solution :
+--------
+Changed the validities of OBG when initilaizing a deleted OBG so that own
+discounts are picked up correctly.
+================================================================================
+Module Version : 7.4 10313
+-------------------
+Date : 24-Jun-2014
+-----------------
+
+Change Order : Bug 18425704 -> P-17922334  - FURTHER_EVENT_ORDER_MISSING_IN_MEMORY_PROFILE for existing /profile/event_ordering
+
+Short Description :
+----------------
+Pipeline crashes in FCT_EventOrder during commiting EDR transaction.
+
+Solution :
+--------
+In case the profile object does not exist in the database we do not create one with invalid value in the pipeline memory.
+Exception handling has been included in the code in case we try to commit an invalid EvenetOrder Profile present in pipeline memory.
+================================================================================
+Module Version : 7.5 10312
+-------------------
+Date : 24-Jun-2014
+-----------------
+
+Change Order : Bug 18637848 -> P-18459386 ERR_EVENT_ORDER_MISSING_IN_MEMORY_PROFILE for existing /profile/event_ordering 
+
+Short Description :
+----------------
+ERR_EVENT_ORDER_MISSING_IN_MEMORY_PROFILE for existing /profile/event_ordering
+
+Solution:
+---------
+The problem was happening due to the optimization which expects that the first account created post start of the pipeline, 
+will have a valid /profile/event_ordering object created if the Out Of Order Criteria is defined. Removed the optimization.
+================================================================================
+Module Version : 7.5 10311
+-------------------
+Date : 10-June-2014
+-----------------
+
+Change Order : Bug 18938586 -> P-18374853 Prepaid and HV Rating Pipeline not starting on Production
+
+Short Description :
+----------------
+Pipeline startup was failing. This was because of huge number of unnecessary non rating profiles being 
+selected for loading. Profile selection criteria while pipeline starting was not correct.
+
+Solution:
+---------
+Modified the profile selection criteria so that pipeline startup does not fail because of huge data.
+================================================================================
+Version : 7.5 10014 / Date: 23-Mar-2014
+----------------
+Notes   bug118460750    pei zhou
+Bug 18460750 - Single-Item Pipeline changes to utilize /config/business_profile in Item Assign
+Cache business_profile in BillInfo and updated eventHandler for the same.
+================================================================================
+Module Version : 7.5 10310
+-------------------
+Date : 26-June-2013
+-----------------
+
+Change Order : Bug 16990333 -> P-16448365 THE PIPELINE STOPS AND GENERATE A CORE FILE
+
+Short Description :
+----------------
+During service's dbUpdate(), a crash was being observed intermittently. The stack trace
+indicated a potential issue during a check for initialization of the service. 
+
+Solution:
+---------
+Modified the code to do an initialization check during dbUpdate of service using its
+validTo and validFrom fields. Also modified the check for needsObgMonUpdate.
+================================================================================
+Module Version : 7.5 10309
+-------------------
+Date : 21-Jan-2013
+-----------------
+
+Change Order : Bug 16079279 -> P-16056512 
+
+Short Description :
+----------------
+There was a potential problem related to the Pool of objects maintained at DAT_Account.
+For iterating over the elements of the pool, wrong condition was used to terminate the loop.
+
+Solution :
+--------
+Changed the condition to take care of any possible error scenarios.
+================================================================================
+Module Version : 7.5 10308
+-------------------
+Date : 14-Jan-2013
+-----------------
+
+Change Order : Bug 16082821 - IN ACCOUNT DUMP, ACCOUNT POID GETS MERGED WITH THE TEXT "Account LogicalPartition"
+
+Short Description :
+----------------
+In Account dump, the account poid and the text "Account LogicalPartition" appear without a space which makes
+the complete text unreadable
+================================================================================
+Module Version : 7.5 10307
+-------------------
+Date : 20-Sept-2012
+-----------------
+
+Change Order : Bug 14645658 - P-14586274 PIPELINE ERROR AT STARTUP AFTER CUSTCREATE EVENT
+
+Short Description :
+----------------
+On CustCreate event, Infranet puts an intimation for CustCreate event in Listener Queue and updates the
+database with customer information. During startup pipeline starts listening and in parallel loads customer
+information from database. Hence there are chances that new account data is already available in memory and
+same data is flowing in through the listener. Because of this scenario, startup of pipeline stops with major
+error "ERR_INSERTING_CUST_CREATE_EVENT_ORDER_PROFILE".
+
+Solution :
+--------
+In case of the above explained scenario, code is modified such that it does not throw a major error and
+make the pipeline to stop but will just log the major error and continue processing.
+================================================================================
+Module Version : 7.5 PATCH 10306
+----------------
+
+Date : 09-JULY-2012
+---------------
+
+Change Order : Bug 14294682 -> P-14245451
+---------------
+
+Short Description :
+----------------
+INF_DB_RECONNECT message was specific to DAT_Account's context even though the
+message is used by other plugins. This made the message not look apt when called
+by other plugins.
+================================================================================
+Module Version : 7.5 10305
+-------------------
+Date : 15-Jun-2012
+-----------------
+
+Change Order : bug 14143463  PIPELINE START-UP Improvements- Fixing containers from Vector to List
+ in DAT_AccountBatch
+
+Short Description and Solution:
+------------------------------
+Pipline startup taking long time to load Account and related data. This fix avoids
+use of reshape and insert of elements in vectors which used to  allocate and de-allocate memory
+every time an elemant is inserted. New Class PtrVectorAsList is introduced to facilitate that. 
+
+================================================================================
+Module Version : 7.5 10304
+-------------------
+Date : 14-Jun-2012
+-----------------
+
+Change Order : bug 14065253 
+
+Short Description :
+----------------
+Pipeline startup time reduction by Thread balancing in DAT_AccountBatch
+
+Solution :
+--------
+A new registry parameter is introduced "perThreadJobsCount" to  control
+loading of accounts and related data. Threads go and ask for job if its
+done with current job. 
+================================================================================
+
+
+Module Version : 7.5 10303
+-------------------
+Date : 30-May-2012
+-----------------
+
+Change Order : bug 14121392 - P-13869376 LONG PIPELINE START-UP
+
+Short Description :
+----------------
+Pipline startup taking long time loading deleted profiles.
+
+Solution :
+--------
+A new registry parameter is introduced "LoadProfilesWithoutNameValue" to  control 
+the loading of profiles not having name value pair. By default all the profiles 
+will be loaded from the main table. If this parameter is set to "False", profile 
+without name-value pair will not be loaded.
+================================================================================
+Module Version : 7.5 10302
+-------------------
+Date : 14-May-2012
+-----------------
+
+Change Order : Bug 14067542 - P-14035757
+
+Short Description :
+----------------
+Pipeline fails when ProductInfoChange event with 1000 or more products are processed 
+in one go. This happens because of the restriction of having strictly less than 1000 
+items in the in clause of the SQL query
+
+Solution:
+---------
+While processing ProductInfoChange, split the poids list into a number of lists where 
+each list contains < 1000 product poids in it. 
+================================================================================
+Module Version : 7.5 10301
+-------------------
+Date : 05-Apr-2012
+-----------------
+
+Change Order : Bug 13920555 - P-13904337
+
+Short Description :
+-----------------
+MAIN RATING PIPELINE CORES DUMP. Problem was faced for account having more than 180
+purchased products.
+Solution :
+--------
+Value of Build Parameter D_RWSTD_MINIMUM_NEW_CAPACITY is changed to 32 for all platforms.
+================================================================================
+Module Version : 7.5 10300
+-------------------
+Date : 28-Mar-2012
+-----------------
+
+Change Order : bug 13876776 
+
+Short Description :
+----------------
+Pipeline does not fetch the ERA if MSISDN is associated to a different account and 
+the cdr is passed with a timestamp prior to this association.
+Solution :
+--------
+The search function for account/service-profiles/account DOM is made consistent with 
+that of non-router search
+================================================================================
+Module Version : 7.5 10299
+-------------------
+Date : 26-Mar-2012
+-----------------
+
+Change Order : bug 13876780
+
+Short Description :
+----------------
+Crash was happening while releasing the service lock. It was due to reference passing of a 
+local variable to lockService function.
+Solution :
+--------
+Passed reference of in memory service object to lockService function which will remain valid 
+till release of the service lock.
+================================================================================
+Module Version : 7.5 10298
+-------------------
+Date : 05-Mar-2012
+-----------------
+
+Change Order : bug 13806728
+
+Short Description :
+----------------
+PIPELINE CRASHED DURING BILLING
+
+Solution :
+--------
+Extended scope of locking to stop simultaneous update and read of account data by multiple threads. 
+Also moved some of the IXT functionality to DAT to limit the dependency on platform libraries.
+================================================================================
+Module Version : 7.5 10297
+-------------------
+Date : 16-Feb-2012
+-----------------
+
+Change Order : bug 13682513
+
+Short Description :
+----------------
+Pipeline hangs because of a deadlock condition. This happens when the CDRs of the 
+member and its owner are processed simultaneously in a splitter pipeline scenario. 
+
+Solution :
+-----------
+The sequence of locking has been changed to avoid DeadLock Condition when the above
+scenario occurs.
+===============================================================================
+Module Version : 7.5 10296
+-------------------
+Date : 09-Jan-2012
+-----------------
+
+Change Order : bug 13574026
+
+Short Description :
+----------------
+When Balance Monitor is created in real-time and refreshed in Pipeline via ifw_sync,
+the outfile shows 2 entries for this balance monitor object, during batch rating.
+
+Solution :
+--------
+OrderedBalanceGroup(OBG) class has 2 methods to read the OBG data from DB - dbMonUpdate()
+to read the OBG for balance monitors ; and dbUpdate() to read OBG for the other group
+sharing objects. dbUpdate() was reading the OBG for balance monitor objects as well,
+resulting in duplicate entries for the balance monitor objects. dbUpdate() method has
+been modified to NOT read balance monitor OBG objects.
+===============================================================================
+Module Version : 7.5 10295
+----------------
+Date : 16-Dec-2011
+---------------
+Change Order : bug13499035
+----------------
+
+Short Description :
+----------------
+In the EDR container, the PROFILE_ATTRIBUTES field in CUSTOMER_DATA.EXTENDED_RATING_ATTRIBUTES are populated
+twice(or multiple times)for each profile. This happens when the profile audit data has the same effective_t
+for a given profile.
+
+Solution:
+Modified the code to add the PROFILE_ATTRIBUTES for the most recent profile object revision for a given profile
+================================================================================
+Module Version : 7.5 10294
+-------------------
+Date : 04-Oct-2011
+-----------------
+
+Change Order : bug 13052640 
+
+Short Description :
+----------------
+When a rate plan is renamed, EDRs which are supposed to get rated with the original rate plan 
+would not get rated as DAT_Account always reads the rate plan's name and updates the edr container
+with this information
+Solution :
+--------
+Changed the code to read rate plan code instead of rate plan name
+================================================================================
+Module Version : 7.4 10293
+-------------------
+Date : 19-Sep-2011
+-----------------
+
+Change Order : bug 12969218
+
+Short Description :
+----------------
+Usage occurring at beginning of cycle being assigned a wrong Item
+
+Solution :
+--------
+Changed the code to select proper Item for the usage
+================================================================================
+Module Version : 7.4 10292
+-------------------
+Date : 01-Jul-2011
+-----------------
+
+Change Order : bug 12710990
+
+Short Description :
+----------------
+Ordered Balance Group(OBG) was not getting refreshed for services that are created 
+while pipeline was running.
+
+Solution :
+--------
+Ordered Balance Group(OBG) data will be refreshed when the service goes for update 
+from database while processing CDR.
+================================================================================
+
+Module Version : 7.5 10291
+--------------
+Date : 28-June-2011
+--------------
+Change Order : bug12687474
+--------------
+
+Short Description :
+-----------------
+CDR is getting rejected for a newly created account (from Customer Center)
+================================================================================
+
+
+DAT_AccountBatch
+===============================================================================
+Module Version : 7.4 10290
+--------------
+Date : 01-June-2011
+--------------
+Change Order : bug12599712
+--------------
+
+Short Description :
+-----------------
+Purchased product audit data is fetched based on the most recent object revision for a given effective_t.
+================================================================================
+
+Module Version : 7.5 10289
+-------------------
+Date : 28-Apr-2011
+-----------------
+
+Change Order : bug 12371489
+
+Short Description :
+----------------
+Changes to get account id in case of router mode for TT LPs. Details are on 
+bug.
+================================================================================
+
+Module Version : 7.4 10288
+-------------------
+Date : 01-Apr-2011
+-----------------
+
+Change Order : bug 11934078
+
+Short Description :
+----------------
+Provide a mechanism to search for account DOM without going through the complete account search.
+
+Solution :
+--------
+search method for twintalk profiles was changed to return only account dom based on an input flag.
+================================================================================
+Module Version : 7.4 10287
+-------------------
+Date : 01-Apr-2011
+-----------------
+
+Change Order : bug 12315198
+
+Short Description :
+----------------
+Dummy purchased_product added in case of no susbcription product for the account did not had
+service id which is required to get ItemPoid. Changes are done to add rating service id to the
+dummy purchased_product.
+================================================================================
+Module Version : 7.4 10286
+-------------------
+Date : 22-Mar-2011
+-----------------
+
+Change Order : bug 11866496 
+
+Short Description :
+----------------
+ALIAS_LIST is not being populated in EDR dump for Accounts created while pipeline
+is running.
+
+Solution :
+--------
+Fixed the code to populate the ALIAS_LIST properly in EDR dump for Accounts created while pipeline
+is running.
+
+Other Modifications :
+-------------------
+1. Fixed the code to use EDR time-stamp while adding profile for subscription service.
+2. Fixed the code to avoid wrong account profiles from being added to the EDR container.
+================================================================================
+Module Version : 7.4 10285
+-------------------
+Date : 24-Jan-2011
+-----------------
+
+Change Order : bug 11061701
+
+Short Description :
+----------------
+Crash when trying to print account information from memory.
+
+================================================================================
+Module Version : 7.4 10284
+-------------------
+Date : 11-Nov-2010
+-----------------
+
+Change Order : bug 10077369
+
+Short Description :
+----------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+Module Version : 7.4 10283
+----------------
+Date : 29-Oct-2010
+---------------
+
+Change Order : bug10140705
+---------------
+
+Short Description :
+----------------
+The select statement used for selecting rerate accounts by job status was referring
+the wrong column name. Code was changed to refer job_batch_accounts_t.job_id instead 
+of job_batch_accounts_t.obj_id0
+=================================================================================
+
+Module Version : 7.4 10282
+----------------
+Date : 19-Oct-2010
+---------------
+
+Change Order : bug10213577 
+---------------
+
+Short Description :
+----------------
+Search performance was improved for accounts having large no of services and products.
+=================================================================================
+Module Version : 7.4 10281
+----------------
+Date : 23-Aug-2010
+---------------
+
+Change Order : bug10036873 
+---------------
+
+Short Description :
+----------------
+ReadAllProducts registry setting was not populating products information correctly.
+Code was changed to fix the problem as well as avoid ERR_NO_RATEPLAN error.
+================================================================================
+Module Version : 7.4 10280
+----------------
+Date : 19-Aug-2010
+---------------
+Change Order : bug9849695 
+---------------
+Short Description :
+----------------
+Value of Build Parameter D_RWSTD_MINIMUM_NEW_CAPACITY is changed to 32 for Linux.
+================================================================================
+Module Version : 7.4 10279
+----------------
+Date : 23-Jul-2010
+---------------
+Change Order : bug9898796 
+---------------
+Short Description :
+----------------
+Validation of ERA's under the profile against the time is introduced.
+================================================================================
+Module Version : 7.4 10278
+----------------
+Date : 02-Jul-2010
+---------------
+Change Order : bug9780676
+---------------
+Short Description :
+----------------
+disableratingproductcheck (for customersearch module) does not work as expected
+================================================================================
+Module Version : 7.4 10277
+----------------
+Date : 20-May-2010
+---------------
+
+Change Order : bug9718521
+---------------
+
+Short Description :
+----------------
+ServiceRef object is enhanced to map multiple event types and prefixes to a single service type.
+The event type passed in search methods is used to pick up the correct reference data
+================================================================================
+Module Version : 7.4 10276
+----------------
+Date : 12-May-2010
+---------------
+
+Change Order : bug9702457
+---------------
+
+Short Description :
+----------------
+Local variable is used as a bind variable for database queries in ClosedAccountDbObject leading 
+to formation of incorrect queries as the variable's scope is limited.
+================================================================================
+Module Version : 7.4 10275
+----------------
+Date : 30-Mar-2010
+---------------
+
+Change Order : bug9379863   
+---------------
+
+Short Description :
+----------------
+Fix is done to populate the Account level balance monitor information in the monitor list.
+================================================================================
+Module Version : 7.4 10274
+----------------
+Date : 22-Feb-2010
+---------------
+
+Change Order : bug9282661   
+---------------
+
+Short Description :
+----------------
+Rating performance decreased due to unnecessary db hits when a valid purchased product does not have the usage period valid for CDR
+time.
+================================================================================
+Module Version : 7.4 10273
+----------------
+Date : 30-DEC-2009
+---------------
+
+Change Order : bug9239626   
+---------------
+
+Short Description :
+----------------
+1. Monitor list was not getting added to search data.
+2. While loading balance monitors, balance group id was missing from balance monitor object.
+================================================================================
+Module Version : 7.4 10272
+----------------
+Date : 29-SEP-2009
+---------------
+
+Change Order : bug8903729  
+---------------
+
+Short Description :
+----------------
+1. Removed duplicate code in dbObject files and put in a single file.
+2. PurchaseProduct and PurchasedDiscount  sync was not happening properly in case of LineTransfer.
+================================================================================
+Module Version : 7.4 10271
+----------------
+Date : 10-SEP-2009
+---------------
+
+Change Order : bug8807278 
+---------------
+
+Short Description :
+----------------
+THE QUANTITY OF PURCHASED DISCOUNT ARE ROUNDED TO INTEGER ONLY
+================================================================================
+Module Version : 7.4 10270
+----------------
+Date : 21-AUG-2009
+---------------
+
+Change Order : bug8823526 
+---------------
+
+Short Description :
+----------------
+Pipeline dumps core on DAT_Account when it calls sharedProfileLabel.
+================================================================================
+Module Version : 7.4 10269
+----------------
+Date : 20-AUG-2009
+---------------
+
+Change Order : bug8818128 
+---------------
+
+Short Description :
+----------------
+Subscription service type was picked from wrong variable.
+================================================================================
+Module Version : 7.4 10268
+----------------
+Date : 24-AUG-2009
+---------------
+
+Change Order : bug8667993
+---------------
+
+Short Description :
+----------------
+P-8516114[VPU][RATING]EVENT ORDERING PROFILE NOT SYNC IN THE RATING PIPELINE
+The customer uses multi-step to create a customer. Intially create an account with no services,
+then adds one or more services, and other profiles.
+Event profile is synced on pipeline through account creation message "CustCreate",
+without creating services, the message is ignored. So event profile was never synced
+without restart pipeline.
+Modified sync of event order profile so that it will be synced in "ServiceLogin" message,
+as well as in "CustCreate".
+================================================================================
+Module Version : 7.4 10267
+Date : 24-Jun-2009
+---------------
+
+Change Order : bug8624698
+----------------
+
+Short Description :
+----------------
+Performance degradation after processing OpenNewActgCycle events where event flist has some errors.
+OpenNewActgCycle event processing was changed to invalidate only those objects which
+has some issues in the flist instead of invalidating all the services and the account in memory.
+If the event flist contains service info of a service which is not loaded in memory,
+the account will not be invalidated,rather srvice info is ignored.
+================================================================================
+Module Version : 7.4 10266
+----------------
+
+Date : 10-Jun-2009
+---------------
+
+Change Order : bug8529570
+----------------
+
+Short Description :
+----------------
+1. Improvement of database exception handling.
+2. Pipeline will create item even when there is no tag provided and no pre-created items are there.
+It will create item Using FSM, if both eventtype and servicetype matches with item tag is present in DB.
+================================================================================
+
+Module Version : 7.4 10265
+----------------
+
+Date : 28-May-2009
+---------------
+
+Change Order : bug8552727 
+----------------
+
+Short Description :
+----------------
+1. DAT_Account not populating all products when readAllProducts set to true.
+2. DAT_Account does not populate Discount id from audit table on dbUpdate.
+================================================================================
+
+Module Version : 7.4 10264
+----------------
+
+Date : 18-May-2009
+---------------
+
+Change Order : bug8471601  
+----------------
+
+Short Description :
+----------------
+Error message on log files was not clear incase of database exception.
+================================================================================
+Module Version : 7.4 10263
+----------------
+
+Date : 15-May-2009
+---------------
+
+Change Order : bug8466228 
+----------------
+
+Short Description :
+----------------
+Using int32 data type for billWhen
+================================================================================
+Module Version : 7.4 10262
+----------------
+
+Date : 14-May-2009
+---------------
+
+Change Order : bug8460453
+----------------
+
+Short Description :
+----------------
+Registry parameter "LoadProfilesFromAudit" introduced to avoid loading Profile Data from
+Audit Table when specified as False(This is introduced to improve startup performance
+ for those customers who don't use profile deleting feature).
+================================================================================
+Module Version : 7.4 10261
+----------------
+
+Date : 29-Apr-2009
+---------------
+
+Change Order : bug8364805 
+----------------
+
+Short Description :
+----------------
+1. Extra argument "disableRatingProductCheck" removed from DAT::Account:search() argument list and embeded inside serchArgs.
+2. item_poid_list and next_item_poid_list length changed from 2000 to 4000.
+3. Changed data type of PurchasedProduct quantity to hold decimal values.
+================================================================================
+Module Version : 7.4 10260
+----------------
+
+Date : 19-Mar-2009
+---------------
+
+Change Order : bug8341797
+----------------
+
+Short Description :
+----------------
+OrderedBalanceGroup was returing wrong object from dbUpdate
+================================================================================
+Module Version : 7.4 10259
+----------------
+
+Date : 05-Mar-2009
+---------------
+
+Change Order : bug8309502
+----------------
+
+Short Description :
+----------------
+corrected new and delete expressions in flexible item poid handling
+================================================================================
+Module Version : 7.4 10258
+----------------
+
+Date : 19-Feb-2009
+---------------
+
+Change Order : bug8256883
+----------------
+
+Short Description :
+----------------
+Tailormade product was not getting rated correctly due to interRatingPPIndex was always set to 0.
+================================================================================
+Module Version : 7.4 10257
+----------------
+
+Date : 19-Jan-2009
+---------------
+
+Change Order : bug7717018
+----------------
+
+Short Description :
+----------------
+Invlid entries for business parameter "CacheResidenciesForBatchPipeline" will result in 
+critical error during pipeline startup
+================================================================================
+Module Version : 7.4 10256
+----------------
+
+Date : 02-Jan-2009
+---------------
+
+Change Order : bug7631910
+----------------
+
+Short Description :
+----------------
+Flexible items created by pipeline for account/service needs to be preserved across database update.
+================================================================================
+Module Version : 7.4 10255
+----------------
+
+Date : 09-Jan-2009
+---------------
+
+Change Order : bug7678729
+----------------
+
+Short Description :
+----------------
+Global group sharing charges not working due to sending wrong objectId to search from db.
+================================================================================
+Module Version : 7.4 10254
+----------------
+
+Date : 06-Jan-2009
+---------------
+
+Change Order : bug7666778
+----------------
+
+Short Description :
+----------------
+firstusage cdr not getting rejected because of firstusage validity was not set from database
+================================================================================
+Module Version : 7.4 10253
+----------------
+
+Date : 31-Dec-2008
+---------------
+
+Change Order : bug7627018
+----------------
+
+Short Description :
+----------------
+Double delete of memory location avoided, which was the cause for inconsistent result on Account migration. 
+================================================================================
+Module Version : 7.4 10252
+----------------
+
+Date : 10-Dec-2008
+---------------
+
+Change Order : bug7606115
+----------------
+
+Short Description :
+----------------
+set the valid to of service objects after initial loading to accounttimemax and 
+needsProffUpdate to false for accounts during initial loading.
+================================================================================
+Module Version : 7.4 10251
+----------------
+
+Date : 15-Dec-2008
+---------------
+
+Change Order : bug7597842 
+----------------
+
+Short Description :
+----------------
+Using a different variable to keep track of remaining profiles
+================================================================================
+Module Version : 7.4 10250
+----------------
+
+Date : 15-Dec-2008
+---------------
+
+Change Order : bug7637149 
+----------------
+
+Short Description :
+----------------
+Ordered Balance Group dbUpdate does not return right version of audit object since
+effectiveTSeconds() is undefined in OrderedBalanceGroupDbObject
+================================================================================
+Module Version : 7.4 10249
+----------------
+
+Date : 15-Dec-2008
+---------------
+
+Change Order : bug7636282
+----------------
+
+Short Description :
+----------------
+Do not populate the error even if no rating products are found, if disableRatingProductCheck 
+parameter in registry is set to true.
+================================================================================
+Module Version : 7.4 10248
+----------------
+
+Date : 05-Dec-2008
+---------------
+
+Change Order : bug7603511 
+----------------
+
+Short Description :
+----------------
+Pipelin was not comming up due to problem in type casting on searchData using dynamic_cast on reference.
+================================================================================
+Module Version : 7.4 10247
+----------------
+
+Date : 05-Dec-2008
+---------------
+
+Change Order : bug7614209
+----------------
+
+Short Description :
+----------------
+ValidFrom of GroupSharingObject is not set after dbUpdate
+================================================================================
+Module Version : 7.4 10247
+----------------
+
+Date : 03-Dec-2008
+---------------
+
+Change Order : bug7594849 
+----------------
+
+Short Description :
+----------------
+Pipeline need to restart, to apply group sharing discount, due to accountid was missing.
+================================================================================
+Module Version : 7.4 10246
+
+Date : 26-Nov-2008
+---------------
+
+Change Order : bug7490975
+----------------
+P-7448006 IBM BMT - DB NUMBER IN ITEM_POID_LIST HAS ONLY 1 DIGIT.
+
+Short Description :
+----------------
+DAT_Account uses a method to convert the Portalbase Db number
+from the format "0.0.0.x" to "x" , which is being corrected 
+to handle when more than one digit dbnumber is used.
+==============================================================================
+
+Module Version : 7.4 10245
+----------------
+
+Date : 04-Nov-2008
+---------------
+
+Change Order : bug7522424
+----------------
+
+Short Description :
+----------------
+Picking up products and discounts from audit even if the purchased start time in memory 
+is after the event time to address re-activation cases
+================================================================================
+Module Version : 7.4 10244
+----------------
+
+Date : 08-Nov-2008
+---------------
+
+Change Order : bug7554760
+----------------
+
+Short Description :
+----------------
+Group sharing discount failing due to wrong data on valid from.
+================================================================================
+Module Version : 7.4 10243
+----------------
+
+Date : 27-Oct-2008
+---------------
+
+Change Order : bug6609184
+----------------
+
+Short Description :
+----------------
+Correcting proc timer issues in getItemPoidList() and setItemPoid().
+================================================================================
+Module Version : 7.4 10242
+----------------
+
+Date : 17-Oct-2008
+---------------
+
+Change Order : bug7492292
+----------------
+
+Short Description :
+----------------
+correcting variable name which found to be wrong after merger.
+================================================================================
+Module Version : 7.4 10241
+----------------
+
+Date : 08-Oct-2008
+---------------
+
+Change Order : bug7210784
+----------------
+
+Short Description :
+----------------
+Implement new dataexchange model for dat_account::search() function. 
+================================================================================
+Module Version : 7.4 10240
+----------------
+
+Date : 29-Sep-2008
+---------------
+
+Change Order : bug7162212
+----------------
+
+Short Description :
+----------------
+MSLEADING INFORMATION IN CUSTOMER DATA MEMORY DUMP
+Display the data dump properly and add needsProfUpdM in Service dump
+
+================================================================================
+Module Version : 7.4 10239
+----------------
+
+Date : 27-AUG-2008
+---------------
+
+Change Order : bug7312564
+----------------
+
+Short Description :
+----------------
+Enhance DAT_Account for selective data loading based on business parameter 
+"CacheResidenciesForBatchPipeline"
+================================================================================
+
+Module Version : 7.4 10238
+----------------
+
+Date : 26-JUN-2008
+---------------
+
+Change Order : bug7189714
+----------------
+Backdated CDR is getting rejected when the OBG update of subscription service is
+ failing.Added additional checks for ensuring that the OBG is not accessed incase 
+of failure in dbupdate.
+================================================================================
+
+Module Version : 7.4 10237
+----------------
+
+Date : 16-JUN-2008
+---------------
+
+Change Order : bug7162675
+---------------
+
+Short Description :
+----------------
+Login DbUpdate query and logic in case of only login was insufficient. Corrected it.
+AliasList not added properly to the searchResult.
+================================================================================
+Module Version : 7.3.2 10236
+----------------
+
+Date : 15-APR-2008
+---------------
+
+Change Order : bug6774455 
+---------------
+
+Short Description :
+----------------
+HP BMT, PERF DEGRADATION IN BATCH RATING WITH FNF ENABLED
+================================================================================
+================================================================================
+Module Version : 7.3.2 10235
+----------------
+
+Date : 04-APR-2008
+---------------
+
+Change Order : bug6934282 
+---------------
+
+Short Description :
+----------------
+RE-RATING RELATED CHANGES TO IMPROVE PERFORMANCE
+================================================================================
+Module Version : 7.3.2 10234
+----------------
+
+Date : 28-NOV-2007
+---------------
+
+Change Order : bug6601323
+---------------
+
+Short Description :
+----------------
+REGRESSION :VALUES OF CURENT_BAL, DELAYED_BAL, NEXT_BAL NOT COMING CORRECTLY.
+DataString manipulation in updateBillingState() of BillInfo is corrected.
+================================================================================
+Module Version : 7.3.1 10233
+----------------
+
+Date : 28-SEP-2007
+---------------
+
+Change Order : bug6455513
+---------------
+
+Short Description :
+----------------
+Discounts in a DSG are given twice to the member due to same effective_t of consecutive
+OBG revisions of the member.
+================================================================================
+Module Version : 7.3.1 10232
+----------------
+
+Date : 28-SEPT-2007
+---------------
+
+Change Order : bug6454774
+---------------
+
+Short Description :
+----------------
+1. pipeline_account failed with error "The qualified declarator "DAT::Account::operator<<" must refer to an existing declaration".
+2. The characters "/*" are detected in a comment on Monitor.hpp and LockedValHashMap.hpp.
+================================================================================
+Module Version : 7.3.1 10231
+----------------
+
+Date : 19-SEP-2007
+---------------
+
+Change Order : bug6434768
+---------------
+
+Short Description :
+----------------
+Corrected the issues in Router logic while disassociating aliases.
+================================================================================
+Module Version : Mercury 10230
+----------------
+Date : 12-Sept-2007
+----------------
+Change Order :  bug6065800
+----------------
+Short Description :
+-------------------
+Added code to test the purchasedProduct status against the Pricing Product flags.
+
+================================================================================
+Module Version : 7.3.1 10229
+----------------
+
+Date : 27-AUG-2007
+---------------
+
+Change Order : bug6360029
+---------------
+
+Short Description :
+----------------
+PIPELINE CORE DUMPS WHILE RATING MEMBER ACCOUNT IN CHARGE SHARING GROUP
+================================================================================
+Module Version : 7.3.1 10228
+----------------
+
+Date : 03-JAUG-2007
+---------------
+
+Change Order : bug6281291
+---------------
+
+Short Description :
+----------------
+pipeline_account is breaking in solaris for non availability of const accessor methods 
+for service, login and service types map in CustomerData class. 
+================================================================================
+Module Version : 7.3.1 10227
+----------------
+
+Date : 26-JUL-2007
+---------------
+
+Change Order : bug6166705
+---------------
+
+Short Description :
+----------------
+Implemented the DataDump interface for FCT_DataDump.
+================================================================================
+Module Version : 7.3.1 10226
+----------------
+
+Date : 18-JULY-2007
+---------------
+
+Change Order : bug6166692
+---------------
+
+Short Description :
+----------------
+globalChargeShareDataString method was moved from CustomerData to 
+GlobalGroupSharingCharges class as part of TOI comments.
+================================================================================
+Module Version : 7.3_PATCH 10225
+----------------
+
+Date : 29-JUN-2007
+---------------
+
+Change Order : bug6153675
+---------------
+
+Short Description :
+----------------
+Discount is not applied properly when CDR file has calls started before the DSG creation time.
+================================================================================
+Module Version : 7.3_PATCH 10224
+----------------
+
+Date : 25-MAY-2007
+---------------
+
+Change Order : bug6075052
+---------------
+
+Short Description :
+----------------
+Pipeline shuting down when a ModifyProfile event is processed for a service 
+that was not originally loaded in the service map.
+================================================================================
+Module Version : 7.3_PATCH 10223
+----------------
+
+Date : 28-APR-2007
+---------------
+
+Change Order : bug6019742
+---------------
+
+Short Description :
+----------------
+Subscriber services are not getting their ERA's set to dirty on CreateProfile or
+ModifyProfile event messages.
+================================================================================
+Module Version : 7.3_PATCH 10222
+----------------
+Date : 01-May-2007
+----------------
+Change Order :  BUG6014431
+----------------
+Short Description :
+-------------------
+DAT_Account enhancement to read business config params from DAT_PortalConfig and
+Add a message into the log to specify that DAT_PortalConfig needs to appear before
+DAT_Account if initialization fails on missing DAT_PortalConfig.
+================================================================================
+Module Version : 7.3_PATCH 10221
+----------------
+
+Date : 12-APR-2007
+---------------
+
+Change Order : bug5884711
+---------------
+
+Short Description :
+----------------
+UK: INTEGRATE FAILS TO DISCOUNT LATE COMING USAGE ONCE THE SERVICE IS CLOSED.
+Changed the use of LONG_MIN to INT_MIN as the data in AccountTime(32 bit) format 
+is truncating the min value to 0.
+================================================================================
+Module Version : 7.3_PATCH 10220
+----------------
+
+Date : 06-Apr-2007
+----------------
+
+Change Order :  bug5772072
+----------------
+
+Short Description :
+-------------------
+Router mode startup is extremely slow. Need to follow map-merge paradigm
+with the RtrAccountHashMap.
+================================================================================
+Module Version : 7.3_PATCH 10219
+----------------
+
+Date : 30-Mar-2007
+----------------
+
+Change Order :  bug5884947
+----------------
+
+Short Description :
+-------------------
+Moved the locks at the right place in getBillInfo() and getBalanceGroupId().
+================================================================================
+Module Version : 7.3_PATCH 10218
+----------------
+
+Date : 28-Mar-2007
+----------------
+
+Change Order :  bug5931405
+----------------
+
+Short Description :
+-------------------
+getOfferDetails() didn't consider grant_resources_as_group setting in deal.
+================================================================================
+Module Version : 7.3_PATCH 10217
+----------------
+
+Date : 23-Mar-2007
+----------------
+
+Change Order :  bug5950878
+----------------
+
+Short Description :
+-------------------
+Fix one time memory leaks
+================================================================================
+Module Version : 7.3_PATCH 10216
+----------------
+
+Date : 11-Jan-2007
+----------------
+
+Change Order :  PRSF00243219
+----------------
+
+Short Description :
+-------------------
+During initPoidConstant() use connection to Infranet DB
+================================================================================
+Module Version : 7.3_PATCH 10215
+----------------
+
+Date : 20-Dec-2006
+----------------
+
+Change Order :  PRSF00241816
+----------------
+
+Short Description :
+-------------------
+Implement PoidConstantType to store poid types in a pool.
+================================================================================
+Module Version : 7.3_PATCH 10214
+----------------
+
+Date : 15-Dec-2006
+----------------
+
+Change Order :  PRSF00240909
+----------------
+
+Short Description :
+-------------------
+Fix CustCreateHandler EventOrderProfile creation hole.
+================================================================================
+Module Version : 7.3_PATCH 10213
+----------------
+
+Date : 01-Dec-2006
+----------------
+
+Change Order :  PRSF00236778
+----------------
+
+Short Description :
+-------------------
+TOI feedback implemented for FNF.
+================================================================================
+Module Version : 7.3_PATCH 10212
+----------------
+Date : 28-Nov-2006
+----------------
+Change Order :  PRSF00239544
+----------------
+Short Description :
+-------------------
+Reduce footprint of PurchasedProduct and PurchasedDiscount objects.
+
+================================================================================
+Module Version : 7.3_PATCH 10211
+----------------
+
+Date : 07-Nov-2006
+----------------
+
+Change Order :  PRSF00237016
+----------------
+
+Short Description :
+-------------------
+Account level monitoring list is not returned properly to billing record module as the
+group sharing balance monitor object id's are not resolved.
+================================================================================
+Module Version : 7.3_PATCH 10210
+----------------
+
+Date : 30-Oct-2006
+----------------
+
+Change Order :  PRSF00234314
+----------------
+
+Short Description :
+-------------------
+Subscription service discounts are not getting evaluated when a member service is using the
+Subscription service OBG.
+================================================================================
+Module Version : 7.3_PATCH 10209
+----------------
+
+Date : 10-Oct-2006
+----------------
+
+Change Order :  PRSF00235121
+----------------
+
+Short Description :
+-------------------
+During LineTransfer Event processing insted of creating a new service transfer list, needsUpdate flag 
+is set for service transfer list. Also service transfer list dbUpdate is called in getItemPoidList function
+if the needsUpdate flag is set for service transfer list.
+================================================================================
+Module Version : DaVinci 10208
+----------------
+Date : 18-Sep-2006
+----------------
+Change Order :  PRSF00233239
+----------------
+Short Description :
+-------------------
+Fix for memory leak in OrderedBalanceGroup and CustomerData class.
+================================================================================
+Module Version : DaVinci 10207
+----------------
+Date : 28-Aug-2006
+----------------
+Change Order :  PRSF00230157
+----------------
+Short Description :
+-------------------
+Revert back to non-exception based DAT_Account::search() failure.
+This is neccesary for optimal performance when LOGIN_NOT_FOUND error occur.
+================================================================================
+Module Version : DaVinci 10206
+----------------
+Date : 24-Aug-2006
+----------------
+Change Order :  PRSF00229041
+----------------
+Short Description :
+-------------------
+Performance improvements to DAT_Account
+================================================================================
+Module Version : DaVinci 10205
+----------------
+Date : 18-Aug-2006
+----------------
+Change Order :  PRSF00225846
+----------------
+Short Description :
+-------------------
+AMT Perf: DAT_AccountBatch should read list of account ids from database for 
+          AMT Business event.
+================================================================================
+Module Version : DaVinci 10204
+----------------
+Date : 11-Aug-2006
+----------------
+Change Order :  PRSF00228483
+----------------
+Short Description :
+-------------------
+Avoid the double throw from DAT_Account.
+================================================================================
+Module Version : DaVinci 10203
+----------------
+Date : 02-Aug-2006
+----------------
+Change Order : PRSF00215442
+----------------
+Short Description :
+-------------------
+Fix for performance issue with CDR processing.
+================================================================================
+Module Version : DaVinci 10202
+----------------
+
+Date : 25-Jul-2006
+----------------
+
+Change Order :  PRSF00225354
+----------------
+
+Short Description :
+-------------------
+No need to lookup the BillingCycle time in EventOrder Implementation.   
+Value is available in the EDR.
+
+Also, fix initClosedAccount() to use a larger BulkReader configured
+with FETCH_SIZE.
+
+================================================================================
+Module Version : DaVinci 10201
+----------------
+Date : 26-July-2006
+----------------
+Change Order : PRSF00225836
+----------------
+Short Description :
+-------------------
+Fix the build break in DAT_AccountBatch
+
+================================================================================
+Module Version : DaVinci 10200
+----------------
+Date : 26-July-2006
+----------------
+Change Order : PRSF00190847
+----------------
+Short Description :
+-------------------
+New event "ModifyAccountNumber" to update the ACCOUNT_NO of account obj.
+================================================================================
+Module Version : DaVinci 10199
+----------------
+
+Date : 26-Jul-2006
+----------------
+
+Change Order : PRSF00224102
+----------------
+
+Short Description :
+-------------------
+PrepareToRerate should not contain a list of account id. Get the account ids
+related to the rerate job from database.
+
+================================================================================
+Module Version : DaVinci 10198
+----------------
+
+Date : 25-Jul-2006
+----------------
+
+Change Order :  PRSF00223975
+----------------
+
+Short Description :
+-------------------
+DbUpdate query was changed to take care of deleted ordered balance group.
+Also the status of the Group sharing object was taken care while populating
+the global charge sharing data to the Edr container.
+================================================================================
+Module Version : DaVinci 10197
+----------------
+
+Date : 21-Jul-2006
+----------------
+
+Change Order :  PRSF00190852
+----------------
+
+Short Description :
+-------------------
+Provide a registry option to turn on/off rating for closed accounts and to receive 
+closed account status using the "AccountStatusUpdate" event.
+=================================================================================
+Module Version : DaVinci 10196
+----------------
+
+Date : 20-Jul-2006
+----------------
+
+Change Order : PRSF00222227 
+----------------
+
+Short Description :
+-------------------
+Changes are made to take care of Profile sharing group created without any 
+shared profile but having members in it.
+================================================================================
+Module Version : DaVinci 10195
+----------------
+
+Date : 18-July-2006
+----------------
+
+Change Order : PRSF00215437 
+----------------
+
+Short Description :
+-------------------
+Reduce the DAT_Account startup memory.
+
+================================================================================
+Module Version : DaVinci 10194
+----------------
+
+Date : 14-Jul-2006
+----------------
+
+Change Order :  PRSF00196102
+----------------
+
+Short Description :
+-------------------
+ERR_BALANCE_GROUP_UPDATE error severity is changed from critical to major while 
+logging in the process log. Also additional information like account and 
+gmtSeconds are logged for more clarification for error.
+================================================================================
+Module Version : DaVinci 10193
+----------------
+
+Date : 29-Jun-2006
+----------------
+
+Change Order : PRSF00218581 
+----------------
+
+Short Description :
+-------------------
+In case of DiscountSetValidity event, the account info would be fetched from the
+PIN_FLD_OWNER_OBJ instead of the PIN_FLD_ACCOUNT_OBJ.
+================================================================================
+Module Version : DaVinci 10192
+----------------
+
+Date : 28-JUNE-2006
+---------------
+
+Change Order : PRSF221623
+---------------
+
+Short Description :
+----------------
+ProductInfoChange message need not require the PIN_FLD_ACCOUNT_OBJ to be a
+loaded account in the HashMap.
+
+================================================================================
+Module Version : DaVinci 10191
+----------------
+
+Date : 27-JUNE-2006
+---------------
+
+Change Order : PRSF221614
+---------------
+
+Short Description :
+----------------
+Performance Improvements to ScratchPad.
+
+================================================================================
+Module Version : DaVinci 10190
+----------------
+
+Date : 27-JUNE-2006
+---------------
+
+Change Order : PRSF221604
+---------------
+
+Short Description :
+----------------
+Cleanup memory leaks in LockPool and HashMap instances.
+
+================================================================================
+Module Version : DaVinci 10189
+----------------
+
+Date : 16-JUNE-2006
+---------------
+
+Change Order : PRSF00215563, PRSF00215564, PRSF00215565, PRSF00215567
+---------------
+
+Short Description :
+----------------
+Fix Reasoning Buffer overflow errors.
+================================================================================
+Module Version : DaVinci 10188
+----------------
+
+Date : 22-Jun-2006
+----------------
+
+Change Order :  PRSF00216006
+----------------
+
+Short Description :
+-------------------
+Incorporated the changes for Special Number Rating/Split Charging feature.
+
+================================================================================
+Module Version : DaVinci 10187
+----------------
+
+Date : 14-JUNE-2006
+---------------
+
+Change Order : PRSF00220147
+---------------
+
+Short Description :
+----------------
+Fix purify reported memory leaks in ScratchPad.
+
+================================================================================
+Module Version : DaVinci 10186
+----------------
+
+Date : 13-JUNE-2006
+---------------
+
+Change Order : PRSF00216940
+---------------
+
+Short Description :
+----------------
+Update CustCreateHandler to create the EventOrderProfile object in the map.
+
+================================================================================
+
+Module Version : DaVinci 10185
+----------------
+
+Date : 05-Jun-2006
+----------------
+
+Change Order :  PRSF00218104
+----------------
+
+Short Description :
+-------------------
+OMG: Analysis fixes pipeline_account.
+
+================================================================================
+Module Version : DaVinci 10184
+----------------
+
+Date : 07-June-2006
+----------------
+
+Change Order :  PRSF00197112
+----------------
+
+Short Description :
+-------------------
+Add AccountProductSplit unit testcases.
+
+================================================================================
+
+Module Version : DaVinci 10183
+----------------
+
+Date : 06-JUN-2006
+----------------
+
+Change Order :  PRSF00207922
+----------------
+
+Short Description :
+-------------------
+Implement the TailorMadePlan Feature
+================================================================================
+
+Module Version : DaVinci 10182
+----------------
+
+Date : 31-May-2006
+----------------
+
+Change Order :  PRSF00215872
+----------------
+
+Short Description :
+-------------------
+Core Dump in CustCreateHandler when processing "ServiceLogin" events 
+with a  ServiceType not in ServiceRefMap.
+
+================================================================================
+Module Version : DaVinci 10181
+----------------
+
+Date : 25-May-2006
+----------------
+
+Change Order :  PRSF00214036
+----------------
+
+Short Description :
+-------------------
+Propagated all the remaining changes for FT_Validity to DaVinci.
+================================================================================
+Module Version : DaVinci 10180
+----------------
+
+Date : 23-May-2006
+----------------
+
+Change Order :  PRSF00190856
+----------------
+
+Short Description :
+-------------------
+Missing code for login handling was introduced and the Warning ERR_GETTING_FLIST_FIELD for 
+PIN_FLD_SERVICE_OBJ during account creation is suppressed. 
+================================================================================
+Module Version : DaVinci 10179
+----------------
+
+Date : 04-May-2006
+----------------
+
+Change Order :  PRSF00209375
+----------------
+
+Short Description :
+-------------------
+Changed the db field name from purchase_instantiated_t to instantiated_t.
+================================================================================
+Module Version : DaVinci 10178
+----------------
+
+Date : 21-Apr-2006
+----------------
+
+Change Order :  PRSF00205697
+----------------
+
+Short Description :
+-------------------
+Implement the First Usage Validity feature.
+================================================================================
+Module Version : DaVinci 10177
+----------------
+
+Date : 25-Apr-2006
+----------------
+
+Change Order : PRSF00206998
+----------------
+
+Short Description :
+-------------------
+Fix compilation error in DAT_AccountBatch.
+
+================================================================================
+Module Version : DaVinci 10176
+----------------
+
+Date : 24-Apr-2006
+----------------
+
+Change Order :  PRSF00194075
+----------------
+
+Short Description :
+-------------------
+DAT::AccountBatch changes for Friends and Family Shared List Feature .
+================================================================================
+Module Version : DaVinci 10175
+----------------
+
+Date : 21-April-2006
+----------------
+
+Change Order :  PRSF00205741
+----------------
+
+Short Description :
+-------------------
+The PlanId datastring was missing the /n terminator.
+
+================================================================================
+Module Version : DaVinci 10174
+----------------
+
+Date : 04-April-2006
+----------------
+
+Change Order :  PRSF00196784
+----------------
+
+Short Description :
+-------------------
+Implementation of EventOrderProfiles in DAT_Account
+================================================================================
+Module Version : DaVinci 10173
+----------------
+
+Date : 31-Mar-2006
+----------------
+
+Change Order :  PRSF00191243
+----------------
+
+Short Description :
+-------------------
+DAT::AccountBatch changes for Billing changes of Best Pricing.
+================================================================================
+Module Version : DaVinci 10172
+----------------
+
+Date : 28-Mar-2006
+----------------
+
+Change Order :  PRSF00200737
+----------------
+
+Short Description :
+-------------------
+Fix InitPurchasedDiscount() vector clearing bug. Caused 10x memory increase.
+================================================================================
+Module Version : DaVinci 10171
+----------------
+
+Date : 24-Mar-2006
+----------------
+
+Change Order :  PRSF00195622
+----------------
+
+Short Description :
+-------------------
+Implement the TransactionalScratchPad.
+================================================================================
+Module Version : DaVinci 10170
+----------------
+
+Date : 18-Mar-2006
+----------------
+
+Change Order :  PRSF00192816
+----------------
+
+Short Description :
+-------------------
+Changes to conditionally acquire mutexes in the initLogins() function.
+================================================================================
+Module Version : DaVinci 10169
+----------------
+
+Date : 13-Mar-2006
+----------------
+
+Change Order :  PRSF00196087
+----------------
+
+Short Description :
+-------------------
+Change the column name which was wrong for PurchaseProduct and PurchaseDiscount.
+================================================================================
+Module Version : DaVinci 10168
+----------------
+
+Date : 07-Mar-2006
+----------------
+
+Change Order :  PRSF00194324
+----------------
+
+Short Description :
+-------------------
+Add purchase_start_t/end_t to the audit query for discounts and products.
+
+================================================================================
+Module Version : DaVinci 10167
+----------------
+
+Date : 06-Mar-2006
+----------------
+
+Change Order :  PRSF00195286
+----------------
+
+Short Description :
+-------------------
+Fix string format of OFFERING_POID to "1 /purchased_product 12000 0"
+
+================================================================================
+Module Version : DaVinci 10166
+----------------
+
+Date : 09-Mar-2006
+----------------
+
+Change Order :  PRSF00193926
+----------------
+
+Short Description :
+-------------------
+CreateProfile event handling is added.Dependent CO on infranet side PRSF00190850.
+================================================================================
+Module Version : DaVinci 10165
+----------------
+
+Date : 03-Mar-2006
+----------------
+
+Change Order :  PRSF00194326
+----------------
+
+Short Description :
+-------------------
+Implementation of EventHandling for all PurchasedProduct and PurchasedDiscount.
+================================================================================
+Module Version : DaVinci 10164
+----------------
+
+Date : 13-Feb-2006
+----------------
+
+Change Order :  PRSF00187903
+----------------
+
+Short Description :
+-------------------
+PurchasedProduct and PurchasedDiscount implemented as seperated Objects.
+================================================================================
+Module Version : DaVinci 10163
+----------------
+
+Date : 18-Nov-2005
+----------------
+
+Change Order :  PRSF00187247
+----------------
+
+Short Description :
+-------------------
+Modify DAT::Account to read effective_t instead of mod_t for BG, OBG, GSC and GSD.
+================================================================================
+Module Version : 7.2_PATCH 10162
+----------------
+
+Date : 21-Oct-2005
+----------------
+
+Change Order :  PRSF00180873
+----------------
+
+Short Description :
+-------------------
+Loading Account having no service or invalid service but is owner of the Resource
+sharing group.
+Registry parameter - LoadAccountForSharingOnly
+Dependent CO - PRSF00179883
+================================================================================
+Module Version : 7.2_PATCH 10161
+----------------
+
+Date : 24-Oct-2005
+----------------
+
+Change Order :  PRSF00185563
+----------------
+
+Short Description :
+-------------------
+During line transfer the service Id remains same but Account Id changes and this
+scenario was not taken care. Now it is being handled.
+================================================================================
+Module Version : 7.2_PATCH 10160
+----------------
+
+Date : 21-Oct-2005
+----------------
+
+Change Order :  PRSF00185468
+----------------
+
+Short Description :
+-------------------
+Use BulkLongVector instead of RWDBTBuffer becasue it is not compatible
+with WIN_IA.
+================================================================================
+Module Version : 7.2_PATCH 10159
+----------------
+
+Date : 03-Oct-2005
+----------------
+
+Change Order :  PRSF00183920
+----------------
+
+Short Description :
+-------------------
+Add registry paramater ClosedAccountDelay = <thershold no of days>.
+If this registry parameter is given then pipeling will not load accounts which are in closed state and last_status_t of that account is less than specified thershold.
+================================================================================
+Module Version : 7.2 10158
+----------------
+
+Date : 05-OCT-2005
+----------------
+
+Change Order :  PRSF00183854
+----------------
+
+Short Description :
+-------------------
+Support added for
+1- if two serviceIds having same login and same effectiveT then latest createdT's
+   serviceId will be considered for rating.
+2- Changed /deleted loginKeys for router case.
+Propagted from CO: 143884
+================================================================================
+Module Version : 7.2 10157
+----------------
+
+Date : 30-SEP-2005
+----------------
+
+Change Order :  PRSF00181390
+----------------
+
+Short Description :
+-------------------
+Changes are made to set the validTo of changed/deleted loginkeys.
+Dependent CO: 183907
+================================================================================
+Module Version : 7.2 10156
+----------------
+
+Date : 30-SEP-2005
+----------------
+
+Change Order :  PRSF00183848
+----------------
+
+Short Description :
+-------------------
+Removing the events 'DealPurchase,  'DealCancel', as the pipeline does not 
+cache any information related to deals.
+Corresponding change in PortalBase delivered through PRSF0O183851
+
+================================================================================
+Module Version : 7.2 10155
+----------------
+
+Date : 21-SEP-2005
+----------------
+
+Change Order :  PRSF00182600
+----------------
+
+Short Description :
+-------------------
+Timer needs to be reset after every query to the database during initial loading so as to avoid
+negetive processing time in the process log.
+================================================================================
+Module Version : 7.2 10154
+----------------
+
+Date : 14-SEP-2005
+----------------
+
+Change Order :  PRSF00182846
+----------------
+
+Short Description :
+-------------------
+The query selectIdentifierM in LoginDbObject was corrected to reference obj_id0 inplace of obj_id
+in the where condition.
+================================================================================
+Module Version : 7.2 10153
+----------------
+
+Date : 14-SEP-2005
+----------------
+
+Change Order :  PRSF00182773
+----------------
+
+Short Description :
+-------------------
+Choose the first rev of Balance group as valid if CDR time stamp falls before
+the time stamp of first rev of the Balance group incase of backdated account.
+================================================================================
+Module Version : 7.2 10152
+----------------
+
+Date : 14-SEP-2005
+----------------
+
+Change Order :  PRSF00179707
+----------------
+
+Short Description :
+-------------------
+Change atoi() and atol() to atoi64() for 64-bit Poid Compatibility.
+================================================================================
+Module Version : New_Pipeline_Velocity 10151
+----------------
+
+Date : 30-AUG-2005
+----------------
+
+Change Order :  PRSF00181206
+----------------
+
+Short Description :
+-------------------
+CDR with gmtSec exactly equal to usage_start_t fails.
+Changes done in isValid() of AccountProduct from > to >=.
+================================================================================
+Module Version : New_Pipeline_Velocity 10150
+----------------
+
+Date : 25-AUG-2005
+----------------
+
+Change Order :  PRSF00180739
+----------------
+
+Short Description :
+-------------------
+No monitor impacts generated in the out file when DeleteOrderedBalanceGroup event is
+generated . Changes are done in DeleteOrderedBalanceGroup.
+================================================================================
+Module Version : New_Pipeline_Velocity 10149
+----------------
+
+Date : 18-AUG-2005
+----------------
+
+Change Order :  PRSF00179305
+----------------
+
+Short Description :
+-------------------
+During AddOrderedBalanceGroup processing , condition is introduced to check for the group
+sharing type("/group/sharing/monitor") in the event flist for the service only before adding
+OBGMON for that service. Corresponding changes are done in the ModifyOrderedBalanceGroup.
+================================================================================
+Module Version : New_Pipeline_Velocity 10148
+----------------
+
+Date : 12-Aug-2005
+----------------
+
+Change Order :  PPRSF00177671
+----------------
+
+Short Description :
+-------------------
+Need to create Monitor OBG during first init of service.
+================================================================================
+Module Version : New_Pipeline_Velocity 10147
+----------------
+
+Date : 12-AUG-2005
+----------------
+
+Change Order :  PRSF00179391
+----------------
+Missspelled UseLastestProductAndDiscount flag in registry file as well as source code
+
+Short Description :
+================================================================================
+Module Version : New_Pipeline_Velocity 10146
+----------------
+
+Date : 51-JULY-2005
+----------------
+
+Change Order :  PPRSF00177742
+----------------
+
+Short Description :
+-------------------
+CR58_VFKK_Regression: Rating edr fails after line transfer without restarting pipeline
+================================================================================
+Module Version : New_Pipeline_Velocity 10145
+----------------
+
+Date : 21-JULY-2005
+----------------
+
+Change Order :  PRSF00177149
+----------------
+
+Short Description :
+-------------------
+Add separate get functions for discount_usage_start and discount_usage_end times.
+================================================================================
+Module Version : New_Pipeline_Velocity 10144
+----------------
+
+Date : 18-JULY-2005
+----------------
+
+Change Order :  PRSF00176739
+----------------
+
+Short Description :
+-------------------
+Change the PIN_FLD_JOB_ID to PIN_FLD_JOB_OBJ parsing to avoid the loss of data 
+as the JOB_ID can be passed as 64 bit .
+================================================================================
+Module Version : New_Pipeline_Velocity 10143
+----------------
+
+Date : 30-JUNE-2005
+----------------
+
+Change Order :  PRSF00174827
+----------------
+
+Short Description :
+-------------------
+Pipeline dumps core if EDR is passed for an account when there is no valid product at 
+the given time. Doing a check on the validity of the ProductHistoryItem before getting 
+the priority of it.
+================================================================================
+Module Version : New_Pipeline_Velocity 10142
+----------------
+
+Date : 22-JUNE-2005
+----------------
+
+Change Order :  PRSF00169226
+----------------
+
+Short Description :
+-------------------
+SQL server does not support 64bit numeric [>2^32] values for int data types.It is 
+throwing an exception out of range value since our POID Max is  23 numeric digits 
+Introducing  DBBigInt to support POID Max in SQl server.
+================================================================================
+Module Version : New_Pipeline_Velocity 10141
+----------------
+
+Date : 13-JUN-2005
+----------------
+
+Change Order :  PRSF00171386
+----------------
+
+Short Description :
+-------------------
+Propagation: FCT_AccountRouter throughput decreases linearly with number of logins AND improve starup and memory
+================================================================================
+Module Version : New_Pipeline_Velocity 10140
+----------------
+
+Date : 20-JUN-2005
+----------------
+
+Change Order :  PRSF00169966
+----------------
+
+Short Description :
+-------------------
+Fix warning messages in the Windows 32-bit build displays that really should be treated as errors
+
+================================================================================
+Module Version : New_Pipeline_Velocity 10139
+----------------
+
+Date : 03-JUN-2005
+----------------
+
+Change Order :  PRSF00169795
+                PRSF00171560
+----------------
+
+Short Description :
+-------------------
+If to_account not in memory during line transfer, add it.  Also, fix CustCreate
+handler.
+================================================================================
+Module Version : New_Pipeline_Velocity 10138
+----------------
+
+Date : 27-MAY-2005
+----------------
+
+Change Order :  PRSF00165213
+----------------
+
+Short Description :
+-------------------
+Copying account_products & account discount in Secondary Cache
+================================================================================
+Module Version : New_Pipeline_Velocity 10137
+----------------
+
+Date : 02-JUN-2005
+----------------
+
+Change Order :  PRSF00153770
+----------------
+
+Short Description :
+-------------------
+QF: Improve DAT BatchAccountPlugIn event receiving/handling code.
+================================================================================
+Module Version : New_Pipeline_Velocity 10136
+----------------
+
+Date : 17-MAY-2005
+----------------
+
+Change Order :  PRSF00168757
+----------------
+
+Short Description :
+-------------------
+Secondary Cache: Modify secondary cache for new PlanId implementation.
+================================================================================
+
+Module Version : New_Pipeline_Velocity 10135
+----------------
+
+Date : 10-MAY-2005
+----------------
+
+Change Order :  PRSF00166147
+----------------
+
+Short Description :
+-------------------
+Make the plan ids valid objects, since some plans may not be valid for a
+particular CDR, due to a plan transfer.
+================================================================================
+Module Version : New_Pipeline_Velocity 10134
+----------------
+
+Date : 12-MAY-2005
+----------------
+
+Change Order :  PRSF00165215 
+----------------
+
+Short Description :
+-------------------
+Need to read from main table for dbUpdate in the case of EventThreadPool.
+Modified the query to read from the main table.
+================================================================================
+Module Version : New_Pipeline_Velocity 10133
+----------------
+
+Date : 12-MAY-2005
+----------------
+
+Change Order :  PRSF00159066
+----------------
+
+Short Description :
+-------------------
+After Inactive the owner service Charges are still shared by owner account of 
+charge sharing group.
+================================================================================
+Module Version : New_Pipeline_Velocity 10132
+----------------
+
+Date : 20-APR-2005
+----------------
+
+Change Order :  PRSF00163714
+----------------
+
+Short Description :
+-------------------
+WIN + Itanium: Pipeline is crashing while reading the bulk data of int64 type.
+Replaced the RWDBTBuffer class with BAS::DBTBuffer class for int64 type.
+================================================================================
+Module Version : Velocity 10131
+----------------
+
+Date : 12-APR-2005
+----------------
+
+Change Order :  PRSF00162821
+
+Short Description :
+-------------------
+ifw startup query optimization, DAT_AccountBatch (propagation from 7.0EBF)
+
+================================================================================
+Module Version : New_Pipeline_Velocity 10131
+----------------
+
+Date : 11-MAY-2005
+----------------
+
+Change Order :  PRSF00165213
+----------------
+
+Short Description :
+-------------------
+Copying account_products & account discount in Secondary Cache
+================================================================================
+Module Version : New_Pipeline_Velocity 10130
+----------------
+
+Date : 13-APR-2005
+----------------
+
+Change Order :  PRSF00159836
+----------------
+
+Short Description :
+-------------------
+WIN + Itanium : While fatching the data DAT_Account gets crash in thread pool.
+================================================================================
+Module Version : Velocity 10129
+----------------
+
+Date : 12-APR-2005
+----------------
+
+Change Order :  PRSF00163327
+----------------
+
+Short Description :
+-------------------
+Fixed a core dump when starting the pipeline with no accounts  
+after setting ReadPlans to true in CustomerData block.
+================================================================================
+Module Version : Velocity 10128
+----------------
+
+Date : 11-APR-2005
+----------------
+
+Change Order :  PRSF00161628
+----------------
+
+Short Description :
+-------------------
+SC: Secondary Cache implementation with Event Thread Pool
+================================================================================
+Module Version : Velocity 10127
+----------------
+
+Date : 01-APR-2005
+----------------
+
+Change Order :  PRSF00161741
+----------------
+
+Short Description :
+-------------------
+BMON: Fix bugs on BMON impacts on account member services and added member services
+================================================================================
+Module Version : Velocity 10126
+----------------
+
+Date : 23-MAR-2005
+----------------
+
+Change Order :  PRSF00158831
+----------------
+
+Short Description :
+-------------------
+Prevent ALIAS_NAME of service obj from getting populated with some junk values.
+Service merging is done in main thread now and aliasNames of service objects 
+are being updated to point to the valid loginKey pointer. 
+================================================================================
+Module Version : Velocity 10125
+----------------
+
+Date : 22-MAR-2005
+----------------
+
+Change Order :  PRSF00159581
+----------------
+
+Short Description :
+Theoretically db_id does not come properly in accountDiscountDataString during dbUpdate
+================================================================================
+Module Version : Velocity 10124
+----------------
+
+Date : 23-MAR-2005
+----------------
+
+Change Order :  PRSF00160021
+----------------
+
+Short Description :
+-------------------
+Charge sharing objects are not getting loaded to the memory.
+================================================================================
+Module Version : Velocity 10123
+----------------
+
+Date : 22-MAR-2005
+----------------
+
+Change Order :  PRSF00158454
+----------------
+
+Short Description :
+-------------------
+improved reporting in all threads to report all objects(accounts, login, services, billinfo etc)
+in the format Total Time, Query Time, Processing Time.
+================================================================================
+Module Version : Velocity 10122
+----------------
+
+Date : 14-MAR-2005
+----------------
+
+Change Order :  PRSF00135410
+----------------
+
+Short Description :
+-------------------
+WRN_EVENT_PROCESSING_FOR_BILLINFO_FAILED | BillInfo does not exist for the account (10981) still after EBF03019
+==============================================================================
+Module Version : Velocity 10121
+----------------
+
+Date : 21-MAR-2005
+----------------
+
+Change Order :  PRSF00158834
+----------------
+
+Short Description :
+-------------------
+IFW streamlog error messages are repeating multiple times
+================================================================================
+Module Version : Velocity 10120
+----------------
+
+Date : 15-MAR-2005
+----------------
+
+Change Order :  PRSF00158620
+----------------
+
+Short Description :
+-------------------
+Monitors were not initially loaded to customer data cache
+================================================================================
+Module Version : Velocity 10119
+----------------
+
+Date : 04-MAR-2005
+----------------
+
+Change Order :  PRSF00151530
+----------------
+
+Short Description :
+-------------------
+Functionality to add plan id to EDR.
+
+================================================================================
+Module Version : Velocity 10118
+----------------
+
+Date : 03-MAR-2005
+----------------
+
+Change Order :  PRSF00154440
+----------------
+
+Short Description :
+-------------------
+DAT_Account selects the wrong service when constructing the Accout Products list
+================================================================================
+Module Version : Velocity 10117
+----------------
+
+Date : 01-MAR-2005
+----------------
+
+Change Order :  PRSF00153312
+----------------
+
+Short Description :
+-------------------
+BMON: Unit and integration test bug fixes
+================================================================================
+Module Version : Velocity 10116
+----------------
+
+Date : 23-FEB-2005
+----------------
+
+Change Order :  PRSF00154996
+----------------
+
+Short Description :
+-------------------
+Changing the  default value of the registry entry "EnrichRatingProductOnly"  to false
+================================================================================
+Module Version : Velocity 10115
+----------------
+
+Date : 14-FEB-2005
+----------------
+
+Change Order :  PRSF00151362
+----------------
+
+Short Description :
+-------------------
+Updated message file to accomodate existing and new messages for the reporting in process log file
+================================================================================
+Module Version : Velocity 10114
+----------------
+
+Date : 07-FEB-2005
+----------------
+
+Change Order :  PRSF00153335
+----------------
+
+Short Description :
+-------------------
+Provide a registry option to enrich only the rating product.
+
+================================================================================
+Module Version : 6.7_FP2 10113
+----------------
+
+Date : 20-JAN-2005
+----------------
+
+Change Order :  PRSF00153325
+----------------
+
+Short Description :
+-------------------
+Explicit tag is now added to avoid autogeneration tag of Roguewave
+Propagation of CO - PRSF00151237
+==================================================================================
+Module Version : 6.7_FP2 10112
+----------------
+
+Date : 20-JAN-2005
+----------------
+
+Change Order :  PRSF00151057
+----------------
+
+Short Description :
+-------------------
+Save dataString from working variable in dbUpdate() for GroupSharingDiscount
+================================================================================
+Module Version : 6.7_FP2 10111
+----------------
+
+Date : 8-JAN-2005
+----------------
+
+Change Order :  PRSF00148237
+----------------
+
+Short Description :
+-------------------
+Headline: Support for Balance Group Monitor Functionality as in Functional Specs Release 1
+================================================================================
+Module Version : 6.7_FP2 10110
+----------------
+
+Date : 06-JAN-2005
+----------------
+
+Change Order : PRSF00148019 
+----------------
+Short Description :
+Inherited OBG does not evaluate -1 as itself, since during processing of OBG of
+base service we are using wrong index to get the account discounts.
+
+-------------------
+================================================================================
+Module Version : 6.7_FP2 10109
+----------------
+
+Date : 14-Dec-2004
+----------------
+
+Change Order : PRSF00144643 
+----------------
+Short Description :
+Inherited OBG does not evaluate -1 as itself, since during processing of OBG of
+base service we are not checking the member's own discount.
+
+-------------------
+================================================================================
+Module Version : 6.7_FP2 10108
+----------------
+
+Date : 10-Dec-2004
+----------------
+
+Change Order : PRSF00132005
+----------------
+Short Description :
+
+Introduce new LockSet object to handle checking for deadlock conditions, when 
+locking an account mutex.  And performa dbUpdate on the account owning 
+a shared discount, if necessary.
+-------------------
+================================================================================
+Module Version : 6.7_FP2 10107
+----------------
+
+Date : 03-Dec-2004
+----------------
+
+Change Order : PRSF00143191 
+----------------
+Short Description :
+Remove check of addAliasList in DAT::Account::CustomerData::initMigratedAccounts()
+-------------------
+================================================================================
+Module Version : 6.7_FP2 10106
+----------------
+
+Date : 24-NOV-2004
+----------------
+
+Change Order :  PRSF00141809
+----------------
+Short Description :
+Regression: System Test: DAT_Account does not find the second discount friom a DSG
+-------------------
+================================================================================
+Module Version : 6.7_FP2 10105
+----------------
+
+Date : 17-NOV-2004
+----------------
+
+Change Order :  PRSF00140986
+----------------
+
+Short Description :
+-------------------
+ServiceTransferList::validItemList() was returning an empty item_poid_list  though there 
+are more than one service transfer object.  Due to this DAT::ItemAssign plugIn was receiving 
+a null value and that caused the issue of not loading the cdr during Line transfer back
+================================================================================
+Module Version : 6.7_FP2 10104
+----------------
+
+Date : 11-NOV-2004
+----------------
+
+Change Order :  PRSF00133741
+----------------
+
+Short Description :
+-------------------
+QF : Improve the in-memroy dump output of DAT::Account
+Also, included work for PRSF00140960:
+Need to check for the zero numbers of Account Balance Group and Bill Info and perform necessary db updates
+
+================================================================================
+Module Version : 6.7_FP2 10103
+----------------
+
+Date : 16-NOV-2004
+----------------
+
+Change Order :  PRSF00136593	
+----------------
+
+Short Description :
+-------------------
+Regression - Unable to rate cdrs if line transfer happens after restart pipeline
+================================================================================
+Module Version : 6.7_FP2 10102
+----------------
+
+Date : 09-NOV-2004
+----------------
+
+Change Order :  PRSF00139516
+----------------
+
+Short Description :
+Capturing of new event called "ProducInfoChange" to update the productMap
+with the modified/new/deleted product info passed in the flist as part of the above event.
+================================================================================
+Module Version : 6.7_FP2 10101
+----------------
+
+Date : 11-NOV-2004
+----------------
+
+Change Order :  PRSF00136910
+----------------
+
+Short Description :
+-------------------
+Update correct ordered balance group for "UpdateOrderedBalanceGroup" and 
+additional fixes.
+================================================================================
+Module Version : 6.7_FP2 10100
+----------------
+
+Date : 08-NOV-2004
+----------------
+
+Change Order :  PRSF00139377
+----------------
+
+Short Description :
+-------------------
+Fix for "Business Event Failed for 'AddBillnfo' "
+We need need to set warning msg when account needs billInfo update is already true.
+================================================================================
+Module Version : 6.7_FP2 10099
+----------------
+
+Date : 06-NOV-2004
+----------------
+
+Change Order :  PRSF00139708
+----------------
+
+Short Description :
+-------------------
+During Pipeline StartUp throws error ERR_MULTI_THREAD_INIT 
+( Need to Change cancelandJoinThread to joinThread in multiThreadedInit() )
+================================================================================
+Module Version : 6.7_FP2 10098
+----------------
+
+Date : 02-NOV-2004
+----------------
+
+Change Order :  PRSF00131387
+----------------
+
+Short Description :
+-------------------
+QF:Need to log the query time vs the process time during CDR processing EDR in 
+DAT_Account
+
+================================================================================
+Module Version : 6.7_FP2 10097
+----------------
+
+Date : 01-NOV-2004
+----------------
+
+Change Order :  PRSF00126910
+----------------
+
+Short Description :
+-------------------
+Could not Rate CDR for backdated purchase discount/product.
+
+This version also closes PRSF00133186
+Usage Aggregation at parent level is not working
+================================================================================
+Module Version : 6.7_FP2 10097
+----------------
+
+Date : 21-OCT-2004
+----------------
+
+Change Order :  PRSF00136910
+----------------
+
+Short Description :
+
+General cleanup of the receiveEvent() method, where updating of the OrderedBalanceGroup
+and the like are improved.
+
+=======================================================================================
+Module Version : 6.7_FP2 10096
+----------------
+
+Date : 21-OCT-2004
+----------------
+
+Change Order :  PRSF00134644
+----------------
+
+Short Description :
+*Provide an registry option to use either effective_t or created_t for profile and Introduced
+ the Order by rec_id as Discounting needs the ERA's of Profile in Specified Order
+*Performance improvement by not loading into memory those service/account profiles having
+ RevisionId = 0 and no ERA's.
+*Fix Profile issue during service/account dbProfUpdate there need to be swap between setting ValidTo
+ and ValidFrom.
+(Propagation of CO113692,CO120521,CO122109,CO133430).
+=======================================================================================
+Module Version : 6.7_FP2 10095
+----------------
+
+Date : 19-October-2004
+----------------
+
+Change Order :  PRSF00127416
+----------------
+
+Short Description :
+-------------------
+Provided an registry option to read the system products from either the main or the audit table.
+Created new entry ReadSystemProductFromMain to achieve it
+* New Method getAllFromMain()  has been added in  ProductDbObject.cpp
+================================================================================
+Module Version : 6.7_FP2 10094
+----------------
+Date : 13-Oct-2004
+----------------
+Change Order :  PRSF00135016
+----------------
+Short Description :
+Creation of explicit tag or alias for referring Database tables in SQL queries 
+for avoiding dynamic tag creation by Roguewave
+
+================================================================================
+Module Version : 6.7_FP2 10093
+----------------
+
+Date : 11-OCT-2004
+----------------
+
+Change Order :  PRSF00127370
+----------------
+
+Short Description :
+Change DAT/Account & DAT/Balance to use BAS::Thread
+================================================================================
+Module Version : 6.7_FP2 10092
+----------------
+
+Date : 30-SEP-2004
+----------------
+
+Change Order :  PRSF00123593
+----------------
+
+Short Description :
+-------------------
+DAT_Account Performance improvement :
+  Evaluate the performance impact of using the parser in FCT_Account
+================================================================================
+Module Version : 6.7_FP2 10091
+----------------
+Date : 29-Sept-2004
+----------------
+Change Order :  PRSF00133324
+----------------
+Short Description :
+Modify the busiiness event name from MakeBillCycleEnd to PartialBilling.
+================================================================================
+Module Version : 6.7_FP2 10090
+----------------
+Date : 21-Sept-2004
+----------------
+Change Order :  PRSF00132334
+----------------
+Short Description :
+Don't add balance group during LineTransfer event if the account needs Billing
+Info update.
+================================================================================
+Module Version : 6.7_FP2 10089
+----------------
+Date : 20-Sept-2004
+----------------
+Change Order :  PRSF00132059
+----------------
+Short Description :
+Headline: Regression - Unable to rate cdrs after line transfer
+================================================================================
+Module Version : 6.7_FP2 10088
+----------------
+Date : 17-Sept-2004
+----------------
+Change Order :  PRSF00131946
+----------------
+Short Description :
+Read BillingState as optional field for AddBillInfo and ModifyBillInfo.
+================================================================================
+Module Version : 6.7_FP2 10087
+----------------
+Date : 16-Sept-2004
+----------------
+Change Order :  PRSF00131852
+----------------
+Short Description :
+Return true from receiveEvent if account not found, since we should not shutdown
+the pipeline.
+================================================================================
+Module Version : 6.7_FP2 10086
+----------------
+Date : 15-Sept-2004
+----------------
+Change Order :  PRSF00131679
+----------------
+Short Description :
+Use PIN_FLD_GROUP_OBJ instead of PIN_FLD_POID for Add, Modify, and Delete
+BalanceGroup.
+================================================================================
+Module Version : 6.7_FP2 10085
+----------------
+Date : 10-Sept-2004
+----------------
+Change Order :  PRSF00127027
+----------------
+Short Description :
+Implementation for Realtime Pipeline to support the Filter_SetPlugIn.
+================================================================================
+Module Version : 6.7_FP2 10084
+----------------
+
+Date : 30-August-2004
+----------------
+
+Change Order :  PRSF000122381
+----------------
+
+Short Description :
+-------------------
+made sure that Data_Account will extract the fields from the array element in case of AddBillInfo an
+d ModifyBillInfo.
+================================================================================
+
+Module Version : 6.7_FP2 10083
+----------------
+
+Date : 06-August-2004
+----------------
+
+Change Order :  PRSF00122372
+----------------
+
+Short Description :
+
+fixed: pipeline failed to rate CDRs of product name w/ comma
+================================================================================
+
+Module Version : 6.7_FP2 10082
+----------------
+
+Date : 26-July-2004
+----------------
+
+Change Order :  PRSF00122842
+----------------
+
+Short Description :
+-------------------
+Add check on the type of service to confirm whether the call is for account level
+or for service level object.  
+================================================================================
+
+Module Version : 6.7_FP2 10081
+----------------
+
+Date : 23-JULY-2004
+----------------
+
+Change Order : PRSF00120407
+----------------
+
+Short Description :
+-------------------
+FCT_Account should set the ACTG_LAST, ACTG_NEXT and ACTG_FUTURE  with the
+values in Infranet DB.
+================================================================================
+
+Module Version : 6.7_FP2 10080
+----------------
+
+Date : 07-July-2004
+----------------
+
+Change Order :  PRSF00119947
+----------------
+
+Short Description :
+-------------------
+Bill Info doesn't get updated when OpenNewActgCycle event recieved by Integrate
+================================================================================
+
+Module Version : 6.7_FP2 10079
+----------------
+
+Date : 14-JULY-2004
+----------------
+
+Change Order : PRSF00119454
+----------------
+
+Short Description :
+-------------------
+Implementation of System product in DAT::Account. 
+================================================================================
+Module Version : 6.7_FP2 10078
+----------------
+
+Date : 20-JUL-2004
+----------------
+
+Change Order :  PRSF00121255
+----------------
+
+Short Description :
+-------------------
+67FP2 Itanium: ifw did not start.
+================================================================================
+
+Module Version : 6.7_FP2 10077
+----------------
+
+Date : 16-JUL-2004
+----------------
+
+Change Order :  PRSF00121870
+----------------
+
+Short Description :
+-------------------
+Rating pipeline on secondary database fails to get logins in heirarchical  group migration.
+================================================================================
+Module Version : 6.7_FP2 10076
+----------------
+
+Date : 16-JUL-2004
+----------------
+
+Change Order :  PRSF00097835
+----------------
+
+Short Description :
+-------------------
+Implement service level locking.
+================================================================================
+Module Version : 6.7_FP2 10075
+----------------
+
+Date : 15-JUL-2004
+----------------
+
+Change Order :  PRSF00121578
+----------------
+
+Short Description :
+-------------------
+[Pipeline] 
+JP5005: Router and Rating pipelines needs to be restarted for updating in-memory account data.
+================================================================================
+Module Version : 6.7_FP2 10074
+----------------
+
+Date : 14-JULY-2004
+----------------
+
+Change Order :  PRSF00121254
+----------------
+
+Short Description :
+-------------------
+Need to react to Create events for Group Sharing Charges and Group Sharing
+discount objects.
+================================================================================
+Module Version : 6.7_FP2 10073
+----------------
+
+Date : 13-JUL-2004
+----------------
+
+Change Order :  PRSF00121171
+----------------
+
+Short Description :
+-------------------
+[Pipeline] 
+Set proper item poid list and next item poid list for make Bill event.
+================================================================================
+Module Version : 6.7_FP2 10072
+----------------
+
+Date : 15-JUNE-2004
+----------------
+
+Change Order :  PRSF00118611
+----------------
+
+Short Description :
+-------------------
+[Pipeline] changes for Re-Rating feature.
+================================================================================
+Module Version : 6.7_FP2 10071
+----------------
+
+Date : 22-JUN-2004
+----------------
+
+Change Order : PRSF00117477
+----------------
+
+Short Description :
+-------------------
+Rating after line transfer fails. This includes fixed for CO 117404 and CO 115933 
+for the 6.7_FP2_FD3_EBF streams.
+================================================================================
+Module Version : 6.7_FP2 10070
+----------------
+
+Date : 26-APR-2004
+----------------
+
+Change Order : PRSF00105697
+----------------
+
+Short Description :
+-------------------
+NT build failure fixed for DAT_AccountBatch.
+================================================================================
+
+Module Version : 6.7_FP2 10069
+----------------
+
+Date : 3-Jun-2004
+----------------
+
+Change Order :  PRSF00113821
+----------------
+
+Short Description :
+-------------------
+Account Sync changes for Trigger Billing
+
+================================================================================
+Module Version : 6.7_FP2 10068
+----------------
+
+Date : 27-MAY-2004
+----------------
+
+Change Order :  PRSF00104073
+----------------
+
+Short Description :
+-------------------
+[Pipeline] Changes for Flexible Item Assignment feature. 
+
+================================================================================
+Module Version : 6.7_FP2 10067
+----------------
+
+Date : 2-Jun-2004
+----------------
+
+Change Order :  PRSF00112527
+----------------
+
+Short Description :
+-------------------
+Add locks for login objects using a lock pool.
+
+================================================================================
+Module Version : 6.7_FP2 10066
+----------------
+
+Date : 1-Jun-2004
+----------------
+
+Change Order :  PRSF00113464
+----------------
+
+Short Description :
+-------------------
+Modify DAT_Account to load AMT data during start up from modified AMT tables.
+================================================================================
+Module Version : 6.7_FP2 10065
+----------------
+
+Date : 27-May-2004
+----------------
+
+Change Order :  PRSF00113749
+----------------
+
+Short Description :
+-------------------
+fixed the build breaker.
+================================================================================
+
+Module Version : 6.7_FP2 10064
+----------------
+
+Date : 26-May-2004
+----------------
+
+Change Order :  PRSF00112243
+----------------
+
+Short Description :
+-------------------
+Included the registry values being used as a part of the memory dump in DAT_Account
+================================================================================
+
+Module Version : Apollo 10064
+----------------
+
+Date : 25-May-2004
+----------------
+
+Change Order :   PRSF00113185
+----------------
+
+Short Description :
+-------------------
+It's a propagation CO (113106).
+item poid list not found after billing in account level bal group
+===========================================================================
+Module Version : Apollo 10063
+----------------
+
+Date : 25-May-2004
+----------------
+
+Change Order :  PRSF00113049
+----------------
+
+Short Description :
+-------------------
+It's a propagation CO (113046).
+SharingGroupDiscount's isTypeService is always false because it checks with 
+/service and length of string
+================================================================================
+Module Version : 6.7_FP2 10062
+----------------
+
+Date : 17-May-2004
+----------------
+
+Change Order :  PRSF000107886
+----------------
+
+Short Description :
+-------------------
+Twin Talk Enabler Plugin changes to search function.
+================================================================================
+
+Module Version : 6.7_FP2 10061
+----------------
+
+Module Version : Apollo 10063
+----------------
+
+Date : 19-MAY-2004
+----------------
+
+Change Order :   PRSF00109285
+----------------
+
+Short Description :
+-------------------
+Elimination of redundant code from Product.cpp
+================================================================================
+Module Version : Apollo 10062
+----------------
+
+Date : 19-MAY-2004
+----------------
+
+Change Order :   PRSF00111170
+----------------
+
+Short Description :
+-------------------
+DAT::Account been modified to include a new field called customer segment list.
+================================================================================
+Module Version : Apollo 10061
+----------------
+
+Date : 29-APR-2004
+----------------
+
+Change Order :   PRSF00043340
+----------------
+
+Short Description :
+-------------------
+AccountRegValue class is added which contain DAT::Account registry value.
+And also from all methods where the registry values are being passed as parameter
+has been removed, now onwards those methods are getting the registry values from
+the AccountRegValue.
+================================================================================
+Date : 14-May-2004
+----------------
+
+Change Order :  PRSF000102999
+----------------
+
+Short Description :
+-------------------
+Performance improvement by changing the follwing during EDR processing
+  1. Use stract instead of the operator+= in BAS::String and BAS::SimpleString
+  2. Use  sprintf instead of RWCString.convert() to convert integers to
+strings 
+================================================================================
+
+Module Version : 6.7_FP2 10060
+----------------
+
+Date : 05-MAY-2004
+----------------
+
+Change Order : PRSF00105872
+----------------
+
+Short Description :
+-------------------
+Below is the Change introduced:
+* Spliting of Account Product Query to improve performance on Account::dbUpdate()
+================================================================================
+
+Module Version : 6.5 FP3 EBF 10059
+----------------
+
+Date : 10-May-2004
+-------------------
+
+Change Order :  PRSF00049658
+----------------------------
+
+Short Description :
+-------------------
+Customer Login Not Found Error is now made configurable.
+In some situation this is not a serious error and EDR should be valid.
+================================================================================
+
+Module Version : 6.7_FP2 10058
+----------------
+
+Date : 4-MAY-2004
+----------------
+
+Change Order :   PRSF00109588
+----------------
+
+Short Description :
+-------------------
+Modify DAT_Acount to not load accounts that have been migrated from the primary DB by AMT
+=====================================================================================
+Module Version : 6.7_FP2 10057
+----------------
+
+Date : 7-MAY-2004
+----------------
+
+Change Order :  PRSF00109583, PRSF00109591
+----------------
+
+Short Description :
+-------------------
+- Orange 6.7 POC [P,T]: Discount share - pin_rel problem
+- Fix base construction when constucting a GroupSharingDiscounts object.
+=====================================================================================
+Module Version : 6.7_FP2 10056
+----------------
+
+Date : 4-MAY-2004
+----------------
+
+Change Order :  PRSF00108806
+----------------
+
+Short Description :
+-------------------
+Fix a bug in DAT_Account - un-initialized member variable in the constructor.
+Initialize numTransactionM in the second constructor.
+=====================================================================================
+Module Version : 6.7_FP2 10055
+----------------
+
+Date : 3-MAY-2004
+----------------
+
+Change Order :  PRSF00108546
+----------------
+
+Short Description :
+-------------------
+Incorrect rating for event with charge sharing due to charge sharing  group not loaded into integrate database. Propagation of PRSF00105485.
+=====================================================================================
+Module Version : 6.7_FP2 10054
+----------------
+
+Date : 30-APR-2004
+----------------
+
+Change Order :  PRSF00107617
+----------------
+
+Short Description :
+-------------------
+[Pipeline] ifw core dumps during startup in DAT::Account
+=====================================================================================
+Module Version : 6.7_FP2 10053
+----------------
+
+Date : 30-APR-2004
+----------------
+
+Module Version : 6.7_FP2 10053
+----------------
+
+Date : 19-MAY-2004
+----------------
+
+Change Order : PRSF00111569
+----------------
+
+Short Description :
+Added bill_state field to know whether account is billed or not, used in Trigger Billing.
+-------------------
+=====================================================================================
+Module Version : 6.7_FP2 10051
+Change Order : PRSF00106091
+----------------
+
+Short Description :
+ Made use of new MemoryPool to allocate instances of Service, LoginService, etc.
+-------------------
+=====================================================================================
+Module Version : 6.7_FP2 10052
+----------------
+
+Date : 30-APR-2004
+----------------
+
+Change Order : PRSF00108290
+----------------
+
+Short Description :
+-------------------
+Fix build breaker
+================================================================================
+Module Version : 6.7_FP2 10051
+----------------
+
+Date : 30-APR-2004
+----------------
+
+Change Order : PRSF0098742
+----------------
+
+Short Description :
+-------------------
+Modify DAT_Account to support AMT with the pipeline online
+================================================================================
+DAT_AccountBatch
+================================================================================
+Module Version : 6.7_FP2 10050
+----------------
+
+Date : 30-MAR-2004
+----------------
+
+Change Order : PRSF00100702 
+----------------
+
+Short Description :
+-------------------
+ Made use of new MemoryPool to allocate instances of Service, LoginService, etc.
+================================================================================
+Module Version : 6.7_FP2 10049
+----------------
+
+Date : 28-APR-2004
+----------------
+
+Change Order :  PRSF00107380
+----------------
+
+Short Description :
+-------------------
+Core Dump : Check for if(subscriptionService) was missing before looping through profiles.
+=========================================================================================
+Module Version : 6.7_FP2 10048
+----------------
+
+Date : 19-APR-2004
+----------------
+
+Change Order :  PRSF00086920
+----------------
+
+Short Description :
+-------------------
+[Pipeline] Code Cleanup: Remove Remains from DB Version Check
+================================================================================
+
+Module Version : 6.7_FP2 10047
+----------------
+
+Date : 22-Apr-2004
+----------------
+
+Change Order : PRSF00106769
+----------------
+
+Short Description :
+-------------------
+Check for null poid in DAT_Account
+================================================================================
+Module Version : 6.7_FP2 10046
+----------------
+
+Date : 21-Apr-2004
+----------------
+
+Change Order : PRSF00092141
+----------------
+
+Short Description :
+-------------------
+Validity for the Profiles introduced , to addon for rating of backdated CDR's.
+================================================================================
+Module Version : 6.7_FP2 10045
+----------------
+
+Date : 19-APR-2004
+----------------
+
+Change Order : PRSF00102430
+----------------
+
+Short Description :
+-------------------
+Line management - For account with 2 identical lines rating works for one line 
+but  rejects the other line.
+================================================================================
+Module Version : 6.7_FP2 10044
+----------------
+
+Date : 6-APR-2004
+----------------
+
+Change Order : PRSF00098307
+----------------
+
+Short Description :
+-------------------
+V_PAC product catalog DAT::Account changes:-
+    * Two new methods (getAllSystemProduct() ,getSystemProductByPoidId() )has been added to the batchAccountPlugIn.cpp file.
+    * In the ProductDbObject.cpp "TYPE" field has been added.
+    * In the ProductHistoryItem.cpp "TYPE" attribute has been added also the cooressponding getter method.
+    * In the Product.cpp type() method has been added which returns the type of the product from the historyItem based on gmt.
+    * In the ProductHistoryItem.cpp "serviceType" has been added which is the service type of the product.
+    * In the Product.cpp getServiceType() method has been added which returns the service type of the product from the historyItem based on gmt.
+    * The new "TYPE" filed also has been added to the containerdescription.dsc
+================================================================================
+
+Module Version : 6.7_FP2 10043
+--------------
+
+Date : 14-APR-2004
+------------------
+
+Change Order :     PRSF00103589
+------------
+
+Short Description :
+-------------------
+Replace Class member of type BAS::String with BAS::SimpleString to reduce Object 
+memory footprint
+
+================================================================================
+
+Module Version : 6.7_FP2 10042
+----------------
+
+Date : 12-APR-2004
+----------------
+
+Change Order : PRSF00104040
+----------------
+
+Short Description :
+-------------------
+start_ifw hangs up ifw after loading and deploying the accounts data using CMT
+Remove deadlock for OpenNewAcctCycle event
+================================================================================
+Module Version : 6.7_FP2 10041
+----------------
+
+Date : 05-APR-2004
+----------------
+
+Change Order : PRSF00102920
+----------------
+
+Short Description :
+-------------------
+Regression - *.edr in "IN" folder did not get pickup for rating
+================================================================================
+Module Version : 6.7_FP2 10040
+----------------
+
+Date : 23-MAR-2004
+----------------
+
+Change Order : PRSF00085633, PRSF00090950
+----------------
+
+Short Description :
+-------------------
+Removed the lock from each account and created a lockpool. Added locking to the
+ordered balance group account and service updates.
+================================================================================
+Module Version : 6.7_FP2 10039
+----------------
+
+Date : 17-MAR-2004
+----------------
+
+Change Order : PRSF00100714
+----------------
+
+Short Description :
+-------------------
+CDR rating failed and got stuck after billing
+================================================================================
+Module Version : 6.7_FP2 10038
+----------------
+
+Date : 17-MAR-2004
+----------------
+
+Change Order : PRSF00100265
+----------------
+
+Short Description :
+-------------------
+OpenNewActgCycle syntax mismatch (PIN_FLD_ITEM_POID_LIST)
+================================================================================
+Module Version : 6.7_FP2 10037
+----------------
+
+Date : 17-MAR-2004
+----------------
+
+Change Order : PRSF00100160
+----------------
+
+Short Description :
+-------------------
+DAT::AccountBatch coredumps due to assertion failure
+================================================================================
+Module Version : 6.7_FP2 10036
+----------------
+
+Date : 16-MAR-2004
+----------------
+
+Change Order : PRSF00100040
+----------------
+
+Short Description :
+-------------------
+Need to change the field name for the Line Tranfer event
+================================================================================
+Module Version : 6.7_FP2 10035
+----------------
+
+Date : 8-MAR-2004
+----------------
+
+Change Order : PRSF00098120
+----------------
+
+Short Description :
+-------------------
+Modify receive event for Line transfer and Make Bill to deal with additional information passed in due to line transfer.
+----------------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10034
+----------------
+
+Date : 08-MAR-2004
+----------------
+
+Change Order :  PRSF00097953
+----------------
+
+Short Description :
+-------------------
+DAT::Account::BatchAccountPlugIn::search() function is changed to fix the problem of multi-product discount.   
+Apollo/Rhea Regression:  Multi-product service including discounts is not working. EDR got rejected always.
+----------------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10033
+----------------
+
+Date : 8-MAR-2004
+----------------
+
+Change Order : PRSF00098071
+----------------
+
+Short Description :
+-------------------
+Fix hpux build breaker in 6.7_FP2 stream.
+----------------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10032
+----------------
+
+Date : 28-FEB-2004
+----------------
+
+Change Order :  PRSF00096449
+----------------
+
+Short Description :
+-------------------
+DAT_Account changes for Line transfer related to item transfer.
+----------------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10031
+----------------
+
+Date : 24-FEB-2004
+----------------
+
+Change Order :  PRSF00092656
+----------------
+
+Short Description :
+-------------------
+DAT_Account changes for Line transfer 
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10030
+----------------
+
+Date : 19-FEB-2004
+----------------
+
+Change Order :  PRSF00090957
+----------------
+
+Short Description :
+-------------------
+  Updated the Makebill Event handling to update the Account Item Poid List & 
+  Next item poid list with the information coming via the Event FLIST.
+----------------------------------------------------------------------------------------
+================================================================================
+Module Version : Apollo 10030
+----------------
+
+Date : 18-FEB-2004
+----------------
+
+Change Order :  PRSF00086760
+----------------
+
+Short Description :
+-------------------
+  Change accountCycles interface
+================================================================================
+Module Version : 6.7_FP2 10029
+----------------
+
+Date : 12-FEB-2004
+----------------
+
+Change Order :  PRSF00092070
+----------------
+
+Short Description :
+-------------------
+Need to map info from the right service object into the Purchase Product Block of the EDR 
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10028
+----------------
+
+Date : 9-FEB-2004
+----------------
+
+Change Order :  PRSF00091421
+----------------
+
+Short Description :
+-------------------
+Fix error in DAT_Account wrt mapping product priority 
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10027
+----------------
+
+Date : 2-FEB-2004
+----------------
+
+Change Order :  PRSF00090857
+----------------
+
+Short Description :
+-------------------
+Fix error in DAT_Account in 6.7_FP2_EA due to merge from the 6.7_FP2 stream
+----------------------------------------------------------------------------------------
+
+Module Version : Apollo 10026
+----------------
+
+Date : 2-FEB-2004
+----------------
+
+Change Order :  PRSF00083299
+----------------
+
+Short Description :
+-------------------
+DAT::Account changes for Line Management
+
+================================================================================
+Module Version : Apollo 10025
+----------------
+
+Date : 30-JAN-2004
+----------------
+
+Change Order :  PRSF00089402
+----------------
+
+Short Description :
+-------------------
+problem with rating when using InitialLoading=False
+================================================================================
+Module Version : Apollo 10024
+----------------
+
+Date : 24-JAN-2004
+----------------
+
+Change Order :  PRSF00077061
+----------------
+
+Short Description :
+-------------------
+  For processing Makebill event efficently, code has been modified to refresh the
+  in-memory Account & Service info with the Data coming in the Queue Event Flist.
+================================================================================
+
+Module Version : Apollo 10023
+----------------
+
+Date : 20-JAN-2004
+----------------
+
+Change Order :  PRSF00087845
+----------------
+
+Short Description :
+-------------------
+DAT::Account, Product not getting updated with dbUpdate
+================================================================================
+Module Version : Apollo 10022
+----------------
+
+Date : 14-JAN-2004
+----------------
+
+Change Order :  PRSF00086418
+----------------
+
+Short Description :
+-------------------
+Addition of new OpenNewActgCycle bus. event.
+================================================================================
+Module Version : Apollo 10021
+----------------
+
+Date : 06-JAN-2004
+----------------
+
+Change Order :  PRSF00082010
+----------------
+
+Short Description :
+-------------------
+The Mapping table object has been removed from Infranet schema hence DAT_AccountBatch needs to be modifed
+================================================================================
+Module Version : Apollo 10020
+----------------
+
+Date : 15-DEC-2003
+----------------
+
+Change Order :  PRSF00080224
+----------------
+
+Short Description :
+-------------------
+Core dump on makebill event (only for billing time discount accounts?). Billinfo was 
+not yet initialized if account had just been created and MakeBill event is generated.
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10019
+----------------
+
+Date : 05-NOV-2003
+----------------
+
+Change Order :  PRSF00070196
+----------------
+
+Short Description :
+-------------------
+Significant increase in memory footprint and startup time for ifw 6.7
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10018
+----------------
+
+Date : 29-Oct-2003
+----------------
+
+Change Order :  PRSF00075872
+----------------
+
+Short Description :
+-------------------
+pin_bill_day caused Batch pipeline crashed and core dump 
+( BUILD_TIME=" Thu Oct 30 01:37:30 PST 2003 " )
+-wrong cast
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10017
+----------------
+
+Date : 29-Oct-2003
+----------------
+
+Change Order :  PRSF00075150
+----------------
+
+Short Description :
+-------------------
+After billing is run , pin_rel fails to load the output from batch pipeline with 
+message "Item is already billed"
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10016
+----------------
+
+Date : 28-Oct-2003
+----------------
+
+Change Order :  PRSF00073387
+----------------
+
+Short Description :
+-------------------
+Pipeline doesn't stop under Oracle Critical Error.
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10015
+----------------
+
+Date : 27-October-2003
+----------------
+
+Change Order :  PRSF00074804
+----------------
+
+Short Description :
+-------------------
+Relocate code block to fix Apollo regression with ReadAllProducts merge.
+========================================================================================
+DAT_AccountBatch
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10014
+----------------
+
+Date : 24-October-2003
+----------------
+
+Change Order :  PRSF00074649
+----------------
+
+Short Description :
+-------------------
+new DAT::ListenerModuleIf::receiveEvent() signature
+
+========================================================================================
+DAT_AccountBatch
+----------------------------------------------------------------------------------------
+Module Version : Apollo 10013
+----------------
+
+Date : 24-October-2003
+----------------
+
+Change Order :  PRSF00070300
+----------------
+
+Short Description :
+-------------------
+Part II - EDR needs to be populated with all valid products, not only the product valid for the current service
+
+
+================================================================================
+Module Version : Apollo 10012
+----------------
+
+Date : 23-Oct-2003
+----------------
+
+Change Order :  PRSF00062403
+----------------
+
+Short Description : 
+-------------------
+Alias List not populated for some EDR's.
+================================================================================
+Module Version : Apollo 10011
+----------------
+
+Date : 21-OCT-2003
+----------------
+
+Change Order :  PRSF00072739
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:  [DAT::Account] Threads Created Without Using the THREADNAME macro
+
+================================================================================
+Module Version : Apollo 10010
+----------------
+
+Date : 16-OCT-2003
+----------------
+
+Change Order :  PRSF00071706
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Message Numbers for Plugin 
+
+================================================================================
+Module Version : Apollo 10009
+----------------
+
+Date : 15-OCT-2003
+----------------
+
+Change Order :  PRSF00069562
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Change DAT_Account to use native types when 
+reading data from the database 
+
+================================================================================
+Module Version : Apollo 10008
+----------------
+
+Date : 14-OCT-2003
+----------------
+
+Change Order :  PRSF00070607
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Apollo Regression - Need to re-start ifw for ifw 
+to rate new account's CDR successfully.
+
+================================================================================
+Module Version : Apollo 10007
+----------------
+
+Date : 10-OCT-2003
+----------------
+
+Change Order :  PRSF00070260
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Fix a bug in DAT_Account to deal with a set of non null 
+discounts in Account and Group Sharing discount object 
+
+================================================================================
+Module Version : Apollo 10006
+----------------
+
+Date : 8-OCT-2003
+----------------
+
+Change Order :  PRSF00069381
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Customer EDR parsing error on InfranetAccount.RatingProduct 
+			  Apollo code was not dealing with multiple products correctly.
+
+================================================================================
+Module Version : Apollo 10005
+----------------
+
+Date : 29-SEP-2003
+----------------
+
+Change Order :  PRSF00066091
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Propagation of tickets to apollo
+
+Change Order :  PRSF00051514
+----------------
+
+Short Description :
+-------------------
+Print in Memory data for a given Login
+
+Change Order :  PRSF00059886
+----------------
+
+Short Description :
+-------------------
+Propagation of CO 52134 in 6.5SP1_EBF .
+There was a  problem in dat_account while checking if the account_product is valid at a specified date. This CO fixed AccountProducts::isValidAt() method.
+
+Change Order :  PRSF00049977
+----------------
+
+Short Description :
+-------------------
+Account,Service&Product validity in Integrate
+
+================================================================================
+Module Release Notes 
+
+================================================================================
+Module Version : Apollo 10006
+----------------
+
+Date : 02-Oct-2003
+-------------------
+
+Change Order :  PRSF00065789
+----------------------------
+
+Short Description :
+-------------------
+Need DAT_Cust type functionality back in 6.5 (Error reporting)
+================================================================================
+Module Version : Apollo 10004
+----------------
+
+Date : 18-SEP-2003
+----------------
+
+Change Order :  PRSF00064498
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Creating a new module for Realtime Dat Account and re-structuring batch 
+
+================================================================================
+Module Release Notes 
+
+Module Version : Apollo 10003
+----------------
+
+Date : 28-AUG-2003
+----------------
+
+Change Order :  PRSF00058090
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Enhance Dat Account in Apollo to deal with some new requirements to map additional data into the EDR 
+
+================================================================================
+Module Release Notes 
+
+Module Version : Apollo 10002
+----------------
+
+Date : 8-JUL-2003
+----------------
+
+Change Order :  PRSF00042447
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Enhance DAT_Account plugin to load new object for Apollo 
+
+================================================================================
+Module Release Notes 
+
+Module Version : Apollo 10001
+----------------
+
+Date : 13-JUN-2003
+----------------
+
+Change Order :  PRSF00050001
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Fix compile error on AIX
+================================================================================
+
+Module Version : 6.5 SP1 EBF 10019
+----------------
+
+Date : 06-JUN-2003
+----------------
+
+Change Order :  PRSF00041879
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: router routes to database ID=0 only
+
+   The search method for router in case of shared mode was modified to return value of the 
+   db from the RtrLoginService class instead of the Login class.
+
+========================================================================================
+
+Module Version : 6.5 SP1 EBF 10017
+----------------
+
+Date : 22-MAY-2003
+----------------
+
+Change Order :  PRSF00041633
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Need to put back the sorting on the rev-id in case of inialisation for Logins
+Put back the sorting on the rev-id in case of inialisation for Logins, 
+because the audit table for the service can have multiple rows with the same effective
+================================================================================
+Module Release Notes 
+
+Module Version : 6.5 SP1 EBF 10015
+----------------
+
+Date : 21-MAY-2003
+----------------
+
+Change Order :  PRSF00041631
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Pipeline performance does not scale 
+Removed the lock which was not needed and had impact on performance.
+
+========================================================================================
+Module Version : 6.5 SP1 EBF 10014
+----------------
+
+Date : 14-May-2003
+----------------
+
+Change Order :  PRSF00040718
+----------------
+
+Short Description :
+-------------------
+One-time discount for specific period failed because of errant logical == sign.
+
+========================================================================================
+
+Module Version : 6.5 SP1 EBF 10013
+----------------
+
+Date : 12-May-2003
+----------------
+
+Change Order :  PRSF00040590
+----------------
+
+Short Description :
+-------------------
+Improve exception handling in the DAT_Account threads associated with multi-threaded
+account loading feature. Now outputing critical error messages.
+
+================================================================================
+Module Release Notes 
+
+Module Version : 6.5 SP2 10016
+----------------
+
+Date : 22-MAY-2003
+----------------
+
+Change Order :  PRSF00041916
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription: Pipeline performance does not scale 
+
+   Removed the lock which was not needed and had impact on performance.
+   
+   Put back the sorting on the rev-id in case of inialisation for Logins, 
+   because the audit table for the service can have multiple rows with the same effective
+================================================================================
+
+Module Version : 6.5 SP2 10016
+----------------
+
+Date : 22-May-2003
+----------------
+
+Change Order :  PRSF00041858
+----------------
+
+Short Description :
+-------------------
+The profile validity fails when the start time and end time use default settings. 
+Added validity for profiles valid for ever. (Propagation of CO 40564)
+
+================================================================================
+Module Version : 6.5 SP2 10015
+----------------
+
+Date : 14-May-2003
+----------------
+
+Change Order :  PRSF00040836
+----------------
+
+Short Description :
+-------------------
+One-time discount for specific period failed because of errant logical == sign.
+
+================================================================================
+Module Version : 6.5 SP2 10014
+----------------
+
+Date : 12-May-2003
+----------------
+
+Change Order :  PRSF00040591
+----------------
+
+Short Description :
+-------------------
+Improve exception handling in the DAT_Account threads associated with multi-threaded
+account loading feature. Now outputing critical error messages.
+
+================================================================================
+
+Module Version : 6.5 SP2 10013
+----------------
+
+Date : 02-May-2003
+----------------
+
+Change Order :  PRSF00039740
+----------------
+
+Short Description :
+------------------- 
+Rename AccountPlugIn class to PlugIn
+
+==============================================================================
+
+Module Version: 10012  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+		interface change
+
+==============================================================================
+
+
+Module Version : 6.5 SP2 10011
+----------------
+
+Date : 30-APR-2003
+----------------
+
+Change Order :  PRSF00039498
+----------------
+
+Short Description : "Propogate CO's 33407,33903,37523,37539,38622, 39216 from 6.5EBF 
+-------------------
+
+1."VF Sweden: DAT_Account reads wrong login data from au_service_alias_list"
+	During the merge of Logins from different threads, logic is added to make sure the 
+latest Login info is in memory if the same login ids are found in multiple threads.
+
+2."Loads Service and Account instances in memory when LoadLogins flag is set for services having  no aliases (Devices) "
+	Made changes not to load Account and Service instances in memory if 
+corresponding login is not in memory.
+
+3."Severe performance degradation when rating a CDR not in memory "
+	When a CDR is rated for a service not in memory, a outer loop query was made to retrive from the 
+au_service_t and au_aservice_alias_t to get the valid login info. 
+This is now modified into 2 queries to get better performance avoiding the outerloop.
+
+4. Change Order  Desription: "Memory Sizing : Decrease the number of login objects stored in memory"
+	Modified to have  common Login object for each account with the same alias names(Logins/Numbers) for different service type . It is very common in wireless implementation to have the same number for different service type. This is achievable in wireless services as the number will be unique across multiple services.
+If the registry entry for Shared Login is set to false then the plugin  is used for other services where the logins across services is not unique.
+
+
+
+========================================================================================
+Module Version : 6.5 SP2 10010
+----------------
+
+Date : 23-April-2003
+----------------
+
+Change Order :  PRSF00038566
+----------------
+
+Short Description :
+------------------- 
+Make the necessary changes to the DAT_Account module to support the 6.5_SP2 namespaces.
+Allow DAT::Account to receive a reconnect semaphore and automatically refresh its database connections.
+Improve the Product History Classes to support multi-usage per product.
+Module Version: 10010  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+Module Version : 6.5 SP1 10009
+----------------
+
+Date : 10-April-2003
+----------------
+
+Change Order :  PRSF00037220
+----------------
+
+Short Description :
+-------------------	 
+Check for valid service before calling member functions
+
+========================================================================================
+Module Version : 6.5 SP1 10008
+----------------
+
+Date : 4-April-2003
+----------------
+
+Change Order :  PRSF00035421
+----------------
+
+Short Description :
+-------------------
+Add Guard around the getLogin in search to avoid concurrent thread to access this part simultaneously
+
+===============================================================================
+
+Module Version : 6.5 10007 
+----------------
+
+Date : 20-MAR-2003
+----------------
+
+Change Order :  PRSF00033190
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription: "part of the account info did not push to pipeline if account is created with multiple services(e.g gsm/tel and gsm/sms"
+
+1. Updated to handle the pin_errbuf_t correctly, when there are any errors occurred.
+2. Added the code to print the formatted FLIST string
+3. Added the code to print the FLIST error messages, when FLIST manipulation functions fails..
+
+========================================================================================
+Module Version : 6.5 SP1 10006
+----------------
+
+Date : 18-Mar-2003
+----------------
+
+Change Order :  PRSF00034142
+----------------
+
+Short Description :
+-------------------
+Impl DAT_LockedPtrHashMapIterator to safeguard against deadlock
+
+========================================================================================
+Module Version : 6.5 SP1 10005
+----------------
+
+Date : 18-Mar-2003
+----------------
+
+Change Order :  PRSF00035140
+----------------
+
+Short Description :
+-------------------
+Convert all data strings to use BAS_SimpleString.
+Convert DAT_AccountPlugIn::writeToLog() method to be non-static.
+
+================================================================================
+
+Module Version : 6.5 SP1 10004
+----------------
+
+Date : 07-Mar-2003
+----------------
+
+Change Order :  PRSF00031283
+----------------
+
+Short Description :
+-------------------
+DAT_AccountPlugIn::updateLogins() function is modified in order to behave 
+correctly when the "LoadLogin" parameter is set to "False" in the registry.
+
+
+========================================================================================
+Module Version : 6.5 SP1 10003
+----------------
+
+Date : 06-Mar-2003
+----------------
+
+Change Order :  PRSF00033850
+----------------
+
+Short Description :
+-------------------
+Convert account, service and login Maps to be RWTPtrHashMaps.
+Add Registry variable to control the fetch buffer size during DB reads.
+
+================================================================================
+
+Module Version : 6.5 SP1 10002
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+========================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 24-Feb-2003
+----------------
+
+Change Order :  PRSF00032518
+----------------
+
+Short Description :
+-------------------
+More process log messages regarding the performance of each thread.
+Configure the double precision sample size percentage (0.0-100) of account_t poid_id0 from a registry value.  
+Encapsulate the InitLogic class inside its own .cpp and .hpp files
+Use RWTValOrderedVector  instead of std::vector in PoidRangeItem calculations.
+Implemented Multi-Thread Map Merging to speed up initialization.
+During initLogins(), filter the serviceRefs via the SQL statement.
+
+========================================================================================
+Module Version : 6.5 SP1 10000
+----------------
+
+Date : 21-Feb-2003
+----------------
+
+Change Order :  PRSF00032457
+----------------
+
+Short Description :
+-------------------
+Reduce number of lock acquisitions during initialization to gain performance.
+Reduce BAS_String construction in DAT_BulkStringVector to gain performance.
+Optimize the generation of data strings to gain performance.
+Implement multi-threaded initialization to provide scalability and reduce pipeline startup time.
+
+================================================================================
+Module Version : 6.5 EBF 10003
+----------------
+
+Date : 27-Jan-2003
+----------------
+
+Change Order :  PRSF00028618
+----------------
+
+Short Description :
+-------------------
+Fix LoadLogin: if LoadLogin = false, the login are not loaded as routing entity (DAT_Login objects)
+Change RWTPtrOrderedVector used in DAT_Account, DAT_Service, DAT_Profile, to RWTPtrVector, to reduce memory usage
+Add a PrintDataSamples entry in the registry to trigger dumping of a sample of all the data loaded in memory.
+
+================================================================================
+Module Version : 6.5 EBF 10002
+----------------
+
+Date : 23-Jan-2003
+----------------
+
+Change Order :  PRSF00029628
+----------------
+
+Short Description :
+-------------------
+Memory Sizing for Router Application- The lock to be done on the login object instead fo Account
+
+As part of Memory sizing  the lock has been implemented only at account level instead of all the objects. 
+But in case of account router this needs to done at the login, as we don't keep the account objects in memeory
+================================================================================
+
+Module Version : 6.5 EBF 10001
+----------------
+
+Date : 16-Jan-2003
+----------------
+
+Change Order :  PRSF00028221
+----------------
+
+Short Description :
+-------------------
+The where clause in the sql string to retrieve the records from au_uniquiness_t for an identifier 
+was corrected to read from column service_obj_type instead of au_parent_obj_type
+========================================================================================
+
+Module Release Notes 
+================================================================================
+
+Module Version : 6.5 EBF 10001
+----------------
+
+Date : 20-Jan-2003
+----------------
+
+Change Order :  PRSF00028618
+----------------
+
+Short Description :
+-------------------
+Fix LoadLogin: if LoadLogin = false, the login are not loaded as routing entity (DAT_Login objects)
+Change RWTPtrOrderedVector used in DAT_Account, DAT_Service, DAT_Profile, to RWTPtrVector, to reduce memory usage
+Add a PrintDataSamples entry in the registry to trigger dumping of a sample of all the data loaded in memory.
+
+================================================================================
+
+Module Version : 6.5 EBF 10000
+----------------
+
+Date : 08-Jan-2003
+----------------
+
+Change Order :  PRSF00028180
+----------------
+
+Short Description :
+-------------------
+Removed references to Audit Account Id, deal id and plan id.
+During startup initialisation the data for accounts, account_products and 
+services is not read from au_tables any more. 
+
+========================================================================================
+ 
+Actual Version : v6.3.7 / Date : 29-JUL-2002
+----------------
+
+- PRSF00014160: IMSI lookup capability for IntegRate
+
+========================================================================================
+ 
+Actual Version : v6.3.6 / Date : 22-JUL-2002
+----------------
+
+- PRSF00014797: The router process CDR fails for account just created
+- PRSF00014790: Account router fails to load the account logins information when it
+                starts up
+
+========================================================================================
+ 
+Actual Version : v6.3.5 / Date : 16-JUL-2002
+----------------
+
+- PRSF00014168: Bulk reader vectors are not resetted
+
+========================================================================================
+ 
+Actual Version : v6.3.4 / Date : 08-JUL-2002
+----------------
+
+- PRSF00013642: ifw cores while discounting a edr-file
+
+========================================================================================
+ 
+Actual Version : v6.3.3 / Date : 05-JUL-2002
+----------------
+
+- PRSF00013632: locking issues in DAT_Account
+
+========================================================================================
+ 
+Actual Version : v6.3.2 / Date : 03-JUL-2002
+----------------
+
+- PRSF00013538: DAT_ACCOUNT should check for PIN_FLD_SERVICE_OBJ when processing
+                CustCreate and ServiceLogin
+
+========================================================================================
+ 
+Actual Version : v6.3.1 / Date : 20-JUN-2002
+----------------
+
+- PRSF00005580: Optimized Infranet Account Synchronization
+
+========================================================================================
+ 
+Actual Version : v4-30-08 / Date : 05-FEB-2002
+----------------
+
+- PETS #38593: DB2 support
+
+========================================================================================
+ 
+Actual Version : v4-30-07 / Date : 06-DEC-2001
+----------------
+
+- PETS #42293: loading of account related extended rating attributes
+- PETS #42308: updating extended rating attributes
+
+========================================================================================
+ 
+Actual Version : v4-30-06 / Date : 28-NOV-2001
+----------------
+
+- PETS #41966: loading billing related fields from parent tables
+- PETS #42061: assigning a default deal resp. plan in case of an undefined one
+
+========================================================================================
+ 
+Actual Version : v4-30-05 / Date : 20-NOV-2001
+----------------
+
+- PETS #41802: fixed account update ignoring other service types
+- new registry parameter 'LogUpdates' for logging account updates
+
+========================================================================================
+ 
+Actual Version : v4-30-04 / Date : 10-NOV-2001
+----------------
+
+- removed problem with connection acquiring
+- fixed multi threading problem
+
+========================================================================================
+ 
+Actual Version : v4-30-03 / Date : 09-NOV-2001
+----------------
+
+- PETS #41336: corrected join between login and alias
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 09-NOV-2001
+----------------
+
+- performance of initial loading increased
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 01-NOV-2001
+----------------
+
+- number of reserved connections (default 5) by registry parameter 'Connections'
+- reload functionality by update registry parameter 'Reload'
+- evaluation of plan and deal
+- more log information
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 19-OCT-2001
+----------------
+
+Registry entries:
+
+- IntegrateConnection  reference to IntegRate db module
+- InfranetConnection   reference to Infranet db module
+- Listener             reference to listener module   
+
+================================================================================
+
+
+

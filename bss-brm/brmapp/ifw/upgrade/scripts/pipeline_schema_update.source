@@ -1,0 +1,101 @@
+--------------------------------------------------------------------------------
+--
+-- Copyright (c) 2010, 2011, Oracle and/or its affiliates. 
+-- All rights reserved. 
+--
+--      This material is the confidential property of Oracle Corporation
+--      or its licensors and may be used, reproduced, stored or transmitted
+--      only in accordance with a valid Oracle license or sublicense agreement.
+--
+--------------------------------------------------------------------------------
+-- Block: Database
+--------------------------------------------------------------------------------
+-- Module Description:
+--   Update script for DB version
+--------------------------------------------------------------------------------
+-- Responsible: Lakshmi K Nandi
+--------------------------------------------------------------------------------
+
+-- spool update_v7.3.2.PIPELINE.log
+
+alter table IFW_APN_GROUP modify(APN_GROUP varchar2(255));
+
+alter table IFW_APN_MAP modify(APN_GROUP varchar2(255), NEW_ZONE_WS varchar2(255), NEW_ZONE_RT varchar2(255));
+
+alter table IFW_CALENDAR modify(CODE varchar2(255));
+
+alter table IFW_CURRENCY modify(CURRENCY varchar2(255));
+
+alter table IFW_DAYCODE modify(CODE varchar2(255));
+
+alter table IFW_DISCOUNTMASTER modify(CODE varchar2(255));
+
+alter table IFW_DISCOUNTMODEL modify(CODE varchar2(255));
+
+alter table IFW_DISCOUNTRULE modify(CODE varchar2(255));
+
+alter table IFW_DISCOUNTSTEP modify(CODE varchar2(255));
+
+alter table IFW_DSCTRIGGER modify(CODE varchar2(255));
+
+alter table IFW_EXCHANGE_RATE modify(FROM_CURRENCY varchar2(255), TO_CURRENCY varchar2(255));
+
+alter table IFW_GEOAREA_LNK modify(AREACODE varchar2(255));
+
+alter table IFW_GEO_MODEL modify(CODE varchar2(255));
+
+alter table IFW_GEO_ZONE modify(ZONE_RT varchar2(255), ZONE_WS varchar2(255));
+
+alter table IFW_GLACCOUNT modify(GLACCOUNT varchar2(255), TAXCODE varchar2(255));
+
+alter table IFW_IMPACT_CAT modify(IMPACT_CATEGORY varchar2(255), RESULT varchar2(255));
+
+alter table IFW_NETWORKMODEL modify(CURRENCY varchar2(255));
+
+alter table IFW_NETWORKOPER modify(CURRENCY varchar2(255));
+
+alter table IFW_NOPRODUCT modify(CURRENCY varchar2(255));
+
+alter table IFW_NOPRODUCT_CNF modify(IMPACT_CATEGORY varchar2(255));
+
+alter table IFW_PRICEMDL_STEP modify(RESOURCE_NAME varchar2(255), RUM varchar2(255), GLACCOUNT varchar2(255));
+
+alter table IFW_RATEPLAN modify(CURRENCY varchar2(255));
+
+alter table IFW_RATEPLAN_CNF modify(IMPACT_CATEGORY varchar2(255));
+
+alter table IFW_RESOURCE modify(RESOURCE_NAME varchar2(255), CURRENCY varchar2(255));
+
+alter table IFW_RUM modify(RUM varchar2(255));
+
+alter table IFW_RUMGROUP_LNK modify(RUM varchar2(255), UOM varchar2(255));
+
+alter table IFW_SERVICE modify(DEF_GLACCOUNT varchar2(255));
+
+alter table IFW_SLA modify(USC_GROUP varchar2(255));
+
+alter table IFW_STANDARD_ZONE modify(ZONE_WS varchar2(255), ZONE_RT varchar2(255));
+
+alter table IFW_TAX modify(TAXCODE varchar2(255));
+
+alter table IFW_TAXCODE modify(TAXCODE varchar2(255));
+
+alter table IFW_TIMEINTERVAL modify(CODE varchar2(255));
+
+alter table IFW_TIMEMODEL modify(CODE varchar2(255));
+
+alter table IFW_TIMEZONE modify(CODE varchar2(255));
+
+alter table IFW_UOM modify(UOM varchar2(255));
+
+alter table IFW_UOM_MAP modify(RUM varchar2(255), FROM_UOM varchar2(255), TO_UOM varchar2(255));
+
+alter table IFW_USC_GROUP modify(USC_GROUP varchar2(255));
+
+alter table IFW_USC_MAP modify(IMPACT_CATEGORY_RT varchar2(255), IMPACT_CATEGORY_WS varchar2(255), USC_GROUP varchar2(255));
+
+alter table IFW_ZONEMODEL modify(CODE varchar2(255), APN_GROUP varchar2(255));
+
+commit;
+
+-- spool off;

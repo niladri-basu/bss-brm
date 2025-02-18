@@ -1,0 +1,58 @@
+<Opcode name="PCM_OP_COLLECTIONS_GROUP_CREATE" visibility="public"
+        transaction="required" component="fm_collections"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+ <Doc>PCM_OP_COLLECTIONS_GROUP_CREATE input and output flist
+      specifications. This opcode creates a collections group. 
+      </Doc>
+ <!-- INPUT SPEC  -->
+ <Input>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>collections group poid.</Doc>
+    <ClassRef>obj://group.collections_targets</ClassRef>
+   </Poid>
+   <Poid name="PIN_FLD_PARENT" use="required" mode="complete">
+    <Doc>Billinfo of the collections group's owner.</Doc>
+    <ClassRef>obj://billinfo</ClassRef>
+   </Poid>
+   <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+    <Doc>Account poid of the collections group's owner.</Doc>
+    <ClassRef>obj://account</ClassRef>
+   </Poid>
+   <String name="PIN_FLD_NAME" use="required" maxlen="255">
+    <Doc>Name for this collections group.</Doc>
+   </String>
+   <String name="PIN_FLD_PROGRAM_NAME" use="optional" maxlen="255">
+    <Doc>The name of the program that calls this opcode.</Doc>
+   </String>
+   <Timestamp name="PIN_FLD_START_T" use="optional">
+        <Doc> Start time - Timestamp of when group started (System Time).</Doc>
+   </Timestamp>
+   <Timestamp name="PIN_FLD_END_T" use="optional">
+     <Doc> End time - Timestamp of when group ended (System Time). </Doc>
+   </Timestamp>
+   <Array name="PIN_FLD_MEMBERS" use="optional" elemIdMode="ignored"
+          iterationOrder="undefined">
+    <Doc>Members details array (list of members billinfos)</Doc>
+    <Fields>
+     <Poid name="PIN_FLD_BILLINFO_OBJ" use="required" mode="complete">
+      <Doc>Billinfo of the member object to add.</Doc>
+      <ClassRef>obj://billinfo</ClassRef>
+     </Poid>
+    </Fields>
+   </Array>
+  </Fields>
+ </Input>
+ <!-- OUTPUT SPEC  -->
+ <Output>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>Poid of the collections group object created.</Doc>
+    <ClassRef>obj://group.collections_targets</ClassRef>
+   </Poid>
+  </Fields>
+ </Output>
+</Opcode>

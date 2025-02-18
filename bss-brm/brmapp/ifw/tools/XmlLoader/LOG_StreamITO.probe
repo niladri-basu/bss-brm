@@ -1,0 +1,5 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+streamITO | 1 | logCircularBufTable | Log Messages | NotSpecified | BigTable |
+logCircularBufTable | 1 | messageEntry | Log Message Table Entry | NotSpecified | Group |
+messageEntry | 1 | logCircularBufTableIndex | Index | ReadOnly | Integer |
+messageEntry | 2 | message | Message | ReadOnly | String |

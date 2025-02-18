@@ -1,0 +1,150 @@
+<Opcode name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC"
+visibility="public"
+transaction="required"
+component="fm_bal"
+xmlns:h="http://www.w3.org/1999/xhtml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc> Returns the balance groups and services for all an account's billinfo 
+ objects or for a single billinfo object. You can pass flags to get the balance
+ group name and service login aliases. 
+</Doc>
+<Input>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Account poid or Billinfo poid</Doc>
+<ClassRef>obj://account</ClassRef>
+<ClassRef>obj://billinfo</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+mode="complete">
+<Doc> Account poid   This field is mandatory if PIN_FLD_POID is a billinfo poid.</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Int name="PIN_FLD_FLAGS" use="optional">
+<Doc> Flags to determine what to return from a service  Valid values:
+ 0: Default. Return balance group and associated services(exclude service-less balance group).
+ 1: Return login/aliases for a service  2: Return the TRANSFER_LIST array
+ 3: Returns default balance group       4: Returns default balance group and service
+ 5: Returns service-less balance group along with other balance groups.
+</Doc>
+</Int>
+</Fields>
+</Input>
+<Output>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Account or billinfo poid</Doc>
+<ClassRef>obj://account</ClassRef>
+<ClassRef>obj://billinfo</ClassRef>
+</Poid>
+<Array name="PIN_FLD_RESULTS" use="optional"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="0" 
+minElemId="0" 
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="false" allowedElemIds="0">
+<Doc> The results array holds the information about balance group and services.
+  This array has other information based on PIN_FLD_FLAGS.</Doc>
+<Fields>
+<Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+mode="complete">
+<Doc> Billinfo poid</Doc>
+<ClassRef>obj://billinfo</ClassRef>
+</Poid>
+<String name="PIN_FLD_BILLINFO_ID" use="required"
+maxlen="60">
+<Doc> Name of the billinfo object</Doc>
+</String>
+<Poid name="PIN_FLD_BAL_GRP_OBJ" use="required"
+mode="complete">
+<Doc> Balance group poid</Doc>
+<ClassRef>obj://balance_group</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_SERVICE_OBJ" use="required"
+mode="complete">
+<Doc> The service object which belongs to the balance group
+Returns dummy service poid ( NULL poid) if default balance group is
+account level default balance group</Doc>
+<ClassRef>obj://service</ClassRef>
+</Poid>
+                                        <Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+                                                        mode="complete">
+                                                <Doc> Account object</Doc>
+                                                <ClassRef>obj://account</ClassRef>
+                                        </Poid>
+                                        <Poid name="PIN_FLD_SUBSCRIPTION_OBJ" use="optional"
+                                                        mode="complete">
+                                                <Doc>Link to the subscription service object associated with the service object present in this array element</Doc>
+                                                <ClassRef>obj://service</ClassRef>
+                                        </Poid>
+                                        <Enum name="PIN_FLD_STATUS" use="optional">
+                                                <Doc>Status of the service</Doc>
+                                                <Values>
+                                                        <Value>0</Value>
+                                                        <Doc>PIN_STATUS_DEFUNCT</Doc>
+                                                </Values>
+                                                <Values>
+                                                        <Value>10103</Value>
+                                                        <Doc>PIN_STATUS_CLOSED</Doc>
+                                                </Values>
+                                                <Values>
+                                                        <Value>10102</Value>
+                                                        <Doc>PIN_STATUS_INACTIVE</Doc>
+                                                </Values>
+                                                <Values>
+                                                        <Value>10100</Value>
+                                                        <Doc>PIN_STATUS_ACTIVE</Doc>
+                                                </Values>
+                                                <Values>
+                                                        <Value>10104</Value>
+                                                        <Doc>PIN_STATUS_NOT_SET</Doc>
+                                                </Values>
+                                                <Values>
+                                                        <Value>10105</Value>
+                                                        <Doc>PIN_STATUS_TOBEDELETED</Doc>
+                                                </Values>
+                                        </Enum>
+                                        <Timestamp name="PIN_FLD_LAST_STATUS_T" use="optional">
+                                                <Doc>Time when the status of the service was changed.</Doc>
+                                        </Timestamp>
+                                        <String name="PIN_FLD_ITEM_POID_LIST" use="optional"
+                                                        maxlen="4000">
+                                                <Doc>List of cumulative item poids - all currently active</Doc>
+                                        </String>
+                                        <String name="PIN_FLD_NEXT_ITEM_POID_LIST" use="optional"
+                                                        maxlen="4000">
+                                                <Doc>List of cumulative next cycle item poids</Doc>
+                                        </String>
+
+<String name="PIN_FLD_NAME" use="optional"
+maxlen="255">
+<Doc> Balance_group name; this will be output when the input PIN_FLD_FLAGS is 1 or 5</Doc>
+</String>
+<String name="PIN_FLD_LOGIN" use="optional"
+maxlen="255">
+<Doc> Service login, only available if service is not NULL</Doc>
+</String>
+<Array name="PIN_FLD_ALIAS_LIST" use="optional"
+elemIdMode="ignored" iterationOrder="undefined"
+minElements="0" 
+minElemId="0" 
+isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+isRecursive="0" allowedElemIds="0">
+<Doc> Optional array of aliases, only available if service is not NULL  and the alias list for this service exists</Doc>
+<Fields>
+<String name="PIN_FLD_NAME" use="optional"
+maxlen="128">
+<Doc> alias name</Doc>
+</String>
+</Fields>
+</Array>
+</Fields>
+</Array>
+</Fields>
+</Output>
+</Opcode>

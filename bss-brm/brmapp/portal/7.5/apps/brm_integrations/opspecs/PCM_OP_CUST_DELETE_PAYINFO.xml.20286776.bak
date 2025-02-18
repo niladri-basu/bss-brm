@@ -1,0 +1,31 @@
+<Opcode name="PCM_OP_CUST_DELETE_PAYINFO" 
+  visibility="public"
+  transaction="supports" 
+  component="fm_cust"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+  xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+ <Doc>
+   This opcode deletes payinfo objects.  Note that a payinfo object
+   that is currently associated with a billinfo object cannot be deleted;
+   the billinfo object must be deleted first.
+ </Doc>
+ <Input>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>Poid of the payinfo object to be deleted.</Doc>
+    <ClassRef>obj://payinfo</ClassRef>
+   </Poid>
+  </Fields>
+ </Input>
+ <Output>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>Poid of the payinfo object that was deleted.</Doc>
+    <ClassRef>obj://payinfo</ClassRef>
+   </Poid>
+  </Fields>
+ </Output>
+</Opcode>
+

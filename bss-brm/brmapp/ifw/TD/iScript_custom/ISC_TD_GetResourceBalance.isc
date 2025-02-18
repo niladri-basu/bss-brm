@@ -1,0 +1,141 @@
+//==============================================================================
+//
+// Copyright (c) 2009, 2013, Oracle and/or its affiliates. All rights reserved.
+//
+// This material is the confidential property of Oracle Corporation
+// or its licensors and may be used, reproduced, stored or transmitted
+// only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+// Block: ISC_GetResourceBalance.isc
+//-------------------------------------------------------------------------------
+// Module Description:
+//
+// This iScript is used for retrieving the balance of non-currency resource.
+//
+// getResourceBalance functionality is used for retrieving the balance of
+// non-currency resource and it is available in balance batch
+// module (DAT_BalanceBatch).
+//
+
+/* This section should be in wireless.reg for this iScript to get active */
+/*
+GetResourceBalance
+{
+ModuleName = FCT_GetResourceBalance
+Module
+    {
+	Active = True
+	Source = FILE
+	Scripts
+	{
+	    GetResourceBalance
+	    {
+		FileName = ./iScriptLib/iScriptLib_Standard/ISC_GetResourceBalance.isc
+	    }
+	}
+    }
+}
+*/
+ 
+use IXT_PipelineBal;
+Bool debug;
+
+function BEGIN
+{
+   // Make debug = true to enable debugging
+   debug = true;
+
+   if( setDAT_BalanceModule( "ifw.DataPool.BalanceDataModule.Module" ) )
+   {
+     if ( debug )
+       logPipeline( "GetResourceBalance iScript: Balance data Module is set\n" );
+   }
+   else
+   {
+     if ( debug )
+       logPipeline( "ERROR: Could not set Ic Module \n", 4 );
+   }
+}
+
+Decimal transactionID;
+
+function onBeginTransaction
+{
+  transactionID = edrDecimal( INTERNAL.TRANSACTION_ID );
+  if ( debug )
+    logPipeline( "GetResourceBalance iScript: Begin transaction " + decimalToStr( transactionID ) + "\n" );
+}
+
+function onDetailEdr
+{
+    // Proto type of the function
+    //  getResourceBal(const BAS::String pipelineName,
+    //                 const unsigned long dbNo,
+    //                 const unsigned long transId,
+    //                 const unsigned long balGroupId,
+    //                 const unsigned long resourceId,
+    //                 const BAS::DateTime startTime,
+    //                 const BAS::String contrib,
+    //                 const BAS::Decimal result)
+	 String currSVCode = edrString( DETAIL.INTERN_SERVICE_CODE );
+	 
+	 logPipeline( "What currSVCode we got :" + currSVCode + "\n" );
+	if (strSearch(currSVCode,"BSMS", 0) >= 0) {
+	
+	logPipeline( "PASSED its BSMS :" + currSVCode + "\n" );
+    Long  resourceId = 1000116;	// resourceId can be either hard-coded or fetched from EDR container
+    String contrib = "*";
+    Decimal result = 0.0;
+	String currTier = "";
+	Long currValue = 0;
+	
+    // Extract Balance Group ID
+    String balGrpIdWithDbNo = edrString( DETAIL.INTERN_BALANCE_GROUP_ID );	// Balance Group Id is fetched from EDR Container
+    Long pos = strSearch(balGrpIdWithDbNo, "_");
+    Long balGrpIdStrLen = strLength(balGrpIdWithDbNo) - (pos + 1); // +1 is for skipping "_"
+    String balGrpIdStr = strSubstr(balGrpIdWithDbNo, (pos + 1), balGrpIdStrLen);
+    Long balGrpId = strToLong(balGrpIdStr);
+
+    // Extract DB No
+    Long dbNoStrLen = strLength(balGrpIdWithDbNo) - balGrpIdStrLen - 1; // -1 is for discarding "_"
+    String dbNoStr = strSubstr(balGrpIdWithDbNo, 0, dbNoStrLen);
+    Long dbNo = strToLong(dbNoStr);
+
+	
+    Bool retStatus = getResourceBal(pipelineName(), dbNo, transactionID, balGrpId, resourceId, edrDate(DETAIL.CHARGING_START_TIMESTAMP), contrib, result);
+	
+	
+    if (retStatus == true) {
+        logPipeline("GetResourceBalance iScript: Balance for the resource id is " + decimalToStr(result) + "\n");
+		currValue = decimalToLong(result); 
+
+			logPipeline("Service code is BSMS:\n");
+			if ( currValue <= 30)
+			{
+				currTier = "T1";
+			}
+			else if ( currValue <= 50)
+			{
+				currTier = "T2";
+			}
+			else if ( currValue <= 70)
+			{
+				currTier = "T3";
+			}
+			else 
+			{
+				currTier = "T4";
+			}
+				edrString(DETAIL.ASS_PIN.BP.PIN_RATE_TAG,0,1)=currTier;
+		}
+		else {
+			if ( debug )
+			  logPipeline("GetResourceBalance iScript ERROR : Could not retrieve balances\n");
+		}
+	
+	}
+	
+		
+}

@@ -1,0 +1,154 @@
+/*==============================================================================
+//
+//      Copyright (c) 2005 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+ | MODULE: ISC_InMapRealtimeDiscount.isc
+ |
+ | DESCRIPTION:
+ |
+ | Input flist mapping for realtime discount module. This is designed to provide
+ | us with needed filtering RUM name due to multi-RUM rating
+ |
+ | NOTE: For events with multiple balance-impacts (e.g. multi-RUM) we may have
+ |       multiple balance impacts and charge packets - in this case, the logic
+ |       for mapping the RUM/GLID is a little more complicated than we might
+ |       really like - and we have to make a few assumptions about the relative
+ |       positions of charge-packet blocks in the EDR and PIN_FLD_BAL_IMPACTS
+ |       array elements.
+ |
+ | INFORMATION:
+ |
+ | REVISION INFORMATION:
+ |
+ +----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------+
+ | Function     : GetRumId
+ |
+ | Description  : Given a the number of the charge packet, find the RUM Id from
+ |                the input flist. This will be part of the balance impact array
+ |                if we have multiple RUMs or on the event if not.
+ |
+ | Input        : abd_idx   Associated charge breakdown index
+ |                cp_idx    Charge packet index
+ |
+ | Return       : RUM ID
+ +----------------------------------------------------------------------------*/
+function Long GetRumId (Long abd_idx, Long cp_idx)
+{
+String rum = "";
+Long rum_id = 0;
+	rum = fListString ("PIN_FLD_EVENT", "PIN_FLD_RUM_NAME");
+	if (rum == "") {
+		/*
+		 * Multi-RUM case. Determine the rum map entry from the balance impact and then
+		 * use this to locate the rum on the rum map.
+		 */
+		rum_id = fListLong ("PIN_FLD_EVENT", "PIN_FLD_BAL_IMPACTS", cp_idx, "PIN_FLD_RUM_ID");
+	}
+	return rum_id;
+}
+
+/*----------------------------------------------------------------------------+
+ | Function     : GetRum
+ |
+ | Description  : Given a the number of RUM index, find the RUM from
+ |                the input flist. This will be part of the balance impact array
+ |                if we have multiple RUMs or on the event if not.
+ |
+ |                NOTE: We assume that the charge packets are created in order
+ |                      from the balance impact array so that the 3rd element is
+ |                      always equal to the 3rd charge packet etc.
+ |
+ | Input        : rum_id   Rum ID
+ |
+ | Return       : RUM name
+ +----------------------------------------------------------------------------*/
+function String GetRum (Long rum_id)
+{
+String rum = "";
+
+	rum = fListString ("PIN_FLD_EVENT", "PIN_FLD_RUM_NAME");
+	if (rum == "") {
+		/*
+		 * Multi-RUM case. Determine the rum map entry from the balance impact and then
+		 * use this to locate the rum on the rum map.
+		 */
+		rum = fListString ("PIN_FLD_EVENT", "PIN_FLD_RUM_MAP", rum_id, "PIN_FLD_RUM_NAME");
+	}
+	return rum;
+}
+
+/*----------------------------------------------------------------------------+
+ | Function     : Main
+ |
+ | Description  : Main script ...
+ |
+ |                NOTE: All functions should be defined BEFORE they are used!
+ |
+ | Input        : None
+ |
+ | Return       : None
+ +----------------------------------------------------------------------------*/
+{
+Long abd_blocks = 0;
+Long abd_idx = 0;
+Long cp_blocks = 0;
+Long cp_idx = 0;
+Long rum_id = 0;
+Bool debug = false;		/* Change this to true if you want the debug output */
+
+	/*----------------------------------------------------------------------------+
+	 | Extract fields from the FLIST that are applicable to all charge packets that
+	 | go to discounting. These are generally things like APN Type, Operator etc.
+	 | that are constant for all packets (unlike multi-RUM etc. which can give a
+	 | different attribute for each charge packet produced).
+	 +----------------------------------------------------------------------------*/
+
+	if (debug) {
+		logStdout ("================================================================\n");
+		logStdout ("EVENT POID : <" + fListString ("PIN_FLD_POID") + ">\n");
+	}
+
+	/*----------------------------------------------------------------------------+
+	 | Loop through all Charge breakdown blocks (ASS_CBD/ASSOCIATED_CHARGE_BREAKDOWN).
+	 | Generally, we will expect only one charge block for rating from the Infranet
+	 | real-time engine. The code below has been designed to support more if it
+	 | becomes necessary in future.
+	 +----------------------------------------------------------------------------*/
+	abd_blocks = edrNumDatablocks (DETAIL.ASS_CBD);
+	if (debug) {
+		logStdout ("NUMBER OF ABD BLOCKS : <" + longToStr (abd_blocks) + ">\n");
+	}
+
+	for (abd_idx = 0; abd_idx < abd_blocks; abd_idx = abd_idx + 1) {
+		/*
+		 * Loop through all charge packets (CP/CHARGE_PACKET)
+		 */
+		cp_blocks = edrNumDatablocks (DETAIL.ASS_CBD.CP, abd_idx);
+		if (debug) {
+			logStdout ("NUMBER OF CP BLOCKS : <" + longToStr (cp_blocks) + ">\n");
+		}
+
+		for (cp_idx = 0; cp_idx < cp_blocks; cp_idx = cp_idx + 1) {
+			rum_id = GetRumId (abd_idx, cp_idx);
+			edrLong (DETAIL.ASS_CBD.CP.INTERN_RUM_ID, abd_idx, cp_idx) = rum_id;
+			edrLong (DETAIL.ASS_CBD.CP.RUM_ID, abd_idx, cp_idx) = rum_id;
+			edrString (DETAIL.ASS_CBD.CP.RUM, abd_idx, cp_idx) = GetRum (rum_id);
+
+
+			if (debug) {
+				logStdout ("CP BLOCK <" + longToStr (cp_idx) + ">\n");
+				logStdout ("    RUM                    : <" +
+					edrString (DETAIL.ASS_CBD.CP.RUM, abd_idx, cp_idx) + ">\n");
+			}
+		}
+	}
+}

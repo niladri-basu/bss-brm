@@ -1,0 +1,6 @@
+INSERT INTO IFW_USAGECLASS ( USAGECLASS, NAME ) VALUES ( 
+'MBI', 'Mailbox Inquiry'); 
+INSERT INTO IFW_USAGECLASS ( USAGECLASS, NAME ) VALUES ( 
+'CONF', 'Conference Call'); 
+commit;
+ 

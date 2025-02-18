@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BAL" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="PCM_OP_BAL_GET_BALANCES.xsd"/>
+            <include schemaLocation="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC.xsd"/>
+            <include schemaLocation="PCM_OP_BAL_GET_ACCT_BILLINFO.xsd"/>
+            <include schemaLocation="PCM_OP_BAL_GET_BAL_GRP_AND_SVC.xsd"/>
+        </schema>
+    </types>
+    <message name="PCM_OP_BAL_GET_BALANCES_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_BAL_GET_BALANCES_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_BAL_GET_BALANCES_outmsg">
+        <part name="PCM_OP_BAL_GET_BALANCES_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_outmsg">
+        <part name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_BAL_GET_ACCT_BILLINFO_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_BAL_GET_ACCT_BILLINFO_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_BAL_GET_ACCT_BILLINFO_outmsg">
+        <part name="PCM_OP_BAL_GET_ACCT_BILLINFO_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC_outmsg">
+        <part name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC_response" type="xsd:string"/>
+    </message>
+    <portType name="BRMBALService_ptt">
+        <operation name="PcmOpBalGetBalances">
+            <input message="brm:PCM_OP_BAL_GET_BALANCES_inmsg" name="PCM_OP_BAL_GET_BALANCES_inmsg"/>
+            <output message="brm:PCM_OP_BAL_GET_BALANCES_outmsg" name="PCM_OP_BAL_GET_BALANCES_outmsg"/>
+        </operation>
+        <operation name="PcmOpBalGetAcctBalGrpAndSvc">
+            <input message="brm:PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_inmsg" name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_inmsg"/>
+            <output message="brm:PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_outmsg" name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_outmsg"/>
+        </operation>
+        <operation name="PcmOpBalGetAcctBillinfo">
+            <input message="brm:PCM_OP_BAL_GET_ACCT_BILLINFO_inmsg" name="PCM_OP_BAL_GET_ACCT_BILLINFO_inmsg"/>
+            <output message="brm:PCM_OP_BAL_GET_ACCT_BILLINFO_outmsg" name="PCM_OP_BAL_GET_ACCT_BILLINFO_outmsg"/>
+        </operation>
+        <operation name="PcmOpBalGetBalGrpAndSvc">
+            <input message="brm:PCM_OP_BAL_GET_BAL_GRP_AND_SVC_inmsg" name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC_inmsg"/>
+            <output message="brm:PCM_OP_BAL_GET_BAL_GRP_AND_SVC_outmsg" name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="BRMBALService_binding" type="brm:BRMBALService_ptt">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PcmOpBalGetBalances">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_BAL_GET_BALANCES_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_BAL_GET_BALANCES_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpBalGetAcctBalGrpAndSvc">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_BAL_GET_ACCT_BAL_GRP_AND_SVC_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpBalGetAcctBillinfo">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_BAL_GET_ACCT_BILLINFO_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_BAL_GET_ACCT_BILLINFO_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpBalGetBalGrpAndSvc">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_BAL_GET_BAL_GRP_AND_SVC_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="BRMBALService">
+        <port binding="brm:BRMBALService_binding" name="BRMBALService_pt">
+            <soap:address location="http://localhost:8080/brm/BRMWSBALServices"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="BRMService_plt">
+        <plt:role name="BRMService_role">
+            <plt:portType name="brm:BRMBALService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

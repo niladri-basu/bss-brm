@@ -1,0 +1,31 @@
+/*******************************************************************
+ *
+ * @(#)%Portal Version: fm_prov_pol_config.c:WirelessVelocityInt:1:2006-Sep-14 11:33:36 %
+ *
+ * Copyright (c) 2001 - 2006 Oracle. All rights reserved.
+ *
+ * This material is the confidential property of Oracle Corporation or its 
+ * licensors and may be used, reproduced, stored or transmitted only in 
+ * accordance with a valid Oracle license or sublicense agreement.
+ *
+ *
+ *******************************************************************/
+
+#include <stdio.h>	/* for FILE * in pcm.h */
+#include "ops/prov.h"
+#include "pcm.h"
+#include "cm_fm.h"
+
+PIN_EXPORT void * fm_prov_pol_config_func();
+
+struct cm_fm_config fm_prov_pol_config[] = {
+	/* opcode as an int,			function name (as a string) */
+	{ PCM_OP_PROV_POL_UPDATE_SVC_ORDER,	"op_prov_pol_update_svc_order" },
+	{ 0,					(char *)0 }
+};
+
+void *
+fm_prov_pol_config_func()
+{
+	return ((void *) (fm_prov_pol_config));
+}

@@ -1,0 +1,275 @@
+========================================================================================
+FCT_ServiceCodeMap
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+
+Module Version: 10007  7.4  09-Jun-2009
+BUG8570666:   Implementation changed to support MapGroup semaphore
+
+================================================================================
+Module Version: 10006  6.7_FP2  03-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10005  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+
+Module Version: 10004  6.5_SP2  13-May-2003
+PRSF00040681: [SERVERERROR] ORA-00923: FROM keyword not found where expected. 
+
+================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 01-May-2003
+----------------
+
+Change Order :  PRSF00039576
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+========================================================================================
+
+Actual Version : v6.4.1 / Date : 15-Aug-2002
+----------------
+
+Notes          :
+----------------
+
+PRSF00015806 DB2 zOS table- and column length adjustments
+             IFW_SERVICECODE_MAP -> IFW_SERVICE_MAP
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 15-Aug-2001 
+----------------
+
+Notes          :
+----------------
+
+- PETS #36559 SourcePro AIX Port
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 12-JUN-2001 
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 12-JUN-2001 
+----------------
+
+Notes          :
+----------------
+
+- Changed to support the v4-30 database and framework versions. 
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 10-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+- Version v4-10-00 updates.
+
+========================================================================================
+
+Actual Version : v4-04-00 / Date : 10-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+- Updated to use the FSM_MultiEngine.
+
+========================================================================================
+
+Actual Version : v4-03-00 / Date : 17-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+Database version check added.
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Implementation changed to support the IBM xlC compiler.
+
+========================================================================================
+
+Actual Version : v4-01-02 / Date : 06-Apr-2000
+----------------
+
+Notes          :
+----------------
+
+The alias names DETAIL.RADIO_CHANNEL_REQUESTED and DETAIL.RADIO_CHANNEL_USED
+are renamed to DETAIL.QOS_REQUESTED and DETAIL.QOS_USED.
+
+========================================================================================
+
+Actual Version : v4-01-01 / Date : 30-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+ - Access indices for the edr container are now initialized correctly.
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 06-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+ - Implementation changed to support the new interface for function
+   processEdrContainer().
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 11-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+ - Implementation changed to support the new edr container.
+
+========================================================================================
+
+Actual Version : v1-25-00 / Date : 23-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+- New columns 'LOCARIND_VASEVENT', 'QOS_REQUESTED', 'QOS_USED'
+  and 'RECORDTYPE' added to 'INT_SERVICECODE_MAP' select.
+- Pattern matching extended for following EDR fields :
+      EDR field name         |   DB column name
+      -----------------------+--------------------
+      locationAreaIndicator  |   LOCARIND_VASEVENT
+      radioChannelRequested  |   QOS_REQUESTED
+      radioChannelUsed       |   QOS_USED
+      recordType             |   RECORDTYPE
+
+========================================================================================
+
+Actual Version : v1-24-00 / Date : 16-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+- Use the improved multi word finite state machine (class PBC_MultiWordFSM)
+
+========================================================================================
+
+Actual Version : v1-23-00 / Date : 20-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+- DAT_Database renamed to DBC_Database
+- The internal CallClass is used for mapping instead of the external one
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PR987
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-00 / Date : 05-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+New function isUsable() added.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-02 / Date : 04-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Log message about numer of loaded mapping entries in format log added.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

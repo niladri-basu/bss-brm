@@ -1,0 +1,49 @@
+========================================================================================
+ISL_Suspense
+----------------------------------------------------------------------------------------
+Module Release Notes
+----------------------------------------------------------------------------------------
+$RCSfile: ISL_Suspense,v $
+$Revision: 1.0 $
+$Author: msung $
+$Date: 2003/11/07 15:15:35 $
+========================================================================================
+Actual Version : v6.7 FP2 / 04-Nov-2004
+----------------
+
+Notes          :
+----------------
+ - PRSF00139087  Suspense Management changes in wireless.reg
+
+
+Actual Version : v6.7 FP2 / 15-June-2004
+----------------
+
+Notes          :
+----------------
+ - PRSF00115502  Add a sample IScript used in resuspend pipeline to unconditionally set
+                 ERR_JOB_AMT_MIGRATION for EDRs so that these EDRs will be re-suspended
+                 because of account migration.
+
+
+Actual Version : v6.5 FP3 / 07-Nov-2003
+----------------
+
+Notes          :
+----------------
+ - PRSF00077049  Add a sample IRules used to route EDR to its original pipeline for 
+		 recycling process.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================

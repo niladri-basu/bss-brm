@@ -1,0 +1,21 @@
+#===============================================================
+# Configuration file for Rating Dashboard scenarios.
+#
+# READ IT FULLY AND UNDERSTAND ALL THE PARAMETERS BEFORE STARTING
+# EXECUTION.
+#
+#===============================================================
+
+PIPE_POSTPAID_INPUT_PATH=/BRM/ifw/TD/data/gsm/postpaid/in/
+PIPE_POSTPAID_FILE_PREFIX=edr
+PIPE_PREPAID_INPUT_PATH=/BRM/ifw/TD/data/gsm/prepaid/in/
+PIPE_PREPAID_FILE_PREFIX=edr
+REL_POSTPAID_INPUT_PATH=/brmapp/portal/7.5/TD/apps/pin_rel/postpaid/
+REL_POSTPAID_FILE_PREFIX=bc
+REL_PREPAID_INPUT_PATH=/brmapp/portal/7.5/TD/apps/pin_rel/prepaid/
+REL_PREPAID_FILE_PREFIX=bc
+POSTPAID_ERROR=/BRM/ifw/TD/data/gsm/postpaid/error/
+POSTPAID_REJECT=/BRM/ifw/TD/data/gsm/postpaid/reject/
+PREPAID_ERROR=/BRM/ifw/TD/data/gsm/prepaid/error/
+PREPAID_REJECT=/BRM/ifw/TD/data/gsm/prepaid/reject/
+

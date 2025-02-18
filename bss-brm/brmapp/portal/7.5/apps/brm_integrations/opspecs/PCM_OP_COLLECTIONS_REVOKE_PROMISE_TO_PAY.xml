@@ -1,0 +1,66 @@
+<Opcode name="PCM_OP_COLLECTIONS_REVOKE_PROMISE_TO_PAY"
+                visibility="public"
+                transaction="required"
+                component="fm_collections"
+                xmlns:h="http://www.w3.org/1999/xhtml"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+                xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+        <Doc>Revoke/cancel promise to pay for a billinfo.</Doc>
+        <Input>
+                <Fields>
+                        <Poid name="PIN_FLD_POID" use="required"
+                                        mode="complete">
+                                <Doc>The activity event poid that holds promise to pay information </Doc>
+                                <ClassRef>obj://event.activity.collections.promise_to_pay</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+                                        mode="complete">
+                                <Doc>The account poid </Doc>
+                                <ClassRef>obj://account</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_SCENARIO_OBJ" use="required"
+                                        mode="complete">
+                                <Doc> The collections scenario poid for which promise to pay is revoked </Doc>
+                                <ClassRef>obj://collections_scenario</ClassRef>
+                        </Poid>
+                        <Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+                                        mode="complete">
+                                <Doc> The billinfo poid</Doc>
+                                <ClassRef>obj://billinfo</ClassRef>
+                        </Poid>
+	        <String name="PIN_FLD_PROGRAM_NAME" use="required"
+                                        maxlen="255">
+                                <Doc> The program name</Doc>
+                       </String>
+                </Fields>
+        </Input>
+        <Output>
+                <Fields>
+                        <Poid name="PIN_FLD_POID" use="required"
+                                        mode="complete">
+                                <Doc>The promise to pay activity event poid </Doc>
+                                <ClassRef>obj://event.activity.collections.promise_to_pay</ClassRef>
+                        </Poid>
+                        <Enum name="PIN_FLD_RESULT" use="required">
+                                <Doc> Result of the operation (pass or fail).
+                                      The values can be:
+                                        <h:ul>
+                                                <h:li>1:
+                                                        Pass (value:PIN_RESULT_PASS).</h:li>
+                                                <h:li>0:
+                                                        Failed (value:PIN_RESULT_FAIL).</h:li>
+                                        </h:ul>
+                                </Doc>
+                                <Values>
+                                        <Value>1</Value>
+                                                <Doc>Pass (value:PIN_RESULT_PASS).</Doc>
+                                </Values>
+                                <Values>
+                                        <Value>0</Value>
+                                                <Doc>Failed (value:PIN_RESULT_FAIL).</Doc>
+                                </Values>
+                        </Enum>
+                </Fields>
+        </Output>
+</Opcode>

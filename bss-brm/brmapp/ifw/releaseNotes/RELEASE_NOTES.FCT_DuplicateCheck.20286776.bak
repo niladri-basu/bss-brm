@@ -1,0 +1,284 @@
+========================================================================================
+FCT_DuplicateCheck
+----------------------------------------------------------------------------------------
+Module Release Notes 
+==============================================================================
+Module Version: 10036 7.5 16-May-2011
+bug11882202   : P-10349440 SPB: INCREASE IN PIPELINE STARTUP TIME - NOW TAKING 12+ HOURS 
+==============================================================================
+Module Version: 10035 7.4.0 19-May-2011
+bug12552278   : P-11905514 IFW DUPLICATECHECK PATCHSET7 CONSUMES 5 TIMES ! MORE THAN PATCHSE
+==============================================================================
+Module Version: 10034 7.4.0 26-Aug-2010
+bug10137048   : P-10086849 DUPLICATECHECK FUNCTIONALITY NOT WORKING FOR SPECIFIC SCENARIO
+==============================================================================
+Module Version: 10033 7.4.0 26-Aug-2010
+bug8649600    :P-8590439 DUPLICATE CHECK (STORELIMIT) DOESN'T WORK WITH VALUES WITH LENGTH
+==============================================================================
+Module Version: 10032 7.4.0 17-Aug-2010 
+bug10027797   : P-10025808 DUPLICATECHECK FUNCTIONALITY FAILING  
+==============================================================================
+Module Version: 10031 7.4.0 24-Jul-2009
+bug8726401    : MESSAGE FILE CHANGES AND CODE CLEANUP  
+==============================================================================
+Module Version: 10030 7.4.0 16-Jul-2009
+bug8690804    : NEED TO USE DIFFERENT METHOD FOR DB CONNECTION IN LINUX 
+==============================================================================
+Module Version: 10029 7.4.0 01-Jul-2009
+bug8415736    : P-5773110 PRSF00233459:SLOW PERF AND BIG JUMP IN MEMORY 
+                DURING FLUSHING. 
+==============================================================================
+Module Version: 10028 7.4.0 09-Apr-2009
+bug8304211    : DUPCHK FLUSH MEMORY GROWTH  
+==============================================================================
+Module Version: 10027 7.3.2 16-Aug-2008
+bug7333068    : DupCheck Propagations to the 7.3.2 stream 
+==============================================================================
+Module Version: 10026 7.3.1 27-Sep-2007
+bug6451388    : PIPELINE_7.3.1 LINUX: PIPELINE_MEDIATION BREAKING 
+==============================================================================
+Module Version: 10025 7.3.1 24-Sep-2007
+bug6439150    : PIPELINE CORE DUMPS WITH DUPLICATE CHECK
+==============================================================================
+Module Version: 10024 7.3.1 20-Aug-2007
+bug6349465    : P-6339111 - DUPLICATE CHECK ISSUE
+==============================================================================
+Module Version: 10023 7.3 18-Sep-2006
+PRSF00233176: dup check, ifw core dump flushing 2M records to DB 
+==============================================================================
+Module Version: 10022 7.3 12-Sep-2006
+PRSF00232655: dup check, misleading warning msg during ifw start 
+==============================================================================
+Module Version: 10021 7.3 21-Aug-2006
+PRSF00229668: Duplicate Check index issue
+==============================================================================
+Module Version: 10020 7.3 18-Jul-2006
+PRSF00219265: Da Vinci Code Clean Up:--pipeline_mediation & suspense Please set 
+              isValidDetail false when you set error above warning 
+==============================================================================
+
+Module Version: 10019 7.3  17-July-2006
+PRSF00222528  : SCM BEPPI: Call Assembly Advantage Request raises CRITICAL errors
+==============================================================================
+
+Module Version: 10018 7.2_Patch  19-June-2006
+PRSF00220518  : Hashkey calculation is erroneous when searchKey is NULL
+==============================================================================
+
+Module Version: 10017 7.2_PATCH  10-Aug-2005
+PRSF00178974  : Pipeline_7.2_Patch nt_ia64: pipeline_mediation Breaking  
+==============================================================================
+
+Module Version: 10016 7.2_PATCH  08-Aug-2005
+PRSF00178367  : Some cleanup required in FCT_DuplicateCheck 
+==============================================================================
+
+Module Version: 10015 Apollo  22-Dec-2004
+PRSF00146683 : Changes in DuplicateCheck to support Binary Stored Procedures
+==============================================================================
+
+Module Version: 10014 Apollo  11-Oct-2004
+PRSF00127372 : Change FCT/DuplicateCheck to use BAS::Thread
+==============================================================================
+
+Module Version: 10013  Apollo  13-Aug-2004
+PRSF00125396: SQL Server Support for DuplicateCheck
+Description of changes :
+1) SQL Server Support for DupCheck .
+2) Sample Table Creation Script and Procedures for SQLServer added in DuplicateCheck_SQLServer.sql file for reference in the Database Section of DuplicateCheck at /vobs/integrate_mod_vob/integrate_mod/Database/Oracle/Scripts/DuplicateCheck.
+3) Two conditional registry entries added named "TableSpaceName" and "IndexSpaceName" for run-time table and index creation in case of SQL Server Database . These entries to be filled with actual existing TableSpace name where the run-time Table and Index will be created either at start-up or semaphore update for BufferLimit .
+4) One new SP added to create the run-time Table and Index creation incase SQL Server .
+5) Propagation of PRSF00115174 : Added Locks to avoid the race condition when multiple threads
+	attempt to insert a secondsEdrDataVec into the dayEdrDataMapM .
+6) Propagation of PRSF00117243 and PRSF00119878 : Check added for DateTime 86400 in
+	insert and insertWithoutSearch functions . Rolled back the portion of code written for 
+	rollback (reading the .tmp file and removing the entries from memory) .
+7) Propagation of 125070 : DupCheck problem in case of subsequent rollback
+	Added one separate lock needsInitLockM where ever writing to needsInitM .
+8) Added one more argument "fileName" to insertWithoutSearch function .
+
+==============================================================================
+
+Module Version: 10012  Apollo  6-Jun-2004
+PRSF00115072 : NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+==============================================================================
+
+Module Version: 10011  Apollo  24-May-2004
+PRSF00108205 : Some cleanup required in FCT_DuplicateCheck
+Description of changes :
+          Full propagation of DuplicateCheck model from 65SP1_EBF (PRSF00084703) to 6.7FP2
+==============================================================================
+
+Module Version: 10010  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+========================================================================================
+
+Module Version: 10009  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+========================================================================================
+
+Module Version: 10008  6.5_SP2  05-May-2003
+PRSF00039900:  More changes are needed to support name space 
+
+==============================================================================
+Module Version: 10007  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+Actual Version : v10006 / Date : 30-APR-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+PRSF00039348 Fix the name space for duplicate check 
+
+========================================================================================
+Actual Version : v10005 / Date : 27-MAR-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+PRSF00035334 FCT_DuplicateCheck leaves "IsValidDetail" to true
+
+========================================================================================
+Actual Version : v10004 / Date : 03-MAR-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+PRSF00032421 extension for FCT_DuplicateCheck to set indicator instead of generating an error (TES CIBER enhancement)
+
+========================================================================================
+
+Actual Version : v10003 / Date : 27-FEB-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+PRSF00032968 Implement Thread Trace 
+
+========================================================================================
+Actual Version : v10002 / Date : 14-FEB-2003
+----------------
+
+Solved PRs/CRs :
+----------------
+PRSF00031895 wrong warning message
+
+========================================================================================
+
+Actual Version : v10001 / Date : 12-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  
+----------------
+PRSF00031570 Wrong table name used in FCT_DuplicateCheckPlugIn::cancel()
+========================================================================================
+
+Actual Version : v6.5.1 / Date : 26-Sep-2002
+----------------
+
+PRSF00019189 FCT_DuplicateCheck shall use DB2 compliant table name IFW_DUPLICATECHECK
+
+========================================================================================
+
+Actual Version : v6.3.3 / Date : 23-JUL-2002
+----------------
+
+PRSF00013526: Reaction on transaction commit while restarting
+
+========================================================================================
+
+Actual Version : v6.3.2 / Date : 12-JUN-2002
+----------------
+
+- new registry parameters 'StoreLimit' and 'BufferLimit' instead of 'RemoveLimit'
+
+========================================================================================
+
+Actual Version : v4-30-05 / Date : 22-NOV-2001
+----------------
+
+- PETS #41741: Ignoring recycle test, inserting only new duplicates while recycling
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 08-OCT-2001
+----------------
+
+- PETS #40232: Added duplicate info message to EDR
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 26-SEP-2001
+----------------
+
+- PETS #39871: Performance of FCT_HashString improved
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 23-AUG-2001
+----------------
+
+- PETS #37987: higher performance (less memory usage)
+- PETS #38438: error if path is not available
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 16-AUG-2001
+----------------
+
+- PETS #36559: SourcePro AIX Port
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 22-JUN-2001
+----------------
+
+Changes for zaphod/v4-30:
+
+- use of the transaction manager
+- fields in the registry must be qualified completely
+- new registry parameter 'Path'
+
+========================================================================================
+
+Actual Version : v4-11-00 / Date : 13-JUN-2001
+----------------
+
+Implemented PT0000000036190:
+Duplicate EDRs are assigned an own output stream which is defined by the registry
+parameter 'StreamName'.
+
+========================================================================================
+
+Actual Version : v4-10-01 / Date : 04-MAY-2001
+----------------
+
+Removed misleading error messages.
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 27-NOV-2000
+----------------
+
+========================================================================================
+
+Actual Version : v4-00-01 / Date : 04-OCT-2000
+----------------
+
+First version.
+
+========================================================================================

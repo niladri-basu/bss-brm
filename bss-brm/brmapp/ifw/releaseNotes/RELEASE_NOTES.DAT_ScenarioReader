@@ -1,0 +1,227 @@
+===============================================================================
+DAT_ScenarioReader
+-------------------------------------------------------------------------------
+Module Release Notes 
+-------------------------------------------------------------------------------
+==============================================================================
+Module Version : 7.4 10012
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug110077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in
+parallel.
+================================================================================
+Module Version: 10011 7.3 20-Jun-2006
+PRSF00213705: Reasoning: R-060323-0090  Null Pointer Dereference 
+==============================================================================
+Module Version: 10010 Velocity 10-Mar-2005
+PRSF00157748: changes of column names in IFW_AGGREGATION Table 
+==============================================================================
+Module Version: 10009 6.7_FP2  22-Sep-2004
+PRSF00124134:  "RAR3: Earliest and Latest Call timestamp are not correct in the Audit Result file for suspense type of status."
+File Modified: DateTime.cpp
+Change done for not computing the valueM if isValidM is not true
+==============================================================================
+
+Revision: 10008  6.7_FP2  08-June-2004  knijhawa
+PRSF00115396 : Changes to FCT_AggreGate and DAT_ScenarioReader For RA Rel 3
+
+==============================================================================
+Module Version: 10007 6.7_FP2  28-May-2004
+PRSF00110943 : change the query for sqlserver in case of certain columns which are keywords
+
+==============================================================================
+Module Version: 10006  6.7_FP2  28-Apr-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10005  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+===============================================================================
+
+Module Version: 10004  6.5_SP2  05-May-2003
+PRSF00039936:   More changes are needed to implement name space 
+
+==============================================================================
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 6.5 SP2 10002 / Date : 1-MAY-2003
+----------------
+
+PRSF00039556: Implement name space for DAT scenarios
+
+===============================================================================
+Actual Version : 6.5 10001 / Date : 27-FEB-2003
+----------------
+
+PRSF00033000: Added fixes for thread tracing.
+
+===============================================================================
+
+Actual Version : v4-30-04 / Date : 23-MAY-2002
+----------------
+
+PETS #44244: condition loading fixed
+
+===============================================================================
+
+Actual Version : v4-30-03 / Date : 18-OCT-2001
+----------------
+
+PETS #40507: removed CBC from build
+
+===============================================================================
+
+Actual Version : v4-30-02 / Date : 29-AUG-2001
+----------------
+
+PETS #38645: update of messages
+
+===============================================================================
+
+Actual Version : v4-30-01 / Date : 05-JUL-2001
+----------------
+
+PETS #36559: SourcePro migration
+
+===============================================================================
+
+Actual Version : v4-30-00 / Date : 20-JUN-2001
+----------------
+
+Changes for zaphod/v4-30:
+
+- use of IFW_EDRC_FIELD instead of SOL_-Tables
+- new registry parameter 'Calendar' to use IFW_HOLIDAY
+- only support for flush mode 0
+
+===============================================================================
+
+Actual Version : v4-10-01 / Date : 23-MAR-2001
+----------------
+
+Fixed problem with invalid configuration.
+
+===============================================================================
+
+Actual Version : v4-10-00 / Date : 27-NOV-2000
+----------------
+
+===============================================================================
+
+Actual Version : v4-02-01 / Date : 13-NOV-2000
+----------------
+
+Support for new regular expressions.
+Event is now generated from scenario.
+
+===============================================================================
+
+Actual Version : v4-02-00 / Date : 25-AUG-2000
+----------------
+
+DB version check.
+
+===============================================================================
+
+Actual Version : v4-01-02 / Date : 25-AUG-2000
+----------------
+
+Support Framework v4-07-XX.
+
+===============================================================================
+
+Actual Version : v4-01-01 / Date : 20-JUL-2000
+----------------
+
+===============================================================================
+
+Actual Version : v4-01-00 / Date : 23-JUN-2000
+----------------
+
+Prepared for new scenario configuration (no more need of table AGG_EDRFORMAT_SCN).
+
+===============================================================================
+
+Actual Version : v4-00-03 / Date : 17-JUN-2000
+----------------
+
+Implementation changed to support the IBM xlC compiler.
+
+===============================================================================
+
+Actual Version : v4-00-01 / Date : 06-APR-2000
+----------------
+
+Possibility to specify an output precision for an aggregation value
+(column PRECISION in table AGG_AGGREGATION, NULL for maximum).
+
+New flush mode 3 (expanded multiple fields).
+
+===============================================================================
+
+Actual Version : v4-00-00 / Date : 21-MAR-2000
+----------------
+
+Support for Framework v4.
+
+===============================================================================
+
+Actual Version : v2-01-00 / Date : 13-MAR-2000
+----------------
+
+Prepared for new flush modes.
+
+===============================================================================
+
+Actual Version : v2-00-06 / Date : 25-FEB-2000
+----------------
+
+Full path names in events and control files.
+
+===============================================================================
+
+Actual Version : v2-00-05 / Date : 04-FEB-2000
+----------------
+
+Made it thread safe.
+
+===============================================================================
+
+Actual Version : v2-00-04 / Date : 31-JAN-2000
+----------------
+
+Memory leak removed.
+
+===============================================================================
+
+Actual Version : v2-00-03 / Date : 19-JAN-2000
+----------------
+
+Better performance.
+
+New events: EVT_RELOAD_FAILED, EVT_RELOAD_SUCCESSFUL
+
+===============================================================================
+
+Actual Version : v2-00-01 / Date : 23-DEC-1999
+----------------
+
+Use of BAS_Decimal.
+
+===============================================================================
+
+Actual Version : v2-00-00 / Date : 02-DEC-1999
+----------------
+
+Initial version 2.

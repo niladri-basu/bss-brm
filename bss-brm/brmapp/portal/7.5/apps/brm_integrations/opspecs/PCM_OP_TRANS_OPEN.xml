@@ -1,0 +1,109 @@
+<Opcode name="PCM_OP_TRANS_OPEN"
+    visibility="public"
+    transaction="required"
+    component="server_platform"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+        opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc> PCM_OP_TRANS_OPEN input flist specification. This opcode opens a new transaction </Doc>
+  <Input>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required"
+        mode="complete">
+      <Doc>Depending on the transaction type, which is specified using the opflags passed to PCM_OP(), the POID may need to be complete.
+	<br />
+ 	For a read-only transaction, the opflags must have the bitflag
+	<br />
+ 	PCM_TRANS_OPEN_READONLY set. In this case, the only the DB piece of 
+	<br />
+ 	PIN_FLD_POID is required in order to identify the DM on which the transaction
+	<br />
+ 	opcode needs to be performed. Note that performing operations like
+	<br />
+ 	PCM_OP_WRITE_FLDS within this transaction will cause an error.
+	<br />
+
+ 	For a read-write transaction, the opflags must have the bitflag
+	<br />
+ 	PCM_TRANS_OPEN_READWRITE set. In this case, the only the DB piece of 
+	<br />
+ 	PIN_FLD_POID is required in order to identify the DM on which the transaction  opcode needs to be performed
+	<br />
+
+ 	For a locked object transaction, the opflags must have the bitflags
+	<br />
+ 	PCM_TRANS_OPEN_READWRITE and PCM_TRANS_OPEN_LOCK_OBJ set.  In this case, 
+	<br />
+ 	a complete PIN_FLD_POID is required in order to identify the object which
+	<br />
+ 	needs to be explicitly locked. And, there should not be any field other than PIN_FLD_POID in the flist.
+	<br />
+	 If a transaction is already open, the ebuf contains the error value  PIN_ERR_TRANS_ALREADY_OPEN when PCM_OP() returns.
+	</Doc>
+    </Poid>
+    <String name="PIN_FLD_TRANS_ID" use="optional">
+      <Doc>Reserved for internal use.
+	<br />
+         This field is used to represent the XID of the transaction in string format 
+	<br />
+	 containing the formatId, global transaction id and branch qualifier separated by commas.
+	<br />
+	The global transaction id  and branch qualifier byte values are encoded in 2-byte hexadecimal characters
+	<br />
+	For example, to represent XID with format Id numeric value = 100, global transaction id bytes  with values 49, 50, 51
+	<br />
+	and branch qualifier bytes with value 52,
+	<br />
+	the field will have the string "100,313233,34"
+	<br />
+	</Doc>
+    </String>
+    <Int name="PIN_FLD_TRANS_TIMEOUT_IN_SECS" use="optional">
+      <Doc>Reserved for internal use.
+	<br />
+         This field is used to indicate XA transaction timeout in seconds
+	<br />
+	</Doc>
+    </Int>
+    <Int name="PIN_FLD_FLAGS" use="optional">
+      <Doc>Reserved for internal use.
+	<br />
+        This field is used to indicate additional parameters for 
+        <br />
+        XA transactions.
+        </Doc>
+    </Int>
+  </Fields>
+  </Input>
+  <Output>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required"
+        mode="complete">
+      <Doc>POID passed in the input flist</Doc>
+    </Poid>
+    <Int name="PIN_FLD_ERROR_NUM" use="optional">
+      <Doc>This field indicates a potential error condition, like a performance limit being reached.
+	<br />
+	 Valid values are defined in include/pin_errs.h.
+	<br />
+	This is then passed to the PCM_OP_TRANS_POL_OPEN policy opcode so
+	<br />
+	it can decide if this potential error should be treated as a real error
+	<br />
+	or ignored.  If it should be treated like a real error, the policy
+	<br />
+	opcode should return this field and its value in the output flist.
+	<br />
+	 If it should be ignored, then the policy opcode should either not
+	<br />
+	return this field or it should return this field with its value changed to PIN_ERR_NONE.
+	<br />
+	</Doc>
+    </Int>
+  </Fields>
+  </Output>
+</Opcode>
+
+

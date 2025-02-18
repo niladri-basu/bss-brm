@@ -1,0 +1,134 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:op="http://www.portal.com/schemas/BusinessOpcodes"
+            xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            elementFormDefault="qualified">
+<xsd:complexType name="purchased_productExtensionType">
+	<xsd:sequence>
+		<xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="CREATED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CYCLE_DISCOUNT" type="UNION_purchased_product" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CYCLE_DISC_AMT" type="UNION_purchased_product" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CYCLE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CYCLE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CYCLE_FEES" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="CHARGED_FROM_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="CHARGED_TO_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="COUNT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="CYCLE_FEE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="CYCLE_FEE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="UNIT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+				</xsd:sequence>
+				<xsd:attribute type="xsd:string" name="elem"/>
+			</xsd:complexType>
+		</xsd:element>
+		<xsd:element name="CYCLE_FEE_AMT" type="UNION_purchased_product" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CYCLE_FEE_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CYCLE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CYCLE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="INSTANTIATED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="MMC_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="MOD_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="NODE_LOCATION" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+				<xsd:element name="OBJECT_CACHE_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="OVERRIDDEN_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PLAN_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="POID" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PRODUCT_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PURCHASE_DISCOUNT" type="UNION_purchased_product" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PURCHASE_DISC_AMT" type="UNION_purchased_product" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PURCHASE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PURCHASE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PURCHASE_FEE_AMT" type="UNION_purchased_product" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PURCHASE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PURCHASE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="QUANTITY" type="UNION_purchased_product" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="READ_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="SERVICE_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="SPONSOR_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="USAGE_DISCOUNT" type="UNION_purchased_product" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="USAGE_END_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="USAGE_END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="USAGE_START_DETAILS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="USAGE_START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="WRITE_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element ref="purchased_productExtension" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:simpleType name="EMPTY_purchased_product">
+	<xsd:restriction base="xsd:string">
+		<xsd:length value="0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="UNION_purchased_product">
+	<xsd:union memberTypes="xsd:decimal EMPTY_purchased_product"/>
+</xsd:simpleType>
+<xsd:element name="purchased_productExtension" type="purchased_productExtensionType"/>
+</xsd:schema>

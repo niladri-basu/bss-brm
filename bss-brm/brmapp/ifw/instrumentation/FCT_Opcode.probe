@@ -1,0 +1,9 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+opcodePlugIn | 1 | opcodePlugInGroup | Opcode PlugIn | NotSpecified | Group |
+opcodePlugInGroup | 1 | totalOpcodeCalls | Total Opcode Calls | ReadOnly | Integer | 
+opcodePlugInGroup | 2 | totalLatency | Accumulated Latency (ns) | ReadOnly | Integer |
+opcodePlugIn | 2 | latencyTable | Last Latencies | NotSpecified | Table |
+latencyTable | 1 | latencyEntry | Opcode Latency Table Entry | NotSpecified | Group |
+latencyEntry | 1 | latencyTableIndex | Index | ReadOnly | Integer |
+latencyEntry | 2 | latency | Latency (ns) | ReadOnly | Integer |
+latencyEntry | 3 | latencyTimestamp | Timestamp | ReadOnly | String |

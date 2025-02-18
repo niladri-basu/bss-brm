@@ -1,0 +1,4152 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#
+#       @(#) % %
+#
+# Copyright (c) 1996, 2009, Oracle and/or its affiliates. All rights reserved. 
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+#
+# Configure HA (High Availability)
+#
+# This script will read in a "ha.conf" file and update the appropriate
+# configuration files.
+#
+# The format of the "ha.conf" file is:
+#
+# <keyword> <keyword specific values>
+# A # is treated as a comment character
+#
+# Supported keywords and their syntax is:
+# INSTALLATION <installation_name> <hostname> <pin_home directory> <pin_log directory> <ifw home directory>
+# SCHEMA <db_number> <user_name> <user_pw>
+# DBI <dbi_name> <host> <port (default 1521)> <db_name>
+# DB <db_name> <service_name> <schema list>
+#  you can have multiple DBI to the same DB.
+# PROCESS <process_name> <installation_name> <port>
+# HA_PAIR <process_name>
+#    <primary installation_name> <primary port> <primary web server port>
+#    <secondary installation_name> <secondary port> <secondary web server port>
+# CONNECT <process_name>((,)<process_name>) TO <process_name>(,<process_name>) || <dbi_name>
+#
+#  To use environment variables, enclose the environment variable name in <<>>
+#
+# The processing of a file is done by first checking to see if a backup
+# copy exists.  If it doesn't exist, then one is created from the current
+# file.  The backup file has ".configure_ha.orig" as a suffix.
+# For example, "pin.conf" will be backed-up as "pin.conf.configure_ha.orig" and
+#   "timos.reg" will be backed-up as "timos.reg.configure_ha.orig".
+# The next step, regardless of if a backup copy is created or not, is
+# to "restore the backup" file.  That is, the "pin_orig.conf" file is
+# copied to "pin.conf".  Thus, if you modify "pin.conf" without modifying
+# "pin.conf.configure_ha.orig", those changes will be lost.  The remaining processing
+# will modify the "pin.conf" file.  Note: the same logic applies to
+# registry files.
+#
+# This script also:
+# - updates sys/test directory with CM connection info.
+# - create a sys/test<cm_subname> directory for each CM defined on this host.
+# - has a restore mode that copies all of the "*.configure_ha.orig" files to their original names.
+# - creates an executable named based upon the process name. For example, if you
+#   have a PROCESS CM_1, then a "cm_1" file will be created by copying "cm" to "cm_1".
+# - updates/adds start/stop scripts
+# - treats "localhost" as a wildcard for any host.
+# - derives subdir name from the Process name.  (set $process_subdir = "$hostname/$process_name)
+# - replaces stop_all with a new version of the script
+#
+# NOTE: RAC_1_P = RAC_2_S
+#
+
+use Cwd;
+use File::Copy;
+use strict;
+
+#
+# global variables that can be over-ridden by args.
+#
+our $me = $0;		 # Retrieve Program Name
+our $release = "7.5";		
+our $version = "2005.10.03";
+our $create_dirs = 1;
+our $debug = 0;
+our $ha_conf_filename = "ha.conf";
+our $is_windows = 0;
+our $test_mode = 0;
+our $restore_mode = 0;
+
+&parse_args();
+
+#--------------------------------------------------------------------------------
+#
+# Main
+#
+#--------------------------------------------------------------------------------
+our $account_type = 0;
+our $account_type_include = "./tools/quest/$ENV{'REL'}/autoext/configure_ha.mui";
+our $already_processed_testnap_pin_conf = 0;
+our $current_host = '';
+our $cm_host = '';
+our $cm_port = '';
+our $clause = '';
+our @comment_lines = ();
+our $conf_type = '';
+our $conn_name;
+our $conn_key_separator = '->';  # Used to separate the two end-points
+our %connections = ();
+our $continue = 0;
+our $db_name = '';
+our $db_number = '';
+our $db_service_name = '';
+our @db_schema_list = ();
+our $dbi_name = '';
+our %dbis = ();
+our %dbs = ();
+our $dmo_host = '';
+our $dmo_port = '';
+our $dmt_host = '';
+our $dmt_partner_host = '';
+our $dmt_partner_port = '';
+our $dmt_port = '';
+our $dmt_webserver_port = '';
+our @entities = ();
+our $exe_extension = "";
+our @file_lines = ();
+our $files_found = 0;
+our $files_missing = 0;
+our $files_updated = 0;
+our %found_dbi_connections = ();
+our %ha_pairs = ();
+our %hosts = ();                  # indexed by hostname (no data)
+our $hosts_found = 0;
+our $hosts_processed = 0;
+our $href;
+our $ifw_home = '';
+our $indent;
+our $indent_per_level = '  ';
+our %installations = ();          # contains pin_home directory indexed by installation name
+our $installation_name = '';
+our $key;
+our @keys = ();
+our $keyword = '';
+our $levels;
+our $line;
+our $line_cnt = 0;
+our @new_file_lines = ();
+our $new_line;
+our %new_nv_pairs = ();    # Name/Value pairs
+our $orig_line;
+our $orig_suffix = '_orig';
+our $pin_conf = '';
+our $pin_home = '';
+our $pin_log_dir = '';
+our $pin_log_file = '';
+our $pin_orig_conf = '';
+our $pin_os = $^O;
+our $primary_process_name;
+our $process_connection = '';
+our @process_connections = ();
+our %process_entities = ();
+our $process_host;
+our $process_installation;
+our $process_installation2;
+our $process_name;
+our $process_name_suffix;
+our $process_port;
+our $process_port2;
+our $process_subdir;
+our $process_subdir2;
+our $process_web_port;
+our $process_web_port2;
+our %processed_dbi_connections = ();
+our @processes = ();
+our $reg_file = '';
+our $reg_orig_file = '';
+our @required_info = ();  # An array of hashes
+our @required_lines = (); # A simple array of strings
+our @replacement_info = (); # An array of 2 strings to be used in a substitute regex.
+our $rtp_host = '';
+our $rtp_port = '';
+our $save_value = 0;
+our $schema_name = '';
+our $schema_user_name = '';
+our $schema_user_pw = '';
+our %schemas = ();
+our $script_file = '';
+our $script_orig_file = '';
+our $secondary_process_name;
+our $slash = "/";
+our $start_aaa_gw_process_list = '';
+our $start_all_process_list = '';
+our $start_cm_process_list = '';
+our $start_dmo_process_list = '';
+our $start_dmt_process_list = '';
+our $start_rtp_process_list = '';
+our $stop_all_process_list = '';
+our $sys_directory = '';
+our $temp_clause = '';
+our $temp_dir = '';
+our $temp_line;
+our $temp_process_name;
+our $this_host = '';
+our $to_host;
+our $to_installation;
+our $to_port;
+our $to_process_name;
+our $type = '';
+our $username = '';
+our $value = '';
+our $well_known_subdir = '';
+our $wild_card_key = '\*';
+our $word = '';
+our @words = ();
+
+# assign OS specifics
+if ($pin_os eq "MSWin32") {
+	$slash = "\\";
+	$exe_extension = "\.exe";
+	$is_windows = 1;
+	$username = $ENV{USERNAME};
+	$this_host = lc($ENV{COMPUTERNAME});
+}
+else {
+	# Try USER first and if blank, then try LOGNAME
+	$username = $ENV{USER};
+	if ($username eq '') {
+		$username = $ENV{LOGNAME};
+	}
+	$this_host = &call_sys_result("/bin/uname -n");
+}
+
+if ($this_host eq '') {
+        print STDERR "***ERROR*** Invalid hostname $this_host\n";
+        exit 1;
+}
+
+$account_type = &get_account_type();
+if ($account_type) {
+	if (! -f "$account_type_include") {
+		print STDERR "***ERROR*** Cannot find file $account_type_include for non-standard installation\n";
+		exit 1;
+	}
+	else {
+		require "$account_type_include";
+		print "---DEBUG--- Require file $account_type_include\n" if $debug;
+	}
+}
+
+#
+# Read the "ha.conf" file
+#
+open(HA_CONF, "$ha_conf_filename") || die("Could not open for input - $ha_conf_filename $!\n");
+while ($line = <HA_CONF>) {
+	$line = &normalize_conf_entries($line);
+	$line_cnt += 1;
+
+	if ($line =~ /^$/ || $line =~ /^#/) {
+		next;   # Skip blank lines
+	}
+
+	#
+	# Handle <<environment variable>> substitution
+	#
+	$line = &handle_env_var($line);
+	@words = split(/[ \n]+/, $line);
+	printf("---DEBUG--- Number of words found=%s, words=@words\n", scalar @words) if $debug;
+
+	$conf_type = uc($words[0]);
+	#####################################################################
+	# Handle CONNECT lines
+	# CONNECT <process_name>((,)<process_name>) TO <process_name>(,<process_name>) | <dbi_name>
+	#####################################################################
+	if ($conf_type eq 'CONNECT') {
+		&process_conf_connect($line);
+	}
+	#####################################################################
+	# Handle DB lines
+	# DB <db_name> <service_name> <schema_list>
+	#####################################################################
+	elsif ($conf_type eq 'DB') {
+		&process_conf_db($line);
+		next;
+	}
+	#####################################################################
+	# Handle DBI (DB instances) lines
+	# DBI <dbi_name> <host> <port> <db_name>
+	# NOTE: You can have multiple DBI to the same DB
+	# TO DO ??? Is there a max of 2???
+	#####################################################################
+	elsif ($conf_type eq 'DBI') {
+		&process_conf_dbi($line);
+		next;
+	}
+	#####################################################################
+	# Handle HA_PAIR lines
+	# HA_PAIR <process_name> <primary installation_name> <primary port> <primary web server port>
+	#                        <secondary installation_name> <secondary port> <secondary web server port>
+	#####################################################################
+	elsif ($conf_type eq 'HA_PAIR') {
+		&process_conf_ha_pair($line);
+		next;
+	}
+	#####################################################################
+	# Handle INSTALLATION lines
+	# INSTALLATION <installation_name> <hostname> <pin_home directory> <ifw home directory>
+	#####################################################################
+	elsif ($conf_type eq 'INSTALLATION') {
+		&process_conf_installation($line);
+		next;
+	}
+	#####################################################################
+	# Handle PROCESS lines
+	# PROCESS <process_name> <installation_name> <port> <subdir>
+	#####################################################################
+	elsif ($conf_type eq 'PROCESS') {
+		&process_conf_process($line);
+		next;
+	}
+	#####################################################################
+	# Handle SCHEMA lines
+	# SCHEMA <db_number> <user_name> <user_pw>
+	# The schema's name is the db_number.  Is this OK??? TO DO ???
+	#####################################################################
+	elsif ($conf_type eq 'SCHEMA') {
+		&process_conf_schema($line);
+		next;
+	}
+	#####################################################################
+	# Unknown command
+	#####################################################################
+	else {
+		die "***ERROR*** Unknown keyword ($conf_type) ->$line\n";
+	}
+}
+close(HA_CONF);
+
+&continue("Completed reading configuration file");
+
+# print out the hashes for debug
+&print_data() if $debug; 
+
+if (&validate()) {
+	print STDERR "***ERROR*** validation failed with fatal error\n";
+	exit 1;
+}
+
+&continue("Completed validation");
+
+&configure();
+exit 0;
+
+#--------------------------------------------------------------------------------
+#
+# configure 
+#
+# Perform HA configurations
+#
+#--------------------------------------------------------------------------------
+
+sub configure {
+	$hosts_found = scalar (keys(%hosts));
+	$hosts_processed = 0;
+	$files_found = 0;
+	$files_missing = 0;
+	$files_updated = 0;
+	my $installation_pin_home = "";
+	my $installation_ifw_home = "";
+	foreach $key (keys %installations) {
+		#
+		# If this is on the current host, then OK, else skip for now.
+		#
+		$current_host = $installations{$key}->{'host'};
+		if ($current_host ne $this_host) {
+			print "---DEBUG--- Skipping $current_host as it is not this host\n" if $debug;
+			next;
+		}
+		$hosts_processed = 1;
+		print "Processing host $current_host\n" if $debug;
+		# get pin_home
+		$installation_pin_home = $installations{$key}->{'pin_home'};
+		$installation_ifw_home = $installations{$key}->{'ifw_home'};
+		if ($is_windows) {
+			$installation_pin_home =~ s/\\/\//g;   # Use forward slashes.
+			$installation_ifw_home =~ s/\\/\//g;   # Use forward slashes.
+		}
+		print "---DEBUG--- host=$current_host, pin_home=$installation_pin_home\n" if $debug;
+		#
+		# Modify CM's  pin.conf  if the CM  is on this host
+		# Modify DM_ORACLE's pin.conf  if the DMO is on this host
+		# Modify TIMOS's Registry if the TIMOS is on this host
+		@processes = sort(keys(%process_entities));
+		$start_aaa_gw_process_list = '';
+		$start_all_process_list = '';
+		$start_cm_process_list = '';
+		$start_dmo_process_list = '';
+		$start_dmt_process_list = '';
+		$stop_all_process_list = '';
+		foreach $process_name (@processes) {
+			$process_installation   = $process_entities{$process_name}->{'installation'};
+			$process_host = $installations{$process_installation}->{'host'};
+			$pin_home = $installations{$process_installation}->{'pin_home'};
+			$pin_log_dir = $installations{$process_installation}->{'pin_log'};
+			$ifw_home = $installations{$process_installation}->{'ifw_home'};
+			$process_port   = $process_entities{$process_name}->{'port'};
+			$process_subdir = $process_entities{$process_name}->{'subdir'};
+			@process_connections = ();
+			print "---DEBUG--- Checking process $process_name, installation=$process_installation, host=$process_host,port=$process_port, subdir=$process_subdir\n" if $debug;
+			#
+			# If this is on the current host, then OK, else skip for now.
+			#
+			if ($process_host ne $current_host) {
+				print "---DEBUG--- Skipping $current_host as it is not the process host\n" if $debug;
+				next;
+			}
+			# Don't process installations on the same host out of order.
+			if ($process_installation ne $key) {
+				print "---DEBUG--- Skipping installation $process_installation\n" if $debug;
+				next;
+			}
+
+			# Common directory variables
+			# Common file location variables
+			$sys_directory = "$pin_home/sys";
+			$pin_conf     = "$sys_directory/$process_subdir/pin.conf";
+			$pin_orig_conf = "$sys_directory/$process_subdir/pin.conf.configure_ha.orig";
+			#
+			# Modify the process' config file
+			# Check if the file exists
+			#######################################################################################
+			if ($process_name =~ /^AAA(.*)/i) {
+				$process_name_suffix = $1;
+				if ( $start_aaa_gw_process_list eq '' ) {
+					$start_aaa_gw_process_list = "aaa_gw$process_name_suffix";
+				}
+				else {
+					$start_aaa_gw_process_list .= " aaa_gw$process_name_suffix";
+				}
+			
+				# Common directory variables
+				# Common file location variables
+				$sys_directory = "$ifw_home";
+				$well_known_subdir = "conf";
+				$reg_file     = "$sys_directory/aaa$process_name_suffix/flist.reg";
+				$reg_orig_file = "$sys_directory/aaa$process_name_suffix/flist.reg.configure_ha.orig";
+				&check_aaa_gw_reg_file();
+				#
+				&create_process_executable("aaa$process_name_suffix", "ifw");
+				&continue("Completed aaa$process_name_suffix processing");
+			}
+			#######################################################################################
+			elsif ($process_name =~ /^CM(.*)/i) {
+				$process_name_suffix = $1;
+				if ( $start_cm_process_list eq '' ) {
+					$start_cm_process_list = "cm$process_name_suffix";
+				}
+				else {
+					$start_cm_process_list .= " cm$process_name_suffix";
+				}
+				#
+				&check_cm_pin_conf();
+				&create_process_executable("cm$process_name_suffix", 'cm');
+				&create_start_stop_scripts("cm$process_name_suffix", 'cm');
+				#
+				# Now update testnap's pin.conf
+				#
+				# What we will do is update the sys/test/pin.conf file to
+				# have a cm_ptr for each CM defined on this host.
+				# Then we will create a test subdir for each CM defined on this
+				# host so we can talk to a specific CM, i.e. the pin.conf in
+				# this new subdirectory will contain a single cm_ptr.
+				# 
+				if (!$already_processed_testnap_pin_conf) {
+					$already_processed_testnap_pin_conf = 1;  # only do this once
+					$pin_conf     = "$sys_directory/test/pin.conf";
+					$pin_orig_conf = "$sys_directory/test/pin.conf.configure_ha.orig";
+					&check_testnap_pin_conf();
+				}
+				# Do this for each CM process
+				$pin_conf     = "$sys_directory/test$process_name_suffix/pin.conf";
+				$pin_orig_conf = "$sys_directory/test$process_name_suffix/pin.conf_configure_ha.orig";
+				&check_testnap_pin_conf();
+				&continue("Completed cm$process_name_suffix processing");
+			}
+			#######################################################################################
+			elsif ($process_name =~ /^DM_ORACLE(.*)/i) {
+				$process_name_suffix = $1;
+				if ( $start_dmo_process_list eq '' ) {
+					$start_dmo_process_list .= "dm_oracle$process_name_suffix";
+				} 
+				else {
+					$start_dmo_process_list .= " dm_oracle$process_name_suffix";
+				}
+				&check_dmo_pin_conf();
+				&create_process_executable("dm_oracle$process_name_suffix", 'dm_oracle');
+				&create_start_stop_scripts("dm_oracle$process_name_suffix", 'dm_oracle');
+				&continue("Completed dm_oracle$process_name_suffix processing");
+			}
+			#######################################################################################
+			elsif ($process_name =~ /^RTP(.*)/i) {
+				$process_name_suffix = $1;
+				if ( $start_rtp_process_list eq '' ) {
+					$start_rtp_process_list = "rtp$process_name_suffix";
+				}
+				else {
+					$start_rtp_process_list .= " rtp$process_name_suffix";
+				}
+			
+				# Common directory variables
+				# Common file location variables
+				$sys_directory = "$ifw_home";
+				$well_known_subdir = "conf";
+				$reg_file     = "$sys_directory/rtp$process_name_suffix/wirelessRealtime.reg";
+				$reg_orig_file = "$sys_directory/rtp$process_name_suffix/wirelessRealtime.reg.configure_ha.orig";
+				&check_rtp_reg_file();
+				#
+				&create_process_executable("rtp$process_name_suffix", "ifw");
+				&continue("Completed rtp$process_name_suffix processing");
+			}
+			#######################################################################################
+			elsif ($process_name =~ /^TIMOS(.*)/i) {
+			
+				$process_web_port   = $process_entities{$process_name}->{'web_port'}; # This has a web_port
+				$process_name_suffix = $1;
+				if ( $start_dmt_process_list eq '' ) {
+					$start_dmt_process_list = "dm_timos$process_name_suffix";
+				} 
+				else {
+					$start_dmt_process_list .= " dm_timos$process_name_suffix";
+				}
+				$reg_file     = "$sys_directory/$process_subdir/timos.reg";
+				$reg_orig_file = "$sys_directory/$process_subdir/timos.reg.configure_ha.orig";
+				&check_dmt_reg_file();
+				&check_dmt_pin_conf();
+				&create_process_executable("dm_timos$process_name_suffix", 'dm_timos');
+				&create_start_stop_scripts("dm_timos$process_name_suffix", 'dm_timos');
+				&continue("Completed dm_timos$process_name_suffix processing");
+			}
+			else {
+				print STDERR "***ERROR*** Don't know how to handle process $process_name\n";
+				exit 1;
+			}
+		}
+		# Update $start_all_process_list and $stop_all_process_list
+		$start_all_process_list = '';
+		$stop_all_process_list = '';
+		# Start DM_ORACLE's first
+		if ($start_dmo_process_list ne '') {
+			$start_all_process_list = $start_dmo_process_list;
+			$stop_all_process_list = $start_dmo_process_list;
+		}
+		# Then start TIMOS's
+		if ($start_dmt_process_list ne '') {
+			if ($start_all_process_list eq '') {
+				$start_all_process_list = $start_dmt_process_list;
+				$stop_all_process_list = $start_dmt_process_list;
+			}
+			else {
+				$start_all_process_list .= " $start_dmt_process_list";
+				$stop_all_process_list = "$start_dmt_process_list $stop_all_process_list";
+			}
+		}
+		# Then start CM's
+		if ($start_cm_process_list ne '') {
+			if ($start_all_process_list eq '') {
+				$start_all_process_list = $start_cm_process_list;
+				$stop_all_process_list = $start_cm_process_list;
+			}
+			else {
+				$start_all_process_list .= " $start_cm_process_list";
+				$stop_all_process_list = "$start_cm_process_list $stop_all_process_list";
+			}
+		}
+		print "Updating the start_all and stop_all scripts.\n";
+		# Now update the start_all/stop_all scripts
+		#
+		# Now do the start_all script
+		#
+		$script_file = "$installation_pin_home/bin/start_all";
+		$script_orig_file = "$installation_pin_home/bin/start_all.configure_ha.orig";
+		if (!-f $script_file) {
+			print STDERR "***ERROR*** Can't find $script_file\n";
+			exit 1;
+		}
+		# START_LIST="dm_oracle dm_oracle2 dm_timos cm cm2"
+		# Need to use type 4 because a space in the list causes problems.
+		@required_lines = (
+		"4:START_LIST= = \"$start_all_process_list\"",
+		);
+		#
+		# Now modify the file
+		&check_start_stop_scripts_file();
+		#
+		# Now for the stop_all script
+		#
+		$script_file = "$installation_pin_home/bin/stop_all";
+		$script_orig_file = "$installation_pin_home/bin/stop_all.configure_ha.orig";
+		if (!-f $script_file) {
+			print STDERR "***ERROR*** Can't find $script_file\n";
+			exit 1;
+		}
+		#  if [ -f "./stop_cm" ]; then ./stop_cm;fi
+		@required_lines = (
+		);
+		@words = split(/\s+/, $start_all_process_list);
+		foreach $word (@words) {
+			push @required_lines, "1:  if \[ -f \"./stop_$word\" \]; then ./stop_$word;fi",
+		}
+		#
+		# Now modify the file
+		&check_start_stop_scripts_file();
+		#
+		#
+	}
+	print "Processed $hosts_processed out of $hosts_found hosts\n" if $debug;
+	print "Processed $files_found files. Number of files not found = $files_missing\n" if $debug;
+	print "Updated $files_updated files.\n" if $debug;
+	if ($hosts_found > 1 || $hosts_processed == 0) {
+		print "Make sure you run this script using the same $ha_conf_filename file on all hosts\n" if $debug;
+		print "The remaining hosts are:\n" if $debug;
+		foreach $key (sort(keys(%hosts))) {
+			if ($key ne $this_host) {
+				print "  $key" if $debug;
+			}
+		}
+		print "\n" if $debug;
+	}
+	
+} # end of configure
+
+#--------------------------------------------------------------------------------
+#
+# call_sys
+#
+# Calls system passing the specified command
+#
+#--------------------------------------------------------------------------------
+sub call_sys {
+	my ($cmd) = @_;
+
+	print "call_sys:Cmd=$cmd\n" if $debug;
+	my $result = system($cmd);
+	if ($result != 0) {
+		my $exit_value = $result >> 8;
+		my $signal_num = $result & 127;
+		my $dumped_core = $result & 128;
+		print STDERR "***ERROR*** $cmd returned $result.\n  Exit=$exit_value,\n  Signal=$signal_num,\n  Core dumped=$dumped_core\n";
+		exit 1;
+	}
+} # end of call_sys
+
+#--------------------------------------------------------------------------------
+#
+# call_sys_result
+#
+# Calls system passing the specified command. This returns the result of the cmd.
+#
+#--------------------------------------------------------------------------------
+sub call_sys_result {
+	my ($cmd) = @_;
+
+	my $cmd_out = qx($cmd);
+	chomp $cmd_out;
+	print "result from \"$cmd\":\n$cmd_out\n" if $debug;
+	return $cmd_out;
+} # end of call_sys_result
+
+#--------------------------------------------------------------------------------
+#
+# check_aaa_gw_reg_file
+#
+# Checks and optionally updates the AAA_GW's Registry file
+#
+#--------------------------------------------------------------------------------
+sub check_aaa_gw_reg_file {
+	print "---DEBUG--- entering check_aaa_gw_reg_file: process_name=$process_name\n" if $debug;
+	print "Checking File: $reg_file\n";
+	#
+	# @require_lines format for registry files
+	# -------------------------------------------------------
+	# <absolute clause name> = <value>
+	# where
+	#   <absolute clause name> is .composed of the name of each level/clause
+	#      separated with periods.
+	@required_lines = ("2:ifw.Pipelines.DispatcherPipeline.Input.InputModule.Module.InputStream.Module.Port = $process_port");
+	@comment_lines = "ifw.DataPool.CMConnectionPool.Module.InfranetPool";
+	
+	#
+	# Add lines based upon the defined connections
+	#
+	# Get the connection info for this process
+	@process_connections = &get_connections_from_process($process_name);
+	#
+	#
+	# Check the connections and set values
+	#
+	foreach $process_connection (@process_connections) {
+		print "---DEBUG--- check_aaa_gw_reg_file: checking connection $process_connection\n" if $debug;
+		# Get the "to" entity.
+		$to_process_name = $process_connection;
+		$to_process_name =~ s/$process_name$conn_key_separator//;
+		$to_installation = $process_entities{$to_process_name}->{'installation'};
+		$to_host = $installations{$to_installation}->{'host'};
+		$to_port = $process_entities{$to_process_name}->{'port'};
+		print "---DEBUG--- check_aaa_gw_connections: checking connection: to_process_name=$to_process_name, to_installation=$to_installation, to_host=$to_host, to_port=$to_port\n" if $debug;
+		# Check if this is to a CM
+		if ($to_process_name =~ /^CM/i) {
+			$temp_line = "2:ifw.DataPool.CMConnectionPool.Module.InfranetPool.${to_process_name}.Host = $to_host";
+			print "---DEBUG--- check_aaa_gw_connections: adding required line: $temp_line\n" if $debug;
+			push @required_lines, $temp_line;
+			$temp_line = "2:ifw.DataPool.CMConnectionPool.Module.InfranetPool.${to_process_name}.Port = $to_port";
+			print "---DEBUG--- check_aaa_gw_connections: adding required line: $temp_line\n" if $debug;
+			push @required_lines, $temp_line;
+			$temp_line = "2:ifw.DataPool.CMConnectionPool.Module.InfranetPool.${to_process_name}.LoginName = root.0.0.0.1";
+			print "---DEBUG--- check_aaa_gw_connections: adding required line: $temp_line\n" if $debug;
+			push @required_lines, $temp_line;
+			$temp_line = "2:ifw.DataPool.CMConnectionPool.Module.InfranetPool.${to_process_name}.LoginPassword = password";
+			print "---DEBUG--- check_aaa_gw_connections: adding required line: $temp_line\n" if $debug;
+			push @required_lines, $temp_line;
+			$temp_line = "2:ifw.DataPool.CMConnectionPool.Module.InfranetPool.${to_process_name}.Logging = True";
+			print "---DEBUG--- check_aaa_gw_connections: adding required line: $temp_line\n" if $debug;
+			push @required_lines, $temp_line;
+		}
+		else {
+			# What kind of connection is this?
+			print STDERR "***ERROR*** check_aaa_gw_connections: Unhandled connection $process_connection\n";
+			exit 1;
+		}
+	} # end of foreach $process_connection (@process_connections)
+	#
+	@replacement_info = ();
+	&check_registry_file();
+} # end of check_aaa_gw_reg_file
+
+#--------------------------------------------------------------------------------
+#
+# check_rtp_reg_file
+#
+# Checks and optionally updates the RTP's Registry file
+#
+#--------------------------------------------------------------------------------
+sub check_rtp_reg_file {
+	print "---DEBUG--- entering check_rtp_reg_file: process_name=$process_name\n" if $debug;
+	print "Checking File: $reg_file\n";
+	#
+	# @require_lines format for registry files
+	# -------------------------------------------------------
+	# <absolute clause name> = <value>
+	# where
+	#   <absolute clause name> is .composed of the name of each level/clause
+	#      separated with periods.
+	@required_lines = ("2:ifw.DataPool.RealtimePipeline.Module.ThreadPool.Port = $process_port");
+	@replacement_info = ();
+	&check_registry_file();
+} # end of check_rtp_reg_file
+
+#--------------------------------------------------------------------------------
+#
+# check_cm_pin_conf
+#
+# Checks and optionally updates the CM's pin.conf file
+#
+#--------------------------------------------------------------------------------
+sub check_cm_pin_conf {
+	print "---DEBUG--- entering check_cm_pin_conf: process_name=$process_name\n" if $debug;
+	print "Checking File: $pin_conf\n";
+	#
+	# Set @require_lines for this pin.conf file.
+	# See the function "create_required_info_for_pin_conf" for
+	# the format of this data.
+	#
+	$pin_log_file = "$pin_log_dir/$process_subdir/$process_subdir.pinlog";
+	@required_lines = (
+'2:- cm pcm_timeout_in_secs = 60',
+'2:- cm pcm_op_max_retries = 1',
+'2:- cm cm_op_max_retries = 1',
+'2:- cm cm_ports = $process_port pin',
+"3:- cm cm_logfile = \/cm\/cm.pinlog \/$process_subdir\/$process_subdir.pinlog",
+"3:- cm cm_data_file = \/cm\/ \/$process_subdir\/",
+	);
+	
+	# Later make the following an optional change *** TO DO ***
+	#
+	push @required_lines, '2:- cm cm_logformat = 1';
+	push @required_lines, '2:- cm cm_loglevel = 3';
+	#
+	# Add dm_pointer lines based upon the defined connections
+	#
+	# Get the connection info for this process
+	@process_connections = &get_connections_from_process($process_name);
+	#
+	$dmo_host = '';
+	$dmo_port = '';
+	$dmt_host = '';
+	$dmt_port = '';
+	$rtp_host = '';
+	$rtp_port = '';
+	#
+	# Check the connections and set values
+	#
+	foreach $process_connection (@process_connections) {
+		print "---DEBUG--- check_cm_pin_conf: checking connection $process_connection\n" if $debug;
+		# Get the "to" entity.
+		$to_process_name = $process_connection;
+		$to_process_name =~ s/$process_name$conn_key_separator//;
+		$to_installation = $process_entities{$to_process_name}->{'installation'};
+		$to_host = $installations{$to_installation}->{'host'};
+		$to_port = $process_entities{$to_process_name}->{'port'};
+		print "---DEBUG--- check_cm_connections: checking connection: to_process_name=$to_process_name, to_installation=$to_installation, to_host=$to_host, to_port=$to_port\n" if $debug;
+		# Check if this is to a DM_ORACLE (CSR case)
+		if ($to_process_name =~ /^DM_ORACLE/i) {
+			$dmo_host = $to_host;
+			$dmo_port = $to_port;
+			my @schemas = &get_db_number_from_connections($process_connection);
+			foreach $db_number (@schemas) {
+				print "---DEBUG--- check_cm_connections: to_host=$to_host, to_port=$to_port\n" if $debug;
+				push @required_lines, "2:- cm dm_pointer $db_number ip = $to_host $to_port";
+			}
+		}
+		elsif ($to_process_name =~ /^RTP/i) {
+			$rtp_host = $to_host;
+			$rtp_port = $to_port;	
+			# Assuming RTP contains both discounting and zoning pipeline
+			print "---DEBUG--- check_cm_connections: to_host=$to_host, to_port=$to_port\n"
+if $debug;
+			push @required_lines, "2:- cm em_pointer discounting ip = $to_host $to_port";
+			push @required_lines, "2:- cm em_pointer zoning ip = $to_host $to_port";
+		}
+		elsif ($to_process_name =~ /^TIMOS/i) {
+			# I need to make sure the primary is listed first.  TO DO *** ???
+			$dmt_host = $to_host;
+			$dmt_port = $to_port;
+			my @schemas = &get_db_number_from_connections($process_connection);
+			foreach $db_number (@schemas) {
+				print "---DEBUG--- check_cm_connections: to_host=$to_host, to_port=$to_port\n" if $debug;
+				push @required_lines, "2:- cm dm_pointer $db_number ip = $to_host $to_port";
+			}
+		}
+		else {
+			# What kind of connection is this?
+			print STDERR "***ERROR*** check_cm_connections: Unhandled connection $process_connection\n";
+			exit 1;
+		}
+	}  # end of foreach $process_connection (@process_connections)
+	$well_known_subdir = 'cm';  # In case I need to create a file
+	#
+	@replacement_info = (
+	);
+	&check_pin_conf_file();
+} # end of check_cm_pin_conf
+
+#--------------------------------------------------------------------------------
+#
+# check_dmo_pin_conf
+#
+# Checks and optionally updates the DM_ORACLE's pin.conf file
+#
+#--------------------------------------------------------------------------------
+sub check_dmo_pin_conf {
+	print "---DEBUG--- entering check_dmo_pin_conf: process_name=$process_name\n" if $debug;
+	print "Checking File: $pin_conf\n";
+	#
+	# Set @require_lines for this pin.conf file.
+	# See the function "create_required_info_for_pin_conf" for
+	# the format of this data.
+	#
+	@required_lines = (
+'2:- dm database_request_timeout_duration = 30',
+'2:- dm dm_port = $process_port',
+"3:- dm dm_logfile = \/dm_oracle\/dm_oracle.pinlog \/$process_subdir\/$process_subdir.pinlog",
+	);
+	# I don't need to call check_pin_conf_connections since DM_ORACLE doesn't connect to another process.
+	$well_known_subdir = 'dm_oracle';  # In case I need to create a file
+	#
+	@replacement_info = (
+	);
+	&check_pin_conf_file();
+} # end of check_dmo_pin_conf
+
+#--------------------------------------------------------------------------------
+#
+# check_dmt_pin_conf
+#
+# Checks and optionally updates the TIMOS's pin.conf file
+#
+#--------------------------------------------------------------------------------
+sub check_dmt_pin_conf {
+	print "---DEBUG--- entering check_dmt_pin_conf: process_name=$process_name\n" if $debug;
+	print "Checking File: $pin_conf\n";
+	#
+	# Set @require_lines for this pin.conf file.
+	# See the function "create_required_info_for_pin_conf" for
+	# the format of this data.
+	#
+	@required_lines = (
+	);
+	#
+	# Add cm_ptr lines based upon the defined CMs on this host
+	# *** TO DO *** Is this right ???
+	#
+	&check_pin_conf_connections('nap cm_ptr', 'CM', 'dm_timos');
+} # end of check_dmt_pin_conf
+
+#--------------------------------------------------------------------------------
+#
+# check_dmt_reg_file
+#
+# Checks and optionally updates the TIMOS's Registry file
+#
+#--------------------------------------------------------------------------------
+sub check_dmt_reg_file {
+	print "---DEBUG--- entering check_dmt_reg_file: process_name=$process_name\n" if $debug;
+	print "Checking File: $reg_file\n";
+	#
+	# @require_lines format for registry files
+	# -------------------------------------------------------
+	# <absolute clause name> = <value>
+	# where
+	#   <absolute clause name> is .composed of the name of each level/clause
+	#      separated with periods.
+	@required_lines = (
+"2:timosMgr.DataMigrator.NumberOfStartupThreads = 1",  # TO get arround a bug *** DELETE ME LATER *** ???
+"2:timosMgr.DataMigrator.NumberOfActiveThreads = 1",   # TO get arround a bug *** DELETE ME LATER *** ???
+'2:timosMgr.TransactionController.TransactionCoordinator.StorageManagers.ReferenceObjectCacheManager.MemoryManager.Segment.Type = AnonMMap',
+"2:timosMgr.TransactionController.TransactionCoordinator.StorageManagers.ReferenceObjectCacheManager.MemoryManager.Segment.Size = 1671088640", # Size based upon 10K accounts.
+"2:timosMgr.PinLogFile = $pin_home/$process_subdir/$process_name.pinlog",
+"2:timosMgr.Semaphore.FilePath = $pin_home/sys/$process_subdir",
+"2:timosMgr.Web.WebServerPort = $process_web_port",
+"2:timosMgr.Web.FileServerAddress = $pin_home/sys/$process_subdir",
+'2:timosMgr.TimosDataManager.DMGatewayPool.NetworkListener.RequestExpirationTime = 60',
+"2:timosMgr.LogServer.Module.ITO.FilePath = $pin_log_dir/$process_subdir/",
+"2:timosMgr.LogServer.Module.ITO.FileName = $process_name",
+"2:timosMgr.LogServer.Module.ITO.ProcessName = $process_name",
+	);
+        if (&is_a_primary_process($process_name)) {
+        	$temp_line = "2:timosMgr.HighAvailabilityManager.Role = Primary";
+                push @required_lines, $temp_line;
+        }
+        else {
+                $temp_line = "2:timosMgr.HighAvailabilityManager.Role = Secondary";
+                push @required_lines, $temp_line;
+        }
+
+	#
+	# Get the connection info for this process
+	@process_connections = &get_connections_from_process($process_name);
+	print "---DEBUG--- check_dmt_reg_file: process=$process_name, connections from=@process_connections\n" if $debug;
+	#
+	# Get the connections - hosts and ports
+	#
+	my $found_dmo = 0;
+	my $index = '';
+	$dmt_partner_host = '';
+	$dmt_partner_port = '';
+	#
+	# Get HA pair - other side (partner)
+	#
+	my $ha_partner_process_name = &get_partner_ha_pair_name($process_name);
+	my $ha_partner_installation = $process_entities{$ha_partner_process_name}->{'installation'};
+	$dmt_partner_host = $installations{$ha_partner_installation}->{'host'};
+	$dmt_partner_port = $process_entities{$ha_partner_process_name}->{'port'};
+	print "---DEBUG--- setting TIMOS partner info: ha_partner_process_name=$ha_partner_process_name, ha_partner_installation=$ha_partner_installation, dmt_partner_host=$dmt_partner_host, dmt_partner_port=$dmt_partner_port\n" if $debug;
+	$temp_line = "2:timosMgr.HighAvailabilityManager.ConnectionConfigurations.Peer.Name = $dmt_partner_host";
+	print "---DEBUG--- check_dmt_reg_file: adding required line: $temp_line\n" if $debug;
+	push @required_lines, $temp_line;
+	$temp_line = "2:timosMgr.HighAvailabilityManager.ConnectionConfigurations.Peer.Port = $dmt_partner_port";
+	print "---DEBUG--- check_dmt_reg_file: adding required line: $temp_line\n" if $debug;
+	push @required_lines, $temp_line;
+	#
+	# Check the connections and set values
+	#
+	foreach $process_connection (@process_connections) {
+		print "---DEBUG--- checking connection $process_connection\n" if $debug;
+		# Get the "to" entity.
+		$to_process_name = $process_connection;
+		$to_process_name =~ s/$process_name$conn_key_separator//;
+		$to_installation = $process_entities{$to_process_name}->{'installation'};
+		$to_host = $installations{$to_installation}->{'host'};
+		$to_port = $process_entities{$to_process_name}->{'port'};
+		print "---DEBUG--- checking connection: to_process_name=$to_process_name, to_installation=$to_installation, to_host=$to_host, to_port=$to_port\n" if $debug;
+		# Check if this is to a DM_ORACLE
+		if ($to_process_name =~ /^DM_ORACLE/i) {
+			# Can have more than one
+			$temp_line = "2:timosMgr.HighAvailabilityManager.ConnectionConfigurations.Server$index.Name = $to_host";
+			print "---DEBUG--- check_dmt_reg_file: adding required line: $temp_line\n" if $debug;
+			push @required_lines, $temp_line;
+			$temp_line = "2:timosMgr.HighAvailabilityManager.ConnectionConfigurations.Server$index.Port = $to_port";
+			print "---DEBUG--- check_dmt_reg_file: adding required line: $temp_line\n" if $debug;
+			push @required_lines, $temp_line;
+			# Save these for error checking purposes.
+			$found_dmo = 1;
+			# This is performed to update the Server block in the default registry, and use a number index afterwards
+			if ($index eq '') {
+				$index = 1;
+			}
+			else {
+				$index++;
+			}
+		}
+		else {
+			# What kind of connection is this?
+		}
+	}  # end of foreach $process_connection (@process_connections)
+	# Make sure I found a DM_ORACLE connection
+	if (!$found_dmo) {
+		print STDERR "***ERROR*** check_dmt_reg_file: Didn't find a connection from $process_name to a DM_ORACLE\n";
+		exit 1;
+	}
+	$well_known_subdir = 'dm_timos';
+	#
+# The following useed to have:
+# 'dm_timos', $process_subdir,
+# But this should be avoided.  The preferred method is to use @required_lines to specify exactly
+# which lines should be changed and how.  Note that the $process_name and $process_subdir can
+# both be used to replace dm_timos, so the context is important.
+	@replacement_info = (
+	);
+	&check_registry_file();
+} # end of check_dmt_reg_file
+
+#--------------------------------------------------------------------------------
+#
+# check_pin_conf_connections
+#
+# Checks and optionally updates the a pin.conf file with port information
+# from the connects from the current process to another entity.
+#
+# Parameters:
+# app_attr_port_name_arg - The name of the application and the name of
+#                      attribute that specifies the port to use.  These
+#                      must be separated by a single space.
+#                      Example for testnap, 'nap cm_ptr'.
+#
+# connection_process_name_arg - The name of process to which this process
+#                      connects.  To match any process, specify '.'.
+#                      Example for testnap, 'CM'.
+#
+# well_known_subdir_arg - The name of directory, relative to PIN_HOME,
+#                      where the installer creates the pin.conf file.
+#                      This is needed in case a new directory needs to
+#                      be created for this process.
+#                      Example for testnap, 'sys/test'.
+#
+# Before calling, you must set:
+#   @required_lines  - This contains any lines that need to exist in the
+#                      pin.conf file.
+#
+#   $process_name    - The name of the process that is being configured.
+#
+#   $process_port    - The port of the process that is being configured.
+#
+#--------------------------------------------------------------------------------
+sub check_pin_conf_connections {
+	my ($app_attr_port_name_arg, $connection_process_name_arg,$well_known_subdir_arg) = @_;
+	print "---DEBUG--- entering check_pin_conf_connections: process_name=$process_name, app_attr_port_name_arg=$app_attr_port_name_arg, connection_process_name_arg=$connection_process_name_arg, well_known_subdir_arg=$well_known_subdir_arg\n" if $debug;
+	print "Checking File: $pin_conf\n";
+	#
+	$pin_log_file = "$pin_log_dir/$process_subdir/$process_subdir.pinlog";  ##  ????  IS THIS RIGHT ???
+	#
+	# Check the connections and set values
+	#
+	foreach $process_connection (@process_connections) {
+		print "---DEBUG--- check_pin_conf_connections: checking connection $process_connection\n" if $debug;
+		# I only care about the connections from the current process name
+		if ($process_connection !~ /^$process_name$conn_key_separator/) {
+			next;
+		}
+		# Get the "to" entity.
+		$to_process_name = $process_connection;
+		$to_process_name =~ s/$process_name$conn_key_separator//;
+		$to_installation = $process_entities{$to_process_name}->{'installation'};
+		$to_host = $installations{$to_installation}->{'host'};
+		$to_port = $process_entities{$to_process_name}->{'port'};
+		print "---DEBUG--- check_pin_conf_connections: checking connection: to_process_name=$to_process_name, to_installation=$to_installation, to_host=$to_host, to_port=$to_port\n" if $debug;
+		# Check if this is a match
+		if ($to_process_name =~ /^$connection_process_name_arg/i) {
+			$process_port = $process_entities{$process_name}->{'port'};
+			$temp_line = "2:- $app_attr_port_name_arg = ip $to_host $to_port";
+			print "---DEBUG--- check_pin_conf_connections: adding $temp_line\n" if $debug;
+			push @required_lines, $temp_line;
+		}
+	}  # end of foreach $process_connection (@process_connections)
+	$well_known_subdir = $well_known_subdir_arg;  # In case I need to create a file
+	#
+	@replacement_info = (
+	);
+	&check_pin_conf_file();
+} # end of check_pin_conf_connections
+
+#--------------------------------------------------------------------------------
+#
+# check_in_simulator_pin_conf    *** TO DO FIX THIS (like testnap ??? )
+#
+# Checks and optionally updates the CM's pin.conf file
+#
+#--------------------------------------------------------------------------------
+sub check_in_simulator_pin_conf {
+	print "---DEBUG--- entering check_in_simulator_pin_conf: process_name=$process_name\n" if $debug;
+	print "Checking File: $pin_conf\n";
+	@required_lines = (
+	);
+	&check_pin_conf_connections('pin_in_simulator gw_pointer', '.', 'apps/pin_in_simulator');
+} # end of check_in_simulator_pin_conf
+
+#--------------------------------------------------------------------------------
+#
+# check_pin_conf_data
+#
+# Checks and optionally updates a pin.conf file
+# Values to check/update/add are specified in @required_info
+#
+#--------------------------------------------------------------------------------
+sub check_pin_conf_data {
+	#
+	# Check to see if this file has the specified values set
+	#
+	@new_file_lines = ();
+	my $file_needs_changes = 0;
+	foreach $line (@file_lines) {
+		$orig_line = $line;
+		if ($line =~ /^\s*#/) {
+			# skip comment lines
+			push @new_file_lines, $line;
+			next;
+		}
+		if ($line =~ /^\s*$/) {
+			# skip blank lines
+			push @new_file_lines, $line;
+			next;
+		}
+		# Get rid of leading/trailing spaces
+		$line =~ s/^\s+//;
+		$line =~ s/\s+$//;
+		$line =~ s/\t/ /g;   # Get rid of tabs
+		$line =~ s/\s\s/ /g;   # Get rid of multiple spaces
+		#
+		print "---DEBUG--- check_pin_conf_data: line=$line\n" if $debug;
+		#
+		# See if I have the keyword, value:
+		#
+		my $type;
+		my $found_it = 0;  # did we find this line in @required_info
+		printf("---DEBUG--- check_pin_conf_data: number of required_info entries=%s\n", scalar @required_info) if $debug;
+		foreach $href (@required_info) {
+			if ($href->{'found'} == 1) {
+				next;
+			}
+			$keyword = $href->{'keyword'};
+			$type = $href->{'type'};
+			$value = $href->{'value'};
+			print "---DEBUG--- check_pin_conf_data: href=(found=$href->{'found'}, type=$type, keyword=$keyword, value=$value\n" if $debug;
+			if ($type == 1) {
+				# Check the keyword
+				if ($line =~ /$keyword/) {
+					# This is OK
+					push @new_file_lines, $orig_line;
+					$href->{'found'} = 1;
+					$found_it = 1;
+					last; # don't need to do any more required_info
+				}
+			}
+			elsif ($type == 2) {
+				# Check the keyword and value
+				if ($line =~ /(.*)$keyword/) {
+					my $prefix = $1;
+					$found_it = 1;
+					print "---DEBUG--- type 2: found_it: prefix=\"$prefix\"\n" if $debug;
+					if ($line =~ /$keyword $value/) {
+						# This line doesn't need changing
+						push @new_file_lines, $orig_line;
+						$href->{'found'} = 1;
+					}
+					else {
+						# need to change it.
+						$href->{'found'} = 1;
+						$file_needs_changes = 1;
+						# If keyword starts with a ^ or ends with a $, then remove
+						# these special characters from "keyword"
+						my $new_keyword = $keyword;
+						$new_keyword =~ s/^\^//;
+						$new_keyword =~ s/\$$//;
+						if ($new_keyword ne $keyword) {
+							print "---DEBUG--- new_keyword=$new_keyword, keyword=$keyword\n" if $debug;
+						}
+						$temp_line = "$prefix$new_keyword $value";
+						push @new_file_lines, "$temp_line\n";
+						if ($test_mode) {
+							print "---TEST --- File: $pin_conf\n            Replacement needed\n            replace  \"$line\"\n               with  \"$temp_line\"\n";
+						}
+						else {
+							print "File: $pin_conf\n            Replacement done\n            replaced  \"$line\"\n                with  \"$temp_line\"\n" if $debug;
+						}
+					}
+					last; # don't need to do any more required_info
+				}
+			}
+			elsif ($type == 3) {
+				# Check the keyword and value
+				if ($line =~ /(.*)$keyword/) {
+					my $prefix = $1;
+					$found_it = 1;
+					print "---DEBUG--- type 3: found_it: prefix=\"$prefix\", keyword=$keyword\n" if $debug;
+					@words = split(/\s+/, $value);
+					if (scalar @words != 2) {
+						print STDERR "***ERROR*** check_pin_conf_data: Coding error. Didn't find 2 words in value.\n";
+						exit 1;
+					}
+					$temp_line = $orig_line;
+					$temp_line =~ s/$words[0]/$words[1]/g;
+					if ($temp_line eq $orig_line) {
+						# This is OK
+						push @new_file_lines, $orig_line;
+						$href->{'found'} = 1;
+					}
+					else {
+						# need to change it.
+						$href->{'found'} = 1;
+						$file_needs_changes = 1;
+						push @new_file_lines, $temp_line;
+						print "---DEBUG--- word_0=\"$words[0]\", word_1=\"$words[1]\"\n" if $debug;
+						if ($test_mode) {
+							print "---TEST --- File: $pin_conf\n            Replacement needed\n            replace  \"$orig_line\"\n               with  \"$temp_line\"\n";
+						}
+						else {
+							print "File: $pin_conf\n            Replacement done\n            replaced  \"$orig_line\"\n                with  \"$temp_line\"\n" if $debug;
+						}
+					}
+					last; # don't need to do any more required_info
+				}
+			}
+			elsif ($type == 4) {
+				# Check the keyword and value
+				if ($line =~ /(.*)$keyword/) {
+					my $prefix = $1;
+					$found_it = 1;
+					print "---DEBUG--- type 4: found_it: prefix=\"$prefix\"\n" if $debug;
+					if ($line =~ /$keyword$value/) {
+						# This line doesn't need changing
+						push @new_file_lines, $orig_line;
+						$href->{'found'} = 1;
+					}
+					else {
+						# need to change it.
+						$href->{'found'} = 1;
+						$file_needs_changes = 1;
+						# If keyword starts with a ^ or ends with a $, then remove
+						# these special characters from "keyword"
+						my $new_keyword = $keyword;
+						$new_keyword =~ s/^\^//;
+						$new_keyword =~ s/\$$//;
+						if ($new_keyword ne $keyword) {
+							print "---DEBUG--- new_keyword=$new_keyword, keyword=$keyword\n" if $debug;
+						}
+						$temp_line = "$prefix$new_keyword$value";
+						push @new_file_lines, "$temp_line\n";
+						if ($test_mode) {
+							print "---TEST --- File: $pin_conf\n            Replacement needed\n            replace  \"$line\"\n               with  \"$temp_line\"\n";
+						}
+						else {
+							print "File: $pin_conf\n            Replacement done\n            replaced  \"$line\"\n                with  \"$temp_line\"\n" if $debug;
+						}
+					}
+					last; # don't need to do any more required_info
+				}
+			}
+			else {
+				print STDERR "***ERROR*** check_pin_conf_data: Coding error. Unknown type ($type). Keyword=$keyword, Value=$value\n";
+				exit 1;
+			}
+		}  # end of foreach $href (@required_info)
+		if (!$found_it) {
+			push @new_file_lines, $orig_line;
+		}
+	}  # end of foreach $line (@file_lines)
+	#
+	# Add lines that were not found
+	#
+	foreach $href (@required_info) {
+		if ($href->{'found'} == 1) {
+			next;
+		}
+		$keyword = $href->{'keyword'};
+		$type = $href->{'type'};
+		$value = $href->{'value'};
+		$file_needs_changes = 1;
+		$temp_line = "$keyword $value";
+		push @new_file_lines, "$temp_line\n";
+		if ($test_mode) {
+			print "---TEST --- File: $pin_conf\n            Addition needed  \"$temp_line\"\n";
+		}
+		else {
+			print "File: $pin_conf\n            Addition done  \"$temp_line\"\n" if $debug;
+		}
+	}
+	#
+	# Check if the file needs to be changed
+	#
+	if (!$file_needs_changes) {
+		print "File $pin_conf is OK. No changes needed for this file.\n" if $debug;
+	}
+	else {
+		if ($test_mode) {
+			print "---TEST --- File $pin_conf not updated\n" if $debug;
+		}
+		else {
+			print "File $pin_conf is being updated\n" if $debug;
+			$files_updated += 1;
+			open (OUTPUT,"> $pin_conf") || die ("Unable to open output file: $pin_conf: $!");
+			foreach $line (@new_file_lines) {
+				print OUTPUT $line;
+			}
+			close (OUTPUT);
+			print "File $pin_conf has been updated\n" if $debug;
+		}
+	} # end of else clause of if (!$file_needs_changes)
+}  # end of check_pin_conf_data
+
+#--------------------------------------------------------------------------------
+#
+# check_pin_conf_file
+#
+# Checks and optionally updates a pin.conf file.
+# This is called after setting up "@required_lines" values.
+#
+#--------------------------------------------------------------------------------
+sub check_pin_conf_file {
+	if ($restore_mode) {
+		if (!-f $pin_orig_conf) {
+			print "---WARN --- Can't restore $pin_conf because $pin_orig_conf doesn't exist.\n";
+			return;
+		}
+		if ($test_mode) {
+			print "---TEST --- Need to restore backup file: $pin_conf\n";
+		}
+		else {
+			print "Restoring file: $pin_conf\n";
+			if (!File::Copy::copy($pin_orig_conf, $pin_conf)) {
+				print STDERR "***ERROR*** copy error: from=$pin_orig_conf, to=$pin_conf, err=$!\n";
+				exit 1;
+			}
+		}
+		return;
+	}
+	if (!-f $pin_conf) {
+		if ($create_dirs) {
+			if ($test_mode) {
+				print "---TEST --- Need to create directory for the file: $pin_conf\n";
+			}
+			else {
+				print "***NOTE *** Creating directory for the file $pin_conf for $process_name\n" if $debug;
+				# Make the directory
+				&mkdir_for_file($pin_conf);
+				# copy pin.conf from well-known location
+				my $from_file = "$sys_directory/$well_known_subdir/pin.conf";
+				if (!File::Copy::copy($from_file, $pin_conf)) {
+					print STDERR "***ERROR*** copy error: from=$from_file, to=$pin_conf, err=$!\n";
+					exit 1;
+				}
+				# See if the "orig" file is there.  If so, copy it.
+				if (!-f $pin_orig_conf) {
+					if (!File::Copy::copy($pin_conf, $pin_orig_conf)) {
+						print STDERR "***ERROR*** copy error: from=$pin_conf, to=$pin_orig_conf, err=$!\n";
+						exit 1;
+					}
+				}
+			}  # end of if $endTest ...
+		}
+	}
+	if (!-f $pin_conf) {
+		$files_missing += 1;
+		print "***WARN *** Unable to find the pin.conf file for $process_name\n";
+		print "            Looking for $pin_conf\n";
+		print "            Specify the -create_dirs option if you want this directory created.\n";
+	}
+	else {
+		# Check to make sure the backup file (pin_orig.conf) exists
+		if (!-f $pin_orig_conf) {
+			if ($test_mode) {
+				print "---TEST --- Need to create backup file: $pin_orig_conf\n";
+			}
+			else {
+				print "Creating backup file: $pin_orig_conf\n";
+				if (!File::Copy::copy($pin_conf, $pin_orig_conf)) {
+					print STDERR "***ERROR*** copy error: from=$pin_conf, to=$pin_orig_conf, err=$!\n";
+					exit 1;
+				}
+			}
+		}
+		#
+		# Always start from the pin_orig.conf file
+		#
+		if (-f $pin_orig_conf && !$test_mode) {
+			if (!File::Copy::copy($pin_orig_conf, $pin_conf)) {
+				print STDERR "***ERROR*** copy error: from=$pin_orig_conf, to=$pin_conf, err=$!\n";
+				exit 1;
+			}
+		}
+		$files_found += 1;
+		# Read in the pin.conf file
+		&read_file($pin_conf);
+		#
+		&create_required_info_for_pin_conf();
+		#
+		# Do the real work
+		#
+		&check_pin_conf_data();
+		
+		# Make this optional for testnap.
+		if ($pin_conf =~ /sys\/test\/pin\.conf$/) {
+			$pin_log_file = '';
+		}
+		else {
+			$pin_log_file = "$pin_log_dir/$process_subdir/$process_subdir.pinlog";
+		}
+		#
+		# Check if the pinlog directory exists
+		#
+		if ($pin_log_file ne '' && !-f $pin_log_file) {  # FIX THIS *** TO DO ***
+			if ($create_dirs) {
+				if ($test_mode) {
+					print "---TEST --- Need to create directory for the file: $pin_log_file\n";
+				}
+				else {
+					print "***NOTE *** Creating directory for the file $pin_log_file for $process_name\n" if $debug;
+					# Make the directory
+					&mkdir_for_file($pin_log_file);
+				}
+			}
+		}
+	} # end of else clause of if (!-f $pin_conf)
+} # end of check_pin_conf_file
+
+#--------------------------------------------------------------------------------
+#
+# check_registry_data
+#
+# Checks and optionally updates a registry file
+# Values to check/update/add are specified in @required_info
+#
+#--------------------------------------------------------------------------------
+sub check_registry_data {
+	#
+	# Check to see if this file has the specified values set
+	#
+	@new_file_lines = ();
+	my $found_database_request_timeout_duration = 0;
+	my $found_RequestExpirationTime = 0;
+	my $found_dm_port = 0;
+	my $file_needs_changes = 0;
+	my @clauses = (); # This will indicate what clause I am in
+	my $previous_word = '';
+	my $comment_on = 0;
+	my $first_comment = 0;
+	@words = ();
+	foreach $line (@file_lines) {
+                $orig_line = $line;
+                if ($line =~ /^\s*#/) {
+                        # skip comment lines
+                        print "---DEBUG--- check_registry_data: new_files_line new line added (1): $line\n" if $debug;
+                        push @new_file_lines, $line;
+                        next;
+                }
+                if ($line =~ /^\s*$/) {
+                        # skip blank lines
+                        print "---DEBUG--- check_registry_data: new_files_line new line added (2): $line\n" if $debug;
+                        push @new_file_lines, $line;
+                        next;
+                }
+                # Get rid of leading/trailing spaces
+                $line =~ s/^(\s+)//;
+                $indent = $1;  # Save the indent
+                $line =~ s/\s+$//;
+                $line =~ s/\t/ /g;   # Get rid of tabs
+                $line =~ s/\s\s/ /g;   # Get rid of multiple spaces
+                @words = split(/[ \n]+/, $line);
+		foreach $word (@words) {
+			if ($previous_word eq '') {
+				$previous_word = $word;
+			}
+			# Is it a starting brace?
+			if ($word eq "\{")  # }  for editor matching purposes
+			{
+				push @clauses, $previous_word;
+				$clause = join('.', @clauses);
+				print "---DEBUG--- check_registry_data: Found {, clause=$clause\n" if $debug; #  for editor matching purposes }
+				foreach $temp_clause (@comment_lines) {
+					if ($clause eq $temp_clause) {
+						$comment_on = 1;
+						$first_comment = 1;
+					}
+				}	
+			}
+			elsif ($word eq "\}") {
+				pop @clauses;
+				$clause = join('.', @clauses);
+				print "---DEBUG--- check_registry_data: Found }, clause=$clause\n" if $debug;
+				foreach $temp_clause (@comment_lines) {
+					if ($clause ne $temp_clause) {
+						$comment_on = 0;
+					}
+				}
+			}
+                        else {
+                                $previous_word = $word;
+                        }
+                }
+		if ($comment_on && !$first_comment) {
+			$line = '#'.$orig_line;
+		}
+		else {
+			$line = $orig_line;
+		}
+		push @new_file_lines, $line;
+		$first_comment = 0;
+	}
+	@file_lines = @new_file_lines;
+	@new_file_lines = ();	
+	@clauses = ();
+	foreach $line (@file_lines) {
+		$orig_line = $line;
+		if ($line =~ /^\s*#/) {
+			# skip comment lines
+			print "---DEBUG--- check_registry_data: new_files_line new line added (1): $line\n" if $debug;
+			push @new_file_lines, $line;
+			next;
+		}
+		if ($line =~ /^\s*$/) {
+			# skip blank lines
+			print "---DEBUG--- check_registry_data: new_files_line new line added (2): $line\n" if $debug;
+			push @new_file_lines, $line;
+			next;
+		}
+		# Get rid of leading/trailing spaces
+		$line =~ s/^(\s+)//;
+		$indent = $1;  # Save the indent
+		$line =~ s/\s+$//;
+		$line =~ s/\t/ /g;   # Get rid of tabs
+		$line =~ s/\s\s/ /g;   # Get rid of multiple spaces
+		@words = split(/[ \n]+/, $line);
+		printf("---DEBUG--- check_registry_data: Number of words found=%s, words=@words\n", scalar @words) if $debug;
+		$keyword = '';
+		$value = '';
+		$save_value = 0;
+		foreach $word (@words) {
+			if ($previous_word eq '') {
+				$previous_word = $word;
+			}
+			if ($save_value) {
+				if ($value eq '') {
+					$value = $word;
+				}
+				else {
+					$value = "$value $word";
+				}
+			}
+			# Is it a starting brace?
+			if ($word eq "\{")  # }  for editor matching purposes
+			{
+				push @clauses, $previous_word;
+				$clause = join('.', @clauses);
+				print "---DEBUG--- check_registry_data: Found {, clause=$clause\n" if $debug; #  for editor matching purposes }
+			}
+			# Is it an ending brace?
+			# {  for editor matching purposes
+			elsif ($word eq "\}") {
+				# I need to check if I was looking for something in this clause.
+				# If I was and I didn't find it, then I need to add it before I
+				# leave this clause.
+				# Now this is where it gets tricky.  I also need to check to see
+				# if I am leaving the parent clause for this clause. Actually,
+				# any ancestor clause.
+				foreach $href (@required_info) {
+					if ($href->{'found'} == 1) {
+						next;
+					}
+					$temp_clause = $href->{'clause'};
+					print "---DEBUG--- check_registry_data: found end-brace: temp_clause=$temp_clause\n" if $debug;
+					# Check the easy case: an exact match
+					if ($clause eq $temp_clause) {
+						# I need to add it
+						$file_needs_changes = 1;
+						$href->{'found'} = 1;
+						# Figure out how many levels are in $clause
+						@words = split(/\./, $clause);
+						$levels = scalar (@words);
+						$indent = $indent_per_level x $levels;
+						$temp_line = "$indent$href->{'keyword'} = $href->{'value'}";
+						print "---DEBUG--- check_registry_data: new_files_line new line added (3): $temp_line\n" if $debug;
+						push @new_file_lines, "$temp_line\n";
+						if ($test_mode) {
+							print "---TEST --- File: $reg_file\n            Addition needed in $clause\n            add  \"$temp_line\"\n";
+						}
+						else {
+							print "File: $reg_file\n            Addition done in $clause\n            added  \"$temp_line\"\n" if $debug;
+						}
+					}
+					# Check for an ancestor
+					# example:
+					# temp_clause=timosMgr.HighAvailabilityManager.ConnectionConfigurations.Server2
+					#      clause=timosMgr.HighAvailabilityManager.ConnectionConfigurations
+					elsif ($temp_clause =~ /^$clause\.(.*)/) {
+						my $remaining_clauses = $1;
+						print "---DEBUG--- check_registry_data: found ancestor end-brace: remaining_clauses=$remaining_clauses\n" if $debug;
+						# Figure out how many levels are in $clause
+						@words = split(/\./, $clause);
+						$levels = scalar (@words);
+						$indent = $indent_per_level x $levels;
+						my $current_clause = $clause;
+						#
+						# I need to add the new clauses
+						@words = split(/\./, $remaining_clauses);
+						$temp_line = '';
+						my $temp_line_2 = '';  # this will hold the trailing end-braces
+						foreach $word (@words) {
+							$temp_line .= "$indent$word\n$indent\{\n";   # } for editor matching purposes
+							# { for editor matching purposes
+							$temp_line_2 = "$indent\}\n$temp_line_2";
+							#
+							# Now there may be more required_lines for this 
+							# clause that need to be added. Go through them
+							# all and add only the exact matches.
+							# NOTE: This will also add the one that started
+							# this logic, so don't add it again.
+							#
+							$current_clause = $current_clause . '.' . $word;
+							print "---DEBUG--- check_registry_data: current_clause=$current_clause\n" if $debug;
+							my $href2 = {};
+							foreach $href2 (@required_info) {
+								if ($href2->{'found'} == 1) {
+									next;
+								}
+								if ($current_clause ne $href2->{'clause'}) {
+									next;
+								}
+								$href2->{'found'} = 1;
+								$temp_line .= "$indent$indent_per_level$href2->{'keyword'} = $href2->{'value'}\n";
+							}
+							$indent .= $indent_per_level;
+						}
+						$file_needs_changes = 1;
+						# Is it possible to not have processed this entry?
+						if ($href->{'found'} == 0) {
+							$href->{'found'} = 1;
+							$temp_line .= "$indent$indent_per_level$href->{'keyword'} = $href->{'value'}\n$temp_line_2";
+						}
+						else {
+							$temp_line .= "$temp_line_2";
+						}
+						print "---DEBUG--- check_registry_data: new_files_line new line added (4): $temp_line\n" if $debug;
+						push @new_file_lines, "$temp_line\n";
+						if ($test_mode) {
+							print "---TEST --- File: $reg_file\n            Addition needed in $clause\n            add  \"\n$temp_line\"\n";
+						}
+						else {
+							print "File: $reg_file\n            Addition done in $clause\n            added  \"\n$temp_line\"\n" if $debug;
+						}
+					}
+				} # end of foreach $href (@required_info)
+				pop @clauses;
+				$clause = join('.', @clauses);
+				print "---DEBUG--- check_registry_data: Found }, clause=$clause\n" if $debug;
+			}
+			elsif ($word eq '=') {
+				$save_value = 1;
+				$keyword = $previous_word;
+				print "---DEBUG--- check_registry_data: Found =, keyword=$keyword\n" if $debug;
+			}
+			else {
+				$previous_word = $word;
+			}
+		}
+		if ($value ne '') {
+			print "---DEBUG--- check_registry_data: Found clause=$clause, keyword=$keyword, value=$value\n" if $debug;
+		}
+		#
+		# See if I have the clause, keyword, value:
+		#
+		my $line_added = 0;
+		my $match_found = 0;
+		foreach $href (@required_info) {
+			if ($href->{'found'} == 1) {
+				next;
+			}
+			$temp_clause = $href->{'clause'};
+			print "---DEBUG--- check_registry_data: temp_clause=$temp_clause\n" if $debug;
+			if ($clause eq $temp_clause) {
+				# Check the keyword/value
+				if ($keyword eq $href->{'keyword'}) {
+					$match_found = 1;
+					if ($value eq $href->{'value'}) {
+						# This is OK
+						print "---DEBUG--- check_registry_data: new_files_line new line added (5): $line\n" if $debug;
+						push @new_file_lines, $orig_line;
+						$href->{'found'} = 1;
+					}
+					else {
+						# need to change it.
+						$href->{'found'} = 1;
+						$file_needs_changes = 1;
+						$temp_line = "$indent$href->{'keyword'} = $href->{'value'}";
+						print "---DEBUG--- check_registry_data: new_files_line new line added (6): $temp_line\n" if $debug;
+						push @new_file_lines, "$temp_line\n";
+						chomp ($orig_line);  # Get rid of end-of-line.
+						if ($test_mode) {
+							print "---TEST --- File: $reg_file\n            Replacement needed in $clause\n            replace  \"$orig_line\"\n               with  \"$temp_line\"\n";
+						}
+						else {
+							print "File: $reg_file\n            Replacement done in $clause\n            replaced  \"$orig_line\"\n                with  \"$temp_line\"\n" if $debug;
+						}
+					}
+					$line_added = 1;
+					last; # don't need to do any more required_info
+				}
+			}
+		}  # end of foreach $href (@required_info)
+		if (!$match_found) {
+			# See if this line needs replacement done
+			if (scalar @replacement_info > 0) {
+				print "---DEBUG--- check_registry_data: calling check_replacement_info\n" if $debug;
+				$temp_line = &check_replacement_info($orig_line);
+				if ($temp_line ne $orig_line) {
+					$file_needs_changes = 1;
+					if ($test_mode) {
+						print "---TEST --- File: $reg_file\n            Replacement needed\n            replace  \"$orig_line\"\n               with  \"$temp_line\"\n";
+					}
+					else {
+						print "File: $reg_file\n            Replacement done\n            replaced  \"$orig_line\"\n                with  \"$temp_line\"\n" if $debug;
+					}
+					$line_added = 1;
+					push @new_file_lines, $temp_line;
+				}
+			}
+		}
+		if (!$line_added) {
+			print "---DEBUG--- check_registry_data: new_files_line new line added (7): $orig_line\n" if $debug;
+			push @new_file_lines, $orig_line;
+		}
+	}  # end of foreach $line (@file_lines)
+	#
+	# Check if the file needs to be changed
+	#
+	if (!$file_needs_changes) {
+		print "File $reg_file is OK. No changes needed for this file.\n" if $debug;
+	}
+	else {
+		if ($test_mode) {
+			print "---TEST --- File $reg_file not updated\n";
+		}
+		else {
+			print "File $reg_file is being updated\n" if $debug;
+			$files_updated += 1;
+			open (OUTPUT,"> $reg_file") || die ("Unable to open output file: $reg_file: $!");
+			foreach $line (@new_file_lines) {
+				print OUTPUT $line;
+			}
+			close (OUTPUT);
+			print "File $reg_file has been updated\n" if $debug;
+		}
+	} # end of else clause of if (!$file_needs_changes)
+} # end of check_registry_data
+
+#--------------------------------------------------------------------------------
+#
+# check_registry_file
+#
+# Checks and optionally updates a registry file.
+# This is called after setting up "@required_lines" values.
+#
+#--------------------------------------------------------------------------------
+sub check_registry_file {
+	if ($restore_mode) {
+		if (!-f $reg_orig_file) {
+			print "---WARN --- Can't restore $reg_file because $reg_orig_file doesn't exist.\n";
+			return;
+		}
+		if ($test_mode) {
+			print "---TEST --- Need to restore backup file: $reg_orig_file\n";
+		}
+		else {
+			print "Restoring file: $reg_orig_file\n";
+			if (!File::Copy::copy($reg_orig_file, $reg_file)) {
+				print STDERR "***ERROR*** copy error: from=$reg_orig_file, to=$reg_file, err=$!\n";
+				exit 1;
+			}
+		}
+		return;
+	}
+	# copy Registry from well-known location
+	@words = split(/\//, $reg_file);
+	my $temp_reg_file_name = pop @words;
+	my $temp_reg_dir = join '/', @words;
+	my $temp_orig_file_name = $temp_reg_file_name;
+	my $from_file;
+	my $temp_dir;
+	if ($temp_reg_file_name eq 'timos.reg') {
+		# TIMOS files are under sys/dm_timos directory
+		$temp_dir = "$sys_directory/$well_known_subdir";
+	}
+	else {
+		# AAA_GW files are under $ifw_home/ifw/conf directory
+		$temp_dir = "$sys_directory/$well_known_subdir";
+	}
+	if (!-f $reg_file) {
+		if ($create_dirs) {
+			if ($test_mode) {
+				print "---TEST --- Need to create directory for the file: $reg_file\n";
+			}
+			else {
+				print "***NOTE *** Creating directory for the file $reg_file for $process_name\n" if $debug;
+				# Make the directory
+				&mkdir_for_file($reg_file);
+				print "---DEBUG--- check_registry_file: temp_orig_file_name=$temp_orig_file_name, temp_dir=$temp_dir\n" if $debug;
+				$from_file = "$temp_dir/$temp_reg_file_name";
+				print "---DEBUG--- check_registry_file: copy from_file=$from_file, to=$reg_file\n" if $debug;
+				if (!File::Copy::copy($from_file, $reg_file)) {
+					print STDERR "***ERROR*** copy error: from=$from_file, to=$reg_file, err=$!\n";
+					exit 1;
+				}
+				# See if the "orig" file is there.  If so, copy it.
+				if (!-f $reg_orig_file) {
+					print "---DEBUG--- check_registry_file: copy from_file=$reg_file, to=$reg_orig_file\n" if $debug;
+					if (!File::Copy::copy($reg_file, $reg_orig_file)) {
+						print STDERR "***ERROR*** copy error: from=$reg_file, to=$reg_orig_file, err=$!\n";
+						exit 1;
+					}
+				}
+			}
+		}
+	}
+	if (!-f $reg_file) {
+		$files_missing += 1;
+		print "***WARN *** Unable to find the Registry file for $process_name\n";
+		print "            Looking for $reg_file\n";
+		print "            Specify the -create_dirs option if you want this directory created.\n";
+	}
+	else {
+		# Check to make sure the backup file exists
+		if (!-f $reg_orig_file) {
+			if ($test_mode) {
+				print "---TEST --- Need to create backup file: $reg_orig_file\n";
+			}
+			else {
+				print "Creating backup file: $reg_orig_file\n" if $debug;
+				if (!File::Copy::copy($reg_file, $reg_orig_file)) {
+					print STDERR "***ERROR*** copy error: from=$reg_file, to=$reg_orig_file, err=$!\n";
+					exit 1;
+				}
+			}
+		}
+		# For TIMOS, copy other files
+		if ($temp_reg_file_name eq 'timos.reg') {
+			#
+			# Check if "internalContainerDesc.dsc" is there.
+			#
+			my $temp_from_file = "$temp_dir/internalContainerDesc.dsc";
+			my $temp_to_file = "$temp_reg_dir/internalContainerDesc.dsc";
+			if (!-f $temp_to_file) {
+				print "---DEBUG--- check_registry_file: copy from_file=$temp_from_file, to=$temp_to_file\n" if $debug;
+				if ($test_mode) {
+					print "---TEST --- Need to create file: $temp_to_file\n";
+				}
+				else {
+					if (!File::Copy::copy($temp_from_file, $temp_to_file)) {
+						print STDERR "***ERROR*** copy error: from=$temp_from_file, to=$temp_to_file, err=$!\n";
+						exit 1;
+					}
+				}
+			}
+		}
+		#
+		# Always start from the original file
+		if (-f $reg_orig_file && !$test_mode) {
+			if (!File::Copy::copy($reg_orig_file, $reg_file)) {
+				print STDERR "***ERROR*** copy error: from=$reg_orig_file, to=$reg_file, err=$!\n";
+				exit 1;
+			}
+		}
+		$files_found += 1;
+		# Read in the registry file
+		&read_file($reg_file);
+		&create_required_info_for_registry();
+		#
+		# Do the real work
+		#
+		&check_registry_data();
+		#
+	} # end of else clause of if (!-f $reg_file)
+} # end of check_registry_file
+
+#--------------------------------------------------------------------------------
+#
+# check_replacement_info
+#
+# Checks the passed line to see if it needs changing beased upon the 
+# values in @replacement_info.
+# This returns the newly possibly-modified line.
+#
+#--------------------------------------------------------------------------------
+sub check_replacement_info {
+	my ($input_line_arg) = @_;
+	my $rref1;
+	my $rref2;
+	
+	my $line_before_replacement = $input_line_arg;
+	$rref1 = '';
+	$rref2 = '';
+	foreach $word (@replacement_info) {
+		if ($rref1 eq '') {
+			$rref1 = $word;
+			next;
+		}
+		$rref2 = $word;
+		print "---DEBUG--- check_replacement_info: rref1=$rref1, rref2=$rref2\n" if $debug;
+		$input_line_arg =~ s/$rref1/$rref2/g;
+		$rref1 = '';
+		$rref2 = '';
+	}
+	print "---DEBUG--- check_replacement_info: line_before_replacement=$line_before_replacement, line now=$input_line_arg\n" if $debug;
+	if ($line_before_replacement ne $input_line_arg) {
+		print "---DEBUG--- *** check_replacement_info: change made and detected\n";
+	}
+	return $input_line_arg;
+} # end of check_replacement_info
+
+#--------------------------------------------------------------------------------
+#
+# check_start_stop_scripts_data
+#
+# Checks and optionally updates a start/stop script file
+# Values to check/update/add are specified in @required_info
+#
+#--------------------------------------------------------------------------------
+sub check_start_stop_scripts_data {
+	#
+	# Check to see if this file has the specified values set
+	#
+	@new_file_lines = ();
+	my $file_needs_changes = 0;
+	foreach $line (@file_lines) {
+		$orig_line = $line;
+		if ($line =~ /^\s*#/) {
+			# skip comment lines
+			push @new_file_lines, $line;
+			next;
+		}
+		if ($line =~ /^\s*$/) {
+			# skip blank lines
+			push @new_file_lines, $line;
+			next;
+		}
+		# Get rid of leading/trailing spaces
+		$line =~ s/^\s+//;
+		$line =~ s/\s+$//;
+		$line =~ s/\t/ /g;   # Get rid of tabs
+		$line =~ s/\s\s/ /g;   # Get rid of multiple spaces
+		#
+		print "---DEBUG--- check_start_stop_scripts_data: line=$line\n" if $debug;
+		#
+		# See if I have the keyword, value:
+		#
+		my $type;
+		my $found_it = 0;  # did we find this line in @required_info
+		printf("---DEBUG--- check_start_stop_scripts_data: number of required_info entries=%s\n", scalar @required_info) if $debug;
+		foreach $href (@required_info) {
+			if ($href->{'found'} == 1) {
+				next;
+			}
+			$keyword = $href->{'keyword'};
+			$type = $href->{'type'};
+			$value = $href->{'value'};
+			print "---DEBUG--- check_start_stop_scripts_data: href=(found=$href->{'found'}, type=$type, keyword=$keyword, value=$value\n" if $debug;
+			if ($type == 1) {
+				# Check the keyword
+				if ($line =~ /$keyword/) {
+					# This is OK
+					push @new_file_lines, $orig_line;
+					$href->{'found'} = 1;
+					$found_it = 1;
+					last; # don't need to do any more required_info
+				}
+			}
+			elsif ($type == 2) {
+				# Check the keyword and value
+				if ($line =~ /(.*)$keyword/) {
+					my $prefix = $1;
+					$found_it = 1;
+					print "---DEBUG--- type 2: found_it: prefix=\"$prefix\"\n" if $debug;
+					if ($line =~ /$keyword $value/) {
+						# This is OK
+						push @new_file_lines, $orig_line;
+						$href->{'found'} = 1;
+					}
+					else {
+						# need to change it.
+						$href->{'found'} = 1;
+						$file_needs_changes = 1;
+						# If keyword starts with a ^ or ends with a $, then remove
+						# these special characters from "keyword"
+						my $new_keyword = $keyword;
+						$new_keyword =~ s/^\^//;
+						$new_keyword =~ s/\$$//;
+						if ($new_keyword ne $keyword) {
+							print "---DEBUG--- new_keyword=$new_keyword, keyword=$keyword\n" if $debug;
+						}
+						$temp_line = "$prefix$new_keyword $value";
+						push @new_file_lines, "$temp_line\n";
+						if ($test_mode) {
+							print "---TEST --- File: $script_file\n            Replacement needed\n            replace  \"$line\"\n               with  \"$temp_line\"\n";
+						}
+						else {
+							print "File: $script_file\n            Replacement done\n            replaced  \"$line\"\n                with  \"$temp_line\"\n" if $debug;
+						}
+					}
+					last; # don't need to do any more required_info
+				}
+			}
+			elsif ($type == 3) {
+				# Check the keyword and value
+				if ($line =~ /(.*)$keyword/) {
+					my $prefix = $1;
+					$found_it = 1;
+					print "---DEBUG--- type 3: found_it: prefix=\"$prefix\", keyword=$keyword\n" if $debug;
+					@words = split(/\s+/, $value);
+					if (scalar @words != 2) {
+						print STDERR "***ERROR*** check_start_stop_scripts_data: Coding error. Didn't find 2 words in value.\n";
+						exit 1;
+					}
+					$temp_line = $orig_line;
+					$temp_line =~ s/$words[0]/$words[1]/g;
+					if ($temp_line eq $orig_line) {
+						# This is OK
+						push @new_file_lines, $orig_line;
+						$href->{'found'} = 1;
+					}
+					else {
+						# need to change it.
+						$href->{'found'} = 1;
+						$file_needs_changes = 1;
+						push @new_file_lines, $temp_line;
+						if ($test_mode) {
+							print "---TEST --- File: $script_file\n            Replacement needed\n            replace  \"$orig_line\"\n               with  \"$temp_line\"\n";
+						}
+						else {
+							print "File: $script_file\n            Replacement done\n            replaced  \"$orig_line\"\n                with  \"$temp_line\"\n" if $debug;
+						}
+					}
+					last; # don't need to do any more required_info
+				}
+			}
+			elsif ($type == 4) {
+				# Check the keyword and value
+				if ($line =~ /(.*)$keyword/) {
+					my $prefix = $1;
+					$found_it = 1;
+					print "---DEBUG--- type 4: found_it: prefix=\"$prefix\"\n" if $debug;
+					if ($line =~ /$keyword$value/) {
+						# This is OK
+						push @new_file_lines, $orig_line;
+						$href->{'found'} = 1;
+					}
+					else {
+						# need to change it.
+						$href->{'found'} = 1;
+						$file_needs_changes = 1;
+						# If keyword starts with a ^ or ends with a $, then remove
+						# these special characters from "keyword"
+						my $new_keyword = $keyword;
+						$new_keyword =~ s/^\^//;
+						$new_keyword =~ s/\$$//;
+						if ($new_keyword ne $keyword) {
+							print "---DEBUG--- new_keyword=$new_keyword, keyword=$keyword\n" if $debug;
+						}
+						$temp_line = "$prefix$new_keyword$value";
+						push @new_file_lines, "$temp_line\n";
+						if ($test_mode) {
+							print "---TEST --- File: $script_file\n            Replacement needed\n            replace  \"$line\"\n               with  \"$temp_line\"\n";
+						}
+						else {
+							print "File: $script_file\n            Replacement done\n            replaced  \"$line\"\n                with  \"$temp_line\"\n" if $debug;
+						}
+					}
+					last; # don't need to do any more required_info
+				}
+			}
+			else {
+				print STDERR "***ERROR*** check_start_stop_scripts_data: Coding error. Unknown type ($type). Keyword=$keyword, Value=$value\n";
+				exit 1;
+			}
+		}  # end of foreach $href (@required_info)
+		if (!$found_it) {
+			push @new_file_lines, $orig_line;
+		}
+	}  # end of foreach $line (@file_lines)
+	#
+	# Add lines that were not found
+	#
+	foreach $href (@required_info) {
+		if ($href->{'found'} == 1) {
+			next;
+		}
+		$keyword = $href->{'keyword'};
+		$type = $href->{'type'};
+		$value = $href->{'value'};
+		$file_needs_changes = 1;
+		$temp_line = "$keyword $value";
+		push @new_file_lines, "$temp_line\n";
+		if ($test_mode) {
+			print "---TEST --- File: $script_file\n            Addition needed  \"$temp_line\"\n";
+		}
+		else {
+			print "File: $script_file\n            Addition done  \"$temp_line\"\n" if $debug;
+		}
+	}
+	#
+	# Check if the file needs to be changed
+	#
+	if (!$file_needs_changes) {
+		print "File $script_file is OK. No changes needed for this file.\n" if $debug;
+	}
+	else {
+		if ($test_mode) {
+			print "---TEST --- File $script_file not updated\n";
+		}
+		else {
+			print "File $script_file is being updated\n" if $debug;
+			$files_updated += 1;
+			open (OUTPUT,"> $script_file") || die ("Unable to open output file: $script_file: $!");
+			foreach $line (@new_file_lines) {
+				print OUTPUT $line;
+			}
+			close (OUTPUT);
+			print "File $script_file has been updated\n" if $debug;
+		}
+	} # end of else clause of if (!$file_needs_changes)
+}  # end of check_start_stop_scripts_data
+
+#--------------------------------------------------------------------------------
+#
+# check_start_stop_scripts_file
+#
+# Checks and optionally updates a script file.
+# This is called after setting up "@required_lines" values.
+# We use the same syntax as is used for pin.conf files.
+#
+#--------------------------------------------------------------------------------
+sub check_start_stop_scripts_file {
+	if ($script_orig_file ne '') {
+		# Only do this if we have specified a $script_orig_file
+		if ($restore_mode) {
+			if (!-f $script_orig_file) {
+				print "---WARN --- Can't restore $script_file because $script_orig_file doesn't exist.\n";
+				return;
+			}
+			if ($test_mode) {
+				print "---TEST --- Need to restore backup file: $script_orig_file\n";
+			}
+			else {
+				print "Restoring file: $script_orig_file\n";
+				if (!File::Copy::copy($script_orig_file, $script_file)) {
+					print STDERR "***ERROR*** copy error: from=$script_orig_file, to=$script_file, err=$!\n";
+					exit 1;
+				}
+			}
+			return;
+		}
+		if (!-f $script_file) {
+			print STDERR "***ERROR*** Unable to find the script file: $script_file\n";
+			exit 1;
+		}
+		# Check to make sure the backup file (*_orig) exists
+		if (!-f $script_orig_file) {
+			if ($test_mode) {
+				print "---TEST --- Need to create backup file: $script_orig_file\n";
+			}
+			else {
+				print "Creating backup file: $script_orig_file\n" if $debug;
+				if (!File::Copy::copy($script_file, $script_orig_file)) {
+					print STDERR "***ERROR*** copy error: from=$script_file, to=$script_orig_file, err=$!\n";
+					exit 1;
+				}
+				&call_sys("chmod 0755 $script_orig_file");
+			}
+		}
+		#
+		# Always start from the *_orig file
+		if (-f $script_orig_file && !$test_mode) {
+			if (!File::Copy::copy($script_orig_file, $script_file)) {
+				print STDERR "***ERROR*** copy error: from=$script_orig_file, to=$script_file, err=$!\n";
+				exit 1;
+			}
+			&call_sys("chmod 0755 $script_file");
+		}
+	} # end of if ($script_orig_file ne '')
+	#
+	$files_found += 1;
+	#
+	# If this is the stop_all script, just create a new one.
+	# because the old one isn't easy to update.
+	# 
+	if ($script_file =~ /stop_all$/) {
+		if ($test_mode) {
+			print "---TEST --- Entire file $script_file will be replaced\n";
+			return;
+		}
+		print "Creating $script_file\n" if $debug;
+		open (OUTPUT, "> $script_file") || die ("Unable to open output file: $script_file: $!");
+		print OUTPUT <<EOF;
+#!/bin/sh
+#
+#    Copyright (c) 2000-2005 Portal Software, Inc. All rights reserved. 
+#
+#    This material is the confidential property of Portal Software, Inc. 
+#    or its subsidiaries or licensors and may be used, reproduced, stored
+#    or transmitted only in accordance with a valid Portal license or
+#    sublicense agreement.
+#
+
+VERSION=Velocity
+PATH=/usr/bin:/bin
+
+PINDIR=\$PIN_HOME
+
+STOP_LIST="$stop_all_process_list"
+
+( cd \${PINDIR}/bin;
+  for d in \${STOP_LIST} ; do
+        if [ -f "./stop_\${d}" ];then ./stop_\${d};fi
+  done
+)
+
+# get rc from cm stop
+exit \$?
+EOF
+
+		close (OUTPUT);
+		return;
+	}
+	# Read in the file
+	&read_file($script_file);
+	#
+	# We can reuse the pin_conf syntax for @required_lines.
+	&create_required_info_for_pin_conf();
+	#
+	# Do the real work
+	#
+	&check_start_stop_scripts_data();
+	#
+} # end of check_start_stop_scripts_file
+
+#--------------------------------------------------------------------------------
+#
+# check_testnap_pin_conf
+#
+# Checks and optionally updates Testnap's pin.conf file
+#
+#--------------------------------------------------------------------------------
+sub check_testnap_pin_conf {
+	print "---DEBUG--- entering check_testnap_pin_conf: process_name=$process_name\n" if $debug;
+	print "Checking File: $pin_conf\n" if $debug;
+	my $handling_sys_test_dir = 0;
+	if ($pin_conf =~ /sys\/test\/pin\.conf$/) {
+		$handling_sys_test_dir = 1;
+	}
+	#
+	# Set @require_lines for this pin.conf file.
+	# See the function "create_required_info_for_pin_conf" for
+	# the format of this data.
+	#
+	@required_lines = (
+	);
+	
+	if ($handling_sys_test_dir) {
+		#
+		# Add cm_ptr lines based upon the defined CMs on this host
+		#
+		@processes = sort(keys(%process_entities));
+		foreach $process_name (@processes) {
+			$process_installation   = $process_entities{$process_name}->{'installation'};
+			$process_host = $installations{$process_installation}->{'host'};
+			if ($process_host ne $current_host) {
+				next;
+			}
+			if ($process_name =~ /^CM/i) {
+				$process_port = $process_entities{$process_name}->{'port'};
+				$temp_line = "2:- nap cm_ptr ip = $process_host $process_port";
+				print "---DEBUG--- check_cm_connections: adding $temp_line\n" if $debug;
+				push @required_lines, $temp_line;
+			}
+		}
+	}
+	else {
+		#
+		# Add only one cm_ptr line for this process only
+		#
+		#$process_installation   = $process_entities{$process_name}->{'installation'};
+		#$process_host = $installations{$process_installation}->{'host'};
+		$process_port = $process_entities{$process_name}->{'port'};
+		$temp_line = "2:- nap cm_ptr ip = $process_host $process_port";
+		print "---DEBUG--- check_cm_connections: adding $temp_line\n" if $debug;
+		push @required_lines, $temp_line;
+	}
+	$well_known_subdir = 'test';  # In case I need to create a file
+	#
+	@replacement_info = (
+	);
+	&check_pin_conf_file();
+} # end of check_testnap_pin_conf
+
+#--------------------------------------------------------------------------------
+#
+# create_required_info_for_pin_conf
+#
+# Creates the @required_info array of hashes for a pin.conf file.  It does this
+# be parsing the data in @required_lines which must be set before calling this
+# function.
+#
+# @require_lines format for pin.conf files
+# -------------------------------------------------------
+# <compare type>:<text to search for with only one space separating words>
+# If <compare type> is:
+#   1, then the text string is used as a search string
+#   2, then the text string up to the = is used as a search string,
+#      The text to the right of the = must be the value
+#   3, then the text string up to the = is used as a search string,
+#      To the right of the = are two words that will used as
+#      is a perl substitute regular expression, ie. s/$word1/$word2/
+#
+#
+#--------------------------------------------------------------------------------
+sub create_required_info_for_pin_conf {
+	# Read in the @required_lines and create a hash of the data so we know
+	# if we have done everything.
+	my $required_line;
+	my $whole_clause = '';
+	@required_info = ();
+	foreach $required_line (@required_lines) {
+		# Break up into "type", "keyword" and "value"
+		print "---DEBUG--- create_required_info_for_pin_conf: required_line=$required_line\n" if $debug;
+		if ($required_line =~ m/^1:(.+)$/) {
+			$keyword = $1;
+			#
+			if ($keyword eq '') {
+				print STDERR "***ERROR*** Parsing error in create_required_info_for_pin_conf. Keyword is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			#
+			# Check if the keyword has a $ in it.  If so, escape it with \\
+			$keyword =~ s/\$/\\\$/g;
+			#
+			# Now add it to @required_info
+			push @required_info, {keyword => $keyword, type => 1, value => '', found => 0};
+			print "---DEBUG--- create_required_info_for_pin_conf: Add to required_info, keyword=$keyword, type=1, value=$value\n" if $debug;
+		}
+		elsif ($required_line =~ m/^2:(.+) = (.*)$/) {
+			$keyword = $1;
+			$value = $2;
+			#
+			if ($keyword eq '') {
+				print STDERR "***ERROR*** create_required_info_for_pin_conf: Parsing error. Keyword is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			#
+			if ($value eq '') {
+				print STDERR "***ERROR*** create_required_info_for_pin_conf: Parsing error. Value is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			my $skip_this = 0;
+			#
+			# Check if the keyword has a $ in it.  If so, escape it with \\
+			$keyword =~ s/\$/\\\$/g;
+			#
+			# Check if the value has a $ in it.  If so, evaluate it
+			if ($value =~ m/\$/) {
+				@words = split(/\s/, $value);
+				$value = '';
+				foreach $word (@words) {
+					my $orig_word = $word;
+					if ($word =~ m/^\$/) {
+						$word = eval $word;
+						if ($word eq '') {
+							print "***WARN *** create_required_info_for_pin_conf: Couldn't evaluate $orig_word for keyword=$keyword, process=$process_name\n";
+							print "            required_line=$required_line\n";
+							$skip_this = 1;
+						}
+					}
+					$value = "$value $word";
+				}
+				$value =~ s/^\s+//;   # Get rid of leading whitespace
+			}
+			# Now add it to the @required_info
+			if (!$skip_this) {
+				push @required_info, {keyword => $keyword, type => 2, value => $value, found => 0};
+				print "---DEBUG--- create_required_info_for_pin_conf: Add to required_info, keyword=$keyword, type=2, value=$value\n" if $debug;
+			}
+		}
+		elsif ($required_line =~ m/^3:(.+) = (.*)$/) {
+			$keyword = $1;
+			$value = $2;
+			#
+			if ($keyword eq '') {
+				print STDERR "***ERROR*** create_required_info_for_pin_conf: Parsing error. Keyword is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			#
+			if ($value eq '') {
+				print STDERR "***ERROR*** create_required_info_for_pin_conf: Parsing error. Value is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			my $skip_this = 0;
+			#
+			# Check if the keyword has a $ in it.  If so, escape it with \\
+			$keyword =~ s/\$/\\\$/g;
+			#
+			# Check if the value has a $ in it.  If so, evaluate it
+			if ($value =~ m/\$/) {
+				@words = split(/\s+/, $value);
+				$value = '';
+				foreach $word (@words) {
+					my $orig_word = $word;
+					if ($word =~ m/^\$/) {
+						$word = eval $word;
+						if ($word eq '') {
+							print "***WARN *** create_required_info_for_pin_conf: Couldn't evaluate $orig_word for keyword=$keyword, process=$process_name\n";
+							print "            required_line=$required_line\n";
+							$skip_this = 1;
+						}
+					}
+					$value = "$value $word";
+				}
+				$value =~ s/^\s+//;   # Get rid of leading whitespace
+			}
+			# Check if two words have been specified after the = (in $value)
+			@words = split(/\s+/, $value);
+			if (scalar @words != 2) {
+				print STDERR "***ERROR*** create_required_info_for_pin_conf: Invalid syntax in the required_lines to apply to the pin.conf file\n";
+				print STDERR "            Exactly 2 space-separated words must be specified after the =\n";
+				print STDERR "            Data=\"$required_line\"\n";
+				exit 1;
+			}
+			# Now add it to the @required_info
+			if (!$skip_this) {
+				push @required_info, {keyword => $keyword, type => 3, value => $value, found => 0};
+				print "---DEBUG--- create_required_info_for_pin_conf: Add to required_info, keyword=$keyword, type=2, value=$value\n" if $debug;
+			}
+		}
+		# Note: Type 4: is the same format as type 2:.  The only difference is no space is added in front of the value.
+		elsif ($required_line =~ m/^4:(.+) = (.*)$/) {
+			$keyword = $1;
+			$value = $2;
+			#
+			if ($keyword eq '') {
+				print STDERR "***ERROR*** create_required_info_for_pin_conf: Parsing error. Keyword is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			#
+			if ($value eq '') {
+				print STDERR "***ERROR*** create_required_info_for_pin_conf: Parsing error. Value is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			my $skip_this = 0;
+			#
+			# Check if the keyword has a $ in it.  If so, escape it with \\
+			$keyword =~ s/\$/\\\$/g;
+			#
+			# Check if the value has a $ in it.  If so, evaluate it
+			if ($value =~ m/\$/) {
+				@words = split(/\s/, $value);
+				$value = '';
+				foreach $word (@words) {
+					my $orig_word = $word;
+					if ($word =~ m/^\$/) {
+						$word = eval $word;
+						if ($word eq '') {
+							print "***WARN *** create_required_info_for_pin_conf: Couldn't evaluate $orig_word for keyword=$keyword, process=$process_name\n";
+							print "            required_line=$required_line\n";
+							$skip_this = 1;
+						}
+					}
+					$value = "$value $word";
+				}
+				$value =~ s/^\s+//;   # Get rid of leading whitespace
+			}
+			# Now add it to the @required_info
+			if (!$skip_this) {
+				push @required_info, {keyword => $keyword, type => 4, value => $value, found => 0};
+				print "---DEBUG--- create_required_info_for_pin_conf: Add to required_info, keyword=$keyword, type=4, value=$value\n" if $debug;
+			}
+		}
+		else {
+			print STDERR "***ERROR*** create_required_info_for_pin_conf: Invalid syntax in the required_lines to apply to the pin.conf file\n";
+			print STDERR "            Data=\"$required_line\"\n";
+			exit 1;
+		}
+	}
+	#
+	foreach $href (@required_info) {
+		print "---DEBUG--- create_required_info_for_pin_conf: href=(found=$href->{'found'}, keyword=$href->{'keyword'}, value=$href->{'value'}\n" if $debug;
+	}
+} # end of create_required_info_for_pin_conf
+
+#--------------------------------------------------------------------------------
+#
+# create_process_executable
+#
+# Creates a copy of an executable with a name the matches the named used in
+# the PROCESS clause.
+#
+#--------------------------------------------------------------------------------
+sub create_process_executable {
+	my ($new_filename_arg, $existing_filename_arg) = @_;
+	
+	if ($restore_mode) {
+		return;
+	}
+	my $dir;
+	my $new_filename = "$pin_home/bin/$new_filename_arg";
+	my $existing_filename = "$pin_home/bin/$existing_filename_arg";
+	#
+	if ($existing_filename_arg eq 'ifw') {
+		$new_filename = "$ifw_home/bin/$new_filename_arg";
+		$existing_filename = "$ifw_home/bin/$existing_filename_arg";
+	}
+	if ($is_windows) {
+		$new_filename .= '.exe';
+		$existing_filename .= '.exe';
+	}
+	print "---DEBUG--- create_process_executable: new_filename=$new_filename, existing_filename=$existing_filename\n" if $debug;
+	if (!-f $new_filename) {
+		if ($test_mode) {
+			print "---TEST --- Need to create executable $new_filename\n";
+			if (!-f $existing_filename) {
+				print STDERR "***ERROR*** Can't find executable $existing_filename\n";
+				exit 1;
+			}
+		}
+		else {
+			if (!-f $existing_filename) {
+				print STDERR "***ERROR*** Can't find executable $existing_filename\n";
+				exit 1;
+			}
+			print "Creating executable file: $new_filename\n" if $debug;
+			if (!File::Copy::copy($existing_filename, $new_filename)) {
+				print STDERR "***ERROR*** copy error: from=$existing_filename, to=$new_filename, err=$!\n";
+				exit 1;
+			}
+			&call_sys("chmod 0755 $new_filename");
+		}
+	}
+} # end of create_process_executable
+
+#--------------------------------------------------------------------------------
+#
+# create_required_info_for_registry
+#
+# Creates the @required_info array of hashes for a registry file
+#
+#--------------------------------------------------------------------------------
+sub create_required_info_for_registry {
+	# Read in the @required_lines and create a hash of the data so we know
+	# if we have done everything.
+	my $required_line;
+	my $whole_clause = '';
+	@required_info = ();
+	foreach $required_line (@required_lines) {
+		# Is it a type 1?
+		# Is it a type 2?
+		# type 2: "clause" and "value"
+		print "---DEBUG--- create_required_info_for_registry: required_line=$required_line\n" if $debug;
+		if ($required_line =~ m/^2:(\S+)\s*=\s*(\S+)$/) {
+			$clause = $1;
+			$value = $2;
+			#
+			if ($clause eq '') {
+				print STDERR "***ERROR*** create_required_info_for_registry: Parsing error. Clause is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			#
+			if ($value eq '') {
+				print STDERR "***ERROR*** create_required_info_for_registry: Parsing error. Value is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			@words = split(/\./, $clause);
+			$keyword = pop @words;
+			$clause = join('.', @words);
+			#
+			my $skip_this = 0;
+			# Check if the value has a $ in it.  If so, evaluate it
+			if ($value =~ m/\$/) {
+				print "---DEBUG---Value before=$value\n" if $debug;
+				@words = split(/\s/, $value);
+				$value = '';
+				foreach $word (@words) {
+					my $orig_word = $word;
+					if ($word =~ m/^\$/) {
+						$word = eval $word;
+						if ($word eq '') {
+							print "***WARN *** create_required_info_for_registry: Couldn't evaluate $orig_word for keyword=$keyword, process=$process_name\n";
+							print "            required_line=$required_line\n";
+							$skip_this = 1;
+						}
+					}
+					$value = "$value $word";
+				}
+				$value =~ s/^\s+//;   # Get rid of leading whitespace
+				print "---DEBUG---Value after=$value\n" if $debug;
+			}
+			if (!$skip_this) {
+				push @required_info, {clause => $clause, keyword => $keyword, type => 2, value => $value, found => 0};
+				print "---DEBUG--- create_required_info_for_registry: Add to required_info, clause=$clause, keyword=$keyword, type=2, value=$value, found=0\n" if $debug;
+			}
+		}
+		# Type 3: keyword = word1 word2
+		# On lines that have "keyword" replace word1 with word2
+		elsif ($required_line =~ m/^3:(.+) = (.*)$/) {
+			$keyword = $1;
+			$value = $2;
+			#
+			if ($keyword eq '') {
+				print STDERR "***ERROR*** create_required_info_for_registry: Parsing error. Keyword is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			#
+			if ($value eq '') {
+				print STDERR "***ERROR*** create_required_info_for_registry: Parsing error. Value is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			my $skip_this = 0;
+			#
+			# Check if the keyword has a $ in it.  If so, escape it with \\
+			$keyword =~ s/\$/\\\$/g;
+			#
+			# Check if the value has a $ in it.  If so, evaluate it
+			if ($value =~ m/\$/) {
+				@words = split(/\s+/, $value);
+				$value = '';
+				foreach $word (@words) {
+					my $orig_word = $word;
+					if ($word =~ m/^\$/) {
+						$word = eval $word;
+						if ($word eq '') {
+							print "***WARN *** create_required_info_for_registry: Couldn't evaluate $orig_word for keyword=$keyword, process=$process_name\n";
+							print "            required_line=$required_line\n";
+							$skip_this = 1;
+						}
+					}
+					$value = "$value $word";
+				}
+				$value =~ s/^\s+//;   # Get rid of leading whitespace
+			}
+			# Check if two words have been specified after the = (in $value)
+			@words = split(/\s+/, $value);
+			if (scalar @words != 2) {
+				print STDERR "***ERROR*** create_required_info_for_registry: Invalid syntax in the required_lines to apply to the pin.conf file\n";
+				print STDERR "            Exactly 2 space-separated words must be specified after the =\n";
+				print STDERR "            Data=\"$required_line\"\n";
+				exit 1;
+			}
+			# Now add it to the @required_info
+			if (!$skip_this) {
+				push @required_info, {clause => '', keyword => $keyword, type => 3, value => $value, found => 0};
+				print "---DEBUG--- create_required_info_for_registry: Add to required_info, keyword=$keyword, type=2, value=$value\n" if $debug;
+			}
+		}
+		# Note: Type 4: is the same format as type 2:.  The only difference is no space is added in front of the value.
+		elsif ($required_line =~ m/^4:(\S+)\s*=\s*(\S+)$/) {
+			$clause = $1;
+			$value = $2;
+			#
+			if ($clause eq '') {
+				print STDERR "***ERROR*** create_required_info_for_registry: Parsing error. Clause is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			#
+			if ($value eq '') {
+				print STDERR "***ERROR*** create_required_info_for_registry: Parsing error. Value is null.\n";
+				print STDERR "            required_line=$required_line\n";
+				exit 1;
+			}
+			@words = split(/\./, $clause);
+			$keyword = pop @words;
+			$clause = join('.', @words);
+			#
+			my $skip_this = 0;
+			# Check if the value has a $ in it.  If so, evaluate it
+			if ($value =~ m/\$/) {
+				print "---DEBUG---Value before=$value\n" if $debug;
+				@words = split(/\s/, $value);
+				$value = '';
+				foreach $word (@words) {
+					my $orig_word = $word;
+					if ($word =~ m/^\$/) {
+						$word = eval $word;
+						if ($word eq '') {
+							print "***WARN *** create_required_info_for_registry: Couldn't evaluate $orig_word for keyword=$keyword, process=$process_name\n";
+							print "            required_line=$required_line\n";
+							$skip_this = 1;
+						}
+					}
+					$value = "$value $word";
+				}
+				$value =~ s/^\s+//;   # Get rid of leading whitespace
+				print "---DEBUG---Value after=$value\n" if $debug;
+			}
+			if (!$skip_this) {
+				push @required_info, {clause => $clause, keyword => $keyword, type => 4, value => $value, found => 0};
+				print "---DEBUG--- create_required_info_for_registry: Add to required_info, clause=$clause, keyword=$keyword, type=4, value=$value, found=0\n" if $debug;
+			}
+		}
+		
+		# Unknown type
+		else {
+			print STDERR "***ERROR*** create_required_info_for_registry: Invalid syntax in the required_lines to apply to the registry file\n";
+			print STDERR "            Data=\"$required_line\"\n";
+			exit 1;
+		}
+	}
+	foreach $href (@required_info) {
+		print "---DEBUG--- create_required_info_for_registry: href=(type=$href->{'type'}, found=$href->{'found'}, clause=$href->{'clause'}, keyword=$href->{'keyword'}, value=$href->{'value'}\n" if $debug;
+	}
+} # end of create_required_info_for_registry
+
+#--------------------------------------------------------------------------------
+#
+# create_start_stop_scripts
+#
+# Create a Start/Stop script for a process.
+#
+#--------------------------------------------------------------------------------
+sub create_start_stop_scripts {
+	my ($new_filename_arg, $existing_filename_arg) = @_;
+	
+	if ($restore_mode) {
+		return;
+	}
+	my $dir;
+	my $new_setup_filename = "$pin_home/bin/setup_$new_filename_arg";
+	my $new_start_filename = "$pin_home/bin/start_$new_filename_arg";
+	my $new_stop_filename  = "$pin_home/bin/stop_$new_filename_arg";
+	my $existing_setup_filename = "$pin_home/bin/setup_$existing_filename_arg";
+	my $existing_start_filename = "$pin_home/bin/start_$existing_filename_arg";
+	my $existing_stop_filename  = "$pin_home/bin/stop_$existing_filename_arg";
+	my @setup_required_lines = ();
+	my @start_required_lines = ();
+	my @stop_required_lines = ();
+	my @other_required_lines = ();
+	#
+	if ($existing_filename_arg eq 'ifw') {
+		$new_setup_filename = "$ifw_home/bin/setup_$new_filename_arg";
+		$new_start_filename = "$ifw_home/bin/start_$new_filename_arg";
+		$new_stop_filename  = "$ifw_home/bin/stop_$new_filename_arg";
+		$existing_setup_filename = "$ifw_home/bin/setup_$existing_filename_arg";
+		$existing_start_filename = "$ifw_home/bin/start_$existing_filename_arg";
+		$existing_stop_filename  = "$ifw_home/bin/stop_$existing_filename_arg";
+	}
+	if ($is_windows) {
+		# Currently Windows doesn't have start/stop scripts.
+		#$new_start_filename .= '.bat';
+		#$new_stop_filename .= '.bat';
+		#$existing_start_filename .= '.bat';
+		#$existing_stop_filename .= '.bat';
+	}
+	print "---DEBUG--- create_start_stop_scripts: new_start_filename=$new_start_filename, existing_start_filename=$existing_start_filename\n" if $debug;
+	if ($test_mode) {
+		if (!-f $new_start_filename) {
+			print "---TEST --- Need to create $new_start_filename\n";
+		}
+		if (!-f $new_stop_filename) {
+			print "---TEST --- Need to create $new_stop_filename\n";
+		}
+		if (!-f $existing_start_filename) {
+			print STDERR "***ERROR*** Can't find $existing_start_filename\n";
+			exit 1;
+		}
+		if (!-f $existing_stop_filename) {
+			print STDERR "***ERROR*** Can't find $existing_stop_filename\n";
+			exit 1;
+		}
+	}
+	else {
+		#
+		# Modify these files according to their type:
+		###########################################################
+		if ($existing_filename_arg eq 'cm') {
+			# Define start_cm changes
+			# -----------------------------------
+			# LOGDIR=$PIN_LOG/cm_1
+			# CM=${PINDIR}/bin/cm_1
+			# CMDIR=${PINDIR}/sys/cm_1
+			# CMLOG=${LOGDIR}/cm_1.log
+			# CMPID=$PIN_LOG/cm_1/cm_1.pid
+			#
+			@start_required_lines = (
+"3:LOGDIR=\$PIN_LOG = \/cm \/$process_subdir",
+"3:CM=\${PINDIR}/bin/ = \/cm \/cm$process_name_suffix",
+"3:CMDIR=\${PINDIR}/sys/ = \/cm \/$process_subdir",
+"3:CMLOG=\${LOGDIR}/ = \/cm \/cm$process_name_suffix",
+"3:CMPID=\${LOGDIR}/ = \/cm \/cm$process_name_suffix",
+);
+			#
+			# Define stop_cm changes
+			# -----------------------------------
+			# LOGDIR=$PIN_LOG/cm_1
+			# CM=cm_1
+			# CMPID=${LOGDIR}/cm_1.pid
+			#
+			@stop_required_lines = (
+"3:LOGDIR=\$PIN_LOG = \/cm \/$process_subdir",
+"3:CM=cm = cm cm$process_name_suffix",
+"3:CMPID=\${LOGDIR}/ = \/cm \/cm$process_name_suffix",
+);
+			#
+			# Define the .synstasto.rules file changes
+			#
+			@other_required_lines = (
+"2:start_cm$process_name_suffix = cpidproc:cm$process_name_suffix: cport:$process_port",
+"2:stop_cm$process_name_suffix = cpidproc:cm$process_name_suffix: cport:$process_port",
+);
+		}
+		###########################################################
+		elsif ($existing_filename_arg eq 'dm_oracle') {
+			# Define start_dm_oracle changes
+			# -----------------------------------
+			# LOGDIR=$PIN_LOG/dm_oracle_1
+			# DM=${PINDIR}/bin/dm_oracle_1
+			# DMDIR=${PINDIR}/sys/dm_oracle_1
+			# DMLOG=${LOGDIR}/dm_oracle_1.log
+			# DMPID=${LOGDIR}/dm_oracle_1.pid
+			#
+			@start_required_lines = (
+"3:LOGDIR=\$PIN_LOG = \/dm_oracle \/$process_subdir",
+"3:DM=\${PINDIR}/bin/ = \/dm_oracle \/dm_oracle$process_name_suffix",
+"3:DMDIR=\${PINDIR}/sys/ = \/dm_oracle \/$process_subdir",
+"3:DMLOG=\${LOGDIR}/ = \/dm_oracle \/dm_oracle$process_name_suffix",
+"3:DMPID=\${LOGDIR}/ = \/dm_oracle \/dm_oracle$process_name_suffix",
+);
+			#
+			# Define stop_dm_oracle changes
+			# -----------------------------------
+			# LOGDIR=$PIN_LOG/dm_oracle_1
+			# DM=dm_oracle_1
+			# DMPID=${LOGDIR}/dm_oracle_1.pid
+			#
+			@stop_required_lines = (
+"3:LOGDIR=\$PIN_LOG = \/dm_oracle \/$process_subdir",
+"3:DM=dm_oracle = dm_oracle dm_oracle$process_name_suffix",
+"3:DMPID=\${LOGDIR}/ = \/dm_oracle \/dm_oracle$process_name_suffix",
+);
+			#
+			# Define the .synstasto.rules file changes
+			#
+			@other_required_lines = (
+"2:start_dm_oracle$process_name_suffix = cpidproc:dm_oracle$process_name_suffix: cport:$process_port",
+"2:stop_dm_oracle$process_name_suffix = cpidproc:dm_oracle$process_name_suffix: cport:$process_port",
+);
+		}
+		###########################################################
+		elsif ($existing_filename_arg eq 'dm_timos') {
+			# Define start_dm_timos changes
+			# -----------------------------------
+			# LOGDIR=$PIN_LOG/dm_timos_1
+			# TIMOS=${PINDIR}/bin/dm_timos_1
+			# TIMOSDIR=${PINDIR}/sys/dm_timos_1
+			# TIMOSLOG=${LOGDIR}/dm_timos_1.log
+			# TIMOSPID=${LOGDIR}/dm_timos_1.pid
+			#
+			@start_required_lines = (
+"4:PINDIR= = $pin_home",
+"4:LOGDIR= = $pin_log_dir\/$process_subdir",
+"3:TIMOS=\${PINDIR}/bin/ = \/dm_timos \/dm_timos$process_name_suffix",
+"3:TIMOSDIR=\${PINDIR}/sys/ = \/dm_timos \/$process_subdir",
+"3:TIMOSLOG=\${LOGDIR}/ = \/dm_timos \/dm_timos$process_name_suffix",
+"3:TIMOSPID=\${LOGDIR}/ = \/dm_timos \/dm_timos$process_name_suffix",
+);
+			if (&is_a_primary_process($process_name)) {
+				#$temp_line = "4:^AS_PRIMARY= = 1";
+				#push @start_required_lines, $temp_line;
+			}
+			else {
+				#$temp_line = "4:^AS_PRIMARY= = 0";
+				#push @start_required_lines, $temp_line;
+			}
+			#
+			# Define stop_dm_timos changes
+			# -----------------------------------
+			# LOGDIR=$PIN_LOG/dm_timos_1
+			# DM=dm_timos_1
+			# DMPID=${LOGDIR}/dm_timos_1.pid
+			#
+			@stop_required_lines = @start_required_lines;
+			#
+			# Define the .synstasto.rules file changes
+			#
+			@other_required_lines = (
+"2:start_dm_timos$process_name_suffix = cpidproc:dm_timos$process_name_suffix: cport:$process_port",
+"2:stop_dm_timos$process_name_suffix = cpidproc:dm_timos$process_name_suffix: cport:$process_port",
+);
+		}
+		###########################################################
+		else {
+			print STDERR "***ERROR*** Coding error: Unknown start_stop script: $existing_filename_arg\n";
+			exit 1;
+		}
+		#
+		# Now process the @required_lines arrays
+		#
+		if (!-f $existing_start_filename) {
+			print STDERR "***ERROR*** Can't find $existing_start_filename\n";
+			exit 1;
+		}
+		print "Updating file: $new_start_filename\n" if $debug;
+		if ($account_type && ($existing_filename_arg ne 'dm_timos')) {
+			$script_file = &get_start_script_file($new_filename_arg, $existing_start_filename, $new_start_filename);
+			@required_lines = @start_required_lines;
+			&check_start_stop_scripts_file();
+		}
+		else {
+			if (!File::Copy::copy($existing_start_filename, $new_start_filename)) {
+				print STDERR "***ERROR*** copy error: from=$existing_start_filename, to=$new_start_filename, err=$!\n";
+				exit 1;
+			}
+			&call_sys("chmod 0755 $new_start_filename");
+			@required_lines = @start_required_lines;
+			$script_file = $new_start_filename;
+			# Now modify the file
+			&check_start_stop_scripts_file();
+		}
+		#
+		# Now do the stop script
+		#
+		if (!-f $existing_stop_filename) {
+			print STDERR "***ERROR*** Can't find $existing_stop_filename\n";
+			exit 1;
+		}
+		print "Updating file: $new_stop_filename\n" if $debug;
+		#
+		if ($account_type && ($existing_filename_arg ne 'dm_timos')) {
+			$script_file = &get_stop_script_file($new_filename_arg, $existing_stop_filename, $new_stop_filename);
+			@required_lines = @stop_required_lines;
+			# Now modify the file
+			&check_start_stop_scripts_file();
+			#
+			# Now change the .synstasto.rules file
+			#
+			@required_lines = @other_required_lines;
+			$script_file = &get_script_file();
+			# Now modify the file
+			&check_start_stop_scripts_file();
+		}
+		else {
+			if (!File::Copy::copy($existing_stop_filename, $new_stop_filename)) {
+				print STDERR "***ERROR*** copy error: from=$existing_stop_filename, to=$new_stop_filename, err=$!\n";
+				exit 1;
+			}
+			&call_sys("chmod 0755 $new_stop_filename");
+			@required_lines = @stop_required_lines;
+			$script_file = $new_stop_filename;
+			# Now modify the file
+			&check_start_stop_scripts_file();
+		}
+		#
+		# Now do the setup script (for dm_timos only)  TO DO **********************8
+		#
+		if ($existing_filename_arg ne 'dm_timos') {
+			return;
+		}
+		if (!-f $existing_setup_filename) {
+			print STDERR "***ERROR*** Can't find $existing_setup_filename\n";
+			exit 1;
+		}
+		print "Updating file: $new_setup_filename\n" if $debug;
+		#
+		if (!File::Copy::copy($existing_setup_filename, $new_setup_filename)) {
+			print STDERR "***ERROR*** copy error: from=$existing_setup_filename, to=$new_setup_filename, err=$!\n";
+			exit 1;
+		}
+		&call_sys("chmod 0755 $new_setup_filename");
+		@required_lines = @start_required_lines;
+		$script_file = $new_setup_filename;
+		# Now modify the file
+		&check_start_stop_scripts_file();
+	}
+} # end of create_start_stop_scripts
+
+#--------------------------------------------------------------------------------
+#
+# exec_remote_cmd
+#
+# Executes a passed command at the specified host
+#
+#--------------------------------------------------------------------------------
+sub exec_remote_cmd {
+	my ($hostname, $cmd) = @_;
+	
+	my $rsh = 'rsh';
+	my $rsh_cmd;
+	my $rsh_cmd_str = '';
+	if ($is_windows) {
+		print "EXEC_REMOTE_CMD skipped on Windows\n";
+		return;
+	}
+	if ($pin_os eq "HP-UX") {
+		$rsh = 'remsh';
+	}
+	# Find out the absolute path to rsh
+	# Try /usr/bin
+	if (-x "/usr/bin/$rsh") {
+		$rsh_cmd = "/usr/bin/$rsh";
+	}
+	elsif (-x "/bin/$rsh") {
+		$rsh_cmd = "/bin/$rsh";
+	}
+	else {
+		# Hope the path is correct
+		$rsh_cmd = $rsh;
+	}
+	$rsh_cmd_str = "$rsh_cmd $hostname -n -l $username 'echo \$SHELL'";
+	print "getting \$SHELL on $hostname using $rsh_cmd_str\n" if $debug;
+	my $rsh_result = &call_sys_result($rsh_cmd_str);
+	my $is_csh = 0;
+	if ($rsh_result =~ /csh/) {
+		$is_csh = 1;
+	}
+	#
+	# without redirection of stdin, stdout and stderr rsh is waiting for the
+	# the remote process to close these filedescriptors
+	# (csh specific version)(sh: cmd >/dev/null 2>&1 </dev/null)
+	#
+	my $redirect = '';
+	if ($is_csh) {
+		$redirect = ">& /dev/null </dev/null";
+	}
+	else {
+		$redirect =  "> /dev/null 2>&1 </dev/null";;
+	}
+	$rsh_cmd_str = "$rsh_cmd $hostname -n -l $username $cmd";
+	print "executing on $hostname using $rsh_cmd_str\n" if $debug;
+	return &call_sys_result($rsh_cmd_str);
+} # end of exec_remote_cmd
+
+#--------------------------------------------------------------------------------
+#
+# get_connections_from_process
+#
+# Returns the connections from the passed process name.
+#
+#--------------------------------------------------------------------------------
+sub get_connections_from_process {
+	my ($ent_name) = @_;
+	
+	my @conn_keys = sort(keys(%connections));
+	my $conn_key;
+	my @results = ();
+	
+	foreach $conn_key (@conn_keys) {
+		# I only care about the connections from the passed process name
+		if ($conn_key =~ /^$ent_name$conn_key_separator/) {
+			push @results, $conn_key;
+		}
+	}
+	print "---DEBUG--- get_connections_from_process $ent_name, returning: @results\n" if $debug;
+	return @results;
+} # end of get_connections_from_process
+
+#--------------------------------------------------------------------------------
+#
+# get_connections_to_process
+#
+# Returns the connections to the passed process name.
+#
+#--------------------------------------------------------------------------------
+sub get_connections_to_process {
+	my ($ent_name) = @_;
+	
+	my @conn_keys = sort(keys(%connections));
+	my $conn_key;
+	my @results = ();
+	
+	foreach $conn_key (@conn_keys) {
+		# I only care about the connections to the passed process name
+		if ($conn_key =~ /$conn_key_separator$ent_name/) {
+			push @results, $conn_key;
+		}
+	}
+	print "---DEBUG--- get_connections_to_process $ent_name, returning: @results\n" if $debug;
+	return @results;
+} # end of get_connections_to_process
+
+#--------------------------------------------------------------------------------
+#
+# get_db_number_from_connections
+#
+# Returns the db_number based upon the passed connections
+#
+#--------------------------------------------------------------------------------
+sub get_db_number_from_connections {
+	my (@passed_connections) = @_;
+	
+	print "---DEBUG--- get_db_number_from_connections: checking connections: @passed_connections\n" if $debug;
+	%found_dbi_connections = ();  # Simple hash of found DBI connections
+	%processed_dbi_connections = ();  # Simple hash of processed DBI connections
+	#
+	# Follow the connections from the "to_entity" until we find a
+	# connection to a DBI.
+	# For example,
+	#  CM_1_x_TIMOS_1_p
+	#  TIMOS_1_p_x_DM_ORACLE_1
+	#  DM_ORACLE_1_x_DBI_1
+	#
+	# TO DO: Should I find all of the connections? Is it possible
+	# to have more than one schema for this? Probably.
+	#
+	&get_db_number_from_connections_internal(@passed_connections);
+	# Did we find it (one or more)?
+	@keys = sort(keys(%found_dbi_connections));
+	print "---DEBUG--- get_db_number_from_connections: found keys=@keys\n" if $debug;
+	if (scalar @keys == 0) {
+		print "***WARN *** get_db_number_from_connections: Didn't find connection to a DBI for \"@passed_connections\"\n";
+		print "            assuming 0.0.0.1\n";
+		return "0.0.0.1";
+	}
+	# Now get the schema name (db_number) associated with this DBI
+	#
+	my @found_schemas = ();
+	my %found_schema_key = ();
+	my $temp_v;
+	foreach $key (@keys) {
+		$dbi_name = $key;
+		# get DBI_NAME
+		$dbi_name =~ s/(.+)$conn_key_separator//;
+		if (!exists $dbis{$dbi_name}) {
+			print "***WARN *** get_db_number_from_connections: Couldn't find DBI (name=$dbi_name, key=$key) while looking for schemas.\n";
+			exit 1;
+		}
+		else {
+			$db_name = $dbis{$dbi_name}->{'db_name'};
+			# See if this DB exists
+			if (!exists $dbs{$db_name}) {
+				print "***WARN *** get_db_number_from_connections: Couldn't find DB (name=$db_name) while looking for schemas.\n";
+			}
+			else {
+				print "---DEBUG--- get_db_number_from_connections, found DB ($db_name). Adding schemas.\n" if $debug;
+				my @temp_val = @{$dbs{$db_name}->{'schema_list'}};
+				#print "---DEBUG--- get_db_number_from_connections, found_schemas=@temp_val\n" if $debug;
+				foreach $temp_v (@temp_val) {
+					if (!exists $found_schema_key{$temp_v}) {
+						$found_schema_key{$temp_v} = 1;
+					}
+				}
+				#push @found_schemas, @temp_val;
+			}
+		}
+	}
+	@found_schemas = keys %found_schema_key;
+	return @found_schemas;
+} # end of get_db_number_from_connections
+
+#--------------------------------------------------------------------------------
+#
+# get_db_number_from_connections_internal
+#
+# Returns the db_number based upon the passed connections.
+# This function should only be called by "get_db_number_from_connections"
+#
+#--------------------------------------------------------------------------------
+sub get_db_number_from_connections_internal {
+	my (@passed_connections) = @_;
+	
+	print "---DEBUG--- get_db_number_from_connections_internal: checking connections=@passed_connections\n" if $debug;
+	my @from_connections = ();
+	my @new_from_connections = ();
+	my $to_entity = '';
+	my $test_connection = '';
+	#
+	# Follow the connections from the "to_entity" until we find a
+	# connection to a DBI.
+	# For example,
+	#  CM_1_x_TIMOS_1_p
+	#  TIMOS_1_p_x_DM_ORACLE_1
+	#  DM_ORACLE_1_x_DBI_1
+	#
+	# TO DO: Should I find all of the connections? Is it possible
+	# to have more than one schema for this? Probably.
+	#
+	@new_from_connections = ();
+	foreach $test_connection (@passed_connections) {
+		# Have I already processed this one?
+		if ($processed_dbi_connections{$test_connection} == 1) {
+			next;
+		}
+		if ($found_dbi_connections{$test_connection} == 1) {
+			next;
+		}
+		if ($test_connection =~ m/^(.+)$conn_key_separator(DBI.+)/i) {
+			$found_dbi_connections{$test_connection} = 1;
+			$processed_dbi_connections{$test_connection} = 1;
+			next;
+		}
+		else {
+			$processed_dbi_connections{$test_connection} = 1;
+			push @new_from_connections, $test_connection;
+		}
+	}
+	# Have I walked this entire branch?
+	if (scalar @new_from_connections != 0) {
+		print "---DEBUG--- get_db_number_from_connections_internal: Not done with all connections. now processing=@new_from_connections\n" if $debug;
+		foreach $test_connection (@new_from_connections) {
+			if ($test_connection =~ m/^(.+)$conn_key_separator(.+)/) {
+				$to_entity = $2;
+			}
+			else {
+				print STDERR "***ERROR*** get_db_number_from_connections_internal: Coding error. Invalid connection name ($test_connection)\n";
+				exit 1;
+			}
+			@from_connections = &get_connections_from_process($to_entity);
+			&get_db_number_from_connections_internal(@from_connections);
+		}
+	}
+} # end of get_db_number_from_connections_internal
+
+#--------------------------------------------------------------------------------
+#
+# get_base_ha_pair_name
+#
+# Returns the HA pair's name based upon the passed process name.
+# Thus,
+# if passed TIMOS_1_p    this returns TIMOS_1
+# if passed TIMOS_1_s    this returns TIMOS_1
+#
+#--------------------------------------------------------------------------------
+sub get_base_ha_pair_name {
+	my ($ent_name) = @_;
+	
+	if ($ent_name =~ /^(\S+)_p$/) {
+		return $1;
+	}
+	if ($ent_name =~ /^(\S+)_s$/) {
+		return $1;
+	}
+	return '';  # Invalid name
+} # end of get_base_ha_pair_name
+
+#--------------------------------------------------------------------------------
+#
+# get_partner_ha_pair_name
+#
+# Returns the HA primary's process name based upon the passed secondary's process
+# name or the HA secondary's process name based upon the passed primary's process
+# name.
+# Thus,
+# if passed TIMOS_1_p    this returns TIMOS_1_s
+# if passed TIMOS_1_s    this returns TIMOS_1_p
+#
+#--------------------------------------------------------------------------------
+sub get_partner_ha_pair_name {
+	my ($ent_name) = @_;
+	
+	if ($ent_name =~ /^(\S+)_p$/) {
+		return "${1}_s";
+	}
+	elsif ($ent_name =~ /^(\S+)_s$/) {
+		return "${1}_p";
+	}
+	return '';  # Invalid name
+} # end of get_partner_ha_pair_name
+
+#--------------------------------------------------------------------------------
+#
+# get_primary_ha_pair_name
+#
+# Returns the HA primary's process name based upon the passed process name.
+# Thus,
+# if passed TIMOS_1    this returns TIMOS_1_p
+#
+#--------------------------------------------------------------------------------
+sub get_primary_ha_pair_name {
+	my ($ent_name) = @_;
+	
+	return "${ent_name}_p";
+} # end of get_primary_ha_pair_name
+
+#--------------------------------------------------------------------------------
+#
+# get_secondary_ha_pair_name
+#
+# Returns the HA secondary's process name based upon the passed process name.
+# Thus,
+# if passed TIMOS_1    this returns TIMOS_1_s
+#
+#--------------------------------------------------------------------------------
+sub get_secondary_ha_pair_name {
+	my ($ent_name) = @_;
+	
+	return "${ent_name}_s";
+} # end of get_secondary_ha_pair_name
+
+#--------------------------------------------------------------------------------
+#
+# get_subdir_from_process_name
+#
+# Returns the subdirectory name based upon the passed process name.
+#
+#--------------------------------------------------------------------------------
+sub get_subdir_from_process_name {
+	my ($ent_name) = @_;
+	my $inst_ref = $process_entities{$ent_name}->{'installation'};
+	my $host_ref = $installations{$inst_ref}->{'host'};
+	
+	return "$ent_name";     # Was "$host_ref/$ent_name";  ??? TO DO FIX THIS ??? MAYBE
+} # end of get_subdir_from_process_name
+
+#--------------------------------------------------------------------------------
+#
+# is_a_primary_process
+#
+# Returns 1 if the passed process name is a primary process. Else it returns 0.
+# Thus,
+# if passed TIMOS_1_p    this returns 1
+# if passed TIMOS_1_s    this returns 0
+#
+#--------------------------------------------------------------------------------
+sub is_a_primary_process {
+	my ($ent_name) = @_;
+	
+	if ($ent_name =~ /^(\S+)_p$/) {
+		return 1;
+	}
+	return 0;
+} # end of is_a_primary_process
+
+#--------------------------------------------------------------------------------
+#
+# is_a_secondary_process
+#
+# Returns 1 if the passed process name is a secondary process. Else it returns 0.
+# Thus,
+# if passed TIMOS_1_p    this returns 0
+# if passed TIMOS_1_s    this returns 1
+#
+#--------------------------------------------------------------------------------
+sub is_a_secondary_process {
+	my ($ent_name) = @_;
+	
+	if ($ent_name =~ /^(\S+)_s$/) {
+		return 1;
+	}
+	return 0;
+} # end of is_a_secondary_process
+
+#--------------------------------------------------------------------------------
+#
+# mkdir_for_file
+#
+# Makes all missing subdirs based upon the passed file name.
+#
+#--------------------------------------------------------------------------------
+sub mkdir_for_file {
+	my ($filename) = @_;
+	
+	if ($is_windows) {
+		@words = split(/\\/, $filename);
+	}
+	else {
+		@words = split(/\//, $filename);
+	}
+	print "---DEBUG--- mkdir_for_file: $filename, words=@words\n" if $debug;
+	pop @words;  # get rid of the filename
+	my @dir_parts = ();
+	my $dir_name = '';
+	my $dir_part;
+	$dir_part = shift @words;
+	while ($dir_part = shift @words) {
+		print "---DEBUG--- dir_part=$dir_part\n" if $debug;
+		if ($dir_name eq '') {
+			# If the original file started with a slash, re-add it.
+			if ($filename =~ m/^\//) {
+				$dir_name = "/$dir_part";
+			}
+			else {
+				$dir_name = $dir_part;
+			}
+		}
+		else {
+			$dir_name = "$dir_name/$dir_part";
+		}
+		if (!-f $dir_name and !-d $dir_name) {
+			print "---DEBUG--- calling mkdir $dir_name\n" if $debug;
+			my $result = mkdir $dir_name, 0755;
+			if ($result == 0 && $! ne "File exists") {
+				print STDERR "***ERROR*** mkdir_for_file: Couldn't mkdir $dir_name: $!\n";
+				exit 1;
+			}
+			else {
+				print STDERR "***WARN *** mkdir_for_file: Couldn't mkdir $dir_name as it exists\n" if $debug;
+			}
+		}
+	}
+} # end of mkdir_for_file
+
+#--------------------------------------------------------------------------------
+#
+# parse_args
+#
+# Look at the args passed and store them in the appropriate variable
+#
+#--------------------------------------------------------------------------------
+sub parse_args {
+  my $option;
+  while (($option = shift @ARGV)) {
+    if ($option eq '-create_dirs') {
+      # Set create_dirs
+      $create_dirs = 1;
+      next;
+    }
+    if ($option eq '-debug') {
+      # Set debug
+      $debug = 1;
+      next;
+    }
+    if ($option eq '-debug') {
+      # Set debug
+      $debug = 1;
+      next;
+    }
+    if ($option eq '-f') {
+      # Source file
+      $ha_conf_filename = shift @ARGV;
+      next;
+    }
+    if ($option eq '-help') {
+      # Display help
+      &usage();
+      exit 0;
+    }
+    if ($option eq '-restore') {
+      $restore_mode = 1;
+      next;
+    }
+    if ($option eq '-test') {
+      $test_mode = 1;
+      next;
+    }
+    if ($option eq '-version') {
+      # Display version
+      print "$me - Release $release Version $version\n";
+      exit 0;
+    }
+    print STDERR "***Error*** Unknown option \"$option\". Type $me -help for a list of valid options\n";
+    die;
+  }
+} # end of parse_args
+
+#--------------------------------------------------------------------------------
+#
+# usage
+#
+# Prints the program's usage.
+#
+#--------------------------------------------------------------------------------
+
+sub usage
+{
+      print "Help for $me - Release $release Version $version\n\n";
+# MAX LINE WIDTH  print "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
+      print "This command will update the setup and config files for an HA configuration.\n\n";
+      print "Syntax:\n";
+      print "\tpin_configure_ha  [-create_dirs] [-debug] [-f <file>] [-help] \n";
+      print "\t                  [-restore] [-test] [-version]\n";
+      print "\n\twhere:\n";
+# MAX LINE WIDTH  print "\t                \txxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
+      print "\t-create_dirs    \tCreate any missing subdirectory and the appropriate\n";
+      print "\t                \t  configuration files.\n";
+      print "\t-debug          \tSet the debug flag for this script.\n";
+      print "\t                \t  prints at least a line for each line read from a file.\n";
+      print "\t-f <file>       \tName of configuration file to read. Default is \"ha.conf\".\n";
+      print "\t-help           \tDisplays this help text.\n";
+      print "\t-restore        \tRestores all of the pin.conf and registry files back to\n";
+      print "\t                \t their original contents. Nothing else is done.\n";
+      print "\t-test           \tDisplay what will be changed but don't change anything.\n";
+      print "\t-version        \tDisplays the version.\n";
+      print "\n";
+} # end of usage
+
+#--------------------------------------------------------------------------------
+#
+# read_file
+#
+# Reads the passed filename into @file_lines.
+#
+#--------------------------------------------------------------------------------
+sub read_file {
+	my ($my_filename) = @_;
+	
+	@file_lines = ();
+	open(THE_CONF, "$my_filename") || die("Could not open for input - $my_filename $!\n");
+	while (my $the_line = <THE_CONF>) {
+		push @file_lines, $the_line;
+	}
+	close(THE_CONF);
+} # end of read_file
+
+#--------------------------------------------------------------------------------
+#
+# verify_entity_name
+#
+# Check to see if the passed value is a valid entity name.
+# If it isn't valid, then the program will die.
+#
+#--------------------------------------------------------------------------------
+sub verify_entity_name {
+	my ($ent_name) = @_;
+	
+	# Valid entity names must start with:
+	# AAA, CM, DM_ORACLE, RTP,  TIMOS
+	if ($ent_name !~ /^AAA|CM|DM_ORACLE|RTP|TIMOS/i) {
+		print STDERR "***ERROR*** Entity name must start with AAA or CM or DM_ORACLE or RTP or TIMOS - found $ent_name on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+} # end of verify_entity_name
+
+#--------------------------------------------------------------------------------
+#
+# get_account_type
+#
+# Determine account type
+#
+#--------------------------------------------------------------------------------
+sub get_account_type {
+	# Flag that defines default installation
+	# 0 for standard installation
+	# 1 for mui installation 
+	# 2 for fmui installation
+	if ($ENV{'MUI_MODE'} eq "shared_dbinst") {
+		$account_type = 2;	
+	}
+	elsif ($ENV{'MUI_MODE'} eq "pin") {
+		$account_type = 1;
+	}
+	else {
+		$account_type = 0;
+	}
+} # end of get_account_type
+
+#--------------------------------------------------------------------------------
+#
+# normalize_conf_entries
+#
+# Parse and edit configuration line
+#
+#--------------------------------------------------------------------------------
+sub normalize_conf_entries {
+	my ($line) = @_;
+
+        # by passing in a subroutine, it is not required to get rid of end-of-line
+        if ($line =~ /(.*?)#/) {
+                $line = $1;  # Get rid of comments
+        }
+        $line =~ s/^\s+//;   # Get rid of leading whitespace
+        $line =~ s/,/ /;   # Get rid of commas
+        $line =~ s/\t/ /g;   # Get rid of tabs
+        $line =~ s/\s\s/ /g;   # Get rid of multiple spaces
+	
+	return $line;
+} # end of normalize_conf_entries
+
+#--------------------------------------------------------------------------------
+#
+# print_data
+#
+# Print all relevant data
+#
+#--------------------------------------------------------------------------------
+sub print_data {
+	# Connections, DBs, DBIs, HA_pairs, Hosts, Process_entries, Schemas
+	@keys = sort(keys(%installations));
+	printf("---DEBUG--- INSTALLATIONS found = %s\n", scalar @keys) if $debug;
+	print  "---DEBUG--- INSTALLATIONS=@keys\n" if $debug;
+	@keys = sort(keys(%hosts));
+	printf("---DEBUG--- HOSTS found = %s\n", scalar @keys) if $debug;
+	print  "---DEBUG--- HOSTS=@keys\n" if $debug;
+	@keys = sort(keys(%ha_pairs));
+	printf("---DEBUG--- HA_PAIRS found = %s\n", scalar @keys) if $debug;
+	print  "---DEBUG--- HA_PAIRS=@keys\n" if $debug;
+	@keys = sort(keys(%process_entities));
+	printf("---DEBUG--- PROCESSES found = %s\n", scalar @keys) if $debug;
+	print  "---DEBUG--- PROCESSES=@keys\n" if $debug;
+	@keys = sort(keys(%connections));
+	printf("---DEBUG--- CONNECTIONS found = %s\n", scalar @keys) if $debug;
+	print  "---DEBUG--- CONNECTIONS=@keys\n" if $debug;
+	@keys = sort(keys(%dbs));
+	printf("---DEBUG--- DBS found = %s\n", scalar @keys) if $debug;
+	print  "---DEBUG--- DBS=@keys\n" if $debug;
+	@keys = sort(keys(%dbis));
+	printf("---DEBUG--- DBIS found = %s\n", scalar @keys) if $debug;
+	print  "---DEBUG--- DBIS=@keys\n" if $debug;
+	@keys = sort(keys(%schemas));
+	printf("---DEBUG--- SCHEMAS found = %s\n", scalar @keys) if $debug;
+	print  "---DEBUG--- SCHEMAS=@keys\n" if $debug;
+} # end of print_data
+
+#--------------------------------------------------------------------------------
+#
+# handle_env_var
+#
+# Search and replace key words indicate as environment variables
+#
+#--------------------------------------------------------------------------------
+
+sub handle_env_var {
+	my ($line) = @_;
+	my $no_env_var_found = 1;
+	while ($no_env_var_found) {
+		if ($line =~ /<<(\S+)>>/) {
+			$word = $1;
+			#
+			# Allow some of the Unix and Windows Environment variable names
+			# to be used interchangeably.
+			#
+			if ($is_windows) {
+				$word =~ s/^HOST$/COMPUTERNAME/;
+				$word =~ s/^USER$/USERNAME/;
+			}
+			else {
+				$word =~ s/^COMPUTERNAME$/HOST/;
+				$word =~ s/^USERNAME$/USER/;
+			}
+			my $ev_val = $ENV{$word};
+			#
+			# Handle some special cases on Windows
+			#
+			if ($word =~ /^COMPUTERNAME$|^HOSTNAME$/) {
+				$ev_val = lc($ev_val);
+			}
+			$ev_val =~ s/\\/\//g;   # Use forward slashes.
+			print "---DEBUG--- Found <<env var>>. EV_name=$word, EV_val=$ev_val, Line=$line\n" if $debug;
+			if ($ev_val eq '') {
+                                print STDERR "***ERROR*** Env var is empty. EV_name=$word, EV_val=$ev_val, Line=$line\n";
+                                exit 1;
+                        }
+                        $line =~ s/<<(\S)+>>/$ev_val/;
+                        print "---DEBUG--- Found <<env var>> line now=$line\n" if $debug;
+                }
+                else {
+                        $no_env_var_found = 0;
+                }
+        }
+	return $line;
+} # end of handle_env_var
+
+#--------------------------------------------------------------------------------
+#
+# process_conf_connect
+#
+# Process configuration entry with CONNECT key word
+#
+#--------------------------------------------------------------------------------
+
+sub process_conf_connect {
+	my ($line) = @_;
+	my @from_entities = ();
+	my @to_entities = ();
+	my $doing_froms = 1;
+	my $from_entity;
+	my $to_entity;
+	my $entity;
+	
+	# Get rid of the "CONNECT" word
+	shift @words;
+	
+	my $is_a_dbi;
+	my $is_a_wild_card;
+	foreach $word (@words) {
+		$is_a_dbi = 0;
+		$is_a_wild_card = 0;
+		if ($word =~ /^to$/i) {
+			$doing_froms = 0;
+			next;
+		}
+		# Need to add rules for connects that cannot have wildcards
+		if ($word =~ /$wild_card_key/) {
+			$is_a_wild_card = 1;
+			print "---DEBUG--- wildcard character found in entity $word\n" if $debug;
+		}
+		if (!$doing_froms && $word =~ /^DBI/i) {
+			# Verify DBI exists
+			if (!exists $dbis{$word}) {
+				print STDERR "***ERROR*** Unknown DBI $word on line $line_cnt.\n";
+				print STDERR "            line=$line\n";
+				exit 1;
+			}
+			$is_a_dbi = 1;
+		}
+		else {
+			&verify_entity_name($word);
+		}
+		# The entity must exist!
+		my $entity_is_ha_pair = 0;
+		if (!exists $ha_pairs{$word}) {
+			if (!$is_a_dbi && !$is_a_wild_card && !exists $process_entities{$word}) {
+				print STDERR "***ERROR*** Unknown entity $word on line $line_cnt.\n";
+				print STDERR "            line=$line\n";
+				exit 1;
+			}
+		}
+		else {
+			$entity_is_ha_pair = 1;
+			print "---DEBUG--- CONNECT is using an HA_PAIR ($word)\n" if $debug;
+		}
+		if ($doing_froms) {
+			if ($entity_is_ha_pair) {
+				push @from_entities, &get_primary_ha_pair_name($word);
+				push @from_entities, &get_secondary_ha_pair_name($word);
+			}
+			else {
+				if ($is_a_wild_card) {
+					foreach $entity (@entities) {
+						if (&match_wild_card($entity, $word)) {
+							push @from_entities, $entity;
+						}
+					}
+				}
+				else {
+					push @from_entities, $word;
+				}	
+			}
+		}
+		# Processing TO's
+		else {
+			if ($entity_is_ha_pair) {
+				push @to_entities, &get_primary_ha_pair_name($word);
+				push @to_entities, &get_secondary_ha_pair_name($word);
+			}
+			else {
+				if ($is_a_wild_card) {
+                                        foreach $entity (@entities) {
+                                                if (&match_wild_card($entity, $word)) {
+                                                        push @to_entities, $entity;
+                                                }
+                                        }
+                                }
+				else {
+					push @to_entities, $word;
+				}
+			}
+		}
+	}
+	# Make sure there are minimum number of values
+	# This value is 3 instead of 4 because I already got rid of the 1st word - CONNECT
+	if (scalar @words < 3) {
+		print STDERR "***ERROR*** Invalid number of parameters on line $line_cnt.\n";
+		print STDERR "            The correct syntax is: CONNECT <process_name>((,)<process_name>) TO <process_name>(,<process_name>)\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	if (scalar @from_entities < 1) {
+		print STDERR "***ERROR*** Invalid syntax - no entities found before the word \"TO\" on line $line_cnt.\n";
+		print STDERR "            The correct syntax is: CONNECT <process_name>((,)<process_name>) TO <process_name>(,<process_name>)\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	if (scalar @to_entities < 1) {
+		print STDERR "***ERROR*** Invalid syntax - no entities found after the word \"TO\" on line $line_cnt.\n";
+		print STDERR "            The correct syntax is: CONNECT <process_name>((,)<process_name>) TO <process_name>(,<process_name>)\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	printf("---DEBUG--- FROM_ENTITIES found = %s\n", scalar @from_entities) if $debug;
+	print  "---DEBUG--- FROM_ENTITIES=@from_entities\n" if $debug;
+	printf("---DEBUG--- TO_ENTITIES found = %s\n", scalar @to_entities) if $debug;
+	print  "---DEBUG--- TO_ENTITIES=@to_entities\n" if $debug;
+	# Now add all of the connections.  Make sure they don't exist.
+	foreach $from_entity (@from_entities) {
+		foreach $to_entity (@to_entities) {
+			$conn_name = "${from_entity}${conn_key_separator}${to_entity}";
+			if (exists $connections{$conn_name}) {
+				print STDERR "***ERROR*** Duplicate connection ($conn_name) found on line $line_cnt.\n";
+				print STDERR "            line=$line\n";
+				exit 1;
+			}
+			$connections{$conn_name} = 1;  # Just indicate that it exists.
+		}
+	}
+	next;
+} # end of process_conf_connect
+
+#--------------------------------------------------------------------------------
+#
+# process_conf_db
+#
+# Process configuration entry with DB key word
+#
+#--------------------------------------------------------------------------------
+
+sub process_conf_db {
+	my ($line) = @_;
+	$db_name = $words[1];
+	# Make sure it isn't duplicated
+	if (exists $dbs{$db_name}) {
+		print STDERR "***ERROR*** DB name ($db_name) is duplicated on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure there are exactly the right number of values
+	if (scalar @words < 4) {
+		print STDERR "***ERROR*** Invalid number of parameters on line $line_cnt.\n";
+		print STDERR "            The correct syntax is: DB <db_name> <service_name> <schema_list>\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# add to the hash
+	$dbs{$db_name}->{'service_name'} = $words[2];
+	# validate the list of schemas
+	# fourth element begins the schema list
+	for (my $count = 3; $count < scalar @words; $count++) {
+		$schema_name = $words[$count];
+		if (!exists $schemas{$schema_name}) {
+			print STDERR "***ERROR*** SCHEMA name ($schema_name) doesn't exist, processing line $line_cnt.\n";
+			print STDERR "            line=$line\n";
+			exit 1;
+		}
+		push @{$dbs{$db_name}->{'schema_list'}}, $schema_name;
+	}
+} # end of process_conf_db
+
+#--------------------------------------------------------------------------------
+#
+# process_conf_dbi
+#
+# Process configuration entry with DBI key word
+#
+#--------------------------------------------------------------------------------
+
+sub process_conf_dbi {
+	my ($line) = @_;
+	$dbi_name = $words[1];
+	# Make sure the name starts with DBI
+	if ($dbi_name !~ /^DBI/i) {
+		print STDERR "***ERROR*** DBI name must start with DBI - found $dbi_name on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure it isn't duplicated
+	if (exists $dbis{$dbi_name}) {
+		print STDERR "***ERROR*** DBI name ($dbi_name) is duplicated on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure there are exactly the right number of values
+	if (scalar @words != 5) {
+		print STDERR "***ERROR*** Invalid number of parameters on line $line_cnt.\n";
+		print STDERR "            The correct syntax is: DBI <dbi_name> <host> <port> <db_name>\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Validate the DB_NAME
+	if (!exists $dbs{$db_name}) {
+		print STDERR "***ERROR*** DB name ($db_name) doesn't exist, processing line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# add to the hash
+	$dbis{$dbi_name}->{'host'} = $words[2];
+	$dbis{$dbi_name}->{'port'} = $words[3];
+	$dbis{$dbi_name}->{'db_name'} = $words[4];
+} # end of process_conf_dbi
+
+#--------------------------------------------------------------------------------
+#
+# process_conf_ha_pair
+#
+# Process configuration entry with HA_PAIR key word
+#
+#--------------------------------------------------------------------------------
+                                                                                                    
+sub process_conf_ha_pair {
+        my ($line) = @_;
+	$process_name          = $words[1];
+	$process_installation  = $words[2];
+	$process_port          = $words[3];
+	$process_web_port      = $words[4];
+	$process_installation2 = $words[5];
+	$process_port2         = $words[6];
+	$process_web_port2     = $words[7];
+	
+	&verify_entity_name($process_name);
+	# Make sure it isn't duplicated
+	if (exists $ha_pairs{$process_name}) {
+		print STDERR "***ERROR*** HA_Pair name ($process_name) is duplicated on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure the translated names also don't exist.
+	$primary_process_name = &get_primary_ha_pair_name($process_name);
+	if (exists $process_entities{$primary_process_name}) {
+		print STDERR "***ERROR*** Entity name ($primary_process_name) is duplicated on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	$secondary_process_name = &get_secondary_ha_pair_name($process_name);
+	if (exists $process_entities{$secondary_process_name}) {
+		print STDERR "***ERROR*** Entity name ($secondary_process_name) is duplicated on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure there are exactly the right number of values
+	if (scalar @words != 8) {
+		print STDERR "***ERROR*** Invalid number of parameters on line $line_cnt.\n";
+		print STDERR "            The correct syntax is:\n";
+		print STDERR "            HA_PAIR <process_name>\n";
+		print STDERR "              <primary installation_name> <primary port>\n";
+		print STDERR "              <primary web server port>\n";
+		print STDERR "              <secondary installation_name> <secondary port>\n";
+		print STDERR "              <secondary web server port>\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure the installation_name is known
+	if (!exists $installations{$process_installation}) {
+		print STDERR "***ERROR*** Unknown installation_name $process_installation on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure the installation_name is known
+	if (!exists $installations{$process_installation2}) {
+		print STDERR "***ERROR*** Unknown installation_name $process_installation2 on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+		}
+	# add two hashes to the process_entities hash
+	$process_entities{$primary_process_name}->{'installation'} = $process_installation;
+	$process_entities{$primary_process_name}->{'port'} = $process_port;
+	$process_entities{$primary_process_name}->{'web_port'} = $process_web_port;
+        $process_subdir = &get_subdir_from_process_name($primary_process_name);
+	$process_entities{$primary_process_name}->{'subdir'} = $process_subdir;
+	#
+	$process_entities{$secondary_process_name}->{'installation'} = $process_installation2;
+	$process_entities{$secondary_process_name}->{'port'} = $process_port2;
+	$process_entities{$secondary_process_name}->{'web_port'} = $process_web_port2;
+        $process_subdir2 = &get_subdir_from_process_name($secondary_process_name);
+	$process_entities{$secondary_process_name}->{'subdir'} = $process_subdir2;
+	#
+	$ha_pairs{$process_name} = 1;  # Just indicate that it exists.
+	push @entities, $primary_process_name;
+	push @entities, $secondary_process_name;
+} # end of process_conf_ha_pair
+
+#--------------------------------------------------------------------------------
+#
+# process_conf_installation
+#
+# Process configuration entry with INSTALLATION key word
+#
+#--------------------------------------------------------------------------------
+                                                                                                    
+sub process_conf_installation {
+        my ($line) = @_;
+	$installation_name = $words[1];
+	# Make sure it isn't duplicated
+	if (exists $installations{$installation_name}) {
+		print STDERR "***ERROR*** installation name ($installation_name) is duplicated on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure there are exactly the right number of values
+	if (scalar @words != 6) {
+		print STDERR "***ERROR*** Invalid number of parameters on line $line_cnt.\n";
+		print STDERR "            The correct syntax is: INSTALLATION <installation_name> <hostname> <pin_home directory> <pin_log directory> <ifw home directory>\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# add to the hash
+	# Treat "localhost" as a wildcard to mean any host.
+	if ($words[2] eq 'localhost') {
+		$words[2] = $this_host;
+	}
+	$installations{$installation_name}->{'host'} = $words[2];
+	$installations{$installation_name}->{'pin_home'} = $words[3];
+	$installations{$installation_name}->{'pin_log'} = $words[4];
+	$installations{$installation_name}->{'ifw_home'} = $words[5];
+	# Add to hash of hosts
+	$hosts{$words[2]} = 1;   # Just indicate it exists
+} # end of process_conf_installation
+
+#--------------------------------------------------------------------------------
+#
+# process_conf_process
+#
+# Process configuration entry with PROCESS key word
+#
+#--------------------------------------------------------------------------------
+                                                                                                    
+sub process_conf_process {
+        my ($line) = @_;
+	$process_name   = $words[1];
+	$process_installation   = $words[2];
+	$process_port   = $words[3];
+	&verify_entity_name($process_name);
+	# Make sure it isn't duplicated
+	if (exists $process_entities{$process_name}) {
+		print STDERR "***ERROR*** Entity name ($process_name) is duplicated on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure there are exactly the right number of values
+	if (scalar @words != 4) {
+		print STDERR "***ERROR*** Invalid number of parameters on line $line_cnt.\n";
+		print STDERR "            The correct syntax is: PROCESS <process_name> <installation_name> <port>\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure the installation_name is known
+	if (!exists $installations{$process_installation}) {
+		print STDERR "***ERROR*** Unknown installation $process_installation on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# add a hash to the hash
+	$process_entities{$process_name}->{'installation'} = $process_installation;
+	$process_entities{$process_name}->{'port'} = $process_port;
+	# Set the subdir (must be done after $process_entities has been updated).
+	$process_subdir = &get_subdir_from_process_name($process_name);
+	$process_entities{$process_name}->{'subdir'} = $process_subdir;
+	push @entities, $process_name;
+} # end of process_conf_process
+
+#--------------------------------------------------------------------------------
+#
+# process_conf_schema
+#
+# Process configuration entry with SCHEMA key word
+#
+#--------------------------------------------------------------------------------
+                                                                                                    
+sub process_conf_schema {
+        my ($line) = @_;
+	$schema_name = $words[1];
+	# Make sure it isn't duplicated
+	if (exists $schemas{$schema_name}) {
+		print STDERR "***ERROR*** schema name ($schema_name) is duplicated on line $line_cnt.\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# Make sure there are exactly the right number of values
+	if (scalar @words != 4) {
+		print STDERR "***ERROR*** Invalid number of parameters on line $line_cnt.\n";
+		print STDERR "            The correct syntax is: SCHEMA <db_number> <user_name> <user_pw>\n";
+		print STDERR "            line=$line\n";
+		exit 1;
+	}
+	# add to the hash
+	$schemas{$schema_name}->{'user_name'} = $words[2];
+	$schemas{$schema_name}->{'user_pw'} = $words[3];
+} # end of process_conf_schema
+
+#--------------------------------------------------------------------------------
+#
+# validate
+#
+# Check to see if each process has at least one connection.
+# Also, make sure the subdirectory hasn't been re-used in an installation.
+#
+#--------------------------------------------------------------------------------
+
+sub validate {
+	@processes = sort(keys(%process_entities));
+	my $fatal_error_detected = 0;
+	my %inst_dirs = ();
+	foreach $process_name (@processes) {
+		@process_connections = &get_connections_from_process($process_name);
+		if (scalar @process_connections == 0) {
+			if ($process_name !~ /^DM_ORACLE/i && $process_name !~ /^RTP/i) {
+				print STDERR "***ERROR*** The process $process_name doesn't have any from connections from it.\n";
+				$fatal_error_detected = 1;
+			}
+		}
+		@process_connections = &get_connections_to_process($process_name);
+		if (scalar @process_connections == 0) {
+			if ($process_name =~ /^AAA/i) {
+				# This is OK.
+			}
+			elsif ($process_name =~ /^CM/i) {
+				print "***WARN *** The process $process_name doesn't have any to connections to it.\n";
+			}
+			elsif ($process_name =~ /^RTP/i) {
+				1# This is OK.	
+			}
+			else
+		 	{
+				print STDERR "***ERROR*** The process $process_name doesn't have any to connections to it.\n";
+				$fatal_error_detected = 1;
+			}
+		}
+		# Now see if this subdir has be re-used.
+		$key = "$process_entities{$process_name}->{'installation'}:$process_entities{$process_name}->{'subdir'}";
+		if (exists $inst_dirs{$key}) {
+			print STDERR "***ERROR*** The process $process_name is using the same subdir";
+			print STDERR " \"$process_entities{$process_name}->{'subdir'}\" as the process $inst_dirs{$key}.\n";
+			$fatal_error_detected = 1;
+		}
+		$inst_dirs{$key} = $process_name;  # Save the process name in case of error.
+	}
+
+	return $fatal_error_detected;
+} # end of validate
+
+#--------------------------------------------------------------------------------
+# 
+# continue
+#
+# print the string passed in and prompt from the standard in to continue
+#
+#--------------------------------------------------------------------------------
+
+sub continue {
+	my ($str) = @_;
+	if ($continue) {	
+		chomp $str;	
+		print "$str\n";
+		print "Press <ENTER> to continue\n";
+		<STDIN>;
+	}
+} # end of continue
+
+#--------------------------------------------------------------------------------
+#
+# match_wild_card
+#
+# match the string with another string that includes one single wildcard
+#
+#--------------------------------------------------------------------------------
+
+sub match_wild_card {
+	my ($str, $str_w) = @_;
+	my $head;
+	my $tail;	
+	my @str_split = split (/$wild_card_key/, $str_w);
+	if (scalar @str_split > 2 || scalar @str_split < 1) {
+		print STDERR "***ERROR*** $str_w entity should contains only one wild card key ($wild_card_key)\n";
+		exit 1;
+	}
+	if (scalar @str_split == 1) {
+		$head = $str_split[0];
+	}
+	else {
+		$head = $str_split[0];	
+		$tail = $str_split[1];
+	}
+	
+	return 1 if ($str =~ /^$head.*$tail$/);
+	return 0;
+} # end of match_wild_card

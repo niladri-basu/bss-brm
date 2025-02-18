@@ -1,0 +1,122 @@
+010	1			4133	4133	1461072312	1461072312	1461072312		0	0				00	974	RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/valuepack			2
+020	2							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028849	1461028850	1
+520	3		228014545	0
+900	4	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-100.00|>
+600	5	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	6	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461455	CORP	0	0											CORP	CORP				202117799	20160419012049	60900	61247				
+890	Postpay Cash	10.00	-100.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	10							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028838	1461028839	1
+520	11		228014545	0
+900	12	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-10.00|>
+600	13	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	14	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461444	CORP	0	0											CORP	CORP				202117799	20160419012039	60900	61247				
+890	Postpay Cash	10.00	-10.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	18							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028841	1461028842	1
+520	19		228014545	0
+900	20	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-20.00|>
+600	21	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	22	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461446	CORP	0	0											CORP	CORP				202117799	20160419012041	60900	61247				
+890	Postpay Cash	10.00	-20.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	26							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028842	1461028843	1
+520	27		228014545	0
+900	28	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-30.00|>
+600	29	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	30	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461448	CORP	0	0											CORP	CORP				202117799	20160419012042	60900	61247				
+890	Postpay Cash	10.00	-30.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	34							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028843	1461028844	1
+520	35		228014545	0
+900	36	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-40.00|>
+600	37	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	38	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461449	CORP	0	0											CORP	CORP				202117799	20160419012043	60900	61247				
+890	Postpay Cash	10.00	-40.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	42							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028844	1461028845	1
+520	43		228014545	0
+900	44	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-50.00|>
+600	45	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	46	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461450	CORP	0	0											CORP	CORP				202117799	20160419012044	60900	61247				
+890	Postpay Cash	10.00	-50.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	50							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028845	1461028846	1
+520	51		228014545	0
+900	52	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-60.00|>
+600	53	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	54	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461451	CORP	0	0											CORP	CORP				202117799	20160419012045	60900	61247				
+890	Postpay Cash	10.00	-60.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	58							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028846	1461028847	1
+520	59		228014545	0
+900	60	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-70.00|>
+600	61	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	62	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461452	CORP	0	0											CORP	CORP				202117799	20160419012046	60900	61247				
+890	Postpay Cash	10.00	-70.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	66							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028847	1461028848	1
+520	67		228014545	0
+900	68	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-80.00|>
+600	69	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	70	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461453	CORP	0	0											CORP	CORP				202117799	20160419012047	60900	61247				
+890	Postpay Cash	10.00	-80.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+020	74							228014545	00		$10 International Chat Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Value packs	0	0	1461028848	1461028849	1
+520	75		228014545	0
+900	76	1 /account 903626509 0	1 /service/telco/gsm 904324868 0	1 /item/usage 297483867063976538 0	0  0 0	;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[228014545,2,0]|;;;;[,2,0]		1	@INTEGRATE#228014545##VAP#1#1#Value packs#0#$10 International Chat Pack#Talk Pack#<1 /item/usage 297483867063976538 0#554#1##10.00#100200600#GST|>#<#0###|>#<Postpay Cash#10.00#-90.00|>
+600	77	1 /account 903626509 0	1 /balance_group 904326008 0	1 /item/usage 297483867063976538 0	554	0	ALL	258	1 /product 1090734 0	100200600	0	GST			1 /purchased_product 904326468 0	1	10.00	0.0	10.00	0.0	0	P
+605	0	1 /balance_group 904326008 0	554
+607	0	10.00	1461029128	0			0	0
+800	78	1 /account 903626509 0	1 /balance_group/monitor 903624077 0	554	10.00
+805	0	1 /balance_group/monitor 903624077 0	554
+807	1461024000	10.00	1461024000	1461110400	
+888	5	11461454	CORP	0	0											CORP	CORP				202117799	20160419012048	60900	61247				
+890	Postpay Cash	10.00	-90.00
+894	BUY	International Chat 300	TRUE																Talk Pack
+090	82			4136	4136	10	1461028838	+1200	1461028849	+1200	0.0	100.00

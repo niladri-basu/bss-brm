@@ -1,0 +1,31 @@
+-----------------IMPORTANT-------------------
+# The following files will be installed 
+# with this patch 
+---------------------------------------------
+---------------------------------------------
+# The following files were packaged with 
+# this patch, However only the applicable 
+# files will be installed 
+---------------------------------------------
+$PATCH_HOME/releaseNotes/RELEASE_NOTES.INP_Recycle
+$PATCH_HOME/lib/libEDR64.so
+$PATCH_HOME/lib/libINP_Recycle64.so
+---------------------------------------------
+# The following files will not be installed
+# because the latest version exists in the 
+# system 
+---------------------------------------------
+releaseNotes/RELEASE_NOTES.INP_Recycle
+lib/libEDR64.so
+lib/libINP_Recycle64.so
+---------------------------------------------
+# The following files will not be installed
+# because the prerequisite product is not
+# installed in the system 
+---------------------------------------------
+
+---------------------------------------------
+# The following are the new files were 
+# packaged with this patch 
+---------------------------------------------
+

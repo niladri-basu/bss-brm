@@ -1,0 +1,75 @@
+================================================================================
+IXT_Db
+--------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Actual Version : 10002 / Date: 19-Apr-2004
+----------------
+
+PRSF00086920:[Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Actual Version : 10001 / Date: 21-Feb-2003
+----------------
+
+PRSF00032419: Implement a thread trace.
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 23-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #38557 - New functions
+
+                Bool dbBeginTransaction(Long)
+                Bool dbCommitTransaction(Long)
+                Bool dbRollbackTransaction(Long)
+
+              introduced.
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 22-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #38491 - BugFix for: dbCloseConnection and dbCloseResult return
+              always false.
+
+================================================================================
+
+Actual Version : v4-01-01 / Date : 15-May-2000
+----------------
+
+Notes          :
+----------------
+
+Internal interface for iScript extensions changed.
+
+================================================================================
+
+Actual Version : v4-00-02 / Date : 08-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+BugFix: SQL insert statements now return a valid result handle.
+
+================================================================================
+
+Actual Version : v4-00-01 / Date : 21-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+Initial version of the iScript database extension.
+
+================================================================================

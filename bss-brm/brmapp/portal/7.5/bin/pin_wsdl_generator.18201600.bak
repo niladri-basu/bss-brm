@@ -1,0 +1,148 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+
+use Getopt::Std;
+
+####################################################################
+#-------------------------------------------------------------------
+#
+#  @(#)% %
+#
+# Copyright (c) 2007, 2009, Oracle and/or its affiliates.All rights reserved. 
+#	
+#	This material is the confidential property of Oracle Corporation
+#	or its licensors and may be used, reproduced, stored or transmitted
+#	only in accordance with a valid Oracle license or sublicense agreement.
+#
+#-------------------------------------------------------------------
+####################################################################
+
+####################################################################
+#-------------------------------------------------------------------
+#
+# Script To Generate WSDL files for the BRM Services
+#
+# Generates WSDL files based on the configuration file, refer to
+# the packaged file pin_wsdl_generator.xml for details. 
+# 
+# Options for the tool: 
+#	-c config_file, the XML configuration file, Mandatory.
+#	-v schema_file, validation file for the config_file.
+#	-j or -s, generate WSDL with JCA or SOAP binding, defaults to JCA.
+#	-d, print debug information to the screen.
+#	-h, print the help information.
+#
+# By default, uses the packaged pin_wsdl_generator.xml file in 
+# $PIN_HOME/apps/brm_integrations/config
+#-------------------------------------------------------------------
+####################################################################
+
+#BRM home
+$PINDIR='/brmapp/portal/7.5';
+# if($^O eq "Windows_NT" )- changed as part of the bug ::  7120752
+if(($^O eq "Windows_NT" ) || ($^O eq "MSWin32")) 
+{
+        $PINDIR=~s/\//\\/g;
+	$LOGDIR=$PINDIR."\\apps\\brm_integrations\\wsdls";
+	$CNFFILE=$PINDIR."\\apps\\brm_integrations\\config\\pin_wsdl_generator.xml";
+}
+else
+{
+	$LOGDIR=$PINDIR."/apps/brm_integrations/wsdls";
+	$CNFFILE=$PINDIR."/apps/brm_integrations/config/pin_wsdl_generator.xml";
+}
+
+#Java executable
+$JAVACMD='$BRM_JRE/bin/java';
+
+# MAIN
+# Program name
+($ME = $0) =~ s,.*/,,;
+
+$USAGE = "$ME \n"
+	."\t\t-c <config_file>, configuration file, defaults to $CNFFILE \n"
+	."\t\t[-v <schema_file>], validation schema file \n"
+        ."\t\t[-j(jca)|-s(soap)], binding to generate, defaults to JCA \n"
+	."\t\t[-d(debug)], print debug information \n"
+	."\t\t[-h(help)], print this message \n";
+
+# parse command line arguments
+getopts("hdjsc:v:", \%opt); 
+if ($opt{'h'}) 
+{
+	print $USAGE;
+	exit 0;
+}
+
+# Options
+foreach my $key (keys %opt)
+{
+        $opt{$key} =~ s/[ \t]//g;
+        if (($opt{$key} eq "") || ($opt{$key} =~ /^-/))
+        {
+                print "ERROR: invalid argument '$opt{$key}' " .
+                        "for command line option '$key'.\n";
+		if ($key eq "c")
+		{
+		        die "ERROR: A valid configuration file must be specified "
+                        	."for command line option '$key'.\n";
+		}
+		elsif ($key eq "v")
+		{
+			die "ERROR: A valid schema file must be specified "
+                        	."for command line option '$key'.\n";
+		}
+	}
+}
+
+$arg = " -c ";
+if ($opt{'c'})
+{
+	$arg .= "\"$opt{'c'}\"";
+}
+else {
+	$arg .= "\"$CNFFILE\"";
+}
+
+if ($opt{'v'} )
+{
+	$arg .= " -v "."\"$opt{'c'}\"";
+}
+
+if ($opt{'s'}) 
+{
+	$arg .= " -s ";	
+}
+else {
+	$arg .= " -j ";
+}
+
+if ($opt{'d'}) 
+{
+	$arg .= " -d ";
+}
+
+#if($^O eq "Windows_NT") - changed as part of the bug : 7120752 
+if(($^O eq "Windows_NT" ) || ($^O eq "MSWin32")) 
+{
+        #$JAVACMD = ~s/\//\\/g;
+		$cmd = "$JAVACMD"." -classpath \"$PINDIR\\jars\\xalan.jar;$PINDIR\\jars\\serializer.jar;"
+		."$PINDIR\\jars\\xerces.jar;$PINDIR\\jars\\WSDLGenerator.jar\" "
+		."oracle.brm.WSDLGenerator ".$arg;
+}
+else
+{
+	$cmd=$JAVACMD." -classpath \"$PINDIR/jars/xalan.jar:$PINDIR/jars/serializer.jar:"
+		."$PINDIR/jars/xerces.jar:$PINDIR/jars/WSDLGenerator.jar\" "
+		."oracle.brm.WSDLGenerator ".$arg;
+}
+
+system($cmd);
+$exit_val  = $? >> 8;
+
+if ($exit_val != 0) {
+	print "\nError, running WSDLGenerator, err: $exit_val \n";
+	exit $exit_val;
+}
+
+print "WSDL files have been generated.\n";
+exit 0;

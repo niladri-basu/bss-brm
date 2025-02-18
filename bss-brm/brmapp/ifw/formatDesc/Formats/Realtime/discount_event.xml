@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!--Module Version : 10004-->
+<OpcodeMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="./opcode_ifw_mapping.xsd"
+        opName="PCM_OP_RATE_DISCOUNT_EVENT">
+    <InputMap containerType="DETAIL">
+        <!--CONSTANT EDR DETAIL ITEMS-->
+        <EdrField name="DETAIL.RECORD_TYPE" value="020" />
+        <EdrField name="DETAIL.DISCARDING" value="0" />
+        <!--CREATE THE CUST_A BLOCK-->
+        <EdrBlock name="DETAIL.CUST_A" />
+        <!--EVENT FLIST STRUCT ITEM-->
+        <FlistField name="PIN_FLD_EVENT">
+	    <FlistField name="PIN_FLD_TELCO_INFO" use="optional">
+		<FlistField name="PIN_FLD_USAGE_CLASS" target="DETAIL.INTERN_USAGE_CLASS" use="optional" />
+	    </FlistField> <!--END PIN_FLD_TELCO_INFO SUBSTRUCT-->
+            <!--CHARGING_START-->
+            <FlistField name="PIN_FLD_START_T" target="DETAIL.CHARGING_START_TIMESTAMP" applyUTCOffset="true" />
+            <FlistField name="PIN_FLD_START_T" target="DETAIL.NE_CHARGING_START_TIMESTAMP" applyUTCOffset="true" />
+            <!--CHARGING_END-->
+            <FlistField name="PIN_FLD_END_T" target="DETAIL.CHARGING_END_TIMESTAMP" applyUTCOffset="true" />
+            <FlistField name="PIN_FLD_END_T" target="DETAIL.NE_CHARGING_END_TIMESTAMP" applyUTCOffset="true" />
+            <FlistField name="PIN_FLD_PROFILE_LABEL_LIST" target="DETAIL.PROFILE_LABEL_LIST" />
+            <!--A wrong field to put unrated quantity, but respect of history -->
+            <FlistField name="PIN_FLD_UNRATED_QUANTITY" target="DETAIL.DURATION" use="optional" />
+            <FlistField name="PIN_FLD_NET_QUANTITY" target="DETAIL.NET_QUANTITY" use="optional" />
+            <FlistField name="PIN_FLD_MIN_QUANTITY" target="DETAIL.MIN_QUANTITY" use="optional" />
+            <FlistField name="PIN_FLD_INCR_QUANTITY" target="DETAIL.INCR_QUANTITY" use="optional" />
+            <FlistField name="PIN_FLD_FLAGS" target="DETAIL.DISCOUNT_ONLY_FLAG" use="optional" />
+	    <!--MOST CALLED FIELD-->
+            <FlistField name="PIN_FLD_MOST_CALLED_INFO" use="optional" >
+                <EdrBlock name="DETAIL.MC" />
+                <FlistField name="PIN_FLD_AMOUNT" target="DETAIL.MC.AMOUNT" use="optional" />
+                <FlistField name="PIN_FLD_QUANTITY" target="DETAIL.MC.QUANTITY" use="optional" />
+                <FlistField name="PIN_FLD_COUNT" target="DETAIL.MC.COUNT" use="optional" />
+                <FlistField name="PIN_FLD_MOST_CALLED_LIST" target="DETAIL.MC.LIST" use="optional" />
+	    </FlistField>
+            <!--ASS_CBD EXTENSION-->
+            <EdrBlock name="DETAIL.ASS_CBD" />
+            <EdrField name="DETAIL.ASS_CBD.RECORD_TYPE" value="981" />
+            <!-- RUM NAME-->
+            <FlistField name="PIN_FLD_RUM_NAME" alias="rum_name" use="optional" />
+            <!-- SERVICE-->
+            <FlistField name="PIN_FLD_SERVICE_OBJ" alias="service_obj" use="optional" />
+            <!-- PRODUCT-->
+            <FlistField name="PIN_FLD_PRODUCT" use="optional">
+                <EdrBlock name="DETAIL.CUST_A.PRODUCT" />
+                <FlistField name="PIN_FLD_PRODUCT_OBJ" format="id" target="DETAIL.CUST_A.PRODUCT.PRODUCT_ID"/>
+                <EdrField name="DETAIL.CUST_A.PRODUCT.SERVICE_ID" useAlias="service_obj" format="id" />
+                <EdrField name="DETAIL.CUST_A.PRODUCT.SERVICE_TYPE" useAlias="service_obj" format="type" />
+            </FlistField>
+            <!-- PIN_FLD_RUM_MAP ARRAY ITEMS-->
+            <FlistField name="PIN_FLD_RUM_MAP" use="optional">
+                <EdrBlock name="DETAIL.ASS_CBD.RM" />
+                <FlistField name="PIN_FLD_RUM_NAME" target="DETAIL.ASS_CBD.RM.RUM_NAME"/>
+                <FlistField name="PIN_FLD_NET_QUANTITY" target="DETAIL.ASS_CBD.RM.NET_QUANTITY"/>
+                <FlistField name="PIN_FLD_UNRATED_QUANTITY" target="DETAIL.ASS_CBD.RM.UNRATED_QUANTITY"/>
+            </FlistField> <!--END PIN_FLD_RUM_MAP ARRAY ITEMS-->
+            <!--PIN_FLD_BAL_IMPACTS ARRAY ITEMS-->
+            <FlistField name="PIN_FLD_BAL_IMPACTS" use="optional">
+                <EdrBlock name="DETAIL.ASS_CBD.CP" />
+                <EdrField name="DETAIL.ASS_CBD.CP.RECORD_TYPE" value="680" />
+                <FlistField name="PIN_FLD_RATE_TAG" target="DETAIL.ASS_CBD.CP.RATETAG_CODE" />
+                <FlistField name="PIN_FLD_IMPACT_CATEGORY" target="DETAIL.ASS_CBD.CP.IMPACT_CATEGORY" />
+                <FlistField name="PIN_FLD_RESOURCE_ID" target="DETAIL.ASS_CBD.CP.RESOURCE_ID" />
+                <EdrField   name="DETAIL.ASS_CBD.CP.RUM" useAlias="rum_name" />
+                <EdrField   name="DETAIL.ASS_CBD.CP.CHARGE_INDEX" useArrayIndex="true" />
+                <FlistField name="PIN_FLD_QUANTITY" target="DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_VALUE" />
+                <FlistField name="PIN_FLD_QUANTITY_FROM" target="DETAIL.ASS_CBD.CP.QUANTITY_FROM" use="optional" />
+                <FlistField name="PIN_FLD_QUANTITY_TO" target="DETAIL.ASS_CBD.CP.QUANTITY_TO" use="optional" />
+                <FlistField name="PIN_FLD_AMOUNT" target="DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE" />
+                <FlistField name="PIN_FLD_TAX_CODE" target="DETAIL.ASS_CBD.CP.CHARGED_TAX_CODE" />
+                <FlistField name="PIN_FLD_PERCENT" target="DETAIL.ASS_CBD.CP.PIN_PERCENT" />
+                <FlistField name="PIN_FLD_GL_ID" target="DETAIL.ASS_CBD.CP.USAGE_GL_ACCOUNT_CODE" />
+                <FlistField name="PIN_FLD_AMOUNT_DEFERRED" target="DETAIL.ASS_CBD.CP.DEFERRED_AMOUNT" use="optional"/>
+                <FlistField name="PIN_FLD_SUB_BALANCES" use="optional">
+                    <FlistField name="PIN_FLD_VALID_FROM" target="DETAIL.ASS_CBD.CP.VALID_FROM" use="optional"/>
+                    <FlistField name="PIN_FLD_VALID_TO" target="DETAIL.ASS_CBD.CP.VALID_TO" use="optional"/>
+                    <FlistField name="PIN_FLD_RELATIVE_CYCLE_OFFSET" target="DETAIL.ASS_CBD.CP.CYCLE_OFFSET" use="optional"/>
+                </FlistField> <!--END SUB BALANCES FLIST STRUCT ITEM-->
+            </FlistField> <!--END PIN_FLD_BAL_IMPACTS ARRAY ITEMS-->
+            <!--MISC-->
+            <FlistField name="PIN_FLD_POID" format="type" target="DETAIL.EVENT_TYPE" alias="event_type"/>
+            <FlistField name="PIN_FLD_POID" format="short" target="DETAIL.EVENT_ID" />
+            <FlistField name="PIN_FLD_SERVICE_OBJ" format="type" target="DETAIL.SERVICE_TYPE" use="optional" />
+	     <!-- Added by GSM -->
+            <FlistField name="PIN_FLD_SERVICE_OBJ" format="id" target="DETAIL.OPERATOR_SPECIFIC_INFO" use="optional" />
+             <!-- *************************** -->
+            <FlistField name="PIN_FLD_BAL_GRP_OBJ" format="short" target="DETAIL.INTERN_BALANCE_GROUP_ID" />
+            <FlistField name="PIN_FLD_BILLINFO_OBJ" format="short" target="DETAIL.INTERN_SERVICE_BILL_INFO_ID" />
+            <FlistField name="PIN_FLD_TIME_OFFSET" target="DETAIL.UTC_TIME_OFFSET" use="optional" />
+            <FlistField name="PIN_FLD_USAGE_TYPE" target="DETAIL.USAGE_TYPE" use="optional" />
+            <!--DROPPED CALL RELATED FIELDS-->
+            <FlistField name="PIN_FLD_CALL_TYPE" target="DETAIL.DROPPED_CALL_STATUS" use="optional" />
+            <FlistField name="PIN_FLD_DROPPED_CALL_QUANTITY" target="DETAIL.DROPPED_CALL_QUANTITY" use="optional" />
+        </FlistField> <!--END EVENT FLIST STRUCT ITEM-->
+        <!--INHERITED_INFO FLIST STRUCT ITEM-->
+        <FlistField name="PIN_FLD_IMPACT_TYPE" target="DETAIL.RERATE_TAG" use="optional" /> 
+        <FlistField name="PIN_FLD_INHERITED_INFO">
+	 <!-- Added by GSM -->
+        <FlistField name="PIN_FLD_ACCOUNT_POID_STR" target="DETAIL.DISCARD_REASON" use="optional" />
+        <FlistField name="PIN_FLD_DISC_OWNER_FLAG" target="DETAIL.ROUTING_CATEGORY" use="optional" />
+        <!-- <FlistField name="PIN_FLD_FILTER_STRING" target="DETAIL.OPERATOR_SPECIFIC_INFO" use="optional" /> -->
+        <!-- *************************** -->
+            <FlistField name="PIN_FLD_POID" format="short" target="DETAIL.CUST_A.ACCOUNT_PARENT_ID" />
+            <FlistField name="PIN_FLD_ACCOUNT_OBJ" target="DETAIL.CUST_A.ACCOUNT_ID" format="short"/>
+            <FlistField name="PIN_FLD_ACCOUNT_NO" target="DETAIL.CUST_A.ACCOUNT_NO" />
+            <FlistField name="PIN_FLD_ACTG_CYCLE_DOM" target="DETAIL.CUST_A.BILL_CYCLE" use="optional"/>
+            <FlistField name="PIN_FLD_LAST_STATUS_T" target="DETAIL.CUST_A.CREATION_DATE" />
+            <FlistField name="PIN_FLD_BRAND_OBJ" format="long" target="DETAIL.CUST_A.SYSTEM_BRAND" />
+            <!--PIN_FLD_PIPE_LINE_INFO BILLINFO for and other stuff -->
+            <FlistField name="PIN_FLD_PIPE_LINE_INFO" use="optional">
+                <FlistField name="PIN_FLD_ACTG_FUTURE_T" target="DETAIL.CUST_A.ACTG_FUTURE_DATE" />
+                <FlistField name="PIN_FLD_ACTG_LAST_T" target="DETAIL.CUST_A.ACTG_LAST_DATE" />
+                <FlistField name="PIN_FLD_ACTG_NEXT_T" target="DETAIL.CUST_A.ACTG_NEXT_DATE" />
+                <FlistField name="PIN_FLD_ACTUAL_LAST_BILL_T" target="DETAIL.CUST_A.ACTG_USED_DATE" />
+                <FlistField name="PIN_FLD_LAST_BILL_T" target="DETAIL.CUST_A.BILL_LAST_DATE" />
+                <FlistField name="PIN_FLD_NEXT_BILL_T" target="DETAIL.CUST_A.BILL_NEXT_DATE" />
+                <FlistField name="PIN_FLD_FUTURE_BILL_T" target="DETAIL.CUST_A.BILL_FUTURE_DATE" />
+                <FlistField name="PIN_FLD_BILL_WHEN" target="DETAIL.CUST_A.BILL_FREQUENCY" />
+            </FlistField> <!--PIN_FLD_PIPE_LINE_INFO-->
+            <!--PIN_FLD_PROFILES ARRAY ACCOUNT PROFILE ITEMS-->
+            <FlistField name="PIN_FLD_PROFILES" use="optional">
+                <EdrBlock name="DETAIL.CUST_A.ERA" />
+                <FlistField name="PIN_FLD_PROFILE_NAME" target="DETAIL.CUST_A.ERA.PROFILE" />
+                <!--PIN_FLD_PROFILES ARRAY ITEMS-->
+                <FlistField name="PIN_FLD_DATA_ARRAY" use="optional">
+                    <EdrBlock name="DETAIL.CUST_A.ERA.PA" />
+                    <FlistField name="PIN_FLD_NAME" target="DETAIL.CUST_A.ERA.PA.KEY" />
+                    <FlistField name="PIN_FLD_VALUE" target="DETAIL.CUST_A.ERA.PA.VALUE" />
+                </FlistField> <!--END PIN_FLD_DATA_ARRAY ITEMS-->
+                <!--PIN_FLD_EXTRATING SUBSTRUCT ITEMS-->
+                <FlistField name="PIN_FLD_EXTRATING" use="optional" >
+                  <FlistField name="PIN_FLD_LABEL" target="DETAIL.CUST_A.ERA.LABEL" />
+                </FlistField> <!--PIN_FLD_EXTRATING SUBSTRUCT ITEMS-->
+            </FlistField> <!--END PIN_FLD_PROFILES ARRAY ITEMS-->
+            <!--PIN_FLD_SERVICE_INFO STRUCT ITEM-->
+            <FlistField name="PIN_FLD_SERVICE_INFO" use="optional">
+                <FlistField name="PIN_FLD_SUBSCRIPTION_OBJ" format="type" target="DETAIL.SERVICE_TYPE" concat=";" use="optional" />
+                <!--PIN_FLD_PROFILES ARRAY SERVICE PROFILE ITEMS-->
+                <FlistField name="PIN_FLD_PROFILES" use="optional">
+                    <EdrBlock name="DETAIL.CUST_A.PRODUCT" use="lazyCreate" />
+                    <EdrBlock name="DETAIL.CUST_A.PRODUCT.ERA" />
+                    <FlistField name="PIN_FLD_PROFILE_NAME" target="DETAIL.CUST_A.PRODUCT.ERA.PROFILE" />
+                    <!--PIN_FLD_PROFILES ARRAY ITEMS-->
+                    <FlistField name="PIN_FLD_DATA_ARRAY" use="optional">
+                        <EdrBlock name="DETAIL.CUST_A.PRODUCT.ERA.PA" />
+                        <FlistField name="PIN_FLD_NAME" target="DETAIL.CUST_A.PRODUCT.ERA.PA.KEY" />
+                        <FlistField name="PIN_FLD_VALUE" target="DETAIL.CUST_A.PRODUCT.ERA.PA.VALUE" />
+                    </FlistField> <!--END PIN_FLD_DATA_ARRAY ITEMS-->
+                    <!--PIN_FLD_EXTRATING SUBSTRUCT ITEMS-->
+                    <FlistField name="PIN_FLD_EXTRATING" use="optional" >
+                      <FlistField name="PIN_FLD_LABEL" target="DETAIL.CUST_A.PRODUCT.ERA.LABEL" />
+                    </FlistField> <!--END PIN_FLD_EXTRATING SUBSTRUCT ITEMS-->
+                </FlistField> <!--END PIN_FLD_PROFILES ARRAY ITEMS-->
+            </FlistField> <!-- END PIN_FLD_SERVICE_INFO FLIST STRUCT ITEM-->
+            <!-- PIN_FLD_SHARED_LIST ITEM -->
+            <FlistField name="PIN_FLD_SHARED_LIST" use="optional" >
+             <EdrBlock name="DETAIL.CUST_A.SHARED_PL" />
+             <!-- PIN_FLD_PROFILES ARRAY SERVICE PROFILE ITEMS -->
+             <FlistField name="PIN_FLD_PROFILES" use="optional" >
+              <EdrBlock name="DETAIL.CUST_A.SHARED_PL.ERA" />
+              <FlistField name="PIN_FLD_PROFILE_NAME" target="DETAIL.CUST_A.SHARED_PL.ERA.PROFILE" use="optional" />
+              <!-- PIN_FLD_DATA_ARRAY ITEMS -->
+              <FlistField name="PIN_FLD_DATA_ARRAY" use="optional" >
+                <EdrBlock name="DETAIL.CUST_A.SHARED_PL.ERA.PA" />
+                <FlistField name="PIN_FLD_NAME" target="DETAIL.CUST_A.SHARED_PL.ERA.PA.KEY" />
+                <FlistField name="PIN_FLD_VALUE" target="DETAIL.CUST_A.SHARED_PL.ERA.PA.VALUE" />
+              </FlistField> <!--END PIN_FLD_DATA_ARRAY ITEM-->
+              <!-- PIN_FLD_EXTRATING SUBSTRUCT ITEM -->
+              <FlistField name="PIN_FLD_EXTRATING" use="optional" >
+               <FlistField name="PIN_FLD_LABEL" target="DETAIL.CUST_A.SHARED_PL.ERA.LABEL" />
+              </FlistField> <!--END PIN_FLD_EXTRATING SUBSTRUCT ITEM-->
+             </FlistField> <!-- PIN_FLD_PROFILES ARRAY SERVICE PROFILE ITEMS -->
+            </FlistField> <!-- PIN_FLD_SHARED_LIST ITEM -->
+        </FlistField> <!--END INHERITED_INFO FLIST STRUCT ITEM-->
+        <!--PIN_FLD_DISCOUNTS FLIST ARRAY ITEMS-->
+        <FlistField name="PIN_FLD_DISCOUNTS" use="optional">
+            <EdrBlock name="DETAIL.CUST_A.DL" />
+            <FlistField name="PIN_FLD_ACCOUNT_OBJ" target="DETAIL.CUST_A.DL.DISCOUNT_OWNER_ACCT_ID" format="short" />
+            <FlistField name="PIN_FLD_OWNER_OBJ" target="DETAIL.CUST_A.DL.DISCOUNT_OWNER_ID" format="short" />
+            <FlistField name="PIN_FLD_BAL_GRP_OBJ" target="DETAIL.CUST_A.DL.BALANCE_GROUP_ID" format="short" />
+            <FlistField name="PIN_FLD_OWNER_OBJ" target="DETAIL.CUST_A.DL.DISCOUNT_OWNER_TYPE" format="type" />
+            <!--PIN_FLD_DISCOUNT_LIST FLIST ARRAY ITEMS-->
+            <FlistField name="PIN_FLD_DISCOUNT_LIST">
+                <EdrBlock name="DETAIL.CUST_A.DL.PD" />
+                <FlistField name="PIN_FLD_DISCOUNT_OBJ" target="DETAIL.CUST_A.DL.PD.DISCOUNT_ID" format="short" />
+                <FlistField name="PIN_FLD_PURCHASE_START_T" target="DETAIL.CUST_A.DL.PD.PURCHASE_START" />
+                <FlistField name="PIN_FLD_PURCHASE_END_T" target="DETAIL.CUST_A.DL.PD.PURCHASE_END" />
+                <FlistField name="PIN_FLD_USAGE_START_T" target="DETAIL.CUST_A.DL.PD.USAGE_START" />
+                <FlistField name="PIN_FLD_USAGE_END_T" target="DETAIL.CUST_A.DL.PD.USAGE_END" />
+                <FlistField name="PIN_FLD_FLAGS" target="DETAIL.CUST_A.DL.PD.VALID_FLAG" />
+                <FlistField name="PIN_FLD_TYPE" target="DETAIL.CUST_A.DL.PD.TYPE" />
+                <FlistField name="PIN_FLD_OFFERING_OBJ" target="DETAIL.CUST_A.DL.PD.OFFERING_POID" format="long" />
+                <FlistField name="PIN_FLD_STATUS" target="DETAIL.CUST_A.DL.PD.STATUS" />
+                <FlistField name="PIN_FLD_FIRST_USAGE" target="DETAIL.CUST_A.DL.PD.FIRST_USAGE_INDICATOR" use="optional" />
+                <FlistField name="PIN_FLD_QUANTITY" target="DETAIL.CUST_A.DL.PD.QUANTITY" />
+                <FlistField name="PIN_FLD_CYCLE_FEE_FLAGS" target="DETAIL.CUST_A.DL.PD.FLAGS" use="optional" />
+                <FlistField name="PIN_FLD_SCALE" target="DETAIL.CUST_A.DL.PD.SCALE" use="optional" />
+            </FlistField> <!--END PIN_FLD_DISCOUNT_LIST FLIST ARRAY ITEMS-->
+        </FlistField> <!--END PIN_FLD_DISCOUNTS FLIST ARRAY ITEMS-->
+        <!--PIN_FLD_SPONSORS FLIST ARRAY ITEMS-->
+        <FlistField name="PIN_FLD_SPONSORS" use="optional">
+            <EdrBlock name="DETAIL.CUST_A.SL" />
+            <FlistField name="PIN_FLD_ACCOUNT_OBJ" target="DETAIL.CUST_A.SL.SPONSOR_OWNER_ACCT_ID" format="short" />
+            <FlistField name="PIN_FLD_OWNER_OBJ" target="DETAIL.CUST_A.SL.SPONSOR_OWNER_ID" format="short" />
+            <FlistField name="PIN_FLD_BAL_GRP_OBJ" target="DETAIL.CUST_A.SL.BALANCE_GROUP_ID" format="short" />
+            <FlistField name="PIN_FLD_OWNER_OBJ" target="DETAIL.CUST_A.SL.SPONSOR_OWNER_TYPE" format="type" />
+            <!--PIN_FLD_SPONSORS_LIST ARRAY ITEMS-->
+            <FlistField name="PIN_FLD_SPONSORS_LIST">
+                <EdrBlock name="DETAIL.CUST_A.SL.SD" />
+                <FlistField name="PIN_FLD_SPONSOR_OBJ" target="DETAIL.CUST_A.SL.SD.SPONSORSHIP_ID" format="short" />
+            </FlistField> <!--END PIN_FLD_SPONSORS_LIST ARRAY ITEMS-->
+        </FlistField> <!--END PIN_FLD_SPONSORS ARRAY ITEMS-->
+        <!--PIN_FLD_PLAN FLIST ARRAY ITEMS-->
+            <FlistField name="PIN_FLD_PLAN" use="optional">
+            <EdrBlock name="DETAIL.CUST_A.PL" />
+            <FlistField name="PIN_FLD_PLAN_OBJ" target="DETAIL.CUST_A.PL.PLAN_ID" format="short" />
+        </FlistField> <!--END PIN_FLD_PLAN FLIST ARRAY ITEMS-->
+        <!--PIN_FLD_PERIOD FLIST ARRAY ITEMS-->
+        <FlistField name="PIN_FLD_PERIOD" use="optional">
+            <EdrBlock name="DETAIL.CUST_A.SUBCYCLE_PL" />
+            <!--PIN_FLD_DISCOUNTS FLIST ARRAY ITEMS-->
+            <FlistField name="PIN_FLD_DISCOUNTS">
+                <EdrBlock name="DETAIL.CUST_A.SUBCYCLE_PL.DL" />
+                <FlistField name="PIN_FLD_ACCOUNT_OBJ" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.DISCOUNT_OWNER_ACCT_ID" format="short"/>
+                <FlistField name="PIN_FLD_OWNER_OBJ" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.DISCOUNT_OWNER_ID" format="short" />
+                <FlistField name="PIN_FLD_BAL_GRP_OBJ" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.BALANCE_GROUP_ID" format="short" />
+                <FlistField name="PIN_FLD_OWNER_OBJ" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.DISCOUNT_OWNER_TYPE" format="type" />
+                <!--PIN_FLD_DISCOUNT_LIST FLIST ARRAY ITEMS-->
+                <FlistField name="PIN_FLD_DISCOUNT_LIST">
+                    <EdrBlock name="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD" />
+                    <FlistField name="PIN_FLD_DISCOUNT_OBJ" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.DISCOUNT_ID" format="short" />
+                    <FlistField name="PIN_FLD_PURCHASE_START_T" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.PURCHASE_START" />
+                    <FlistField name="PIN_FLD_PURCHASE_END_T" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.PURCHASE_END" />
+                    <FlistField name="PIN_FLD_USAGE_START_T" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.USAGE_START" />
+                    <FlistField name="PIN_FLD_USAGE_END_T" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.USAGE_END" />
+                    <FlistField name="PIN_FLD_FLAGS" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.VALID_FLAG" />
+                    <FlistField name="PIN_FLD_TYPE" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.TYPE" />
+                    <FlistField name="PIN_FLD_OFFERING_OBJ" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.OFFERING_POID" format="long" />
+                    <FlistField name="PIN_FLD_STATUS" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.STATUS" />
+                    <FlistField name="PIN_FLD_QUANTITY" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.QUANTITY" />
+                    <FlistField name="PIN_FLD_CYCLE_FEE_FLAGS" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.FLAGS" use="optional" />
+                    <FlistField name="PIN_FLD_SCALE" target="DETAIL.CUST_A.SUBCYCLE_PL.DL.PD.SCALE" use="optional" />
+                </FlistField> <!--END PIN_FLD_DISCOUNT_LIST FLIST ARRAY ITEMS-->
+            </FlistField> <!--END PIN_FLD_DISCOUNTS FLIST ARRAY ITEMS-->
+        </FlistField> <!--END PIN_FLD_PERIOD ARRAY ITEMS-->
+        <FlistField name="PIN_FLD_CHECK_CREDIT_LIMIT" target="DETAIL.CREDIT_LIMIT_CHECK" use="optional" />
+        <!--PIN_FLD_BAL_INFO FLIST ARRAY ITEMS-->
+        <FlistField name="PIN_FLD_BAL_INFO" use="optional"> 
+            <EdrBlock name="DETAIL.CUST_A.BG" />
+            <FlistField name="PIN_FLD_BAL_GRP_OBJ" target="DETAIL.CUST_A.BG.BALANCE_GROUP_ID" format="short" />
+            <!--PIN_FLD_BALANCES FLIST ARRAY ITEMS-->
+            <FlistField name="PIN_FLD_BALANCES" use="optional">
+                <EdrBlock name="DETAIL.CUST_A.BG.BAL_ELEM" />
+                <FlistField name="PIN_FLD_CURRENT_BAL" target="DETAIL.CUST_A.BG.BAL_ELEM.CURR_BAL" />
+                <EdrField name="DETAIL.CUST_A.BG.BAL_ELEM.RESOURCE_ID" useArrayIndex="true" />
+                <FlistField name="PIN_FLD_CREDIT_FLOOR" target="DETAIL.CUST_A.BG.BAL_ELEM.CREDIT_FLOOR" use="optional" />
+                <FlistField name="PIN_FLD_CREDIT_LIMIT" target="DETAIL.CUST_A.BG.BAL_ELEM.CREDIT_LIMIT" use="optional" />
+                <FlistField name="PIN_FLD_RESERVED_AMOUNT" target="DETAIL.CUST_A.BG.BAL_ELEM.RESERVED_AMOUNT" use="optional" />
+            </FlistField> <!--END PIN_FLD_BALANCES FLIST ARRAY ITEMS-->
+        </FlistField> <!--END PIN_FLD_BAL_INFO FLIST ARRAY ITEMS-->
+    </InputMap>
+</OpcodeMap>

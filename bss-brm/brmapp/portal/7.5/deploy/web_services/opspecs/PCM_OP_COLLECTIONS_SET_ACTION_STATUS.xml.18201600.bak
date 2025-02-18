@@ -1,0 +1,81 @@
+<Opcode name="PCM_OP_COLLECTIONS_SET_ACTION_STATUS"
+		visibility="public"
+		transaction="required"
+		component="fm_collections"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc>
+		<!--h:p>
+			<h:i>Copyright &#169; 20078 Oracle. All rights reserved. This
+			material is the confidential property of Oracle Corporation or
+			its licensors and may be used, reproduced, stored or transmitted
+			only in accordance with a valid Oracle license or sublicense
+			agreement. 
+			</h:i>
+		</h:p-->
+			Changes the status of a collections action.
+	</Doc>
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The action poid</Doc>
+				<ClassRef>obj://collections_action</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+					mode="complete">
+				<Doc> The account poid</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Enum name="PIN_FLD_STATUS" use="required">
+				<Doc> 
+					The new action status.
+				<h:ul>
+					<h:li>0:Action Pending.</h:li>
+					<h:li>1:Action Cancelled.</h:li>
+					<h:li>2:Action Completed.</h:li>
+					<h:li>3:Action Error.</h:li>
+				</h:ul>
+				</Doc>
+				<Values>
+					<Value>0</Value>
+					<Doc>Action Pending</Doc>
+				</Values>
+				<Values>
+					<Value>1</Value>
+					<Doc>Action Cancelled</Doc>
+				</Values>
+				<Values>
+					<Value>2</Value>
+					<Doc>Action Completed</Doc>
+				</Values>
+				<Values>
+					<Value>3</Value>
+					<Doc>Action Error</Doc>
+				</Values> 
+			</Enum>
+			<Int name="PIN_FLD_FLAGS" use="optional">
+				<Doc> The flag which is used to decide whether to apply the status change to particular action(flag = 0) or all the pending errored actions(flag = 1)</Doc>
+			</Int>
+			<String name="PIN_FLD_DESCR" use="optional"
+					maxlen="255">
+				<Doc> The description for the status change</Doc>
+			</String>
+			<String name="PIN_FLD_PROGRAM_NAME" use="optional"
+					maxlen="255">
+				<Doc> The name of the program that calls this opcode</Doc>
+			</String>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc> The action poid</Doc>
+				<ClassRef>obj://collections_action</ClassRef>
+			</Poid>
+		</Fields>
+	</Output>
+</Opcode>

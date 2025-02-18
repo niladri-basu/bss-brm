@@ -1,0 +1,67 @@
+#!/bin/sh
+#!/bin/sh
+# continuus file information --- %full_filespec: pin_bill_week.sh~8:shsrc:1 %
+
+####################################################################
+#-------------------------------------------------------------------
+#
+#  @(#) %full_filespec: pin_bill_week.sh~8:shsrc:1 %
+#
+# Copyright (c) 1996, 2014, Oracle and/or its affiliates. All rights reserved.
+#
+#      This material is the confidential property of Oracle Corporation or its
+#      licensors and may be used, reproduced, stored or transmitted only in
+#      accordance with a valid Oracle license or sublicense agreement.
+#
+#-------------------------------------------------------------------
+####################################################################
+
+VERSION=$PIN_VERSION
+
+####################################################################
+#-------------------------------------------------------------------
+#
+# Master Weekly Billing Script
+#
+#	Performs the following 'weekly' billing tasks:
+#
+#	- CreditCard Collection	(pin_collect -pay_type 10003 -vendor fusa)
+#
+#	It is assumed that this script is run (in the background)
+#	by cron once a week, via a crontab entry something like the
+#	following (which will run the script Sundays at 12:05 am):
+#
+#		5 0 * * 0 /brmapp/portal/7.5/bin/pin_bill_week &
+#
+#-------------------------------------------------------------------
+####################################################################
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/pin_billd
+
+
+CNFDIR=${PINDIR}/apps/pin_billd
+
+PATH=/usr/bin:/bin:${PINDIR}/bin
+
+cd ${CNFDIR}
+
+#-------------------------------------------------------------------
+# CreditCard Collection		(pin_collect -pay_type 10003 -vendor fusa)
+# Direct Debit Collection	(pin_collect -pay_type 10005 -vendor fusa)
+# Sepa Direct Debit Collection	(pin_collect -pay_type 10018)
+#
+#	Attempt to (re)collect due balances that are at least
+#	a week old from ACTIVE creditcard accounts.
+#
+#-------------------------------------------------------------------
+pin_collect -active -rebill -end 7 -pay_type 10003 -vendor fusa
+pin_collect -active -rebill -end 7 -pay_type 10005 -vendor fusa
+pin_collect -active -rebill -end 7 -pay_type 10018
+
+#-------------------------------------------------------------------
+# All done - wait for all to finish up.
+#-------------------------------------------------------------------
+wait
+
+exit 0

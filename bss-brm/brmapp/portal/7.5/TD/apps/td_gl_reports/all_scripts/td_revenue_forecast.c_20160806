@@ -1,0 +1,1521 @@
+#include <stdio.h>
+
+#include "pcm.h"
+#include "cm_fm.h"
+#include "pin_errs.h"
+#include "pinlog.h"
+#include "pin_mta.h"
+#include "pin_cust.h"
+
+/**************************************
+* Macros used as Application constants
+**************************************/
+
+#define MODE_VERBOSE		1
+#define MODE_NON_VERBOSE	0
+#define CSV_FIELD_COUNT		6
+
+/***********************************************
+* Macros to map the input fileds from .csv file
+***********************************************/
+
+#define ACCOUNT_POID	0
+#define CURRENCY 	1
+#define START_T		2
+#define END_T	3
+#define OFFERING_POID	4
+#define BAL_POID	5
+
+/*******************************************************************
+ * Functions used within
+ *******************************************************************/
+
+static void td_revenue_forecast_get_commandline();
+static char *unquote ();
+static char *trim ();
+static char *get_tok ();
+static char *trim_comment_from_flist ();
+poid_t*
+td_bil_arrears_prep_input(
+	pin_flist_t	**input_flistpp,
+	pin_errbuf_t	*ebufp);
+
+
+/*******************************************************************
+ * Configuration of application
+ * Called prior MTA_CONFIG policy opcode
+ *******************************************************************/
+PIN_EXPORT void 
+pin_mta_config	(
+	pin_flist_t	*param_flistp,
+	pin_flist_t	*app_flistp,
+	pin_errbuf_t	*ebufp)
+{
+	int32		mta_flags = 0;
+	void		*vp = 0;
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		return;
+	}
+
+	PIN_ERRBUF_CLEAR (ebufp);
+
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_config parameters flist", param_flistp);
+	
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_config application info flist", app_flistp);
+
+ 
+	vp = PIN_FLIST_FLD_GET (app_flistp, 
+			PIN_FLD_FLAGS, 0,ebufp);
+	
+
+	if(vp){
+		mta_flags = *((int32*)vp);
+	}
+
+	/***********************************************************
+         * The new flag MTA_FLAG_VERSION_NEW has been introduced to
+         * differentiate between new mta & old mta applications as
+         * only new applications have the ability to drop PIN_FLD_PARAMS
+         * for valid parameters . It is only for new apps that
+         * checking err_params_cnt is valid, otherwise for old applications
+         * this check without a distincion for new applications would hamper
+         * normal functioning.
+         ***********************************************************/
+	
+	mta_flags = mta_flags | MTA_FLAG_VERSION_NEW;
+
+	PIN_FLIST_FLD_SET (app_flistp, PIN_FLD_FLAGS, &mta_flags, ebufp);
+
+        PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_config parameters flist", param_flistp);
+
+        PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_config application info flist", app_flistp);
+
+	/*******************************************************************
+	* Call the td_revenue_forecast_get_commandline function to get
+	* command line options
+	*******************************************************************/
+
+	td_revenue_forecast_get_commandline(param_flistp, app_flistp, ebufp);
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+				 "pin_mta_config error", ebufp);
+	}
+
+	return;
+}
+
+static void
+td_revenue_forecast_get_commandline(
+	pin_flist_t	*param_flistp,
+	pin_flist_t	*app_flistp,
+	pin_errbuf_t	*ebufp)
+{
+	pin_flist_t	*flistp = NULL;
+	pin_cookie_t	cookie = NULL;
+	pin_cookie_t	prev_cookie = NULL;
+	pin_rec_id_t	rec_id = 0;
+	char		file_name[100] = "./input_files/";
+	char		*option = 0;
+	char		*input_file_name = NULL;
+	char		sbuf[2024] = {0};
+	int32		mode = MODE_NON_VERBOSE;
+	int32		mta_flags = 0;
+	int32		file_opt_flag = 0;
+	time_t          raw_time = 0;
+	struct tm       *timeinfo = NULL;
+	void		*vp = NULL;
+
+	/**************** Return if any error ***************/
+
+	if (PIN_ERR_IS_ERR(ebufp))
+		return;
+
+	PIN_ERRBUF_CLEAR(ebufp);
+
+	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG,
+			"parameters flist", param_flistp);
+
+	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG,
+			"application flist", app_flistp);
+
+	/*************************************************
+	* Set mode to Non-verbose which is default mode
+	*************************************************/
+
+	PIN_FLIST_FLD_SET(app_flistp, PIN_FLD_MODE, &mode, ebufp);
+
+        PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG,
+                        "application flist", app_flistp);
+
+	vp = PIN_FLIST_FLD_GET(app_flistp, PIN_FLD_FLAGS, 1, ebufp);
+
+	if (vp){
+		mta_flags = *(int32 *)vp;
+	}
+
+	/*************************************************************
+	* Get each of the command line options from the param_flistp
+	*************************************************************/
+
+	rec_id = 0;
+	cookie = NULL;
+	prev_cookie = NULL;
+
+	while(	(flistp = PIN_FLIST_ELEM_GET_NEXT(param_flistp, 
+				PIN_FLD_PARAMS, &rec_id, 1, &cookie, 
+				ebufp)	) != NULL)
+	{
+		option = PIN_FLIST_FLD_GET(flistp, 
+					PIN_FLD_PARAM_NAME, 0, ebufp);
+
+		if (!option) {
+			prev_cookie = cookie;
+			continue;
+		}
+
+		if (strcmp(option, "-v") == 0)
+		{
+			/*******************************
+			* Verbose option selected
+			*******************************/
+
+			mode = MODE_VERBOSE;
+			
+			PIN_FLIST_FLD_SET(app_flistp, 
+					PIN_FLD_MODE, &mode, ebufp);
+			
+			PIN_FLIST_ELEM_DROP(param_flistp, 
+					PIN_FLD_PARAMS, rec_id, ebufp);
+	
+			cookie = prev_cookie;
+		}
+		else if (strcmp(option, "-h") == 0)
+		{
+			/*****************************************
+			* Help option selected
+			* Display the default application usage 
+			*****************************************/
+
+			mta_flags = mta_flags | MTA_FLAG_USAGE_MSG;
+			
+			PIN_FLIST_FLD_SET(app_flistp, 
+					PIN_FLD_FLAGS, &mta_flags, ebufp);
+
+			PIN_FLIST_ELEM_DROP(param_flistp, 
+					PIN_FLD_PARAMS, rec_id, ebufp);
+
+			cookie = prev_cookie;
+		}
+		else if (strcmp(option, "-f") == 0)
+		{
+			/*****************************************
+			* File option selected.
+			* Get the file name from command line
+			* Set the file option flag
+			*****************************************/
+
+			input_file_name = PIN_FLIST_FLD_GET(flistp, 
+						PIN_FLD_PARAM_VALUE, 1, ebufp);
+			
+			file_opt_flag = 1;
+	
+			if (!input_file_name)
+			{
+				fprintf(stderr, "\n \t File name not specified"
+						" after -f option. \n");
+
+				mta_flags = mta_flags | MTA_FLAG_USAGE_MSG;
+			}
+			else
+			{
+				strcat(file_name, input_file_name);
+
+				PIN_FLIST_FLD_SET(app_flistp, PIN_FLD_INPUT_FILE_NAME, 
+						(void *)file_name, ebufp);
+			}
+
+			PIN_FLIST_ELEM_DROP(param_flistp, PIN_FLD_PARAMS, 
+						rec_id, ebufp);
+
+			cookie = prev_cookie;
+		}
+		else
+		{
+			prev_cookie = cookie;
+		}
+	}
+
+	/***************************************
+	* Check if file name is passed or not
+	***************************************/
+
+	if (file_opt_flag == 0)
+	{
+		fprintf(stderr, "\n \t File option is mandatory. \n");
+
+		mta_flags = mta_flags | MTA_FLAG_USAGE_MSG;
+	}
+
+	PIN_FLIST_FLD_SET(app_flistp, PIN_FLD_FLAGS, 
+				&mta_flags, ebufp);
+
+	/****************************
+	* Set a search file
+	* Set an output file
+	****************************/
+
+	PIN_FLIST_FLD_SET(app_flistp, PIN_FLD_FILENAME, 
+				(void *)"tmp.flist", ebufp);
+
+	time (&raw_time);
+		timeinfo = localtime(&raw_time);
+
+	sprintf(sbuf, "output_files/failed_%02d%02d%04d%02d%02d%02d_%s", 
+			timeinfo->tm_mday, timeinfo->tm_mon+1,timeinfo->tm_year + 1900,
+			timeinfo->tm_hour,timeinfo->tm_min, timeinfo->tm_sec, 
+			input_file_name);
+
+	PIN_FLIST_FLD_SET(app_flistp, PIN_FLD_ERROR_FILE_NAME, 
+			(void *)sbuf, ebufp);
+
+	/************************
+	* Check for any errors
+	************************/
+	
+	if (PIN_ERR_IS_ERR(ebufp))
+	{
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+				"td_revenue_forecast_commandline error", ebufp);
+	}
+
+	return;
+}
+
+/*******************************************************************
+ * Usage information for the specific app.
+ * Called prior MTA_USAGE policy opcode
+ *******************************************************************/
+PIN_EXPORT void
+pin_mta_usage(
+	char	*prog)
+{
+
+	pin_errbuf_t	ebufp;
+	pin_flist_t	*ext_flistp = NULL;
+	char		*usage_str = NULL;
+
+	char		*format = "\nUsage:\t %s [-v] [-f <input file name>] \n"
+			"\t\t -h help option \n"
+			"\t\t -v verbose option \n"
+			"\t\t -f <input file name> Mandatory input filename \n";
+
+	PIN_ERRBUF_CLEAR (&ebufp);
+
+	/********************************************
+	* Allocate memory for default usage string
+	********************************************/
+
+	usage_str = (char*)pin_malloc( strlen(format) + strlen(prog) + 1 );
+
+	/****************************************
+	* Error out if memeory is not available
+	****************************************/
+
+	if (usage_str == NULL) {
+		PIN_ERR_LOG_MSG(PIN_ERR_LEVEL_ERROR,"No Memory error");
+		
+		return;
+	}
+
+	sprintf(usage_str, format ,prog);
+	fprintf(stderr,usage_str);
+
+	ext_flistp = pin_mta_global_flist_node_get_no_lock (PIN_FLD_EXTENDED_INFO,
+							&ebufp);
+
+	PIN_FLIST_FLD_SET (ext_flistp, PIN_FLD_DESCR, usage_str, &ebufp);
+
+	if (PIN_ERR_IS_ERR(&ebufp)) {
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+				 "pin_mta_usage error", &ebufp);
+	}
+
+	/************************************
+	* Free the allocated memeory
+	************************************/
+
+	if (usage_str) {
+		pin_free(usage_str);
+	}
+
+	return;
+}
+
+/*******************************************************************
+ * Initialization of application
+ * Called prior MTA_INIT_APP policy opcode
+ *******************************************************************/
+PIN_EXPORT void 
+pin_mta_init_app(
+	pin_flist_t	*app_flistp,
+	pin_errbuf_t	*ebufp)
+{
+	pin_flist_t	*oper_flistp 	=	 NULL;
+	pin_flist_t	*result_flistp	=	 NULL;
+	pin_flist_t	*flistp	 	=	 NULL;
+	pin_flist_t	*serv_flistp	=	NULL;
+	FILE		*fread 		=	 NULL;
+	FILE		*fwrite		=	 NULL;
+	FILE		*ferror 	=	 NULL;
+	void		*vp 		=	 NULL;
+	int32		flist_len 	=	 0;
+	int32		mode 		=	 0;
+	int32		row_no 		=	 0;
+	int32 		nfield 		=	 0;
+	int32		any_valid_record =	 0;
+	int32		failed_count 	=	 0;
+//	int32		flag_value = NULL;
+	int32		arr_elem_id = 0;	
+	int32		row_elem_id = 0;
+	int32		start_t = 0;
+	int32		end_t = 0;
+	char		*str_flist 	=	 NULL;
+	char		*input_file_name =	 NULL;
+	char            *search_file_name =	 NULL;
+	char            *error_file_name =	 NULL;
+	char 		*fields[CSV_FIELD_COUNT] = {0};
+	char		buf[2024] = {0};
+	char		sbuf[2024] = {0};
+	char		curr_rec[2024] = {0};
+	static	char 		poid_str[100] = {0};
+	static char 		pur_poid_str[100]= {0};
+	static char 		bal_poid_str[100]= {0};
+	char		*q = NULL;
+	char		*tok = NULL;
+	poid_t		*poid1_ptr = NULL;
+	poid_t		*poid2_ptr = NULL;
+	poid_t		*poid3_ptr = NULL;
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		return;
+	}
+	PIN_ERRBUF_CLEAR (ebufp);
+
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+				"pin_mta_init_app application info flist", app_flistp);
+ 
+	vp = PIN_FLIST_FLD_GET(app_flistp, PIN_FLD_MODE, 1, ebufp);
+
+	if (vp)
+	{
+		mode = *(int32 *)vp;
+	}
+
+	/***********************************************
+	* Execution starts if mode is set to verbose
+	***********************************************/
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, "\n \t Application execution started ......\n");
+	}
+
+	oper_flistp = pin_mta_global_flist_node_get_with_lock(
+					PIN_FLD_OPERATION_INFO, ebufp);
+
+	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG,
+				"pin_mta_init_app application oper_flistp", oper_flistp);
+
+	/************************************************
+	* Set process and program name
+	************************************************/
+
+	PIN_FLIST_FLD_SET(oper_flistp, PIN_FLD_PROCESS_NAME, 
+				(void *)"pin_trial_bill_accts", ebufp);
+	PIN_FLIST_FLD_SET(oper_flistp, PIN_FLD_PROGRAM_NAME, 
+				(void *)"pin_trial_bill_accts", ebufp);
+
+	vp = (void *)NULL;
+
+	/***************************************
+	* Set the required  statistical fields
+	***************************************/
+
+	PIN_FLIST_FLD_SET(oper_flistp, PIN_FLD_SUCCESSFUL_RECORDS, vp, ebufp);
+	PIN_FLIST_FLD_SET(oper_flistp, PIN_FLD_FAILED_RECORDS, vp, ebufp);
+	PIN_FLIST_FLD_SET(oper_flistp, PIN_FLD_NUM_TOTAL_RECORDS, vp, ebufp);
+
+	/******************************************
+	* Get the input file to read records
+	******************************************/
+
+	input_file_name = PIN_FLIST_FLD_GET(app_flistp, 
+					PIN_FLD_INPUT_FILE_NAME, 1, ebufp);
+
+	sprintf(sbuf, "\n\tOpening the input file: %s \n", 
+			input_file_name ? (char *) input_file_name: "");
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, sbuf);
+	}
+
+	sprintf(sbuf, "\n\tChecking for invalid records..........\n");
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, sbuf);
+	}
+
+	PIN_ERR_LOG_MSG(PIN_ERR_LEVEL_DEBUG, sbuf);
+
+	/******************************
+	* Try opening the input file
+	******************************/
+
+	if (input_file_name)
+	{
+		fread = fopen((char *)input_file_name, "r");
+	}
+
+	if (fread == (FILE *)NULL)
+	{
+		/**********************************
+		* Error out if cannot be opened
+		**********************************/
+
+		pin_set_err(ebufp, PIN_ERRLOC_APP, 
+			PIN_ERRCLASS_APPLICATION, PIN_ERR_FILE_IO, 
+			PIN_FLD_INPUT_FILE_NAME, 0, 0);
+
+		sprintf(sbuf, "\n\tpin_mta_init_app error :"
+				" Unable to open the input file : %s \n",
+				 (char *) input_file_name);
+
+		fprintf(stderr, sbuf);
+
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR, sbuf, ebufp);
+
+		exit (1);
+	}
+
+	/*********************************
+	* Try opening the search file
+	*********************************/
+
+	search_file_name = PIN_FLIST_FLD_GET(app_flistp, PIN_FLD_FILENAME, 1, ebufp);
+
+	if (search_file_name)
+	{
+		fwrite = fopen((char *)search_file_name, "w");
+	}
+
+	if (fwrite == (FILE *)NULL)
+	{
+		/**********************************
+                * Error out if cannot be opened
+                **********************************/
+
+		pin_set_err(ebufp, PIN_ERRLOC_APP, 
+			PIN_ERRCLASS_APPLICATION, PIN_ERR_FILE_IO, 
+			PIN_FLD_FILENAME, 0, 0);
+
+		sprintf(sbuf, "\n\tpint_mta_init_app error :"
+				" Unable to open the file %s for writing .\n", 
+				(char *)search_file_name);
+
+		fprintf(stderr, sbuf);
+
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR, sbuf, ebufp);
+
+		exit (2);
+	}
+
+	/********************************
+	* Try opening the error file
+	********************************/
+
+	error_file_name = PIN_FLIST_FLD_GET(app_flistp, 
+				PIN_FLD_ERROR_FILE_NAME, 1, ebufp);
+
+	sprintf(sbuf, "\n\tOpening the file %s for writing invalid records\n", 
+			error_file_name ? (char *)error_file_name : "");
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, sbuf);
+	}
+
+	PIN_ERR_LOG_MSG(PIN_ERR_LEVEL_DEBUG, sbuf);
+
+	if (error_file_name)
+	{
+		ferror = fopen((char *)error_file_name, "w");
+	}
+
+	if (ferror == (FILE *)NULL)
+	{
+		/**********************************
+                * Error out if cannot be opened
+                **********************************/
+
+		pin_set_err(ebufp, PIN_ERRLOC_APP, 
+			PIN_ERRCLASS_APPLICATION, PIN_ERR_FILE_IO, 
+			PIN_FLD_ERROR_FILE_NAME, 0, 0);
+
+		sprintf(sbuf, "\n\tpin_mta_init_app error :"
+				"Unable to open the file %s for writing invalid records\n", 
+				(char *)error_file_name);
+
+		fprintf(stderr, sbuf);
+
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR, sbuf, ebufp);
+		
+		exit (2);
+	}
+
+	/*****************************
+	* Initialize row no to 0
+	*****************************/
+
+	row_no = 0;
+
+	while (fgets(buf, sizeof(buf), fread) != NULL)
+	{
+		arr_elem_id = 0;	
+		row_no++;
+		nfield = 0;
+
+		strcpy(curr_rec, buf);
+
+		/*****************************************************
+		* Build an array with fields read from input records
+		*****************************************************/
+ 		
+		for ( q = buf; (tok = get_tok(q)) != NULL; q = NULL)
+		{
+			if (nfield == CSV_FIELD_COUNT)
+			{
+				break;
+			}
+
+			fields[nfield++] = unquote(trim(tok));
+		}
+
+		
+		/**************************************************************
+		 *  Check to see if the CSV record is a valid length record.
+		 *  If not, report an error and increment the failed_count.
+		 *  Report error for any of the below cases:-
+		 *  - Invalid Length
+		 *  - All fields are missing
+		 *  - Account number and login both are missing
+		 *  - Invalid flag value is passed
+		 **************************************************************/
+
+		if (	nfield != (CSV_FIELD_COUNT) ||
+			!strcmp(fields[ACCOUNT_POID], "") || !strcmp(fields[START_T], "") ||
+			!strcmp(fields[END_T], "") || !strcmp(fields[OFFERING_POID], "") 
+				|| !strcmp(fields[BAL_POID], "") ) 
+		{
+			pin_set_err(ebufp, PIN_ERRLOC_APP, 
+				PIN_ERRCLASS_APPLICATION,
+				PIN_ERR_BAD_ARG,
+				PIN_FLD_RESULTS, 0, 0);
+
+			sprintf(sbuf, "\tpin_mta_init_app error : Invalid record"
+					" found at line %d for account %s\n and count in  %d ", row_no, 
+				(char *)fields[ACCOUNT_POID], nfield );
+			fprintf(stdout, sbuf);
+
+			if (!strcmp(fields[ACCOUNT_POID], "") && !strcmp(fields[START_T], "")) 
+			{
+				sprintf(sbuf, "<RECORD %d> \n Record format not proper."
+					"Either account number or persona is mandatory\n", row_no);
+			}
+			else
+			{
+				sprintf(sbuf, "<RECORD %d> \n Record format not proper. \n",
+						 row_no);
+			}
+
+			fprintf(ferror, sbuf);
+			fprintf(ferror, curr_rec);
+
+			PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR, sbuf, ebufp);
+			PIN_ERR_CLEAR_ERR(ebufp);
+
+			/*****************************************************************
+			* Increment failed count each time when invalid record is found
+			*****************************************************************/
+
+			failed_count++;
+			continue;
+		}					
+		
+		/***********************
+		* Create search flist
+		***********************/
+		result_flistp = PIN_FLIST_CREATE(ebufp);
+
+		flistp = PIN_FLIST_ELEM_ADD(result_flistp, PIN_FLD_RESULTS, 
+					row_elem_id++, ebufp);
+
+		strcat(poid_str, "0.0.0.1 /account ");
+		strcat(poid_str, fields[ACCOUNT_POID]);
+		poid1_ptr = PIN_POID_FROM_STR(poid_str , '\0', ebufp);
+		PIN_FLIST_FLD_SET(flistp, PIN_FLD_POID, 
+				(void *)poid1_ptr, ebufp);
+		strcat(pur_poid_str, "0.0.0.1 /purchased_product ");
+                strcat(pur_poid_str, fields[OFFERING_POID]);
+		poid2_ptr = PIN_POID_FROM_STR(pur_poid_str , '\0', ebufp);
+                PIN_FLIST_FLD_SET(flistp, PIN_FLD_OFFERING_OBJ,
+                                (void *)poid2_ptr, ebufp);
+
+		strcat(bal_poid_str, "0.0.0.1 /balance_group ");
+                strcat(bal_poid_str, fields[BAL_POID]);
+		poid3_ptr = PIN_POID_FROM_STR(bal_poid_str , '\0', ebufp);
+                PIN_FLIST_FLD_SET(flistp, PIN_FLD_BAL_GRP_OBJ,
+                                (void *)poid3_ptr, ebufp);
+		
+		poid_str[0] = 0;
+		pur_poid_str[0] = 0;
+		bal_poid_str[0] = 0;
+
+		start_t = atoi (fields[START_T]);
+		end_t  = atoi (fields[END_T]);
+		PIN_FLIST_FLD_SET(flistp, PIN_FLD_START_T, 
+				(void *)&start_t, ebufp);
+
+		PIN_FLIST_FLD_SET(flistp, PIN_FLD_END_T, 
+				 (void *)&end_t, ebufp);	
+		
+		PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, 
+				"result flistp parameters flist", result_flistp);
+		
+		/*if (str_flist != (char *)NULL)
+		{
+			free(str_flist);
+			str_flist = (char *)NULL;
+		}*/
+
+		PIN_FLIST_TO_STR(result_flistp, &str_flist, &flist_len, ebufp);
+
+		fputs(trim_comment_from_flist(str_flist), fwrite);
+
+		free (str_flist);
+		str_flist = NULL;
+		any_valid_record = 1;
+		PIN_POID_DESTROY (poid1_ptr, ebufp);
+		PIN_POID_DESTROY (poid2_ptr, ebufp);
+		PIN_POID_DESTROY (poid3_ptr, ebufp);
+		PIN_FLIST_DESTROY_EX(&result_flistp, NULL);
+	}
+
+	/***********************
+	* Free the memory
+	***********************/
+
+	//free (str_flist);
+	str_flist = NULL;
+
+	if (any_valid_record == 0)
+	{
+		sprintf(sbuf, "Input file is empty or records are not proper \n");
+	
+		if (mode == MODE_VERBOSE)
+		{
+			fprintf(stdout, sbuf);
+		}
+	}
+
+	/*************************************
+	* Store the number of failed records
+	*************************************/
+
+	PIN_FLIST_FLD_SET(oper_flistp, PIN_FLD_FAILED_RECORDS, 
+				(void *)&failed_count, ebufp);
+
+	/*************************************
+	* Store the total number of records
+	*************************************/
+
+	PIN_FLIST_FLD_SET(oper_flistp, PIN_FLD_NUM_TOTAL_RECORDS, 
+				(void *)&row_no, ebufp);
+
+	sprintf(sbuf, "\n\tTotal number of records in input file = %d", row_no);
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, sbuf);
+	}
+
+	sprintf(sbuf, "\n\tTotal number of records correct = %d",
+				 (row_no - failed_count));
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, sbuf);
+	}
+
+	sprintf(sbuf, "\n\tTotal number of records incorrect = %d \n\n", failed_count);
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, sbuf);
+	}
+
+	pin_mta_global_flist_node_release(PIN_FLD_OPERATION_INFO, ebufp);
+
+	/****************************
+	* Close input file
+	****************************/
+	
+	if ( fread != (FILE *)NULL)
+	{
+		fclose(fread);
+	}
+
+	/***************************
+	* Close the search file
+	***************************/
+
+	if ( fwrite != (FILE *)NULL)
+	{
+		fclose(fwrite);
+	}
+	
+	/***************************
+	* Close the error file
+	***************************/
+
+	if ( ferror != (FILE *)NULL)
+	{
+		fclose(ferror);
+	}
+
+	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_init_app application info flist", app_flistp);
+
+	/**********************
+	* Check for error
+	**********************/
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+				 "pin_mta_init_app error", ebufp);
+	}
+
+	return;
+}
+
+/*******************************************************************
+ * Application defined search criteria.
+ * Called prior MTA_INIT_SEARCH policy opcode
+ *******************************************************************/
+PIN_EXPORT void
+pin_mta_init_search(
+	pin_flist_t	*app_flistp,
+	pin_flist_t	**s_flistpp,
+	pin_errbuf_t	*ebufp)
+{
+	pin_flist_t	*s_flistp = NULL;
+	char		sbuf[255] = {0};
+	void		*vp = NULL;
+	char		*file_name = NULL;
+	int32		field_count = (CSV_FIELD_COUNT - 1 );
+	int32		mode = 0;
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		return;
+	}
+	PIN_ERRBUF_CLEAR (ebufp);
+
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_init_search application info flist", app_flistp);
+
+	s_flistp = PIN_FLIST_CREATE(ebufp);
+
+	/******************************************
+	* Read and set the verbose flag
+	******************************************/
+
+	vp = PIN_FLIST_FLD_GET (app_flistp, PIN_FLD_POID_VAL, 0, ebufp);
+	
+	if(vp)
+	{
+		mode = *(int32 *)vp;
+	}
+
+	/***************************
+	* Get the search file name
+	***************************/
+
+	file_name = (char *)PIN_FLIST_FLD_GET(app_flistp, 
+				PIN_FLD_FILENAME, 0, ebufp);
+
+	PIN_FLIST_FLD_SET(s_flistp, PIN_FLD_FILENAME, 
+				(void *)file_name, ebufp);
+	
+	PIN_FLIST_FLD_SET(s_flistp, PIN_FLD_COUNT, 
+				(void *)&field_count, ebufp);
+
+	sprintf(sbuf, "\n Distributing task among worker threads with file %s and field count %d\n", file_name, field_count);
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, sbuf);
+	}
+
+	PIN_ERR_LOG_MSG(PIN_ERR_LEVEL_DEBUG, sbuf);
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+				 "pin_mta_init_search error", ebufp);
+		
+		//PIN_FLIST_DESTROY_EX(&s_flistp, 0);
+	}
+	else
+	{
+		//*s_flistpp = s_flistp;
+		*s_flistpp  = PIN_FLIST_COPY(s_flistp, ebufp);
+		PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, 
+				"pin_mta_init_search search flist", s_flistp);
+	}
+	PIN_FLIST_DESTROY_EX(&s_flistp, 0);
+	return;
+}
+
+/*******************************************************************
+ * Function executed at application exit
+ * Called after MTA_EXIT policy opcode
+ *******************************************************************/
+PIN_EXPORT void 
+pin_mta_post_exit(
+	pin_flist_t	*app_flistp,
+	pin_errbuf_t	*ebufp)
+{
+	pin_flist_t	*oper_flistp = NULL;
+	pin_flist_t	*thread_flistp	= NULL;
+	pin_flist_t	*rec_flistp = NULL;
+	void		*vp = NULL;
+	int32		mta_flags = 0;
+	int32		success_count = 0;
+	int32		failed_count = 0;
+	int32		total_count = 0;
+	int32		rec_id	= 0;
+	int32		rec_id1	= 0;
+	int32		mode = 0;
+	pin_cookie_t	cookie	= NULL;
+	FILE		*ferr = NULL;
+	char		*err_file_name	= NULL;
+	char		sbuf[1024] = {0};
+	char		buf[1024] = {0};
+
+	pin_cookie_t	cookie1	= NULL;
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		return;
+	}
+	PIN_ERRBUF_CLEAR (ebufp);
+
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_post_exit application info flist", app_flistp);
+ 
+	/*********************************************************
+	* Confirm if PIN_FLD_FLAGS is set to PIN_FLAG_USAGE_MSG
+	*********************************************************/
+	vp = PIN_FLIST_FLD_GET(app_flistp, PIN_FLD_FLAGS, 0, ebufp);
+
+	if (vp){
+		mta_flags = *(int32 *)vp;
+	}
+
+	if (mta_flags & MTA_FLAG_USAGE_MSG){
+		return;
+	}
+
+	vp = PIN_FLIST_FLD_GET(app_flistp, PIN_FLD_MODE, 0, ebufp);
+
+	if (vp){
+		mode = *(int32 *)vp;
+	}
+
+	oper_flistp = pin_mta_global_flist_node_get_with_lock(
+					PIN_FLD_OPERATION_INFO, ebufp);
+
+	PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, 
+			"td_revenue_forecast application oper_flistp", oper_flistp);
+
+	/**********************************
+	* Get the statistical details
+	**********************************/
+	vp = PIN_FLIST_FLD_GET(oper_flistp, 
+			PIN_FLD_SUCCESSFUL_RECORDS, 0, ebufp);
+
+	if (vp){
+		success_count += *(int32 *)vp;
+	}
+
+	vp = PIN_FLIST_FLD_GET(oper_flistp, 
+			PIN_FLD_FAILED_RECORDS, 0, ebufp);
+
+	if (vp){
+		failed_count += *(int32 *)vp;
+	}
+
+	vp = PIN_FLIST_FLD_GET(oper_flistp, 
+			PIN_FLD_NUM_TOTAL_RECORDS, 0, ebufp);
+
+	if (vp){
+		total_count = *(int32 *)vp;
+	}
+
+	/********************************************************
+	* Open a file to write erroneous CSV records
+	********************************************************/
+	err_file_name = PIN_FLIST_FLD_GET(app_flistp, 
+				PIN_FLD_ERROR_FILE_NAME, 1, ebufp);
+
+	sprintf(sbuf, "\n Opening the file %s for writing invalid records\n",
+			 err_file_name ? (char *) err_file_name : "");
+
+	PIN_ERR_LOG_MSG(PIN_ERR_LEVEL_DEBUG, sbuf);
+
+	if (err_file_name){
+		ferr = fopen((char *)err_file_name, "a");
+	}
+
+	if (ferr == (FILE *)NULL)
+	{
+		/**********************************
+                * Error out if cannot be opened
+                **********************************/
+		pin_set_err(ebufp, PIN_ERRLOC_APP, 
+			PIN_ERRCLASS_APPLICATION, PIN_ERR_FILE_IO, 
+			PIN_FLD_ERROR_FILE_NAME, 0, 0);
+
+		sprintf(sbuf, "\n pin_mta_post_exit error :"
+			" Unable to open the file %s for writing invalid records \n\n",
+			 (char *)err_file_name);
+
+		fprintf(stderr, sbuf);
+
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR, sbuf, ebufp);
+
+		exit (2);
+	}
+
+	/********************************************************
+	* Loop through the thread specific info to consolidate	
+	*********************************************************/
+	rec_id = 0;
+	cookie = NULL;
+
+	while (	(thread_flistp = PIN_FLIST_ELEM_GET_NEXT(oper_flistp, 
+				PIN_FLD_THREAD_INFO, &rec_id, 1, &cookie, ebufp)) != NULL)
+	{
+		PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, "thread_flistp :", thread_flistp);
+
+		/********************************************
+		* Consolidate list of failed records here
+		********************************************/
+		cookie1 = NULL;
+		rec_id1 = 0;
+
+		while (	(rec_flistp = PIN_FLIST_ELEM_GET_NEXT(thread_flistp, 
+					PIN_FLD_NUMBERS, &rec_id1, 1, &cookie1, ebufp))
+					 != NULL)
+		{
+			vp = PIN_FLIST_FLD_GET(rec_flistp, PIN_FLD_DESCR, 0, ebufp);
+
+			strcpy(buf, (void *)vp);
+
+			/*****************************************
+			* Write failed CSV record to error file
+			*****************************************/
+			sprintf(sbuf, "<RECORD %d> \n Record failed in opcode or bad input record \n", rec_id1);
+		
+			fprintf(ferr, sbuf);
+
+			fprintf(ferr, buf);
+
+			failed_count++;
+		}
+	}
+
+	fprintf(ferr, "\n\t ************Result summary************ \n");
+
+	fprintf(ferr, "\n\tTotal no. of successful records = %d",
+				(total_count - failed_count) );
+	fprintf(ferr, "\n\tTotal no. of failed records = %d", failed_count);
+	fprintf(ferr, "\n\tTotal no. of records processed = %d \n\n", total_count);
+
+	if (ferr != (FILE *)0)
+	{
+		fclose(ferr);
+	}
+
+	if (mode == MODE_VERBOSE)
+	{
+		fprintf(stdout, "\n\t ************Result summary************ \n");
+
+		fprintf(stdout, "\n\tTotal no. of successful records = %d", 
+					(total_count - failed_count));
+		fprintf(stdout, "\n\tTotal no. of failed records = %d", failed_count);
+		fprintf(stdout, "\n\tTotal no. of records processed = %d \n\n", total_count);
+	}
+
+	pin_mta_global_flist_node_release(PIN_FLD_OPERATION_INFO, ebufp);
+
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+				 "pin_mta_post_exit error", ebufp);
+	}
+	
+	return;
+}
+
+/*******************************************************************
+ * Main application opcode is called here
+ *******************************************************************/
+PIN_EXPORT void 
+pin_mta_worker_opcode(
+	pcm_context_t	*ctxp,
+	pin_flist_t	*srch_res_flistp,
+	pin_flist_t	*op_in_flistp,
+	pin_flist_t	**op_out_flistpp,
+	pin_flist_t	*ti_flistp,
+	pin_errbuf_t	*ebufp)
+{
+	pin_flist_t	*tmp_flistp = NULL;
+	pin_flist_t	*app_flistp = NULL;
+	pin_flist_t	*err_flistp = NULL;
+	pin_flist_t	*r_flistp = NULL;
+	pin_flist_t	*res_flistp = NULL;
+	pin_flist_t	*bal_imp_flistp = NULL;
+	pin_flist_t	*prd_flistp = NULL;
+	pin_flist_t	*inp_res_flistp = NULL;
+	pin_flist_t	*bal_info_flistp = NULL;
+	int32		*rec_no = 0;
+	int32		*elemid = 0;
+	int32		*bal_elemid = 0;
+	int32		mode = 0;
+	void		*vp = 0;
+	pin_cookie_t	cookie = 0;
+	pin_cookie_t	bal_cookie = 0;
+	
+	poid_t		*offering_poid = NULL;
+	poid_t		*pp_poid = NULL;
+
+	int32		account_obj = 0;
+	int32		billinfo_obj =  0;
+	int32		product_obj =  0;
+	int32		pur_obj =  0;
+	struct tm * timeinfo;
+	time_t 		earned_start_t = 0;
+	time_t 		earned_end_t  = 0;
+	time_t		raw_time;
+	int32		gl_id = 0;	
+	int32		resource_id = 0;	
+	char		*quantity = NULL;	
+	char            sbuf[2024] = {0};	
+	char		*amount = NULL;
+	char		*rate_tag = NULL;
+	char		*tax_code = NULL;
+	char		*out_file_name = NULL;
+
+	FILE            *fout         =        NULL;
+	pin_errbuf_t	ebuf1;
+	int 	counter = 0;
+	int 	counter1 = 0;
+	int 	counter2 = 0;
+	int 	counter3 = 0;
+	int32 	pp_int = 0;
+	int32	off_int = 0;
+	pin_decimal_t *amount_dec = NULL;
+	pin_decimal_t *quantity_dec = NULL;
+	
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		return;
+	}
+	PIN_ERRBUF_CLEAR (ebufp);
+
+	PIN_ERRBUF_CLEAR (&ebuf1);
+
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_worker_opcode search results flist", 
+					   srch_res_flistp);
+
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_worker_opcode prepared flist for main opcode", 
+					   op_in_flistp);
+
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG, 
+			"pin_mta_worker_opcode thread info flist", 
+					   ti_flistp);
+
+	/*****************************************
+	* Prepare input flist for the opcode
+	*****************************************/
+	td_bil_arrears_prep_input(&op_in_flistp, ebufp);
+	
+		
+	bal_info_flistp = PIN_FLIST_ELEM_GET ( op_in_flistp, PIN_FLD_BAL_INFO, 0, 1, ebufp);
+	inp_res_flistp = PIN_FLIST_ELEM_GET (bal_info_flistp , PIN_FLD_RESULTS, 0,1, ebufp);
+	
+	offering_poid = PIN_FLIST_FLD_GET ( inp_res_flistp, PIN_FLD_OFFERING_OBJ, 1, ebufp);
+	
+
+	if (!PIN_ERR_IS_ERR(ebufp)) {
+		PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, "pin_mta_worker_opcode modified flist for main opcode", op_in_flistp);
+
+		/******************************
+		 * Execute the main opcode
+		 ******************************/
+		PCM_OP(ctxp, 104,  128, op_in_flistp, op_out_flistpp, ebufp);
+
+
+	}
+
+	r_flistp = PIN_FLIST_COPY (*op_out_flistpp, ebufp);
+
+
+
+	time (&raw_time);
+    	timeinfo = localtime(&raw_time);
+	sprintf(sbuf, "output_files/output_file.txt",
+			timeinfo->tm_mday, timeinfo->tm_mon+1,timeinfo->tm_year + 1900);
+					
+	//out_file_name = "./output/test.csv";
+	out_file_name = sbuf;
+	if (out_file_name){
+
+		fout = fopen((char *)out_file_name, "a+");
+	}
+
+	if (ferror == (FILE *)NULL)
+        {
+                /**********************************
+                * Error out if cannot be opened
+                **********************************/
+
+                pin_set_err(ebufp, PIN_ERRLOC_APP,
+                        PIN_ERRCLASS_APPLICATION, PIN_ERR_FILE_IO,
+                        PIN_FLD_ERROR_FILE_NAME, 0, 0);
+
+                sprintf(sbuf, "\n\tpin_mta_init_app error :"
+                                "Unable to open the file %s for writing ouput  records\n",
+                                (char *)out_file_name);
+
+                fprintf(stderr, sbuf);
+
+                PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR, sbuf, ebufp);
+
+                exit (2);
+        }
+	
+	/* working in the output*/
+
+	 while ((res_flistp = PIN_FLIST_ELEM_GET_NEXT(r_flistp, PIN_FLD_RESULTS, 
+				elemid, 1, &cookie, ebufp)) != (pin_flist_t *)NULL) {
+
+		prd_flistp = PIN_FLIST_SUBSTR_GET (res_flistp, PIN_FLD_PRODUCT, 1, ebufp );
+
+		pp_poid = PIN_FLIST_FLD_GET ( prd_flistp, PIN_FLD_OFFERING_OBJ, 1, ebufp) ;
+
+		PIN_ERR_LOG_MSG (PIN_ERR_LEVEL_DEBUG,"Checking for offering");	
+
+		pp_int = PIN_POID_GET_ID(pp_poid);
+		off_int = PIN_POID_GET_ID(offering_poid);	
+		account_obj =  PIN_POID_GET_ID((poid_t*)PIN_FLIST_FLD_GET ( res_flistp, PIN_FLD_ACCOUNT_OBJ, 1, ebufp));
+		counter++;	
+		if (PIN_POID_COMPARE(pp_poid, offering_poid, 0, ebufp) == 0) {	
+
+		PIN_ERR_LOG_MSG (PIN_ERR_LEVEL_DEBUG, "Condition Met for offering ");
+		counter1++;	
+	
+		//account_obj =  PIN_POID_GET_ID((poid_t*)PIN_FLIST_FLD_GET ( res_flistp, PIN_FLD_ACCOUNT_OBJ, 1, ebufp));
+		billinfo_obj =  PIN_POID_GET_ID((poid_t*)PIN_FLIST_FLD_GET ( res_flistp, PIN_FLD_BILLINFO_OBJ,  1, ebufp));
+		earned_start_t = *(time_t *)PIN_FLIST_FLD_GET ( res_flistp, PIN_FLD_EARNED_START_T, 1, ebufp);
+		earned_end_t = *(time_t *)PIN_FLIST_FLD_GET ( res_flistp, PIN_FLD_EARNED_END_T, 1, ebufp);
+		 while (( bal_imp_flistp = PIN_FLIST_ELEM_GET_NEXT(res_flistp, PIN_FLD_BAL_IMPACTS,
+					 bal_elemid, 1, &bal_cookie, ebufp)) != (pin_flist_t *)NULL) {
+			counter2++;
+
+			resource_id = *(int32 *) PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_RESOURCE_ID, 1, ebufp);
+			rate_tag = (char *) PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_RATE_TAG,1, ebufp);
+			if (resource_id == 554 && strcmp(rate_tag, "Tax") != 0) {
+				counter3++;
+				PIN_ERR_LOG_MSG (PIN_ERR_LEVEL_DEBUG, "Writing Record");
+				product_obj = PIN_POID_GET_ID((poid_t*)PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_PRODUCT_OBJ, 1, ebufp));
+				pur_obj =PIN_POID_GET_ID((poid_t*)PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_OFFERING_OBJ, 1, ebufp ));
+				//amount_dec = (pin_decimal_t*)PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_AMOUNT, 1, ebufp);
+				amount = (char *)pbo_decimal_to_str((pin_decimal_t*)PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_AMOUNT,1 , ebufp), ebufp);
+				//amount =  (char *)pbo_decimal_to_str(amount_dec, ebufp);
+				gl_id = *(int32 *)PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_GL_ID, 1, ebufp);
+				quantity = (char *)pbo_decimal_to_str((pin_decimal_t*)PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_QUANTITY,1 , ebufp), ebufp);	
+				//quantity_dec  = (pin_decimal_t*)PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_QUANTITY,1 , ebufp);	
+				//quantity = (char *)pbo_decimal_to_str(quantity_dec, ebufp);
+				tax_code = (char *)PIN_FLIST_FLD_GET ( bal_imp_flistp, PIN_FLD_TAX_CODE,1, ebufp);
+				sprintf(sbuf, "%d,%d,%d,%d,%ld,%ld,%d,%s,%d,%s,%s\n", account_obj, billinfo_obj,
+							 product_obj, pur_obj, earned_start_t, earned_end_t, resource_id
+									,amount, gl_id, quantity, tax_code);
+				free(quantity);
+				free(amount);
+
+				fprintf((fout), sbuf);
+				//pbo_decimal_destroy(&amount_dec);
+				//pbo_decimal_destroy(&quantity_dec);
+			}
+		}
+		
+		}
+		bal_cookie = 0;
+		bal_elemid= 0;
+	}
+	//fprintf(stdout, "\n\tConnter : %d,%d,%d,%d,%d,%d,%d", account_obj,off_int, pp_int,counter, counter1, counter2, counter3);	
+
+	if ( fout != (FILE *)NULL)
+        {
+                fclose(fout);
+        }
+	/*************************
+	 * Error??
+	 *************************/
+	if (PIN_ERR_IS_ERR(ebufp)) {
+		PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR, "pin_mta_worker_opcode error", ebufp);
+
+		/**********************************************
+		* Check for any errors and update error flist
+		**********************************************/
+		rec_no = (int32 *) PIN_FLIST_FLD_GET(op_in_flistp, 
+					PIN_FLD_ELEMENT_ID, 0, &ebuf1);
+		
+		err_flistp = PIN_FLIST_ELEM_ADD(ti_flistp, PIN_FLD_NUMBERS, 
+					*rec_no, &ebuf1);
+
+		PIN_FLIST_FLD_SET(err_flistp, PIN_FLD_ELEMENT_ID, 
+					(void *)rec_no, &ebuf1);
+
+		vp = (int32 *)PIN_FLIST_FLD_GET(op_in_flistp, 
+					PIN_FLD_DESCR, 0, &ebuf1);
+
+		PIN_FLIST_FLD_SET(err_flistp, PIN_FLD_DESCR, vp, &ebuf1);
+	}
+	else
+	{
+		/***********************************************
+		* If no error then return the output flist
+		***********************************************/
+
+		rec_no = (int32 *) PIN_FLIST_FLD_GET(op_in_flistp, 
+					PIN_FLD_ELEMENT_ID, 0, ebufp);
+
+		err_flistp = PIN_FLIST_ELEM_ADD(ti_flistp, 
+					PIN_FLD_OP_ELEM, *rec_no, ebufp);
+
+		PIN_FLIST_FLD_SET(err_flistp, PIN_FLD_ELEMENT_ID, 
+					(void *)rec_no, ebufp);
+
+		PIN_ERR_LOG_FLIST(PIN_ERR_LEVEL_DEBUG, 
+				"pin_mta_worker_opcode output flist from main opcode", 
+				*op_out_flistpp);
+		PIN_ERR_LOG_MSG (PIN_ERR_LEVEL_DEBUG,"No error encounterd");
+	}
+	
+	//PIN_FLIST_DESTROY_EX(&op_in_flistp,NULL);
+	PIN_FLIST_DESTROY_EX(&r_flistp,NULL);	
+	PIN_FLIST_DESTROY_EX(op_out_flistpp,NULL);	
+	return;
+}
+
+/******************************************************************************
+ * Function     : unquote()
+ * Description  : This function removes the quotes(") from the input string.
+ ******************************************************************************/
+static char *
+unquote(char *p)
+{
+	if (p[0] == '"') {
+		if (p[strlen(p)-1] == '"')
+			p[strlen(p)-1] = '\0';
+		p++;
+	}
+	return p;
+}
+
+/******************************************************************************
+ * Function     : trim()
+ * Description  : This function returns a copy of the string, with leading
+ *              : and trailing whitespaces omitted.
+ ******************************************************************************/
+
+static char *
+trim(char *str)
+{
+	int c;
+
+	while ((c = str[strlen(str) - 1]) == ' ' || c == '\t'){
+		str[strlen(str) - 1] = '\0';
+	}
+
+	while((c = *str) == ' ' || c == '\t'){
+		str++;
+	}
+
+	return str;
+}
+
+/******************************************************************************
+ * Function     : get_tok()
+ * Parameters   : char  *str :  A string with comma separated values.
+ * Returns      : (char *) A string token (or NULL) on each call.
+ ******************************************************************************/
+static char *
+get_tok(char *str)
+{
+	static char *next	= NULL;
+
+	if(str == NULL) {
+		str = next;
+	}
+	else {
+		next = str;
+	}
+
+	if(str == NULL) {
+		return NULL;
+	}
+
+	while(*next && *next != '\n' && *next != '\r') {
+		if(*next == '|') {
+			*next = '\0';
+			next++;
+			return str;
+		}
+		next++;
+	}
+
+	if(*next == '\r' || *next == '\n') {
+		*next = '\0';
+	}
+
+	next = NULL;
+
+	return str;
+}
+
+/******************************************************************************
+ * Function     : trim_comment_from_flist()
+ * Description  : This function returns a copy of the flist string after
+ *              : the comment header from the flist
+ ******************************************************************************/
+static char *
+trim_comment_from_flist(char *str)
+{
+	int c;
+
+	if(str[0] == '#'){
+		while( (c = *str++) != '\n' && c != '\r' )
+			/* do nothing */ ;
+		if(c == '\r' && *str == '\n'){
+			str++;
+		}
+	}
+
+	return str;
+}
+
+/*************************************************************
+* td_bil_arrears_prep_input 
+*************************************************************/
+poid_t*
+td_bil_arrears_prep_input(
+        pin_flist_t     **input_flistpp,
+        pin_errbuf_t    *ebufp)
+{
+        pin_flist_t	*res_flistp = NULL;
+        pin_flist_t	*bal_flistp = NULL;
+        pin_flist_t	*tmp_flistp = NULL;
+
+	char		*get_type_str = NULL;
+	char		*type_str = NULL;
+
+	int32		rec_id = 0;
+	int32		flag_value = 0;
+	void		*vp = NULL;
+	int32		count = 0;
+	int32		status = 10100;
+	int32		element_id = 0;
+	int32		status_flag = PIN_STATUS_FLAG_MANUAL;
+	poid_t 		*offering_poid = NULL;
+	pin_cookie_t	cookie = NULL;
+
+        if (PIN_ERR_IS_ERR(ebufp)) {
+                return;
+        }
+
+        PIN_ERRBUF_CLEAR(ebufp);
+
+	/*******************************************
+	* Get each of service strings and tokenize
+	* to get service type and status
+	* Set the same into tmp_in_flistp
+	*******************************************/
+	rec_id = 0;
+	cookie = NULL;
+
+	PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG,
+                        " flist to work upon", *input_flistpp);
+        /**************************************************************
+         * Prepare input flist for the main opcode and return the same
+         **************************************************************/
+	tmp_flistp = PIN_FLIST_COPY(*input_flistpp, ebufp);
+	PIN_FLIST_FLD_SET(*input_flistpp, PIN_FLD_PROGRAM_NAME, (void *)"pin_trial_bill_accts", ebufp);
+
+	bal_flistp = PIN_FLIST_ELEM_ADD (*input_flistpp, PIN_FLD_BAL_INFO, 0, ebufp);
+	res_flistp = PIN_FLIST_ELEM_ADD ( bal_flistp , PIN_FLD_RESULTS, 0 , ebufp);
+	vp = PIN_FLIST_FLD_TAKE(*input_flistpp, PIN_FLD_BAL_GRP_OBJ, 0, ebufp);
+	PIN_FLIST_FLD_SET(res_flistp, PIN_FLD_BAL_GRP_OBJ, vp, ebufp);
+
+	vp = PIN_FLIST_FLD_TAKE (*input_flistpp, PIN_FLD_OFFERING_OBJ, 0 , ebufp);
+	PIN_FLIST_FLD_SET(res_flistp, PIN_FLD_OFFERING_OBJ, vp, ebufp);
+	
+	offering_poid  = (poid_t *)vp; 
+
+	 PIN_FLIST_FLD_SET(res_flistp, PIN_FLD_SUBSCRIPTION_OBJ, NULL, ebufp)
+	PIN_FLIST_FLD_SET(res_flistp, PIN_FLD_STATUS, (void*)&status, ebufp);
+	
+	vp = PIN_FLIST_FLD_GET (tmp_flistp, PIN_FLD_POID, 0, ebufp);
+	PIN_FLIST_FLD_SET(res_flistp, PIN_FLD_ACCOUNT_OBJ, vp, ebufp);
+
+	PIN_FLIST_FLD_SET(res_flistp, PIN_FLD_NEXT_ITEM_POID_LIST, "", ebufp);
+	PIN_FLIST_FLD_SET(res_flistp, PIN_FLD_ITEM_POID_LIST, "", ebufp);
+	
+	 PIN_ERR_LOG_FLIST (PIN_ERR_LEVEL_DEBUG,
+                        "completed flist", *input_flistpp);
+
+	
+	PIN_FLIST_DESTROY_EX(&tmp_flistp, NULL);
+
+
+        /******************************
+	 * Error?
+         ******************************/
+        if (PIN_ERR_IS_ERR(ebufp)) {
+                PIN_ERR_LOG_EBUF(PIN_ERR_LEVEL_ERROR,
+                        "td_bil_arrears_prep_input error", ebufp);
+        }
+		
+        return ;
+}
+
+
+

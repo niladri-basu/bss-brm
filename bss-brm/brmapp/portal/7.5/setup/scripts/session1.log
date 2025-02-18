@@ -1,0 +1,230 @@
+
+SQL*Plus: Release 11.2.0.4.0 Production on Fri Apr 10 21:40:12 2015
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options
+
+SQL> SQL> SQL> SQL> Info: Add_partitions_exec
+Processing the table EVENT_ITEM_TRANSFER_BUF_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_TAX_JURISDICTIONS_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_RUM_MAP_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_REVERSAL_BATCH_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_PROVISION_BATCH_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_PRODUCT_FEE_DISCOUNTS_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_ITEM_TRANSFER_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_INV_NAMEINFO_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_GROUP_PARENT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_ESSENTIALS_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_BILLINFO_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CONTROL_RERATE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_VALID_DD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_TAXES_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_SB_VALIDITY_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REVERSAL_WTRAN_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REVERSAL_PORDR_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REVERSAL_CHECK_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REVERSAL_CASH_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REFUND_POST_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REFUND_DD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REFUND_CC_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REFUND_CASH_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_POST_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_FAILED_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_CHECK_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_CASH_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_LIMIT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_CHRG_INV_STATS_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_CHARGE_DD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_BUNDLE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILL_VOUCHERTOPUP_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILL_PYMT_VOUCHER_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILL_BP_BEST_BAL_IMP_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILL_BP_BASE_BAL_IMP_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_AUDIT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_AUDIT_SVC_BG_TRANSFER_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_AUDIT_PROFILES_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_AUDIT_BALGRPS_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_SESSION_DIALUP_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_INV_INVOICE_INFO_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_DEVICE_STATE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_DEVICE_DISASCT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_DEVICE_ATTR_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CORRECTIVE_BILL_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_VALID_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REVERSAL_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PRODUCT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_INCENTIVE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_DISCOUNT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_CHARGE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_AUDIT_ACCOUNT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_ACTIVITY_REG_T
+Boundary set
+Partitions dropped
+New partitions added
+
+PL/SQL procedure successfully completed.
+
+SQL> Disconnected from Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CUST" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="PCM_OP_CUST_UPDATE_SERVICES.xsd"/>
+            <include schemaLocation="PCM_OP_CUST_CREATE_PROFILE.xsd"/>
+            <include schemaLocation="PCM_OP_CUST_COMMIT_CUSTOMER.xsd"/>
+            <include schemaLocation="PCM_OP_CUST_UPDATE_CUSTOMER.xsd"/>
+            <include schemaLocation="PCM_OP_CUST_DELETE_PAYINFO.xsd"/>
+            <include schemaLocation="PCM_OP_CUST_MODIFY_PROFILE.xsd"/>
+            <include schemaLocation="PCM_OP_CUST_MODIFY_CUSTOMER.xsd"/>
+            <include schemaLocation="PCM_OP_CUST_DELETE_ACCT.xsd"/>
+            <include schemaLocation="PCM_OP_CUST_DELETE_PROFILE.xsd"/>
+        </schema>
+    </types>
+    <message name="PCM_OP_CUST_UPDATE_SERVICES_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_UPDATE_SERVICES_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_UPDATE_SERVICES_outmsg">
+        <part name="PCM_OP_CUST_UPDATE_SERVICES_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_CREATE_PROFILE_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_CREATE_PROFILE_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_CREATE_PROFILE_outmsg">
+        <part name="PCM_OP_CUST_CREATE_PROFILE_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_COMMIT_CUSTOMER_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_COMMIT_CUSTOMER_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_COMMIT_CUSTOMER_outmsg">
+        <part name="PCM_OP_CUST_COMMIT_CUSTOMER_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_UPDATE_CUSTOMER_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_UPDATE_CUSTOMER_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_UPDATE_CUSTOMER_outmsg">
+        <part name="PCM_OP_CUST_UPDATE_CUSTOMER_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_DELETE_PAYINFO_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_DELETE_PAYINFO_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_DELETE_PAYINFO_outmsg">
+        <part name="PCM_OP_CUST_DELETE_PAYINFO_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_MODIFY_PROFILE_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_MODIFY_PROFILE_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_MODIFY_PROFILE_outmsg">
+        <part name="PCM_OP_CUST_MODIFY_PROFILE_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_MODIFY_CUSTOMER_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_MODIFY_CUSTOMER_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_MODIFY_CUSTOMER_outmsg">
+        <part name="PCM_OP_CUST_MODIFY_CUSTOMER_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_DELETE_ACCT_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_DELETE_ACCT_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_DELETE_ACCT_outmsg">
+        <part name="PCM_OP_CUST_DELETE_ACCT_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_DELETE_PROFILE_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_CUST_DELETE_PROFILE_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_CUST_DELETE_PROFILE_outmsg">
+        <part name="PCM_OP_CUST_DELETE_PROFILE_response" type="xsd:string"/>
+    </message>
+    <portType name="BRMCUSTService_ptt">
+        <operation name="PcmOpCustUpdateServices">
+            <input message="brm:PCM_OP_CUST_UPDATE_SERVICES_inmsg" name="PCM_OP_CUST_UPDATE_SERVICES_inmsg"/>
+            <output message="brm:PCM_OP_CUST_UPDATE_SERVICES_outmsg" name="PCM_OP_CUST_UPDATE_SERVICES_outmsg"/>
+        </operation>
+        <operation name="PcmOpCustCreateProfile">
+            <input message="brm:PCM_OP_CUST_CREATE_PROFILE_inmsg" name="PCM_OP_CUST_CREATE_PROFILE_inmsg"/>
+            <output message="brm:PCM_OP_CUST_CREATE_PROFILE_outmsg" name="PCM_OP_CUST_CREATE_PROFILE_outmsg"/>
+        </operation>
+        <operation name="PcmOpCustCommitCustomer">
+            <input message="brm:PCM_OP_CUST_COMMIT_CUSTOMER_inmsg" name="PCM_OP_CUST_COMMIT_CUSTOMER_inmsg"/>
+            <output message="brm:PCM_OP_CUST_COMMIT_CUSTOMER_outmsg" name="PCM_OP_CUST_COMMIT_CUSTOMER_outmsg"/>
+        </operation>
+        <operation name="PcmOpCustUpdateCustomer">
+            <input message="brm:PCM_OP_CUST_UPDATE_CUSTOMER_inmsg" name="PCM_OP_CUST_UPDATE_CUSTOMER_inmsg"/>
+            <output message="brm:PCM_OP_CUST_UPDATE_CUSTOMER_outmsg" name="PCM_OP_CUST_UPDATE_CUSTOMER_outmsg"/>
+        </operation>
+        <operation name="PcmOpCustDeletePayinfo">
+            <input message="brm:PCM_OP_CUST_DELETE_PAYINFO_inmsg" name="PCM_OP_CUST_DELETE_PAYINFO_inmsg"/>
+            <output message="brm:PCM_OP_CUST_DELETE_PAYINFO_outmsg" name="PCM_OP_CUST_DELETE_PAYINFO_outmsg"/>
+        </operation>
+        <operation name="PcmOpCustModifyProfile">
+            <input message="brm:PCM_OP_CUST_MODIFY_PROFILE_inmsg" name="PCM_OP_CUST_MODIFY_PROFILE_inmsg"/>
+            <output message="brm:PCM_OP_CUST_MODIFY_PROFILE_outmsg" name="PCM_OP_CUST_MODIFY_PROFILE_outmsg"/>
+        </operation>
+        <operation name="PcmOpCustModifyCustomer">
+            <input message="brm:PCM_OP_CUST_MODIFY_CUSTOMER_inmsg" name="PCM_OP_CUST_MODIFY_CUSTOMER_inmsg"/>
+            <output message="brm:PCM_OP_CUST_MODIFY_CUSTOMER_outmsg" name="PCM_OP_CUST_MODIFY_CUSTOMER_outmsg"/>
+        </operation>
+        <operation name="PcmOpCustDeleteAcct">
+            <input message="brm:PCM_OP_CUST_DELETE_ACCT_inmsg" name="PCM_OP_CUST_DELETE_ACCT_inmsg"/>
+            <output message="brm:PCM_OP_CUST_DELETE_ACCT_outmsg" name="PCM_OP_CUST_DELETE_ACCT_outmsg"/>
+        </operation>
+        <operation name="PcmOpCustDeleteProfile">
+            <input message="brm:PCM_OP_CUST_DELETE_PROFILE_inmsg" name="PCM_OP_CUST_DELETE_PROFILE_inmsg"/>
+            <output message="brm:PCM_OP_CUST_DELETE_PROFILE_outmsg" name="PCM_OP_CUST_DELETE_PROFILE_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="BRMCUSTService_binding" type="brm:BRMCUSTService_ptt">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PcmOpCustUpdateServices">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_UPDATE_SERVICES_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_UPDATE_SERVICES_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpCustCreateProfile">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_CREATE_PROFILE_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_CREATE_PROFILE_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpCustCommitCustomer">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_COMMIT_CUSTOMER_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_COMMIT_CUSTOMER_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpCustUpdateCustomer">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_UPDATE_CUSTOMER_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_UPDATE_CUSTOMER_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpCustDeletePayinfo">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_DELETE_PAYINFO_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_DELETE_PAYINFO_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpCustModifyProfile">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_MODIFY_PROFILE_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_MODIFY_PROFILE_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpCustModifyCustomer">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_MODIFY_CUSTOMER_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_MODIFY_CUSTOMER_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpCustDeleteAcct">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_DELETE_ACCT_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_DELETE_ACCT_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpCustDeleteProfile">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_CUST_DELETE_PROFILE_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_CUST_DELETE_PROFILE_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="BRMCUSTService">
+        <port binding="brm:BRMCUSTService_binding" name="BRMCUSTService_pt">
+            <soap:address location="http://localhost:8080/brm/BRMWSCUSTServices"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="BRMService_plt">
+        <plt:role name="BRMService_role">
+            <plt:portType name="brm:BRMCUSTService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

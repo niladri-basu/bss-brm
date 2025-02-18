@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<price_list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="price_list.xsd" version="7.2">
+<offer_profile>
+	<offer_profile_name> Platinum </offer_profile_name>
+	<offer_profile_code> Platinum </offer_profile_code>
+	<policy_label>
+		<label>Fair Usage</label>
+		<resource_name>Megabytes Used</resource_name>
+		<resource_id>1000009</resource_id>
+		<unit>megabyte</unit>
+		<tier>
+			<tier_start_range>0</tier_start_range>
+			<tier_end_range>2.5</tier_end_range>
+			<status_label>High Qos</status_label>
+		</tier>
+		<tier>
+			<tier_start_range>2.5</tier_start_range>
+			<tier_end_range>5</tier_end_range>
+			<status_label>Med Qos</status_label>
+		</tier>
+		<tier>
+			<tier_start_range>5</tier_start_range>
+			<status_label>Low Qos</status_label>
+		</tier>
+	</policy_label>
+</offer_profile>
+</price_list>

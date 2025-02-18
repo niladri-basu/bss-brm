@@ -1,0 +1,578 @@
+//==============================================================================
+//
+//      Copyright (c) 2004 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_LeastCostRating
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module calculates the charge breakdown with the least cost.
+//
+//------------------------------------------------------------------------------
+
+// @(#)% %
+
+//==============================================================================
+// BEGIN Container
+//==============================================================================
+
+
+//===========================================================================
+// Hash totalCharge {rateplancode}[]
+// totalCharge {rateplancode}[0] --> totalcharge(CP+DP) for the product
+// totalCharge {rateplancode}[1] -->stores the saving amount for the leastcost amount
+//===========================================================================
+// Hash productInfo {rateplancode}[]
+// productInfo {rateplancode}[0] -->indicates if it is a systemproduct or not 0->no 1->yes
+// productInfo {rateplancode}[1] -->stores the block index of the ASS_CBD for the corresponding rateplan
+// productInfo {rateplancode}[2] -->stores the index of the product which contributed to the least cost
+// productInfo {rateplancode}[3] -->indicates that this is the product with the leastcost 0->no 1->yes
+//===========================================================================
+
+
+Bool    debug;
+Decimal totalCharge {} [];
+Long    productInfo {} []; 
+String  Resource;
+Long    lResource_id;
+
+
+function BEGIN
+{
+  debug = false;
+
+  if (debug)
+   logStdout("Begin()\n");
+
+  Resource = regString(registryNodeName() + ".Resource");
+  lResource_id = strToLong(regString(registryNodeName() + ".Resource_id"));
+	
+	
+}
+   
+//==============================================================================
+// Function declarations
+//==============================================================================
+
+//==============================================================================
+// isPromotionalProduct()
+// This function checks to see if the product is a promotional product or a base
+// product.It also stores the index of each rating product in the productInfo array
+//==============================================================================
+
+function Bool isPromotionalProduct(String ratePlanCode)
+{
+  Long ProdpacketIndex;
+  Long ProdpacketEntries=edrNumDatablocks(DETAIL.CUST_A.PRODUCT, 0);
+  Long index;
+  String ratePlanCode_tmp;
+
+  if (debug)
+   logStdout("isPromotionalProduct()\n");
+
+  // Remove the block index (_Block_Index) from the rate plan code before searching the product block
+  ratePlanCode_tmp = strSubstr(ratePlanCode,0,strLength(ratePlanCode)-2);
+
+  for(index=0 ; index < ProdpacketEntries ; index = index +1)
+  {
+    if (edrString(DETAIL.CUST_A.PRODUCT.RATEPLAN_NAME,0,index) == ratePlanCode_tmp )
+    { 
+      productInfo{ratePlanCode}[2] = index;
+      if(edrLong(DETAIL.CUST_A.PRODUCT.PRIORITY,0,index) == 0)
+      {
+         return false;
+      }
+    }
+  }
+  return true;
+}
+
+//==============================================================================
+// calcCharge()
+// This function calculates the charge for each associated breakdown,and stores it
+// in the totalCharge array. totalcharge = charge + discount. It also stores the
+// block index of each ASS_CBD.
+//==============================================================================
+
+function calcCharge(Long blockIndex)
+{
+  Long CPpacketIndex;
+  Long CPpacketEntries=edrNumDatablocks( DETAIL.ASS_CBD.CP,blockIndex); 
+  Long DPpacketIndex;
+  Long DPpacketEntries=edrNumDatablocks( DETAIL.ASS_CBD.DP,blockIndex); 
+  
+  Decimal currCharge;
+  Decimal currDiscount;
+  String currCPpacketRateCode;
+  String currDPpacketRateCode;
+  String sBlockIndex = longToStr(blockIndex);
+  
+  if (debug)
+   logStdout("calcCharge()\n"); 
+  
+
+  for(CPpacketIndex=0; CPpacketIndex < CPpacketEntries ; CPpacketIndex = CPpacketIndex +1 )
+  {
+         //append the block index to the rate plan code so as to make the combination unique
+       	 currCPpacketRateCode = edrString( DETAIL.ASS_CBD.CP.RATEPLAN_CODE ,blockIndex,CPpacketIndex) + "_" + sBlockIndex;
+	 currCharge = edrDecimal( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE,blockIndex,CPpacketIndex);
+	 totalCharge {currCPpacketRateCode}[0] = totalCharge {currCPpacketRateCode}[0] + currCharge;
+  }
+  
+  for(DPpacketIndex=0; DPpacketIndex < DPpacketEntries ; DPpacketIndex = DPpacketIndex +1 )
+  {
+	 currDiscount = edrDecimal( DETAIL.ASS_CBD.DP.AMOUNT,blockIndex,DPpacketIndex);
+	 totalCharge {currCPpacketRateCode}[0] = totalCharge {currCPpacketRateCode}[0] + currDiscount;
+  }  
+
+  // If it is a promotional product set the 0th element of the hash to 1
+  if(isPromotionalProduct(currCPpacketRateCode) )
+  {
+    productInfo {currCPpacketRateCode}[0] = 1;
+  }
+  else
+  {
+    productInfo {currCPpacketRateCode}[0] = 0;
+  }
+
+  //Store the block index at 1st place
+  productInfo {currCPpacketRateCode}[1] = blockIndex;
+  
+}
+//==============================================================================
+// calcLeastCost()
+// This function loops thro the totalCharge array and locates the rate plan with
+// the least cost.It also calculates the saving amount. 
+// Saving Amount = Maximumcharge - Least Cost
+//============================================================================== 
+function String calcLeastCost
+{
+
+  String Keys[];
+  Long keyCount =  hashKeys( totalCharge, Keys );
+  Long index;
+  Decimal currCharge; 
+  Decimal leastCost;	
+  Decimal maxCost;
+  String leastCostRateCode;
+ 
+ if (debug)
+   logStdout("calcLeastCost()\n"); 
+
+	for(index=0 ; index < keyCount ; index=index+1)
+	{
+	 
+	   if(index==0) 
+	   {
+		   currCharge=leastCost=maxCost=totalCharge {Keys[index]}[0];
+		   leastCostRateCode = Keys[index];
+		   productInfo{leastCostRateCode}[3] = 1;
+	   }
+
+	   currCharge = totalCharge {Keys[index]}[0];
+           
+	   if(leastCost > currCharge )
+	   {
+	    
+		    leastCost = currCharge;
+	    
+	 	   //Set the 2nd element to 0 if this is not the product which contributes to the least cost
+            	   productInfo{leastCostRateCode}[3] = 0;
+		   
+		    leastCostRateCode = Keys[index];
+
+		    //Set the new  value to 1 as this product contributes to the least cost
+		    productInfo{leastCostRateCode}[3] = 1;
+	   
+	   }
+	  
+	   if(maxCost < currCharge )
+	   {
+		    maxCost = currCharge;
+	   }
+	  
+	}
+
+	//populate the saving amount in the 1st element
+	totalCharge{leastCostRateCode}[1] = maxCost - leastCost;
+	edrLong (DETAIL.CUST_A.INTERN_FOUND_PP_INDEX, 0)= productInfo{leastCostRateCode}[2];
+	return leastCostRateCode;
+}
+
+//==============================================================================
+// createChargePacket()
+//This function creates a saving charge packet in the CBD which contributed to the 
+//least cost.It stores the saving amount in this CP,and also sets the record type to
+//992.
+//==============================================================================  
+function createChargePacket(String leastCostRateCode)
+{
+	
+ Long CPpacketIndex;
+ Long blockIndex = productInfo {leastCostRateCode}[1];
+
+ if (debug)
+   logStdout("createChargePacket()\n");
+	
+ 	edrAddDatablock( DETAIL.ASS_CBD.CP,blockIndex);
+	CPpacketIndex = edrNumDatablocks( DETAIL.ASS_CBD.CP,blockIndex );
+      
+ 	edrString(DETAIL.ASS_CBD.CP.RESOURCE,blockIndex,CPpacketIndex-1)= Resource;
+ 	edrLong(DETAIL.ASS_CBD.CP.RESOURCE_ID,blockIndex,CPpacketIndex-1)= lResource_id;
+ 	edrString(DETAIL.ASS_CBD.CP.RECORD_TYPE,blockIndex,CPpacketIndex-1)= "992";
+ 	edrDecimal( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE,blockIndex,CPpacketIndex-1)= totalCharge {leastCostRateCode}[1];
+
+ 	//populating default values from CP(0)
+ 	edrString(DETAIL.ASS_CBD.CP.RATEPLAN_CODE,blockIndex,CPpacketIndex-1)=
+  	 edrString(DETAIL.ASS_CBD.CP.RATEPLAN_CODE,blockIndex,0);                                   
+
+ 	edrString(DETAIL.ASS_CBD.CP.RATEPLAN_TYPE,blockIndex,CPpacketIndex-1)=
+  	 edrString(DETAIL.ASS_CBD.CP.RATEPLAN_TYPE,blockIndex,0);                                   
+
+ 	edrString(DETAIL.ASS_CBD.CP.RATETAG_CODE,blockIndex,CPpacketIndex-1)=
+  	 edrString(DETAIL.ASS_CBD.CP.RATETAG_CODE,blockIndex,0);                                    
+
+ 	edrString(DETAIL.ASS_CBD.CP.ZONEMODEL_CODE,blockIndex,CPpacketIndex-1)=
+  	 edrString(DETAIL.ASS_CBD.CP.ZONEMODEL_CODE,blockIndex,0);                                  
+
+ 	edrString(DETAIL.ASS_CBD.CP.SERVICE_CODE_USED,blockIndex,CPpacketIndex-1)=
+  	 edrString(DETAIL.ASS_CBD.CP.SERVICE_CODE_USED,blockIndex,0);                               
+
+ 	edrString(DETAIL.ASS_CBD.CP.SERVICE_CLASS_USED,blockIndex,CPpacketIndex-1)=
+  	 edrString(DETAIL.ASS_CBD.CP.SERVICE_CLASS_USED,blockIndex,0);                              
+
+ 	edrString(DETAIL.ASS_CBD.CP.IMPACT_CATEGORY,blockIndex,CPpacketIndex-1)=
+  	 edrString(DETAIL.ASS_CBD.CP.IMPACT_CATEGORY,blockIndex,0);                                 
+
+ 	edrString(DETAIL.ASS_CBD.CP.ZONE_DESCRIPTION,blockIndex,CPpacketIndex-1)=
+  	 edrString(DETAIL.ASS_CBD.CP.ZONE_DESCRIPTION,blockIndex,0);                                
+
+  	edrString(DETAIL.ASS_CBD.CP.IC_DESCRIPTION,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.IC_DESCRIPTION,blockIndex,0);                                  
+
+  	edrString(DETAIL.ASS_CBD.CP.ZONE_ENTRY_NAME,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.ZONE_ENTRY_NAME,blockIndex,0);                                 
+
+  	edrLong(DETAIL.ASS_CBD.CP.DISTANCE,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.DISTANCE,blockIndex,0);                                        
+
+ 	 edrString(DETAIL.ASS_CBD.CP.TIMEMODEL_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.TIMEMODEL_CODE,blockIndex,0);                                  
+
+  	edrString(DETAIL.ASS_CBD.CP.TIMEZONE_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.TIMEZONE_CODE,blockIndex,0);                                   
+
+  	edrString(DETAIL.ASS_CBD.CP.DAY_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.DAY_CODE,blockIndex,0);                                        
+
+  	edrString(DETAIL.ASS_CBD.CP.TIME_INTERVAL_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.TIME_INTERVAL_CODE,blockIndex,0);                              
+
+  	edrString(DETAIL.ASS_CBD.CP.PRICEMODEL_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.PRICEMODEL_CODE,blockIndex,0);                                 
+
+  	edrString(DETAIL.ASS_CBD.CP.PRICEMODEL_TYPE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.PRICEMODEL_TYPE,blockIndex,0);                                 
+
+  	edrString(DETAIL.ASS_CBD.CP.RUMGROUP,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.RUMGROUP,blockIndex,0);                                        
+
+ 	edrString(DETAIL.ASS_CBD.CP.RUM,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.RUM,blockIndex,0);                                             
+
+  	edrString(DETAIL.ASS_CBD.CP.NETWORK_OPERATOR_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.NETWORK_OPERATOR_CODE,blockIndex,0);                           
+
+  	edrString(DETAIL.ASS_CBD.CP.NETWORK_OPERATOR_BILLINGTYPE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.NETWORK_OPERATOR_BILLINGTYPE,blockIndex,0);                    
+
+  	edrString(DETAIL.ASS_CBD.CP.CHARGE_TYPE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.CHARGE_TYPE,blockIndex,0);                                     
+
+  	edrString(DETAIL.ASS_CBD.CP.TRUNK_USED,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.TRUNK_USED,blockIndex,0);                                      
+
+  	edrString(DETAIL.ASS_CBD.CP.POI_USED,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.POI_USED,blockIndex,0);                                        
+
+  	edrString(DETAIL.ASS_CBD.CP.PRODUCTCODE_USED,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.PRODUCTCODE_USED,blockIndex,0);                                
+
+  	edrString(DETAIL.ASS_CBD.CP.PIN_LOGIN_ALIAS,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.PIN_LOGIN_ALIAS,blockIndex,0);                                 
+
+  	edrDate(DETAIL.ASS_CBD.CP.CHARGING_START_TIMESTAMP,blockIndex,CPpacketIndex-1)=
+	  edrDate(DETAIL.ASS_CBD.CP.CHARGING_START_TIMESTAMP,blockIndex,0);                        
+
+  	edrDecimal(DETAIL.ASS_CBD.CP.CHARGEABLE_QUANTITY_VALUE,blockIndex,CPpacketIndex-1)=
+	  edrDecimal(DETAIL.ASS_CBD.CP.CHARGEABLE_QUANTITY_VALUE,blockIndex,0);                       
+
+  	edrDecimal(DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_VALUE,blockIndex,CPpacketIndex-1)=
+	  edrDecimal(DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_VALUE,blockIndex,0);                          
+                                                                
+  	edrDecimal(DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_FROM,blockIndex,CPpacketIndex-1)=
+	  edrDecimal(DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_FROM,blockIndex,0);                           
+
+  	edrDecimal(DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_TO,blockIndex,CPpacketIndex-1)=
+	  edrDecimal(DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_TO,blockIndex,0);                             
+
+  	edrString(DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_UOM,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_UOM,blockIndex,0);                            
+
+  	edrDecimal(DETAIL.ASS_CBD.CP.EXCHANGE_RATE,blockIndex,CPpacketIndex-1)=
+	  edrDecimal(DETAIL.ASS_CBD.CP.EXCHANGE_RATE,blockIndex,0);                                   
+
+  	edrString(DETAIL.ASS_CBD.CP.EXCHANGE_CURRENCY,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.EXCHANGE_CURRENCY,blockIndex,0);                               
+
+  	edrString(DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE,blockIndex,0);                           
+                                                               
+  	edrString(DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_CURRENCY,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_CURRENCY,blockIndex,0);                         
+
+  	edrString(DETAIL.ASS_CBD.CP.CHARGED_TAX_TREATMENT,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.CHARGED_TAX_TREATMENT,blockIndex,0);                           
+
+  	edrLong(DETAIL.ASS_CBD.CP.CHARGED_TAX_RATE,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.CHARGED_TAX_RATE,blockIndex,0);                                
+
+  	edrString(DETAIL.ASS_CBD.CP.CHARGED_TAX_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.CHARGED_TAX_CODE,blockIndex,0);                                
+
+  	edrString(DETAIL.ASS_CBD.CP.USAGE_GL_ACCOUNT_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.USAGE_GL_ACCOUNT_CODE,blockIndex,0);                           
+
+  	edrString(DETAIL.ASS_CBD.CP.REVENUE_GROUP_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.REVENUE_GROUP_CODE,blockIndex,0);                              
+
+  	edrString(DETAIL.ASS_CBD.CP.RATEPLAN_INFO,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.RATEPLAN_INFO,blockIndex,0);                                   
+
+  	edrString(DETAIL.ASS_CBD.CP.DISCOUNTMODEL_CODE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.DISCOUNTMODEL_CODE,blockIndex,0);                              
+
+  	edrDecimal(DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_AMOUNT_VALUE,blockIndex,CPpacketIndex-1)=
+	  edrDecimal(DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_AMOUNT_VALUE,blockIndex,0);                   
+
+  	edrDecimal(DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_QUANTITY_VALUE,blockIndex,CPpacketIndex-1)=
+	  edrDecimal(DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_QUANTITY_VALUE,blockIndex,0);                 
+
+  	edrString(DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_QUANTITY_UOM,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_QUANTITY_UOM,blockIndex,0);                   
+
+  	edrLong(DETAIL.ASS_CBD.CP.NUMBER_OF_DISCOUNT_PACKETS,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.NUMBER_OF_DISCOUNT_PACKETS,blockIndex,0);                      
+
+  	edrLong(DETAIL.ASS_CBD.CP.INTERN_PACKET_INDEX,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.INTERN_PACKET_INDEX,blockIndex,0);                             
+
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_RATEPLAN,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_RATEPLAN,blockIndex,0);                                 
+                                                           
+  	edrLong(DETAIL.ASS_CBD.CP.INTERN_RATEPLAN_VERSION,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.INTERN_RATEPLAN_VERSION,blockIndex,0);                         
+                                                                
+  	edrLong(DETAIL.ASS_CBD.CP.INTERN_ZONE_MODEL,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.INTERN_ZONE_MODEL,blockIndex,0);                               
+                                                                
+  	edrLong(DETAIL.ASS_CBD.CP.INTERN_ZONE_MODEL_USED,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.INTERN_ZONE_MODEL_USED,blockIndex,0);                               
+
+                                                                
+  	edrLong(DETAIL.ASS_CBD.CP.INTERN_GEOMODEL,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.INTERN_GEOMODEL,blockIndex,0);                                 
+
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_APN_GROUP,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_APN_GROUP,blockIndex,0);                                
+                                                                
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_RULESET,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_RULESET,blockIndex,0);                                  
+
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_ORIGIN_NUM_ZONE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_ORIGIN_NUM_ZONE,blockIndex,0);                          
+                                                                
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_DESTIN_NUM_ZONE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_DESTIN_NUM_ZONE,blockIndex,0);                          
+                                                                
+  	edrDecimal(DETAIL.ASS_CBD.CP.INTERN_FIX_COST,blockIndex,CPpacketIndex-1)=
+	  edrDecimal(DETAIL.ASS_CBD.CP.INTERN_FIX_COST,blockIndex,0);                                 
+                                                                
+  	edrLong(DETAIL.ASS_CBD.CP.INTERN_DISCOUNT_MODEL,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.INTERN_DISCOUNT_MODEL,blockIndex,0);                           
+                                                                
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_DISCOUNT_ACCOUNT,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_DISCOUNT_ACCOUNT,blockIndex,0);                         
+                                                                
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_HOME_CURRENCY,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_HOME_CURRENCY,blockIndex,0);                            
+                                                                
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_BILLING_CURRENCY,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_BILLING_CURRENCY,blockIndex,0);                         
+                                                                
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_DISCOUNT_BUNDLE,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_DISCOUNT_BUNDLE,blockIndex,0);                          
+                                                                
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_DISCOUNT_OWNER,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_DISCOUNT_OWNER,blockIndex,0);                           
+
+  	edrString(DETAIL.ASS_CBD.CP.INTERN_PRICE_MDL_STEP_INFO,blockIndex,CPpacketIndex-1)=
+	  edrString(DETAIL.ASS_CBD.CP.INTERN_PRICE_MDL_STEP_INFO,blockIndex,0);                      
+                                                                
+                                                                
+  	edrLong(DETAIL.ASS_CBD.CP.INTERN_RUM_ID,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.INTERN_RUM_ID,blockIndex,0);                                   
+
+  	edrLong(DETAIL.ASS_CBD.CP.RELATED_RECORD_NUMBER,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.RELATED_RECORD_NUMBER,blockIndex,0); 
+
+  	edrLong(DETAIL.ASS_CBD.CP.RELATED_CHARGE_INFO_ID,blockIndex,CPpacketIndex-1)=
+	  edrLong(DETAIL.ASS_CBD.CP.RELATED_CHARGE_INFO_ID,blockIndex,0); 
+                                                                
+}
+//==================================================================================
+// findCbdIndex
+// This function iterates all CBD and returns the first occurance of record type 981
+//==================================================================================
+function Long findCbdIndex
+{
+  Long blockIndex ;
+
+  for ( blockIndex = 0; blockIndex < edrNumDatablocks(DETAIL.ASS_CBD); blockIndex = blockIndex + 1 )
+  {
+    if (edrString(DETAIL.ASS_CBD.RECORD_TYPE,blockIndex) == "981")
+    {
+      return blockIndex;
+    }
+  }
+  return -1;
+} // end function findCbdIndex
+
+//==============================================================================
+// deleteAssCbd(leastCostRateCode)
+// This function deletes all the CBD's which did not contribute to the least cost
+//=============================================================================
+
+function deleteAssCbd(String leastCostRateCode,Long indexshift)
+{
+  Long tmpIndex = indexshift;
+
+  // Remove the block index from the rate plan code.
+  String sRateCode = strSubstr(leastCostRateCode,0,strLength(leastCostRateCode)-2);
+
+  if (debug)
+    logStdout("deleteAssCbd");
+
+  while(edrNumDatablocks( DETAIL.ASS_CBD) > (indexshift + 1)) 
+  {
+    //keep deleting the (indexshift)th CBD till it becomes the least cost CBD and then start deleting the
+    //CBD at the (indexshift+1)st position,till all the CBD's except the least cost CBD are deleted.
+    if((edrString( DETAIL.ASS_CBD.CP.RATEPLAN_CODE ,tmpIndex,0) != sRateCode) or (tmpIndex == (indexshift + 1)))
+    { 
+      edrDeleteDatablock(DETAIL.ASS_CBD,tmpIndex);
+    }
+    else
+    {
+      tmpIndex = indexshift + 1;
+    }
+  }
+}
+//==============================================================================
+// onDetailEdr()
+// This function is fired for each detail edr.It loops through each ASS_CBD and 
+// then executes the functions which calculate the least cost.
+//==============================================================================
+
+function onDetailEdr
+{
+  Long blockEntries = edrNumDatablocks( DETAIL.ASS_CBD);
+  Long indexval;
+  indexval = findCbdIndex();
+  if(indexval == -1)
+  {
+    return ;
+  }
+ 
+  if (debug)
+   logStdout("onDetailEdr()\n");
+
+  //clear the hash tables
+  hashClear(totalCharge);
+  hashClear(productInfo);
+ 
+  if (edrString(DETAIL.CUST_A.LEAST_COST,0) == "2")
+  {
+    Long blockIndex;
+    String leastCostRateCode;
+ 	
+    for ( blockIndex = 0 ; blockIndex < blockEntries ; blockIndex = blockIndex + 1 )
+    {
+      if(edrString( DETAIL.ASS_CBD.RECORD_TYPE, blockIndex )=="981")
+      {    
+	calcCharge(blockIndex);
+      }
+    }
+	
+    leastCostRateCode=calcLeastCost();
+ 	
+    if(productInfo{leastCostRateCode}[0] == 1)
+    {	
+      createChargePacket(leastCostRateCode);
+    }
+
+    deleteAssCbd(leastCostRateCode,indexval);
+  }
+  else
+  {
+    // Least cost feature is not applicable on this edr.
+    // Check if we are to calculate promitional saving for this EDR.
+    if (edrString(DETAIL.CUST_A.PROMOTIONAL_SAVING,0) == "2")
+    {
+      // We are to calculate promotional saving.
+      if ( blockEntries > (indexval + 1))
+      {
+        Decimal baseCharge;
+        Decimal promotionalCharge;
+  
+        // Get the rate plan code for base & promotional product.
+        String  promotionalRateCode = edrString( DETAIL.ASS_CBD.CP.RATEPLAN_CODE ,indexval,0)+ "_" + longToStr(indexval);
+        String  baseRateCode      = edrString( DETAIL.ASS_CBD.CP.RATEPLAN_CODE ,(indexval+1),0)+ "_" + longToStr(indexval+1);
+  
+        // Calculate the chargable amount for base & promotional product.
+        calcCharge(indexval);    // 0 = Promotional
+        calcCharge(indexval + 1);    // 1 = Base
+  
+        // Get the chargable amount.
+        promotionalCharge = totalCharge {promotionalRateCode}[0];
+        baseCharge = totalCharge {baseRateCode}[0];
+  
+        // Calculate the saving.
+        totalCharge{promotionalRateCode}[1] = baseCharge - promotionalCharge;
+         
+        // Create a saving charge packet.
+        createChargePacket(promotionalRateCode);
+  
+        // Delete the base ASC.CBD from the container & kepp the promotional.
+        deleteAssCbd(promotionalRateCode,indexval);
+      }
+      else
+      {
+        // Edr Container have only one CBD for base product. Hence Saving is zero here.
+        String baseRateCode = edrString( DETAIL.ASS_CBD.CP.RATEPLAN_CODE ,indexval,0);
+
+        //Store the block index at 1st place in productInfo for this Rate Plan.
+        productInfo {baseRateCode}[1] = 0;
+
+        // Store the zero saving in the saving Charge Packet.
+        totalCharge{baseRateCode}[1] = longToDecimal(0);
+
+        // Create a saving charge packet.
+        createChargePacket(baseRateCode);
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+#	@(#) % %
+#       Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+#      
+#       This material is the confidential property of Oracle Corporation or its
+#       licensors and may be used, reproduced, stored or transmitted only in
+#       accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# start_dm_eai
+#
+# The underlying database (if any) must already be started
+# when this script runs.
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+# This is for HP Itanium. It works around a change in the thread libraries
+# for itanium which affects the way shared memory mutexes work
+case `uname -m` in
+  ia64**)
+    export PTHREAD_DISABLE_HANDOFF=1
+    ;;
+esac
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/dm_eai
+
+DM=${PINDIR}/bin/dm_eai
+
+DMDIR=${PINDIR}/sys/dm_eai
+DMLOG=${LOGDIR}/dm_eai.log
+DMPID=${LOGDIR}/dm_eai.pid
+
+if [ ! -x ${DM} ]; then
+        echo "HELP: executable \"${DM}\" not found!"
+        exit 1
+fi       
+
+if [ ! -d ${DMDIR} ]; then
+        echo "HELP: dm_eai dir \"${DMDIR}\" not found!"
+        exit 1
+fi
+
+if [ ! -d ${LOGDIR} ]; then
+	mkdir -p ${LOGDIR}
+	if [ $? -ne 0 ]; then
+		echo "HELP: problems making dm_eai LOGDIR \"${LOGDIR}\"!"
+		exit 1
+	fi
+fi       
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${DMDIR} ;
+  echo "started dm_eai at..." >> ${DMLOG}
+  date >> ${DMLOG}
+  ${DM} >> ${DMLOG} 2>&1 &
+  echo $! > ${DMPID} ;
+  chmod 664 ${DMLOG} ;
+  chmod 664 ${DMPID} )
+
+# use rc from dm_eai startup
+exit $?

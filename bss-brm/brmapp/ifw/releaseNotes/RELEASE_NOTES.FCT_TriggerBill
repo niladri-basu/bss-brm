@@ -1,0 +1,75 @@
+========================================================================================
+FCT_TriggerBill
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+================================================================================
+Module Version: 10008  7.2 09-Sep-2005  
+
+PRSF00179707 :
+
+Change atoi() and atol() to atoi64() for 64-bit Poid Compatibility.
+================================================================================
+Module Version: 10007  6.7_FP2  04-Jan-2005  
+
+PRSF00146844 :
+
+Remove the code related to setting the BATCH_ID as FCT_TriggerBill is not 
+required to do so. 
+
+===============================================================================
+Module Version: 10006  6.7_FP2  17-Dec-2004  
+
+PRSF00145859 :
+
+Fix to get the valid BATCH_ID assigned to DETAIL.BATCH_ID instead of Null
+
+===============================================================================
+Module Version: 10005  6.7_FP2  16-Aug-2004  Archana
+
+PRSF00126400 :
+
+changing the log msg severity when trigger billing from warning to major
+
+===============================================================================
+
+Module Version: 10004  6.7_FP2 03 -Aug-2004
+		
+PRSF00123984  :
+
+Adding a check to trigger billing based on current time stamp
+================================================================================
+
+Module Version: 10003  6.7_FP2  02-Aug-2004  Archana
+
+PRSF00124040 : 
+
+Using MAKE_STR2 macro for LIBNAME for  UTCOffsetIdx and 
+
+changing the log msg severity when trigger billing from major to warning                 
+
+================================================================================
+
+Module Version: 10002  6.7_FP2  14-Jul-2004
+		
+PRSF00121302  :
+
+Caluculation of UTC_TIME_OFFSET and propagating the changes to 6.7_FP2 stream
+================================================================================
+
+Module Version: 10001  6.7_FP2  17-Jun-2004
+		
+PRSF00116873  :
+
+Changing the Error Status in TriggerBillPlugin.cpp from normal to major for suspending edrs
+================================================================================
+
+Module Version: 10000  6.7_FP2  14-Apr-2004
+		
+PRSF00098733  :
+
+There is a requirement to identify accounts for which billing should have been triggered. 
+For these accounts Account_Poid and  billinfo details are written  out to a new output stream.
+
+========================================================================================
+

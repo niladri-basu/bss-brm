@@ -1,0 +1,16 @@
+//==============================================================================
+// Added by GSM to split EDR Ouput per stream
+//==============================================================================
+
+RULE: EventTypeSplitting
+SOURCE: File
+FILE: ./TD/iScript_custom/IRL_EventTypeSplittingEdr_GSM.data
+
+INIT_SCRIPT:
+
+CONDITION:
+//edrString(DETAIL.INTERN_SERVICE_CODE) =~ "${1}";
+edrString(DETAIL.INTERN_SERVICE_CODE) == "${1}";
+
+RESULT:
+edrSetStream("${2}");

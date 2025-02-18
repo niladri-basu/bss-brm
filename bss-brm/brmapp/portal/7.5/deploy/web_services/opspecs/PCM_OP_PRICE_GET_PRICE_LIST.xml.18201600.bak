@@ -1,0 +1,1101 @@
+<Opcode name="PCM_OP_PRICE_GET_PRICE_LIST"
+    visibility="public"
+    transaction="required"
+    component="fm_price"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+    opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+    <Doc></Doc>
+    <Input>
+        <Fields>
+	    <Poid name="PIN_FLD_POID" use="required" mode="complete">
+	        <Doc> Dummy poid used for database only.</Doc>
+                <ClassRef>obj://service.pcm_client</ClassRef>
+            </Poid>
+	    <Int name="PIN_FLD_FLAGS" use="optional">
+	        <Doc>Flag value indicates the type of object to be retrieved. 
+	             Flag value 0x10 for product, 0x20 for discount and 0x40 for 
+		     sponsorship. Product, discount and/or sponsorship can be 
+		     retrieved by combining these three values. Flag value 0x0008 
+		     to retrieve tailor made products as well from Portal system.
+		</Doc>
+	    </Int>
+	    <String name="PIN_FLD_PERMITTED" use="optional" maxlen="255">
+		<Doc>Service type. This field is used when either product or discount
+		     objects are required.
+		</Doc>
+            </String>
+	    <Timestamp name="PIN_FLD_MOD_T" use="optional">
+		<Doc>Modified time. This field is used when either product
+		     or discount or sponsorship objects are required. Total time in 
+	             seconds w.r.t. server Time Zone.
+		</Doc>	
+	    </Timestamp>	
+	    <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+		<Doc>Object name. Object can be product, discount or sponsorship.</Doc>
+            </String>
+	</Fields>
+    </Input>
+    <Output>
+        <Fields>
+            <Poid name="PIN_FLD_POID" use="required" mode="complete">
+	        <Doc> Poid from input flist returned.</Doc>
+	        <ClassRef>obj://service.pcm_client</ClassRef>
+	    </Poid>
+	    <Array name="PIN_FLD_PLAN_LISTS" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+	        <Doc> Array to hold planlist info.</Doc>
+		<Fields> 
+		    <Poid name="PIN_FLD_POID" use="required" mode="complete">
+		    <Doc> Plan Poid </Doc>
+		        <ClassRef>obj://group.plan_list</ClassRef>
+		    </Poid>
+		    <Timestamp name="PIN_FLD_CREATED_T" use="required">
+		        <Doc> Created time.</Doc>
+		    </Timestamp>
+		    <Timestamp name="PIN_FLD_MOD_T" use="required">
+		        <Doc> Time of modification.</Doc>
+		    </Timestamp>
+		    <String name="PIN_FLD_NAME" use="required" maxlen="255">
+		        <Doc> Name of the object</Doc>
+		    </String>
+		    <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="typeonly">
+		        <Doc> Account OBJ</Doc>
+		        <ClassRef>obj://account</ClassRef>
+		    </Poid>
+		    <String name="PIN_FLD_TYPE_STR" use="required" maxlen="255">
+		        <Doc> TYPE field </Doc>
+		    </String>
+		    <String name="PIN_FLD_DESCR" use="optional" maxlen="1023">
+		        <Doc> Plan list description.</Doc>
+		    </String>
+		    <Enum name="PIN_FLD_STATUS" use="required">
+		        <Doc> STATUS field, the available values are PIN_STATUS_DEFUNCT = 0, PIN_STATUS_ACTIVE = 10100, PIN_STATUS_INACTIVE = 10102, PIN_STATUS_CLOSED = 10103, PIN_STATUS_NOT_SET = 10104.</Doc>
+		        <Values>
+		            <Value> 0,10100,10102,10103,10104</Value>
+		            <Doc> </Doc>
+		        </Values>
+		    </Enum>
+		    <Array name="PIN_FLD_PLAN" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Plan Array - array of plans in the planlist. At least one array element is required</Doc>
+			<Fields>
+			    <String name="PIN_FLD_NAME" use="required" maxlen="255">
+			        <Doc> Name of plan</Doc>
+			    </String>
+			    <Poid name="PIN_FLD_PLAN_OBJ" use="required" mode="complete">
+			        <Doc> Poid of the Plan</Doc>
+			        <ClassRef>obj://plan</ClassRef>
+			    </Poid>
+			</Fields>
+		    </Array>
+		</Fields>
+	    </Array>
+	    <Array name="PIN_FLD_PLAN" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+	        <Doc> Array to hold plan info.  Each element is a plan obj representation.</Doc>
+		<Fields>
+		    <Poid name="PIN_FLD_POID" use="required" mode="complete">
+		        <Doc> Plan Poid</Doc>
+		        <ClassRef>obj://plan</ClassRef>
+		    </Poid>
+		    <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+		        <Doc> Name of the object</Doc>
+		    </String>
+		    <String name="PIN_FLD_DESCR" use="optional" maxlen="1023">
+		        <Doc> Plan description.</Doc>
+		    </String>
+		    <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="typeonly">
+		        <Doc> Account OBJ</Doc>
+		        <ClassRef>obj://account</ClassRef>
+		    </Poid>
+		    <Poid name="PIN_FLD_DEAL_OBJ" use="required" mode="typeonly">
+		        <Doc>  In case of account level, complete poid will be available.</Doc>
+		        <ClassRef>obj://deal</ClassRef>
+		    </Poid>
+		    <Int name="PIN_FLD_FLAGS" use="optional">
+		        <Doc> The 21st bit of PIN_FLD_FLAGS is on then it is a bill on demand.</Doc>
+		    </Int>
+		    <String name="PIN_FLD_DEAL_NAME" use="optional" maxlen="255">
+		        <Doc> Deal name</Doc>
+		    </String>
+		    <Array name="PIN_FLD_SERVICES" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Service array. Each element represents a service object to create and specifies information to use during the creation. Element-id is not significant.</Doc>
+			<Fields>
+			    <Poid name="PIN_FLD_SERVICE_OBJ" use="required" mode="complete">
+		   	        <Doc> Partial poid of service object to create.</Doc>
+			        <ClassRef>obj://service.ip</ClassRef>
+			    </Poid>
+			    <String name="PIN_FLD_DEAL_NAME" use="required" maxlen="255">
+			        <Doc> Service level deal to purchase</Doc>
+			    </String>
+			    <Int name="PIN_FLD_SUBSCRIPTION_INDEX" use="optional">
+			        <Doc> He index of the subscription service.  This value should be one of the element id of the PIN_FLD_SERVICES array.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_BAL_INFO_INDEX" use="optional">
+			        <Doc>This must be greater than or equal to 0. If this is greater than 0 then there must be a corresponding bal info array exist with this index value.</Doc>
+			    </Int>
+			    <String name="PIN_FLD_SERVICE_ID" use="optional" maxlen="255">
+			        <Doc> User defined name for the service.</Doc>
+			    </String>
+			    <Array name="PIN_FLD_DEALS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+			        <Doc> Deals array. to hold the required and optional deals.</Doc>
+			        <Fields>
+				    <String name="PIN_FLD_DEAL_NAME" use="required" maxlen="255">
+				        <Doc> The DEAL</Doc>
+				    </String>
+				    <Enum name="PIN_FLD_TYPE" use="required">
+			    	        <Doc> The type of this deal. Required or Optional</Doc>
+				        <Values>
+				            <Value> 0,1</Value>
+				            <Doc> </Doc>
+				        </Values>
+				    </Enum>
+				</Fields>
+			    </Array>
+			</Fields>
+		    </Array>
+		    <Array name="PIN_FLD_LIMIT" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Credit limits to be set for the account. Element-ids match the balance element whose limit is to be set.</Doc>
+			<Fields>
+			    <Decimal name="PIN_FLD_CREDIT_LIMIT" use="required">
+			        <Doc> Max amount of this resource that a customer can owe.</Doc>
+			    </Decimal>
+			    <Decimal name="PIN_FLD_CREDIT_FLOOR" use="optional">
+			        <Doc> Baseline for calculating percentage for threshold triggers.</Doc>
+			    </Decimal>
+			    <Int name="PIN_FLD_CREDIT_THRESHOLDS" use="optional">
+			        <Doc> Bit flags for triggering when resource balance crosses a boundary when increasing in value.</Doc>
+			    </Int>
+			    <Array name="PIN_FLD_THRESHOLDS" use="optional"
+				 elemIdMode="ignored" iterationOrder="undefined"
+				 isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+				 isRecursive="false" maxElements="1">
+				<Doc>Array to hold account level fixed threshold values.</Doc>
+				<Fields>
+				    <Int name="PIN_FLD_THRESHOLD" use="required">
+				        <Doc>Account level fixed threshold value.</Doc>
+				    </Int>
+				</Fields>
+			    </Array>
+			</Fields>
+		    </Array>
+		    <Array name="PIN_FLD_RULES" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Rules array.</Doc>
+			<Fields>
+			    <Enum name="PIN_FLD_CONSUMPTION_RULE" use="required">
+			        <Doc> Consumption Rules array.Consumption rule to be applied on the resource. Possible values are EST(1), LST(2), EET(3), LET(4), ESTLET(5), ESTEET(6), LSTEET(7), LSTLET(8), EETEST(9), EETLST(10), LETEST(11), LETLST(12).</Doc>
+			        <Values>
+			            <Value> 1,2,3,4,5,6,7,8,9,10,11,12 </Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			</Fields>
+		    </Array>
+		    <Array name="PIN_FLD_BAL_INFO" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Balance info array.</Doc>
+			<Fields>
+			    <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+				<Doc> Label for the balance group.</Doc>
+			    </String>
+			    <Array name="PIN_FLD_LIMIT" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+			        <Doc> Array of credit limit to be set up as part of this plan while creating accounts.</Doc>
+				<Fields>
+				    <Decimal name="PIN_FLD_CREDIT_FLOOR" use="optional">
+				        <Doc> Max amount of this resource that a customer can owe.</Doc>
+			            </Decimal>
+				    <Decimal name="PIN_FLD_CREDIT_LIMIT" use="required">
+				        <Doc> Max amount of this resource that a customer can owe.</Doc>
+				    </Decimal>
+				    <Int name="PIN_FLD_CREDIT_THRESHOLDS" use="optional">
+				        <Doc> Bit flags for triggering when resource balance crosses a boundary when increasing in value.</Doc>
+				    </Int>
+				    <Array name="PIN_FLD_THRESHOLDS" use="optional"
+					 elemIdMode="ignored" iterationOrder="undefined"
+					 isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+					 isRecursive="false" maxElements="1">
+					<Doc>Array to hold service level fixed threshold values.</Doc>
+					<Fields>
+					    <Int name="PIN_FLD_THRESHOLD" use="required">
+						<Doc>Service level fixed threshold value.</Doc>
+					    </Int>
+					</Fields>
+				    </Array>
+				</Fields>
+			    </Array>
+			    <Array name="PIN_FLD_RULES" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+			        <Doc> Rules array.</Doc>
+				<Fields>
+				    <Enum name="PIN_FLD_CONSUMPTION_RULE" use="required">
+				        <Doc> Consumption Rules array.Consumption rule to be applied on the resource. Possible values are EST(1), LST(2), EET(3), LET(4), ESTLET(5), ESTEET(6), LSTEET(7), LSTLET(8), EETEST(9), EETLST(10), LETEST(11), LETLST(12).</Doc>
+				        <Values>
+				            <Value> 1,2,3,4,5,6,7,8,9,10,11,12</Value>
+				            <Doc> </Doc>
+				        </Values>
+				    </Enum>
+				</Fields>
+			    </Array>
+			</Fields>
+		    </Array>
+		</Fields>
+	    </Array>
+	    <Array name="PIN_FLD_BEST_PRICING" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+	        <Doc> Best pricing array.</Doc>
+		<Fields>
+		    <String name="PIN_FLD_DEAL_NAME" use="required" maxlen="255">
+		        <Doc> Name of the unique base deal for this /best_pricing instance.</Doc>
+		    </String>
+		    <Enum name="PIN_FLD_APPLY_MODE" use="required">
+		        <Doc> Mode of Best Pricing application - full rerate (0x0), one time adjustment (0x1).</Doc>
+		        <Values>
+		            <Value>0x0,0x1</Value>
+		            <Doc> </Doc>
+		        </Values>
+		    </Enum>
+		    <Array name="PIN_FLD_DEALS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Array to hold the alternate deals.</Doc>
+		        <Fields>
+			    <String name="PIN_FLD_DEAL_NAME" use="required" maxlen="255">
+			        <Doc> Name of an alternate deal.</Doc>
+			    </String>
+			    <Decimal name="PIN_FLD_MINIMUM" use="required">
+			        <Doc> Minimum charge for the alternate deal.</Doc>
+			    </Decimal>
+			    <Array name="PIN_FLD_CONDITIONS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+			        <Doc> Conditions for Best Pricing consideration.If the conditions are met the deal will be considered by Best Pricing.</Doc>
+				<Fields>
+				    <Int name="PIN_FLD_RESOURCE_ID" use="optional">
+				        <Doc> ID of resource used for the Best Pricing condition</Doc>
+				    </Int>
+				    <Decimal name="PIN_FLD_AMOUNT" use="required">
+				        <Doc> Amount against which the condition will be compared.</Doc>
+				    </Decimal>
+				    <Enum name="PIN_FLD_OPERATOR" use="required">
+				        <Doc> Conditional operator -- (0x0) equal to, (0x1) not equal to, (0x2) less than, (0x3) greater than, (0x4) less than or equal to,(0x5) greater than or equal to.</Doc>
+				        <Values>
+				            <Value> 0x0,0x1,0x2,0x3,0x4,0x5</Value>
+				            <Doc> </Doc>
+				        </Values>
+				    </Enum>
+				</Fields>
+			    </Array>
+			</Fields>
+		    </Array>
+		</Fields>
+	    </Array>
+	    <Array name="PIN_FLD_DEPENDENCIES" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+	        <Doc> Array to hold dependency info. Each element is a dependencyobj representation.</Doc>
+		<Fields>
+		    <Poid name="PIN_FLD_DEPENDEE_OBJ" use="required" mode="complete">
+		        <Doc> Poid of dependee object. only used to know the type of object.</Doc>
+		        <ClassRef>obj://dependency</ClassRef>
+		    </Poid>
+		    <Poid name="PIN_FLD_DEPENDENT_OBJ" use="required" mode="complete">
+		        <Doc> Poid of dependent object. only used to know the type of object.</Doc>
+		        <ClassRef>obj://dependency</ClassRef>
+		    </Poid>
+		    <String name="PIN_FLD_DEPENDEE_NAME" use="required" maxlen="255">
+		        <Doc> Name of dependee object</Doc>
+		    </String>
+		    <String name="PIN_FLD_DEPENDENT_NAME" use="required" maxlen="255">
+		        <Doc> Name of dependent object. </Doc>
+		    </String>
+		    <Enum name="PIN_FLD_TYPE" use="required">
+		        <Doc> Type of dependency (1 = prereq, 2 = mutex)</Doc>
+		        <Values>
+		            <Value> 1,2</Value>
+		            <Doc> </Doc>
+		        </Values>
+		    </Enum>
+		</Fields>
+	    </Array>
+	    <Array name="PIN_FLD_TRANSITIONS" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+	        <Doc> Array to hold transition info.  Each element is a transition obj representation.</Doc>
+		<Fields>
+		    <Int name="PIN_FLD_FEE_FLAG" use="optional">
+		        <Doc> Flag to decide what fees are to be applied.</Doc>
+		    </Int>
+		    <String name= "PIN_FLD_FROM_NAME" use="required" maxlen="255">
+		        <Doc> Name of the FROM object.</Doc>
+		    </String>
+		    <Poid name="PIN_FLD_FROM_OBJ" use="required" mode="complete">
+		        <Doc> Poid type of the FROM object</Doc>
+		        <ClassRef>obj://transition</ClassRef>
+		    </Poid>
+		    <String name="PIN_FLD_TO_NAME" use="required" maxlen="255">
+		        <Doc> Name  of the TO object</Doc>
+		    </String>
+		    <Poid name="PIN_FLD_TO_OBJ" use="required" mode="complete">
+		        <Doc> Name  of the TO object.</Doc>
+		        <ClassRef>obj://transition</ClassRef>
+		    </Poid>
+		    <Timestamp name="PIN_FLD_START_T" use="optional">
+		        <Doc> Valid start time defines valid period for transition object (inclusive) Stored as desired time in server timezone.</Doc>
+		    </Timestamp>
+		    <Timestamp name="PIN_FLD_END_T" use="optional">
+		        <Doc> Valid end time - defines valid period for transition object (non-inclusive) Stored as desired time in server timezone.</Doc>
+		    </Timestamp>
+		    <String name="PIN_FLD_PERMITTED" use="optional" maxlen="255">
+		        <Doc> PERMITED field. Mandatory in case of plan->plan transition.</Doc>
+		    </String>
+		    <Enum name="PIN_FLD_TYPE" use="required">
+		        <Doc> Type of the transition: Upgrade=0, Downgrade=1.</Doc>
+		        <Values>
+		            <Value> 0,1</Value>
+		            <Doc> </Doc>
+		        </Values>
+		    </Enum>
+		</Fields>
+	    </Array>
+	    <Array name="PIN_FLD_DEALS" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+	        <Doc> Array to hold deal info.  Each element is a deal obj representation.</Doc>
+		<Fields>
+		    <String name="PIN_FLD_NAME" use="required" maxlen="255">
+		        <Doc> Name of the object</Doc>
+		    </String> 
+		    <String name="PIN_FLD_DESCR" use="optional" maxlen="1023">
+		        <Doc> Plan description.</Doc>
+		    </String>
+		    <Int name="PIN_FLD_FLAGS" use="optional"> 
+		        <Doc> Deal Customization flags</Doc>
+		    </Int>
+		    <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="typeonly">
+		        <Doc> Account OBJ. </Doc>
+		        <ClassRef>obj://account</ClassRef>
+		    </Poid>
+		    <Timestamp name="PIN_FLD_START_T" use="required">
+		        <Doc> Valid start time - defines valid period for deal object (inclusive) Stored as desired time in server timezone.</Doc>
+		    </Timestamp>
+		    <Timestamp name="PIN_FLD_END_T" use="required">
+		        <Doc> Valid end time - defines valid period for deal object (non-inclusive) Stored as desired time in server timezone. If end time is zero, valid period does not expire.</Doc>
+		    </Timestamp>
+		    <String name="PIN_FLD_PERMITTED" use="optional" maxlen="255">
+		        <Doc> PERMITED field.</Doc>
+		    </String>
+		    <Array name="PIN_FLD_PRODUCTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+		        <Doc> Products Array - array of products to purchase for the deal.Element-id is not significant. At least one array element is required</Doc>
+			<Fields>
+			    <String name="PIN_FLD_PROD_NAME" use="required" maxlen="255">
+			        <Doc> Poid of product to purchase</Doc>
+			    </String>
+			    <String name="PIN_FLD_CODE" use="required" maxlen="255">
+			        <Doc> Code of product to purchase</Doc>
+			    </String>
+			    <Decimal name="PIN_FLD_QUANTITY" use="required">
+			        <Doc> Quantity to purchase</Doc>
+			    </Decimal>
+			    <Decimal name="PIN_FLD_PURCHASE_DISCOUNT" use="required">
+			        <Doc> Purchase discount - discount applied to purchase or cancel rates of product</Doc>
+			    </Decimal>
+			    <Decimal name="PIN_FLD_CYCLE_DISCOUNT" use="required">
+			        <Doc> Cycle fee discount - discount applied to cycle rates of product</Doc>
+			    </Decimal>
+			    <Decimal name="PIN_FLD_USAGE_DISCOUNT" use="required">
+			        <Doc> Usage fee discount - discount applied to usage rates of product</Doc>
+			    </Decimal>
+			    <Enum name="PIN_FLD_STATUS" use="required">
+			        <Doc> Initial status of the product that is being purchased.Active=1 and Inactive=2</Doc>
+			        <Values>
+			            <Value> 1,2</Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			    <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+			        <Doc> Inital status flags</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_PURCHASE_START_OFFSET" use="optional">
+			        <Doc> Purchase relative start offset. A value -1 to indicate purchase is based on first usage. A value 0 indicates start immediately.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_PURCHASE_START_UNIT" use="optional">
+			        <Doc> Purchase relative start unit. This field is not required when the purchase validity is based on First Usage. To start immediately the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_PURCHASE_END_OFFSET" use="required">
+			        <Doc> Purchase relative end offset.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_PURCHASE_END_UNIT" use="required">
+			        <Doc> Purchase relative end unit. To end never the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_CYCLE_START_OFFSET" use="optional">
+			        <Doc> Cycle relative start offset. A value -1 to indicate cycle is based on first usage. A value 0 indicates start immediately.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_CYCLE_START_UNIT" use="optional">
+			        <Doc> This field is not required when the cycle validity is based on First Usage. To start immediately the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_CYCLE_END_OFFSET" use="required">
+			        <Doc> Cycle relative end offset.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_CYCLE_END_UNIT" use="required">
+			        <Doc> Cycle relative end unit. To end never the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_USAGE_START_OFFSET" use="optional">
+			        <Doc> Usage relative start offset. A value -1 to indicate usage is based on first usage. A value 0 indicates start immediately.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_USAGE_START_UNIT" use="optional">
+			        <Doc> This field is not required when the usage validity is based on First Usage. To start immediately the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_USAGE_END_OFFSET" use="required">
+			        <Doc> Usage relative end offset.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_USAGE_END_UNIT" use="required">
+			        <Doc> Usage relative end unit. To end never the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			</Fields>
+		    </Array>
+		    <Array name="PIN_FLD_DISCOUNTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Discounts Array - array of discounts to purchase for the deal. Element-id is not significant.</Doc>
+			<Fields>
+			    <String name="PIN_FLD_DISC_NAME" use="required" maxlen="255">
+			        <Doc> Name of discount to purchase.</Doc>
+			    </String>
+			    <String name="PIN_FLD_CODE" use="required" maxlen="255">
+			        <Doc> Code of discount to purchase.</Doc>
+			    </String>
+			    <Decimal name="PIN_FLD_QUANTITY" use="required">
+			        <Doc> Quantity to purchase</Doc>
+			    </Decimal>
+			    <Enum name="PIN_FLD_STATUS" use="required">
+			        <Doc> Initial status of the discount that is being purchased.Active=1 and Inactive=2</Doc>
+			        <Values>
+			            <Value> 1,2</Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			    <Int name="PIN_FLD_STATUS_FLAGS" use="optional">
+			        <Doc> Inital status flags</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_PURCHASE_START_OFFSET" use="optional">
+			        <Doc> Purchase relative start offset. A value -1 to indicate purchase is based on first usage. A value 0 indicates start immediately.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_PURCHASE_START_UNIT" use="optional">
+			        <Doc> This field is not required when the purchase validity is based on First Usage. To start immediately the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_PURCHASE_END_OFFSET" use="required">
+			        <Doc> Purchase relative end offset.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_PURCHASE_END_UNIT" use="required">
+			        <Doc> Purchase relative end unit. To end never the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_CYCLE_START_OFFSET" use="optional">
+			        <Doc> A value -1 to indicate cycle is based on first usage. A value 0 indicates start immediately.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_CYCLE_START_UNIT" use="optional">
+			        <Doc> This field is not required when the cycle validity is based on First Usage. To start immediately the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_CYCLE_END_OFFSET" use="required">
+			        <Doc> Cycle relative end offset.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_CYCLE_END_UNIT" use="required">
+			        <Doc> To end never the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_USAGE_START_OFFSET" use="optional">
+			        <Doc> A value -1 to indicate usage is based on first usage. A value 0 indicates start immediately.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_USAGE_START_UNIT" use="optional">
+			        <Doc> This field is not required when the usage validity is based on First Usage. To start immediately the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_USAGE_END_OFFSET" use="required">
+			        <Doc> Usage relative end offset.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_USAGE_END_UNIT" use="required">
+			        <Doc> Usage relative end unit. To end never the unit can be anything but the offset to be sent as 0. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Accounting Cycles=8.</Doc>
+			    </Int>
+			</Fields>
+		    </Array>
+		</Fields>
+	    </Array>
+	    <Array name="PIN_FLD_PRODUCTS" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+	        <Doc> Array to hold product info.  Each element is a product obj representation.</Doc>
+		<Fields>
+		    <String name="PIN_FLD_NAME" use="required" maxlen="255">
+		        <Doc> Name of the object</Doc>
+		    </String>
+		    <String name="PIN_FLD_CODE" use="required" maxlen="255">
+		        <Doc> Code of the object</Doc>
+		    </String>
+		    <String name="PIN_FLD_DESCR" use="optional" maxlen="1023">
+		        <Doc> Product description.</Doc>
+		    </String>
+		    <Enum name="PIN_FLD_TYPE" use="required">
+		        <Doc> Product type - products are item(601), subscription/ongoing(602) and  system(603).</Doc>
+		        <Values>
+		            <Value>601, 602, 603</Value>
+		            <Doc> </Doc>
+		        </Values>
+		    </Enum>
+		    <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="typeonly">
+		        <Doc> Account obj</Doc>
+		        <ClassRef>obj://account</ClassRef>
+		    </Poid>
+		    <Int name="PIN_FLD_TAILORMADE" use="optional">
+		        <Doc>A value 1 indicates a tailor made product</Doc>
+		    </Int>
+		    <Timestamp name="PIN_FLD_START_T" use="required">
+		        <Doc> Valid start time - defines valid period for product object (inclusive) Stored as desired time in server timezone</Doc>
+		    </Timestamp>
+		    <Timestamp name="PIN_FLD_END_T" use="required">
+		        <Doc> Valid end time - defines valid period for product object (non-inclusive) Stored as desired time in server timezone. If end time is zero, valid period does not expire.</Doc>
+		    </Timestamp>
+		    <Decimal name="PIN_FLD_PURCHASE_MIN" use="required">
+		        <Doc> Purchase Minimum - minimum quantity that can be purchased at a single time. Test is non-inclusive - quantity must be greater than min. A value of PIN_NUM_MIN means no minimum limit.</Doc>
+		    </Decimal>
+		    <Decimal name="PIN_FLD_PURCHASE_MAX" use="required">
+		        <Doc> Purchase Maximum - maximum quantity that can be purchased at a single time. Test is inclusive - quantity must be less than equal to max.</Doc>
+		    </Decimal>
+		    <Decimal name="PIN_FLD_OWN_MIN" use="required">
+		        <Doc> Ownership Minimum - minimum quantity that can be owned at any time. Test is non-inclusive - quantity must be greater than min.A value of PIN_NUM_MIN means no minimum limit.</Doc>
+		    </Decimal>
+		    <Decimal name="PIN_FLD_OWN_MAX" use="required">
+		        <Doc> Ownership Maximum - maximum quantity that can be owned at any time. Test is inclusive - quantity must be less than equal to max. A value of PIN_NUM_MAX means no maximum limit.</Doc>
+		    </Decimal>
+		    <Enum name="PIN_FLD_PARTIAL" use="required">
+		        <Doc>  Partial parameter - determines if fractional quantities can be purchased and/or owned.</Doc>
+		        <Values>
+		            <Value> 0,1</Value>
+		            <Doc> </Doc>
+		        </Values>
+	    	    </Enum>
+		    <Decimal name="PIN_FLD_PRIORITY" use="required">
+		        <Doc> Priority - used to resolve ordering of product application.</Doc>
+		    </Decimal>
+		    <String name="PIN_FLD_PERMITTED" use="optional" maxlen="255">
+		        <Doc> Permitted - contains a single type string for account or service object types that is permitted to purchase this product. Theentry is implicitly appended with a wildcard for checking, so account or service types that were inherited from a permitted type are also permitted themselves.</Doc>
+		    </String>
+		    <String name="PIN_FLD_PROVISIONING_TAG" use="optional" maxlen="64">
+		        <Doc> Provisioning tag - used with PCM_OP_BILL_POL_{PURCHASE, CANCEL}_PROD_PROVISIONING</Doc>
+		    </String>
+		    <String name="PIN_FLD_ZONEMAP_NAME" use="optional" maxlen="255">
+		        <Doc>Zone map name.</Doc>
+		    </String>
+		    <String name="PIN_FLD_SUPPLIER_NAME" use="optional" maxlen="255">
+		        <Doc> Supplier name.</Doc>
+		    </String>
+		    <Array name="PIN_FLD_USAGE_MAP" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Usage map (optional)</Doc>
+			<Fields>
+			    <String name="PIN_FLD_EVENT_TYPE" use="required" maxlen="255">
+		  	        <Doc> Event type</Doc>
+			    </String>          
+			    <String name="PIN_FLD_RUM_NAME" use="required" maxlen="255">
+			        <Doc> Specifies which RUM should be used to rate this event type.</Doc>
+			    </String>
+			    <Enum name="PIN_FLD_TOD_MODE" use="required">
+			        <Doc> TOD mode defines how tod rate are applied to the event.START_TIME(0), END_TIME(1), TIMED(2)</Doc>
+			        <Values>
+			            <Value> 0,1,2</Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			    <Enum name="PIN_FLD_TIMEZONE_MODE" use="required">
+			        <Doc> It defines which timezoneto use when apply TOD rates.Value can be EVENT(0), SERVER(1), ACCOUNT(2).</Doc>
+			        <Values>
+			            <Value> 0,1,2</Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			    <Decimal name="PIN_FLD_MIN_QUANTITY" use="required">
+			        <Doc> It defines which timezoneto use when apply TOD rates.Value can be EVENT(0), SERVER(1), ACCOUNT(2).</Doc>
+			    </Decimal>
+			    <Int name="PIN_FLD_FLAGS" use="optional">
+			        <Doc> Specify if this usage map is valid for the product at certain status.</Doc>
+			    </Int>
+			    <Enum name="PIN_FLD_MIN_UNIT" use="required">
+			        <Doc> Unit min quantity is expressed in. Value can be NONE(0), SECOND(1), MINUTE(2), HOUR(3), DAY(4).</Doc>
+			        <Values>
+			            <Value> 0,1,2,3,4</Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			    <Decimal name="PIN_FLD_INCR_QUANTITY" use="required">
+			        <Doc> Increment value to round RUM Quantity to.</Doc>
+			    </Decimal>
+			    <Enum name="PIN_FLD_INCR_UNIT" use="required">
+			        <Doc> Increment Unit. The values could be 0(None), 1(Minute), 2(Second), 3(Hour), 4(Day), 11(Byte), 12(Kilobyte), 13(Megabyte), 14(Gigabyte).</Doc>
+			        <Values>
+			            <Value> 0,1,2,3,11,12,13,14</Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			    <Enum name="PIN_FLD_ROUNDING_MODE" use="required">
+			        <Doc> Rounding mode. The values could be 0(Nearest), 1(Up), 2(Down).</Doc>
+		        	<Values>
+			            <Value> 0,1,2</Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			    <String name="PIN_FLD_RATE_PLAN_NAME" use="optional" maxlen="255">
+			        <Doc> Rate plan name</Doc>
+			    </String>
+			    <Substruct name="PIN_FLD_RATE_PLAN_SELECTOR" use="optional" isRecursive="false">
+			        <Doc> Rate plan selector.</Doc>
+			        <Fields>
+			            <String name="PIN_FLD_NAME" use="required" maxlen="255">
+				        <Doc> Selector name.</Doc>
+				    </String>
+				    <Buf name="PIN_FLD_SELECTOR" use="required" maxlen="536870912">
+				        <Doc> Selector data</Doc>
+				    </Buf>	 
+			        </Fields>
+			    </Substruct> 
+		        </Fields>
+		    </Array>
+		    <Array name="PIN_FLD_RUM_MAP" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Rum Map (optional) Set of rums with which events will be rated in the multi-rum case. if this product has the highest priority. if RUMMAP is null we fall back to the single rum case.</Doc>
+		        <Fields>
+		            <String name="PIN_FLD_EVENT_TYPE" use="required" maxlen="255">
+			        <Doc> Event Type - The event for which we define the rum_list</Doc>
+		            </String>
+			    <Array name="PIN_FLD_RUM_LIST" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+			        <Doc> RUM LIST  the list of rums to be considered while rating the event </Doc>
+		                <Fields>
+			            <String name="PIN_FLD_RUM_NAME" use="required" maxlen="255">
+			  	        <Doc> RUM name.</Doc>
+				    </String>
+			        </Fields>
+			    </Array>
+		        </Fields> 
+		    </Array>
+		    <Array name="PIN_FLD_RATE_PLANS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Rate plan array.</Doc>
+		        <Fields>
+		            <Int name="PIN_FLD_CURRENCY" use="required">
+			        <Doc> Currency resource that this rate plan impacts</Doc>
+			    </Int>
+			    <String name="PIN_FLD_NAME" use="required" maxlen="255">
+			        <Doc> Pin field name</Doc>
+			    </String>
+			    <String name="PIN_FLD_TAX_CODE" use="optional" maxlen="255">
+			        <Doc> Identifier used by the tax engine to calculate tax for this rate.</Doc>
+			    </String> 
+			    <Enum name="PIN_FLD_TAX_WHEN" use="optional">
+			        <Doc> When to apply taxes on the rate charges. The values could be 0(no taxes), 1(tax when the event occurs), 2(defer to the end of the accounting or billing cycle.</Doc>
+			        <Values>
+			            <Value>0,1,2</Value>
+				    <Doc> </Doc>
+			        </Values> 
+			    </Enum>
+			    <Array name="PIN_FLD_RATE_TIERS" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+			        <Doc> Rate tier array.</Doc>
+			        <Fields>
+			            <String name="PIN_FLD_NAME" use="required" maxlen="255">
+				        <Doc> Name of this rate tier.</Doc>
+				    </String>
+				    <Enum name="PIN_FLD_DATE_RANGE_TYPE" use="optional">
+				    <Doc> Specifies which type of the date ranges are used in this tier. ABSOLUTE(0), RELATIVE(1).</Doc>
+				        <Values>
+					    <Value> 0,1</Value>
+					    <Doc> </Doc>
+				        </Values>
+				    </Enum>
+				    <Decimal name="PIN_FLD_PRIORITY" use="optional">
+				        <Doc> Rates priority.</Doc>
+				    </Decimal>
+				    <Int name="PIN_FLD_RATE_INDEX" use="optional">
+				        <Doc> Rate index.</Doc>
+				    </Int>
+				    <Array name="PIN_FLD_DATE_RANGES" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+				        <Doc> Array of date ranges.</Doc>
+				        <Fields>
+ 				            <String name="PIN_FLD_LINEAGE" use="required" maxlen="255">
+					        <Doc> The array index of its ancestors separated by'.'.</Doc>
+					    </String>
+					    <String name="PIN_FLD_NAME" use="required" maxlen="255">
+					        <Doc> Name of this date range.</Doc> 
+					    </String>
+					    <Timestamp name="PIN_FLD_START_T" use="optional">
+					        <Doc> Inclusive start time of the validity period for the rate.</Doc>
+					    </Timestamp>
+					    <Timestamp name="PIN_FLD_END_T" use="optional">
+					        <Doc> Inclusive end time of the validity period for the rate.</Doc>
+					    </Timestamp>
+					    <Int name="PIN_FLD_RELATIVE_START_OFFSET" use="optional">
+					        <Doc> Offset value from product purchase for start of relative date range.</Doc>
+					    </Int>
+					    <Int name="PIN_FLD_RELATIVE_END_OFFSET" use="optional">
+					        <Doc> Offset value from product purchase for end of relative date range.</Doc>
+					    </Int>
+					    <Enum name="PIN_FLD_RELATIVE_START_UNIT" use="optional">
+					        <Doc> Start unit. Value can be second(1), minute(2), hour(3), or day(4).</Doc>
+					        <Values>
+					            <Value> 1,2,3,4</Value>
+						    <Doc> </Doc>
+					        </Values>
+					    </Enum>
+					    <Enum name="PIN_FLD_RELATIVE_END_UNIT" use="optional">
+					        <Doc> End unit. Value can be second(1), minute(2), hour(3), or day(4).</Doc>
+					        <Values>
+					            <Value> 1,2,3,4</Value>
+						    <Doc> </Doc>
+					        </Values>
+					    </Enum>
+					    <Int name="PIN_FLD_RATE_INDEX" use="optional">
+					        <Doc> Rate index.</Doc>
+					    </Int>
+					    <Array name="PIN_FLD_DAY_RANGES" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+					        <Doc> Day ranges array.</Doc>
+					        <Fields>
+					            <String name="PIN_FLD_LINEAGE" use="required" maxlen="255">
+					    	        <Doc> The array index of its ancestors separated by'.'.</Doc>
+					    	    </String>
+						    <String name="PIN_FLD_NAME" use="required" maxlen="255">
+						        <Doc> Pin field name</Doc>
+						    </String>
+						    <Int name="PIN_FLD_VALID_DOW" use="required">
+						        <Doc> Valid day-of-week flag.</Doc>
+						    </Int>
+						    <Int name="PIN_FLD_VALID_DOM" use="required">
+						        <Doc> Valid day-of-month flag</Doc>
+						    </Int>
+						    <Int name="PIN_FLD_VALID_MOY" use="required">
+						        <Doc> Valid month-of-year flag.</Doc>
+						    </Int>
+						    <Int name="PIN_FLD_RATE_INDEX" use="optional">
+						        <Doc> Rate index.</Doc>
+						    </Int>
+						    <Array name="PIN_FLD_TOD_RANGES" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+						        <Doc> Array of valid daily time ranges for the rate object.</Doc>
+					  	        <Fields>
+						            <String name="PIN_FLD_LINEAGE" use="required" maxlen="255">
+						    	        <Doc> The array index of its ancestors separated by'.'.</Doc>
+							    </String>
+							    <Int name="PIN_FLD_START_OFFSET" use="required">
+							        <Doc> Valid start offset-seconds from begining of the day.</Doc>
+							    </Int>
+							    <Int name="PIN_FLD_END_OFFSET" use="required">
+							        <Doc> Valid end offset-seconds from begining of the day.</Doc>
+							    </Int>
+							    <Int name="PIN_FLD_RATE_INDEX" use="required">
+							        <Doc> Rate index.</Doc>
+							    </Int>
+						        </Fields>
+						    </Array> 
+					        </Fields>
+					    </Array>
+				        </Fields>
+				    </Array>
+			        </Fields>			
+			    </Array>
+			    <Array name="PIN_FLD_RATES" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+			        <Doc> Rate array.</Doc>
+			        <Fields>
+			            <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+				        <Doc> Rate description.</Doc>
+				    </String>
+				    <String name="PIN_FLD_TAILORMADE_DATA" use="optional" maxlen="1024">
+				        <Doc>all resources along ith their percentage override. The data will be stored as "USD,-20;MIN,-20".</Doc>
+				    </String>
+				    <Enum name="PIN_FLD_PRORATE_FIRST" use="optional">
+				        <Doc> Prorating option for the first cycle the product is owned. You can charge for a whole month (701),prorate thecharge based on the days left in the month (702), or not charge for the partial month (703). Used only for cycycle fees rates.</Doc>
+				        <Values>
+				            <Value> 701,702,703</Value>
+					    <Doc> </Doc>
+				        </Values>
+				    </Enum> 
+				    <Enum name="PIN_FLD_PRORATE_LAST" use="optional">
+				        <Doc> Prorating option for the first cycle the product is owned. You can charge for a whole month (701),prorate thecharge based on the days left in the month (702), or not charge for the partial month (703). Used only forcycle fees rates.</Doc>
+				        <Values>
+				            <Value> 701,702,703</Value>
+					    <Doc> </Doc>
+				        </Values>
+				    </Enum>
+				    <Enum name="PIN_FLD_TYPE" use="optional">
+				        <Doc> Values are Normal (0), Default (740) and Default-only (741). 'Normal' rates honor credit limits and 'Defaultoverride credit limits.</Doc>
+				        <Values>
+				            <Value> 0,740,741</Value>
+					    <Doc> </Doc>
+				        </Values>
+				    </Enum>
+				    <Enum name="PIN_FLD_STEP_TYPE" use="optional">
+				        <Doc> Specifies the type of quantity that quantity tiering steps on. Values can be TOTAL_QUANTITY_RATED(0),QUANTITY_RATED_PER_RATE(1and RESOURCE_QUANTITY(2) If the value is RESOURCE_QUANTITY, step_resourceneed to be specified as well.</Doc>
+				        <Values>
+				            <Value> 0,1,2</Value>
+					    <Doc> </Doc>
+				        </Values>
+				    </Enum> 
+				    <Int name="PIN_FLD_STEP_RESOURCE_ID" use="optional">
+				        <Doc> </Doc>
+				    </Int>
+				    <Array name="PIN_FLD_QUANTITY_TIERS" use="optional" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+				        <Doc> Quantity tiers array.</Doc>
+				        <Fields>
+				            <Decimal name="PIN_FLD_STEP_MIN" use="optional">
+					        <Doc> Min quantity of event that can use this tier.</Doc>
+					    </Decimal>
+					    <Decimal name="PIN_FLD_STEP_MAX" use="optional">
+					        <Doc> Max quantity of event that can use this tier.</Doc>
+					    </Decimal>  
+					    <Array name="PIN_FLD_BAL_IMPACTS" use="optional" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+					        <Doc> Balance impact array.</Doc>
+					        <Fields>
+					            <String name="PIN_FLD_IMPACT_CATEGORY" use="optional" maxlen="255">
+						        <Doc> Impact category.</Doc>
+						    </String> 
+						    <Int name="PIN_FLD_ELEMENT_ID" use="required">
+						        <Doc> Numeric value of the resource to be impacted.</Doc>
+						    </Int>
+						    <Int name="PIN_FLD_GL_ID" use="optional">
+						        <Doc> Gl id to be used when impacting the resource associated with this balance impact.</Doc>
+						    </Int>
+						    <Decimal name="PIN_FLD_FIXED_AMOUNT" use="optional">
+						        <Doc> Fixed amount.</Doc>
+						    </Decimal>
+						    <Decimal name="PIN_FLD_SCALED_AMOUNT" use="optional">
+						        <Doc> Scaled amount.</Doc>
+						    </Decimal>
+						    <Enum name="PIN_FLD_SCALED_UNIT" use="optional">
+						        <Doc> Value can be NONE(0), SECOND(1) , MINUTE(2), HOUR(3), DAY(4).</Doc>
+						        <Values>
+						            <Value> 1,2,3,4, 5</Value>
+						    	    <Doc> </Doc>
+						        </Values>
+						    </Enum> 
+						    <Timestamp name="PIN_FLD_START_T" use="optional">
+						        <Doc> Inclusive start time of the validity period for the balance impact.</Doc>
+						    </Timestamp>
+						    <Timestamp name="PIN_FLD_END_T" use="optional">
+						        <Doc> Inclusive end time of the validity period for the balance impact.</Doc>
+						    </Timestamp>
+						    <Int name="PIN_FLD_FLAGS" use="required">
+						        <Doc> Balance impact flags.</Doc>
+						    </Int>
+						    <Int name="PIN_FLD_RELATIVE_START_OFFSET" use="optional">
+						        <Doc> Provide the relative start offset. A value -1 to indicate first usage.</Doc>
+						    </Int>
+						    <Enum name="PIN_FLD_RELATIVE_START_UNIT" use="optional">
+						        <Doc> Provide the relative start units such as sec, min, hour, day, months, and cycles. This field is not required when the First Usage flag is 1. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Event Cycles=7, Accounting Cycles=8, Bill Cycles=9.</Doc>
+						    </Enum>
+						    <Int name="PIN_FLD_RELATIVE_END_OFFSET" use="optional">
+						        <Doc> Provide the relative start offset.</Doc>
+						    </Int>
+						    <Enum name="PIN_FLD_RELATIVE_END_UNIT" use="optional">
+						        <Doc> Provide the relative end units such as sec, min, hour, day, months, and cycles. Unit in terms of Seconds=1, Minutes=2, Hours=3, Days=4, Months=5, Event Cycles=7, Accounting Cycles=8, Bill Cycles=9.</Doc>
+						    </Enum>
+					        </Fields>
+					    </Array>   
+				        </Fields>
+				    </Array> 	
+			        </Fields>  
+			    </Array>
+		        </Fields>
+		    </Array> 
+		    <Array name="PIN_FLD_ROLLOVERS" use="required" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Rollover array.</Doc>
+		        <Fields>
+		            <String name="PIN_FLD_NAME" use="required" maxlen="255">
+			        <Doc> Name of the rollover object.</Doc>
+			    </String>
+			    <String name="PIN_FLD_DESCR" use="optional" maxlen="255">
+			        <Doc> Rollover description.</Doc>
+			    </String>
+			    <Timestamp name="PIN_FLD_START_T" use="optional">
+			        <Doc> Inclusive start time of the validity period for the rollover.</Doc>
+			    </Timestamp>
+			    <Timestamp name="PIN_FLD_END_T" use="optional">
+			        <Doc> Inclusive end time of the validity period for the rollover.</Doc>
+			    </Timestamp>
+			    <Enum name="PIN_FLD_DATE_RANGE_TYPE" use="optional">
+			        <Doc> Specify which type of the date ranges are used in this tier. Value can be ABSOLUTE(0), RELATIVE(1).</Doc>
+			        <Values>
+			            <Value> 0,1</Value>
+			            <Doc> </Doc>
+			        </Values>
+			    </Enum> 
+			    <Int name="PIN_FLD_RELATIVE_START_OFFSET" use="optional">
+			        <Doc> Provide the relative start offset. A value -1 to indicate first usage.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_RELATIVE_END_OFFSET" use="optional">
+			        <Doc> Offset value from end date.</Doc>
+			    </Int>
+			    <Enum name="PIN_FLD_RELATIVE_START_UNIT" use="optional">
+			        <Doc> Unit PIN_FLD_RELATIVE_START_UNIT is expressed in. Value can be SECOND(1), MINUTE(2), HOUR(3), or DAY(4).</Doc>
+			        <Values>
+			            <Value> 1,2,3,4</Value>
+				    <Doc> </Doc>
+			        </Values> 
+			    </Enum> 
+			    <Enum name="PIN_FLD_RELATIVE_END_UNIT" use="optional">
+			        <Doc> Unit PIN_FLD_RELATIVE_END_UNIT is expressed in. Value can be SECOND(1), MINUTE(2), HOUR(3), or DAY(4).</Doc>
+			        <Values>
+			            <Value> 1,2,3,4</Value>
+				    <Doc> </Doc>
+			        </Values>
+			    </Enum>
+			    <Array name="PIN_FLD_BAL_IMPACTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+			        <Doc> Balance impact array.</Doc>
+			        <Fields>
+			            <Int name="PIN_FLD_RESOURCE_ID" use="required">
+				        <Doc> Numeric value of the resource to be impacted.</Doc>
+				    </Int>
+				    <Int name="PIN_FLD_GL_ID" use="optional">
+				        <Doc> Gl id associated with balance group.</Doc>
+				    </Int>
+				    <String name="PIN_FLD_IMPACT_CATEGORY" use="optional" maxlen="255">
+				        <Doc> Impact category.</Doc>
+				    </String>
+				    <Decimal name="PIN_FLD_ROLLOVER_MAX_UNITS" use="optional">
+				        <Doc> Maximum quantity that can be rollovered.</Doc>
+				    </Decimal>
+				    <Decimal name="PIN_FLD_ROLLOVER_UNITS" use="optional">
+				        <Doc> Specifies the unit of measure (days or months)</Doc>
+				    </Decimal>
+				    <Enum name="PIN_FLD_ROLLOVER_UOM" use="optional">
+				        <Doc> Specifies the unit of measure (days or months).</Doc>
+				        <Values>
+				            <Value> </Value>
+					    <Doc> </Doc>
+				        </Values>
+				    </Enum>
+				    <Int name="PIN_FLD_ROLLOVER_COUNT" use="optional">
+				        <Doc> Max times to rollover.</Doc>
+				    </Int>
+				    <Enum name="PIN_FLD_PRORATE_FIRST" use="optional">
+				        <Doc> Prorating option for the first cycle the product is owned. You can charge for a whole month (701), prorate the charge based on the days left in the month (702), or not charge for the partial month (703). Used only for cycle fees rates.</Doc>
+				        <Values>
+				            <Value> 701,702,703</Value>
+					    <Doc> </Doc>
+				        </Values>
+				    </Enum>
+				    <Enum name="PIN_FLD_PRORATE_LAST" use="optional">
+				        <Doc> Prorating option for the last cycle the product is owned. You can charge for a whole month (701), prorate the charge based on the days left in the month (702), or not charge for the partial month (703). Used only for cycle fees rates.</Doc>
+				        <Values>
+				            <Value> 701,702,703</Value>
+					    <Doc> </Doc>
+				        </Values>
+				    </Enum>
+			        </Fields>
+			    </Array>
+		        </Fields>
+		    </Array>
+                </Fields>
+	    </Array>
+	    <Array name="PIN_FLD_DISCOUNTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+	        <Doc> Array to hold discount info.  Each element is a discount obj representation.</Doc>
+	        <Fields>
+	            <String name="PIN_FLD_NAME" use="required" maxlen="255">
+		        <Doc> Unique name of the discount.</Doc>
+		    </String>
+	            <String name="PIN_FLD_CODE" use="required" maxlen="255">
+		        <Doc> Unique code of the discount.</Doc>
+		    </String>
+		    <String name="PIN_FLD_DESCR" use="optional" maxlen="1023">
+		        <Doc> Discount description.</Doc>
+		    </String>
+		    <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="typeonly">
+		        <Doc> </Doc>
+		        <ClassRef>obj://account</ClassRef>
+		    </Poid>
+		    <Enum name="PIN_FLD_TYPE" use="required">
+		        <Doc> Discount type:item(601), subscription(602), system(603).</Doc>
+		        <Values>
+		            <Value> 601,602,603</Value>
+			    <Doc> </Doc>
+		        </Values>
+		    </Enum>
+		    <Timestamp name="PIN_FLD_START_T" use="required">   
+		        <Doc> Valid start time - defines valid period for discount object (inclusive). Stored as desired time in server timezone.</Doc>
+		    </Timestamp>
+		    <Timestamp name="PIN_FLD_END_T" use="required">
+		        <Doc> Valid end time - defines valid period for discount object (non-inclusive). Stored as desired time in server timezone</Doc>
+		    </Timestamp>
+		    <Decimal name="PIN_FLD_PURCHASE_MIN" use="required">
+		        <Doc> Purchase Minimum - minimum quantity that can be purchased at a single time.</Doc>
+		    </Decimal>
+		    <Decimal name="PIN_FLD_PURCHASE_MAX" use="required">
+		        <Doc> Purchase Maximum - maximum quantity that can be purchased at a single time.</Doc>
+		    </Decimal>
+		    <Decimal name="PIN_FLD_OWN_MIN" use="required">
+		        <Doc> Ownership Minimum - minimum quantity that can be owned at any time</Doc>
+		    </Decimal>
+		    <Decimal name="PIN_FLD_OWN_MAX" use="required">
+		        <Doc> Ownership Maximum - maximum quantity that can be owned at any time.</Doc>
+		    </Decimal>
+		    <Decimal name="PIN_FLD_PRIORITY" use="required">
+		        <Doc> Priority - used to resolve ordering of discount application.</Doc>
+		    </Decimal>
+		    <String name="PIN_FLD_PERMITTED" use="optional" maxlen="255">
+		        <Doc> Permitted field.</Doc>
+		    </String>
+		    <String name="PIN_FLD_PROVISIONING_TAG" use="optional" maxlen="64">
+		        <Doc> Provisioning field.</Doc>
+		    </String>
+		    <Enum name="PIN_FLD_MODE" use="optional">
+		        <Doc> Discount Mode (optional) - used to indicate different mode of discount. 801 for parallel, 802 for cascading, 803 for sequential</Doc>
+		        <Values>
+		            <Value> 801,802,803</Value>
+			    <Doc> </Doc>
+		        </Values>
+		    </Enum>
+		    <Array name="PIN_FLD_USAGE_MAP" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Array of usage map.</Doc>
+		        <Fields>
+		            <String name="PIN_FLD_EVENT_TYPE" use="required" maxlen="1024">
+			        <Doc> Type of event that this entry specifies discount for.</Doc>
+			    </String>
+			    <String name="PIN_FLD_DISCOUNT_MODEL" use="optional" maxlen="255">
+			        <Doc> Discount model name. Either discount model or model selector field will be populated.</Doc>
+			    </String>
+			    <String name="PIN_FLD_MODEL_SELECTOR" use="optional" maxlen="255">
+			        <Doc> Model selector. Either discount model or model selector field will be populated.</Doc>
+			    </String> 
+			    <Int name="PIN_FLD_FLAGS" use="optional">
+			        <Doc> Stop discounting flag.</Doc>
+			    </Int>
+			    <Int name="PIN_FLD_SNOWBALL_FLAG" use="optional">
+			        <Doc> Snowball flag.</Doc>
+			    </Int>
+		        </Fields>
+		    </Array>
+		    <Array name="PIN_FLD_DISCOUNT_CYCLE_VALIDITY" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Array of entries defining the discount rules for cycle events.</Doc>
+		        <Fields>
+		            <Int name="PIN_FLD_DISCOUNT_FLAGS" use="optional">
+			        <Doc> Values are 0 (PIN_DISCOUNT_FLAG_NA), 1 (PIN_DISCOUNT_FLAG_FULL), 2 (PIN_DISCOUNT_FLAG_PRORATE), 3 (PIN_DISCOUNT_FLAG_NONE).</Doc>
+			    </Int>
+		        </Fields>
+		    </Array>
+		    <Array name="PIN_FLD_DISCOUNT_USAGE_VALIDITY" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Array of entries defining the discount rules for usage events.</Doc>
+		        <Fields>
+		            <Int name="PIN_FLD_DISCOUNT_FLAGS" use="optional">
+			        <Doc> Values are 0 (PIN_DISCOUNT_FLAG_NA), 1 (PIN_DISCOUNT_FLAG_FULL), 2 (PIN_DISCOUNT_FLAG_PRORATE), 3 (PIN_DISCOUNT_FLAG_NONE).</Doc>
+			    </Int>
+		        </Fields>
+		    </Array>
+	        </Fields>
+	    </Array>
+	    <Array name="PIN_FLD_SPONSORSHIPS" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256"> 
+	        <Doc> Sponsorship array.</Doc>
+	        <Fields>
+	            <String name="PIN_FLD_NAME" use="required" maxlen="255">
+		        <Doc> Unique name of the sponsorship.</Doc>
+		    </String>
+		    <String name="PIN_FLD_DESCR" use="optional" maxlen="1023">
+		        <Doc> Sponsorship description.</Doc>
+		    </String>
+		    <Poid name="PIN_FLD_ACCOUNT_OBJ" use="required" mode="typeonly">
+		        <Doc> </Doc>
+		        <ClassRef>obj://account</ClassRef>
+		    </Poid>
+		    <Timestamp name="PIN_FLD_START_T" use="optional">
+		        <Doc> Inclusive absolute start time.</Doc>
+		    </Timestamp>
+		    <Timestamp name="PIN_FLD_END_T" use="optional">
+		        <Doc> Non-Inclusive end time of the validity period for the object.</Doc>
+		    </Timestamp>
+		    <Array name="PIN_FLD_USAGE_MAP" use="optional" elemIdMode="ignored" iterationOrder="undefined" minElements="0" maxElements="256" minElemId="0" maxElemId="256" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+		        <Doc> Array of entries defining how sponsorship should be performed for different events.</Doc>
+		        <Fields>
+		            <String name="PIN_FLD_EVENT_TYPE" use="required" maxlen="255">
+			        <Doc> Type of event that this entry specifies the discount for.</Doc>
+			    </String>
+			    <String name="PIN_FLD_DISCOUNT_MODEL" use="required" maxlen="255">
+			        <Doc> Discount model name.</Doc>
+			    </String>
+			    <Int name="PIN_FLD_FLAGS" use="optional">
+			        <Doc> Specifies if this usage map is valid if the sponsorship instance is at certain status.</Doc>
+			    </Int>
+		        </Fields>
+		    </Array>
+	        </Fields>
+	    </Array>
+        </Fields>
+    </Output>
+</Opcode>

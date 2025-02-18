@@ -1,0 +1,38 @@
+LoadIfwConfig
+{
+  LogMessageTable
+  {
+    MessageFilePath   = ./
+    MessageFileSuffix = .msg
+  }
+
+  ProcessLog
+  {
+    FilePath          = ./log
+    FileName          = LoadIfwConfig
+    FileSuffix        = .log
+    WriteMessageKey   = True
+  }
+
+  DataPool
+    {
+      Database
+      {
+        ModuleName = DbInterface
+        Module
+        {
+          # Common
+          UserName           = INTEGRATE
+        PassWord           = &aes|08|0D5E11BFDD97D2769D9B0DBFBD1BBF7E174B446E7DA339AD5BEAFC967ECA419FD3
+        DatabaseName       = BRMUAT
+        AccessLib          = oci11g72
+        Connections        = 5
+	}
+      }
+    }
+
+  #XMLCustomizationFile = CustomConfig.xml
+  XMLCustomizationFile = CustomConfigDM.xml
+  LoadDataFromDB = True
+  RowFetchSize = 100
+}

@@ -1,0 +1,132 @@
+-------------------------------------------------------------------
+PORTAL Infranet - Pipeline Plugin Development Kit (PDK)
+-------------------------------------------------------------------
+
+ Copyright (c) 1996, 2011, Oracle and/or its affiliates. All rights reserved. 
+
+This material is the confidential property of Oracle Corporation or its
+licensors and may be used, reproduced, stored or transmitted only in
+accordance with a valid Oracle license or sublicense agreement.
+
+Complete rating in combination with Infranet
+=============================================
+
+----------------------------------------------------------------
+- Complete delivery                                            -
+----------------------------------------------------------------
+Step 1 - Bash-user: Source the source.me.sh for the shell.
+         C-Shell or tc-shell user: Source the source.me.csh for 
+         the shell.
+
+Step 2 - Create an empty ifw database according to the description 
+         in the IntegRate Wireless installation instructions 
+         (http://docs.pin.com/6.5/Documentation/html/ifw_install.html).
+
+Step 3 - To load the sample configuration into the DB, adjust and 
+         execute "insertWIRELESS_SAMPLE.sh", which can be found in 
+         the DB vendor-specific subdirectory 'Oracle' or 'DB2' 
+         under the DataBase_Setup directory.
+
+Step 4 - Adjust your IntegRate registry 
+         (./samples/wireless/wireless_tt.reg) to the correct environment:
+         a) Adjust the DB connections (username and password).
+         b) To use the account listener, configure and uncomment
+            the sections "Corba" and "AccountListener" and uncomment 
+            the AccountListener parameter in the "CustomerData" 
+            section.
+
+Step 5 - Start IntegRate by using wireless_tt.reg:
+
+         bin/ifw -r samples/wireless/wireless_tt.reg
+
+Step 6 - Wait until IntegRate has started, and then create sample CDRs
+         according to the sample in ./data/in/test_cdr.orig.
+
+         Use this format:
+
+         test<xxx>.edr where <xxx> is any string.
+
+         The CDRs must match your Infranet data (service, a-number, 
+         timestamps).
+
+// Sample CDR format:
+// ------------------
+// Plain ASCII, semi-colon-separated format, one record per line
+// Note: Last record must also contain a NL (new line).
+//
+// <service-code>;<a-number>;<b-number>;<start-time>;<duration>;<vol-sent>;<vol-received>;<callclass>;<cell-id>;<apn>
+//
+// <service-code>  : max.  3-chars, e.g. TEL, SMS or GP
+// <a-number>      : max. 40-chars, e.g. 00491729183333
+// <b-number>      : max. 40-chars, e.g. 004941067600
+// <start-time>    : YYYYMMDDHHMISS, e.g. 20011114184510 for '14.11.2001 18:45:10'
+// <duration>      : max. 11-digits, number of seconds, e.g. 300 for 5min.
+// <vol-sent>      : max. 11-digits, number of byte, e.g. 1024 for 1k.
+// <vol-received>  : max. 11-digits, number of byte, e.g. 1024 for 1k.
+// <callclass>     : max.  5-chars, optional call class, e.g. for ConferenceCall indication
+// <cell-id>       : max. 10-digits, optional number of the gsm cell-id, e.g. 123456
+// <apn>           : max. 64-chars, optional access-point-name, e.g. url for GPRS
+//
+// The following <service-code>-values are predefined in the sample rate plan:
+// "TEL", "GPR", "SMS", "WAP", "DAT", "FAX"
+//
+// The following <callclass>-values are predefined in the sample rate plan:
+// "Conf..." = Conference Call
+// "Mail..." = Mailbox Inquiry
+// "MOC"     = Mobile-Originated Call (Outgoing Roaming)
+// "MTC"     = Mobile-Terminated Call (Incomming Roaming)
+//
+// Example:
+// "TEL;00491729183333;004941067600;20011114184510;300;0;0;;;"
+// "TEL;00491729183333;004941067600;20011114184510;300;0;0;Mail;47113;"
+// "TEL;00491729183333;004941067600;20011114184510;300;0;0;Conf;98765;"
+// "TEL;00491729183333;004941067600;20011114184510;300;0;0;MOC;238476;"
+
+Step 7 - If you experience any errors, check the process- or 
+         pipeline-log and fix your configuration errors.
+
+Step 8 - Rerun your sample CDRs.
+
+
+
+
+Complete multi-pipeline rating in combination with Infranet
+===========================================================
+
+----------------------------------------------------------------
+- Complete delivery                                            -
+----------------------------------------------------------------
+Step 1 - Bash-user: Source the source.me.sh for the shell.
+         C-Shell or tc-shell user: Source the source.me.csh for 
+         the shell.
+
+Step 2 - Use the database from the previous sample or create and fill
+         a new one as described in first wireless sample.
+
+Step 3 - Adjust your IntegRate registry 
+         (./samples/wireless/wireless_2pipes.reg) to the correct 
+         environment:
+         a) Adjust the DB connections (username and password).
+         b) To use the account listener, configure and uncomment
+            the sections "Corba" and "AccountListener" and uncomment 
+            the AccountListener parameter in the "CustomerData"
+            section.
+
+Step 4 - Start IntegRate with the wireless_2pipes.reg:
+
+         bin/ifw -r samples/wireless/wireless_2pipes.reg
+
+Step 5 - Wait until IntegRate has started, and then create sample CDRs 
+         according to the sample in ./data/in/test_cdr.orig like those
+         in the previous wireless sample.
+
+         The files should be named pipe1<xxx>.edr or pipe2<xxx>.edr, 
+         where <xxx> is any string, to use both process-pipelines.
+
+         The CDRs must match your infranet data (service, a-number, 
+         timestamps).
+
+Step 6 - If you experience any errors, check the process- or 
+         pipeline-log and fix your configuration errors.
+
+Step 7 - Rerun your sample CDRs.

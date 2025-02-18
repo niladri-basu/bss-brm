@@ -1,0 +1,129 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:op="http://www.portal.com/schemas/BusinessOpcodes"
+            xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            elementFormDefault="qualified">
+<xsd:complexType name="payinfoExtensionType">
+	<xsd:sequence>
+		<xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="ACH" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CREATED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="DUE_DOM" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="INVOICE_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="INV_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="MOD_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PAYMENT_OFFSET" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PAYMENT_TERM" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="POID" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="READ_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="RELATIVE_DUE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="WRITE_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element ref="payinfoExtension" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="payinfoExtension" type="payinfoExtensionType" abstract="true"/>
+<xsd:element name="payinfo_ccExtension" substitutionGroup="payinfoExtension" type="payinfo_ccExtensionType"/>
+<xsd:complexType name="payinfo_ccExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="payinfoExtensionType">
+			<xsd:sequence>
+				<xsd:element name="CC_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_EXP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="payinfo_ddExtension" substitutionGroup="payinfoExtension" type="payinfo_ddExtensionType"/>
+<xsd:complexType name="payinfo_ddExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="payinfoExtensionType">
+			<xsd:sequence>
+				<xsd:element name="DD_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="BANK_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DD_ACTIVATION_DATE" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DEBIT_NUM" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="FIAS_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MANDATE_STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="MAN_RECEIVED_DATE" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="payinfo_invoiceExtension" substitutionGroup="payinfoExtension" type="payinfo_invoiceExtensionType"/>
+<xsd:complexType name="payinfo_invoiceExtensionType">
+	<xsd:complexContent>
+		<xsd:extension base="payinfoExtensionType">
+			<xsd:sequence>
+				<xsd:element name="INV_INFO" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ADDRESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="CITY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="COUNTRY" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DELIVERY_DESCR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="DELIVERY_PREFER" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="EMAIL_ADDR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INV_INSTR" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="INV_TERMS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="STATE" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+							<xsd:element name="ZIP" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+						</xsd:sequence>
+						<xsd:attribute type="xsd:string" name="elem"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:extension>
+	</xsd:complexContent>
+</xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,93 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+# 
+# $Header: install_vob/install_odc/Server/ISMP/Portal_Base/scripts/pin_cmp_bip_udf.pl /cgbubrm_7.5.0.portalbase/1 2014/04/23 17:18:07 vivilin Exp $
+#
+# pin_cmp_bip_udf.pl
+# 
+# Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
+#
+#    NAME
+#      pin_cmp_bip_udf.pl - creates user defined functions in DB for BIP 
+#
+#    DESCRIPTION
+#	It needs to load some plb and class files to database. It uses loadjava utility of Oracle client.
+#
+#    NOTES
+#      If DB and installer are on different servers, loadjava should use thin JDBC according to Sreekar. 
+#
+#    MODIFIED   (MM/DD/YY)
+#    vivilin     04/10/14 - XbranchMerge vivilin_bug-18412614 from
+#                           cgbubrm_7.5.0.8.0custfix.portalbase
+#    ngougol     04/12/11 - Creation
+# 
+# If running stand alone, without pin_setup
+use Sys::Hostname;
+require "pin_oracle_functions.pl";
+require "pin_cmp_dm_db.pl";
+$host = hostname;
+
+if ( ! ( $RUNNING_IN_PIN_SETUP eq TRUE ) )
+{
+   require "pin_res.pl";
+   require "pin_functions.pl";
+   require "../pin_setup.values";
+
+   &ConfigureComponentCalledSeparately ( $0 );
+}
+sub configure_bip_udf_database {
+# Perform the database updates needed for BIP Reports UDF.
+#
+
+    local ( %DB ) = %{$DM_ORACLE{"db"}};
+#    $DM_ORACLE{'db'}->{'vendor'} = "oracle";
+
+    $attention= <<END
+**********Attention*****************************\n
+Installer is trying to run loadjava. For that, Oracle client should be installed directly 
+in its folder and should not be copied from another installation. Oracle OCI JDBC should be also installed. If any issue with OCI JDBC, you can also run loadjava manually after installation using -thin option as below:
+loadjava -thin -user <user>/<password>@<db_machinename>:<db_port>:<db_sid>  -resolve ExpandCompactEventSet.jar
+If the database version is 10g, please do not use -resolve option of loadjava .
+*************************************************\n
+END
+;
+    &Output( STDOUT, $attention);
+    &Output( fpLogFile, $attention);
+    my $RESOLVE =  "-resolve";
+    if ( $DB{'version'} =~ /^10g$|^9i$/ ){
+       $RESOLVE = "";
+    } 
+
+    if ($ENABLE_ENCRYPTION =~ /Yes/i  ) {
+       &decrypt_pwd();
+    }
+    $command = "loadjava -user "."$DB{'user'}/$DB{'password'}"."@"."$MAIN_DB{'alias'} $RESOLVE $PIN_HOME/jars/ExpandCompactEventSet.jar";
+    $o = `$command`;
+    $command = "loadjava -user "."$DB{'user'}/***@"."$MAIN_DB{'alias'} $RESOLVE $PIN_HOME/jars/ExpandCompactEventSet.jar";
+    &Output( STDOUT, $IDS_EXECUTING_COMMAND, $command);
+    &Output( fpLogFile, $IDS_EXECUTING_COMMAND, $command);
+    &Output( STDOUT, $o);
+    &Output( fpLogFile, $o);
+
+    @plbs= (
+	"$PIN_HOME/sys/bip_udf/data/create_expand_events_function.plb" ,
+	"Script to create the UDF function in the database, which is for BIP Reports.",
+	"$PIN_HOME/sys/bip_udf/data/create_temporary_tables.plb",
+	"Script to create the procedure to create the temporary tables in the database, which is for BIP Reports.");
+
+    for ($i = 0; $i <= $#plbs; $i+= 2) {
+      if ( -f $plbs[$i] )
+      {
+	&ExecutePLB_file ($plbs[$i],
+	    $plbs[$i + 1],
+	    %DM_ORACLE );
+      }
+      else
+      {
+	&Output( STDOUT, "Could not find file %s\n", $plbs[$i] );
+	&Output( fpLogFile, "Could not find file %s\n", $plbs[$i] );
+      }
+    }
+    %DM = %DM_ORACLE;
+    &ExecuteSQL_Statement("call create_temp_tables_proc();", TRUE, TRUE, %{$DM{'db'}} );
+}
+

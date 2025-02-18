@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+#	Copyright (c) 2000 - 2003 Portal Software, Inc.
+#
+#	This material is the confidential property of Portal Software, Inc.
+#	or its subsidiaries or licensors and may be used, reproduced, stored
+#	or transmitted only in accordance with a valid Portal license or
+#	sublicense agreement.
+#
+
+#
+# stop_formatter
+#
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+LOGDIR=/brmapp/portal/7.5/var/formatter
+JSPID=${LOGDIR}/formatter.pid
+
+me=$0
+
+if [ ! -f ${JSPID} ]; then
+	echo "${me}: ERROR: no pid file: ${JSPID}, cannot kill formatter"
+	exit 1
+fi
+
+kill `cat ${JSPID}`
+rc=$?
+if [ ${rc} -ne 0 ]; then
+	echo "${me}: ERROR: kill formatter `cat ${JSPID}` FAILED"
+	exit ${rc}
+else
+	rm ${JSPID}
+fi
+
+exit 0

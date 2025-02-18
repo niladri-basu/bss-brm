@@ -1,0 +1,14 @@
+select 
+distinct td.poid_id0 ||',11_930' from
+  PIN.TD_USGEVENT_DETAILS TD,
+  PIN.ITEM_T IT,
+  PIN.PURCHASED_PRODUCT_T PROD,
+  PIN.EVENT_T ET
+where
+    TD.POID_TYPE = '/event/delayed/session/telco/gsm/valuepack'
+and TD.DESCR='$0 Daily Roaming'
+and IT.POID_ID0 = TD.ITEM_POID_ID0
+and IT.SERVICE_OBJ_ID0 = PROD.SERVICE_OBJ_ID0
+and ET.POID_ID0 = TD.EVENT_POID_ID0
+AND ET.START_T > PROD.CREATED_T
+and PROD.PRODUCT_OBJ_ID0 in (320574462,84907996);

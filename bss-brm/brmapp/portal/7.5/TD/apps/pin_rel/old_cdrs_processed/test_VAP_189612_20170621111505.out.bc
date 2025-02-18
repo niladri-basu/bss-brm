@@ -1,0 +1,14 @@
+010	1			2703	2703	1498043712	1498043712	1498043712		0	0				00	974	RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/valuepack			2
+020	2							228921661	00		$55 Islands Pack	0	17	01	VAP			00	S	+1200	0.0	0.0	1	NORM	Roaming value packs	0	0	1498000398	1498000399	1
+520	3		228921661	0
+900	4	1 /account 1276563532 0	1 /service/telco/gsm 1276592381 0	1 /item/usage_niltax 304995730728680767 0	0  0 0	;;;;[228921661,2,0]|;;;;[228921661,2,0]|;;;;[228921661,2,0]|;;;;[,2,0]		1	@INTEGRATE#228921661##VAP#1#1#Roaming value packs#0#$55 Islands Pack#Roaming Pack##<1 /item/usage_niltax 304995730728680767 0#554#1##55.00#100200661#NILGST|>#<#0###|>#<Postpay Cash#55.00#-151.00|>
+600	5	1 /account 1276563532 0	1 /balance_group 1276594557 0	1 /item/usage_niltax 304995730728680767 0	554	0	ALL	258	1 /product 1090734 0	100200661	0	NILGST			1 /purchased_product 1276593923 0	1	55.00	0.0	55.00	0.0	0	P
+605	0	1 /balance_group 1276594557 0	554
+607	0	55.00	1498000526	0			0	0
+800	6	1 /account 1276563532 0	1 /balance_group/monitor 1276566860 0	554	55.00
+805	0	1 /balance_group/monitor 1276566860 0	554
+807	1497916800	55.00	1497916800	1498003200	
+888	5	546023		0	0																202117799	20170620231318	90509	90915				
+890	Postpay Cash	55.00	-151.00
+894	BUY	Roam Zone 4 Combo 3	TRUE																Roaming Pack
+090	10			2705	2705	1	1498000398	+1200	1498000398	+1200	0.0	55.00

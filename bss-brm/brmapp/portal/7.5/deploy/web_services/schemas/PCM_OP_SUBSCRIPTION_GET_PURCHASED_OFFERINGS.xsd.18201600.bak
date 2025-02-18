@@ -1,0 +1,149 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" elementFormDefault="qualified" xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:op="http://www.portal.com/schemas/BusinessOpcodes" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--Copyright (c) 2007 Oracle. All rights reserved.
+
+        This material is the confidential property of Oracle Corporation or
+        its licensors and may be used, reproduced, stored or transmitted only
+        in accordance with a valid Oracle license or sublicense agreement.-->
+   <xsd:include schemaLocation="purchased_product.xsd"/>
+   <xsd:include schemaLocation="purchased_discount.xsd"/>
+   <xsd:include schemaLocation="purchased_product.xsd"/>
+   <xsd:include schemaLocation="purchased_discount.xsd"/>
+   <xsd:element name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_inputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="DEAL_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(deal)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_12112">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="END_T" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:dateTime"/>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="INCLUSION_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="OVERRIDDEN_OBJ" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(purchased_product)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="OVERRIDE_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="PACKAGE_ID" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="POID" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_12111">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SCOPE_OBJ" minOccurs="1" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(billinfo)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(service)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="VALIDITY_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_12111">
+      <xsd:sequence>
+         <xsd:element ref="purchased_productExtension"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_12112">
+      <xsd:sequence>
+         <xsd:element ref="purchased_discountExtension"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:element name="PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_outputFlist">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="DISCOUNTS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="DISCOUNTS_ARRAY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_1313">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="POID" minOccurs="0" maxOccurs="1">
+               <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                     <xsd:pattern value="([0-9]*\.)+[0-9]*(\s)+(((/)*|(/)(account)((/)*([a-zA-Z_]*))*))(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+                     <xsd:pattern value=""/>
+                  </xsd:restriction>
+               </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="PRODUCTS" minOccurs="0" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="PRODUCTS_ARRAY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_1312">
+                        <xsd:attribute name="elem" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="PRODUCTS_ARRAY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_1312">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="DISCOUNTS_ARRAY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS_1313">
+      <xsd:sequence>
+         <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" processContents="skip"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="BUFFER_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS">
+      <xsd:simpleContent>
+         <xsd:extension base="xsd:hexBinary">
+            <xsd:attribute name="flags" type="xsd:string" use="optional"/>
+            <xsd:attribute name="size" type="xsd:string" use="optional"/>
+            <xsd:attribute name="offset" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:simpleContent>
+   </xsd:complexType>
+   <xsd:simpleType name="EMPTY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS">
+      <xsd:restriction base="xsd:string">
+         <xsd:length value="0"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+   <xsd:simpleType name="UNION_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS">
+      <xsd:union memberTypes="xsd:decimal EMPTY_PCM_OP_SUBSCRIPTION_GET_PURCHASED_OFFERINGS"/>
+   </xsd:simpleType>
+</xsd:schema>

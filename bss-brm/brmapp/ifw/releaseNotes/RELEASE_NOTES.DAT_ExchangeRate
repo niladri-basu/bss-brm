@@ -1,0 +1,116 @@
+========================================================================================
+DAT_ExchangeRatePlugIn
+----------------------------------------------------------------------------------------
+Module Release Notes 
+==============================================================================
+
+Module Version: 10007  7.4 03-Jan-2011
+bug10432844: CORE DUMP IN  PRODUCTION (EXCHANGE RATE RELOAD SEMAPHORE PASSED)
+Core dump was happening due to uninitialized variable getting used to initialize 
+data container.
+
+==============================================================================
+
+Module Version : 7.4 10006
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+
+==============================================================================
+
+Module Version: 10005  6.7_FP2  28-Apr-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+Module Version: 10004  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check 
+
+==============================================================================
+Module Version: 10003  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+==============================================================================
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+- PETS # 28863 Added Thread trace info for rating modules
+
+===================================================================================
+
+Actual Version : v4-30-02 / Date : 31-Jan-2002
+----------------
+
+Notes          :
+----------------
+- PETS #38593 DB2 Port
+
+================================================================================
+
+Actual Version : CR-08-2001 / Date : 10-Sept-2001
+----------------
+
+Notes          :
+----------------
+- PETS #37618: Code Review CR-08.2001
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 08-Jun-2001
+----------------
+
+Notes          :
+----------------
+- PETS #38493 round of exchangerate values failed - fixed.
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 08-Jun-2001
+----------------
+
+Notes          :
+----------------
+- Database changes updated
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 02-Feb-2001
+----------------
+
+Notes          :
+----------------
+- Just new
+
+========================================================================================
+
+Actual Version :
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+

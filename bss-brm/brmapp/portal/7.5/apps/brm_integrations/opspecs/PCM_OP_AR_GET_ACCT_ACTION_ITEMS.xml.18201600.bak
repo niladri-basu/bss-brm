@@ -1,0 +1,568 @@
+<Opcode
+    name="PCM_OP_AR_GET_ACCT_ACTION_ITEMS"
+    visibility="public"
+    transaction="required"
+    component="fm_ar"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+    <Doc>
+        <!--h:p>
+            <h:i> Copyright &#169; 2006-2009 Oracle. All rights reserved. This
+                material is the confidential property of Oracle Corporation or
+                its licensors and may be used, reproduced, stored or transmitted
+                only in accordance with a valid Oracle license or sublicense
+                agreement. </h:i>
+        </h:p-->
+
+	This opcode returns a list of A/R items for a particular bill unit.
+	If an Account is given instead, the opcode returns the
+	AR items object information of all the bill-info objects of the Account.
+        Search criteria can be specified in the input flist.
+    </Doc>
+
+	
+	<SeeAlso>
+		<Item
+				href="obj://bill">
+				<Doc>Bill object.</Doc>
+		</Item>
+		<Item
+				href="obj://billinfo">
+				<Doc>Bill Info object.</Doc>
+		</Item>
+		<Item
+				href="obj://account">
+				<Doc>Account  Object</Doc>
+		</Item>
+		<Item
+				href="op://PCM_OP_BAL_GET_ACCT_BILLINFO">
+				<Doc>Use this opcode to get all the Bill-info objects of an Account.</Doc>
+		</Item>
+		<Item
+				href="op://PCM_OP_AR_GET_ACTION_ITEMS">
+				<Doc>Use this opcode to get al the AR Bill objects of a Bill-info object.</Doc>
+		</Item>
+		<Item
+				href="file://pin_flds.h">
+				<Doc>The C Header file contains the PIN_FLD definitions. The C++
+                Header file is PinFlds.h</Doc>
+		</Item>
+		<Item
+				href="file://pcm_ops.h">
+				<Doc>The Header file contains the PCM_OP definitions.</Doc>
+		</Item>
+		<Item
+				href="file://pcm.h">
+				<Doc>The Header file contains the opcode flags OPFLG
+                definitions.</Doc>
+		</Item>
+		<Item
+				href="file://pin_bill.h">
+				<Doc>The Header file contains PIN_OBJ_TYPE_ITEM definitions.</Doc>
+		</Item>
+		<Item
+				href="file://pin_pymt.h">
+				<Doc>The Header file contains PIN_PAY_TYPE definitions.</Doc>
+		</Item>
+		<Item
+				href="http://www.portal.com">
+				<Doc>Visit Portal web site for additional information.</Doc>
+		</Item>
+	</SeeAlso>
+
+	
+	<Input>
+		<Doc>All time stamps in the input flist are in Portal format.</Doc>
+		<Fields>
+			<Poid
+					name="PIN_FLD_POID"
+					use="required"
+					mode="complete">
+					<Doc>Poid of a Bill-info object or an Account object.</Doc>
+					<ClassRef>obj://account</ClassRef>
+					<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid
+					name="PIN_FLD_AR_BILLINFO_OBJ"
+					use="optional"
+					mode="complete">
+					<Doc> Poid of a corresponding AR Bill-info object to the one given in PIN_FLD_POID.
+					      If the same poid is specified here, the Bills of the
+					      Bill-info hierarchy (if any) will be included.</Doc>
+					<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid
+					name="PIN_FLD_BILLINFO_OBJ"
+					use="optional"
+					mode="complete">
+					<Doc> Poid of a Bill-info object for use with
+					      the Bill-info object above to obtain a simple non-hierarchical view.</Doc>
+					<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid
+					name="PIN_FLD_BILL_OBJ"
+					use="optional"
+					mode="complete">
+					<Doc> Poid of a Bill object for use as an AR Bill Object with
+					      the Bill-info object above to obtain a detail hierarchical view.</Doc>
+					<ClassRef>obj://bill</ClassRef>
+			</Poid>
+			<String
+					name="PIN_FLD_BILL_NO"
+					use="optional"
+					maxlen="60">
+					<Doc>Bill Number.</Doc>
+			</String>
+			<Int
+					name="PIN_FLD_INCLUDE_CHILDREN"
+					use="required">
+					<Doc>Indicator of how the Bill-info hierarchy view is to be returned.
+					    Specify a 0 value, if an simple non-hierarchical view is desired.
+					    Otherwise, detail hierarchical view  will be  returned. </Doc>
+			</Int>
+			<String
+					name="PIN_FLD_POID_TYPE"
+					use="optional"
+					maxlen="256">
+					<Doc>  Poid type strings of AR Items that are used as a search criteria.
+					       The poid types are separated by commas. Sample poid types are:
+                    <h:ul>
+                        <h:li>PIN_OBJ_TYPE_ITEM_PAYMENT:    "/item/payment"</h:li>
+						<h:li>PIN_OBJ_TYPE_ITEM_REVERSAL    "/item/payment/reversal"</h:li>
+						<h:li>PIN_OBJ_TYPE_ITEM_REFUND:     "/item/refund"</h:li>
+						<h:li>PIN_OBJ_TYPE_ITEM_DISPUTE:    "/item/dispute"</h:li>
+						<h:li>PIN_OBJ_TYPE_ITEM_SETTLEMENT: "/item/settlement"</h:li>
+						<h:li>PIN_OBJ_TYPE_ITEM_ADJUSTMENT: "/item/adjustment"</h:li>
+					</h:ul>
+				</Doc>
+			</String>
+			<Int
+					name="PIN_FLD_AMOUNT_INDICATOR"
+					use="optional">
+					<Doc> Credit or Deit Amount indicator:
+                    <h:ul>
+                        <h:li>0 for credit</h:li>
+						<h:li>1 for debit.</h:li>
+					</h:ul>
+				</Doc>
+			</Int>
+			<Decimal
+					name="PIN_FLD_AMOUNT_FROM"
+					use="optional">
+					<Doc> Minimum Amount  range against PIN_FLD_ITEM_TOTAL.
+					      Search constraint on the  Item Total Amount. </Doc>
+			</Decimal>
+			<Decimal
+					name="PIN_FLD_AMOUNT_TO"
+					use="optional">
+					<Doc> Maximum Amount  range against PIN_FLD_ITEM_TOTAL.
+					      Search constraint on the Item Total Amount. .</Doc>
+			</Decimal>
+			<Int
+					name="PIN_FLD_THRESHOLD"
+					use="optional">
+					<Doc> Threshold value for the number of  AR Items to be retrieved.  
+					      If the actual count exceeds the threshold, the AR Items will be skipped.
+					      A PIN_FLD_THRESHOLD output field will be returned to
+					      indicate the total number of Items. Threshold value not considered for pending AR Items.</Doc>
+			</Int>
+			<Enum
+					name="PIN_FLD_STATUS"
+					use="optional">
+					<Doc> Item Status that will be used as a search criteria.
+				              The default is to include all Item Statuses.
+                    <h:ul>
+						<h:li>PIN_ITEM_STATUS_OPEN (2)</h:li>
+						<h:li>PIN_ITEM_STATUS_CLOSED (4)</h:li>
+                                                <h:li>PIN_ITEM_STATUS_REVERSED (8)</h:li> 
+					</h:ul>
+				</Doc>
+				<Values>
+					<Value>2</Value>
+					<Doc>PIN_ITEM_STATUS_OPEN</Doc>
+				</Values>
+				<Values>
+					<Value>4</Value>
+					<Doc>PIN_ITEM_STATUS_CLOSED</Doc>
+				</Values>
+                                <Values>
+                                        <Value>8</Value>
+                                        <Doc>PIN_ITEM_STATUS_REVERSED</Doc>
+                                </Values>
+			</Enum>
+			<Timestamp
+					name="PIN_FLD_START_T"
+					use="optional">
+					<Doc> Start time range of   PIN_FLD_EFFECTIVE_T.
+					      Search constraint on the  Item's Effective Time.</Doc>
+			</Timestamp>
+			<Timestamp
+					name="PIN_FLD_END_T"
+					use="optional">
+					<Doc> End  time range of   PIN_FLD_EFFECTIVE_T.
+					      Search constraint on the  Item's Effective Time.</Doc>
+			</Timestamp>
+			<Int
+					name="PIN_FLD_FLAGS"
+					use="optional">
+					<Doc> Flags for indicate the special items as billed and/or unbilled.
+						<h:ul>
+							<h:li>PIN_AR_BILLED_ITEM : Mark Item as billed.</h:li>
+							<h:li>PIN_AR_UNBILLED_ITEM: Mark Item as unbilled.</h:li>
+						</h:ul>
+					</Doc>
+			</Int>
+		</Fields>
+	</Input>
+
+
+	
+	<Output>
+		<Fields>
+			<Poid
+					name="PIN_FLD_POID"
+					use="required"
+					mode="complete">
+					<Doc>Poid of a Bill-info object or
+					     an Account object that is propagated from the input flist.</Doc>
+					<ClassRef>obj://account</ClassRef>
+					<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Array
+					name="PIN_FLD_RESULTS"
+					use="optional"
+					elemIdMode="ignored"
+					iterationOrder="undefined"
+					minElements="0"
+					minElemId="0"
+					isElemIdAssignAllowed="false"
+					isElemIdAnyAllowed="false"
+					isRecursive="false">
+					<Doc>All time stamps in the output flist are in Portal format.</Doc>
+				<Fields>
+					
+					<Poid
+							name="PIN_FLD_POID"
+							use="required"
+							mode="complete">
+							<Doc> Poid of an Item Object</Doc>
+							<ClassRef>obj://item</ClassRef>
+					</Poid>
+					<String
+							name="PIN_FLD_ITEM_NO"
+							use="required"
+							maxlen="60">
+							<Doc> Item Number.</Doc>
+					</String>
+					<String
+							name="PIN_FLD_NAME"
+							use="required"
+							maxlen="255">
+							<Doc> Item Name.</Doc>
+					</String>
+					<Decimal
+							name="PIN_FLD_ITEM_TOTAL"
+							use="required">
+							<Doc> Total Amount  on the Item,</Doc>
+					</Decimal>
+					<Decimal
+							name="PIN_FLD_DUE"
+							use="required">
+							<Doc> Total Amount Due on the Item.</Doc>
+					</Decimal>
+					<Decimal
+							name="PIN_FLD_TRANSFERED"
+							use="required">
+							<Doc> Total Amount that is Transferred Ot of  the Item.</Doc>
+					</Decimal>
+					<Decimal
+							name="PIN_FLD_ALLOCATED"
+							use="required">
+							<Doc> Total Amount that is applied to the Bill.</Doc>
+					</Decimal>
+					<Timestamp
+							name="PIN_FLD_EFFECTIVE_T"
+							use="required">
+							<Doc> Item Effective Time.</Doc>
+					</Timestamp>
+					<Timestamp
+							name="PIN_FLD_CREATED_T"
+							use="required">
+							<Doc> Creation time of this item.</Doc>
+					</Timestamp>
+					<Poid
+							name="PIN_FLD_BILLINFO_OBJ"
+							use="required"
+							mode="complete">
+							<Doc> Bill-info object of the Item.</Doc>
+							<ClassRef>obj://billinfo</ClassRef>
+					</Poid>
+					<Poid
+							name="PIN_FLD_AR_BILLINFO_OBJ"
+							use="required"
+							mode="complete">
+							<Doc> AR Bill-info object of the Item.</Doc>
+							<ClassRef>obj://billinfo</ClassRef>
+					</Poid>
+					<Int
+							name="PIN_FLD_THRESHOLD"
+							use="optional">
+							<Doc> The threshold to indicate the total number of
+							      Items could have been returned.
+							      If the actual count exceeded the input threshold,
+							      the AR Items will be skipped.
+                             </Doc>
+					</Int>
+					<Poid
+							name="PIN_FLD_ACCOUNT_OBJ"
+							use="required"
+							mode="complete">
+							<Doc> Account of the Bill object.</Doc>
+							<ClassRef>obj://account</ClassRef>
+					</Poid>
+					<String
+							name="PIN_FLD_ACCOUNT_NO"
+							use="required"
+							maxlen="60">
+							<Doc> Account Number.</Doc>
+					</String>
+					<Int
+							name="PIN_FLD_FLAGS"
+							use="optional">
+							<Doc> Flags for indicate the special item as billed or unbilled.
+								<h:ul>
+									<h:li>PIN_AR_BILLED_ITEM : Mark Item as billed.</h:li>
+									<h:li>PIN_AR_UNBILLED_ITEM: Mark Item as unbilled.</h:li>
+								</h:ul>
+							</Doc>
+					</Int>
+					<Poid
+							name="PIN_FLD_RELATED_BILL_ITEM_OBJ"
+							use="optional"
+							mode="complete">
+							<Doc>Bill Item to which the dispute/settlement is made.</Doc>
+							<ClassRef>obj://item</ClassRef>
+					</Poid>
+					<Poid
+							name="PIN_FLD_RELATED_ACTION_ITEM_OBJ"
+							use="optional"
+							mode="complete">
+							<Doc>Related Reversal or Settlement Action Item of
+							   the Payment or Dispute Item above.</Doc>
+							<ClassRef>obj://item</ClassRef>
+					</Poid>
+					<Enum
+							name="PIN_FLD_PAY_TYPE"
+							use="optional">
+							<Doc> Payment Type that is appliable to the Payment or Refund Item:
+                            <h:ul>
+                                <h:li>  PIN_PAY_TYPE_UNDEFINED  :<h:br/> Invalid - used during acct create </h:li>
+								<h:li>  PIN_PAY_TYPE_PREPAID    :<h:br/> Prepaid to keep negative balance </h:li>
+								<h:li>  PIN_PAY_TYPE_INVOICE    :<h:br/> Invoiced monthly </h:li>
+								<h:li>  PIN_PAY_TYPE_DEBIT      :<h:br/> Checking account debit </h:li>
+								<h:li>  PIN_PAY_TYPE_CC         :<h:br/> Credit Card </h:li>
+								<h:li>  PIN_PAY_TYPE_DDEBIT     :<h:br/> French Direct Debit </h:li>
+								<h:li>  PIN_PAY_TYPE_DD         :<h:br/> US/Canadian Direct Debit </h:li>
+								<h:li>  PIN_PAY_TYPE_SMARTC     :<h:br/> Smartcard </h:li>
+								<h:li>  PIN_PAY_TYPE_SUBORD     :<h:br/> Roll up to parent account </h:li>
+								<h:li>  PIN_PAY_TYPE_CASH       :<h:br/> Cash payments for payment tool </h:li>
+								<h:li>  PIN_PAY_TYPE_CHECK      :<h:br/> Check payments for payment tool </h:li>
+								<h:li>  PIN_PAY_TYPE_WTRANSFER  :<h:br/>
+                                   Wire transfer payments for payment tool </h:li>
+								<h:li>  PIN_PAY_TYPE_PAYORDER   :<h:br/>
+                                   Inter bank payment order payments for payment tool </h:li>
+								<h:li>  PIN_PAY_TYPE_POSTALORDER:<h:br/>
+                                   Postal order payments for payment tool </h:li>
+								<h:li>  PIN_PAY_TYPE_VOUCHER    :<h:br/> Voucher payments </h:li>
+								<h:li>  PIN_PAY_TYPE_FAILED     :<h:br/> Failed payment </h:li>
+							</h:ul>
+						</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_PAY_TYPE_UNDEFINED</Doc>
+						</Values>
+						<Values>
+							<Value>10000</Value>
+							<Doc>PIN_PAY_TYPE_PREPAID</Doc>
+						</Values>
+						<Values>
+							<Value>10001</Value>
+							<Doc>PIN_PAY_TYPE_INVOICE</Doc>
+						</Values>
+						<Values>
+							<Value>10002</Value>
+							<Doc>PIN_PAY_TYPE_DEBIT</Doc>
+						</Values>
+						<Values>
+							<Value>10003</Value>
+							<Doc>PIN_PAY_TYPE_CC</Doc>
+						</Values>
+						<Values>
+							<Value>10004</Value>
+							<Doc>PIN_PAY_TYPE_DDEBIT</Doc>
+						</Values>
+						<Values>
+							<Value>10005</Value>
+							<Doc>PIN_PAY_TYPE_DD</Doc>
+						</Values>
+						<Values>
+							<Value>10006</Value>
+							<Doc>PIN_PAY_TYPE_SMARTC</Doc>
+						</Values>
+						<Values>
+							<Value>10007</Value>
+							<Doc>PIN_PAY_TYPE_SUBORD</Doc>
+						</Values>
+						<Values>
+							<Value>10011</Value>
+							<Doc>PIN_PAY_TYPE_CASH</Doc>
+						</Values>
+						<Values>
+							<Value>10012</Value>
+							<Doc>PIN_PAY_TYPE_CHECK</Doc>
+						</Values>
+						<Values>
+							<Value>10013</Value>
+							<Doc>PIN_PAY_TYPE_WTRANSFER</Doc>
+						</Values>
+						<Values>
+							<Value>10014</Value>
+							<Doc>PIN_PAY_TYPE_PAYORDER</Doc>
+						</Values>
+						<Values>
+							<Value>10015</Value>
+							<Doc>PIN_PAY_TYPE_POSTALORDER</Doc>
+						</Values>
+						<Values>
+							<Value>10016</Value>
+							<Doc>PIN_PAY_TYPE_VOUCHER</Doc>
+						</Values>
+						<Values>
+							<Value>10017</Value>
+							<Doc>PIN_PAY_TYPE_FAILED</Doc>
+						</Values>
+					</Enum>
+					<Timestamp
+							name="PIN_FLD_POSTED_T"
+							use="optional">
+						<Doc>  Time when the Related Action Item was posted.  </Doc>
+					</Timestamp>
+					<Enum name="PIN_FLD_DISPUTE_TYPE" use="optional">
+						<Doc>Flag to indicate whether event level dispute or item level dispute.  Either PIN_DISPUTE_ITEM_LEVEL or PIN_DISPUTE_EVENT_L
+EVEL  It is mandatory in case of dispute items</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_DISPUTE_ITEM_LEVEL</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>PIN_DISPUTE_EVENT_LEVEL</Doc>
+						</Values>
+					</Enum>
+					<Enum name="PIN_FLD_ADJUSTMENT_TYPE" use="optional">
+						<Doc>
+Flag to indicate whether event level adjustment or item level adjustment.
+Either PIN_ADJUSTMENT_ITEM_LEVEL or PIN_ADJUSTMENT_EVENT_LEVEL.   It presents only for adjustment items
+</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_ADJUSTMENT_ITEM_LEVEL</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>PIN_ADJUSTMENT_EVENT_LEVEL</Doc>
+						</Values>
+					</Enum>
+					<Enum name="PIN_FLD_SETTLEMENT_TYPE" use="optional">
+						<Doc>
+Flag to indicate whether event level settlement or item level settlement.
+Either PIN_SETTLEMENT_ITEM_LEVEL or PIN_SETTLEMENT_EVENT_LEVEL.   It presents only for settlement items
+</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_SETTLEMENT_ITEM_LEVEL</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>PIN_SETTLEMENT_EVENT_LEVEL</Doc>
+						</Values>
+					</Enum>
+					<Enum name="PIN_FLD_RESOURCE_IMPACTED" use="optional">
+						<Doc>
+Flag to indicate whether single resource or multiple resources impacted.
+Either PIN_RESOURCE_SINGLE or PIN_RESOURCE_MULTIPLE.
+It presents only for event level adjustments/disputes/settlements
+</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_RESOURCE_SINGLE</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>PIN_RESOURCE_MULTIPLE</Doc>
+						</Values>
+					</Enum>
+					<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+						<Doc> It represents reource id impacted.  It presents only for item level A/R actions.</Doc>
+					</Int>
+					<Array name="PIN_FLD_EVENTS" use="optional"
+							elemIdMode="ignored" iterationOrder="undefined"
+							minElements="0"
+							minElemId="0"
+							isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+							isRecursive="false">
+						<Doc>
+Array for the A/R  events like event.billing.dispute.event or   .event.billing.adjustment.event.
+This array will present only if   items are formed because of event level A/R actions
+only for  adjustments or disputes or settlements
+</Doc>
+						<Fields>
+							<Poid name="PIN_FLD_POID" use="required"
+									mode="complete">
+								<Doc> Poid for the A/R event. If PIN_FLD_EVENTS array exists   these two fields are mandatory</Doc>
+								<ClassRef>obj://event</ClassRef>
+							</Poid>
+							<String name="PIN_FLD_DESCR" use="required"
+									maxlen="1024">
+								<Doc> Description of the A/R event</Doc>
+							</String>
+						</Fields>
+					</Array>
+					<Array name="PIN_FLD_AGGREGATE_AMOUNTS" use="optional"
+							elemIdMode="ignored" iterationOrder="undefined"
+							minElements="0"
+							minElemId="0"
+							isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+							isRecursive="false">
+						<Doc> Aggregate amounts array</Doc>
+						<Fields>
+							<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+								<Doc> Mandatory Resource Id.</Doc>
+							</Int>
+							<Decimal name="PIN_FLD_AMOUNT" use="optional">
+								<Doc> Mandatory Charge Amount.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_DISCOUNT" use="optional">
+								<Doc> Optional Discount Amount</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_ADJUSTED" use="optional">
+								<Doc> Optional Adjusted Amount.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_DISPUTED" use="optional">
+								<Doc> Optional Disputed Amount.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_ORIG_DISPUTE_AMOUNT" use="optional">
+								<Doc> Optional Original Disputed Amount. </Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_AMOUNT_ADJUSTED" use="optional">
+								<Doc> Optional Settlement Amount.</Doc>
+							</Decimal>
+						</Fields>
+					</Array>
+				</Fields>
+			</Array>
+		</Fields>
+	</Output>
+</Opcode>

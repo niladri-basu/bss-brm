@@ -1,0 +1,235 @@
+E Sat Nov  7 07:00:18 2015  exlhamuatbrm  <no name>:19239  pin_mta_api.c:445 1:<machine>:<program>:0:0:0:0:0
+	pin_mta_get_str_from_pinconf error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Sat Nov  7 07:00:18 2015  exlhamuatbrm  pin_deferred_act:19239  pin_mta.c:1907 1:exlhamuatbrm:pin_deferred_act:19239:-143796528:0:1446832818:1
+	pcm_connect error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Sat Nov  7 07:00:18 2015  exlhamuatbrm  pin_deferred_act:19239  pin_mta.c:2124 1:exlhamuatbrm:pin_deferred_act:19239:-143796528:0:1446832818:1
+	normal error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Sat Nov  7 07:00:18 2015  exlhamuatbrm  pin_deferred_act:19239  pin_mta.c:2146 1:exlhamuatbrm:pin_deferred_act:19239:-143796528:0:1446832818:1
+	Application global flist at exit
+# number of field entries allocated 20, used 6
+0 PIN_FLD_CONFIG_OBJ   SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_APPLICATION_INFO SUBSTRUCT [0] allocated 20, used 13
+1     PIN_FLD_NAME            STR [0] "pin_deferred_act"
+1     PIN_FLD_CHILDREN        INT [0] 1
+1     PIN_FLD_STEP_SIZE       INT [0] 0
+1     PIN_FLD_BATCH_SIZE      INT [0] 0
+1     PIN_FLD_FETCH_SIZE      INT [0] 0
+1     PIN_FLD_SLEEP_INTERVAL    INT [0] 60
+1     PIN_FLD_NUM_RETRIES     INT [0] 0
+1     PIN_FLD_FLAGS           INT [0] 0
+1     PIN_FLD_MAX_ERROR       INT [0] 0
+1     PIN_FLD_MAX_TIME        INT [0] 0
+1     PIN_FLD_HOTLIST_FILENAME    STR [0] ""
+1     PIN_FLD_MONITOR_FILENAME    STR [0] ""
+1     PIN_FLD_OBJ_TYPE        STR [0] "/config/mta"
+0 PIN_FLD_SEARCH_FLIST SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_SEARCH_RESULTS SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_EXTENDED_INFO SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_OPERATION_INFO SUBSTRUCT [0] allocated 20, used 5
+1     PIN_FLD_PID             INT [0] 19239
+1     PIN_FLD_HOSTNAME        STR [0] "exlhamuatbrm"
+1     PIN_FLD_START_T      TSTAMP [0] (1446832818) Sat Nov  7 07:00:18 2015
+1     PIN_FLD_END_T        TSTAMP [0] (1446832818) Sat Nov  7 07:00:18 2015
+1     PIN_FLD_ERROR_INFO    ARRAY [0] allocated 20, used 5
+2         PIN_FLD_ERROR_NUM       INT [0] 1
+2         PIN_FLD_SYS_ERROR_NUM    INT [0] 0
+2         PIN_FLD_ERROR_CODE      STR [0] "PIN_ERR_NOT_FOUND"
+2         PIN_FLD_ERROR_DESCR     STR [0] "\t            <location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>\n\t            <field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>\n\t            <facility=0 msg_id=0 version=0>\n"
+2         PIN_FLD_TRACKING_ID     STR [0] "1:exlhamuatbrm:pin_deferred_act:19239:-143796528:0:1446832818:1"
+E Sun Nov  8 07:00:25 2015  exlhamuatbrm  <no name>:13092  pin_mta_api.c:445 1:<machine>:<program>:0:0:0:0:0
+	pin_mta_get_str_from_pinconf error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Sun Nov  8 07:00:25 2015  exlhamuatbrm  pin_deferred_act:13092  pin_mta.c:1907 1:exlhamuatbrm:pin_deferred_act:13092:-144013616:0:1446919225:1
+	pcm_connect error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Sun Nov  8 07:00:25 2015  exlhamuatbrm  pin_deferred_act:13092  pin_mta.c:2124 1:exlhamuatbrm:pin_deferred_act:13092:-144013616:0:1446919225:1
+	normal error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Sun Nov  8 07:00:25 2015  exlhamuatbrm  pin_deferred_act:13092  pin_mta.c:2146 1:exlhamuatbrm:pin_deferred_act:13092:-144013616:0:1446919225:1
+	Application global flist at exit
+# number of field entries allocated 20, used 6
+0 PIN_FLD_CONFIG_OBJ   SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_APPLICATION_INFO SUBSTRUCT [0] allocated 20, used 13
+1     PIN_FLD_NAME            STR [0] "pin_deferred_act"
+1     PIN_FLD_CHILDREN        INT [0] 1
+1     PIN_FLD_STEP_SIZE       INT [0] 0
+1     PIN_FLD_BATCH_SIZE      INT [0] 0
+1     PIN_FLD_FETCH_SIZE      INT [0] 0
+1     PIN_FLD_SLEEP_INTERVAL    INT [0] 60
+1     PIN_FLD_NUM_RETRIES     INT [0] 0
+1     PIN_FLD_FLAGS           INT [0] 0
+1     PIN_FLD_MAX_ERROR       INT [0] 0
+1     PIN_FLD_MAX_TIME        INT [0] 0
+1     PIN_FLD_HOTLIST_FILENAME    STR [0] ""
+1     PIN_FLD_MONITOR_FILENAME    STR [0] ""
+1     PIN_FLD_OBJ_TYPE        STR [0] "/config/mta"
+0 PIN_FLD_SEARCH_FLIST SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_SEARCH_RESULTS SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_EXTENDED_INFO SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_OPERATION_INFO SUBSTRUCT [0] allocated 20, used 5
+1     PIN_FLD_PID             INT [0] 13092
+1     PIN_FLD_HOSTNAME        STR [0] "exlhamuatbrm"
+1     PIN_FLD_START_T      TSTAMP [0] (1446919225) Sun Nov  8 07:00:25 2015
+1     PIN_FLD_END_T        TSTAMP [0] (1446919225) Sun Nov  8 07:00:25 2015
+1     PIN_FLD_ERROR_INFO    ARRAY [0] allocated 20, used 5
+2         PIN_FLD_ERROR_NUM       INT [0] 1
+2         PIN_FLD_SYS_ERROR_NUM    INT [0] 0
+2         PIN_FLD_ERROR_CODE      STR [0] "PIN_ERR_NOT_FOUND"
+2         PIN_FLD_ERROR_DESCR     STR [0] "\t            <location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>\n\t            <field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>\n\t            <facility=0 msg_id=0 version=0>\n"
+2         PIN_FLD_TRACKING_ID     STR [0] "1:exlhamuatbrm:pin_deferred_act:13092:-144013616:0:1446919225:1"
+E Mon Nov  9 07:00:19 2015  exlhamuatbrm  <no name>:25624  pin_mta_api.c:445 1:<machine>:<program>:0:0:0:0:0
+	pin_mta_get_str_from_pinconf error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon Nov  9 07:00:19 2015  exlhamuatbrm  pin_deferred_act:25624  pin_mta.c:1907 1:exlhamuatbrm:pin_deferred_act:25624:-144378160:0:1447005619:1
+	pcm_connect error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon Nov  9 07:00:19 2015  exlhamuatbrm  pin_deferred_act:25624  pin_mta.c:2124 1:exlhamuatbrm:pin_deferred_act:25624:-144378160:0:1447005619:1
+	normal error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Mon Nov  9 07:00:19 2015  exlhamuatbrm  pin_deferred_act:25624  pin_mta.c:2146 1:exlhamuatbrm:pin_deferred_act:25624:-144378160:0:1447005619:1
+	Application global flist at exit
+# number of field entries allocated 20, used 6
+0 PIN_FLD_CONFIG_OBJ   SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_APPLICATION_INFO SUBSTRUCT [0] allocated 20, used 13
+1     PIN_FLD_NAME            STR [0] "pin_deferred_act"
+1     PIN_FLD_CHILDREN        INT [0] 1
+1     PIN_FLD_STEP_SIZE       INT [0] 0
+1     PIN_FLD_BATCH_SIZE      INT [0] 0
+1     PIN_FLD_FETCH_SIZE      INT [0] 0
+1     PIN_FLD_SLEEP_INTERVAL    INT [0] 60
+1     PIN_FLD_NUM_RETRIES     INT [0] 0
+1     PIN_FLD_FLAGS           INT [0] 0
+1     PIN_FLD_MAX_ERROR       INT [0] 0
+1     PIN_FLD_MAX_TIME        INT [0] 0
+1     PIN_FLD_HOTLIST_FILENAME    STR [0] ""
+1     PIN_FLD_MONITOR_FILENAME    STR [0] ""
+1     PIN_FLD_OBJ_TYPE        STR [0] "/config/mta"
+0 PIN_FLD_SEARCH_FLIST SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_SEARCH_RESULTS SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_EXTENDED_INFO SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_OPERATION_INFO SUBSTRUCT [0] allocated 20, used 5
+1     PIN_FLD_PID             INT [0] 25624
+1     PIN_FLD_HOSTNAME        STR [0] "exlhamuatbrm"
+1     PIN_FLD_START_T      TSTAMP [0] (1447005619) Mon Nov  9 07:00:19 2015
+1     PIN_FLD_END_T        TSTAMP [0] (1447005619) Mon Nov  9 07:00:19 2015
+1     PIN_FLD_ERROR_INFO    ARRAY [0] allocated 20, used 5
+2         PIN_FLD_ERROR_NUM       INT [0] 1
+2         PIN_FLD_SYS_ERROR_NUM    INT [0] 0
+2         PIN_FLD_ERROR_CODE      STR [0] "PIN_ERR_NOT_FOUND"
+2         PIN_FLD_ERROR_DESCR     STR [0] "\t            <location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>\n\t            <field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>\n\t            <facility=0 msg_id=0 version=0>\n"
+2         PIN_FLD_TRACKING_ID     STR [0] "1:exlhamuatbrm:pin_deferred_act:25624:-144378160:0:1447005619:1"
+E Tue Nov 10 10:20:06 2015  exlhamuatbrm  <no name>:3859  pin_mta_api.c:445 1:<machine>:<program>:0:0:0:0:0
+	pin_mta_get_str_from_pinconf error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue Nov 10 10:20:06 2015  exlhamuatbrm  pin_deferred_act:3859  pin_mta.c:1907 1:exlhamuatbrm:pin_deferred_act:3859:-144087344:0:1447104006:1
+	pcm_connect error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue Nov 10 10:20:06 2015  exlhamuatbrm  pin_deferred_act:3859  pin_mta.c:2124 1:exlhamuatbrm:pin_deferred_act:3859:-144087344:0:1447104006:1
+	normal error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue Nov 10 10:20:06 2015  exlhamuatbrm  pin_deferred_act:3859  pin_mta.c:2146 1:exlhamuatbrm:pin_deferred_act:3859:-144087344:0:1447104006:1
+	Application global flist at exit
+# number of field entries allocated 20, used 6
+0 PIN_FLD_CONFIG_OBJ   SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_APPLICATION_INFO SUBSTRUCT [0] allocated 20, used 13
+1     PIN_FLD_NAME            STR [0] "pin_deferred_act"
+1     PIN_FLD_CHILDREN        INT [0] 1
+1     PIN_FLD_STEP_SIZE       INT [0] 0
+1     PIN_FLD_BATCH_SIZE      INT [0] 0
+1     PIN_FLD_FETCH_SIZE      INT [0] 0
+1     PIN_FLD_SLEEP_INTERVAL    INT [0] 60
+1     PIN_FLD_NUM_RETRIES     INT [0] 0
+1     PIN_FLD_FLAGS           INT [0] 0
+1     PIN_FLD_MAX_ERROR       INT [0] 0
+1     PIN_FLD_MAX_TIME        INT [0] 0
+1     PIN_FLD_HOTLIST_FILENAME    STR [0] ""
+1     PIN_FLD_MONITOR_FILENAME    STR [0] ""
+1     PIN_FLD_OBJ_TYPE        STR [0] "/config/mta"
+0 PIN_FLD_SEARCH_FLIST SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_SEARCH_RESULTS SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_EXTENDED_INFO SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_OPERATION_INFO SUBSTRUCT [0] allocated 20, used 5
+1     PIN_FLD_PID             INT [0] 3859
+1     PIN_FLD_HOSTNAME        STR [0] "exlhamuatbrm"
+1     PIN_FLD_START_T      TSTAMP [0] (1447104006) Tue Nov 10 10:20:06 2015
+1     PIN_FLD_END_T        TSTAMP [0] (1447104006) Tue Nov 10 10:20:06 2015
+1     PIN_FLD_ERROR_INFO    ARRAY [0] allocated 20, used 5
+2         PIN_FLD_ERROR_NUM       INT [0] 1
+2         PIN_FLD_SYS_ERROR_NUM    INT [0] 0
+2         PIN_FLD_ERROR_CODE      STR [0] "PIN_ERR_NOT_FOUND"
+2         PIN_FLD_ERROR_DESCR     STR [0] "\t            <location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>\n\t            <field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>\n\t            <facility=0 msg_id=0 version=0>\n"
+2         PIN_FLD_TRACKING_ID     STR [0] "1:exlhamuatbrm:pin_deferred_act:3859:-144087344:0:1447104006:1"
+E Tue Nov 10 10:38:09 2015  exlhamuatbrm  <no name>:14343  pin_mta_api.c:445 1:<machine>:<program>:0:0:0:0:0
+	pin_mta_get_str_from_pinconf error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue Nov 10 10:38:09 2015  exlhamuatbrm  pin_deferred_act:14343  pin_mta.c:1907 1:exlhamuatbrm:pin_deferred_act:14343:-143882544:0:1447105089:1
+	pcm_connect error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue Nov 10 10:38:09 2015  exlhamuatbrm  pin_deferred_act:14343  pin_mta.c:2124 1:exlhamuatbrm:pin_deferred_act:14343:-143882544:0:1447105089:1
+	normal error
+	<location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>
+	<field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>
+	<facility=0 msg_id=0 version=0>
+E Tue Nov 10 10:38:09 2015  exlhamuatbrm  pin_deferred_act:14343  pin_mta.c:2146 1:exlhamuatbrm:pin_deferred_act:14343:-143882544:0:1447105089:1
+	Application global flist at exit
+# number of field entries allocated 20, used 6
+0 PIN_FLD_CONFIG_OBJ   SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_APPLICATION_INFO SUBSTRUCT [0] allocated 20, used 13
+1     PIN_FLD_NAME            STR [0] "pin_deferred_act"
+1     PIN_FLD_CHILDREN        INT [0] 1
+1     PIN_FLD_STEP_SIZE       INT [0] 0
+1     PIN_FLD_BATCH_SIZE      INT [0] 0
+1     PIN_FLD_FETCH_SIZE      INT [0] 0
+1     PIN_FLD_SLEEP_INTERVAL    INT [0] 60
+1     PIN_FLD_NUM_RETRIES     INT [0] 0
+1     PIN_FLD_FLAGS           INT [0] 0
+1     PIN_FLD_MAX_ERROR       INT [0] 0
+1     PIN_FLD_MAX_TIME        INT [0] 0
+1     PIN_FLD_HOTLIST_FILENAME    STR [0] ""
+1     PIN_FLD_MONITOR_FILENAME    STR [0] ""
+1     PIN_FLD_OBJ_TYPE        STR [0] "/config/mta"
+0 PIN_FLD_SEARCH_FLIST SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_SEARCH_RESULTS SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_EXTENDED_INFO SUBSTRUCT [0] allocated 20, used 0
+0 PIN_FLD_OPERATION_INFO SUBSTRUCT [0] allocated 20, used 5
+1     PIN_FLD_PID             INT [0] 14343
+1     PIN_FLD_HOSTNAME        STR [0] "exlhamuatbrm"
+1     PIN_FLD_START_T      TSTAMP [0] (1447105089) Tue Nov 10 10:38:09 2015
+1     PIN_FLD_END_T        TSTAMP [0] (1447105089) Tue Nov 10 10:38:09 2015
+1     PIN_FLD_ERROR_INFO    ARRAY [0] allocated 20, used 5
+2         PIN_FLD_ERROR_NUM       INT [0] 1
+2         PIN_FLD_SYS_ERROR_NUM    INT [0] 0
+2         PIN_FLD_ERROR_CODE      STR [0] "PIN_ERR_NOT_FOUND"
+2         PIN_FLD_ERROR_DESCR     STR [0] "\t            <location=PIN_ERRLOC_APP:8 class=PIN_ERRCLASS_APPLICATION:4 errno=PIN_ERR_NOT_FOUND:3>\n\t            <field num=PIN_FLD_LOGFILE:5,305 recid=0 reserved=0 reserved2=0 time(sec:usec)=0:0>\n\t            <facility=0 msg_id=0 version=0>\n"
+2         PIN_FLD_TRACKING_ID     STR [0] "1:exlhamuatbrm:pin_deferred_act:14343:-143882544:0:1447105089:1"

@@ -1,0 +1,82 @@
+# @(#)%Portal Version: SampleRelHandler_config.values:UelEaiVelocityInt:1:2006-Sep-05 22:24:53 %
+#
+# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved. 
+#       This material is the confidential property of Oracle Corporation
+#       or its licensors and may be used, reproduced, stored
+#       or transmitted only in accordance with a valid Oracle license
+#       or sublicense agreement.
+#=============================================================
+#=============================================================
+#
+# Configuration file for the Sample Handler.
+#
+#=============================================================
+# In a TimesTen enabled environment, TIMESTEN_ARGS should be set 
+# to "-timesten <lpidentifier>". 
+# For example, if the entry in pin_rel's Infranet.properties for the 
+# TimesTen logical partition is tt_lp1 (infranet.rel.dbname.tt_lp1=....)
+# then set $TIMESTEN_ARGS to "-timesten tt_lp1"
+# For oracle, this should be left blank
+$TIMESTEN_ARGS=" ";
+
+#
+# Debug toggle (0: don't print, 1: print debug messages)
+#
+$DEBUG = 0;
+
+#
+# File matching pattern.
+# Note that this pattern needs to end with the Batch Controller's
+# file rename extension as listed for the batch.file.rename.extension
+# key in its Infranet.properties file.
+#
+# Example: $FILETYPE = "*.txt.bc"
+#
+$FILETYPE = "*.bc";
+
+#
+# Full pathname of the handler local directory.
+#
+$HANDLER_DIR = "/var/portal/pin_rel/postpaid";
+
+#
+# Full pathname to handler log file.
+#
+$LOGFILE = "$HANDLER_DIR/handler.log";
+
+#
+# Full path name to batch application directory.
+#
+$pinRELDir = "/brmapp/portal/7.5/TD/apps/pin_rel/postpaid";
+
+#
+# Full path name to batch application executable.
+#
+$pinREL = "$pinRELDir/pin_rel";
+
+#
+# Full pathname to the handler input file location.
+#
+#$STAGING = "/cdrapp_postpaid/out/vap";
+$STAGING = "/cdrapp_postpaid/out/tmp_load/vap";
+
+#
+# Full pathname to the batch application input file location.
+# The handler will move input files from the STAGING directory to the
+# PROCESSING directory; the batch application reads imput files from
+# the PROCESSING directory.
+# For the REL, this parameter should be exactly the same as specified by the
+# infranet.rel.default.interim_directory in the REL's Infranet.properties file.
+#
+$PROCESSING = "$pinRELDir";
+
+#
+# Full pathnames to the batch application output file locations.
+# The handler will move input files from the PROCESSING directory to these
+# directories based upon the exit code of the batch application.
+#
+$ARCHIVE = "$HANDLER_DIR/archive";
+$REJECT = "$HANDLER_DIR/reject";
+
+1;
+

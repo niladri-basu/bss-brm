@@ -1,0 +1,56 @@
+#!/usr/bin/ksh
+outfile=/brmapp/portal/7.5/TD/apps/td_sampling/scenario_logs/bat_validate.log
+
+$ORACLE_HOME/bin/sqlplus -s pin/Brm_213pin@BRMUAT>>$outfile<<EOF
+SET WRAP ON
+--
+set heading off;
+set feedback off;
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS ON VERIFY OFF;
+--
+set linesize 200
+set serveroutput on size 2000
+
+
+DECLARE
+        v_billinfo number;
+	v_count number; 
+	v_scenario_no varchar2(100);
+        v_dml_stmt varchar2(2000);
+	v_dml_stmt1 varchar2(2000);
+	v_startRows number:=0;
+	v_lastRows number:=0;
+
+BEGIN
+	select count(1) into v_count from td_bat_validate_t where status='N';
+	dbms_output.put_line(' V_count ' || v_count); 
+	if v_count = 0 then
+        	execute immediate 'truncate table td_bat_validate_t';
+	END IF;
+	
+	SELECT COUNT(1) into v_lastRows from td_sampled_accounts_t ;
+	dbms_output.put_line(' v_lastRows ' || v_lastRows);
+	
+	while v_startRows < v_lastRows 
+	loop
+	
+	dbms_output.put_line(' v_lastRows ' || v_lastRows);
+	dbms_output.put_line(' v_startRows ' || v_startRows);
+    	   select billinfo_obj_id0,scenario_no 	INTO v_billinfo,v_scenario_no from td_sampled_accounts_t where rownum=v_startRows;
+			dbms_output.put_line(' billinfo_obj_id0 ' || v_billinfo);
+			dbms_output.put_line(' scenario_no ' || v_scenario_no);
+                    v_dml_stmt:='insert into td_bat_validate_t select billinfo_obj_id0, scenario_no,''N'' from td_sampled_accounts_t where billinfo_obj_id0='||v_billinfo ||' and scenario_no='''||v_scenario_no||'''';
+					dbms_output.put_line(' v_dml_stmt ::' || v_dml_stmt);
+                    execute immediate v_dml_stmt;
+					commit;
+                   
+		v_startRows:= v_startRows+1;
+		v_dml_stmt:='';
+        end loop;
+
+END;
+/
+
+exit;
+EOF
+

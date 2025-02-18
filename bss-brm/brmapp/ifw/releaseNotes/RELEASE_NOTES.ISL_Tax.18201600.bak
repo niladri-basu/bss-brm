@@ -1,0 +1,53 @@
+================================================================================
+ISL_Tax
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.ISL_Tax $
+$Revision: /cgbubrm_7.3.2.pipeline/1 $
+$Author: smalviya $
+$Date: 2009/12/28 22:27:27 $ 
+================================================================================
+
+Module Version : v7.4.0.2.0 / Date : 23-Dec-2009
+----------------
+
+Notes          :
+----------------
+
+- bug8767503: THE DELAYED EVENTS WITH TWO TAX_JURISDICTION NOT GETTING LOADED PROPERLY BY REL
+		Removed "hashClear(taxTypeHash)" from the function readTaxType .
+
+================================================================================
+
+Module Version : v7.2 / Date : 12-Apr-2005
+----------------
+
+Notes          :
+----------------
+
+- PRSF00162537 Moving of SE feature JP0026 to Core product
+		Implemented review comments raised in PRSF00160925
+
+================================================================================
+ 
+Module Version : v7.2 / Date : 01-Apr-2005
+----------------
+ 
+Notes          :
+----------------
+
+- PRSF00160925 Moving of SE feature JP0026 to Core product
+
+================================================================================
+
+Actual Version : v6.7fp2 / Date : 26-Apr-2004
+----------------
+ 
+Notes          :
+----------------
+
+- PRSF00107147 Added Script ISC_tax.isc to implement pipeline taxation in SE
+
+================================================================================
+

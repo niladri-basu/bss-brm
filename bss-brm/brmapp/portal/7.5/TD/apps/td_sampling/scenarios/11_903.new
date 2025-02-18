@@ -1,0 +1,5 @@
+select  distinct td.poid_id0 ||',11_903'
+from TD_USGEVENT_BAL_DETAILS td
+where td.poid_type = '/event/delayed/session/telco/gsm/data'
+and td.descr='Data'
+and td.RESOURCE_NAME='C018 Craft Regular User Data';

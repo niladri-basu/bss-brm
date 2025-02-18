@@ -1,0 +1,624 @@
+<Opcode name="PCM_OP_PRICE_COMMIT_DISCOUNT"
+	visibility="public"
+	transaction="required"
+	component="fm_price"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+	xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+  <Doc>This opcode commits discount object.</Doc>
+  <Input>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required" mode="complete">
+      <Doc>Dummy poid used for database only.</Doc>
+      <ClassRef>obj://discount</ClassRef>
+    </Poid>
+    <String name="PIN_FLD_PROGRAM_NAME" use="required" maxlen="255">
+      <Doc>Program name for event.</Doc>
+    </String>
+    <Array name="PIN_FLD_DISCOUNTS" use="optional"
+      elemIdMode="ignored" iterationOrder="undefined"
+      isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+      isRecursive="false" allowedElemIds="256">
+      <Doc>Array to hold discount info.  Each element is a discount obj representation.</Doc>
+      <Fields>
+        <Int name="PIN_FLD_DELETED_FLAG" use="optional">
+          <Doc>Flag to indicate if the item is to be DELETED rather than add/replaced.</Doc>
+        </Int>
+        <String name="PIN_FLD_NAME" use="required" maxlen="255">
+          <Doc>Name of the object.</Doc>
+        </String>
+        <String name="PIN_FLD_CODE" use="required" maxlen="255">
+          <Doc> Non-modifiable code of the object. </Doc>
+        </String>
+        <String name="PIN_FLD_DESCR" use="optional" maxlen="1023">
+          <Doc>Discount description.</Doc>
+        </String>
+        <Enum name="PIN_FLD_TYPE" use="required">
+          <Doc>Discount type:item(PIN_DISC_TYPE_ITEM-601), 
+		subscription(PIN_DISC_TYPE_ONGOING-602), 
+		system(PIN_DISC_TYPE_SYSTEM-603).</Doc>
+          <Values>
+            <Value>601,602,603</Value>
+            <Doc> </Doc>
+          </Values>
+        </Enum>
+        <Int name="PIN_FLD_FLAGS" use="optional">
+          <Doc>Value decides whether partial updates are to be done on the discount. 
+		Value can be 1 or 0. 1 = Allow partial update, 0 = Full update. For 
+		full update, if any existing usage map entry does not present in the 
+		input then it will be deleted. Default value is 0.</Doc>
+        </Int>
+        <Timestamp name="PIN_FLD_START_T" use="optional">
+          <Doc>Valid start time - defines valid period for discount 
+		object (inclusive). Stored as desired time in server 
+		timezone. Default value is 0(starts immediately).</Doc>
+        </Timestamp>
+        <Timestamp name="PIN_FLD_END_T" use="optional">
+          <Doc>Valid end time - defines valid period for discount object 
+		(non-inclusive). Stored as desired time in server timezone.
+		Default value is 0(ends never).</Doc>
+        </Timestamp>
+        <Decimal name="PIN_FLD_PURCHASE_MIN" use="optional">
+          <Doc>Purchase Minimum - minimum quantity that can be purchased at 
+		a single time. Test is non-inclusive - quantity must be greater 
+		than min. A value of NULL means no minimum limit.</Doc>
+        </Decimal>
+        <Decimal name="PIN_FLD_PURCHASE_MAX" use="optional">
+          <Doc>Purchase Maximum - maximum quantity that can be purchased at a 
+		single time. Test is inclusive - quantity must be less than 
+		equal to max. A value of NULL means no maximum limit.</Doc>
+        </Decimal>
+        <Decimal name="PIN_FLD_OWN_MIN" use="optional">
+          <Doc>Ownership Minimum - minimum quantity that can be owned at any 
+		time. Test is non-inclusive - quantity must be greater than 
+		min. A value of NULL means no minimum limit.</Doc>
+        </Decimal>
+        <Decimal name="PIN_FLD_OWN_MAX" use="optional">
+          <Doc>Ownership Maximum - maximum quantity that can be owned at any 
+		time. Test is inclusive - quantity must be less than equal to 
+		max. A value of NULL means no maximum limit.</Doc>
+        </Decimal>
+        <Decimal name="PIN_FLD_PRIORITY" use="optional">
+          <Doc>Priority - used to resolve ordering of discount application.
+		Default value is 0.</Doc>
+        </Decimal>
+        <String name="PIN_FLD_PERMITTED" use="optional" maxlen="255">
+          <Doc>Permitted - contains a single type string for account or service 
+		object types that is permitted to purchase this discount. The 
+		entry is implicitly appended with a wildcard for checking, so 
+		account or service types that were inherited from a permitted 
+		type are also permitted themselves  No entry implies any account 
+		or service type is permitted to purchase the discount.</Doc>
+        </String>
+        <String name="PIN_FLD_PROVISIONING_TAG" use="optional" maxlen="64">
+          <Doc>Provisioning tag.</Doc>
+        </String>
+        <Enum name="PIN_FLD_MODE" use="optional">
+          <Doc>Discount Mode (optional) - used to indicate different mode of 
+		discount. 801 for parallel, 802 for cascading, 803 for sequential</Doc>
+          <Values>
+            <Value>801,802,803</Value>
+            <Doc>801 for parallel, 802 for cascading, 803 for sequential.</Doc>
+          </Values>
+        </Enum>
+        <Array name="PIN_FLD_USAGE_MAP" use="optional"
+          elemIdMode="ignored" iterationOrder="undefined"
+          isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+          isRecursive="false" allowedElemIds="256">
+          <Doc> Usage map.(optional)</Doc>
+          <Fields>
+          <String name="PIN_FLD_EVENT_TYPE" use="required" maxlen="1024">
+            <Doc>Event type.</Doc>
+          </String>
+          <String name="PIN_FLD_DISCOUNT_MODEL" use="optional" maxlen="255">
+            <Doc>Discount model.Either PIN_FLD_DISCOUNT_MODEL 
+		 or PIN_FLD_MODEL_SELECTOR field has to be populated.</Doc>
+          </String>
+          <String name="PIN_FLD_MODEL_SELECTOR" use="optional" maxlen="255">
+            <Doc>Model selector. Model selector has to pre-exist. Either
+	    	 PIN_FLD_DISCOUNT_MODEL or PIN_FLD_MODEL_SELECTOR field
+	    	 has to be populated.</Doc>
+          </String>
+          <Int name="PIN_FLD_FLAGS" use="optional">
+            <Doc>Stop discounting flag.The valid values are 0 (Inactive), 
+		1 (Never), 2 (Inactive or Cancelled), 3 (Cancelled).</Doc>
+          </Int>
+          <Int name="PIN_FLD_SNOWBALL_FLAG" use="optional">
+            <Doc>Snowball flag.This will either be 1(true) or 0(false).</Doc>
+          </Int>
+          </Fields>
+        </Array>
+        <Array name="PIN_FLD_DISCOUNT_CYCLE_VALIDITY" use="optional"
+          elemIdMode="ignored" iterationOrder="undefined"
+          isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+          isRecursive="false" allowedElemIds="3">
+          <Doc>Discount Validity Rules (optional) Array of entries defining 
+		the discount rules. Discount valid from the middle of the 
+		cycle - 0. Discount valid to the middle of the cycle - 1. 
+		Discount valid only part of the cycle - 2. By default the 
+		values are set to 1.</Doc>
+          <Fields>
+            <Enum name="PIN_FLD_DISCOUNT_FLAGS" use="optional">
+              <Doc> The valid values are full(1), prorate(2), no(3).</Doc>
+              <Values>
+                <Value>1,2,3</Value>
+                <Doc> </Doc>
+              </Values>
+            </Enum>
+          </Fields>
+        </Array>
+        <Array name="PIN_FLD_DISCOUNT_USAGE_VALIDITY" use="optional"
+          elemIdMode="ignored" iterationOrder="undefined"
+          isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+          isRecursive="false" allowedElemIds="3">
+          <Doc>Usage validity array.</Doc>
+          <Fields>
+            <Enum name="PIN_FLD_DISCOUNT_FLAGS" use="optional">
+              <Doc>The valid values are full(1), prorate(2), no(3).</Doc>
+              <Values>
+                <Value>1,2,3</Value>
+                <Doc> </Doc>
+              </Values>
+            </Enum>
+          </Fields>
+        </Array>
+        <Array name="PIN_FLD_PIPELINE_DISC_MODELS" use="optional"
+		elemIdMode="ignored" iterationOrder="undefined"
+		isElemIdAssignAllowed="true"
+		isElemIdAnyAllowed="true"
+		isRecursive="false" allowedElemIds="256">
+          <Doc>Array to hold discount model details. This field need to be 
+		passed only to create/update/reuse discount model which is being used 
+		in PIN_FLD_USAGE_MAP array.</Doc>
+          <Fields>
+            <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+              <Doc>Unique code for discount model.</Doc>
+            </String>
+            <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+              <Doc>Discount model name or description.</Doc>
+            </String>
+            <String name="PIN_FLD_CHARGESHARE_FLAG" use="optional"  maxlen="1">
+              <Doc>Charge share flag. Value is '0' for discount model.</Doc>
+            </String>
+            <Array name="PIN_FLD_DISC_MODEL_VERS" use="required"
+		elemIdMode="ignored" iterationOrder="undefined"
+		isElemIdAssignAllowed="true"
+		isElemIdAnyAllowed="true"
+		isRecursive="false" allowedElemIds="256">
+              <Doc>Array to hold discount model version.</Doc>
+              <Fields>
+                <Int name="PIN_FLD_VERSION_ID" use="required">
+                  <Doc>Model version.</Doc>
+                </Int>
+                <Timestamp name="PIN_FLD_VALID_FROM" use="required">
+                  <Doc>Valid from time - defines from when this is valid.</Doc>
+                </Timestamp>
+                <String name="PIN_FLD_STATUS_STR" use="optional" maxlen="1">
+                  <Doc>Status of this discount model version (A=active,
+			 D=deactive, T=test, S=simulation).</Doc>
+                </String>
+                <Array name="PIN_FLD_DISC_MODEL_CNFS" use="required"
+			elemIdMode="ignored" iterationOrder="undefined"
+			isElemIdAssignAllowed="true"
+			isElemIdAnyAllowed="true"
+			isRecursive="false" allowedElemIds="256">
+                  <Doc>Array to hold discount model configuration.</Doc>
+                  <Fields>
+                    <Int name="PIN_FLD_RANK" use="required">
+                      <Doc>Defines the order of configuration entries
+				within a discount model.</Doc>
+                    </Int>
+                    <Int name="PIN_FLD_MODE" use="required">
+                      <Doc>Discount mode. Use entry only if previous rank is 
+				 completed (completely used).</Doc>
+                    </Int>
+                    <String name="PIN_FLD_TRIGGER_CODE" use="required"  maxlen="10">
+                      <Doc>Trigger code.</Doc>
+                    </String>
+                    <String name="PIN_FLD_RULE_CODE" use="required"  maxlen="10">
+                      <Doc>Rule code.</Doc>
+                    </String>
+                    <Int name="PIN_FLD_SEQUENCE_NUM" use="optional">
+                      <Doc>Database discount configuration  sequence  value. 
+                           Required for update case.</Doc>
+                    </Int>
+                  </Fields>
+                </Array>
+                <Array name="PIN_FLD_DISC_TRIGGERS" use="required"
+			elemIdMode="ignored" iterationOrder="undefined"
+			isElemIdAssignAllowed="true"
+			isElemIdAnyAllowed="true"
+			isRecursive="false" allowedElemIds="256">
+                  <Doc>Array to hold discount trigger.</Doc>
+                  <Fields>
+                    <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+                      <Doc>Unique code for discount trigger.</Doc>
+                    </String>
+                    <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                      <Doc>Trigger name or description.</Doc>
+                    </String>
+                    <Array name="PIN_FLD_DISC_CONDS" use="optional"
+			elemIdMode="ignored" iterationOrder="undefined"
+			isElemIdAssignAllowed="true"
+			isElemIdAnyAllowed="true"
+			isRecursive="false" allowedElemIds="256">
+                      <Doc>Array to hold discount condition. This field is required 
+				for new teigger.</Doc>
+                      <Fields>
+                        <String name="PIN_FLD_COND_EXPR" use="required" maxlen="2000">
+                          <Doc>Condition expression.</Doc>
+                        </String>
+                        <String name="PIN_FLD_OPERATOR_STR" use="required" maxlen="2">
+                          <Doc>Condition operator.</Doc>
+                        </String>
+                        <Int name="PIN_FLD_COND_VALUE" use="required">
+                          <Doc>Condition value.</Doc>
+                        </Int>
+                        <Int name="PIN_FLD_SEQUENCE_NUM" use="optional">
+                          <Doc>Database discount condition sequence  value.
+                               Required for update case.</Doc>
+                        </Int>
+                      </Fields>
+                    </Array>
+                  </Fields>
+                </Array>
+                <Array name="PIN_FLD_DISC_RULES" use="required"
+			elemIdMode="ignored" iterationOrder="undefined"
+			isElemIdAssignAllowed="true"
+			isElemIdAnyAllowed="true"
+			isRecursive="false" allowedElemIds="256">
+                  <Doc>Array to hold discount rules.</Doc>
+                  <Fields>
+                    <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+                      <Doc>Unique code for discount rule.</Doc>
+                    </String>
+                    <String name="PIN_FLD_NAME" use="optional"  maxlen="255">
+                      <Doc>Rule name or description.</Doc>
+                    </String>
+                    <String name="PIN_FLD_DRUM_EXPR" use="required" maxlen="2000">
+                      <Doc>DRUM expression.</Doc>
+                    </String>
+                    <String name="PIN_FLD_RULE_TYPE" use="optional" maxlen="1">
+                      <Doc>Rule type.</Doc>
+                    </String>
+                    <String name="PIN_FLD_DRUM_TYPE" use="optional" maxlen="1">
+                      <Doc>DRUM type.</Doc>
+                    </String>
+                    <String name="PIN_FLD_MASTER_CODE" use="required" maxlen="10">
+                      <Doc>Master code.</Doc>
+                    </String>
+                    <Array name="PIN_FLD_STEPS" use="optional"
+			elemIdMode="ignored" iterationOrder="undefined"
+			isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+			isRecursive="false" allowedElemIds="256">
+                      <Doc>Array to hold discount rule steps. This field is required
+				for new rule.</Doc>
+                      <Fields>
+                        <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+                          <Doc>Discount step code.</Doc>
+                        </String>
+                        <Int name="PIN_FLD_RANK" use="required">
+                          <Doc>Defines the order of configuration entries
+				within a discount rule.</Doc>
+                        </Int>
+                        <Int name="PIN_FLD_THRESHOLD_FROM" use="required">
+                          <Doc>Lower boundary threshold from when on this
+				 discount step is valid.</Doc>
+                        </Int>
+                        <String name="PIN_FLD_THRESHOLD_TO_STR" use="required" maxlen="2000">
+                          <Doc>Lower boundary threshold upto when on this
+				 discount stagger step is valid.</Doc>
+                        </String>
+                        <Int name="PIN_FLD_PRORATE_PURCHASE" use="optional">
+                          <Doc>Prorate purchase.</Doc>
+                        </Int>
+                        <Int name="PIN_FLD_PRORATE_CANCEL" use="optional">
+                          <Doc>Prorate cancel.</Doc>
+                        </Int>
+                        <Array name="PIN_FLD_BAL_IMPACTS" use="required"
+				elemIdMode="ignored" iterationOrder="undefined"
+				isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+				isRecursive="false" allowedElemIds="256">
+                          <Doc>Array to hold discount balance impact.</Doc>
+                          <Fields>
+                            <Int name="PIN_FLD_RESOURCE_ID" use="required">
+                              <Doc>Resource id.</Doc>
+                            </Int>
+                            <String name="PIN_FLD_TYPE_STR" use="required"  maxlen="1">
+                              <Doc>Discount type. 0 = Fixed, 1 = Percentage.</Doc>
+                            </String>
+                            <Decimal name="PIN_FLD_AMOUNT" use="required">
+                              <Doc>Amount in fixed or percentage.</Doc>
+                            </Decimal>
+                            <Int name="PIN_FLD_GRANT_BEAT" use="optional">
+                              <Doc>Grant beat.</Doc>
+                            </Int>
+                            <Int name="PIN_FLD_GRANT_PRORATED_BEAT" use="optional">
+                              <Doc>Grant prorate value.</Doc>
+                            </Int>
+                            <String name="PIN_FLD_BASE_EXPR" use="required" maxlen="2000">
+                              <Doc>Base expression.</Doc>
+                            </String>
+                            <String name="PIN_FLD_IMPACT_CATEGORY" use="optional" maxlen="10">
+                              <Doc>Impact category.</Doc>
+                            </String>
+                            <Int name="PIN_FLD_EVENT_BAL_ID" use="optional">
+                              <Doc>Event balance id.</Doc>
+                            </Int>
+                            <Int name="PIN_FLD_DISC_OWNER_FLAG" use="optional">
+                              <Doc>Discount owner flag.</Doc>
+                            </Int>
+                            <Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+                              <Doc>Valid from time.</Doc>
+                            </Timestamp>
+                            <Timestamp name="PIN_FLD_VALID_TO" use="optional">
+                              <Doc>Valid to time.</Doc>
+                            </Timestamp>
+                            <Int name="PIN_FLD_GRANT_PERIOD_OFFSET" use="optional">
+                              <Doc>Grant period offset.</Doc>
+                            </Int>
+                            <Int name="PIN_FLD_GRANT_PERIOD_UNIT" use="optional">
+                              <Doc>Grant period unit.</Doc>
+                            </Int>
+                            <Int name="PIN_FLD_FIRST_USAGE" use="optional">
+                              <Doc>First usage.</Doc>
+                            </Int>
+                            <String name="PIN_FLD_TAX_CODE" use="optional" maxlen="5">
+                              <Doc>Tax code.</Doc>
+                            </String>
+                            <String name="PIN_FLD_GL_ACCT" use="optional" maxlen="10">
+                              <Doc>GL id.</Doc>
+                            </String>
+                            <Int name="PIN_FLD_SEQUENCE_NUM" use="optional">
+                              <Doc>Database balance impact sequence value.
+                                   Required for update case.</Doc>
+                            </Int>
+                          </Fields>
+                        </Array>
+                      </Fields>
+                    </Array>
+                  </Fields>
+                </Array>
+                <Array name="PIN_FLD_DISC_MASTERS" use="required"
+			elemIdMode="ignored" iterationOrder="undefined"
+			isElemIdAssignAllowed="true"
+			isElemIdAnyAllowed="true"
+			isRecursive="false" allowedElemIds="256">
+                  <Doc>Array to hold discount master.</Doc>
+                  <Fields>
+                    <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+                      <Doc>Unique code for discount master.</Doc>
+                    </String>
+                    <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+                      <Doc>Discount master name or description.</Doc>
+                    </String>
+                    <Array name="PIN_FLD_DISCOUNT_DETAILS" use="optional"
+			elemIdMode="ignored" iterationOrder="undefined"
+			isElemIdAssignAllowed="true"
+			isElemIdAnyAllowed="true"
+			isRecursive="false" allowedElemIds="256">
+                      <Doc>Array to hold discount detail. This field is required
+				for new master.</Doc>
+                      <Fields>
+                        <Int name="PIN_FLD_RANK" use="required">
+                          <Doc>Defines the order of configuration entries
+				within a discount model.</Doc>
+                        </Int>
+                        <String name="PIN_FLD_VALID_FROM_STR" use="required" maxlen="8">
+                          <Doc>Valid from time - defines from when the
+				condition is valid.</Doc>
+                        </String>
+                        <String name="PIN_FLD_VALID_TO_STR" use="optional" maxlen="8">
+                          <Doc>Valid from time - defines till when the
+				condition is valid.</Doc>
+                        </String>
+                        <String name="PIN_FLD_TIME_FROM_STR" use="optional" maxlen="5">
+                          <Doc>Optional time starting interval within the
+				valid date range.</Doc>
+                        </String>
+                        <String name="PIN_FLD_TIME_TO_STR" use="optional" maxlen="5">
+                          <Doc>Optional time ending interval within the valid
+				date range.</Doc>
+                        </String>
+                        <String name="PIN_FLD_ZONEMODEL_CODE" use="optional" maxlen="2000">
+                          <Doc>Zone model.</Doc>
+                        </String>
+                        <String name="PIN_FLD_IMPACT_CATEGORY" use="optional" maxlen="2000">
+                          <Doc>Impact category.</Doc>
+                        </String>
+                        <String name="PIN_FLD_SERVICE_CODE" use="optional" maxlen="2000">
+                          <Doc>Service code.</Doc>
+                        </String>
+                        <String name="PIN_FLD_SERVICE_CLASS" use="optional" maxlen="2000">
+                          <Doc>Service class.</Doc>
+                        </String>
+                        <String name="PIN_FLD_USAGE_TYPE" use="optional" maxlen="2000">
+                          <Doc>Usage type.</Doc>
+                        </String>
+                        <String name="PIN_FLD_USAGE_CLASS" use="optional" maxlen="2000">
+                          <Doc>Usage class.</Doc>
+                        </String>
+                        <String name="PIN_FLD_TIMEMODEL" use="optional" maxlen="2000">
+                          <Doc>Time model.</Doc>
+                        </String>
+                        <String name="PIN_FLD_TIMEZONE_CODE" use="optional"  maxlen="2000">
+                          <Doc>Time zone.</Doc>
+                        </String>
+                        <String name="PIN_FLD_PRICE_MODEL_CODE" use="optional" maxlen="2000">
+                          <Doc>Price model.</Doc>
+                        </String>
+                        <String name="PIN_FLD_RESOURCE_NAME" use="optional"  maxlen="2000">
+                          <Doc>Resource name.</Doc>
+                        </String>
+                        <String name="PIN_FLD_RUM_NAME" use="optional" maxlen="2000">
+                          <Doc>Rum name.</Doc>
+                        </String>
+                        <String name="PIN_FLD_RECORD_TYPE" use="optional"  maxlen="2000">
+                          <Doc>Record types.</Doc>
+                        </String>
+                        <String name="PIN_FLD_RATE_PLAN_CODE" use="optional" maxlen="2000">
+                          <Doc>Rate plan.</Doc>
+                        </String>
+                        <String name="PIN_FLD_RATE_TAG" use="optional" maxlen="2000">
+                          <Doc>Rate tag.</Doc>
+                        </String>
+                        <String name="PIN_FLD_GL_ACCT" use="optional" maxlen="2000">
+                          <Doc>GL id.</Doc>
+                        </String>
+                      </Fields>
+                    </Array>
+                  </Fields>
+                </Array>
+                
+              </Fields>
+            </Array>
+          </Fields>
+        </Array>
+
+      </Fields>
+    </Array>
+  </Fields>
+</Input>
+<Output>
+  <Fields>
+    <Poid name="PIN_FLD_POID" use="required" mode="complete">
+      <Doc>Dummy poid used for database only.</Doc>
+      <ClassRef>obj://discount</ClassRef>
+    </Poid>
+    <Enum name="PIN_FLD_RESULT" use="required">
+      <Doc>Result flag indicating if the commit happened as planned.  
+	Validation errors may be returned, even if the opcode succeeds 
+	without ebuf error. This will either be 1(pass) or 0(fail).</Doc>
+      <Values>
+        <Value>0,1 </Value>
+        <Doc> </Doc>
+      </Values>
+    </Enum>
+    <Int name="PIN_FLD_RESULT_FORMAT" use="optional">
+      <Doc>Contains a more explanatory enum value for why it failed.</Doc>
+    </Int>
+    <String name="PIN_FLD_DESCR" use="optional" maxlen="1023">
+      <Doc>If there is a validation error, this contains additional message text.</Doc>
+    </String>
+    <Array name="PIN_FLD_DISCOUNTS" use="optional" elemIdMode="ignored" 
+        iterationOrder="undefined" isElemIdAssignAllowed="false" 
+        isElemIdAnyAllowed="false" isRecursive="false" allowedElemIds="256">
+      <Doc>Array to hold discount info.</Doc>
+      <Fields>
+        <Poid name="PIN_FLD_DISCOUNT_OBJ" use="required" mode="complete">
+          <Doc>Discount poid.</Doc>
+        </Poid>
+        <Array name="PIN_FLD_PIPELINE_DISC_MODELS" use="optional" 
+            elemIdMode="ignored"  iterationOrder="undefined" isElemIdAssignAllowed="true"
+            isElemIdAnyAllowed="true" isRecursive="false" allowedElemIds="256">
+          <Doc>Array to hold discount model details.</Doc>
+          <Fields>
+            <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+              <Doc>Unique code for discount model.</Doc>
+            </String>
+            <Int name="PIN_FLD_SEQUENCE_NUM" use="required">
+              <Doc>Database discount model sequence.</Doc>
+            </Int>
+            <Array name="PIN_FLD_DISC_MODEL_VERS" use="required" elemIdMode="ignored" 
+                iterationOrder="undefined" isElemIdAssignAllowed="true"
+                isElemIdAnyAllowed="true"  isRecursive="false" allowedElemIds="256">
+              <Doc>Array to hold discount model version.</Doc>
+              <Fields>
+                <Int name="PIN_FLD_VERSION_ID" use="required">
+                  <Doc>Model version.</Doc>
+                </Int>
+                <Array name="PIN_FLD_DISC_MODEL_CNFS" use="optional" elemIdMode="ignored"
+                    iterationOrder="undefined" isElemIdAssignAllowed="true" 
+                    isElemIdAnyAllowed="true" isRecursive="false" allowedElemIds="256">
+                  <Doc>Array to hold discount trigger.</Doc>
+                  <Fields>
+                    <Int name="PIN_FLD_SEQUENCE_NUM" use="required">
+                      <Doc>Database trigger sequence.</Doc>
+                    </Int>
+                  </Fields>
+                </Array>
+                <Array name="PIN_FLD_DISC_TRIGGERS" use="optional" elemIdMode="ignored" 
+                    iterationOrder="undefined" isElemIdAssignAllowed="true" 
+                    isElemIdAnyAllowed="true" isRecursive="false" allowedElemIds="256">
+                  <Doc>Array to hold discount trigger.</Doc>
+                  <Fields>
+                    <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+                      <Doc>Unique code for discount trigger.</Doc>
+                    </String>
+                    <Int name="PIN_FLD_SEQUENCE_NUM" use="required">
+                      <Doc>Database trigger sequence.</Doc>
+                    </Int>
+                    <Array name="PIN_FLD_DISC_CONDS" use="optional" elemIdMode="ignored" 
+                        iterationOrder="undefined" isElemIdAssignAllowed="true" 
+                        isElemIdAnyAllowed="true" isRecursive="false" allowedElemIds="256">
+                      <Doc>Array to hold discount condition.</Doc>
+                      <Fields>
+                        <Int name="PIN_FLD_SEQUENCE_NUM" use="required">
+                          <Doc>Database condition sequence.</Doc>
+                        </Int>
+                      </Fields>
+                    </Array>
+                  </Fields>
+                </Array>
+                <Array name="PIN_FLD_DISC_RULES" use="optional" elemIdMode="ignored" 
+                    iterationOrder="undefined" isElemIdAssignAllowed="true" 
+                    isElemIdAnyAllowed="true" isRecursive="false" allowedElemIds="256">
+                  <Doc>Array to hold discount rules.</Doc>
+                  <Fields>
+                    <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+                      <Doc>Unique code for discount rule.</Doc>
+                    </String>
+                    <Int name="PIN_FLD_SEQUENCE_NUM" use="required">
+                      <Doc>Database rule sequence.</Doc>
+                    </Int>
+                    <String  name="PIN_FLD_MASTER_CODE" use="required" maxlen="10">
+                      <Doc>Master code.</Doc>
+                    </String>
+                    <Array name="PIN_FLD_STEPS" use="optional" elemIdMode="ignored" 
+                        iterationOrder="undefined" isElemIdAssignAllowed="true" 
+                        isElemIdAnyAllowed="true" isRecursive="false" allowedElemIds="256">
+                      <Doc>Array to hold discount stepss.</Doc>
+                      <Fields>
+                        <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+                          <Doc>Unique code for discount step.</Doc>
+                        </String>
+                        <Int name="PIN_FLD_SEQUENCE_NUM" use="required">
+                          <Doc>Database rule sequence.</Doc>
+                        </Int>
+                        <Array name="PIN_FLD_BAL_IMPACTS" use="optional" elemIdMode="ignored" 
+                            iterationOrder="undefined" isElemIdAssignAllowed="true" 
+                            isElemIdAnyAllowed="true" isRecursive="false" allowedElemIds="256">
+                          <Doc>Array to hold discount balance impacts.</Doc>
+                          <Fields>
+                            <Int name="PIN_FLD_SEQUENCE_NUM" use="required">
+                              <Doc>Database balance impact  sequence.</Doc>
+                            </Int>
+                          </Fields>
+                        </Array>
+                      </Fields>
+                    </Array>
+                  </Fields>
+                </Array>
+                <Array name="PIN_FLD_DISC_MASTERS" use="optional" elemIdMode="ignored" 
+                    iterationOrder="undefined" isElemIdAssignAllowed="true" 
+                    isElemIdAnyAllowed="true" isRecursive="false" allowedElemIds="256">
+                  <Doc>Array to hold discount master.</Doc>
+                  <Fields>
+                    <String name="PIN_FLD_CODE_STR" use="required" maxlen="10">
+                      <Doc>Unique code for discount master.</Doc>
+                    </String>
+                    <Int name="PIN_FLD_SEQUENCE_NUM" use="required">
+                      <Doc>Database master sequence.</Doc>
+                    </Int>
+                  </Fields>
+                </Array>
+              </Fields>
+            </Array>
+          </Fields>
+        </Array>
+      </Fields>
+    </Array>
+  </Fields>
+</Output>
+</Opcode>

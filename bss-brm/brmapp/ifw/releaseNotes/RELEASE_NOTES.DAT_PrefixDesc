@@ -1,0 +1,461 @@
+========================================================================================
+DAT_PrefixDesc
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+
+Module Version: 10011  7.4_PS8 15-Nov-2010
+BUG10243069 : Unnecessary destroy method call is removed during reload operation.
+
+================================================================================
+
+Module Version: 10010  7.4 11-Nov-2010             Chetan
+Bug bug10077369  : ECR: PARALLEL LOADING IN THE PIPELINE ENGINE 
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+
+================================================================================
+
+Module Version: 10009  7.4 20-Apr-2009
+BUG8361697: "CLIBase" not updated by registryUpdate of DAT_PrefixDesc
+
+================================================================================
+
+Module Version: 10008  DaVinci 31-Jul-2006
+PRSF00225698: SCM_TAP3_Beppi DAT_PrefixDesc iscript extension does not work any more
+
+================================================================================
+
+Module Version: 10007  6.7_FP2  4-Oct-2004
+PRSF00132353: Make DAT_PrefixDesc const correct (part of quality fest)
+
+================================================================================
+
+Module Version: 10006  6.7_FP2  14-May-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10005  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+==============================================================================
+
+Module Version: 10004  6.5_SP2  05-May-2003
+PRSF00039853:   Fix namespace forward declartions
+
+==============================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 01-May-2003
+----------------
+
+Change Order :  PRSF00039309
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+================================================================================
+
+Actual Version : v6.4.1 / Date : 15-Aug-2002
+----------------
+
+Notes          :
+----------------
+
+PRSF00015806 DB2 zOS table- and column length adjustments
+             IFW_DESTINATIONDESC -> IFW_DESTINDESC
+
+================================================================================
+
+Actual Version : v4-10-02 / Date : 10-Jan-2001
+----------------
+
+Notes          :
+----------------
+This is the API version. Add only comments.
+================================================================================
+
+Actual Version : v4-10-01 / Date : 10-Jan-2001
+----------------
+
+Notes          :
+----------------
+New FSM library added to Makefile.
+
+================================================================================
+
+Actual Version : v4-10-00 / Date : 22-Nov-2000
+----------------
+
+Notes          :
+----------------
+-Unchanged for version v4-10-00.
+
+========================================================================================
+
+Actual Version : v4-02-03 / Date : 12-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+Modifications in iScript extension due to changes in module SCR.
+Small changes to support IBM xlC compiler.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-02-01 / Date : 20-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+Now it is not more neccessary to set the PrefixDesc parameter
+when reload from DB.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-02-00 / Date : 19-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+Now the prefix data can be accessed from within iScript by the
+DAT_PrefixDesc iScript extension.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-02 / Date : 11-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+Last changes for defaultConnction with Library parameter.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-01-01 / Date : 04-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+Solve PR 2412: Now the error status is printing out.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-01-00 / Date : 31-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Implement the DB version control system.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+Remove all code review marks.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-00-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+  - Support for AIX compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-26-00 / Date : 22-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Add send event for reloading data.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-25-00 / Date : 16-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Add a new search method.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-24-02 / Date : 09-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+change the return value of internal function (setInputList)
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-24-01 / Date : 01-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+Print now the right error information when
+the isUsable function called.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-24-00 / Date : 28-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+check all code review errors and correct them.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-23-01 / Date : 26-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+fix the bug when using no DB Interface and calling the isUsable function.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+
+Actual Version : v1-23-00 / Date : 21-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+change the DB-Access from DAT_Database to DBC
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v1-22-00 / Date : 08-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+*** Fix the search-bug.
+*** isUsable functionality build in.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+When no description data was found the last founded number was set
+to the description.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-01 / Date : 04-Okt-1999
+----------------
+
+Notes          :
+----------------
+insert one missing return value.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

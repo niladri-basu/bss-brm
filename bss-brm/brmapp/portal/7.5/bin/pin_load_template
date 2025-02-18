@@ -1,0 +1,671 @@
+#!/tools/CGBU/contrib/DO/BRM/7.5.0.TP.TOOL.R1/tools_vob/tools/linux/perl_5_18_2/perl/bin/perl
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#############################################################################
+# @(#)pin_load_template.pl
+#
+#      Copyright (c) 2000 - 2006 Oracle. All rights reserved.
+#
+#      This material is the confidential property of Oracle Corporation or its
+#      licensors and may be used, reproduced, stored or transmitted only in
+#      accordance with a valid Oracle license or sublicense agreement.
+#
+#############################################################################
+
+#---------------------------------------------------------------------#
+#  This script loads brand specifc /config/invoice_templates object   #
+#  into the Infranet Database	        	                      #
+#---------------------------------------------------------------------#
+
+use Getopt::Long;
+use pcmif;
+
+
+$ME = $0;
+my ($DB_NO, $config_object);
+
+					# template
+  GetOptions('brand=s', \$opt_brand, 'format=s', \$opt_format,
+	     'locale=s', \$opt_locale, 'template=s', \$opt_template,
+	     'usexsl!', \$opt_usexsl, 'name=s', \$opt_name, 
+	     'type=s', \$opt_type, 
+					# drill down
+	     'leveltemplate=s@', \@opt_leveltemplate,
+					# common options
+	     'debug!', \$opt_debug, 'help!', \$opt_help,
+	     'logfile=s', \$opt_logfile);
+
+  &Usage() if ($opt_help || !$opt_name || ($opt_format && $opt_locale && $opt_name && 
+	       !($opt_template || $opt_leveltemplate[0]))
+	      );
+
+  $DEBUG = 1 if $opt_debug;
+
+  $opt_logfile = ($opt_logfile?$opt_logfile:"pin_load_template.log");
+  open (LOGFILE, ">$opt_logfile") ||
+		die "$ME:  Could not open logfile\n";
+
+  if (!$opt_format) {
+        $opt_format="text/html";
+  }
+  if (!$opt_locale) {
+        $opt_locale = "en_US";
+  }
+
+    #-------------------------------------------------------------
+    #  Connect to Infranet
+    #-------------------------------------------------------------
+	&pin_init();
+
+    #-------------------------------------------------------------
+    #  Verification 
+    # 	  1.  Verify whether Brand exists and is actually a brand
+    #     2.  Check whether config object & inv_info element exists 
+    #         for the brand
+    #     3.  Check all the file names and they are readable
+    #-------------------------------------------------------------
+	if ($opt_brand) {
+		&Verify_Brand ($opt_brand) || 
+			die "$ME: *ERROR* Brand <$opt_brand> Verification Failed.  Please check Log File.\n";
+	}
+
+	$poid_type = "/config/invoice_templates";
+	if ($opt_type && !($opt_type =~ /invoice/)) {
+		$poid_type .= "/$opt_type";
+	} 
+					# check whether config object exists
+	($config_object, $inv_info_elemid) = 
+		&Verify_Config_Object ($opt_brand, $opt_name, $poid_type, 
+			$opt_format, $opt_locale);
+
+					# verify all the filenames passed
+	if ($opt_template) {
+		$valid = &Verify_Template_File_Names ($opt_template); 
+		die "$ME: *ERROR* Invalid File Names Specified.  Please check Log File.\n" if !$valid;
+	}	
+    #-------------------------------------------------------------
+    #  Construct and Load a /config/invoice_templates object
+    #-------------------------------------------------------------
+	$config_object = &Load_Invoice_Templates ($config_object, $inv_info_elemid, $opt_brand, $opt_name, $poid_type, $opt_format, $opt_locale, $opt_usexsl, $opt_template, \@opt_leveltemplate );
+
+ 	if ($config_object) {
+	  print ("$ME: Config object <$config_object> created/updated successfully!\n");
+	} else {
+	  print ("$ME: *ERROR* In creating/updating /config/invoice_templates object. Please check Log File.\n");
+ 	}
+	
+    #-------------------------------------------------------------
+    #  Disconnet from Infranet
+    #-------------------------------------------------------------
+	&pin_exit();
+
+	
+  close (LOGFILE);
+
+exit (0);
+
+#---------------------------------------------------------------------#
+#  This subroutine verifies that the given Brand POID is valid	      #
+#  and belongs to a Brand Account				      #
+#---------------------------------------------------------------------#
+sub Verify_Brand {
+  my ($brand) = @_;
+
+  my ($input_flist, $opcode, $flags, $output_flist);
+  my ($INFRANET);
+
+  &pin_write_log_message ("$ME: Verifying Brand POID <$brand>\n");
+
+  $input_flist = <<"END"
+0       PIN_FLD_POID    POID [0] $brand
+0       PIN_FLD_BRAND_OBJ       POID [0] NULL
+0       PIN_FLD_ACCOUNT_TYPE    ENUM [0] 0
+END
+  ;
+  $opcode = "PCM_OP_READ_FLDS";
+  $flags = 0;
+
+  &pin_write_log_message ("Verify_Brand: $opcode Input Flist:\n$input_flist\n") if $DEBUG;
+  $output_flist = &pin_read_flist ($opcode, $flags, \$input_flist);
+  &pin_write_log_message ("Verify_Brand: $opcode Output Flist:\n$$output_flist\n") if $DEBUG;
+
+  $INFRANET = &pin_str_flist_to_hash($output_flist);
+
+  if ($INFRANET->{"main.PIN_FLD_ACCOUNT_TYPE"} == "2") {
+  	&pin_write_log_message ("\tVerify_Brand: Brand Exists!\n");
+  	return (1);
+  } else {
+  	&pin_write_log_message ("\tVerify_Brand: Brand does not Exist!\n");
+	return (0);
+  }
+}
+
+#---------------------------------------------------------------------#
+#  This subroutine verifies that a config object exists for the       #
+#  given (brand, name, type and locale), or for the given (brand).          #
+#  If (brand, type, locale) exists then we already have a inv_info    #
+#  array element to work with, else it means we need to create        #
+#  a new array element						      # 
+#---------------------------------------------------------------------#
+sub Verify_Config_Object {
+  my ($brand, $name, $poid_type, $format, $locale) = @_;
+
+  my ($input_flist, $opcode, $flags, $output_flist);
+  my ($INFRANET);
+  my ($key, $locale_key, $invinfo_elemid, $invinfo_type, $invinfo_locale);
+  my ($arg3, $template);
+  my ($max_elemid);
+
+  &pin_write_log_message ("\n$ME: Verifying Config Object for <$brand:$name:$poid_type:$format:$locale>\n");
+
+  $template = "select X from /config/invoice_templates where F1 = V1 and F2 = V2 ";
+  if ($brand) {
+	$template .= "and F3 = V3 ";
+	$arg3 = << "END"
+0 PIN_FLD_ARGS			   ARRAY [3]
+1     PIN_FLD_ACCOUNT_OBJ           POID [0] $brand
+END
+ ;
+  } 
+  $input_flist = <<"END"
+0 PIN_FLD_POID                      POID [0] $DB_NO /search -1 0
+0 PIN_FLD_FLAGS                      INT [0] 256
+0 PIN_FLD_ARGS                     ARRAY [1] 
+1     PIN_FLD_INHERITED_INFO        SUBSTRUCT [0]
+2         PIN_FLD_TEMPLATE_NAME      STR [0] "$name"
+0 PIN_FLD_ARGS			   ARRAY [2]
+1     PIN_FLD_POID		    POID [0] $DB_NO $poid_type -1
+${arg3}0 PIN_FLD_TEMPLATE                   STR [0] "$template"
+0 PIN_FLD_RESULTS                  ARRAY [0] 
+1  PIN_FLD_POID                     POID [0] NULL
+1  PIN_FLD_INV_INFO		   ARRAY [*]
+2  	PIN_FLD_NAME		     STR [0] NULL
+2       PIN_FLD_LOCALE		     STR [0] NULL
+END
+  ;
+
+  $opcode = "PCM_OP_SEARCH";
+  $flags = 0;
+  &pin_write_log_message ("Verify_Config_Object: $opcode Input Flist:\n$input_flist\n") if $DEBUG;
+  $output_flist = &pin_read_flist ($opcode, $flags, \$input_flist);
+  &pin_write_log_message ("Verify_Config_Object: $opcode Output Flist:\n$$output_flist\n") if $DEBUG;
+
+  $INFRANET = &pin_str_flist_to_hash($output_flist);
+
+  if ($INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"}) {
+    &pin_write_log_message ("\tVerify_Config_Object: Config object <" . 
+	$INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"} . "> found\n");
+				# Grab the Invoice Info element id
+				# from output flist
+    $max_elemid = 0;
+    for $key (keys %$INFRANET) {
+				# now rip the elemid
+	if ($key =~ /PIN_FLD_INV_INFO.*PIN_FLD_NAME/) {
+	  $invinfo_elemid = $key; 
+	  $invinfo_elemid =~ /^.*PIN_FLD_INV_INFO\[(\d+)\].*$/; 
+	  $invinfo_elemid = $1;
+	  if ($max_elemid < $invinfo_elemid) {
+		$max_elemid = $invinfo_elemid;
+	  }
+				# check the type and locale out
+  	  $invinfo_type = @$INFRANET{"$key"};
+	  $locale_key = $key;
+	  $locale_key =~ s/PIN_FLD_NAME/PIN_FLD_LOCALE/g;
+  	  $invinfo_locale = @$INFRANET{"$locale_key"};
+
+				# iff an exact match found
+          if ($invinfo_type eq "\"".$format."\"" && $invinfo_locale eq "\"".$locale."\"") {
+            &pin_write_log_message ("\tVerify_Config_Object: Config object <" . 
+	    $INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"} . 
+	    ":INV_INFO[$invinfo_elemid]:NAME[$invinfo_type]:LOCALE[$invinfo_locale]> found\n");
+            return ($INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"}, $invinfo_elemid);
+          }
+        }
+    } 
+
+    # no exact match, but config object exists
+    &pin_write_log_message ("\tVerify_Config_Object: Config object <" . 
+	$INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"} . "> found\n");
+    return ($INFRANET->{"main.PIN_FLD_RESULTS[0].PIN_FLD_POID"}, $max_elemid + 1);
+  } else {
+    &pin_write_log_message ("\tVerify_Config_Object: Config object not found\n");
+    return (0);
+  }
+}
+
+#---------------------------------------------------------------------#
+#  This subroutine verifies that template file names specified        #
+#  in the command line are valid and readable			      #
+#---------------------------------------------------------------------#
+sub Verify_Template_File_Names {
+  my ($template) = @_;
+
+  my ($valid);
+
+  &pin_write_log_message ("\n$ME: Verifying Template File Names \n");
+  $valid = 1;
+
+			# this check is real, because we are going to
+			# load in the file contents
+  if ($template && !( -r $template)) {
+    $valid = 0;
+    &pin_write_log_message ("\tVerify_Template_File_Names: Template file <$template> not found\n");
+  }
+
+  return $valid;
+
+}
+
+#---------------------------------------------------------------------#
+#  This subroutine constructs the brand specific 		      #
+#  /config/invoice_templates object and loads it into the Infranet db    #
+#  Three cases:
+#	1.  If config object does'nt exist
+#		create the config object
+#	2.  If config object exists, but invinfo element does'nt exist
+#		Add and populate the INV_INFO array element 
+#	3.  If config object and invinfo element exists
+#		Do a write fields with new values
+#---------------------------------------------------------------------#
+sub Load_Invoice_Templates {
+  my ($config_object, $inv_info_elemid, 
+	$brand, $name, $poid_type, $format, $locale, $usexsl,
+	$template, $level_template) = @_;
+
+  my ($input_flist, $opcode, $flags, $output_flist);
+  my ($eventtype, $i);
+  my ($elemid);
+  my ($INFRANET);
+
+  &pin_write_log_message ("\n$ME: Loading /config/invoice_templates object\n");
+
+  if ($config_object)  {
+    &pin_write_log_message ("\tLoad_Invoice_Templates : Reloading Config Object <$config_object>\n");
+    $opcode = "PCM_OP_WRITE_FLDS";
+    $flags = 32;			# PCM_OPFLG_ADD_ENTRY
+  } else {
+    $opcode = "PCM_OP_CREATE_OBJ";
+    $config_object = "$DB_NO $poid_type";
+    $inv_info_elemid = 0;
+  }
+
+  if (!$usexsl) {
+	$usexsl = 0;
+  }
+
+  if ($brand) {
+	$line_account = "0       PIN_FLD_ACCOUNT_OBJ POID [0] $brand
+"
+  }
+  $input_flist = <<"END"
+0       PIN_FLD_POID    POID [0] $config_object
+${line_account}0	PIN_FLD_HOSTNAME STR [0] "-"
+0	PIN_FLD_NAME	 STR [0] "Templates config object"
+0	PIN_FLD_PROGRAM_NAME STR [0] "-"
+0	PIN_FLD_INHERITED_INFO SUBSTRUCT [0]
+1		PIN_FLD_TEMPLATE_NAME STR [0] "$name"
+1		PIN_FLD_FLAGS INT [0] $usexsl
+END
+  ;
+
+  if (!$format) {
+	$format="text/html";
+  }
+  if (!$locale) {
+	$locale = "en_US";
+  }
+      $input_flist .= <<"END"
+0	PIN_FLD_INV_INFO    ARRAY [$inv_info_elemid]
+1		PIN_FLD_NAME    STR [0] "$format"
+1		PIN_FLD_LOCALE  STR [0] "$locale"
+END
+;
+      if ($template) {
+        $input_flist .= "1\t\tPIN_FLD_BUFFER\tBUF [0] flag\/size\/offset\/xbuf_file 0x1 - 0 $template\n";
+      } else {
+        $elemid = 0;
+        for $template (@$level_template) {
+            $input_flist .= <<"END"
+1		PIN_FLD_FORMATS    ARRAY [$elemid]
+2			PIN_FLD_FILENAME    STR [0] "$template"
+END
+;
+            $elemid ++;
+        }
+      }
+
+  &pin_write_log_message ("Load_Invoice_Templates <$config_object>: $opcode Input Flist:\n$input_flist\n") if $DEBUG;
+  $output_flist = &pin_read_flist ($opcode, $flags, \$input_flist);
+  &pin_write_log_message ("Load_Invoice_Templates <$config_object>: $opcode Output Flist:\n$$output_flist\n") if $DEBUG;
+
+  $INFRANET = &pin_str_flist_to_hash($output_flist);
+					# for successfull write fields or 
+					# create object we should get a POID
+					# back
+  if ($INFRANET->{'main.PIN_FLD_POID'}) {
+      &pin_write_log_message("\tLoad_Invoice_Templates: Config object <" . 
+		$INFRANET->{'main.PIN_FLD_POID'} . "> created/updated successfully\n");
+      return ($INFRANET->{'main.PIN_FLD_POID'});
+  } else {
+      &pin_write_log_message("\tLoad_Invoice_Templates: Config object <$config_object> create/update failed\n");
+      return (0);
+  }
+}
+
+#---------------------------------------------------------------------#
+#  This subroutine prints the Usage information for this script       #
+#
+#  Note: This script is also able to load a group of templates (for use
+#        in the drill-down invoicing) at a time.  But for now the usage
+#	 info does not contain such functionality as the drill-down 
+#	 invoicing feature is not included. 
+#---------------------------------------------------------------------#
+sub Usage {
+  print <<END
+
+  Usage: To Load/Reload template/stylesheet of HTML or arbitrary mime type
+  ---------------------------------------------------------------------
+     pin_load_template.pl [ -brand <brand poid> ]
+				  -name <template name>
+				  [ -type <template type> ]
+				  -format <template output format>
+				  -locale <locale string>
+				  -template <templatefile>
+				  [ -usexsl ]
+				  [ -debug ] 
+				  [ -logfile <logfile> ]
+
+  Usage: To Change the flag for using HTML template or XSL style sheets
+  ---------------------------------------------------------------------
+     pin_load_template.pl [ -brand <brand poid> ]
+				  -name <template name>
+				  [ -usexsl ]
+
+   Options
+   -------
+     -brand 	-> brand object poid. example  "0.0.0.1 /account 10 1"
+		-> default brand is determined by login in pin.conf
+     -name  	-> template name. Unique in a given brand and for a given type.
+     -type  	-> template category. Default is "invoice".  Can be any name,
+		-> example "dunning" for dunning letter templates. 
+     -locale 	-> locale string.  example "en_US"
+     -template 	-> template file name.  
+     -usexsl   	-> use the new XSL invoice formatting opcode.  Please note
+		   that in this case, the template should be a XSL stylesheet.
+     -debug     -> run in debug mode.  More messages are output in logfile.
+     -logfile   -> write log messages to the specified log file
+
+END
+ ;
+  exit(1);
+}
+
+##############################################################################
+#  U T I L I T Y   S U B  R O U T I N E S
+##############################################################################
+
+##############################################################################
+#
+# pin_init():
+#       This routine initializes a connection to CM and
+#       initializes some options to their defaults.
+#
+##############################################################################
+sub pin_init {
+
+        my ($ebufp);
+        my ($sec);
+        my ($min);
+        my ($hour);
+        my ($mday);
+        my ($mon);
+        my ($year);
+        my ($wday);
+        my ($yday);
+        my ($isdst);
+
+        ######################################################################
+        # Set autoflushing on stdout.
+        ######################################################################
+        # $| = 1;
+
+        ######################################################################
+        # Initialize defaults.
+        ######################################################################
+        if ( $^O =~ /win/i ) {
+                $cwd = `cd`;
+                $cwd =~ s,\\,/,g;
+        } else {
+                $cwd = `pwd`;
+        }
+        chop($cwd);
+
+        $logdir = "$cwd"."/log_dir";
+
+        if (!(defined $printer)) {
+                $printer = $ENV{"PRINTER"};
+        }
+
+        ######################################################################
+        # Make connection to CM.
+        ######################################################################
+
+        $DB_NO = pin_make_cm_connection($dump);
+
+        return;
+}
+
+##############################################################################
+#
+# pin_str_flist_to_hash()
+#       This routine splits the string form flist and converts
+#       that to a hash.  This handles arrays and buffers cleanly
+#
+##############################################################################
+sub pin_str_flist_to_hash {
+    my ($strflist) = @_;
+
+    my (@struct) =  ("main");                   # to keep track of the
+                                                # level
+
+    my $INFRANET = {};                          # output hash
+
+    my (@flistlines) = split("\n", $$strflist);
+
+    while ($line=(shift @flistlines)) {
+
+        next if $line =~ /^\#/;                 # ignore comments
+
+        ($level, $fldname, $fldtype, $element, $value) =
+                split(/\s+/, $line, 5);
+
+                                                # adjust levels
+        while (@struct > $level+1) {
+           pop (@struct);
+        }
+
+        if ($fldtype =~ /ARRAY/) {
+           push @struct, $fldname . $element;
+        } elsif ($fldtype =~ /BUF/) {           # whole can of worms!
+           $key = join('.',@struct) . ".$fldname";
+
+                                                # ignore the first line
+                                                # it does'nt contain any data
+           $line = shift @flistlines;
+
+           do {
+
+             @buflines = split(/\s+/,$line);
+             $buflines[1] =~ s/([0-9a-fA-F][0-9a-fA-F])/pack("C", hex($1))/ieg;
+             $INFRANET->{$key} .= $buflines[1];
+             $line = shift @flistlines;
+
+           } while ($line  =~ /^x/);
+
+           unshift (@flistlines, $line) if $line;
+
+        } else {
+           $key = join('.',@struct) . ".$fldname";
+           $INFRANET->{$key} = $value;
+        }
+    }
+
+    return $INFRANET;
+}
+
+#############################################################################
+#
+# pin_read_flist()
+#       sub-routine to process the FList output data
+#
+#############################################################################
+sub pin_read_flist {
+        my ($pcm_op, $flags, $in_flist_str) = @_;
+        my ($flistp);
+        my ($ebufp);
+        my ($ebuf_str);
+
+        #####################################################################
+        ## note the "pcmif::" prefix - this is a class prefix, meaning that the
+        ## function "pcm_perl_new_ebuf()" is from the package/class "pcmif".
+        ##
+        ##
+        ## first thing, get an ebuf for error reporting.
+        #####################################################################
+        $ebufp = pcmif::pcm_perl_new_ebuf();
+
+        #####################################################################
+        ## here is how one converts an ebuf to a printable string.
+        #####################################################################
+        $ebuf_str = pcmif::pcm_perl_ebuf_to_str($ebufp);
+
+        #####################################################################
+        # ALWAYS remember to put $DB_NO in your POID!
+        # ~~~~~~
+        # Note: Array type is NOT -1, as with Testnap (sometimes).
+        #
+        #####################################################################
+
+        $flistp = pcmif::pin_perl_str_to_flist($$in_flist_str, $DB_NO, $ebufp);
+
+        if (pcmif::pcm_perl_is_err($ebufp)) {
+            pin_write_log_message (
+                "pin_read_flist(): flist conversion to check failed:\n" .
+                "$$in_flist_str\n");
+            pcmif::pcm_perl_print_ebuf($ebufp);
+            pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+            carp;
+            exit(1);
+        }
+        #####################################################################
+        # Execute the opcode.
+        #####################################################################
+        $out_flistp = pcmif::pcm_perl_op($pcm_ctxp, $pcm_op,
+                        $flags, $flistp, $ebufp);
+
+        if (pcmif::pcm_perl_is_err($ebufp)) {
+            pin_write_log_message ("pin_read_flist(): $pcm_op failed!\n");
+            pcmif::pcm_perl_print_ebuf($ebufp);
+            pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+            carp;
+            exit(1);
+        }
+        #####################################################################
+        # Set the out variable and return.
+        #####################################################################
+        $out = pcmif::pin_perl_flist_to_str($out_flistp, $ebufp);
+
+        #####################################################################
+        # Cleanup
+        #####################################################################
+
+        pcmif::pin_flist_destroy($flistp);
+        pcmif::pin_flist_destroy($out_flistp);
+        pcmif::pcm_perl_destroy_ebuf($ebufp);
+
+        #####################################################################
+        # Return
+        #####################################################################
+        return \$out;
+}
+
+
+#############################################################################
+#
+# pin_make_cm_connection
+#       sub-routine to connect to infranet
+#
+#############################################################################
+sub pin_make_cm_connection {
+        my ($dump) = @_;
+
+        ######################################################################
+        # Initialize the ebufp.
+        ######################################################################
+        $ebufp = pcmif::pcm_perl_new_ebuf();
+
+        ######################################################################
+        # Make connection to CM.
+        ######################################################################
+        $pcm_ctxp = pcmif::pcm_perl_connect($DB_NO, $ebufp);
+
+        ######################################################################
+        # check for errors - best to always do this.
+        ######################################################################
+        if (pcmif::pcm_perl_is_err($ebufp)) {
+            pin_write_log_message (
+                "pin_make_cm_connection(): Connect to CM failed\n");
+                pcmif::pcm_perl_print_ebuf($ebufp);
+                pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+                carp;
+                exit(1);
+        }
+
+        ######################################################################
+        # Cleanup
+        ######################################################################
+        pcmif::pcm_perl_destroy_ebuf($ebufp);
+        return $DB_NO;
+}
+
+
+##############################################################################
+#
+# pin_exit():
+#       This routine disconnects from the CM and does misc cleanup.
+#
+##############################################################################
+sub pin_exit {
+        my ($ebufp);
+
+        ######################################################################
+        # Initialize the ebufp.
+        ######################################################################
+        $ebufp = pcmif::pcm_perl_new_ebuf();
+
+        ######################################################################
+        # Disconnect from CM.
+        ######################################################################
+        pcmif::pcm_context_close($pcm_ctxp, 0, $ebufp);
+
+        ######################################################################
+        # check for errors - best to always do this.
+        ######################################################################
+        if (pcmif::pcm_perl_is_err($ebufp)) {
+                pin_write_log_message ("pin_exit(): Disconnect to CM failed\n");
+                pcmif::pcm_perl_print_ebuf($ebufp);
+                carp;
+                exit(1);
+        }
+}
+
+##############################################################################
+#
+# pin_write_log_message():
+#       This routine writes messages to the log file
+#
+##############################################################################
+sub pin_write_log_message {
+        my ($msg) = @_;
+
+        print LOGFILE $msg;
+}

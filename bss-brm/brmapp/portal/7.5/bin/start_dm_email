@@ -1,0 +1,67 @@
+#!/bin/sh
+# continuus file information --- %full_filespec: start_qm.sh~6:shsrc:1 %
+#
+#  @(#) %full_filespec: start_qm.sh~6:shsrc:1 %
+#
+# Copyright (c) 1998, 2014, Oracle and/or its affiliates. All rights reserved.
+#
+#      This material is the confidential property of Oracle Corporation or its
+#      licensors and may be used, reproduced, stored or transmitted only in
+#      accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# start_dm_email
+#
+# The underlying database (if any) must already be started
+# when this script runs.
+#
+VERSION=7.5
+PATH=/usr/bin:/bin
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/brmapp/portal/7.5/var/dm_email
+
+QM=${PINDIR}/bin/dm_email
+
+QMDIR=${PINDIR}/sys/dm_email
+QMLOG=${LOGDIR}/dm_email.log
+QMPID=${LOGDIR}/dm_email.pid
+
+if [ -r ${QMPID} ]; then
+  /bin/ps -f -p `cat ${QMPID}` | grep ${QM} > /dev/null
+  if [ $? -eq 0 ]; then
+        echo "ERROR: dm_email is already running"
+        exit 1
+  fi
+fi
+
+if [ ! -x ${QM} ]; then
+        echo "HELP: executable \"${QM}\" not found!"
+        exit 1
+fi       
+
+if [ ! -d ${QMDIR} ]; then
+        echo "HELP: ${QM} dir \"${QMDIR}\" not found!"
+        exit 1
+fi
+
+if [ ! -d ${LOGDIR} ]; then
+	mkdir -p ${LOGDIR}
+	if [ $? -ne 0 ]; then
+		echo "HELP: problems making QM LOGDIR \"${LOGDIR}\"!"
+		exit 1
+	fi
+fi       
+
+# XXX ought to save old log file, or check for > some-size...
+( cd ${QMDIR} ;
+  echo "started ${QM} at..." >> ${QMLOG}
+  date >> ${QMLOG}
+  ${QM} >> ${QMLOG} 2>&1 &
+  echo $! > ${QMPID} ;
+  chmod 664 ${QMLOG} ;
+  chmod 664 ${QMPID} )
+
+# use rc from qm startup
+exit $?

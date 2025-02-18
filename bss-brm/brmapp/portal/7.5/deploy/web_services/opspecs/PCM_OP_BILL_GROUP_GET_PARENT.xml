@@ -1,0 +1,38 @@
+<Opcode name="PCM_OP_BILL_GROUP_GET_PARENT"
+
+visibility="public"
+transaction="required"
+component="financial"
+xmlns:h="http://www.w3.org/1999/xhtml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes
+opspec.xsd"
+xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+<Doc>
+This opcode retrieves the parent-account for the specified member-account 
+from the group object.
+</Doc>
+<Input>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Poid of group member</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+</Fields>
+</Input>
+<Output>
+<Fields>
+<Poid name="PIN_FLD_POID" use="required"
+mode="complete">
+<Doc>Poid of group member passed in</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+<Poid name="PIN_FLD_PARENT" use="required"
+mode="complete">
+<Doc> Poid of group parent (NULL if group not found)</Doc>
+<ClassRef>obj://account</ClassRef>
+</Poid>
+</Fields>
+</Output>
+</Opcode>

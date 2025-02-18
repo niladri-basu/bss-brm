@@ -1,0 +1,174 @@
+INF_ACCOUNTBUSY_BATCHES_NOT_FOUND       | Batches array not found in flist for job: %s  | 40010
+ERR_ACCOUNTBUSY_BATCH_OBJ_NOT_FOUND     | Batch obj not found in flist for job: %s      | 40015
+ERR_ACCOUNTBUSY_JOB_ALREADY_REMOVED     | Busy job with the id does not exits : %s      | 40013
+ERR_ACCOUNTBUSY_JOB_ID_FIELD_NOT_FOUND  | Busy job field not found in flist: %s         | 40011
+ERR_ACCOUNT_DB_UPDATE_FAILED            | Database update failed for account (%s) at time (%s)       | 40006
+ERR_BAD_VALUE                           | Null object poid in AddOrderedBalanceGroup event | 30066
+ERR_BALANCE_GROUP_UPDATE                | Customer balance group update error: %s     | 30063
+ERR_BALANCE_GR_NOT_FOUND                | Balance group not found.  Balance GroupID=(%s) Account=(%s) Service=(%s)   | 40008
+ERR_BILLING_INFO_NOT_FOUND              | BillInfo not Found. BillInfoID=(%s) Account=(%s) Service=(%s)      | 40005
+ERR_BILL_INFO_UPDATE                    | Customer bllinfo update error (%s).           | 30064
+ERR_CUSTOMER_ACCOUNT_NOT_FOUND          | Customer Account not found (%s).              | 40009
+ERR_CUSTOMER_EDR_PARSING                | Customer EDR parsing error (%s).              | 30006
+ERR_CUSTOMER_INVALID_ITEM_POID          | Customer item POID not valid (%s).            | 30010
+ERR_CUSTOMER_LOGIN_ACCOUNT_NOT_FOUND    | Customer account not found after login (%s).  | 30003
+ERR_CUSTOMER_LOGIN_INTERNAL_ERROR       | Customer login internal error (%s).           | 30012
+ERR_CUSTOMER_LOGIN_NOT_FOUND            | Customer login not found: identifier=(%s) prefix=(%s) serviceCode=(%s). | 30001
+ERR_CUSTOMER_LOGIN_NOT_VALID_FOR_TIME   | Customer login (%s) not valid for time (%s).       | 30007
+ERR_CUSTOMER_LOGIN_SERVICE_NOT_FOUND    | Customer service not found: identifier=(%s) prefix=(%s) serviceCode=(%s).              | 30002
+ERR_CUSTOMER_NO_VALID_PRODUCT           | Customer has no valid products for account (%s) at time (%s).              | 30008
+ERR_CUSTOMER_NO_VALID_PRODUCT_RATING    | Customer has no valid rating product. Account=(%s) ServiceCode=(%s) GMT=(%s)   | 30009
+ERR_CUSTOMER_SERVICE_NOT_FOUND          | Customer Service not found (%s).              | 30005
+ERR_DUPLICATE_ACCOUNTBUSY_JOB_ADDED     | Busy job with the id already exists : %s      | 40012
+ERR_GET_RANGE_ITEMS                     | DAT_LoginDbObject::getPoidRangeItems failure: Reason=%s | 30018
+ERR_INIT_ACCOUNTS_CANCELLED             | Thread=%s has cancelled in DAT::InitCustomerThread::initAccounts method - %s |  30085
+ERR_INIT_BALANCE_GROUPS_CANCELLED       | Thread=%s has cancelled in DAT::InitCustomerThread::initBalanceGroups method - %s|  30088
+ERR_INIT_BILL_INFOS_CANCELLED           | Thread=%s has cancelled in DAT::InitCustomerThread::initBillInfo method - %s |  30087
+ERR_INIT_DELETED_ORDERED_BALANCE_GROUPS_CANCELLED | Thread=%s has cancelled in DAT::InitCustomerThread::initDeletedOrderedBalanceGroups method - %s | 30094
+ERR_INIT_GROUP_SHARING_DISCOUNTS_CANCELLED | Thread=%s has cancelled in DAT::InitCustomerThread::initGroupSharingDiscounts method - %s  | 30091    
+ERR_INIT_LOGIN_CANCELLED                | Thread=%s has cancelled in DAT::InitCustomerThread::initLogins method - %s |  30083
+ERR_INIT_MAPPING_TABLES_CANCELLED       | Thread=%s has cancelled in DAT::InitCustomerThread::initMappingTable method - %s|  30089
+ERR_INIT_ORDERED_BALANCE_GROUPS_CANCELLED | Thread=%s has cancelled in DAT::InitCustomerThread::initOrderedBalanceGroups method - %s| 30090
+ERR_INIT_PROFILES_CANCELLED             | Thread=%s has cancelled in DAT::InitCustomerThread::initProfiles method - %s |  30086
+ERR_INIT_SERVICE_CANCELLED              | Thread=%s has cancelled in DAT::InitCustomerThread::initServices method - %s |  30098
+ERR_INIT_THREAD_DIED                    | Thread-%s has died with an expection in DAT_InitCustomerThread::run() - %s   | 30019
+ERR_INVALID_OUTPUT_STREAM               | Invalid output stream (%s).                   | 30011
+ERR_LISTENER_NOT_FOUND                  | Listener '%s' not found.                      | 30013
+ERR_MAPPING_TABLE_UPDATE                | Customer mapping table update error (%s).     | 30065
+ERR_MAP_MERGE_THREAD_CANCELLED          | DAT_MapMergeThread::%s has cancelled because one child thread died with exception - %s |  30082
+ERR_MAP_MERGE_THREAD_DIED               | DAT_MapMergeThread::%s has died with an expection: %s         | 30020
+ERR_MULTI_THREAD_INIT                   | DAT_InitCustomerThread failed to create and start: Reason=%s  | 30015
+ERR_MULTI_THREAD_MAP_MERGE              | DAT_MapMergeThread failed to create and start: Reason=%s      | 30016
+ERR_NOT_ENOUGH_CONNECTIONS              | Not enough connections available to coincide with the "Threads" registy value. Define a "%s" registry value greater or equal to the thread count. | 30014
+ERR_RERATING_IN_PROGRESS                | ReRating is currently Going not, EDR not processed : %s | 40014
+ERR_SERVICE_DB_UPDATE_FAILED            | account database update failed for service (%s) at (%s) gmt.     | 40007
+ERR_SERVICE_NOT_CONFIGURED              | Service not found (%s).                                 | 30004
+ERR_SERVICE_OBJECT_NOT_FOUND            | Service object not found for perticular service Id : %s | 40001
+ERR_SERVICE_OBJECT_UPDATE_FAILED        | Service object update failed for a perticular service id. : %s  | 40004
+ERR_SUBSCRIPTION_SERVICE_NOT_FOUND      | Subscription  service not found for (%s) with id (%s).           | 30093
+ERR_THREAD_CANCELLED                    | Thraed=%s has cancelled because some child thread gets an error in DAT_InitCustomerThread::run(): Info=%s |  30081
+ERR_THREAD_DIED_UNEXPECTED              | Thread=%s has unexpectedly died: Info=%s                        | 30021
+INF_BEGIN_MAP_MERGE                     | Map Merger Starting...                                          | 30033
+INF_BEGIN_POID_SAMPLE                   | Account poid sampling beginning with sample size= %s percent    | 30035
+INF_DB_RECONNECT                        | Module reconnecting to the BRM database. (Subject=%s) | 30061
+INF_END_MAP_MERGE                       | Map Merger completed in %s seconds.                             | 30034
+INF_END_MULTI_THREAD_INIT               | Finished DAT_Account Multi-Threaded Initialization.             | 30028
+INF_END_POID_SAMPLE                     | Account poid sampling completed in %s seconds.                  | 30036
+INF_ENTRIES_LOADED                      | %s %s loaded.                                 | 30025
+INF_FETCH_SIZE                          | Fetch size buffer = %s rows.                  | 30060
+INF_FINAL_ACCOUNT_HASH_MAP_SIZE         | Final Account hash map size set to %s.        | 30057
+INF_FINAL_GROUP_SHARING_CHARGES_HASH_MAP_SIZE   | Final Group Sharing Charges hash map size set to %s.  | 30080
+INF_FINAL_GROUP_SHARING_DISCOUNT_HASH_MAP_SIZE  | Final Group Sharing Discount hash map size set to %s. | 30079
+INF_FINAL_LOGIN_HASH_MAP_SIZE           | Final Login hash map size set to %s.          | 30059
+INF_FINAL_SERVICE_HASH_MAP_SIZE         | Final Service hash map size set to %s.        | 30058
+INF_FINISHED_LOADING                    | Finished loading account data.                | 30026
+INF_MERGE_ACCOUNT_MAP_FINISHED          | Merging the account map has completed in %s seconds.  | 30052
+INF_MERGE_GROUP_SHARING_CHARGES_MAP_FINISHED    | Merging the group sharing charges map has completed in %s seconds.    | 30077
+INF_MERGE_GROUP_SHARING_DISCOUNTS_MAP_FINISHED  | Merging the group sharing discounts map has completed in %s seconds.  | 30078
+INF_MERGE_LOGIN_MAP_FINISHED            | Merging the login map has completed in %s seconds.    | 30050
+INF_MERGE_SERVICE_MAP_FINISHED          | Merging the service map has completed in %s seconds.  | 30051
+INF_MULTI_THREAD_INIT_COMPLETED         | Multi-Threaded Initialization has completed in %s seconds                     | 30030
+INF_REDUCING_THREAD_COUNT               | Reducing number of threads down to %s to improve account partitioning.        | 30029
+INF_REG_VALUE_ACCOUNT_HASH_MAP          | Account thread hash map size set to %s.               | 30053
+INF_REG_VALUE_LOGIN_HASH_MAP            | Login thread hash map size set to %s.                 | 30055
+INF_REG_VALUE_SERVICE_HASH_MAP          | Service thread hash map size set to %s.               | 30054
+INF_SAMPLE_SIZE_NUMBERS                 | Account poid sample contains %s out of %s total elements.             | 30037
+INF_STARTED_LOADING                     | Started loading account data.                         | 30024
+INF_START_MULTI_THREAD_INIT             | Starting DAT_Account Multi-Threaded Initialization with %s threads.   | 30027
+INF_THREAD_ACCOUNTS_PROCESSED           | Thread-%s has processed %s accounts.                  | 30038
+INF_THREAD_A_BALANCE_GROUPS_LOADED      | Thread-%s has loaded %s account balance groups.       | 30070
+INF_THREAD_A_BILL_INFOS_LOADED          | Thread-%s has loaded %s account bill infos.           | 30068
+INF_THREAD_A_MAPPING_TABLES_LOADED      | Thread-%s has loaded %s account mapping tables.       | 30069
+INF_THREAD_A_PROFILES_LOADED            | Thread-%s has loaded %s account profiles.             | 30043
+INF_THREAD_DISCOUNTS_LOADED             | Thread-%s has loaded %s account discounts.            | 30067
+INF_THREAD_FINISHED                     | Thread-%s has completed in %s seconds.                | 30032
+INF_THREAD_INIT_ACCOUNTS_DONE           | Thread-%s initAccounts() has completed in %s seconds. | 30047
+INF_THREAD_INIT_ACCOUNTS_TIME           | Thread-%s initAccounts() Accounts Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40023
+INF_THREAD_INIT_PURCHASED_DISCOUNTS_TIME  | Thread-%s initAccounts() Account Discounts Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40022
+INF_THREAD_INIT_PURCHASED_PRODUCTS_TIME   | Thread-%s initAccounts() Account Products Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40021
+INF_THREAD_INIT_ACCOUNT_PROFILE_TIME    | Thread-%s initProfiles() Account Profile Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40019
+INF_THREAD_INIT_A_MAPPING_TABLES_DONE   | Thread-%s initMappingTable() has completed in %s seconds.     | 30074
+INF_THREAD_INIT_BALANCE_GROUPS_DONE     | Thread-%s initBalanceGroups() has completed in %s seconds.    | 30073
+INF_THREAD_INIT_BALANCE_GROUPS_TIME     | Thread-%s initBalanceGroups() BalanceGroups Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40028
+INF_THREAD_INIT_BILL_INFOS_DONE         | Thread-%s initBillInfos() has completed in %s seconds.        | 30075
+INF_THREAD_INIT_BILL_INFOS_TIME         | Thread-%s initBillInfo() BillInfos Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40027
+INF_THREAD_INIT_DELETED_ORDERED_BALANCE_GROUPS_DONE  | Thread-%s initDeletedOrderedBalanceGroups() has completed in %s seconds.     | 30096
+INF_THREAD_INIT_DEL_ACCOUNT_PROFILE_TIME             | Thread-%s initProfiles() Deleted Account Profile Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40020
+INF_THREAD_INIT_DEL_SERVICE_PROFILE_TIME             | Thread-%s initProfiles() Deleted Service Profile Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40018
+INF_THREAD_INIT_GROUP_SHARING_BALANCE_MONITORS_LOADED| Thread-%s has loaded %s GS Balance Monitors. | 40033
+INF_THREAD_INIT_GROUP_SHARING_BALANCE_MONITORS_TIME  | Thread-%s initGroupSharingBalanceMonitors() GroupSharingBalanceMonitors Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40032
+INF_THREAD_INIT_GROUP_SHARING_CHARGES_LOADED         | Thread-%s has loaded %s GS Charges. | 40035
+INF_THREAD_INIT_GROUP_SHARING_CHARGES_TIME           | Thread-%s initGroupSharingCharges() GroupSharingCharges Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40031
+INF_THREAD_INIT_GROUP_SHARING_DISCOUNTS_LOADED       | Thread-%s has loaded %s GS Discounts. | 40034
+INF_THREAD_INIT_GROUP_SHARING_DISCOUNTS_TIME         | Thread-%s initGroupSharingDiscounts() GroupSharingDiscounts Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40030
+INF_THREAD_INIT_LOGINS_DONE                          | Thread-%s initLogins() has completed in %s seconds.   | 30045
+INF_THREAD_INIT_LOGINS_TIME                          | Thread-%s initLogins() Logins Loading : Total Time %s seconds. [Query=(%s), Data Transfer=(%s) seconds, Processing=(%s) seconds] | 40024
+INF_THREAD_INIT_ORDERED_BALANCE_GROUPS_DONE          | Thread-%s initOrderedBalanceGroups() has completed in %s seconds.     | 30076
+INF_THREAD_INIT_ORDERED_BALANCE_GROUPS_TIME          | Thread-%s initOrderedBalanceGroups() OrderedBalanceGroups Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40029
+INF_THREAD_INIT_PROFILES_DONE                        | Thread-%s initProfiles() has completed in %s seconds.         | 30048
+INF_THREAD_INIT_SERVICES_ALIASLIST_TIME              | Thread-%s initServices() Services AliasList Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40026
+INF_THREAD_INIT_SERVICES_DONE                        | Thread-%s initServices() has completed in %s seconds.         | 30046
+INF_THREAD_INIT_SERVICES_TIME                        | Thread-%s initServices() Services Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40025
+INF_THREAD_INIT_SERVICE_PROFILE_TIME                 | Thread-%s initProfiles() Service Profile Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40017
+INF_THREAD_LOGINS_PROCESSED                          | Thread-%s has processed %s logins.            | 30040
+INF_THREAD_PRODUCTS_LOADED                           | Thread-%s has loaded %s account products.     | 30042
+INF_THREAD_SERVICES_PROCESSED                        | Thread-%s has processed %s services.          | 30039
+INF_THREAD_STARTED                                   | Thread-%s is starting and will process accounts in poid range %s to %s | 30031
+INF_JOB_STARTED                                      | Thread-%s Job-%s Started | 30099
+INF_JOB_FINISHED                                     | Thread-%s Job-%s Finished in %s seconds | 30100
+INF_THREAD_S_BALANCE_GROUPS_LOADED                   | Thread-%s has loaded %s service balance groups. | 30071
+INF_THREAD_S_DELETED_ORDERED_BALANCE_GROUPS_LOADED   | Thread-%s has loaded %s service ordered balance groups (that were deleted earlier). | 30095
+INF_THREAD_S_ORDERED_BALANCE_GROUPS_LOADED           | Thread-%s has loaded %s SvcOBGs, %s SvcMonOBGs, and %s ActgMonOBGs.  | 30072
+INF_THREAD_S_PROFILES_LOADED                         | Thread-%s has loaded %s service profiles.     | 30044
+WRN_EVENT_PROCESSING_FOR_BILLINFO_FAILED             | BillInfo update failed for account Id : %s    | 40016
+WRN_MULTI_THREAD_MAP_MERGE                           | Login %s found in multiple threads but update failed during map merge| 30017
+WRN_SYSTEM_PRODUCT_MAP_IS_EMPTY                      | System product map is empty : %s              | 40002
+WRN_SYSTEM_PRODUCT_NOT_FOUND                         | System product not found from system product map for perticular product Id. : %s | 40003
+ERR_INIT_GROUP_SHARING_CHARGES_CANCELLED| Thread=%s has cancelled in DAT::InitCustomerThread::initGroupSharingCharges method - %s                         | 40036
+ERR_INIT_ORDERED_BALANCE_GROUPS_BILLINFO| Thread=%s has inconsistent data in DAT::InitCustomerThread::initOrderedBalanceGroups method  for account - %s   | 40037
+ERR_OBG_RESOLVE_ID                      | Error in resolving OBG Id (%s).                                 | 40038
+INF_THREAD_GSC_PROCESSED                | Thread-%s has processed %s GSCs.                                | 40039
+INF_THREAD_GSD_PROCESSED                | Thread-%s has processed %s GSDs.                                | 40040
+INF_THREAD_GSM_PROCESSED                | Thread-%s has processed %s GSMs.                                | 40041
+INF_THREAD_CLOSEDACCOUNT_EXCLUDED                    | Thread-%s has excluded %s closed Accounts.         | 40042 
+ERR_DISCOUNT_DATA_STRING                | Error building discount data string for service (%s).           | 40043
+ERR_UNKNOWN_DAT_ACCOUNT_EXCEPTION       | Unknown Exception encountered in: %s                            | 40044
+ERR_RW_DAT_ACCOUNT_EXCEPTION            | A RogueWave Exception encountered in: %s.  Reason=%s            | 40045
+ERR_INIT_PURCHASED_PRODUCTS_CANCELLED   | Thread=%s has cancelled in DAT::InitCustomerThread::initPurchasedProducts method - %s |  40046
+ERR_INIT_PURCHASED_DISCOUNTSS_CANCELLED | Thread=%s has cancelled in DAT::InitCustomerThread::initPurchasedDiscounts method - %s |  40047
+ERR_SCRATCH_PAD_ITEM_NULL               | Attemping to call AdoptAndLock() will a NULL ScratchPadItem. Pipeline Transaction Hash=(%s)   | 40048
+ERR_SCRATCH_PAD_NOT_FOUND               | ScratchPad not found. Pipeline Transaction Hash=(%s). FunctionName= (%s)   | 40049
+ERR_SCRATCH_PAD_ITEM_NOT_FOUND          | ScratchPadItem not found. ResourceHash=(%s). Pipeline Transaction Hash=(%s). FunctionName= (%s)   | 40050
+ERR_SCRATCH_PAD_ITEM_ALREADY_EXISTS     | CreateScratchPadItem() failed because item with resourceHash=(%s) for Pipeline/Transaction=(%s) already exists.   |  40051
+ERR_SCRATCH_PAD_ITEM_LOCKED_BY_ANOTHER_TRANSACTION | Unable to Read or Write ScratchPadItem because it is locked by another transaction. ResourceHash=(%s) Pipeline/Transaction=(%s)   |  40052
+ERR_SCRATCH_PAD_ITEM_IS_READ_DIRTY      | WriteData() failed because item with resourceHash=(%s) has been updated bt another transaction.   |  40053
+ERR_EVENT_ORDER_MISSING_SCRATCH_PAD_ITEM | EventOrderImpl::doUpdateEventOrderData() is unable to find the ScratchPadItem with moniker (%s) and pipeline/transaction (%s). | 40054
+ERR_EVENT_ORDER_MISSING_IN_MEMORY_PROFILE | EventOrder Profile object is missing for account %s.   |   40055
+INF_FINAL_GROUP_SHARING_PROFILES_HASH_MAP_SIZE       | Final Group Sharing Profiles hash map size set to %s.  | 40057
+INF_REG_VALUE_GROUP_SHARING_PROFILES_HASH_MAP        | Group Sharing Profiles thread hash map size set to %s. | 40058
+INF_THREAD_INIT_GROUP_SHARING_PROFILES_LOADED        | Thread-%s has loaded %s GS Profiles. | 40059
+INF_THREAD_INIT_GROUP_SHARING_PROFILES_TIME          | Thread-%s initGroupSharingProfiles() GroupSharingProfiles Loading : Total Time %s seconds. [Query and Data Transfer %s seconds, Processing %s seconds] | 40060
+ERR_INIT_GROUP_SHARING_PROFILES_CANCELLED            | Thread=%s has cancelled in DAT::InitCustomerThread::initGroupSharingProfiles method - %s| 40061
+INF_MERGE_GROUP_SHARING_PROFILES_MAP_FINISHED        | Merging the group sharing profiles map has completed in %s seconds. | 40062
+ERR_FIRST_USAGE_OBJECT_ALREADY_INITIALIZED | First Usage product/discount with id (%s) has been already used and initialized in probably same or different transaction, so not initializing the validity with current time.  | 40063
+ERR_FIRST_USAGE_ITEM_ALREADY_COMMITTED | First Usage product/discount with id (%s) has been already committed in the pipeline. | 40064
+ERR_INSERTING_CUST_CREATE_EVENT_ORDER_PROFILE  |  Unable to insert EventOrderProfile (%s) for newly created account (%s) during a CustCreate event. | 40065
+ERR_INIT_BALANCE_GROUPS_BILLINFO | Thread=%s BillInfo missing in DAT::InitCustomerThread::initBalanceGroups method  for account - %s   | 40066
+ERR_UPDATE_BILLING_STATE_BAD_DATASTRING | BillInfo::updateBillingState() failed with invalid dataStringM (%s)   | 40067
+INF_REG_VALUE_EVENT_ORDER_HASH_MAP     | EventOrderProfile thread hash map size set to %s.         | 40068
+INF_REG_VALUE_GSC_HASH_MAP     | GroupSharingCharges thread hash map size set to %s.               | 40069
+INF_REG_VALUE_GSD_HASH_MAP     | GroupSharingDiscounts thread hash map size set to %s.             | 40070
+INF_REG_VALUE_GSM_HASH_MAP     | GroupSharingBalanceMonitors thread hash map size set to %s.       | 40071
+INF_REG_VALUE_GSP_HASH_MAP     | GroupSharingProfiles thread hash map size set to %s.              | 40072
+ERR_LOOKUP_CONSTANT_ITEM       | ConstantItem::getPoolItem() cannot find requested item (%s) in the ConstantItem Pool.    | 40073
+ERR_REQUIRED_REG_ENTRY_MISSING | Error: %s | 40075
+ERR_REQUIRED_REG_ENTRY_NOT_CONFIGURED | Entry not configured for DAT_Account: %s | 40076
+WRN_MODIFY_PROFILE_NO_SERVICE  | Warning, unable to complete the Modify/CreateProfile event.  Cannot locate the ERA's Service Object in the CustomerData ServiceMap. ServiceID = %s  | 40077
+ERR_INVALID_TYPE_CAST     | Error on type cast %s.              | 40078
+WRN_INVALID_SERVICE_IN_PROFILE  | Warning, One or more service profiles point to an invalid service id | 40079
+WRN_INVALID_ACCOUNT_IN_PROFILE  | Warning, One or more account profiles point to an invalid account id | 40080
+ERR_INVALID_ENTRY_FOR_BUSINESS_PARAM | Invalid value for Business Parameter: %s Value: %s | 40081
+ERR_BILLINFO_UPDATE                | Customer billinfo update error: %s     | 40082
+WRN_REG_ENTRY_INVALID  | Warning, Registry entry for DAT_Account is invalid %s | 40083
+ERR_MISSING_EVENT_TYPE  | Event type has to be passed since multiple events are mapped to servce %s | 40084
+ERR_INVALID_EVENT_TYPE  | Event type %s passed is not valid for the service %s | 40085

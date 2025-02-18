@@ -1,0 +1,57 @@
+================================================================================
+FCT_PreSuspense
+--------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+Module Version: 7.3_Modular 10009  23-Mar-2007  ashishk
+bug5943102    : SUSPENSE CHANGES FOR RA PROPAGATION
+================================================================================
+
+Module Version: 7.0_Patch 10008  03-Aug-2005  pmahishi
+PRSF00178411: FCT_PreSuspense is slow(propagation of PRSF00148592 from 7.0_EBF)
+
+================================================================================
+Module Version: 6.7_FP2  10007  16-Sep-2004  Deepak Kapila
+PRSF00131621 : QF: To Modify FCT_PreSuspense functional plugin for One EDR Recycling Method
+
+Implemented the code for the Standard recycling mechanism.
+Standard recycling mechanism will be identified if there is QueryableFields entry in the registry or not.
+If the QueryableFields entry is not there in the registry then some of the data structures are not
+required to be populated.
+Also in the standard recycling mechanism HEADER.QUERYABLE_FIELDS_MAPPING and
+DETAIL.ASS_SUSPENSE_EXT.QUERYABLE_FIELDS are set to an empty string. 
+
+================================================================================
+Module Version: 6.7_FP2  10006  24-May-2004  Satya Prakash
+PRSF00105998: NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+=============================================================================
+
+Revision: 10005  6.7_FP2  25-May-2004  pmahishi
+PRSF000103037: Need to store original batch id as well as suspended (rerating) batch id in /suspended_usage object in
+Suspense Handling
+
+=============================================================================
+
+Revision: 6.7_FP2 10004 15-Mar-2004  lalita
+RSF00099753: Change xml Serialize function to binary serialize
+==============================================================================
+
+Revision: 6.7_FP1 10003 26-Dec-2003  rjadav/vgounder
+RSF00084113: Change in Serialize function
+
+
+Revision: 6.7_FP1  10002  18-Nov-2003  rjadav/vgounder
+PRSF00077637: Setting of BATCH_ID during recycling
+
+==============================================================================
+
+Revision: 6.5_FP3  10001  03-Oct-2003  msung
+PRSF00068493: Supports recycling process
+
+==============================================================================
+
+Revision: 6.5_FP3  10000  21-Aug-2003  msung
+PRSF00056560: Initial version of FCT_PreSuspense
+
+================================================================================

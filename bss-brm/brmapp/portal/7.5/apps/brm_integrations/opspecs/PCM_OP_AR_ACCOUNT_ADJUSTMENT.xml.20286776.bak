@@ -1,0 +1,615 @@
+<Opcode name="PCM_OP_AR_ACCOUNT_ADJUSTMENT"
+		visibility="public"
+		transaction="required"
+		component="fm_ar"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc>This opcode creates debit or credit adjustments at account, billinfo and service level.</Doc>
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>Account poid.</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Decimal name="PIN_FLD_AMOUNT" use="required">
+				<Doc> Amount of adjustment.</Doc>
+			</Decimal>
+			<Int name="PIN_FLD_CURRENCY" use="optional">
+				<Doc> Currency associated with Amount. This field is optional and will default to primary currency if not set.</Doc>
+			</Int>
+			<String name="PIN_FLD_DESCR" use="optional"
+					maxlen="255">
+				<Doc> Adjustment description - Free text for application to describe the adjustment.</Doc>
+			</String>
+			<String name="PIN_FLD_PROGRAM_NAME" use="required"
+					maxlen="60">
+				<Doc> Program name - Identifies calling program.</Doc>
+			</String>
+			<Int name="PIN_FLD_STR_VERSION" use="optional">
+				<Doc> String version of the debit or credit reason code.</Doc>
+			</Int>
+			<Int name="PIN_FLD_STRING_ID" use="optional">
+				<Doc> String ID of the debit or credit reason Code.</Doc>
+			</Int>
+			<Timestamp name="PIN_FLD_START_T" use="optional">
+				<Doc> Start time - Timestamp of when event started (Portal Time).</Doc>
+			</Timestamp>
+			<Timestamp name="PIN_FLD_END_T" use="optional">
+				<Doc> End time - Timestamp of when event ended (Portal Time).</Doc>
+			</Timestamp>
+			<Decimal name="PIN_FLD_AMOUNT_ORIG" use="optional">
+				<Doc> Original Amount of adjustment. This field would contain the secondary currency amount.</Doc>
+			</Decimal>
+			<Int name="PIN_FLD_RESOURCE_ID_ORIG" use="optional">
+				<Doc> Currency associated with original amount in PIN_FLD_AMOUNT_ORIG.</Doc>
+			</Int>
+			<Poid name="PIN_FLD_BILLINFO_OBJ" use="optional"
+					mode="complete">
+				<Doc> Billinfo poid - When specified, the default balance group of this billinfo will be impacted. However, if the balance group is specified then this field is not considered. In case neither billinfo nor the balance group are specified, then the account's default balance group will be impacted.</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+					mode="complete">
+				<Doc> Balance Group poid: When specified, this balance group will be impacted.  Otherwise, if billinfo is passed then default balance group of the billinfo will be impacted. If both billinfo and balance group are not passed then accounts default balance group will be impacted.</Doc>
+				<ClassRef>obj://balance_group</ClassRef>
+			</Poid>
+			<String name="PIN_FLD_ITEM_NO" use="optional" maxlen="60">
+				<Doc> This field gets passed by pin_apply_bulk_adjustment application. This field conatins the PIN_SEQUENCE_TYPE_ADJUSTMENT prefixed with "A1-", Ex. PIN_FLD_ITEM_NO    STR [0] "A1-58". If this field is not passed then PIN_SEQUENCE_TYPE_ADJUSTMENT is fetched from /data/sequence.</Doc>
+			</String>
+			<Array name="PIN_FLD_SUB_BALANCES" use="optional"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="0"
+					minElemId="0"
+					isElemIdAssignAllowed="true" isElemIdAnyAllowed="false"
+					isRecursive="false">
+				<Doc> Sub-balance element, for adjusting a particular sub-balance or creating a new  entry. The element ID will be a particular one if adjusting, or PIN_ELEMID_ASSIGN for new creation.</Doc>
+				<Fields>
+					<Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+						<Doc>The start date of this validity based balance.</Doc>
+					</Timestamp>
+					<Timestamp name="PIN_FLD_VALID_TO" use="optional">
+						<Doc>The end date of this validity based balance.</Doc>
+					</Timestamp>
+				</Fields>
+			</Array>
+			<Int name="PIN_FLD_FLAGS" use="optional">
+				<Doc> Optional flag for tax treatment. The PIN_AR_WITH_TAX (value = 2, see pin_bill.h) flag value directs the opcode to adjust the taxes, and the PIN_AR_WITHOUT_TAX (value = 1, see pin_bill.h)flag value directs the opcode to adjust without tax. If this flag is not specified then the default tax behavior is read from the pin.conf file of the CM.</Doc>
+			</Int>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required" mode="complete">
+				<Doc>Account object passed into call (on event).</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Enum name="PIN_FLD_RESULT" use="optional">
+				<Doc> Result of the operation (pass or fail).</Doc>
+				<Values>
+					<Value>0</Value>
+					<Doc>PIN_RESULT_FAIL</Doc>
+				</Values>
+				<Values>
+					<Value>1</Value>
+					<Doc>PIN_RESULT_PASS</Doc>
+				</Values>
+			</Enum>
+			<String name="PIN_FLD_DESCR" use="optional"
+					maxlen="255">
+				<Doc> Descriptive message - may be sent on success as well as failure.</Doc>
+			</String>
+			<Substruct name="PIN_FLD_ON_DEMAND_INFO" use="optional" isRecursive="false">
+				<Doc>
+On demand bill substructure resulted from item assign
+Refer PCM_OP_BILL_ITEM_ASSIGN for entry details
+</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_BILL_OBJ" use="required"
+							mode="complete">
+						<Doc> On demand bill object ( if created or passed )</Doc>
+						<ClassRef>obj://bill</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_AR_BILL_OBJ" use="required"
+							mode="complete">
+						<Doc> On demand AR bill object ( if created or passed )</Doc>
+						<ClassRef>obj://bill</ClassRef>
+					</Poid>
+					<String name="PIN_FLD_ITEM_POID_LIST" use="required"
+							maxlen="256">
+						<Doc> Account level cumulative items poid list for bill now  (from account)</Doc>
+					</String>
+					<Array name="PIN_FLD_SPONSOR" use="optional"
+							elemIdMode="ignored" iterationOrder="undefined"
+							minElements="0"
+							minElemId="0"
+							isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+							isRecursive="false">
+						<Doc> For account that is sponsored</Doc>
+						<Fields>
+							<Poid name="PIN_FLD_POID" use="required"
+									mode="complete">
+								<Doc> Sponsor Account</Doc>
+								<ClassRef>obj://account</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_BILL_OBJ" use="required"
+									mode="complete">
+								<Doc> On demand bill object for the sponsor account</Doc>
+								<ClassRef>obj://bill</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_AR_BILL_OBJ" use="required"
+									mode="complete">
+								<Doc> On demand AR bill object for the sponsor account( if created or passed )</Doc>
+								<ClassRef>obj://bill</ClassRef>
+							</Poid>
+							<String name="PIN_FLD_ITEM_POID_LIST" use="required"
+									maxlen="256">
+								<Doc> Account level cumulative items poid list for on demand bill  (taken from sponsor account)</Doc>
+							</String>
+							<Int name="PIN_FLD_CURRENCY" use="required">
+								<Doc> Sponsor account primary currency</Doc>
+							</Int>
+							<Poid name="PIN_FLD_PAYINFO_OBJ" use="required"
+									mode="complete">
+								<Doc> Sponsor account payinfo object</Doc>
+								<ClassRef>obj://payinfo</ClassRef>
+							</Poid>
+						</Fields>
+					</Array>
+					<Array name="PIN_FLD_SERVICES" use="optional"
+							elemIdMode="ignored" iterationOrder="undefined"
+							minElements="0"
+							minElemId="0"
+							isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+							isRecursive="false">
+						<Doc> end array PIN_FLD_SPONSOR   Taken from the account</Doc>
+						<Fields>
+							<Poid name="PIN_FLD_SERVICE_OBJ" use="required"
+									mode="complete">
+								<Doc> Service object poid product belongs to</Doc>
+								<ClassRef>obj://service</ClassRef>
+							</Poid>
+							<String name="PIN_FLD_ITEM_POID_LIST" use="required"
+									maxlen="256">
+								<Doc> Service level cumulative items poid list for bill now</Doc>
+							</String>
+						</Fields>
+					</Array>
+				</Fields>
+			</Substruct>
+			<Array name="PIN_FLD_RESULTS" use="required" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+				<Doc>
+Array of results information.
+Since only one event object is created by this call, only one element
+will be returned. The element-id is not significant.
+</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_POID" use="required" mode="complete">
+						<Doc>Poid of the event object created for event</Doc>
+						<ClassRef>obj://event</ClassRef>
+					</Poid>
+					<Array name="PIN_FLD_BAL_IMPACTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>Event balance impacts</Doc>
+						<Fields>
+							<Enum name="PIN_FLD_IMPACT_TYPE" use="optional">
+								<Doc>Impact type.Indicates the impact type of the event.</Doc>
+								
+								<Values>
+									<Value>1</Value>
+									<Doc>PIN_IMPACT_TYPE_RATED </Doc>
+								</Values>
+								<Values>
+									<Value>2</Value>
+									<Doc>PIN_IMPACT_TYPE_PRERATED</Doc>
+								</Values>
+								<Values>
+									<Value>4</Value>
+									<Doc>PIN_IMPACT_TYPE_TAX </Doc>
+								</Values>
+								<Values>
+									<Value>8</Value>
+									<Doc>PIN_IMPACT_TYPE_PO </Doc>
+								</Values>
+								<Values>
+									<Value>16</Value>
+									<Doc>PIN_IMPACT_TYPE_TOLERANCE</Doc>
+								</Values>
+								<Values>
+									<Value>32</Value>
+									<Doc>PIN_IMPACT_TYPE_RERATED</Doc>
+								</Values>
+								<Values>
+									<Value>64</Value>
+									<Doc>PIN_IMPACT_TYPE_RERATED_TAX</Doc>
+								</Values>
+								<Values>
+									<Value>128</Value>
+									<Doc>PIN_IMPACT_TYPE_DISCOUNT</Doc>
+								</Values>
+								<Values>
+									<Value>256</Value>
+									<Doc>PIN_IMPACT_TYPE_DISCOUNT_RERATED</Doc>
+								</Values>
+								<Values>
+									<Value>258</Value>
+									<Doc>PIN_IMPACT_TYPE_INTEGRATE_PRERATED</Doc>
+								</Values>
+								<Values>
+									<Value>288</Value>
+									<Doc>PIN_IMPACT_TYPE_INTEGRATE_RERATED</Doc>
+								</Values>
+								<Values>
+									<Value>512</Value>
+									<Doc>PIN_IMPACT_TYPE_SHARING</Doc>
+								</Values>
+								<Values>
+									<Value>1024</Value>
+									<Doc>PIN_IMPACT_TYPE_SHARING_RERATED</Doc>
+								</Values>
+							
+							</Enum>
+							<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+								<Doc>Numeric value of the resource that is impacted.</Doc>
+							</Int>
+							<Int name="PIN_FLD_RESOURCE_ID_ORIG" use="optional">
+								<Doc> Currency associated with original amount.</Doc>
+							</Int>
+							<String name="PIN_FLD_TAX_CODE" use="optional"
+									maxlen="255">
+								<Doc>Tax code for this particular rate.</Doc>
+							</String>
+							<String name="PIN_FLD_RATE_TAG" use="optional"
+									maxlen="255">
+								<Doc>Rate Tag.</Doc>
+							</String>
+							<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+									mode="complete">
+								<Doc>Account object we are logging this balance impact against.</Doc>
+								<ClassRef>obj://account</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_ITEM_OBJ" use="optional"
+									mode="complete">
+								<Doc>Item object we are logging this balance impact against.</Doc>
+								<ClassRef>obj://item</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_RATE_OBJ" use="optional"
+									mode="complete">
+								<Doc>Rate object that was used to generate this balance impact for rated events.</Doc>
+								<ClassRef>obj://rate</ClassRef>
+							</Poid>
+							<Decimal name="PIN_FLD_DISCOUNT" use="optional">
+								<Doc>Discount amount applied for this balance impact.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_PERCENT" use="optional">
+								<Doc>Adjustment percent</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_QUANTITY" use="optional">
+								<Doc>Quantity applied - "units" that were actually applied using this rate.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_AMOUNT_DEFERRED" use="optional">
+								<Doc>Tax deffered amount.</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_AMOUNT" use="optional">
+								<Doc>Amount of adjustment</Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_AMOUNT_ORIG" use="optional">
+								<Doc>Original amount of adjustment</Doc>
+							</Decimal>
+							<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+									mode="complete">
+								<Doc>Balance group poid.</Doc>
+								<ClassRef>obj://balance_group</ClassRef>
+							</Poid>
+							<Int name="PIN_FLD_GL_ID" use="optional">
+								<Doc>General Ledger ID associated with this balance impact.</Doc>
+							</Int>
+							<String
+									name="PIN_FLD_IMPACT_CATEGORY"
+									use="optional">
+								<Doc>Impact category.</Doc>
+							</String>
+							<String
+									name="PIN_FLD_LINEAGE"
+									use="optional">
+								<Doc> Lineage of event attributes, will be recordedin the event balance impact array,   can only be specified if PIN_FLD_RATE_PLAN_N
+AME is specified.</Doc>
+							</String>
+							<Poid
+									name="PIN_FLD_OFFERING_OBJ"
+									use="optional"
+									mode="complete">
+								<Doc>poid of the purchased product</Doc>
+							</Poid>
+							<Poid
+									name="PIN_FLD_PRODUCT_OBJ"
+									use="optional"
+									mode="complete">
+								<Doc>In case of discount balance impact Discount Object</Doc>
+								<ClassRef>obj://product</ClassRef>
+							</Poid>
+							<Int
+									name="PIN_FLD_RUM_ID"
+									use="optional">
+								<Doc>RUM id</Doc>
+							</Int>
+							<String
+									name="PIN_FLD_DISCOUNT_INFO"
+									use="optional">
+								<Doc>Discount information</Doc>
+							</String>
+						</Fields>
+					</Array>
+					<Array name="PIN_FLD_SUB_BAL_IMPACTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>Sub Balance Imapcts</Doc>
+						<Fields>
+							<Poid name="PIN_FLD_BAL_GRP_OBJ" use="optional"
+									mode="complete">
+								<Doc>Balance group poid</Doc>
+								<ClassRef>obj://balance_group</ClassRef>
+							</Poid>
+							<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+								<Doc> Currency associated with original amount.</Doc>
+							</Int>
+							<Array name="PIN_FLD_SUB_BALANCES" use="optional"
+									elemIdMode="ignored" iterationOrder="undefined"
+									minElements="0"
+									minElemId="0"
+									isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+									isRecursive="false">
+								<Doc>Sub balance element adjusted.</Doc>
+								<Fields>
+									<Decimal name="PIN_FLD_AMOUNT" use="optional">
+										<Doc> Amount of adjustment.</Doc>
+									</Decimal>
+									<Timestamp name="PIN_FLD_VALID_FROM" use="optional">
+										<Doc>Start date of this validity based balance.</Doc>
+									</Timestamp>
+									<Timestamp name="PIN_FLD_VALID_TO" use="optional">
+										<Doc>The end date of this validity based balance.</Doc>
+									</Timestamp>
+									<String name="PIN_FLD_CONTRIBUTOR_STR" use="optional"
+											maxlen="256">
+										<Doc>The contributor for this sub-balance.</Doc>
+									</String>
+									<Int name="PIN_FLD_ROLLOVER_DATA" use="optional">
+										<Doc>Rollover information for sub-balance.</Doc>
+									</Int>
+									<Int name="PIN_FLD_VALID_FROM_DETAILS" use="optional">
+										<Doc>Detail of field PIN_FLD_VALID_FROM mode, offset and unit.</Doc>
+									</Int>
+									<Int name="PIN_FLD_VALID_TO_DETAILS" use="optional">
+										<Doc>Detail of field PIN_FLD_VALID_TO mode, offset and unit.</Doc>
+									</Int>
+									<Poid name="PIN_FLD_GRANTOR_OBJ" use="optional"
+											mode="complete">
+										<Doc>Poid of the grantor.</Doc>
+										<ClassRef>obj://purchased_product</ClassRef>
+										<ClassRef>obj://purchased_discount</ClassRef>
+										<ClassRef>obj://product</ClassRef>
+									</Poid>
+								</Fields>
+							</Array>
+						</Fields>
+					</Array>
+					<Array name="PIN_FLD_TOTAL" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>Total balance impact per resource</Doc>
+						<Fields>
+							<Decimal name="PIN_FLD_AMOUNT" use="required">
+								<Doc>Amount</Doc>
+							</Decimal>
+						</Fields>
+					</Array>
+					<Array name="PIN_FLD_RUM_MAP" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>RUM MAP - RUM MAPs used for rating the event in multirum rating.</Doc>
+						<Fields>
+							<Decimal name="PIN_FLD_NET_QUANTITY" use="required">
+								<Doc>Net quantity applied for rating</Doc>
+							</Decimal>
+							<String name="PIN_FLD_RUM_NAME" use="required">
+								<Doc>Name of the RUM</Doc>
+							</String>
+							<Decimal name="PIN_FLD_UNRATED_QUANTITY" use="required">
+								<Doc>Quantity which has not been rated, for the RUM</Doc>
+							</Decimal>
+						</Fields>
+					</Array>
+					<Decimal name="PIN_FLD_UNRATED_QUANTITY" use="optional">
+						<Doc>Quantity which has not been rated, in single RUM case</Doc>
+					</Decimal>
+					<Poid name="PIN_FLD_SERVICE_OBJ" use="optional" mode="complete">
+						<Doc> Service object initiating session</Doc>
+						<ClassRef>obj://service</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional" mode="complete">
+						<Doc>Account object for which the session to be created</Doc>
+						<ClassRef>obj://account</ClassRef>
+					</Poid>
+					<Enum name="PIN_FLD_RATING_STATUS" use="optional">
+						<Doc>Status of Rating result. Either success or reason for failure</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>SUCCESSFUL_RATING</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>ZERO_QUANTITY</Doc>
+						</Values>
+						<Values>
+							<Value>10</Value>
+							<Doc>NO_SCALE_TO_RATE</Doc>
+						</Values>
+						<Values>
+							<Value>11</Value>
+							<Doc>NO_CANDIDATE_RUMS</Doc>
+						</Values>
+						<Values>
+							<Value>12</Value>
+							<Doc>NO_INITIAL_PRODUCTS</Doc>
+						</Values>
+						<Values>
+							<Value>13</Value>
+							<Doc>PRIMARY_PRODUCT_NOT_IN_DB</Doc>
+						</Values>
+						<Values>
+							<Value>14</Value>
+							<Doc>NO_PRODUCT_IN_AUDIT_DB</Doc>
+						</Values>
+						<Values>
+							<Value>15</Value>
+							<Doc>CALC_MAX_IN_MULTI_RUM</Doc>
+						</Values>
+						<Values>
+							<Value>16</Value>
+							<Doc>NO_MATCHING_RUM</Doc>
+						</Values>
+						<Values>
+							<Value>17</Value>
+							<Doc>NO_QUALIFIED_PRODUCTS</Doc>
+						</Values>
+						<Values>
+							<Value>18</Value>
+							<Doc>NO_RUM</Doc>
+						</Values>
+						<Values>
+							<Value>19</Value>
+							<Doc>STATUS_MISMATCH</Doc>
+						</Values>
+						<Values>
+							<Value>20</Value>
+							<Doc>NO_RATE_PLAN</Doc>
+						</Values>
+						<Values>
+							<Value>21</Value>
+							<Doc>NO_MATCHING_SELECTOR_DATA</Doc>
+						</Values>
+						<Values>
+							<Value>22</Value>
+							<Doc>NO_MATCHING_IMPACT_CATEGORY</Doc>
+						</Values>
+						<Values>
+							<Value>23</Value>
+							<Doc>NO_RATING_CURRENCY</Doc>
+						</Values>
+						<Values>
+							<Value>24</Value>
+							<Doc>CREDIT_LIMIT_EXCEEDED</Doc>
+						</Values>
+					</Enum>
+					<Substruct name="PIN_FLD_CYCLE_INFO" use="optional" isRecursive="false">
+						<Doc>Cycle Information substruct</Doc>
+						<Fields>
+							<Timestamp name="PIN_FLD_CYCLE_START_T" use="required">
+								<Doc> Indicates the cycle start time if the event is a cycle event. </Doc>
+							</Timestamp>
+							<Timestamp name="PIN_FLD_CYCLE_END_T" use="required">
+								<Doc> Indicates the cycle end time if the event is a cycle event. </Doc>
+							</Timestamp>
+							<Int name="PIN_FLD_FLAGS" use="required">
+								<Doc>Cycle flags</Doc>
+							</Int>
+							<Decimal name="PIN_FLD_SCALE" use="required">
+								<Doc> scale for proration </Doc>
+							</Decimal>
+							<Decimal name="PIN_FLD_ORIGINAL_SCALE" use="required">
+								<Doc> Original scale for proration. Relative to PIN_FLD_SCALE </Doc>
+							</Decimal>
+						</Fields>
+					</Substruct>
+				</Fields>
+			</Array>
+			<Substruct name="PIN_FLD_EXTENDED_INFO" use="optional" isRecursive="false">
+				<Doc>
+The extended_info substruct is used for passing reusable information around
+between transactions. The opcode op_act_usage only does routing job for this
+structure.
+It currently contains only reusable lineage info under pin_fld_results array.
+Since the PIN_FLD_EXTENDED_INFO substruct is reserved for special
+functionality such as IP Telephony. Portal recommends you don't use the
+PIN_FLD_EXTENDED_INFO substruct for your customization in the input or
+output flist of this opcode.
+</Doc>
+				<Fields>
+					<Substruct name="PIN_FLD_INHERITED_INFO" use="optional" isRecursive="false">
+						<Doc>
+reusable account info include first level fields, account products
+info, and account balances info
+</Doc>
+						<Fields></Fields>
+					</Substruct>
+					<Array name="PIN_FLD_RESULTS" use="optional" elemIdMode="ignored" iterationOrder="undefined" isElemIdAssignAllowed="false" isElemIdAnyAllowed="false" isRecursive="false">
+						<Doc>This array stores all reusable lineage values</Doc>
+						<Fields>
+							<String name="PIN_FLD_STRING" use="optional" maxlen="255">
+								<Doc>field name</Doc>
+							</String>
+							<String name="PIN_FLD_LINEAGE" use="optional" maxlen="255">
+								<Doc>field value</Doc>
+							</String>
+						</Fields>
+					</Array>
+				</Fields>
+			</Substruct>
+			<Substruct name="PIN_FLD_ROLLOVER_INFO" use="optional" isRecursive="false">
+				<Doc>Optional substruct that is used to return details of the rollover object</Doc>
+				<Fields>
+					<String name="PIN_FLD_IMPACT_CATEGORY" use="required" maxlen="256">
+						<Doc>Impact category value</Doc>
+					</String>
+					<Enum name="PIN_FLD_PRORATE_FIRST" use="required">
+						<Doc>Proration flag for the first period</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_RATE_FSTLST_NA</Doc>
+						</Values>
+						<Values>
+							<Value>701</Value>
+							<Doc>PIN_RATE_FSTLST_FULL</Doc>
+						</Values>
+						<Values>
+							<Value>702</Value>
+							<Doc>PIN_RATE_FSTLST_PRORATE</Doc>
+						</Values>
+						<Values>
+							<Value>703</Value>
+							<Doc>PIN_RATE_FSTLST_NONE</Doc>
+						</Values>
+					</Enum>
+					<Enum name="PIN_FLD_PRORATE_LAST" use="required">
+						<Doc>Proration flag for the last period</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_RATE_FSTLST_NA</Doc>
+						</Values>
+						<Values>
+							<Value>701</Value>
+							<Doc>PIN_RATE_FSTLST_FULL</Doc>
+						</Values>
+						<Values>
+							<Value>702</Value>
+							<Doc>PIN_RATE_FSTLST_PRORATE</Doc>
+						</Values>
+						<Values>
+							<Value>703</Value>
+							<Doc>PIN_RATE_FSTLST_NONE</Doc>
+						</Values>
+					</Enum>
+					<Decimal name="PIN_FLD_ROLLOVER_MAX_UNITS" use="required">
+						<Doc>Max qty that can be rolled over across periods</Doc>
+					</Decimal>
+					<Decimal name="PIN_FLD_ROLLOVER_UNITS" use="required">
+						<Doc>Max amt that can be rolled over</Doc>
+					</Decimal>
+					<Int name="PIN_FLD_ROLLOVER_COUNT" use="required">
+						<Doc>No of months the qty can be rolled over</Doc>
+					</Int>
+					<Enum name="PIN_FLD_ROLLOVER_UOM" use="required">
+						<Doc>No of periods the qty can be rolled over</Doc>
+					</Enum>
+				</Fields>
+			</Substruct>
+		</Fields>
+	</Output>
+</Opcode>
+

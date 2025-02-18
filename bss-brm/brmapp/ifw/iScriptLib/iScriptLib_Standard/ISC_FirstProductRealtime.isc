@@ -1,0 +1,144 @@
+//==============================================================================
+//
+//      Copyright (c) 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_FirstProductRealtime.isc
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module prepare the input flist & calls the 
+//   PCM_OP_SUBSCRIPTION_SET_VALIDITY opcode to set the validity.
+//
+//------------------------------------------------------------------------------
+//
+// @(#)% %
+//
+//------------------------------------------------------------------------------
+// Responsible: Ashwani Kumar
+//
+// $RCSfile: ISC_FirstProductRealtime.isc,v $
+// $Revision: 1.0 $
+// $Author: Ashwani Kumar $
+// $Date: 2006/05/05 13:30:00 $
+// $Locker:  $
+//------------------------------------------------------------------------------
+
+
+//==============================================================================
+// onDetailEdr()
+// This function is fired for each detail edr.
+//==============================================================================
+
+use EXT_FList;
+use EXT_Opcode;
+
+String list[];
+String tmplist[];
+Long numList;
+Long internPPIndex;
+Long firstUsageInd;
+
+String s1 = "";
+String s2 = "";
+
+function onDetailEdr
+{
+  logPipeline("ISC_FirstProductRealtime::onDetailEdr()\n");
+
+  // Get the index of the product used.
+  internPPIndex = edrLong( DETAIL.CUST_A.INTERN_FOUND_PP_INDEX, 0 );
+
+  // Check if the product used is a first usage product or not.
+  firstUsageInd = edrLong  (DETAIL.CUST_A.PRODUCT.FIRST_USAGE_INDICATOR, 0,internPPIndex );
+
+  if( firstUsageInd == 1)
+  {
+    // This is a first usage product.
+
+    // Create a new flist
+    fListCreateNew();
+
+    // Get the Account Obj Poid.    
+    numList =  strSplit( list, edrString(DETAIL.CUST_A.ACCOUNT_PARENT_ID, 0), "_");  
+    String dbNumber = list[0];
+    String accountObj = "0.0.0."+dbNumber+" "+"/account"+" "+list[1]+" 0";
+
+    // Set the account obj poid in the flist.
+    fListSetPoid( "PIN_FLD_ACCOUNT_OBJ", accountObj);
+
+    // Get the Product Poid.
+    numList =  strSplit( list, edrString(DETAIL.CUST_A.PRODUCT.OFFERING_POID, 0,internPPIndex ), " ");
+    // Since the poid is in the format "1_114319 /purchased_product", splitting by "_" to get the id
+    strSplit( tmplist, list[0], "_");
+
+    String productPoid = "0.0.0."+dbNumber+" "+list[1]+" "+tmplist[1]+" 0";
+    // Set the product poid the flist.
+    fListSetPoid( "PIN_FLD_POID", productPoid);
+
+    // Get Service ID.
+    numList =  strSplit( list, edrString(DETAIL.CUST_A.PRODUCT.SERVICE_ID, 0,internPPIndex ), "_");  
+    list[0] = edrString(DETAIL.CUST_A.PRODUCT.SERVICE_TYPE, 0,internPPIndex );
+    String servicePoid = "0.0.0."+dbNumber+" "+list[0]+" "+list[1]+" 0";
+
+    // Set the service poid in the flist.
+    fListSetPoid( "PIN_FLD_SERVICE_OBJ", servicePoid);
+   
+    // Get session ID. 
+    list[1]  = longToStr(edrLong(DETAIL.EVENT_ID));  
+    list[0] = edrString(DETAIL.EVENT_TYPE);
+    String sessionPoid = "0.0.0."+dbNumber+" "+list[0]+" "+list[1]+" 0";
+
+    // Set the session poid in the flist.
+    fListSetPoid( "PIN_FLD_SESSION_OBJ", sessionPoid);
+
+    // Get start time & set in the flist.
+    Date chargingStartTime = edrDate(DETAIL.CHARGING_START_TIMESTAMP);
+    fListSetDate( "PIN_FLD_START_T", chargingStartTime );
+
+    // Get Pipeline name & set in the flist.
+    String programName = pipelineName(); // Pipline name or just "Pipeline"
+    fListSetString( "PIN_FLD_PROGRAM_NAME", programName );
+
+    // Get UTC Time Offset & set in the flist.
+    fListSetString( "PIN_FLD_TIMEZONE_ID", edrString(DETAIL.UTC_TIME_OFFSET));
+
+    //Execute the opcode PCM_OP_SUBSCRIPTION_SET_VALIDITY
+    if (opcodeExecuteInternal(9065,0) == false )
+    {
+      // Opcode failed.
+      fListGetErrorText( s1, s2 );
+      logPipeline("ERROR: PCM_OP_SUBSCRIPTION_SET_VALIDITY failed: " + s1 + " " + s2 + "\n");
+      String fRStr = fListToString();
+      logPipeline("Printing the Return FLIST:\n");
+      logPipeline(fRStr);
+    }
+    else
+    {
+      // Opcode Succeeded.
+
+      // Check if there is any error.
+      strSplit( list, fListString("PIN_FLD_POID"), " ");
+      if(list[1] == "/error_poid")
+      {
+        logPipeline("ERROR: PCM_OP_SUBSCRIPTION_SET_VALIDITY returned Error \n");
+        String fRStr = fListToString();
+        logPipeline(fRStr);
+      }
+      else
+      {
+        logPipeline("NORMAL: PCM_OP_SUBSCRIPTION_SET_VALIDITY passed \n");
+
+	// Set the DETAIL.REFRESH_BALANCE.
+        edrLong( DETAIL.REFRESH_BALANCE ) = 1;
+
+        logPipeline("Printing the Return FLIST:\n");
+        String fRStr = fListToString();
+        logPipeline(fRStr);
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+--
+-- Copyright (c) 2011, 2012, Oracle and/or its affiliates. 
+-- All rights reserved. 
+--
+-- This material is the confidential property of Oracle Corporation
+-- or its licensors and may be used, reproduced, stored or transmitted
+-- only in accordance with a valid Oracle license or sublicense agreement.
+--
+--------------------------------------------------------------------------------
+-- Block: Database
+--------------------------------------------------------------------------------
+-- Module Description:
+-- Update script for DB version
+--------------------------------------------------------------------------------
+-- Responsible: Saurabh Jain
+--------------------------------------------------------------------------------
+alter table IFW_DSCBALIMPACT modify(TAX_CODE varchar2(255));
+commit;
+

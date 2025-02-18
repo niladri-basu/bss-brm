@@ -1,0 +1,83 @@
+//===============================================================================
+//
+//      Copyright (c) 1998 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//
+// Block: IRL_UsageType.irl
+//
+// Module Description:
+//   This module replaces the FCT_CallType function module. 
+//   Used to determine Customer dependent event scenarios.
+//   This module has to be included into the system registry to 
+//   affect the event processing.
+//   example entries in the IRL_UsageType.data file:
+//   N,N,.,.,.,.,.,.,.,.,.,.,.,.,Y,HOME_CELL
+//
+//   Attention: the rulesets within the ".data"-file
+//   have to be used in a well defined order, to avoid
+//   that one rules overrides another if this is not
+//   wanted!
+//
+//===============================================================================
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//
+// Responsible: Jochen Bischoff
+//
+// $RCSfile: IRL_UsageType.irl,v $
+// $Revision: 1.3 $
+// $Author: jbischof $
+// $Date: 2001/08/30 11:06:07 $
+// $Locker:  $
+//
+// $Log: IRL_UsageType.irl,v $
+// Revision 1.3  2001/08/30 11:06:07  jbischof
+// PT0000000038801:
+// DETAIL.USAGE_CLASS changed to DETAIL.USAGE_TYPE
+//
+// Revision 1.2  2001/07/17 13:31:00  jbischof
+// changed INITIAL_ISCRIPT to INIT_SCRIPT
+//
+// Revision 1.1  2001/06/22 14:53:04  jbischof
+// iRules files for ISC_UsageType.isc
+//                                                                                                                
+//===============================================================================
+
+RULE: UsageTypeDetermination
+SOURCE: File
+FILE: ./iScriptLib/iScriptLib_Standard/IRL_UsageType.data
+
+INIT_SCRIPT:
+include "./iScriptLib/iScriptLib_Standard/ISC_UsageType.isc";
+
+CONDITION:
+
+isRoaming =~ "${1}";
+isInternational =~ "${2}";
+isHomeRegion =~ "${3}";
+isCustomerToCustomer =~ "${4}";
+isSameClosedUserGroup =~ "${5}";
+isSameCorporateAgreement =~ "${6}";
+isSameCustomer =~ "${7}";
+isSameSystemBrand =~ "${8}";
+isSameSegment =~ "${9}";
+isSameRateplan =~ "${10}";
+isSameDiscountModel =~ "${11}";
+isSameBillcycle =~ "${12}";
+isBirthdayCall =~ "${13}";
+isFriendsAndFamily =~ "${14}";
+isHomeCell =~ "${15}";
+${16};
+
+RESULT:
+
+edrString( DETAIL.USAGE_TYPE ) = "${17}"; 

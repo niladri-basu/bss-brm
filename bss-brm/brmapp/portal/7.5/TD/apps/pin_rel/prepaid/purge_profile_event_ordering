@@ -1,0 +1,21 @@
+#!/bin/sh
+#-------------------------------------------------------------------
+# @(#)% %
+# 
+#      Copyright (c) 2006 Oracle. All rights reserved.  
+#      This material is the confidential property of Oracle Corporation  
+#      or its licensors and may be used, reproduced, stored  
+#      or transmitted only in accordance with a valid Oracle license  
+#      or sublicense agreement.  
+#
+
+#-------------------------------------------------------------------
+#extracts user,pwd and host from dm_oracle's pin.conf 
+#and executes purge_profile_event_ordering proc
+#-------------------------------------------------------------------
+user=`grep '^-' $PIN_HOME/sys/dm_oracle/pin.conf | grep 'sm_id' | awk '{print $4}'`
+pwd=`grep  '^-' $PIN_HOME/sys/dm_oracle/pin.conf | grep 'sm_pw' | awk '{print $4}'`
+host=`grep '^-' $PIN_HOME/sys/dm_oracle/pin.conf | grep 'sm_database' | awk '{print $4}'`
+sqlplus -s $user/$pwd@$host << eof_sql
+execute pin_rel.purge_profile_event_ordering;
+eof_sql

@@ -1,0 +1,50 @@
+#####################################################################
+# Wrapper script to call the td_cc_reverse
+# application td_cc_reverse.pl
+# from the cronrab environment
+####################################################################
+
+#!/bin/bash
+#cd $PIN_HOME
+cd /brmapp/portal/7.5
+#source $PIN_HOME/source.me.sh
+source /brmapp/portal/7.5/source.me.sh
+#Name of the script
+SCRIPT_NAME="crontab_td_cc_reverse.sh"
+echo "#################################################################"
+echo "$SCRIPT_NAME started at "`date` >>/brmapp/portal/7.5/TD/apps/td_cc_reverse/crontab_td_cc_reverse.log
+echo "#################################################################"
+echo 
+
+#cd $PIN_HOME/TD/apps/td_cc_reverse
+cd /brmapp/portal/7.5/TD/apps/td_cc_reverse
+echo "Current Working Directory: /brmapp/portal/7.5/TD/apps/td_cc_reverse::"
+echo
+
+##Check if the script is already running##
+
+USER=`id | awk -F\( '{print $2}' | awk -F\) '{print $1}'`
+#count=`ps -efo user,args | grep "$USER" | grep "sampling_control.pl"  | grep -v grep |grep -v "sh -c"|wc -l`
+count=`ps -ef | grep "$USER" | grep "td_cc_reverse.pl" | grep -v grep | wc -l`
+
+
+if [ $count -gt 1 ]; then
+echo "Process already running... "
+exit 1
+fi
+
+echo "#################################################################"
+echo "Starting Process Execution: " >>/brmapp/portal/7.5/TD/apps/td_cc_reverse/crontab_td_cc_reverse.log
+echo "#################################################################"
+####################################################################
+# Execute the paymnet processing mta executable from here
+####################################################################
+#./td_cc_reverse.pl
+./td_cc_reverse.pl -verbose  >> /brmapp/portal/7.5/TD/apps/td_cc_reverse/crontab_td_cc_reverse.log
+echo "#################################################################"
+echo "End of cc reverse" >> /brmapp/portal/7.5/TD/apps/td_cc_reverse/crontab_td_cc_reverse.log
+echo
+echo "#################################################################"
+echo "$SCRIPT_NAME finished at "`date` >> /brmapp/portal/7.5/TD/apps/td_cc_reverse/crontab_td_cc_reverse.log
+echo "#################################################################"
+echo

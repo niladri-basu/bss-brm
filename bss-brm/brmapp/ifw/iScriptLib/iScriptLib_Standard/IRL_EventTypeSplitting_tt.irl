@@ -1,0 +1,59 @@
+//==============================================================================
+//
+// Copyright (c) 1998, 2011, Oracle and/or its affiliates. 
+// All rights reserved. 
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//
+// Block: IRL_EventTypeSplitting.irl
+//
+// Module Description:
+//   This module assigns StreamNames to an edr according to the field
+//   DETAIL.INTERN_SERVICE_CODE which represents the event-type.
+//
+//   Attention: the rulesets within the ".data"-file
+//   have to be used in a well defined order, to avoid
+//   that one rules overrides another if this is not
+//   wanted!
+//
+//==============================================================================
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+// Responsible: Peter Engelbrecht
+//
+//------------------------------------------------------------------------------
+//
+// $RCSfile: IRL_EventTypeSplitting_tt.irl $
+// $Revision: /cgbubrm_main.pipeline/1 $
+// $Author: ashisguk $
+// $Date: 2011/04/15 17:28:06 $
+// $Locker:  $
+//
+//------------------------------------------------------------------------------
+// $Log: IRL_EventTypeSplitting.irl,v $
+// Revision 1.1  2001/07/10 10:02:07  pengelbr
+// PETS #36654 Splitting of output-streams per Event-Type.
+// Added IRL_EventTypeSplitting.data IRL_EventTypeSplitting.irl
+//
+//==============================================================================
+
+RULE: EventTypeSplitting
+SOURCE: File
+FILE: ./iScriptLib/iScriptLib_Standard/IRL_EventTypeSplitting_tt.data
+
+INIT_SCRIPT:
+
+CONDITION:
+edrString(DETAIL.INTERN_SERVICE_CODE) =~ "${1}";
+edrString(DETAIL.LOGICAL_PARTITION_ID) =~ "${2}";
+
+RESULT:
+edrSetStream("${3}");

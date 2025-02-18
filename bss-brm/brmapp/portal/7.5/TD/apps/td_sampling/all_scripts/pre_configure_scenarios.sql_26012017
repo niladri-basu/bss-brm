@@ -1,0 +1,2545 @@
+DROP TABLE TD_SCENARIO_DESCR_T CASCADE CONSTRAINTS;
+
+CREATE TABLE TD_SCENARIO_DESCR_T
+(
+  SCENARIO_ID     VARCHAR2(500 BYTE),
+  SCENARIO_DESCR  VARCHAR2(500 BYTE)
+);
+
+SET DEFINE OFF;
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_49', 'Calls to Voice Mail  having rating group AOG free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_5', 'Call is going to the plan included countries but charged incorrectly.');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_50', 'Voice Mail classified other charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_51', 'Calls to Voice Mail  having rating group PREMIUM_INTERNATIONAL or  SHARE_EVERYTHING  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_52', 'Calls to Voice Mail  having rating group PREMIUM_INTERNATIONAL or  SHARE_EVERYTHING  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_53', 'Calls to Voice Mail  having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_54', 'Calls to Voice Mail  having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_55', 'Calls to Voice Mail  having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_56', 'Calls to Voice Mail  having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_57', 'Roaming call from Zone 1 to NZ charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_58', 'Roaming call from Zone 1 to all other Zones  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_10', 'International Telehony calls toZone 1 having rating group AOG and tariff 44c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_11', 'International Telehony calls toZone 1 having rating group AOG and tariff 44c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_12', 'International Telehony calls to ROW having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_13', 'International Voicemail calls to ROW having rating groupAOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_14', 'International Telehony calls to ROW having rating group AOG free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_15', 'International Voicemail calls to ROW having rating group AOG free-1');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_16', 'International Telehony calls to Zone 1 Bonus having rating group BASE_DATA  and tariff 49c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_17', 'International Telehony calls to Zone 1 Bonus having rating group BASE_DATA  and tariff 49c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_18', 'International Telehony calls to Zone 1 Mobile having rating group BASE_DATA and tariff 69c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_19', 'International Telehony calls to Zone 1 Mobile having rating group BASE_DATA and tariff 69c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_2', 'Call to an international destination not in the free countries and charged on the 179 international plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_20', 'International Telehony calls toZone 1 having rating group BASE_DATA and tariff 69c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_21', 'International Telehony calls to Zone 1 having rating group BASE_DATA and  tariff 69c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_22', 'International Telehony calls to ROW having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_23', 'International Telehony calls to ROW having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_24', 'International Telehony calls to Zone 1 having rating group CARRYOVER_BASIC  and tariff 69c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_25', 'International Telehony calls to Zone 1 having rating group CARRYOVER_BASIC  and tariff 69c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_26', 'International Telehony calls to ROW having rating group CARRYOVER_BASIC  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_27', 'International Telehony calls to ROW having rating group CARRYOVER_BASIC free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_28', 'International Telehony calls to Zone 1 Bonus having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONALand tariff 22c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_29', 'International Telehony calls to Zone 1 Bonus having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONALand tariff 22c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_3', 'Call to an international destination free since in the list of free countries and charged on the 179 international plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_30', 'International Telehony calls to Zone 1 Mobile having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONALand tariff 44c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_31', 'International Telehony calls to Zone 1 Mobile having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONALand tariff 44c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_32', 'International Telehony calls toZone 1 having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONALand tariff 44c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_33', 'International Telehony calls toZone 1 having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONALand tariff 44c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_34', 'International Telehony calls to ROW having rating group LEGACY_PLAN or PREMIUM_INTERNATIONAL,   charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_35', 'International Telehony calls to ROW having rating group LEGACY_PLAN or PREMIUM_INTERNATIONAL,   free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_36', 'International Telephony calls not to zones in (''International - Zone 1'' ,''International - RoW'',''International Zone 1 Bonus'',''International Zone 1 Mobile'',''International - Zone 2'') and rating group in PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_37', 'International Telehony calls to Zone 1 having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL and  tariff 49c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_38', 'International Telehony calls to Zone 1 having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL and  tariff 49c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_39', 'International Telehony calls to ROW having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_4', 'Call to an international destination free since in the list of plan included free countries and charged on the 179 international plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_40', 'International Telehony calls to ROW having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_43', 'Incoming Calls while roaming in Zone 1');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_44', 'Incoming Calls while roaming in Zone 2');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_45', 'Incoming Calls while roaming in Zone 3');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_46', 'Incoming Calls while roaming in Zone 4');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_47', 'Incoming Calls while roaming in Zone 5');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_48', 'Calls to Voice Mail  having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_101', 'International SMS  having rating group AOG free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_102', 'International SMS  having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_103', 'International SMS  having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_104', 'International SMS  having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_105', 'International SMS  having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_106', 'International SMS  having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_107', 'International SMS  having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_108', 'MMS having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_109', 'Calls to other network having rating group AOG  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_110', 'Calls to other network having rating group AOG  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_111', 'Calls to other network having rating group BASE_DATA  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_144', 'Call to 2D having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_145', 'Call to 2D having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_146', 'SMS to 2D  having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_147', 'SMS to 2D  having rating group AOG free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_148', 'SMS to 2D  having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_149', 'SMS to 2D  having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_150', 'SMS to 2D  having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_151', 'SMS to 2D  having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_152', 'SMS to 2D  having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_153', 'SMS to 2D  having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_154', 'Calls to Voice Mail Free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_78', 'Calls to 2D where OVERIDDEN_TARRIF_PLAN in (151) charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_79', 'Calls to 2D where OVERIDDEN_TARRIF_PLAN in (151) free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_80', 'Calls to fixed line where OVERIDDEN_TARRIF_PLAN in (151) charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_81', 'Calls to fixed line where OVERIDDEN_TARRIF_PLAN in (151) free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_82', 'Calls to other mobile networks where OVERIDDEN_TARRIF_PLAN in (151) charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_83', 'Calls to other mobile networks where OVERIDDEN_TARRIF_PLAN in (151) free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_84', 'Calls to 2D where OVERIDDEN_TARRIF_PLAN in (96, 174) charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_85', 'Calls to 2D where OVERIDDEN_TARRIF_PLAN in (96, 174) free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_86', 'Calls to fixed line where OVERIDDEN_TARRIF_PLAN in (96,  174) charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_87', 'Calls to fixed line where OVERIDDEN_TARRIF_PLAN in (96,  174) free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_88', 'Calls to other mobile networks where OVERIDDEN_TARRIF_PLAN in (96,  174) charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_89', 'Calls to other mobile networks where OVERIDDEN_TARRIF_PLAN in (96,  174) free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_112', 'Calls to other network having rating group BASE_DATA  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_113', 'Calls to other network having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL and tariff 49c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_114', 'Calls to other network having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL and tariff 49c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_115', 'Calls to other network having rating group CARRYOVER_BASIC and tariff 69c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_116', 'Calls to other network having rating group CARRYOVER_BASIC and tariff 69c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_117', 'Call to other network having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_118', 'Call to other network having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_119', 'SMS to other mobile networks  having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_120', 'SMS to other mobile networks  having rating group AOG free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_121', 'SMS to other mobile networks  having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_122', 'SMS to other mobile networks  having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_123', 'SMS to other mobile networks  having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_124', 'SMS to other mobile networks  having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_125', 'SMS to other mobile networks  having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_126', 'SMS to other mobile networks  having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_128', 'Roaming SMS having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_129', 'Roaming SMS having rating group AOG  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_130', 'Roaming SMS having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_131', 'Roaming SMS having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_132', 'Roaming SMS having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_133', 'Roaming SMS having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_134', 'Roaming SMS having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_135', 'Roaming SMS having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_136', 'Call to 2D having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_137', 'Call to 2D having rating group AOG free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_138', 'Call to 2D having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_139', 'Call to 2D having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_140', 'Call to 2D having rating group  CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL and tariff 49c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_141', 'Call to 2D having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL and tariff 49c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_142', 'Call to 2D having rating group  CARRYOVER_BASIC  and tariff 69c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_143', 'Call to 2D having rating group  CARRYOVER_BASIC  and tariff 69c Not charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_59', 'Roaming call from Zone 1 to Zone 1 charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_6', 'International Telehony calls to Zone 1 Bonus having rating group AOG and tariff 22c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_60', 'Roaming call from Zone 1 to Voice Mail ');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_61', 'Roaming call from Zone 2 to NZ charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_62', 'Roaming call from Zone 2 to all other Zones  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_63', 'Roaming call from Zone 2 to Zone 2 charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_64', 'Roaming call from Zone 2 to Voice Mail ');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_65', 'Roaming call from Zone 3 to NZ charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_66', 'Roaming call from Zone 3 to all other Zones  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_67', 'Roaming call from Zone 3 to Zone 3 charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_68', 'Roaming call from Zone 3 to Voice Mail ');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_69', 'Roaming call from Zone 4 to NZ charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_7', 'International Telehony calls to Zone 1 Bonus having rating group AOG and tariff 22c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_70', 'Roaming call from Zone 4 to all other Zones  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_71', 'Roaming call from Zone 4 to Zone 4 charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_72', 'Roaming call from Zone 4 to Voice Mail ');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_73', 'Roaming call from Zone 5 to NZ charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_74', 'Roaming call from Zone 5 to all other Zones  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_75', 'Roaming call from Zone 5 to Zone 5 charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_76', 'Roaming call from Zone 5 to Voice Mail ');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_8', 'International Telehony calls to Zone 1 Mobile having rating group AOG and tariff 44c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('1_9', 'International Telehony calls to Zone 1 Mobile having rating group AOG and tariff 44c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_100', 'International SMS  having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_198', 'Other Calls having rating group AOG free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_199', 'Other Calls having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_200', 'Other Calls having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_201', 'Other Calls having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_202', 'Other Calls having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_203', 'Other Calls having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_204', 'Other Calls having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_205', 'Premium Content having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_206', 'Premium Content having rating group AOG  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_207', 'Premium Content having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_208', 'Premium Content having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_209', 'Premium Content having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_210', 'Premium Content having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_211', 'Premium Content having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_212', 'Premium Content having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_214', 'Charged Data Session while Roaming');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_215', 'Free Data Session while Roaming');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_216', 'Purchase Value Pack 12GB Zone Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_217', 'Purchase Value Pack 1GB Zone Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_218', 'Purchase Value Pack 3GB NZ Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_219', 'Purchase Value Pack 500MB NZ Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_220', 'Purchase Value Pack All You Need Landline Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_221', 'Purchase Value Pack Aussie Talk and Text Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_222', 'Purchase Value Pack China120 Talk Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_223', 'Purchase Value Pack Everyone100 Talk Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_90', 'Calls to fixed lines having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_91', 'Calls to fixed lines having rating group AOG free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_92', 'Calls to fixed lines having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_93', 'Calls to fixed lines having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_94', 'Calls to fixed lines having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL and tariff 49c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_95', 'Calls to fixed lines having rating group CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL and tariff 49c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_96', 'Calls to fixed lines having rating group CARRYOVER_BASIC and tariff 69c charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_97', 'Calls to fixed lines having rating group CARRYOVER_BASIC and tariff 69c free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_98', 'Calls to fixed lines having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('2_99', 'Calls to fixed lines having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_156', 'Calls to Care having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_157', 'Calls to Care having rating group AOG  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_158', 'Calls to Care having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_159', 'Calls to Care having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_160', 'Calls to Care having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_161', 'Calls to Care having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_162', 'Calls to Care having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_163', 'Calls to Care having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_164', 'Calls to Directory having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_165', 'Calls to Directory having rating group AOG  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_166', 'Calls to Directory having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_167', 'Calls to Directory having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_168', 'Calls to Directory having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_169', 'Calls to Directory having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_170', 'Calls to Directory having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_171', 'Calls to Directory having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_172', 'Calls to Intgernational Directory having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_173', 'Calls to Intgernational Directory having rating group AOG  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_174', 'Calls to Intgernational Directory having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_175', 'Calls to International Directory having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_176', 'Calls to International Directory having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_177', 'Calls to International Directory having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_178', 'Calls to International Directory having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_179', 'Calls to International Directory having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_180', 'Calls to TOLL FREE having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_181', 'Calls to TOLL FREE having rating group AOG  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_182', 'Calls to TOLL FREE having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_183', 'Calls to TOLL FREE having rating group BASE_DATA free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_184', 'Calls to TOLL FREE having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_185', 'Calls to TOLL FREE having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_186', 'Calls to TOLL FREE having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_187', 'Calls to TOLL FREE having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_188', 'Charged Data Session');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_189', 'Free Data Session');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_190', 'MMS having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_191', 'MMS having rating group AOG  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_192', 'MMS having rating group BASE_DATA charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_193', 'MMS having rating group DATA_PLAN free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_194', 'MMS having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_195', 'MMS having rating group CARRYOVER_BASIC  or CARRYOVER_STANDARD or  SHARE_EVERYTHING or PREMIUM_INTERNATIONAL  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_196', 'MMS having rating group LEGACY_PLAN or  PREMIUM_INTERNATIONAL free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_197', 'Other Calls having rating group AOG charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_257', 'Prorated on activation only Govt Tier 2 with subsidy up to 10,000 $33.95');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_259', 'Prorated on activation only Govt Tier 3 without subsidy up to 10,000  $36.05');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_261', 'Prorated on activation only Govt Tier 3 with subsidy up to 10,000 $42.95');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_263', 'Prorated on activation only Govt Unlimited without subsidy  $64.10');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_264', 'Prorated on activation only Govt unlimited with subsidy  $86.00');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_265', 'Prorated on activation only Carry over $29.95, 500MB ,  160 mins, unlimited txt');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_266', 'Prorated on activation only Carry over $39.95, 750 MB, 220 mins, unlimited txt');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_267', 'Prorated on activation only Carry Over $49.95, 1GB, 300 mins, unlimited txt');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_268', 'Prorated on activation only Carry Over $69.95, 1.25GB , 450 mins, unlimited txt');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_269', 'Prorated on activation only $89.95 Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_270', 'Prorated on activation only $99.95 Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_310', 'Govt Unlimited without subsidy  $64.10');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_311', 'Govt unlimited with subsidy  $86.00');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_313', 'Active for full cycle Carry over $29.95, 500MB ,  160 mins, unlimited txt');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_314', 'Active for full cycle Carry over $39.95, 750 MB, 220 mins, unlimited txt');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_315', 'Active for full cycle Carry Over $49.95, 1GB, 300 mins, unlimited txt');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_316', 'Active for full cycle Carry Over $69.95, 1.25GB , 450 mins, unlimited txt');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_317', 'Active for full cycle $89.95 Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_318', 'Active for full cycle $99.95 Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_319', 'Active for full cycle $119.95 Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_320', 'Active for full cycle $149.95 Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_321', 'Active for full cycle Carry Over $179, 3.5GB, unlimited mins, unlimited txt,  you cannot have the "All you need VP"');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_322', 'Active for full cycle Business Carry Over $29.95, 500 MB, 160 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_323', 'Active for full cycle Business Carry Over $39, 750MB, 220 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_324', 'Active for full cycle Business Carry Over $49.95, Free VM, 1GB, 300 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_325', 'Active for full cycle Business Carry Over $69.95, Free VM, 1.25 GB, 450 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_326', 'Active for full cycle $89.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_327', 'Active for full cycle $99.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_328', 'Active for full cycle $119.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_329', 'Active for full cycle $149.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_330', 'Active for full cycle Business Carry Over $179, Free VM,  4GB data, unlimited txt, voice, L/L calls to 30 countries, mob calls to 10 countries,100mb intnl data, Free CUG, you cannot have the "All you need VP "');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_271', 'Prorated on activation only $119.95 Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_272', 'Prorated on activation only $149.95 Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_273', 'Prorated on activation only Carry Over $179, 3.5GB, unlimited mins, unlimited txt, you cannot have the "All you need VP"');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_274', 'Prorated on activation only Business Carry Over $29.95, 500 MB, 160 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_275', 'Prorated on activation only Business Carry Over $39.95, 750MB, 220 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_276', 'Prorated on activation only Business Carry Over $49.95, Free VM, 1GB, 300 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_277', 'Prorated on activation only Business Carry Over $69.95, Free VM, 1.25 GB, 450 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_278', 'Prorated on activation only $89.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_279', 'Prorated on activation only $99.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_280', 'Prorated on activation only $119.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_281', 'Prorated on activation only $149.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_282', 'Prorated on activation only Business Carry Over $179, Free VM,  4GB data, unlimited txt, voice, L/L calls to 30 countries, mob calls to 10 countries,100mb intnl data, Free CUG, You cannot have the "All you need VP"');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_283', 'LandLine On Your Mobile  $20.00 Pro-rated , any plan except Data plans. No charges for $89 Plan and above until Feb ');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_284', 'Active for Full Cycle Pay Monthly $29 plan - Full plan charge, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_285', 'Active for Full Cycle Pay Monthly $39 plan - Full plan charge, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_286', 'Active for Full Cycle Pay Monthly $59 plan - Full plan charge, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_287', 'Active for Full Cycle Pay Monthly $89 plan - Full plan charge, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_288', 'Active for Full Cycle Pay Monthly 99 plan - Full plan charge, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_289', 'Active for Full Cycle Pay Monthly $129 plan - Full plan charge, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_290', 'Active for Full Cycle Pay Monthly $149 plan - Full plan charge, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_291', 'Active for Full Cycle Pay Monthly $179 plan - Full plan charge, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_296', 'Active for Full Cycle 1GB NZ Carryover Data Plan $20.95 No Zone  OOB $0.20c');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_297', 'Active for Full Cycle  3GB NZ Carryover Data Plan $50.95 No Zone  OOB $0.20c');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_298', 'Govt Tier 1 without  subsidy up to 10,000 $17.55 full charge');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_300', 'Govt Tier 1 with subsidy  up to 10,000  $24.45 full charge');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_302', 'Govt Tier 2 without subsidy up to 10,000  $27.05');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_304', 'Govt Tier 2 with subsidy up to 10,000 $33.95');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_306', 'Govt Tier 3 without subsidy up to 10,000  $36.05 full charge');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_308', 'Govt Tier 3 with subsidy up to 10,000 $42.95 full charge');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_224', 'Purchase Value Pack India120 Talk Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_225', 'Purchase Value Pack 100MB International Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_226', 'Purchase Value Pack 10MB International Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_227', 'Purchase Value Pack 50MB International Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_228', 'Purchase Value Pack International Landline250 Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_229', 'Purchase Value Pack 100MB National Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_230', 'Purchase Value Pack 50MB National Data Pack');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_236', 'Prorated Pay Monthly $29 plan - Prorated as a daily rate, where daily rate is total for the product / total number of days for the cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_237', 'Prorated Pay Monthly $39 plan - Prorated as a daily rate, where daily rate is total for the product / total number of days for the cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_238', 'Prorated Pay Monthly $59 plan - Prorated as a daily rate, where daily rate is total for the product / total number of days for the cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_239', 'Prorated Pay Monthly $89 plan - Prorated as a daily rate, where daily rate is total for the product / total number of days for the cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_240', 'Prorated Pay Monthly $99 plan - Prorated as a daily rate, where daily rate is total for the product / total number of days for the cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_241', 'Prorated Pay Monthly $129 plan - Prorated as a daily rate, where daily rate is total for the product / total number of days for the cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_242', 'Prorated Pay Monthly $149 plan - Prorated as a daily rate, where daily rate is total for the product / total number of days for the cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_243', 'Prorated Pay Monthly $179 plan - Prorated as a daily rate, where daily rate is total for the product / total number of days for the cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_248', 'Prorated 1GB NZ Carryover Data Plan $20.95 No Zone  OOB $0.20c');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_249', 'Prorated 3GB NZ Carryover Data Plan $50.95 No Zone  OOB $0.20c');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_251', 'Prorated on activation only Govt Tier 1 without  subsidy up to 10,000 $17.55');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_253', 'Prorated on activation only Govt Tier 1 with subsidy  up to 10,000  $24.45');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_255', 'Prorated on activation only Govt Tier 2 without subsidy up to 10,000  $27.05');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_386', 'Calls to Voice Mail  having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_387', 'Calls to Voice Mail  having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_388', 'Calls to Voice Mail  having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_389', 'Calls to Voice Mail  having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_390', 'Calls to Voice Mail  having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_391', 'Calls to Voice Mail  having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_392', 'Calls to fixed lines  having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_393', 'Calls to fixed lines  having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_394', 'Calls to fixed lines  having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_395', 'Calls to fixed lines  having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_396', 'Calls to fixed lines  having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_397', 'Calls to fixed lines  having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_398', 'Calls to fixed lines  having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_399', 'Calls to fixed lines  having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_400', 'International SMS  having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_401', 'International SMS   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_402', 'International SMS  having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_403', 'International SMS  having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_404', 'International SMS having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_405', 'International SMS  having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_406', 'International SMS  having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_407', 'International SMS  having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_331', 'Active for Full Cycle $10 FCN, charged GST Inclusive');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_332', 'FCN  -Business Carry Over Plans - Free for every account with 3 or more connections. TBA - awaiting new requirements.');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_333', 'LandLine On Your Mobile  $20.00 Full Month, any plan except Data plans.');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_334', 'Plan change Fee');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_335', 'Zero rental charges');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_336', 'Suspended services should not be charged line rental or FCN  or any other recurring charge VP etc..');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('5_339', 'Assoc_discount');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('6_340', 'TRADING_AS_POPULATED');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_341', 'Check for  CCA payments all advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_342', 'Check for  CCA payments no advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_343', 'Check for  CCA multiple payments');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_344', 'Check for DDA Payments all advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_345', 'Check for DDA Payments no advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_346', 'Check for  DDA multiple payments');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_347', 'Check for payments where channel is IVR all advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_348', 'Check for payments where channel is IVR no advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_349', 'Check for multiple payments where channel is IVR');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_350', 'Check for payments where channel is Mobile App all advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_351', 'Check for payments where channel is Mobile App no advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_352', 'Check for multiple payments where channel is Mobile App');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_353', 'Check for payments where channel is Direct Banking all advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_354', 'Check for payments where channel is Direct Banking no advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_355', 'Check for multiple payments where channel is Direct Banking');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_356', 'Check for payments where channel is PAY-ONLINE all advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_357', 'Check for payments where channel is PAY-ONLINE no advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_358', 'Check for multiple payments where channel is PAY-ONLINE');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_359', 'Check for payments where channel is NZ Post all advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_360', 'Check for payments where channel is NZ Post no advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_361', 'Check for multiple payments where channel is NZ Post');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_365', 'Check for payments where channel is unknown all advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_366', 'Check for payments where channel is unknown no advance');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('7_367', 'Check for multiple payments where channel is unknown');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_368', 'International Telehony calls to Zone 1 having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_369', 'International Telehony calls to Zone 1 having rating group  BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_370', 'International Telehony calls to ROW having rating group BUS_LINK  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_371', 'International Telehony calls to ROW having rating groupBUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_372', 'International Telehony calls to Zone 1 having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_373', 'International Telehony calls to Zone 1 having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_374', 'International Telehony calls to ROW having rating group BUS_SHARE_MASTER  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_375', 'International Telehony calls to ROW having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_376', 'International Telehony calls to Zone 1 having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_377', 'International Telehony calls to Zone 1 having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_378', 'International Telehony calls to ROW having rating group BUS_SHARE_CHILD  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_379', 'International Telehony calls to ROW having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_380', 'International Telehony calls to Zone 1 having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_381', 'International Telehony calls to Zone 1 having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_382', 'International Telehony calls to ROW having rating group CORPORATE  free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_383', 'International Telehony calls to ROW having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_384', 'Calls to Voice Mail  having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_385', 'Calls to Voice Mail  having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_430', 'Roaming SMS  having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_431', 'Roaming SMS  having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_432', 'Call to 2D   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_433', 'Call to 2D   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_434', 'Call to 2D   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_435', 'Call to 2D   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_436', 'Call to 2D   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_437', 'Call to 2D   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_438', 'Call to 2D   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_439', 'Call to 2D   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_440', 'SMS to 2D   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_441', 'SMS to 2D   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_475', 'Call to TOLL FREE   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_476', 'Call to TOLL FREE   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_477', 'Call to TOLL FREE   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_478', 'Call to TOLL FREE   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_479', 'Call to TOLL FREE   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_480', 'MMS   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_481', 'MMS   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_482', 'MMS   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_483', 'MMS   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_484', 'MMS   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_485', 'MMS   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_486', 'MMS   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_487', 'MMS   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_488', 'Calls to Other Mobile Networks   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_489', 'Calls to Other Mobile Networks   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_490', 'Calls to Other Mobile Networks   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_491', 'Calls to Other Mobile Networks   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_492', 'Calls to Other Mobile Networks   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_493', 'Calls to Other Mobile Networks   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_494', 'Calls to Other Mobile Networks   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_495', 'Calls to Other Mobile Networks   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_496', 'Premium Content   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_442', 'SMS to 2D   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_443', 'SMS to 2D   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_444', 'SMS to 2D   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_445', 'SMS to 2D   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_446', 'SMS to 2D   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_447', 'SMS to 2D   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_448', 'Call to Care   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_449', 'Call to Care   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_450', 'Call to Care   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_451', 'Call to Care   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_452', 'Call to Care   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_453', 'Call to Care   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_454', 'Call to Care   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_455', 'Call to Care   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_456', 'Call to Directory   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_457', 'Call to Directory   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_458', 'Call to Directory   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_459', 'Call to Directory   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_460', 'Call to Directory   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_461', 'Call to Directory   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_462', 'Call to Directory   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_463', 'Call to Directory   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_464', 'Call to International Directory   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_465', 'Call to International Directory   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_466', 'Call to International Directory   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_467', 'Call to International Directory   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_468', 'Call to International Directory   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_469', 'Call to International Directory   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_470', 'Call to International Directory   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_471', 'Call to International Directory   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_472', 'Call to TOLL FREE   having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_473', 'Call to TOLL FREE   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_474', 'Call to TOLL FREE   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_408', 'Call to other network  having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_409', 'Call to other network  having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_410', 'Call to other network  having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_411', 'Call to other network  having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_412', 'Call to other network  having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_413', 'Call to other network  having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_414', 'Call to other network  having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_415', 'Call to other network  having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_416', 'SMS to other mobile network  having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_417', 'SMS to other mobile network  having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_418', 'SMS to other mobile network  having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_419', 'SMS to other mobile network  having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_420', 'SMS to other mobile network  having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_421', 'SMS to other mobile network  having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_422', 'SMS to other mobile network  having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_423', 'SMS to other mobile network  having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_424', 'Roaming SMS  having rating group BUS_LINK charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_425', 'Roaming SMS  having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_426', 'Roaming SMS  having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_427', 'Roaming SMS  having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_428', 'Roaming SMS  having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_429', 'Roaming SMS  having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_497', 'Premium Content   having rating group BUS_LINK free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_498', 'Premium Content   having rating group BUS_SHARE_MASTER charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_499', 'Premium Content   having rating group BUS_SHARE_MASTER free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_500', 'Premium Content   having rating group BUS_SHARE_CHILD charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_501', 'Premium Content   having rating group BUS_SHARE_CHILD free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_502', 'Premium Content   having rating group CORPORATE charged');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('8_503', 'Premium Content   having rating group CORPORATE free');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_504', 'Active for full cycle $29.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_505', 'Prorate charges for $29.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_506', 'Active for full cycle $29.95 Carryover Plan (1GB)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_507', 'Prorated charges for $29.95 Carryover Plan (1GB)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_508', 'Active for full cycle $39.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_509', 'Prorate charges for $39.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_510', 'Active for full cycle $49.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_511', 'Prorate charges for $49.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_512', 'Active for full cycle $69.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_513', 'Prorate charges for $69.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_514', 'Active for full cycle $89.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_515', 'Prorate charges for $89.95 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_516', 'Active for full cycle $149 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_517', 'Prorate charges for $149 Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_518', 'Active for full cycle $35.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_519', 'Prorated charges for $35.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_520', 'Active for full cycle $45.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_521', 'Prorated charges for $45.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_522', 'Active for full cycle $60.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_523', 'Prorated charges for $60.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_524', 'Active for full cycle $85.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_525', 'Prorated charges for $85.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_526', 'Active for full cycle $100.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_527', 'Prorated charges for $100.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_528', 'Active for full cycle $125.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_529', 'Prorated charges for $125.83 Business Select Plan (excl GST)');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_530', 'Active for full cycle Business Freedom');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_531', 'Prorated charges for Business Freedom');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_532', 'Active for full cycle Business Freedom Plus');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_533', 'Prorated charges for Business Freedom Plus');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_534', 'Active for full cycle $69.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_535', 'Prorated charges for $69.95 Business Share Everything Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_536', 'Active for full cycle 500MB NZ Data Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_537', 'Prorated charges for 500MB NZ Data Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_538', 'Active for full cycle TDegrees Business $29');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_539', 'Prorated charges for TDegrees Business $29');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_540', 'Active for full cycle TDegrees Business $39');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_541', 'Prorated charges for TDegrees Business $39');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_542', 'Active for full cycle TDegrees Business $59');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_543', 'Prorated charges for TDegrees Business $59');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_544', 'Active for full cycle TDegrees Business $89');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_545', 'Prorated charges for TDegrees Business $89');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_546', 'Active for full cycle TDegrees Business $99');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_547', 'Prorated charges for TDegrees Business $99');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_548', 'Active for full cycle TDegrees Business $129');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_549', 'Prorated charges for TDegrees Business $129');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_550', 'Active for full cycle TDegrees Business $149');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_551', 'Prorated charges for TDegrees Business $149');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_552', 'Active for full cycle TDegrees Business $179');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_553', 'Prorated charges for TDegrees Business $179');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_554', 'Account holiday charged for full cycle');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_555', 'Mobile repayment charges');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_556', 'Mobile repayment final charges');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_557', 'Trade Up Monthly Fee product charges');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_558', 'Trade Up Monthly Fee Credit');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_559', 'Winover products - Plan charge credit');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_560', 'Instore deposit charges');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_561', 'Online deposit charges');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('9_562', 'Adjustment checks');
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_563',
+             'International Telehony calls to Zone 1 having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_564',
+             'International Telehony calls to Zone 1 having rating group  BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_565',
+             'International Telehony calls to ROW having rating group BUS_SELECT  free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_566',
+             'International Telehony calls to ROW having rating groupBUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_567',
+             'Calls to Voice Mail  having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_568',
+             'Calls to Voice Mail  having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_569',
+             'Calls to fixed lines  having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_570',
+             'Calls to fixed lines  having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_571',
+             'International SMS  having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_572',
+             'International SMS   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_573',
+             'Call to other network  having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_574',
+             'Call to other network  having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_575',
+             'SMS to other mobile network  having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_576',
+             'SMS to other mobile network  having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_577', 'Roaming SMS  having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_578', 'Roaming SMS  having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_579', 'Call to 2D   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_580', 'Call to 2D   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_581', 'SMS to 2D   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_582', 'SMS to 2D   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_583', 'Call to Care   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_584', 'Call to Care   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_585',
+             'Call to Directory   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_586',
+             'Call to Directory   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_587',
+             'Call to International Directory   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_588',
+             'Call to International Directory   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_589',
+             'Call to TOLL FREE   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_590',
+             'Call to TOLL FREE   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_591', 'MMS   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_592', 'MMS   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_593',
+             'Calls to Other Mobile Networks   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_594',
+             'Calls to Other Mobile Networks   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('8_595',
+             'Premium Content   having rating group BUS_SELECT charged'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('8_596', 'Premium Content   having rating group BUS_SELECT free'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('7_597', 'Check for  CCA advance split payments'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('7_598', 'Check for  CCA allocated split payments'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('7_599', 'Check for  DDA advance split payments'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('7_600', 'Check for  DDA allocated split payments'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id, scenario_descr
+            )
+     VALUES ('7_601', 'Check for advance split payments where channel is IVR'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_602',
+             'Check for allocated split payments where channel is IVR'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_603',
+             'Check for advance split payments where channel is Mobile App'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_604',
+             'Check for allocated split payments where channel is Mobile App'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_605',
+             'Check for advance split payments where channel is Direct Banking'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_606',
+             'Check for allocated split payments where channel is Direct Banking'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_607',
+             'Check for advance split payments where channel is PAY-ONLINE'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_608',
+             'Check for allocated split payments where channel is PAY-ONLINE'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_609',
+             'Check for advance split payments where channel is NZ Post'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_610',
+             'Check for allocated split payments where channel is NZ Post'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_611',
+             'Check for advance split payments where channel is unknown'
+            );
+INSERT INTO td_scenario_descr_t
+            (scenario_id,
+             scenario_descr
+            )
+     VALUES ('7_612',
+             'Check for allocated split payments where channel is unknown'
+            );
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_613', 'Active for Full Cycle 1GB Data Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_614', 'Prorated on activation 1GB Data Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_615', 'Active for Full Cycle 3GB Data Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('4_616', 'Prorated on activation 3GB Data Plan');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+select '9_562-' || st.version||'_'||st.string_id,  string 
+from strings_t st where domain in ('Reason Codes-Debit Reasons','Reason Codes-Credit Reasons');
+Insert into TD_SCENARIO_DESCR_T
+   (SCENARIO_ID, SCENARIO_DESCR)
+ Values
+   ('3_617', 'Purchase Value Pack 3GB Zone Data Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_618','10GB Data Connect Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_619','$10 Aussie Roaming Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_620','$15 Aussie Roaming Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_621','Bonus 60 NZ Mins Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_622','Bonus 100 NZ Mins Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_623','Bonus 200MB NZ Data Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_624','Bonus 500MB NZ Data Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_625','Bonus 1GB NZ Data Pack');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_626','Usage - Voice - Fixed Landline (Other) charged at 49c for $29 plans');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_627','Usage - Voice - Other Mobile (Other) charged at 49c for $29 plans');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_628','Usage - Voice - Other 2Degrees (Other) charged at 49c for $29 plans');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_629','Usage - Voice - CUG (free) - Calls between services in a CUG ');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_630','Usage - Voice - CUG (charged) - Calls between services in a CUG');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_631','Usage - Voice - FCN (free) - Calls from services in account to account FCN's');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_632','Usage - Voice - FCN (charged) - Calls from services in account to account FCN's');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_633','Usage - Premium & Content - SMS (Nil GST)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_634','Usage - Google Play Content (Nil GST)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_635','Monthly Recurring Charges - Share Data');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_636','Monthly Recurring Charges - Share');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_637','Monthly Recurring Charges - Share (Retired)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_638','Monthly Recurring Charges - MRO Monthly Installment');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_639','Monthly Recurring Charges - MRO Monthly Installment in inactive status');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_640','Monthly Recurring Charges - Trade Up Monthly Fee');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_641','Monthly Recurring Charges - Trade Up Monthly Fee in inactive status');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_642','Account holiday charged for partial cycle');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_643','Account holiday cancelled in current cycle');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_644','Monthly Recurring Charges - Any MRC not detailed');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_645','"Discounts - Multi Connection Discount Tier 1
+$0 discount only where account has 1-5 active services on , charged GST Inclusive"');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_646','"Discounts - Multi Connection Discount Tier 2
+$10 discount prorated on activation of service where account has 6-15 active services on $149.95 Business Share Everything Plans, charged GST Inclusive"');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_647','"Discounts - Multi Connection Discount Tier 3
+$20 discount prorated on activation of service where account has 16-30 active services on $149.95 Business Share Everything Plans, charged GST Inclusive"');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_648','"Discounts - Multi Connection Discount Tier 4
+$30 discount prorated on activation of service where account has 31+ active services on $149.95 Business Share Everything Plans, charged GST Inclusive"');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_649','Discounts - Multi Connection Discount Tier 2');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_650','Discounts - Multi Connection Discount Tier 3');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_651','Discounts - Multi Connection Discount Tier 4');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_652','"Discounts - Multi Connection Discount Tier 2
+$10 discount only where account has 6-15 active services on $149.95 Business Share Everything Plans, charged GST Inclusive"');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_653','"Discounts - Multi Connection Discount Tier 3
+$20 discount only where account has 16-30 active services on $149.95 Business Share Everything Plans, charged GST Inclusive"');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_654','"Discounts - Multi Connection Discount Tier 4
+$30 discount only where account has 31+ active services on $149.95 Business Share Everything Plans, charged GST Inclusive"');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_655','Discounts - Co-Op Taxi Discount');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_656','Discounts - Co-Op Taxi Discount');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_657','Discounts - Co-Op Taxi Discount');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_658','Discounts - Landline on Your Mobile Discount');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_659','Discounts - Data Plan Discount');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_660','Discounts - Share Discount');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_661','Discounts - Share Discount 1 month');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_662','Discounts - Share Discount 12 months');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_663','Discounts - Share Discount 3 months');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_664','Discounts - Share Discount 6 months');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_665','Discounts - SIM NRC Charge $20');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_666','Discounts - SIM NRC Charge $5');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_667','Discounts - Any other discount not detailed');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_668','Product - Other Charges - Samsung Trade Up Fee Credit');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_669','Product - Other Charges - MRO Final Installment');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_670','Product - Other Charges - Early Termination Charge');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_671','Product - Other Charges - Change Plan Charge');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_672','Product - Other Charges - Deposit');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_673','Product - Other Charges - Plan Charge Credit (Win-Over)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_674','Product - Other Charges - Plan Charge Credit (Win-Over)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_675','Product - Other Charges - Late Payment Fee');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_676','Product - Other Charges - Trade Up Redemption Fee');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_677','Product - Other Charges - Trade Up Redemption Fee Credit');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_678','Product - Other Charges - Any other charge not detailed');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_679','Security Deposit Refunds');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('11_680','Payments - Payment Reversal due to dishonour');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_681','Product - Plan - Business Link Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_682','Product - Plan - Government Zero Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_683','Check for Overdue Bill Profile');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_684','Usage - Voice - Fixed Landline (Other)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_685','Usage - Voice - Other Mobile (Other)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_686','Usage - Voice - Other 2Degrees (Other)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('9_687','Calls to Scott Base');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_688','Check for any cancelled base plan within the cycle');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_689','Active for full cycle $29.95 Business Carryover Plan (1GB),  500 MB, 160 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_690','Prorated on activation only $29.95 Business Carryover Plan (1GB), 500 MB, 160 mins, unlimited txt, Free CUG');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_691','Active for full cycle Business Freedom Ultimate Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_692','Prorated on activation only Business Freedom Ultimate Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_693','Active for full cycle Business Connect 12GB Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_694','Prorated on activation only Business Connect 12GB Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_695','Active for full cycle Business Connect 50GB Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_696','Prorated on activation only Business Connect 50GB Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_697','Product - Plan - Landline On Your Mobile (Free)');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_698','Product - Plan - Government Zero Plan and $15 CUG');
+
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_699','Active for full cycle Talk and Text Connect Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_700','Prorated on activation only Talk and Text Connect Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_701','Active for full cycle Talk and Text Connect Flexi Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_702','Prorated on activation only Talk and Text Connect Flexi Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_703','Active for full cycle Data Connect Flexi Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_704','Prorated on activation only Data Connect Flexi Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_705','Active for full cycle Data Connect Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_706','Prorated on activation only Data Connect Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_707','Plan charges Business Assure Data Plan');
+Insert into TD_SCENARIO_DESCR_T (SCENARIO_ID, SCENARIO_DESCR) Values  ('10_708','Plan charges Business Assure Plan');
+
+COMMIT;
+

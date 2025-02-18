@@ -1,0 +1,198 @@
+<Opcode
+    name="PCM_OP_AR_GET_ACCT_BAL_SUMMARY"
+    visibility="public"
+    transaction="required"
+    component="fm_ar"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+    xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+    <Doc>
+        <!--h:p>
+            <h:i> Copyright &#169; 2006-2007 Oracle. All rights reserved. This
+                material is the confidential property of Oracle Corporation or
+                its licensors and may be used, reproduced, stored or transmitted
+                only in accordance with a valid Oracle license or sublicense
+                agreement. </h:i>
+        </h:p-->
+
+	This opcode retrieves the unapplied, open bill due, pending bill due, and
+	total dispute balances for all the bill units (/billinfo objects) in
+	a specified account or for a particular bill unit.
+
+    </Doc>
+
+    <SeeAlso>
+        <Item
+            href="obj://billinfo">
+            <Doc>Bill Info object.</Doc>
+        </Item>
+        <Item
+            href="obj://account">
+            <Doc>Account  Object</Doc>
+        </Item>
+        <Item
+            href="op://PCM_OP_BAL_GET_ACCT_BILLINFO">
+            <Doc>Use this opcode to get all the Bill-Info objects of an Account.</Doc>
+        </Item>
+        <Item
+            href="op://PCM_OP_AR_GET_BAL_SUMMARY">
+            <Doc>Use this opcode to get balance summary for a single Bill-Info and
+                corresponding AR Bill-Info object.</Doc>
+        </Item>
+        <Item
+            href="file://pin_flds.h">
+            <Doc>The C Header file contains the PIN_FLD definitions. The C++
+                Header file is PinFlds.h</Doc>
+        </Item>
+        <Item
+            href="file://pcm_ops.h">
+            <Doc>The Header file contains the PCM_OP definitions.</Doc>
+        </Item>
+        <Item
+            href="file://pcm.h">
+            <Doc>The Header file contains the opcode flags OPFLG
+                definitions.</Doc>
+        </Item>
+        <Item
+            href="file://pin_bill.h">
+            <Doc>The Header file contains PIN_OBJ_TYPE_ITEM definitions.</Doc>
+        </Item>
+        <Item
+            href="http://www.portal.com">
+            <Doc>Visit Portal web site for additional information.</Doc>
+        </Item>
+    </SeeAlso>
+
+
+
+    <Input>
+        <Fields>
+            <Poid
+                name="PIN_FLD_POID"
+                use="required"
+                mode="complete">
+                <Doc>Poid of a Bill-info object or an Account object</Doc>
+                <ClassRef>obj://account</ClassRef>
+                <ClassRef>obj://billinfo</ClassRef>
+            </Poid>
+            <Poid
+                name="PIN_FLD_AR_BILLINFO_OBJ"
+                use="optional"
+                mode="complete">
+                <Doc> Poid of a corresponding AR Bill-info object to
+                    the one given in PIN_FLD_POID.
+                    If the same poid is specified here, the balance summaries of the
+                    Bill-info hierarchy (if any) will be included.</Doc>
+                <ClassRef>obj://billinfo</ClassRef>
+            </Poid>
+            <Int
+                name="PIN_FLD_INCLUDE_CHILDREN"
+                use="required">
+                <Doc>Indicator of how the Bill-info hierarchy balance summaries 
+                    to be returned.
+                    Specify a 0 value, if an overall balance summary is desired.
+                    Otherwise, detailed balance summaries of
+                    the Bill-info hierarchy  will be  returned. </Doc>
+            </Int>
+        </Fields>
+    </Input>
+
+    <Output>
+        <Fields>
+            <Poid
+                name="PIN_FLD_POID"
+                use="required"
+                mode="complete">
+                <Doc>Poid of a Bill-info object or
+                   an Account object that is propagated from the input flist.</Doc>
+                <ClassRef>obj://account</ClassRef>
+                <ClassRef>obj://billinfo</ClassRef>
+            </Poid>
+            <Poid
+                name="PIN_FLD_BILLINFO_OBJ"
+                use="required"
+                mode="complete">
+                <Doc> Poid of a Bill-info object.
+                   This field is null if an Account was given.</Doc>
+                <ClassRef>obj://billinfo</ClassRef>
+            </Poid>
+            <Poid
+                name="PIN_FLD_AR_BILLINFO_OBJ"
+                use="required"
+                mode="complete">
+                <Doc> Poid of a corresponding AR Bill-info. 
+                    This field is null if an Account was given.</Doc>
+                <ClassRef>obj://billinfo</ClassRef>
+            </Poid>
+            <Decimal
+                name="PIN_FLD_OPENBILL_DUE"
+                use="required">
+                <Doc> Total Amount Due on all open Bills.</Doc>
+            </Decimal>
+            <Decimal
+                name="PIN_FLD_UNAPPLIED_AMOUNT"
+                use="required">
+                <Doc> Total Unapplied Amount.</Doc>
+            </Decimal>
+            <Int
+                name="PIN_FLD_TOTAL_RECORDS"
+                use="optional">
+                <Doc> Total number of action records.
+                    This field is used a  supplement information when
+                    the total unapplied amount above is zero.</Doc>
+            </Int>
+            <Decimal
+                name="PIN_FLD_PENDINGBILL_DUE"
+                use="required">
+                <Doc> Total Amount Due on all the Pending Bills.</Doc>
+            </Decimal>
+            <Decimal
+                name="PIN_FLD_DISPUTED"
+                use="required">
+                <Doc> Total Amount of open Disputes.</Doc>
+            </Decimal>
+            <Poid
+                name="PIN_FLD_BILL_OBJ"
+                use="required"
+                mode="complete">
+                <Doc> Poid of a pending Bill.
+                    This field is null if an Account was given.</Doc>
+                <ClassRef>obj://bill</ClassRef>
+            </Poid>
+            <Int
+                name="PIN_FLD_COUNT"
+                use="required">
+                <Doc> Depth count of all subordinates of the Bill-info hierarchy.</Doc>
+            </Int>
+	    <Enum
+                name="PIN_FLD_DISPUTE_TYPE"
+                use="optional">
+                <Doc>Flagging the existence of non-currency disputes.
+                In this opcode, this enumeration field is not used to indicate event or item dispute type.
+                Instead, it has a boolean enumeration value.</Doc>
+                <Values>
+                    <Value>1</Value>
+                    <Doc>PIN_BOOLEAN_TRUE</Doc>
+                </Values>
+                <Values>
+                    <Value>0</Value>
+                    <Doc>PIN_BOOLEAN_FALSE</Doc>
+                </Values>
+            </Enum>
+            <Enum
+                name="PIN_FLD_ITEM_PENDING_FLAGS"
+                use="optional">
+                <Doc> Flag whether pending Items exist or not.</Doc>
+                <Values>
+                    <Value>0</Value>
+                    <Doc> Specifies that pending Items do not exist.</Doc>
+                </Values>
+                <Values>
+                    <Value>1</Value>
+                    <Doc> Specifies that pending Items exist.</Doc>
+                </Values>
+            </Enum>
+        </Fields>
+    </Output>
+</Opcode>

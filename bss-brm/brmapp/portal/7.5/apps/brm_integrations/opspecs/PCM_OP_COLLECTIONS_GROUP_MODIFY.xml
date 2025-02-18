@@ -1,0 +1,72 @@
+<Opcode name="PCM_OP_COLLECTIONS_GROUP_MODIFY" visibility="public"
+        transaction="required" component="fm_collections"
+        xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+        xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+ <Doc>PCM_OP_COLLECTIONS_GROUP_MODIFY input and output flist
+	This opcode is used to rename the group, change parent
+	and replace existing members with new set of members.
+        Entire members set is used and validations are performed 
+	and replaces the existing set of current memebrs of group.
+      </Doc>
+ <!-- INPUT SPEC  -->
+ <Input>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>Collections group object</Doc>
+    <ClassRef>obj://group</ClassRef>
+   </Poid>
+   <String name="PIN_FLD_NAME" use="optional" maxlen="255">
+    <Doc>Name of this collections group</Doc>
+   </String>
+   <Poid name="PIN_FLD_PARENT" use="optional" mode="complete">
+    <Doc>Collections group owner billinfo object. When new parent is 
+	passed it checks against old and if there is no cyclic relation
+	it will set the parent.</Doc>
+    <ClassRef>obj://group</ClassRef>
+   </Poid>
+   <Array elemIdMode="index" iterationOrder="undefined"
+             name="PIN_FLD_MEMBERS" use="optional">
+        <Doc>Member details array (list of members billinfo). If
+             no members is passed, no action is performed on the members. If an
+             empty members array element is passed, then it is deleted.
+             Otherwise the request is to modify the member entry. Duplicate
+             entries are ignored.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_BILLINFO_OBJ" use="required">
+            <Doc>Member billinfo object.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid mode="complete" name="PIN_FLD_PARENT_BILLINFO_OBJ" use="required">
+            <Doc>Member billinfo object.</Doc>
+            <ClassRef>obj://billinfo</ClassRef>
+          </Poid>
+          <Poid mode="complete" name="PIN_FLD_ACCOUNT_OBJ" use="required">
+            <Doc>Member billinfo object.</Doc>
+            <ClassRef>obj://account</ClassRef>
+          </Poid>
+        </Fields>
+      </Array>
+  </Fields>
+ </Input>
+ <!-- OUTPUT SPEC  -->
+ <Output>
+  <Fields>
+   <Poid name="PIN_FLD_POID" use="required" mode="complete">
+    <Doc>Poid of the collections group object modified (copied from the input).</Doc>
+    <ClassRef>obj://group</ClassRef>
+   </Poid>
+   <Array elemIdMode="ignored" iterationOrder="undefined"
+             name="PIN_FLD_RESULTS" use="optional">
+        <Doc>Array of results information.</Doc>
+        <Fields>
+          <Poid mode="complete" name="PIN_FLD_POID" use="required">
+            <Doc>Poid of the event object created</Doc>
+            <ClassRef>obj://event</ClassRef>
+          </Poid>
+	</Fields>
+   </Array>
+  </Fields>
+ </Output>
+</Opcode>

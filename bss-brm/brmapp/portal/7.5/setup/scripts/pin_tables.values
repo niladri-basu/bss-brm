@@ -1,0 +1,3186 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+# @(#)%Portal Version: pin_tables.values:InstallVelocityInt:4:2005-Apr-19 11:22:58 %
+#
+# Copyright (c) 1998, 2011, Oracle and/or its affiliates. All rights reserved. 
+#  This material is the confidential property of Oracle Corporation
+#  or its licensors and may be used, reproduced, stored
+#  or transmitted only in accordance with a valid Oracle license
+#  or sublicense agreement.
+#
+# This section allows you to configure the characteristics 
+# of tables that are used to map Portal Storable Classes and
+# their fields. This is done using the associative array %PIN_CONF_SM_INFO.
+# This information is appended to the CREATE TABLE statements that the
+# DM executes when the data dictionary is populated using pin_init script.
+#
+# Five storage configurations PIN_CONF_SM_CONFIGURATION_xxx
+# are provided below for making global selections for storage
+# characteristics conveniently. Each configuration defines the following:
+#	STORAGE_SMALL	(small tables)
+#	STORAGE_MED	(medium-sized tables)
+#	STORAGE_LARGE	(large tables)
+#	STORAGE_HUGE	(huge tables)
+# below are special storages for tables with extensive inserting
+# ( mostly this are event tables )
+#	STORAGE_SMALL_INS	(small tables)
+#	STORAGE_MED_INS	(medium-sized tables)
+#	STORAGE_LARGE_INS	(large tables)
+#	STORAGE_HUGE_INS	(huge tables)
+#
+# There are different ways you can configure the table characteristics:
+#
+# 1. You can pick one of the configurations by changing the variable
+#    @PIN_CONF_STORAGE to point to the right pre-defined 
+#    configuration.
+#
+# 2. You can define additional configurations if you want.
+#
+# 3. You can override the configuration for a specific table by changing
+#    %PIN_CONF_SM_INFO.
+#	For example, if you want to change the change the characteristics
+#	of the "account_balances_t" table that is mapped to "PIN_FLD_BALANCES"
+#	field in the "/account" storable class, you would change the following:
+#	
+#	OLD:
+#		'/account.PIN_FLD_BALANCES,
+#			"$PIN_CONF_TBLSPACE $PIN_CONF_STORAGE_MED"
+#
+#	NEW:
+#		'/account.PIN_FLD_BALANCES,
+#			"TABLESPACE bigone MAXTRANS 10 STORAGE (INITIAL 4M)"
+#
+
+$PIN_CONF_DM_DB_TABLES_GROUP = $MAIN_DB{'tables_group'};
+$PIN_CONF_DM_DB_INDEX_GROUP = $MAIN_DB{'indexes_group'};
+
+if ( $MAIN_DM{'db'}->{'vendor'} =~ /^oracle$/i ) {
+  @PIN_CONF_STORAGE_DEFAULT	= (
+	# storage small
+	"",
+	# storage medium
+	"",
+	# storage large
+	"",
+	# storage huge
+	"",
+	# storage small ( with intensive inserting )
+	"",
+	# storage medium ( with intensive inserting )
+	"",
+	# storage large ( with intensive inserting )
+	"",
+	# storage huge ( with intensive inserting )
+	"",
+  );
+
+#
+# This should be used for testing env., especially multi-user testing env.,
+#       where the initial disk space useage is a major concern.
+# Partitions inherit storage parameters from their table. It is not necessary
+#       for a testing database to have so many big partitions since most of them
+#       are not used and will never be used. If a large space is indeed
+#       needed, the "next" parameter, whose value is the same as in the
+#       "small" storage model will take care of it so that the database
+#       doesn't have to perform too many extra allocations.
+#
+  @PIN_CONF_STORAGE_TEST        = (
+        # storage small
+        "storage (initial 100k next 100k maxextents unlimited pctincrease 0 )",
+        # storage medium
+        "storage (initial 100k next 200k maxextents unlimited pctincrease 0 )",
+        # storage large
+        "storage (initial 100k next 500k maxextents unlimited pctincrease 0 )",
+        # storage huge
+        "storage (initial 100k next 750k maxextents unlimited pctincrease 0 )",
+        # storage small
+        "storage (initial 100k next 100k maxextents unlimited pctincrease 0 )",
+        # storage medium
+        "storage (initial 100k next 200k maxextents unlimited pctincrease 0 freelists 2 )",
+        # storage large
+        "initrans 2 storage (initial 100k next 500k maxextents unlimited pctincrease 0 freelists 2 )",
+        # storage huge
+        "initrans 4 storage (initial 100k next 750k maxextents unlimited pctincrease 0 freelists 4 )"
+  );
+
+  @PIN_CONF_STORAGE_MINI	= (
+	# storage small
+	"storage (initial 100k next 100k maxextents unlimited pctincrease 0 )",
+	# storage medium
+	"storage (initial 200k next 200k maxextents unlimited pctincrease 0 )",
+	# storage large
+	"storage (initial 500k next 500k maxextents unlimited pctincrease 0 )",
+	# storage huge
+	"storage (initial 750k next 750k maxextents unlimited pctincrease 0 )",
+	# storage small
+	"storage (initial 100k next 100k maxextents unlimited pctincrease 0 )",
+	# storage medium
+	"storage (initial 200k next 200k maxextents unlimited pctincrease 0 freelists 2 )",
+	# storage large
+	"initrans 2 storage (initial 500k next 500k maxextents unlimited pctincrease 0 freelists 2 )",
+	# storage huge
+	"initrans 4 storage (initial 750k next 750k maxextents unlimited pctincrease 0 freelists 4 )"
+  );
+
+  # MEDIUM CONFIGURATION
+  @PIN_CONF_STORAGE_MIDSIZE = (
+	# storage small
+	"storage (initial 100k next 100k maxextents unlimited pctincrease 0 )",
+	# storage medium
+	"storage (initial 200k next 200k maxextents unlimited pctincrease 0 )",
+	# storage large
+	"storage (initial 1m next 1m maxextents unlimited pctincrease 0 )",
+	# storage huge
+	"storage (initial 2m next 2m maxextents unlimited pctincrease 0 )",
+	# storage small
+	"storage (initial 100k next 100k maxextents unlimited pctincrease 0 )",
+	# storage medium
+	"storage (initial 200k next 200k maxextents unlimited pctincrease 0 freelists 2 )",
+	# storage large
+	"initrans 2 storage (initial 1m next 1m maxextents unlimited pctincrease 0 freelists 2 )",
+	# storage huge
+	"initrans 4 storage (initial 2m next 2m maxextents unlimited pctincrease 0 freelists 4 )"
+  );
+
+  # LARGE CONFIGURATION
+  @PIN_CONF_STORAGE_HUGE = (
+	# storage small
+	"storage (initial 1m next 1m maxextents unlimited pctincrease 0 )",
+	# storage medium
+	"storage (initial 4m next 4m maxextents unlimited pctincrease 0 )",
+	# storage large
+	"storage (initial 16m next 16m maxextents unlimited pctincrease 0 )",
+	# storage huge
+	"storage (initial 20m next 20m maxextents unlimited pctincrease 0 )",
+	# storage small
+	"initrans 4 storage (initial 1m next 1m maxextents unlimited pctincrease 0 freelists 8 )",
+	# storage medium
+	"initrans 6 storage (initial 4m next 4m maxextents unlimited pctincrease 0 freelists 12 )",
+	# storage large
+	"initrans 8 storage (initial 16m next 16m maxextents unlimited pctincrease 0 freelists 16 )",
+	# storage huge
+	"initrans 10 storage (initial 20m next 20m maxextents unlimited pctincrease 0 freelists 20 )"
+  );
+
+  if( $MAIN_DB{'storage_model'} =~ /^Small$/i ) {
+  	@PIN_CONF_STORAGE = @PIN_CONF_STORAGE_MINI;
+  } elsif( $MAIN_DB{'storage_model'} =~ /^Medium$/i ) {
+  	@PIN_CONF_STORAGE = @PIN_CONF_STORAGE_MIDSIZE;
+  } elsif( $MAIN_DB{'storage_model'} =~ /^Large$/i ) {
+  	@PIN_CONF_STORAGE = @PIN_CONF_STORAGE_HUGE;
+  } elsif( $MAIN_DB{'storage_model'} =~ /^Test$/i ) {
+         @PIN_CONF_STORAGE = @PIN_CONF_STORAGE_TEST;
+  }
+
+  # storages mapping
+
+  $PIN_CONF_STORAGE_SMALL		=	$PIN_CONF_STORAGE[0];
+  $PIN_CONF_STORAGE_MED		=	$PIN_CONF_STORAGE[1];
+  $PIN_CONF_STORAGE_LARGE		=       $PIN_CONF_STORAGE[2];
+  $PIN_CONF_STORAGE_HUGE		=       $PIN_CONF_STORAGE[3];
+  $PIN_CONF_STORAGE_SMALL_INS	=	$PIN_CONF_STORAGE[4];
+  $PIN_CONF_STORAGE_MED_INS	=	$PIN_CONF_STORAGE[5];
+  $PIN_CONF_STORAGE_LARGE_INS	=       $PIN_CONF_STORAGE[6];
+  $PIN_CONF_STORAGE_HUGE_INS	=       $PIN_CONF_STORAGE[7];
+
+  #
+  # Partitioning clause mapping.
+  # For Oracle only
+  # 1. partition_historic is reserved for certain events that can't be purged
+  # 2. 17592186044416 is power(2, 44), a poid_id0/obj_id0 >= that has non-0
+  #     digits at the top 20 bits, the top 5th to 20th of which
+  #     are used to hold the encoding for partitioning purpose
+  #
+  # These are for non-event classes
+%PIN_CONF_PARTITION_INFO = (
+	'/account.BASE_TABLE_CLAUSE', "",
+	'/account.OTHER_TABLE_CLAUSE', "",
+	'/account.INDEX_CLAUSE', "",
+	'/active_session.BASE_TABLE_CLAUSE', "",
+	'/active_session.OTHER_TABLE_CLAUSE', "",
+	'/active_session.INDEX_CLAUSE', "",
+	'/admin_action.BASE_TABLE_CLAUSE', "",
+	'/admin_action.OTHER_TABLE_CLAUSE', "",
+	'/admin_action.INDEX_CLAUSE', "",
+	'/audit_account_products.BASE_TABLE_CLAUSE', "",
+	'/audit_account_products.OTHER_TABLE_CLAUSE', "",
+	'/audit_account_products.INDEX_CLAUSE', "",
+	'/batch.BASE_TABLE_CLAUSE', "",
+	'/batch.OTHER_TABLE_CLAUSE', "",
+	'/batch.INDEX_CLAUSE', "",
+	'/balance_group.BASE_TABLE_CLAUSE', "",
+	'/balance_group.OTHER_TABLE_CLAUSE', "",
+	'/balance_group.INDEX_CLAUSE', "",
+	'/best_pricing.BASE_TABLE_CLAUSE', "",
+	'/best_pricing.OTHER_TABLE_CLAUSE', "",
+	'/best_pricing.INDEX_CLAUSE', "",
+	'/bill.BASE_TABLE_CLAUSE', "",
+	'/bill.OTHER_TABLE_CLAUSE', "",
+	'/bill.INDEX_CLAUSE', "",
+	'/history_bills.BASE_TABLE_CLAUSE', "",
+	'/history_bills.OTHER_TABLE_CLAUSE', "",
+	'/history_bills.INDEX_CLAUSE', "",
+	'/billinfo.BASE_TABLE_CLAUSE', "",
+	'/billinfo.OTHER_TABLE_CLAUSE', "",
+	'/billinfo.INDEX_CLAUSE', "",
+	'/block.BASE_TABLE_CLAUSE', "",
+	'/block.OTHER_TABLE_CLAUSE', "",
+	'/block.INDEX_CLAUSE', "",
+	'/bulkacct.BASE_TABLE_CLAUSE', "",
+	'/bulkacct.OTHER_TABLE_CLAUSE', "",
+	'/bulkacct.INDEX_CLAUSE', "",
+	'/channel.BASE_TABLE_CLAUSE', "",
+	'/channel.OTHER_TABLE_CLAUSE', "",
+	'/channel.INDEX_CLAUSE', "",
+	'/channel_event.BASE_TABLE_CLAUSE', "",
+	'/channel_event.OTHER_TABLE_CLAUSE', "",
+	'/channel_event.INDEX_CLAUSE', "",
+	'/collections_action.BASE_TABLE_CLAUSE', "",
+	'/collections_action.OTHER_TABLE_CLAUSE', "",
+	'/collections_action.INDEX_CLAUSE', "",
+	'/collections_scenario.BASE_TABLE_CLAUSE', "",
+	'/collections_scenario.OTHER_TABLE_CLAUSE', "",
+	'/collections_scenario.INDEX_CLAUSE', "",
+	'/config.BASE_TABLE_CLAUSE', "",
+	'/config.OTHER_TABLE_CLAUSE', "",
+	'/config.INDEX_CLAUSE', "",
+	'/data.BASE_TABLE_CLAUSE', "",
+	'/data.OTHER_TABLE_CLAUSE', "",
+	'/data.INDEX_CLAUSE', "",
+	'/deal.BASE_TABLE_CLAUSE', "",
+	'/deal.OTHER_TABLE_CLAUSE', "",
+	'/deal.INDEX_CLAUSE', "",
+	'/device.BASE_TABLE_CLAUSE', "",
+	'/device.OTHER_TABLE_CLAUSE', "",
+	'/device.INDEX_CLAUSE', "",
+	'/discount.BASE_TABLE_CLAUSE', "",
+	'/discount.OTHER_TABLE_CLAUSE', "",
+	'/discount.INDEX_CLAUSE', "",
+	'/edr_field_mapping.BASE_TABLE_CLAUSE', "",
+	'/edr_field_mapping.OTHER_TABLE_CLAUSE', "",
+	'/edr_field_mapping.INDEX_CLAUSE', "",
+	'/fold.BASE_TABLE_CLAUSE', "",
+	'/fold.OTHER_TABLE_CLAUSE', "",
+	'/fold.INDEX_CLAUSE', "",
+	'/group.BASE_TABLE_CLAUSE', "",
+	'/group.OTHER_TABLE_CLAUSE', "",
+	'/group.INDEX_CLAUSE', "",
+	'/item.BASE_TABLE_CLAUSE', "",
+	'/item.OTHER_TABLE_CLAUSE', "",
+	'/item.INDEX_CLAUSE', "",
+	'/invoice.BASE_TABLE_CLAUSE', "",
+	'/invoice.OTHER_TABLE_CLAUSE', "",
+	'/invoice.INDEX_CLAUSE', "",
+	'/job.BASE_TABLE_CLAUSE', "",
+	'/job.OTHER_TABLE_CLAUSE', "",
+	'/job.INDEX_CLAUSE', "",
+	'/job_batch.BASE_TABLE_CLAUSE', "",
+	'/job_batch.OTHER_TABLE_CLAUSE', "",
+	'/job_batch.INDEX_CLAUSE', "",
+	'/journal.BASE_TABLE_CLAUSE', "",
+	'/journal.OTHER_TABLE_CLAUSE', "",
+	'/journal.INDEX_CLAUSE', "",
+	'/ledger_report.BASE_TABLE_CLAUSE', "",
+	'/ledger_report.OTHER_TABLE_CLAUSE', "",
+	'/ledger_report.INDEX_CLAUSE', "",
+	'/lock_program.BASE_TABLE_CLAUSE', "",
+	'/lock_program.OTHER_TABLE_CLAUSE', "",
+	'/lock_program.INDEX_CLAUSE', "",
+	'/note.BASE_TABLE_CLAUSE', "",
+	'/note.OTHER_TABLE_CLAUSE', "",
+	'/note.INDEX_CLAUSE', "",
+	'/message.BASE_TABLE_CLAUSE', "",
+	'/message.OTHER_TABLE_CLAUSE', "",
+	'/message.INDEX_CLAUSE', "",
+	'/monitor_queue.BASE_TABLE_CLAUSE', "",
+	'/monitor_queue.OTHER_TABLE_CLAUSE', "",
+	'/monitor_queue.INDEX_CLAUSE', "",
+	'/opcode.BASE_TABLE_CLAUSE', "",
+	'/opcode.OTHER_TABLE_CLAUSE', "",
+	'/opcode.INDEX_CLAUSE', "",
+	'/order.BASE_TABLE_CLAUSE', "",
+	'/order.OTHER_TABLE_CLAUSE', "",
+	'/order.INDEX_CLAUSE', "",
+	'/ordered_balgrp.BASE_TABLE_CLAUSE', "",
+	'/ordered_balgrp.OTHER_TABLE_CLAUSE', "",
+	'/ordered_balgrp.INDEX_CLAUSE', "",
+	'/payinfo.BASE_TABLE_CLAUSE', "",
+	'/payinfo.OTHER_TABLE_CLAUSE', "",
+	'/payinfo.INDEX_CLAUSE', "",
+	'/plan.BASE_TABLE_CLAUSE', "",
+	'/plan.OTHER_TABLE_CLAUSE', "",
+	'/plan.INDEX_CLAUSE', "",
+	'/pop.BASE_TABLE_CLAUSE', "",
+	'/pop.OTHER_TABLE_CLAUSE', "",
+	'/pop.INDEX_CLAUSE', "",
+	'/ppv_schedule.BASE_TABLE_CLAUSE', "",
+	'/ppv_schedule.OTHER_TABLE_CLAUSE', "",
+	'/ppv_schedule.INDEX_CLAUSE', "",
+	'/ppv_purchase.BASE_TABLE_CLAUSE', "",
+	'/ppv_purchase.OTHER_TABLE_CLAUSE', "",
+	'/ppv_purchase.INDEX_CLAUSE', "",
+	'/process_audit.BASE_TABLE_CLAUSE', "",
+	'/process_audit.OTHER_TABLE_CLAUSE', "",
+	'/process_audit.INDEX_CLAUSE', "",
+	'/product.BASE_TABLE_CLAUSE', "",
+	'/product.OTHER_TABLE_CLAUSE', "",
+	'/product.INDEX_CLAUSE', "",
+	'/profile.BASE_TABLE_CLAUSE', "",
+	'/profile.OTHER_TABLE_CLAUSE', "",
+	'/profile.INDEX_CLAUSE', "",
+        '/purchased_discount.BASE_TABLE_CLAUSE', "",
+        '/purchased_discount.OTHER_TABLE_CLAUSE', "",
+        '/purchased_discount.INDEX_CLAUSE', "",
+        '/purchased_product.BASE_TABLE_CLAUSE', "",
+        '/purchased_product.OTHER_TABLE_CLAUSE', "",
+        '/purchased_product.INDEX_CLAUSE', "",		
+        '/ra_threshold_status.BASE_TABLE_CLAUSE', "",
+	'/ra_threshold_status.OTHER_TABLE_CLAUSE', "",
+	'/ra_threshold_status.INDEX_CLAUSE', "",
+	'/rate.BASE_TABLE_CLAUSE', "",
+	'/rate.OTHER_TABLE_CLAUSE', "",
+	'/rate.INDEX_CLAUSE', "",
+	'/rate_plan.BASE_TABLE_CLAUSE', "",
+	'/rate_plan.OTHER_TABLE_CLAUSE', "",
+	'/rate_plan.INDEX_CLAUSE', "",
+	'/rate_plan_selector.BASE_TABLE_CLAUSE', "",
+	'/rate_plan_selector.OTHER_TABLE_CLAUSE', "",
+	'/rate_plan_selector.INDEX_CLAUSE', "",
+	'/rel_event_extract_sync.BASE_TABLE_CLAUSE', "",
+	'/rel_event_extract_sync.OTHER_TABLE_CLAUSE', "",
+	'/rel_event_extract_sync.INDEX_CLAUSE', "",
+	'/remittance.BASE_TABLE_CLAUSE', "",
+	'/remittance.OTHER_TABLE_CLAUSE', "",
+	'/remittance.INDEX_CLAUSE', "",
+	'/remittance_info.BASE_TABLE_CLAUSE', "",
+	'/remittance_info.OTHER_TABLE_CLAUSE', "",
+	'/remittance_info.INDEX_CLAUSE', "",
+	'/remittance_calculation.BASE_TABLE_CLAUSE', "",
+	'/remittance_calculation.OTHER_TABLE_CLAUSE', "",
+	'/remittance_calculation.INDEX_CLAUSE', "",
+	'/reservation.BASE_TABLE_CLAUSE', "",
+	'/reservation.OTHER_TABLE_CLAUSE', "",
+	'/reservation.INDEX_CLAUSE', "",
+	'/reservation_list.BASE_TABLE_CLAUSE', "",
+	'/reservation_list.OTHER_TABLE_CLAUSE', "",
+	'/reservation_list.INDEX_CLAUSE', "",
+	'/rollover.BASE_TABLE_CLAUSE', "",
+	'/rollover.OTHER_TABLE_CLAUSE', "",
+	'/rollover.INDEX_CLAUSE', "",
+	'/schedule.BASE_TABLE_CLAUSE', "",
+	'/schedule.OTHER_TABLE_CLAUSE', "",
+	'/schedule.INDEX_CLAUSE', "",
+	'/search.BASE_TABLE_CLAUSE', "",
+	'/search.OTHER_TABLE_CLAUSE', "",
+	'/search.INDEX_CLAUSE', "",
+	'/service.BASE_TABLE_CLAUSE', "",
+	'/service.OTHER_TABLE_CLAUSE', "",
+	'/service.INDEX_CLAUSE', "",
+	'/sponsorship.BASE_TABLE_CLAUSE', "",
+	'/sponsorship.OTHER_TABLE_CLAUSE', "",
+	'/sponsorship.INDEX_CLAUSE', "",
+	'/strings.BASE_TABLE_CLAUSE', "",
+	'/strings.OTHER_TABLE_CLAUSE', "",
+	'/strings.INDEX_CLAUSE', "",
+	'/suspended_batch.BASE_TABLE_CLAUSE', "",
+	'/suspended_batch.OTHER_TABLE_CLAUSE', "",
+	'/suspended_batch.INDEX_CLAUSE', "",
+	'/suspended_usage.BASE_TABLE_CLAUSE', "",
+	'/suspended_usage.OTHER_TABLE_CLAUSE', "",
+	'/suspended_usage.INDEX_CLAUSE', "",
+	'/suspended_usage_edits.BASE_TABLE_CLAUSE', "",
+	'/suspended_usage_edits.OTHER_TABLE_CLAUSE', "",
+	'/suspended_usage_edits.INDEX_CLAUSE', "",
+	'/timos.BASE_TABLE_CLAUSE', "",
+	'/timos.OTHER_TABLE_CLAUSE', "",
+	'/timos.INDEX_CLAUSE', "",
+	'/tmp_suspended_usage.BASE_TABLE_CLAUSE', "",
+	'/tmp_suspended_usage.OTHER_TABLE_CLAUSE', "",
+	'/tmp_suspended_usage.INDEX_CLAUSE', "",
+	'/topup.BASE_TABLE_CLAUSE', "",
+	'/topup.OTHER_TABLE_CLAUSE', "",
+	'/topup.INDEX_CLAUSE', "",
+	'/topuprules.BASE_TABLE_CLAUSE', "",
+	'/topuprules.OTHER_TABLE_CLAUSE', "",
+	'/topuprules.INDEX_CLAUSE', "",
+	'/uniqueness.BASE_TABLE_CLAUSE', "",
+	'/uniqueness.OTHER_TABLE_CLAUSE', "",
+	'/uniqueness.INDEX_CLAUSE', "",
+	'/zonemap.BASE_TABLE_CLAUSE', "",
+	'/zonemap.OTHER_TABLE_CLAUSE', "",
+	'/zonemap.INDEX_CLAUSE', "",
+	'/user_activity.BASE_TABLE_CLAUSE', "",
+);
+
+  if ($ENABLE_PARTITION =~ /Yes/i ) {
+    $HISTORIC_BOUNDRY = 35184372088832;
+
+    # For event_t
+    $PIN_CONF_PARTITION_POID_ID		=       "partition by range (poid_id0) "
+	."(partition partition_historic values less than ($HISTORIC_BOUNDRY), "
+	."partition partition_last values less than (MAXVALUE))";
+
+    # For other event tables
+    $PIN_CONF_PARTITION_OBJ_ID		=       "partition by range (obj_id0) "
+	."(partition partition_historic values less than ($HISTORIC_BOUNDRY), "
+	."partition partition_last values less than (MAXVALUE))";
+
+    # For indexes on event tables
+    $PIN_CONF_PARTITION_IND		=       "local";
+
+	# For non event base table
+	$PIN_CONF_NON_EVENT_PARTITION_POID_ID	= "partition by range (poid_id0) "
+	."(partition partition_last values less than (MAXVALUE))";
+
+	# For other non event tables
+	$PIN_CONF_NON_EVENT_PARTITION_OBJ_ID	= "partition by range (obj_id0) "
+	."(partition partition_last values less than (MAXVALUE))";
+
+	# For indexes on non event tables
+	$PIN_CONF_NON_EVENT_PARTITION_IND	= "local";
+
+	foreach $each_class_info (@CLASSES_TO_BE_PARTITIONED) {
+		$class_info = lc($each_class_info);
+		$position = index($class_info, ":");
+		if ( $position == -1 ) {
+			print "Invalid index type for the class listed in CLASSES_TO_BE_PARTITIONED\n";
+			exit(0);
+		}
+		$class_name = substr($class_info, 0, $position);
+		$index_type = substr($class_info, $position+1);
+		$position = rindex($class_name, "/");
+		if ( $position != 0 ) {
+			print "Invalid class name $class_name listed in CLASSES_TO_BE_PARTITIONED\n";
+			exit(0);
+		}
+		$class_found = 0;
+		# validate the class
+		foreach $class_info_key (keys %PIN_CONF_PARTITION_INFO)
+		{
+			if ( index($class_info_key, "BASE") != -1 ) {
+				$class_name_key = substr($class_info_key, 0, index($class_info_key, "\."));
+				if ( $class_name eq $class_name_key ) {
+					$class_found = 1;
+					last;
+				}
+			}
+		}
+		if ( $class_found == 0 ) {
+			print "Invalid class name $class_name listed in CLASSES_TO_BE_PARTITIONED\n";
+			exit(0);
+                }
+		$PIN_CONF_PARTITION_INFO{"$class_name.BASE_TABLE_CLAUSE"} =
+						$PIN_CONF_NON_EVENT_PARTITION_POID_ID;
+		$PIN_CONF_PARTITION_INFO{"$class_name.OTHER_TABLE_CLAUSE"} =
+						$PIN_CONF_NON_EVENT_PARTITION_OBJ_ID;
+		if ($index_type eq "local" or $index_type eq "global" ) {
+			if ($index_type eq "local") {
+				$PIN_CONF_PARTITION_INFO{"$class_name.INDEX_CLAUSE"} =
+							$PIN_CONF_NON_EVENT_PARTITION_IND;
+			}
+		} else {
+			print "Invalid index type given for the class $class_info\n";
+			exit(0);
+		}
+	}
+  } else {
+    # For event_t
+    $PIN_CONF_PARTITION_POID_ID		=       "";
+
+    # For other event tables
+    $PIN_CONF_PARTITION_OBJ_ID		=       "";
+
+    # For indexes on event tables
+    $PIN_CONF_PARTITION_IND		=       "";
+  }
+}
+
+# tablespaces mapping
+# all tables layout created for 36 logical tablespaces
+# other 36 logical tablespaces used for indexes        
+# by default all logical tablespaces mapped to 
+# one physical tablespace for tables and one tablespace for indexes
+# much better performance could be achieved by assigning different
+# physical tablespaces ( raw devices ) to different logical tablespaces
+#     PIN_CONF_TBLSPACEnn       (tablespace where tables reside)
+#     PIN_CONF_TBLSPACEXnn      (for indexes)
+
+# To keep compatability with MSSQL7, the keyword 'tablespace' has been removed
+# from this section.  $PIN_CONF_TABLESPACE_ID will contain the right word
+# 
+# By default these are set to whatever the user has in the override file.  
+# You may set them to anything you want here though
+#-------------------------------------------------------------
+# DB2 NOTES - IMPORTANT for DB2 Installation
+#
+# If for performance reasons you are using 4K, 8K and 16K pagesize 
+# tablespaces, please note how the assignment between virtual and real 
+# tablespaces is done.
+# All tablespaces for indexes can be of 4K pagesize.
+#
+# Tablespaces TBLSPACE0, TBLSPACE5, TBLSPACE17, TBLSPACE25 and TBLSPACE33 
+# have to be at least 16K pagesize.
+# Tablespace TBLSPACE1 and Tablespace TBLSPACE8 have to be at least 8K.
+# All other tablespaces have to be at least 4K pagesize.
+#
+# Tablespaces PIN_CONF_TBLSPACE25 - PIN_CONF_TBLSPACE28 are used by IREL
+# for temporary tables. Do not use these tablespaces for any other tables.
+# Tablespaces PIN_CONF_TBLSPACE29 - PIN_CONF_TBLSPACE32 are used by 
+# optional managers (wap, gprs, gsm) for temporary tables. Do not use 
+# these tablespaces for any other tables.
+# Tablespace PIN_CONF_TBLSPACE33 - PIN_CONF_TBLSPACE35 are also used for
+# base Portal tables. 
+#
+# See PIN_CONF_SM_INFO section in the DB2 block to see actual mapping.
+#--------------------------------------------------------------
+
+$PIN_CONF_TBLSPACE0		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE1		= 	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";
+$PIN_CONF_TBLSPACE2		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE3		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE4		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE5		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE6		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE7		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE8		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE9		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE10		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE11		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE12		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE13		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE14		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE15		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE16		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE17		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE18		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE19		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE20		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE21		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE22		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE23		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE24		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE25		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE26		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE27		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE28		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE29		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE30		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE31		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE32		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE33		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE34		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE35		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+$PIN_CONF_TBLSPACE36		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_TABLES_GROUP";  
+
+# For DB2, index tablespaces are specified while creating the table. For e.g
+# create table t1 (...) in tblsp1 index in indxsp1 long in longsp1 
+# PIN_CONF_INDEX_TABLSPACE_ID is assumed to be set to "index in" in
+# the install scripts
+# The "create_indexes_db2.source should not specify the index tablespace name 
+
+if ( $MAIN_DM{'db'}->{'vendor'} =~ /^db2$/i ) {
+	$PIN_CONF_TABLESPACE_ID = $PIN_CONF_INDEX_TABLESPACE_ID;
+}
+
+
+$PIN_CONF_TBLSPACEX0		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX1		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX2		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX3		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX4		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX5		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX6		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX7		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX8		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX9		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX10		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX11		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX12		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX13		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX14		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX15		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP"; 
+$PIN_CONF_TBLSPACEX16		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX17		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX18		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX19		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX20		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX21		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX22		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX23		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX24		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX25		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX26		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX27		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX28		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX29		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX30		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX31		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX32		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX33		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX34		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX35		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+$PIN_CONF_TBLSPACEX36		=	"$PIN_CONF_TABLESPACE_ID $PIN_CONF_DM_DB_INDEX_GROUP";  
+
+if ( $MAIN_DM{'db'}->{'vendor'} =~ /^db2$/i ) {
+
+# 	Tablespaces are listed in order of pagesize 
+#	16K Pagesize tablespaces
+
+	$PIN_CONF_TBLSPACE0 = "$PIN_CONF_TBLSPACE0 $PIN_CONF_TBLSPACEX0";
+	$PIN_CONF_TBLSPACE5 = "$PIN_CONF_TBLSPACE5 $PIN_CONF_TBLSPACEX5";
+	$PIN_CONF_TBLSPACE17 = "$PIN_CONF_TBLSPACE17 $PIN_CONF_TBLSPACEX17";
+	$PIN_CONF_TBLSPACE25 = "$PIN_CONF_TBLSPACE25 $PIN_CONF_TBLSPACEX25";
+	$PIN_CONF_TBLSPACE33 = "$PIN_CONF_TBLSPACE33 $PIN_CONF_TBLSPACEX33";
+
+#	8K Pagesize tablespaces
+
+	$PIN_CONF_TBLSPACE1 = "$PIN_CONF_TBLSPACE1 $PIN_CONF_TBLSPACEX1";
+	$PIN_CONF_TBLSPACE8 = "$PIN_CONF_TBLSPACE8 $PIN_CONF_TBLSPACEX8";
+
+#	4K Pagesize tablespaces
+
+	$PIN_CONF_TBLSPACE2 = "$PIN_CONF_TBLSPACE2 $PIN_CONF_TBLSPACEX2";
+	$PIN_CONF_TBLSPACE3 = "$PIN_CONF_TBLSPACE3 $PIN_CONF_TBLSPACEX3";
+	$PIN_CONF_TBLSPACE4 = "$PIN_CONF_TBLSPACE4 $PIN_CONF_TBLSPACEX4";
+	$PIN_CONF_TBLSPACE6 = "$PIN_CONF_TBLSPACE6 $PIN_CONF_TBLSPACEX6";
+	$PIN_CONF_TBLSPACE7 = "$PIN_CONF_TBLSPACE7 $PIN_CONF_TBLSPACEX7";
+	$PIN_CONF_TBLSPACE9 = "$PIN_CONF_TBLSPACE9 $PIN_CONF_TBLSPACEX9";
+	$PIN_CONF_TBLSPACE10 = "$PIN_CONF_TBLSPACE10 $PIN_CONF_TBLSPACEX10";
+	$PIN_CONF_TBLSPACE11 = "$PIN_CONF_TBLSPACE11 $PIN_CONF_TBLSPACEX11";
+	$PIN_CONF_TBLSPACE12 = "$PIN_CONF_TBLSPACE12 $PIN_CONF_TBLSPACEX12";
+	$PIN_CONF_TBLSPACE13 = "$PIN_CONF_TBLSPACE13 $PIN_CONF_TBLSPACEX13";
+	$PIN_CONF_TBLSPACE14 = "$PIN_CONF_TBLSPACE14 $PIN_CONF_TBLSPACEX14";
+	$PIN_CONF_TBLSPACE15 = "$PIN_CONF_TBLSPACE15 $PIN_CONF_TBLSPACEX15";
+	$PIN_CONF_TBLSPACE16 = "$PIN_CONF_TBLSPACE16 $PIN_CONF_TBLSPACEX16";
+	$PIN_CONF_TBLSPACE18 = "$PIN_CONF_TBLSPACE18 $PIN_CONF_TBLSPACEX18";
+	$PIN_CONF_TBLSPACE19 = "$PIN_CONF_TBLSPACE19 $PIN_CONF_TBLSPACEX19";
+	$PIN_CONF_TBLSPACE20 = "$PIN_CONF_TBLSPACE20 $PIN_CONF_TBLSPACEX20";
+	$PIN_CONF_TBLSPACE21 = "$PIN_CONF_TBLSPACE21 $PIN_CONF_TBLSPACEX21";
+	$PIN_CONF_TBLSPACE22 = "$PIN_CONF_TBLSPACE22 $PIN_CONF_TBLSPACEX22";
+	$PIN_CONF_TBLSPACE23 = "$PIN_CONF_TBLSPACE23 $PIN_CONF_TBLSPACEX23";
+	$PIN_CONF_TBLSPACE24 = "$PIN_CONF_TBLSPACE24 $PIN_CONF_TBLSPACEX24";
+
+	$PIN_CONF_TBLSPACE26 = "$PIN_CONF_TBLSPACE26 $PIN_CONF_TBLSPACEX26";
+	$PIN_CONF_TBLSPACE27 = "$PIN_CONF_TBLSPACE27 $PIN_CONF_TBLSPACEX27";
+	$PIN_CONF_TBLSPACE28 = "$PIN_CONF_TBLSPACE28 $PIN_CONF_TBLSPACEX28";
+
+	$PIN_CONF_TBLSPACE29 = "$PIN_CONF_TBLSPACE29 $PIN_CONF_TBLSPACEX29";
+	$PIN_CONF_TBLSPACE30 = "$PIN_CONF_TBLSPACE30 $PIN_CONF_TBLSPACEX30";
+	$PIN_CONF_TBLSPACE31 = "$PIN_CONF_TBLSPACE31 $PIN_CONF_TBLSPACEX31";
+	$PIN_CONF_TBLSPACE32 = "$PIN_CONF_TBLSPACE32 $PIN_CONF_TBLSPACEX32";
+
+	$PIN_CONF_TBLSPACE34 = "$PIN_CONF_TBLSPACE34 $PIN_CONF_TBLSPACEX34";
+	$PIN_CONF_TBLSPACE35 = "$PIN_CONF_TBLSPACE35 $PIN_CONF_TBLSPACEX35";
+
+	$PIN_CONF_TBLSPACE36 = "$PIN_CONF_TBLSPACE36 $PIN_CONF_TBLSPACEX36";
+}
+
+#
+# Associative array to specify the table characteristics.
+# The key is the name of a base storable class or a field 
+# within the storable class (ARRAY/SUBSTRUCT/BUFFER) that requires a table.
+#
+# Since the mapping for oracle and db2 are different, PIN_CONF_SM_INFO is
+# defined differently for oracle and db2.
+
+if ( $MAIN_DM{'db'}->{'vendor'} =~ /^db2$/i ) {
+
+# This section is for db2 only
+
+%PIN_CONF_SM_INFO = (
+	'/account',
+		"$PIN_CONF_TBLSPACE0 $PIN_CONF_STORAGE_LARGE",
+	'/account.PIN_FLD_EXEMPTIONS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED",
+	'/account.PIN_FLD_INTERNAL_NOTES',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE",
+	'/account.PIN_FLD_NAMEINFO',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_LARGE",
+	'/account.PIN_FLD_NAMEINFO.PIN_FLD_PHONES',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/admin_action',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+        '/admin_action/suspended_usage/edit.PIN_FLD_EDIT_INFO',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+        '/admin_action/suspended_usage/edit.PIN_FLD_UNDO_DATA',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+        '/admin_action/suspended_usage/recycle.PIN_FLD_RECYCLE_INFO',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/audit_account_products',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE",
+	'/batch',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED",
+        '/batch/gel.PIN_FLD_GEL_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS",
+        '/batch/gel.PIN_FLD_HEADER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS",
+        '/batch/gel.PIN_FLD_TRAILER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS",
+        '/batch/gel.PIN_FLD_SESSION_STATS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS",
+	'/batch/handler.PIN_FLD_BATCH_HANDLER_INFO',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED",
+	'/batch/occurrence.PIN_FLD_BATCH_OCCURRENCE_INFO',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED",
+	'/batch/rel.PIN_FLD_BATCH_REL_INFO',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED",
+	'/balance_group',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_LARGE_INS",
+	'/balance_group.PIN_FLD_BALANCES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS",
+	'/balance_group.PIN_FLD_BALANCES.PIN_FLD_SUB_BALANCES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS",
+	'/bill',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_LARGE_INS",
+	'/bill.PIN_FLD_INVOICES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS",
+	'/billinfo',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE_INS",
+	'/bulkacct',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_SMALL",
+	'/channel',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/channel.PIN_FLD_CONSUMERS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/channel.PIN_FLD_SUPPLIERS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/channel_event',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED",
+	'/config',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/account_era.PIN_FLD_EXT_RA',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ach.PIN_FLD_ACH_INFO',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/adjustment/event.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/bel_provision_tags.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/beid.PIN_FLD_BALANCES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/broadband_mgr.PIN_FLD_ATTRIBUTES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/broadband_mgr.PIN_FLD_ATTRIBUTES.PIN_FLD_ATTRVALS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/broadband_mgr.PIN_FLD_TWOWAY_STRINGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/broadband_mgr.PIN_FLD_VENDORS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/broadband_mgr.PIN_FLD_BROADBAND',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/business_params.PIN_FLD_PARAMS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/business_profile.PIN_FLD_PAIR',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/business_profile.PIN_FLD_TEMPLATE_ARRAY',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/business_type.PIN_FLD_BUSINESS_TYPE_ARRAY',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/country_currency_map.PIN_FLD_COUNTRIES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/country_currency_map.PIN_FLD_COUNTRIES.PIN_FLD_CURRENCIES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/content.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/rum.PIN_FLD_CANDIDATE_RUMS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/credit_profile.PIN_FLD_PROFILES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/credit/termcause.PIN_FLD_TERMINATE_CAUSES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/currency/emu.PIN_FLD_CURRENCY_EMU_MEMBERS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/currency/conversionrates.PIN_FLD_CUR_RATES_TIMEFRAMES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/currency/conversionrates.PIN_FLD_CUR_RATES_TIMEFRAMES.PIN_FLD_CUR_CONV_RATES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/currency/supportedcombinations.PIN_FLD_CUR_SUPPORTED_COMB',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/currency/supportedcombinations.PIN_FLD_CUR_SUPPORTED_COMB.PIN_FLD_CUR_SUPPORTED_SEC_CUR',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/device_state.PIN_FLD_TYPE_INFO',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/device_state.PIN_FLD_DEVICE_STATES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/device_state.PIN_FLD_DEVICE_STATES.PIN_FLD_NEXT_STATES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/device_permit_map.PIN_FLD_DEVICES.PIN_FLD_PERMITTEDS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/device_permit_map.PIN_FLD_DEVICES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/dialup_rates.PIN_FLD_RATES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/event_map.PIN_FLD_EVENT_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/event_map.PIN_FLD_EVENT_MAP.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/event_record_map',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/event_record_map.PIN_FLD_EVENT_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/event_resource_map.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/event_resource_map.PIN_FLD_EVENTS.PIN_FLD_BALANCES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/fld_validate.PIN_FLD_DOMAINS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/fld_validate.PIN_FLD_FORMATS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/fld_validate.PIN_FLD_VALIDATION',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/gel/template.PIN_FLD_GEL_TEMPLATE_INFO',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/config/gel/template.PIN_FLD_GEL_TEMPLATE_INFO.PIN_FLD_GEL_TEMPLATE',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE",
+	'/config/glid.PIN_FLD_GL_IDS',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_SMALL",
+	'/config/glid.PIN_FLD_GL_IDS.PIN_FLD_GL_ACCTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/gl_segment.PIN_FLD_GL_SEGMENTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/gl_chartaccts.PIN_FLD_GL_CHARTACCTS',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_SMALL",
+	'/config/gl_chartaccts.PIN_FLD_GL_CHARTACCTS.PIN_FLD_GL_COA_ACCTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/gprs.PIN_FLD_GPRS_INFO',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/gprs.PIN_FLD_GPRS_INFO.PIN_FLD_BUFFER',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_SMALL",
+	'/config/gprs.PIN_FLD_APN_MAP',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED",
+	'/config/gprs.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED",
+	'/config/gsmtags.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/gsmtags.PIN_FLD_GSM_FEATURES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/gsmtags.PIN_FLD_EXT_RA',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/icsf_aging_periods.PIN_FLD_AGING_PERIODS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/icsf_collection_schemes.PIN_FLD_COLLECTION_SCHEMES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/icsf_collection_schemes.PIN_FLD_COLLECTION_SCHEMES.PIN_FLD_COLLECTION_SCHEMES_STEPS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/icsf_ppv_ratings.PIN_FLD_RATINGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/impact_category.PIN_FLD_IMPACT_CATEGORIES',
+	 	"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/invoice.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/invoice_events.PIN_FLD_EVENTS',
+	 	"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/invoice_templates.PIN_FLD_INHERITED_INFO', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/invoice_templates.PIN_FLD_INV_INFO', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/invoice_templates.PIN_FLD_INV_INFO.PIN_FLD_FORMATS', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/invoice_templates.PIN_FLD_INV_INFO.PIN_FLD_BUFFER',
+		 "$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE",
+	'/config/items.PIN_FLD_ITEMS',
+		 "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/items.PIN_FLD_ITEMS.PIN_FLD_EVENTS',
+		 "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/link_batchstat.PIN_FLD_BATCHSTAT_LINKS',
+                 "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/license.PIN_FLD_LICENSE_INFO',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/license.PIN_FLD_LICENSE_INFO.PIN_FLD_BUFFER',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/locales_map.PIN_FLD_LOCALES_MAP',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/locales_map.PIN_FLD_LOCALES_MAP.PIN_FLD_CODESETS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/locales_validate.PIN_FLD_LOCALES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/locales_validate.PIN_FLD_LOCALES.PIN_FLD_VALIDATION_SPECIFICS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/map_glid.PIN_FLD_CHOICES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/mta.PIN_FLD_CONFIG_MTA',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/mta.PIN_FLD_CONFIG_MTA.PIN_FLD_OPCODE_MAP',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/mta.PIN_FLD_CONFIG_MTA.PIN_FLD_FUNCTION_MAP',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/network_element.PIN_FLD_NETWORK_ELEMENT_INFO',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/notify.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/payment.PIN_FLD_PAY_TYPES',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL",
+	'/config/payment.PIN_FLD_PAY_TYPES.PIN_FLD_OPCODES',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL",
+	'/config/paymenttool.PIN_FLD_PAY_TYPES',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL",
+	'/config/paymenttool.PIN_FLD_PAY_TYPES.PIN_FLD_PAYMENTTOOL_FIELDS',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL",
+	'/config/pin_archive.PIN_FLD_ARCHIVABLE_OBJ_TYPES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/pin_archive.PIN_FLD_ARCHIVABLE_OBJ_TYPES.PIN_FLD_ARCHIVE_TABLEMAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/paymenttool.PIN_FLD_BILL_TYPES.PIN_FLD_PAYMENTTOOL_FIELDS',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL",
+	'/config/pin_webd.PIN_FLD_PERMITTEDS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_CONFIG_PPV',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_DISTRIBUTORS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_SUBJECTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_STUDIOS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_COPY_VALUES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_CANCEL_REASONS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_PPV_VENDORS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_CONTENT_PROVIDERS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/ppv.PIN_FLD_REQUIRED_FIELDS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/psm.PIN_FLD_ACCOUNTS',
+                 "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+        '/config/process_audit_conf.PIN_FLD_AUDIT_CONFIG',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/ra_alerts.PIN_FLD_THRESHOLDS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/ra_alerts.PIN_FLD_RECIPIENTS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/ra_flows.PIN_FLD_RA_FLOWS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/ra_flows.PIN_FLD_CONTROL_POINTS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/ra_thresholds.PIN_FLD_THRESHOLDS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/ra_thresholds.PIN_FLD_FILTER_DETAILS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+        '/config/ra_thresholds.PIN_FLD_VALUE_RANGES',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/suspense_editable_flds.PIN_FLD_FIELD_NAMES',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+        '/config/suspense_edr_fld_map.PIN_FLD_EVENTS',
+                  "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+        '/config/suspense_edr_fld_map.PIN_FLD_EVENT_MAP',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+        '/config/suspense_override_reason.PIN_FLD_SUSPENSE_REASONS',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+        '/config/suspense_reason_code.PIN_FLD_SUSPENSE_REASONS',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+        '/config/template.PIN_FLD_PAIR',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+        '/config/template.PIN_FLD_TEMPLATE_INFO',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+        '/config/template.PIN_FLD_TEMPLATE_INFO.PIN_FLD_ISCRIPT_BUF',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/rum.PIN_FLD_RUM_MAP',
+	 	"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/rum.PIN_FLD_RUM_MAP.PIN_FLD_CANDIDATE_RUMS',
+	 	"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/distribution.PIN_FLD_DISTRIBUTION', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/spec_impact_category.PIN_FLD_IMPACT_CATEGORIES', 
+		"$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_SMALL",
+	'/config/spec_rates.PIN_FLD_RATES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/ssg/tags.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/sub_bal_contributor.PIN_FLD_EVENT_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/sub_bal_contributor.PIN_FLD_EVENT_MAP.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/usage_map.PIN_FLD_USAGE_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/verify.PIN_FLD_CHECKS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/tax_supplier.PIN_FLD_TAX_SUPPLIER_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/config/remittance_flds.PIN_FLD_REMIT_FLDS', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/remittance_spec.PIN_FLD_REMIT_ACCOUNTS', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/config/remittance_spec.PIN_FLD_REMIT_ACCOUNTS.PIN_FLD_CRITERIA',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/sub_bal_contributor.PIN_FLD_EVENT_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/sub_bal_contributor.PIN_FLD_EVENT_MAP.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/config/video/loader.PIN_FLD_VIDEO_LOADER_INFO',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/config/video/loader.PIN_FLD_VIDEO_LOADER_INFO.PIN_FLD_VIDEO_LOADER_TEMPLATE',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE",
+	'/config/wap.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/data',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_MED",
+	'/data.PIN_FLD_BUFFER',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE",
+        '/data/archiving.PIN_FLD_ARCHIVING_STATE',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/data/ledger_report.PIN_FLD_LEDGER_REPORT',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_MED",
+	'/dd/fields.PIN_FLD_FIELD',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/md/objects.PIN_FLD_OBJ_DESC',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/dd/objects.PIN_FLD_OBJ_DESC',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/dd/objects.PIN_FLD_OBJ_ELEM',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED",
+	'/deal',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_SMALL",
+	'/deal.PIN_FLD_PRODUCTS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/deal.PIN_FLD_DISCOUNTS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/device',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS",
+	'/device.PIN_FLD_SERVICES',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS",
+	'/device/settop.PIN_FLD_DEV_SETTOP',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_HUGE_INS",
+	'/discount',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/discount.PIN_FLD_USAGE_MAP',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+        '/event',
+                "$PIN_CONF_TBLSPACE5 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_POID_ID",
+        '/event.PIN_FLD_BAL_IMPACTS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_RUM_DETAILS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_RUM_MAP',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_TAX_JURISDICTIONS',
+                "$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_TOTAL',
+                "$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_SUB_BAL_IMPACTS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_SUB_BAL_IMPACTS.PIN_FLD_SUB_BALANCES',
+                "$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_SUB_BAL_IMPACTS.PIN_FLD_NEW_SUB_BAL_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/content.PIN_FLD_CONTENT_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/reg.PIN_FLD_REG',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/sms.PIN_FLD_SMS_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/verify.PIN_FLD_VERIFY',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/activity/video/ppv.PIN_FLD_PPV',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/activity/video/ppv.PIN_FLD_DEVICES',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/wap/interactive.PIN_FLD_WAP_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/aggregation/netflow.PIN_FLD_NETFLOW',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/aggregation/netflow.PIN_FLD_TOTAL_USAGE',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/aggregation/netflow.PIN_FLD_USAGE_RECORDS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/audit.PIN_FLD_EVENT_AUDIT',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/gel.PIN_FLD_GEL_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/gel.PIN_FLD_HEADER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/gel.PIN_FLD_TRAILER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/gel.PIN_FLD_SESSION_STATS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/rel.PIN_FLD_REL_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing.PIN_FLD_EVENT_MISC_DETAILS',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/batch/payment.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/batch/provision.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/batch/reversal.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge.PIN_FLD_CHARGE',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/ddebit.PIN_FLD_DDEBIT_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/invoice.PIN_FLD_INV_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/invoice.PIN_FLD_INV_INFO.PIN_FLD_STATUSES',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/cycle.PIN_FLD_CYCLE',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/cycle/fold.PIN_FLD_FOLD',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/cycle/tax.PIN_FLD_TAX_CYCLES',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/cycle/tax.PIN_FLD_TAXES',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/deal.PIN_FLD_DEAL_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/discount.PIN_FLD_AC_DISCOUNT',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/discount/action.PIN_FLD_ACTION_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/fee/failed_payment.PIN_FLD_FAILED_PAYMENT_FEE',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/incentive.PIN_FLD_INCENTIVE',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/invoice.PIN_FLD_ACTIVITIES',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/invoice.PIN_FLD_INVOICE_INFO',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/invoice.PIN_FLD_NAMEINFO',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/item/transfer.PIN_FLD_ACTION_INFO',
+                "$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/item/transfer.PIN_FLD_ACTION_INFO.PIN_FLD_BUFFER',
+                "$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/limit.PIN_FLD_LIMIT',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/ordered_balgrp.PIN_FLD_ORDERED_BALGROUPS',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment.PIN_FLD_PAYMENT',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/cash.PIN_FLD_CASH_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/ddebit.PIN_FLD_DDEBIT_INFO',
+                "$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/check.PIN_FLD_CHECK_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/failed.PIN_FLD_PAYMENT_FAILED_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/payorder.PIN_FLD_PAY_ORDER_INFO',
+		"$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/postalorder.PIN_FLD_POSTAL_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/voucher.PIN_FLD_VOUCHERS_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/wtransfer.PIN_FLD_WIRE_TRANSFER_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/control_rerate.PIN_FLD_ARGS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/product.PIN_FLD_PRODUCT',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/product/action.PIN_FLD_ACTION_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/product/fee/cycle.PIN_FLD_CYCLE_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/product/fee/cycle.PIN_FLD_CYCLE_DISCOUNTS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/provision/dd.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/provision/dd.PIN_FLD_CHARGES',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/cash.PIN_FLD_CASH_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/check.PIN_FLD_CHECK_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/payorder.PIN_FLD_PAY_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/postalorder.PIN_FLD_POSTAL_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund.PIN_FLD_REFUND',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/voucher.PIN_FLD_VOUCHERS_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/wtransfer.PIN_FLD_WIRE_TRANSFER_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/ddebit.PIN_FLD_DDEBIT_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/batch/refund.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal.PIN_FLD_PAYMENT',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/ddebit.PIN_FLD_DDEBIT_INFO',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/check.PIN_FLD_CHECK_INFO',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/payorder.PIN_FLD_PAY_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/postalorder.PIN_FLD_POSTAL_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/wtransfer.PIN_FLD_WIRE_TRANSFER_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/sub_bal_validity.PIN_FLD_SUB_BAL_AUDIT',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/validate.PIN_FLD_VALIDATION',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/validate/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/validate/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/broadband.PIN_FLD_BROADBAND',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/broadband/usage.PIN_FLD_BROADBAND_USAGE',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/actginfo.PIN_FLD_ACTGINFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/billinfo.PIN_FLD_BILLINFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/locale.PIN_FLD_LOCALES',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/login.PIN_FLD_LOGINS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/login.PIN_FLD_LOGINS.PIN_FLD_ALIAS_LIST',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/nameinfo.PIN_FLD_NAMEINFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/nameinfo.PIN_FLD_NAMEINFO.PIN_FLD_PHONES',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/password.PIN_FLD_PASSWORDS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/status.PIN_FLD_STATUSES',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/wap/interactive.PIN_FLD_WAP_INFO',
+		"$PIN_CONF_TBLSPACE24 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/gsm.PIN_FLD_GSM_INFO',
+		"$PIN_CONF_TBLSPACE21 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/gsm.PIN_FLD_SERVICE_CODES',
+		"$PIN_CONF_TBLSPACE22 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/gprs.PIN_FLD_GPRS_INFO',
+		"$PIN_CONF_TBLSPACE23 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/telco.PIN_FLD_TELCO_INFO',
+               "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/telco.PIN_FLD_SERVICE_CODES',
+               "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/wireless.PIN_FLD_WIRELESS_INFO',
+               "$PIN_CONF_TBLSPACE32 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/wireless.PIN_FLD_SERVICE_CODES',
+               "$PIN_CONF_TBLSPACE32 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/telco.PIN_FLD_TELCO_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/telco.PIN_FLD_SERVICE_CODES',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/telco/gsm.PIN_FLD_GSM_INFO',
+                "$PIN_CONF_TBLSPACE20 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/wireless.PIN_FLD_WIRELESS_INFO',
+               "$PIN_CONF_TBLSPACE21 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/wireless.IN_FLD_SERVICE_CODES',
+               "$PIN_CONF_TBLSPACE21 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/tmp_profile_event_ordering.PIN_FLD_OOD_CRITERIA',
+               "$PIN_CONF_TBLSPACE32 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device.PIN_FLD_DEVICE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/associate.PIN_FLD_SERVICE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/attribute.PIN_FLD_ATTRIBUTE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/brand.PIN_FLD_BRAND_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/disassociate.PIN_FLD_SERVICE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/replace.PIN_FLD_REPLACE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/state.PIN_FLD_STATE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/member.PIN_FLD_MEMBERS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/parent.PIN_FLD_PARENTS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/sharing.PIN_FLD_MEMBERS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/sharing/charges.PIN_FLD_SPONSORS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/sharing/discounts.PIN_FLD_DISCOUNTS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/netflow/usage.PIN_FLD_NETFLOW_USAGE',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/netflow/categorization.PIN_FLD_NETFLOW_CATEGORIZATION',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/deal.PIN_FLD_DEALS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/deal.PIN_FLD_DEALS.PIN_FLD_PERMITTEDS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/deal.PIN_FLD_DEALS.PIN_FLD_PRODUCTS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/fold.PIN_FLD_RATES',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/fold.PIN_FLD_RATES.PIN_FLD_BAL_IMPACTS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/fold.PIN_FLD_RATES.PIN_FLD_VALID_TOD',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/product.PIN_FLD_PRODUCTS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/product.PIN_FLD_PRODUCTS.PIN_FLD_PERMITTEDS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/rate.PIN_FLD_RATES',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/rate.PIN_FLD_RATES.PIN_FLD_BAL_IMPACTS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/rate.PIN_FLD_RATES.PIN_FLD_VALID_TOD',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/provisioning/service_order.PIN_FLD_SVC_ORDER',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/provisioning/service_order/bel.PIN_FLD_SVC_ORDER_BEL',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/provisioning/service_order/bel.PIN_FLD_RESULTS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/provisioning/service_order/gsm.PIN_FLD_SERVICE_ORDER_INFO',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/provisioning/service_order/gsm.PIN_FLD_SERVICE_ORDER_INFO.PIN_FLD_PARAMS',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/batch_controller.PIN_FLD_BATCH_CONTROLLER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/batch_handler.PIN_FLD_BATCH_HANDLER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/batch_occurrence.PIN_FLD_BATCH_OCCURRENCE_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/dialup.PIN_FLD_DIALUP',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/dialup/narus.PIN_FLD_NRS_DIALUP_IPDR',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/gprs.PIN_FLD_GPRS_INFO',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/gprs/subsession.PIN_FLD_GPRS_SUBSESSION_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/gsm.PIN_FLD_GSM_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/gsm.PIN_FLD_SERVICE_CODES',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/ipt/call.PIN_FLD_CALL',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/ipt/call/narus.PIN_FLD_NRS_VOIP_IPDR',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/call/telephony.PIN_FLD_TELEPHONY',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/call/telephony.PIN_FLD_EMI_RECORD',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/telco/gsm.PIN_FLD_GSM_INFO',
+		    "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS  $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/telco/gsm.PIN_FLD_SERVICE_CODES',
+	          "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS  $PIN_CONF_PARTITION_OBJ_ID",
+
+	'/fold',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_SMALL",
+	'/fold.PIN_FLD_BAL_IMPACTS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_SMALL",
+	'/global_transaction',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ",
+	'/group',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/group.PIN_FLD_PERMITTEDS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/group/acl.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_SMALL",
+	'/group/billing.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/group/plan_list.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/group/sharing.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/group/sharing/charges.PIN_FLD_SPONSORS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/group/sharing/discounts.PIN_FLD_DISCOUNTS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/group/sponsor.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/group/sponsor.PIN_FLD_SPONSOR',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/item',
+		"$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS",
+	'/invoice',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS",
+	'/invoice.PIN_FLD_FORMATS.PIN_FLD_BUFFER',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE_INS",
+	'/invoice.PIN_FLD_FORMATS',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS",
+	'/invoice.PIN_FLD_STATUSES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED",
+	'/job',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE",
+	'/job/amt.PIN_FLD_CUSTOM_INFO',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED",
+	'/job/rerate.PIN_FLD_REQUEST_INFO',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE",
+	'/job_batch',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE",
+	'/job_batch.PIN_FLD_ACCOUNTS',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE",
+	'/job_batch/amt.PIN_FLD_CUSTOM_INFO',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED",
+	'/job_batch/rerate.PIN_FLD_RERATE_ACCOUNTS',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE",
+	'/job_batch/rerate.PIN_FLD_RERATE_REQUEST',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE",
+	'/journal',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_POID_ID",
+	'/ledger_report',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/ledger_report.PIN_FLD_GL_ACCTS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/ledger_report.PIN_FLD_ACCOUNT_GROUPS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/ledger_report.PIN_FLD_GL_SEGMENTS_ARRAY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/ledger_report.PIN_FLD_TOTAL_GROUPS_ARRAY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/lock_program',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL",
+	'/note',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE",
+	'/message',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/opcode',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/ordered_balgrp',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/ordered_balgrp.PIN_FLD_ORDERED_BALGROUPS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/payinfo',
+		"$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_LARGE",
+	'/payinfo/cc.PIN_FLD_CC_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/payinfo/dd.PIN_FLD_DD_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/payinfo/ddebit.PIN_FLD_DDEBIT_INFO',
+		"$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED",
+	'/payinfo/invoice.PIN_FLD_INV_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/payinfo/subord.PIN_FLD_SUBORD_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/plan',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/plan.PIN_FLD_LIMIT',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/plan.PIN_FLD_BAL_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/plan.PIN_FLD_BAL_INFO.PIN_FLD_LIMIT',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/plan.PIN_FLD_SERVICES',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/pop',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/pop.PIN_FLD_ANIS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/ppv_schedule',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_HUGE_INS",
+	'/ppv_schedule.PIN_FLD_VENDOR_PROVISIONING',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_HUGE_INS",
+	'/ppv_schedule.PIN_FLD_ORDER_TIME_SLOTS',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_HUGE_INS",
+	'/ppv_purchase',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_HUGE_INS",
+	'/ppv_purchase.PIN_FLD_DEVICES',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_HUGE_INS",
+        '/process_audit',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat.PIN_FLD_FORWARD_LINKS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat.PIN_FLD_BACKWARD_LINKS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat.PIN_FLD_BATCH_STAT',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/outputstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/rel.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/revstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/revstream_status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/revstream_svctype.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/revstream_svctype_status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/simple.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/suspense.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/svctype.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/svctype_revstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/svctype_revstream_outputstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/svctype_revstream_status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/svctype_revstream_status_outputstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/batchstat/svctype_status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/billing.PIN_FLD_BILLING_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/billing.PIN_FLD_BILLING_SEGMENTS',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/billing.PIN_FLD_REVENUES',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/billing.PIN_FLD_BILL_SUPPRESSION',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/billing.PIN_FLD_FAILED_ACCOUNTS',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/pipeline.PIN_FLD_PIPE_LINE_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS",
+        '/process_audit/pipeline.PIN_FLD_FAILED_CDRS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS",
+	'/product',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/product.PIN_FLD_USAGE_MAP',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/product.PIN_FLD_RUM_MAP',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/product.PIN_FLD_RUM_MAP.PIN_FLD_RUM_LIST',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/profile',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/profile/acct_extrating.PIN_FLD_DATA_ARRAY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/profile/customer_care.PIN_FLD_CUSTOMER_CARE_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/profile/icsf_collections.PIN_FLD_COLLECTIONS_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/profile/icsf_collections.PIN_FLD_AMOUNTS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/profile/icsf_ftax.PIN_FLD_CUSTOM_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/profile/ldap.PIN_FLD_LDAP_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/profile/serv_extrating.PIN_FLD_EXTRATING',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/profile/serv_extrating.PIN_FLD_DATA_ARRAY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/profile/tax_supplier.PIN_FLD_TAX_SUPPLIER_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/profile/tax_supplier.PIN_FLD_VATINFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/profile/writeoff.PIN_FLD_WRITEOFF_INFO',
+                 "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+        '/purchased_discount',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE", 
+        '/purchased_product',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE", 
+        '/purchased_product.PIN_FLD_CYCLE_FEES',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE", 
+        '/ra_threshold_status',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+        '/ra_threshold_status.PIN_FLD_THRESHOLDS',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/rate',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/rate.PIN_FLD_VALID_TOD',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/rate.PIN_FLD_QUANTITY_TIERS.PIN_FLD_BAL_IMPACTS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/rate.PIN_FLD_QUANTITY_TIERS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/rate_plan',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/rate_plan.PIN_FLD_DATE_RANGES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/rate_plan.PIN_FLD_DAY_RANGES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/rate_plan.PIN_FLD_RATE_TIERS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/rate_plan_selector.PIN_FLD_SELECTOR',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_SMALL",
+	'/rate_plan.PIN_FLD_TOD_RANGES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL",
+	'/rate_plan_selector',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/remittance',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/remittance.PIN_FLD_REMIT_PROVIDERS',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED",
+	'/remittance_info',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS",
+	'/remittance_info.PIN_FLD_REMITTANCE_INFO',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS",
+	'/remittance_calculation',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_SMALL",
+	'/remittance_calculation.PIN_FLD_REMITTANCE_DETAILS',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_SMALL",
+	'/reservation',
+		"$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED",
+	'/reservation.PIN_FLD_BALANCES',
+		"$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED",
+	'/rollover',
+		"$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED",
+	'/rollover.PIN_FLD_BAL_IMPACTS',
+		"$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED",
+	'/schedule',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_MED",
+	'/schedule.PIN_FLD_INPUT_FLIST',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_MED",
+	'/schedule/device.PIN_FLD_DEVICE_INFO',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_MED",
+	'/search',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_SMALL",
+	'/service',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE",
+	'/service.PIN_FLD_ALIAS_LIST',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/admin_client.PIN_FLD_PERMITTEDS',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED",
+	'/service/admin_client.PIN_FLD_SERVICE_ADMINCLIENT',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS",
+	'/service/admin_client.PIN_FLD_SERVICE_ADMINCLIENT.PIN_FLD_USER_PREFS',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_SMALL_INS",
+	'/service/broadband.PIN_FLD_IP_ADDRESSES',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED",
+	'/service/broadband.PIN_FLD_SERVICE_BROADBAND',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED",
+	'/service/content.PIN_FLD_PROFILES',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/content.PIN_FLD_CONTENT_CATEGORIES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/content.PIN_FLD_CONTENT_CATEGORIES.PIN_FLD_CATEGORY_LIST',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/email.PIN_FLD_SERVICE_EMAIL',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/service/email.PIN_FLD_ALIASES',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/email.PIN_FLD_ATTRIBUTES',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/service/gsm.PIN_FLD_GSM_INFO',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/gsm.PIN_FLD_GSM_FEATURES',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/ip.PIN_FLD_ARGS',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/ip.PIN_FLD_SERVICE_IP',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_MED",
+	'/service/ip/gprs.PIN_FLD_SERVICE_GPRS',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/ip/gprs.PIN_FLD_FILTER_DETAILS',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/ip/gprs.PIN_FLD_FILTER_DETAILS.PIN_FLD_FILTER_LIST',
+		"$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/sms.PIN_FLD_SERVICE_SMS',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/provider.PIN_FLD_PROVIDER_TOPICS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_MED",
+	'/service/provider_prod.PIN_FLD_PROVIDER_PRODUCTS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_MED",
+	'/service/ssg.PIN_FLD_ARGS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE",
+	'/service/ssg.PIN_FLD_SERVICES',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE",
+	'/service/telco/gsm.PIN_FLD_GSM_INFO',
+            "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS",
+      '/service/telco/gsm.PIN_FLD_GSM_FEATURES',
+            "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/telephony.PIN_FLD_ARGS',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/telephony.PIN_FLD_FILTER_DETAILS',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/telephony.PIN_FLD_FILTER_DETAILS.PIN_FLD_FILTER_LIST',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/telephony.PIN_FLD_REDIRECT_LIST',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/telephony.PIN_FLD_SERVICE_TELEPHONY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/service/telephony.PIN_FLD_SPEED_DIAL_LIST',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/video.PIN_FLD_SERVICE_VIDEO',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/video.PIN_FLD_DEVICES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED",
+	'/service/vpdn.PIN_FLD_ARGS',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/service/vpdn.PIN_FLD_SERVICE_IP',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED",
+	'/service/wap.PIN_FLD_SERVICE_WAP',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/wap.PIN_FLD_BEARER_TYPE_LIST',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED",
+	'/service/wap.PIN_FLD_FILTER_DETAILS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE_INS",
+	'/service/wap.PIN_FLD_FILTER_DETAILS.PIN_FLD_FILTER_LIST',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_LARGE_INS",
+	'/sponsorship',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/sponsorship.PIN_FLD_USAGE_MAP',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+	'/strings',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE",
+	'/suspended_usage',
+                "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_LARGE_INS",
+        '/suspended_usage.PIN_FLD_ACTIONS',
+                "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_LARGE_INS",
+        '/suspended_usage.PIN_FLD_EDR',
+                "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_LARGE_INS",
+        '/suspended_usage/telco.PIN_FLD_TELCO_INFO',
+                "$PIN_CONF_TBLSPACE31 $PIN_CONF_STORAGE_LARGE_INS",
+        '/suspended_usage/telco/gprs.PIN_FLD_GPRS_INFO',
+                "$PIN_CONF_TBLSPACE31 $PIN_CONF_STORAGE_LARGE_INS",
+        '/suspended_usage/telco/gsm.PIN_FLD_GSM_INFO',
+                 "$PIN_CONF_TBLSPACE31 $PIN_CONF_STORAGE_LARGE_INS",
+        '/suspended_usage_edits',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+        '/suspended_usage_edits.PIN_FLD_ACTIONS',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL",
+        '/tmp_suspended_usage',
+                "$PIN_CONF_TBLSPACE32 $PIN_CONF_STORAGE_LARGE_INS",
+	'/topuprules',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL",
+	'/uniqueness',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/uniqueness.PIN_FLD_ALIAS_LIST',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED",
+	'/zonemap',
+		"$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_SMALL",
+	'/zonemap.PIN_FLD_ZONEMAP_DATA_RAW',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE",
+	'/zonemap.PIN_FLD_ZONEMAP_DATA_DERIVED',
+		"$PIN_CONF_TBLSPACE33 $PIN_CONF_STORAGE_LARGE",
+);
+} else {
+
+# This section is for Oracle
+
+%PIN_CONF_SM_INFO = (
+	'/account',
+		"$PIN_CONF_TBLSPACE0 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/account.BASE_TABLE_CLAUSE'}",
+	'/account.PIN_FLD_EXEMPTIONS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/account.OTHER_TABLE_CLAUSE'}",
+	'/account.PIN_FLD_INTERNAL_NOTES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/account.OTHER_TABLE_CLAUSE'}",
+	'/account.PIN_FLD_NAMEINFO',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/account.OTHER_TABLE_CLAUSE'}",
+	'/account.PIN_FLD_NAMEINFO.PIN_FLD_PHONES',
+		"$PIN_CONF_TBLSPACE0 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/account.OTHER_TABLE_CLAUSE'}",
+	'/admin_action',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/admin_action.BASE_TABLE_CLAUSE'}",
+        '/admin_action/suspended_usage/edit.PIN_FLD_EDIT_INFO',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/admin_action.OTHER_TABLE_CLAUSE'}",
+        '/admin_action/suspended_usage/edit.PIN_FLD_UNDO_DATA',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/admin_action.OTHER_TABLE_CLAUSE'}",
+        '/admin_action/suspended_usage/recycle.PIN_FLD_RECYCLE_INFO',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/admin_action.OTHER_TABLE_CLAUSE'}",
+	'/audit_account_products',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/audit_account_products.BASE_TABLE_CLAUSE'}",
+	'/batch',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/batch.BASE_TABLE_CLAUSE'}",
+        '/batch/gel.PIN_FLD_GEL_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/batch.OTHER_TABLE_CLAUSE'}",
+        '/batch/gel.PIN_FLD_HEADER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/batch.OTHER_TABLE_CLAUSE'}",
+        '/batch/gel.PIN_FLD_TRAILER_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/batch.OTHER_TABLE_CLAUSE'}",
+        '/batch/gel.PIN_FLD_SESSION_STATS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/batch.OTHER_TABLE_CLAUSE'}",
+	'/batch/handler.PIN_FLD_BATCH_HANDLER_INFO',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/batch.OTHER_TABLE_CLAUSE'}",
+	'/batch/occurrence.PIN_FLD_BATCH_OCCURRENCE_INFO',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/batch.OTHER_TABLE_CLAUSE'}",
+	'/batch/rel.PIN_FLD_REL_INFO',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/batch.OTHER_TABLE_CLAUSE'}",
+	'/batch/rel.PIN_FLD_SUB_PROCESSES',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_SMALL".
+                "$PIN_CONF_PARTITION_INFO{'/batch.OTHER_TABLE_CLAUSE'}",
+	'/balance_group',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/balance_group.BASE_TABLE_CLAUSE'}",
+	'/balance_group.PIN_FLD_BALANCES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/balance_group.OTHER_TABLE_CLAUSE'}",
+	'/balance_group.PIN_FLD_BALANCES.PIN_FLD_SUB_BALANCES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/balance_group.OTHER_TABLE_CLAUSE'}",
+	'/bill',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/bill.BASE_TABLE_CLAUSE'}",
+	'/bill.PIN_FLD_INVOICES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/bill.OTHER_TABLE_CLAUSE'}",
+	'/history_bills',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/history_bills.BASE_TABLE_CLAUSE'}",
+	'/history_bills.PIN_FLD_INVOICES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/history_bills.OTHER_TABLE_CLAUSE'}",
+	'/history_bills.PIN_FLD_ITEMS',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/history_bills.OTHER_TABLE_CLAUSE'}",
+	'/billinfo',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/billinfo.BASE_TABLE_CLAUSE'}",
+	'/bulkacct',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/bulkacct.BASE_TABLE_CLAUSE'}",
+	'/channel',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/channel.BASE_TABLE_CLAUSE'}",
+	'/channel.PIN_FLD_CONSUMERS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/channel.OTHER_TABLE_CLAUSE'}",
+	'/channel.PIN_FLD_SUPPLIERS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/channel.OTHER_TABLE_CLAUSE'}",
+	'/channel_event',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/channel_event.BASE_TABLE_CLAUSE'}",
+	'/config',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.BASE_TABLE_CLAUSE'}",
+	'/config/account_era.PIN_FLD_EXT_RA',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ach.PIN_FLD_ACH_INFO',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/adjustment/event.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/bel_provision_tags.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/beid.PIN_FLD_BALANCES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/broadband_mgr.PIN_FLD_ATTRIBUTES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/broadband_mgr.PIN_FLD_ATTRIBUTES.PIN_FLD_ATTRVALS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/broadband_mgr.PIN_FLD_TWOWAY_STRINGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/broadband_mgr.PIN_FLD_VENDORS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/broadband_mgr.PIN_FLD_BROADBAND',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/business_params.PIN_FLD_PARAMS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/business_profile.PIN_FLD_PAIR',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/business_profile.PIN_FLD_TEMPLATE_ARRAY',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/business_type.PIN_FLD_BUSINESS_TYPE_ARRAY',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/country_currency_map.PIN_FLD_COUNTRIES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/country_currency_map.PIN_FLD_COUNTRIES.PIN_FLD_CURRENCIES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/content.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/rum.PIN_FLD_CANDIDATE_RUMS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/credit_profile.PIN_FLD_PROFILES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/credit/termcause.PIN_FLD_TERMINATE_CAUSES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/currency/emu.PIN_FLD_CURRENCY_EMU_MEMBERS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/currency/conversionrates.PIN_FLD_CUR_RATES_TIMEFRAMES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/currency/conversionrates.PIN_FLD_CUR_RATES_TIMEFRAMES.PIN_FLD_CUR_CONV_RATES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/currency/supportedcombinations.PIN_FLD_CUR_SUPPORTED_COMB',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/currency/supportedcombinations.PIN_FLD_CUR_SUPPORTED_COMB.PIN_FLD_CUR_SUPPORTED_SEC_CUR',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/device_state.PIN_FLD_TYPE_INFO',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/device_state.PIN_FLD_DEVICE_STATES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/device_state.PIN_FLD_DEVICE_STATES.PIN_FLD_NEXT_STATES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/device_permit_map.PIN_FLD_DEVICES.PIN_FLD_PERMITTEDS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/device_permit_map.PIN_FLD_DEVICES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/dialup_rates.PIN_FLD_RATES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/event_map.PIN_FLD_EVENT_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/event_map.PIN_FLD_EVENT_MAP.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/event_record_map',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/event_record_map.PIN_FLD_EVENT_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/event_resource_map.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/event_resource_map.PIN_FLD_EVENTS.PIN_FLD_BALANCES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/fld_validate.PIN_FLD_DOMAINS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/fld_validate.PIN_FLD_FORMATS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/fld_validate.PIN_FLD_VALIDATION',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gel/template.PIN_FLD_GEL_TEMPLATE_INFO',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gel/template.PIN_FLD_GEL_TEMPLATE_INFO.PIN_FLD_GEL_TEMPLATE',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/glid.PIN_FLD_GL_IDS',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/glid.PIN_FLD_GL_IDS.PIN_FLD_GL_ACCTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gl_segment.PIN_FLD_GL_SEGMENTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gl_chartaccts.PIN_FLD_GL_CHARTACCTS',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gl_chartaccts.PIN_FLD_GL_CHARTACCTS.PIN_FLD_GL_COA_ACCTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gprs.PIN_FLD_GPRS_INFO',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gprs.PIN_FLD_GPRS_INFO.PIN_FLD_BUFFER',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gprs.PIN_FLD_APN_MAP',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gprs.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gsmtags.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gsmtags.PIN_FLD_GSM_FEATURES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/gsmtags.PIN_FLD_EXT_RA',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/icsf_aging_periods.PIN_FLD_AGING_PERIODS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/icsf_collection_schemes.PIN_FLD_COLLECTION_SCHEMES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/icsf_collection_schemes.PIN_FLD_COLLECTION_SCHEMES.PIN_FLD_COLLECTION_SCHEMES_STEPS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/icsf_ppv_ratings.PIN_FLD_RATINGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/impact_category.PIN_FLD_IMPACT_CATEGORIES',
+	 	"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/invoice.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/invoice_events.PIN_FLD_EVENTS',
+	 	"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/invoice_templates.PIN_FLD_INHERITED_INFO', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/invoice_templates.PIN_FLD_INV_INFO', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/invoice_templates.PIN_FLD_INV_INFO.PIN_FLD_FORMATS', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/invoice_templates.PIN_FLD_INV_INFO.PIN_FLD_BUFFER',
+		 "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/items.PIN_FLD_ITEMS',
+		 "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/items.PIN_FLD_ITEMS.PIN_FLD_EVENTS',
+		 "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/link_batchstat.PIN_FLD_BATCHSTAT_LINKS',
+                 "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/locales_map.PIN_FLD_LOCALES_MAP',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/locales_map.PIN_FLD_LOCALES_MAP.PIN_FLD_CODESETS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/locales_validate.PIN_FLD_LOCALES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/locales_validate.PIN_FLD_LOCALES.PIN_FLD_VALIDATION_SPECIFICS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/map_glid.PIN_FLD_CHOICES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/mta.PIN_FLD_CONFIG_MTA',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/mta.PIN_FLD_CONFIG_MTA.PIN_FLD_OPCODE_MAP',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/mta.PIN_FLD_CONFIG_MTA.PIN_FLD_FUNCTION_MAP',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/network_element.PIN_FLD_NETWORK_ELEMENT_INFO',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/notify.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/payment.PIN_FLD_PAY_TYPES',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/payment.PIN_FLD_PAY_TYPES.PIN_FLD_OPCODES',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/paymenttool.PIN_FLD_PAY_TYPES',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/paymenttool.PIN_FLD_PAY_TYPES.PIN_FLD_PAYMENTTOOL_FIELDS',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/pin_archive.PIN_FLD_ARCHIVABLE_OBJ_TYPES',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/pin_archive.PIN_FLD_ARCHIVABLE_OBJ_TYPES.PIN_FLD_ARCHIVE_TABLEMAP',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/paymenttool.PIN_FLD_BILL_TYPES.PIN_FLD_PAYMENTTOOL_FIELDS',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/pin_webd.PIN_FLD_PERMITTEDS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_CONFIG_PPV',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_DISTRIBUTORS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_SUBJECTS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_STUDIOS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_COPY_VALUES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_CANCEL_REASONS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_PPV_VENDORS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_CONTENT_PROVIDERS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ppv.PIN_FLD_REQUIRED_FIELDS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/psm.PIN_FLD_ACCOUNTS',
+                 "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/process_audit_conf.PIN_FLD_AUDIT_CONFIG',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/ra_alerts.PIN_FLD_THRESHOLDS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/ra_alerts.PIN_FLD_RECIPIENTS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/ra_flows.PIN_FLD_RA_FLOWS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/ra_flows.PIN_FLD_CONTROL_POINTS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/ra_thresholds.PIN_FLD_THRESHOLDS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/ra_thresholds.PIN_FLD_FILTER_DETAILS',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/ra_thresholds.PIN_FLD_VALUE_RANGES',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/suspense_editable_flds.PIN_FLD_FIELD_NAMES',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/suspense_edr_fld_map.PIN_FLD_EVENTS',
+                  "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/suspense_edr_fld_map.PIN_FLD_EVENT_MAP',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/suspense_override_reason.PIN_FLD_SUSPENSE_REASONS',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/suspense_reason_code.PIN_FLD_SUSPENSE_REASONS',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/template.PIN_FLD_PAIR',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/template.PIN_FLD_TEMPLATE_INFO',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+        '/config/template.PIN_FLD_TEMPLATE_INFO.PIN_FLD_ISCRIPT_BUF',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/rum.PIN_FLD_RUM_MAP',
+	 	"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/rum.PIN_FLD_RUM_MAP.PIN_FLD_CANDIDATE_RUMS',
+	 	"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/distribution.PIN_FLD_DISTRIBUTION', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/spec_impact_category.PIN_FLD_IMPACT_CATEGORIES', 
+		"$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/spec_rates.PIN_FLD_RATES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/ssg/tags.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/usage_map.PIN_FLD_USAGE_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/verify.PIN_FLD_CHECKS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/tax_supplier.PIN_FLD_TAX_SUPPLIER_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/remittance_flds.PIN_FLD_REMIT_FLDS', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/remittance_spec.PIN_FLD_REMIT_ACCOUNTS', 
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/remittance_spec.PIN_FLD_REMIT_ACCOUNTS.PIN_FLD_CRITERIA',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/sub_bal_contributor.PIN_FLD_EVENT_MAP',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/sub_bal_contributor.PIN_FLD_EVENT_MAP.PIN_FLD_EVENTS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/video/loader.PIN_FLD_VIDEO_LOADER_INFO',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/video/loader.PIN_FLD_VIDEO_LOADER_INFO.PIN_FLD_VIDEO_LOADER_TEMPLATE',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/config/wap.PIN_FLD_PROD_PROVISIONING_TAGS',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/config.OTHER_TABLE_CLAUSE'}",
+	'/cryptkey',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ",
+	'/aes_crypt_details',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ",
+	'/data',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/data.BASE_TABLE_CLAUSE'}",,
+	'/data.PIN_FLD_BUFFER',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/data.OTHER_TABLE_CLAUSE'}",
+        '/data/archiving.PIN_FLD_ARCHIVING_STATE',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/data.OTHER_TABLE_CLAUSE'}",
+	'/data/ledger_report.PIN_FLD_LEDGER_REPORT',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/data.OTHER_TABLE_CLAUSE'}",
+	'/dd/fields.PIN_FLD_FIELD',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ",
+	'/md/objects.PIN_FLD_OBJ_DESC',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ",
+	'/dd/objects.PIN_FLD_OBJ_DESC',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ",
+	'/dd/objects.PIN_FLD_OBJ_ELEM',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED ",
+	'/deal',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/deal.BASE_TABLE_CLAUSE'}",
+	'/deal.PIN_FLD_PRODUCTS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/deal.OTHER_TABLE_CLAUSE'}",
+	'/deal.PIN_FLD_DISCOUNTS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/deal.OTHER_TABLE_CLAUSE'}",
+	'/device',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/device.BASE_TABLE_CLAUSE'}",
+	'/device.PIN_FLD_SERVICES',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/device.OTHER_TABLE_CLAUSE'}",
+	'/device/settop.PIN_FLD_DEV_SETTOP',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_HUGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/device.OTHER_TABLE_CLAUSE'}",
+	'/discount',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/discount.BASE_TABLE_CLAUSE'}",
+	'/discount.PIN_FLD_USAGE_MAP',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/discount.OTHER_TABLE_CLAUSE'}",
+        '/event',
+                "$PIN_CONF_TBLSPACE5 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_POID_ID",
+        '/event.PIN_FLD_BAL_IMPACTS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_RUM_DETAILS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_RUM_MAP',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_TAX_JURISDICTIONS',
+                "$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_TOTAL',
+                "$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_SUB_BAL_IMPACTS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_SUB_BAL_IMPACTS.PIN_FLD_SUB_BALANCES',
+                "$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event.PIN_FLD_SUB_BAL_IMPACTS.PIN_FLD_NEW_SUB_BAL_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/content.PIN_FLD_CONTENT_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/reg.PIN_FLD_REG',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/sms.PIN_FLD_SMS_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/verify.PIN_FLD_VERIFY',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/activity/video/ppv.PIN_FLD_PPV',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/activity/video/ppv.PIN_FLD_DEVICES',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/activity/wap/interactive.PIN_FLD_WAP_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/aggregation/netflow.PIN_FLD_NETFLOW',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/aggregation/netflow.PIN_FLD_TOTAL_USAGE',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/aggregation/netflow.PIN_FLD_USAGE_RECORDS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/audit.PIN_FLD_EVENT_AUDIT',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/gel.PIN_FLD_GEL_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/gel.PIN_FLD_HEADER_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/gel.PIN_FLD_TRAILER_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/gel.PIN_FLD_SESSION_STATS',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/batch/rel.PIN_FLD_REL_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing.PIN_FLD_EVENT_MISC_DETAILS',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/batch/payment.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/batch/provision.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/batch/reversal.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge.PIN_FLD_CHARGE',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/ddebit.PIN_FLD_DDEBIT_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/invoice.PIN_FLD_INV_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/charge/invoice.PIN_FLD_INV_INFO.PIN_FLD_STATUSES',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/cycle.PIN_FLD_CYCLE',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/cycle/fold.PIN_FLD_FOLD',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/cycle/tax.PIN_FLD_TAX_CYCLES',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/cycle/tax.PIN_FLD_TAXES',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/deal.PIN_FLD_DEAL_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/discount.PIN_FLD_AC_DISCOUNT',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/discount/action.PIN_FLD_ACTION_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/fee/failed_payment.PIN_FLD_FAILED_PAYMENT_FEE',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/incentive.PIN_FLD_INCENTIVE',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/invoice.PIN_FLD_ACTIVITIES',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/invoice.PIN_FLD_INVOICE_INFO',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/invoice.PIN_FLD_NAMEINFO',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/item/transfer.PIN_FLD_ACTION_INFO',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/item/transfer.PIN_FLD_ACTION_INFO.PIN_FLD_BUFFER',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/limit.PIN_FLD_LIMIT',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/ordered_balgrp.PIN_FLD_ORDERED_BALGROUPS',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment.PIN_FLD_PAYMENT',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/cash.PIN_FLD_CASH_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/ddebit.PIN_FLD_DDEBIT_INFO',
+                "$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/check.PIN_FLD_CHECK_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/failed.PIN_FLD_PAYMENT_FAILED_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/payorder.PIN_FLD_PAY_ORDER_INFO',
+		"$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/postalorder.PIN_FLD_POSTAL_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/voucher.PIN_FLD_VOUCHERS_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/payment/wtransfer.PIN_FLD_WIRE_TRANSFER_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/control_rerate.PIN_FLD_ARGS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/product.PIN_FLD_PRODUCT',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/product/action.PIN_FLD_ACTION_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/product/fee/cycle.PIN_FLD_CYCLE_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/product/fee/cycle.PIN_FLD_CYCLE_DISCOUNTS',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/provision/dd.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/provision/dd.PIN_FLD_CHARGES',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/cash.PIN_FLD_CASH_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/check.PIN_FLD_CHECK_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/payorder.PIN_FLD_PAY_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/postalorder.PIN_FLD_POSTAL_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund.PIN_FLD_REFUND',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/voucher.PIN_FLD_VOUCHERS_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/wtransfer.PIN_FLD_WIRE_TRANSFER_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/refund/ddebit.PIN_FLD_DDEBIT_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/batch/refund.PIN_FLD_BATCH_INFO',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal.PIN_FLD_PAYMENT',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/ddebit.PIN_FLD_DDEBIT_INFO',
+                "$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/check.PIN_FLD_CHECK_INFO',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/payorder.PIN_FLD_PAY_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/postalorder.PIN_FLD_POSTAL_ORDER_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/reversal/wtransfer.PIN_FLD_WIRE_TRANSFER_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/sub_bal_validity.PIN_FLD_SUB_BAL_AUDIT',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/validate.PIN_FLD_VALIDATION',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/validate/cc.PIN_FLD_CC_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/billing/validate/dd.PIN_FLD_DD_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/billing/corrective_bill.PIN_FLD_EVENT_CORRECTIVE_BILL',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/broadband.PIN_FLD_BROADBAND',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/broadband/usage.PIN_FLD_BROADBAND_USAGE',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/actginfo.PIN_FLD_ACTGINFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/billinfo.PIN_FLD_BILLINFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/locale.PIN_FLD_LOCALES',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/login.PIN_FLD_LOGINS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/login.PIN_FLD_LOGINS.PIN_FLD_ALIAS_LIST',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/nameinfo.PIN_FLD_NAMEINFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/nameinfo.PIN_FLD_NAMEINFO.PIN_FLD_PHONES',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/password.PIN_FLD_PASSWORDS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/customer/status.PIN_FLD_STATUSES',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/wap/interactive.PIN_FLD_WAP_INFO',
+		"$PIN_CONF_TBLSPACE24 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/gsm.PIN_FLD_GSM_INFO',
+		"$PIN_CONF_TBLSPACE21 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/gsm.PIN_FLD_SERVICE_CODES',
+		"$PIN_CONF_TBLSPACE22 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/gprs.PIN_FLD_GPRS_INFO',
+		"$PIN_CONF_TBLSPACE23 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/telco.PIN_FLD_TELCO_INFO',
+               "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/telco.PIN_FLD_SERVICE_CODES',
+               "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/wireless.PIN_FLD_WIRELESS_INFO',
+               "$PIN_CONF_TBLSPACE32 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/activity/wireless.PIN_FLD_SERVICE_CODES',
+               "$PIN_CONF_TBLSPACE32 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/telco.PIN_FLD_TELCO_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/telco.PIN_FLD_SERVICE_CODES',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/telco/gsm.PIN_FLD_GSM_INFO',
+                "$PIN_CONF_TBLSPACE20 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/wireless.PIN_FLD_WIRELESS_INFO',
+               "$PIN_CONF_TBLSPACE21 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/session/wireless.IN_FLD_SERVICE_CODES',
+               "$PIN_CONF_TBLSPACE21 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/delayed/tmp_profile_event_ordering.PIN_FLD_OOD_CRITERIA',
+               "$PIN_CONF_TBLSPACE32 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device.PIN_FLD_DEVICE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/associate.PIN_FLD_SERVICE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/attribute.PIN_FLD_ATTRIBUTE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/brand.PIN_FLD_BRAND_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/disassociate.PIN_FLD_SERVICE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/replace.PIN_FLD_REPLACE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/device/state.PIN_FLD_STATE_INFO',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/member.PIN_FLD_MEMBERS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/parent.PIN_FLD_PARENTS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/sharing.PIN_FLD_MEMBERS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/sharing/charges.PIN_FLD_SPONSORS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/group/sharing/discounts.PIN_FLD_DISCOUNTS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/netflow/usage.PIN_FLD_NETFLOW_USAGE',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/netflow/categorization.PIN_FLD_NETFLOW_CATEGORIZATION',
+                "$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/deal.PIN_FLD_DEALS',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/deal.PIN_FLD_DEALS.PIN_FLD_PERMITTEDS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/deal.PIN_FLD_DEALS.PIN_FLD_PRODUCTS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/fold.PIN_FLD_RATES',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/fold.PIN_FLD_RATES.PIN_FLD_BAL_IMPACTS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/fold.PIN_FLD_RATES.PIN_FLD_VALID_TOD',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/product.PIN_FLD_PRODUCTS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/product.PIN_FLD_PRODUCTS.PIN_FLD_PERMITTEDS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/rate.PIN_FLD_RATES',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/rate.PIN_FLD_RATES.PIN_FLD_BAL_IMPACTS',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/price/rate.PIN_FLD_RATES.PIN_FLD_VALID_TOD',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/provisioning/service_order.PIN_FLD_SVC_ORDER',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/provisioning/service_order/bel.PIN_FLD_SVC_ORDER_BEL',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/provisioning/service_order/bel.PIN_FLD_RESULTS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+	'/event/provisioning/service_order/gsm.PIN_FLD_SERVICE_ORDER_INFO',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/provisioning/service_order/gsm.PIN_FLD_SERVICE_ORDER_INFO.PIN_FLD_PARAMS',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/batch_controller.PIN_FLD_BATCH_CONTROLLER_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_MED $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/batch_handler.PIN_FLD_BATCH_HANDLER_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/batch_occurrence.PIN_FLD_BATCH_OCCURRENCE_INFO',
+                "$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/dialup.PIN_FLD_DIALUP',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/dialup/narus.PIN_FLD_NRS_DIALUP_IPDR',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/gprs.PIN_FLD_GPRS_INFO',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/gprs/subsession.PIN_FLD_GPRS_SUBSESSION_INFO',
+                "$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/gsm.PIN_FLD_GSM_INFO',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/gsm.PIN_FLD_SERVICE_CODES',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/ipt/call.PIN_FLD_CALL',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/ipt/call/narus.PIN_FLD_NRS_VOIP_IPDR',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/call/telephony.PIN_FLD_TELEPHONY',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/call/telephony.PIN_FLD_EMI_RECORD',
+                "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/telco/gsm.PIN_FLD_GSM_INFO',
+		    "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS  $PIN_CONF_PARTITION_OBJ_ID",
+        '/event/session/telco/gsm.PIN_FLD_SERVICE_CODES',
+	          "$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_HUGE_INS  $PIN_CONF_PARTITION_OBJ_ID",
+	'/fold',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/fold.BASE_TABLE_CLAUSE'}",
+	'/fold.PIN_FLD_BAL_IMPACTS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/fold.OTHER_TABLE_CLAUSE'}",
+	'/global_transaction',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ",
+	'/group',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.BASE_TABLE_CLAUSE'}",
+	'/group.PIN_FLD_PERMITTEDS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",
+	'/group/acl.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",
+	'/group/billing.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",
+	'/group/plan_list.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",
+	'/group/sharing.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",
+	'/group/sharing/charges.PIN_FLD_SPONSORS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",	
+	'/group/sharing/discounts.PIN_FLD_DISCOUNTS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",
+	'/group/sponsor.PIN_FLD_MEMBERS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",
+	'/group/sponsor.PIN_FLD_SPONSOR',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/group.OTHER_TABLE_CLAUSE'}",
+	'/item',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/item.BASE_TABLE_CLAUSE'}",
+	'/invoice',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/invoice.BASE_TABLE_CLAUSE'}",
+	'/invoice.PIN_FLD_FORMATS.PIN_FLD_BUFFER',
+		"$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/invoice.OTHER_TABLE_CLAUSE'}",
+	'/invoice.PIN_FLD_FORMATS',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/invoice.OTHER_TABLE_CLAUSE'}",
+	'/invoice.PIN_FLD_STATUSES',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/invoice.OTHER_TABLE_CLAUSE'}",
+	'/job',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/job.BASE_TABLE_CLAUSE'}",
+	'/job/amt.PIN_FLD_CUSTOM_INFO',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/job.OTHER_TABLE_CLAUSE'}",
+	'/job/rerate.PIN_FLD_REQUEST_INFO',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/job.OTHER_TABLE_CLAUSE'}",
+	'/job_batch',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/job_batch.BASE_TABLE_CLAUSE'}",
+	'/job_batch.PIN_FLD_ACCOUNTS',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/job_batch.OTHER_TABLE_CLAUSE'}",
+	'/job_batch/amt.PIN_FLD_CUSTOM_INFO',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/job_batch.OTHER_TABLE_CLAUSE'}",
+	'/job_batch/rerate.PIN_FLD_RERATE_ACCOUNTS',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/job_batch.OTHER_TABLE_CLAUSE'}",
+	'/job_batch/rerate.PIN_FLD_RERATE_REQUEST',
+		"$PIN_CONF_TBLSPACE11 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/job_batch.OTHER_TABLE_CLAUSE'}",
+        '/journal',
+                "$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/journal.BASE_TABLE_CLAUSE'}",
+	'/ledger_report',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/ledger_report.BASE_TABLE_CLAUSE'}",
+	'/ledger_report.PIN_FLD_GL_ACCTS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/ledger_report.OTHER_TABLE_CLAUSE'}",
+	'/ledger_report.PIN_FLD_ACCOUNT_GROUPS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/ledger_report.OTHER_TABLE_CLAUSE'}",
+	'/ledger_report.PIN_FLD_GL_SEGMENTS_ARRAY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/ledger_report.OTHER_TABLE_CLAUSE'}",
+	'/ledger_report.PIN_FLD_TOTAL_GROUPS_ARRAY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/ledger_report.OTHER_TABLE_CLAUSE'}",
+	'/lock_program',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/lock_program.BASE_TABLE_CLAUSE'}",
+	'/note',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/note.BASE_TABLE_CLAUSE'}",
+	'/message',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/message.BASE_TABLE_CLAUSE'}",
+	'/opcode',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/opcode.BASE_TABLE_CLAUSE'}",
+	'/ordered_balgrp',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/ordered_balgrp.BASE_TABLE_CLAUSE'}",
+	'/ordered_balgrp.PIN_FLD_ORDERED_BALGROUPS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/ordered_balgrp.OTHER_TABLE_CLAUSE'}",
+	'/payinfo',
+		"$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/payinfo.BASE_TABLE_CLAUSE'}",
+	'/payinfo/cc.PIN_FLD_CC_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/payinfo.OTHER_TABLE_CLAUSE'}",
+	'/payinfo/dd.PIN_FLD_DD_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/payinfo.OTHER_TABLE_CLAUSE'}",
+	'/payinfo/ddebit.PIN_FLD_DDEBIT_INFO',
+		"$PIN_CONF_TBLSPACE7 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/payinfo.OTHER_TABLE_CLAUSE'}",
+	'/payinfo/invoice.PIN_FLD_INV_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/payinfo.OTHER_TABLE_CLAUSE'}",
+	'/payinfo/subord.PIN_FLD_SUBORD_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/payinfo.OTHER_TABLE_CLAUSE'}",
+	'/plan',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/plan.BASE_TABLE_CLAUSE'}",
+	'/plan.PIN_FLD_LIMIT',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/plan.OTHER_TABLE_CLAUSE'}",
+	'/plan.PIN_FLD_BAL_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/plan.OTHER_TABLE_CLAUSE'}",
+	'/plan.PIN_FLD_BAL_INFO.PIN_FLD_LIMIT',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/plan.OTHER_TABLE_CLAUSE'}",
+	'/plan.PIN_FLD_SERVICES',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/plan.OTHER_TABLE_CLAUSE'}",
+	'/pop',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/pop.BASE_TABLE_CLAUSE'}",
+	'/pop.PIN_FLD_ANIS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/pop.OTHER_TABLE_CLAUSE'}",
+	'/ppv_schedule',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_HUGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/ppv_schedule.BASE_TABLE_CLAUSE'}",
+	'/ppv_schedule.PIN_FLD_VENDOR_PROVISIONING',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_HUGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/ppv_schedule.OTHER_TABLE_CLAUSE'}",
+	'/ppv_schedule.PIN_FLD_ORDER_TIME_SLOTS',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_HUGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/ppv_schedule.OTHER_TABLE_CLAUSE'}",
+	'/ppv_purchase',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_HUGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/ppv_purchase.BASE_TABLE_CLAUSE'}",
+	'/ppv_purchase.PIN_FLD_DEVICES',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_HUGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/ppv_purchase.OTHER_TABLE_CLAUSE'}",
+        '/process_audit',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.BASE_TABLE_CLAUSE'}",
+        '/process_audit/batchstat.PIN_FLD_FORWARD_LINKS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat.PIN_FLD_BACKWARD_LINKS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat.PIN_FLD_BATCH_STAT',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/outputstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/rel.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/revstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/revstream_status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/revstream_svctype.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/revstream_svctype_status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/simple.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/suspense.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/svctype.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/svctype_revstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/svctype_revstream_outputstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/svctype_revstream_status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/svctype_revstream_status_outputstream.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/batchstat/svctype_status.PIN_FLD_GROUP_DETAILS',
+                "$PIN_CONF_TBLSPACE34 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/billing.PIN_FLD_BILLING_INFO',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/billing.PIN_FLD_BILLING_SEGMENTS',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/billing.PIN_FLD_REVENUES',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/billing.PIN_FLD_BILL_SUPPRESSION',
+                "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/billing.PIN_FLD_FAILED_ACCOUNTS',
+                "$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/pipeline.PIN_FLD_PIPE_LINE_INFO',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+        '/process_audit/pipeline.PIN_FLD_FAILED_CDRS',
+                "$PIN_CONF_TBLSPACE35 $PIN_CONF_STORAGE_MED_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/process_audit.OTHER_TABLE_CLAUSE'}",
+	'/product',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/product.BASE_TABLE_CLAUSE'}",
+	'/product.PIN_FLD_USAGE_MAP',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/product.OTHER_TABLE_CLAUSE'}",
+	'/product.PIN_FLD_RUM_MAP',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/product.OTHER_TABLE_CLAUSE'}",
+	'/product.PIN_FLD_RUM_MAP.PIN_FLD_RUM_LIST',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/product.OTHER_TABLE_CLAUSE'}",
+	'/profile',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.BASE_TABLE_CLAUSE'}",
+	'/profile/acct_extrating.PIN_FLD_DATA_ARRAY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/customer_care.PIN_FLD_CUSTOMER_CARE_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/icsf_collections.PIN_FLD_COLLECTIONS_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/icsf_collections.PIN_FLD_AMOUNTS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/icsf_ftax.PIN_FLD_CUSTOM_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/ldap.PIN_FLD_LDAP_INFO',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/serv_extrating.PIN_FLD_EXTRATING',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/serv_extrating.PIN_FLD_DATA_ARRAY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/tax_supplier.PIN_FLD_TAX_SUPPLIER_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/tax_supplier.PIN_FLD_VATINFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+	'/profile/writeoff.PIN_FLD_WRITEOFF_INFO',
+                "$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/profile.OTHER_TABLE_CLAUSE'}",
+        '/purchased_discount',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE ".
+                "$PIN_CONF_PARTITION_INFO{'/purchased_discount.BASE_TABLE_CLAUSE'}", 
+        '/purchased_product',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE ".
+                "$PIN_CONF_PARTITION_INFO{'/purchased_product.BASE_TABLE_CLAUSE'}", 
+        '/purchased_product.PIN_FLD_CYCLE_FEES',
+                "$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE ".
+                "$PIN_CONF_PARTITION_INFO{'/purchased_product.OTHER_TABLE_CLAUSE'}",  
+        '/ra_threshold_status',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/ra_threshold_status.BASE_TABLE_CLAUSE'}",
+        '/ra_threshold_status.PIN_FLD_THRESHOLDS',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/ra_threshold_status.OTHER_TABLE_CLAUSE'}",
+	'/rate',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate.BASE_TABLE_CLAUSE'}",
+	'/rate.PIN_FLD_VALID_TOD',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate.OTHER_TABLE_CLAUSE'}",
+	'/rate.PIN_FLD_QUANTITY_TIERS.PIN_FLD_BAL_IMPACTS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate.OTHER_TABLE_CLAUSE'}",
+	'/rate.PIN_FLD_QUANTITY_TIERS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate.OTHER_TABLE_CLAUSE'}",
+	'/rate_plan',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate_plan.BASE_TABLE_CLAUSE'}",
+	'/rate_plan.PIN_FLD_DATE_RANGES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate_plan.OTHER_TABLE_CLAUSE'}",
+	'/rate_plan.PIN_FLD_DAY_RANGES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate_plan.OTHER_TABLE_CLAUSE'}",
+	'/rate_plan.PIN_FLD_RATE_TIERS',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate_plan.OTHER_TABLE_CLAUSE'}",
+	'/rate_plan.PIN_FLD_TOD_RANGES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate_plan.OTHER_TABLE_CLAUSE'}",
+	'/rate_plan_selector',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate_plan_selector.BASE_TABLE_CLAUSE'}",
+	'/rate_plan_selector.PIN_FLD_SELECTOR',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rate_plan_selector.OTHER_TABLE_CLAUSE'}",
+	'/rel_event_extract_sync',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/rel_event_extract_sync.BASE_TABLE_CLAUSE'}",
+	'/remittance',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/remittance.BASE_TABLE_CLAUSE'}",
+	'/remittance.PIN_FLD_REMIT_PROVIDERS',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/remittance.OTHER_TABLE_CLAUSE'}",
+	'/remittance_info',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/remittance_info.BASE_TABLE_CLAUSE'}",
+	'/remittance_info.PIN_FLD_REMITTANCE_INFO',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/remittance_info.OTHER_TABLE_CLAUSE'}",
+	'/remittance_calculation',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/remittance_calculation.BASE_TABLE_CLAUSE'}",
+	'/remittance_calculation.PIN_FLD_REMITTANCE_DETAILS',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/remittance_calculation.OTHER_TABLE_CLAUSE'}",
+	'/reservation',
+		"$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/reservation.BASE_TABLE_CLAUSE'}",
+	'/reservation.PIN_FLD_BALANCES',
+		"$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/reservation.OTHER_TABLE_CLAUSE'}",
+	'/rollover',
+		"$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/rollover.BASE_TABLE_CLAUSE'}",
+	'/rollover.PIN_FLD_BAL_IMPACTS',
+		"$PIN_CONF_TBLSPACE6 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/rollover.OTHER_TABLE_CLAUSE'}",
+	'/schedule',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/schedule.BASE_TABLE_CLAUSE'}",
+	'/schedule.PIN_FLD_INPUT_FLIST',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/schedule.OTHER_TABLE_CLAUSE'}",
+	'/schedule/device.PIN_FLD_DEVICE_INFO',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/schedule.OTHER_TABLE_CLAUSE'}",
+	'/search',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/search.BASE_TABLE_CLAUSE'}",
+	'/service',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/service.BASE_TABLE_CLAUSE'}",
+	'/service.PIN_FLD_ALIAS_LIST',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service.PIN_FLD_TRANSFER_LIST',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",	
+	'/service/admin_client.PIN_FLD_PERMITTEDS',
+		"$PIN_CONF_TBLSPACE15 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/admin_client.PIN_FLD_SERVICE_ADMINCLIENT',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/admin_client.PIN_FLD_SERVICE_ADMINCLIENT.PIN_FLD_USER_PREFS',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_SMALL_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/broadband.PIN_FLD_IP_ADDRESSES',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/broadband.PIN_FLD_SERVICE_BROADBAND',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/content.PIN_FLD_PROFILES',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/content.PIN_FLD_CONTENT_CATEGORIES',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/content.PIN_FLD_CONTENT_CATEGORIES.PIN_FLD_CATEGORY_LIST',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/email.PIN_FLD_SERVICE_EMAIL',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/email.PIN_FLD_ALIASES',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/email.PIN_FLD_ATTRIBUTES',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/gsm.PIN_FLD_GSM_INFO',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/gsm.PIN_FLD_GSM_FEATURES',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/ip.PIN_FLD_ARGS',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/ip.PIN_FLD_SERVICE_IP',
+		"$PIN_CONF_TBLSPACE12 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/ip/gprs.PIN_FLD_SERVICE_GPRS',
+		"$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/ip/gprs.PIN_FLD_FILTER_DETAILS',
+		"$PIN_CONF_TBLSPACE9 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/ip/gprs.PIN_FLD_FILTER_DETAILS.PIN_FLD_FILTER_LIST',
+		"$PIN_CONF_TBLSPACE8 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/sms.PIN_FLD_SERVICE_SMS',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/provider.PIN_FLD_PROVIDER_TOPICS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/provider_prod.PIN_FLD_PROVIDER_PRODUCTS',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/ssg.PIN_FLD_ARGS',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/ssg.PIN_FLD_SERVICES',
+		"$PIN_CONF_TBLSPACE13 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/telco/gsm.PIN_FLD_GSM_INFO',
+            "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/telco/gsm.PIN_FLD_GSM_FEATURES',
+            "$PIN_CONF_TBLSPACE10 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/telephony.PIN_FLD_ARGS',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/telephony.PIN_FLD_FILTER_DETAILS',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/telephony.PIN_FLD_FILTER_DETAILS.PIN_FLD_FILTER_LIST',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/telephony.PIN_FLD_REDIRECT_LIST',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/telephony.PIN_FLD_SERVICE_TELEPHONY',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/telephony.PIN_FLD_SPEED_DIAL_LIST',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/video.PIN_FLD_SERVICE_VIDEO',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/video.PIN_FLD_DEVICES',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/vpdn.PIN_FLD_ARGS',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/vpdn.PIN_FLD_SERVICE_IP',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/wap.PIN_FLD_SERVICE_WAP',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/wap.PIN_FLD_BEARER_TYPE_LIST',
+		"$PIN_CONF_TBLSPACE2 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/wap.PIN_FLD_FILTER_DETAILS',
+		"$PIN_CONF_TBLSPACE3 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/service/wap.PIN_FLD_FILTER_DETAILS.PIN_FLD_FILTER_LIST',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/service.OTHER_TABLE_CLAUSE'}",
+	'/sponsorship',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/sponsorship.BASE_TABLE_CLAUSE'}",
+	'/sponsorship.PIN_FLD_USAGE_MAP',
+		"$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/sponsorship.OTHER_TABLE_CLAUSE'}",
+	'/strings',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/strings.BASE_TABLE_CLAUSE'}",
+        '/suspended_usage',
+                "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/suspended_usage.BASE_TABLE_CLAUSE'}",
+        '/suspended_usage.PIN_FLD_ACTIONS',
+                "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/suspended_usage.OTHER_TABLE_CLAUSE'}",
+        '/suspended_usage.PIN_FLD_EDR',
+                "$PIN_CONF_TBLSPACE30 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/suspended_usage.OTHER_TABLE_CLAUSE'}",
+        '/suspended_usage/telco.PIN_FLD_TELCO_INFO',
+                "$PIN_CONF_TBLSPACE31 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/suspended_usage.OTHER_TABLE_CLAUSE'}",
+        '/suspended_usage/telco/gprs.PIN_FLD_GPRS_INFO',
+                "$PIN_CONF_TBLSPACE31 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/suspended_usage.OTHER_TABLE_CLAUSE'}",
+        '/suspended_usage/telco/gsm.PIN_FLD_GSM_INFO',
+                 "$PIN_CONF_TBLSPACE31 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/suspended_usage.OTHER_TABLE_CLAUSE'}",
+        '/suspended_usage_edits',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/suspended_usage_edits.BASE_TABLE_CLAUSE'}",
+        '/suspended_usage_edits.PIN_FLD_ACTIONS',
+                "$PIN_CONF_TBLSPACE4 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/suspended_usage_edits.OTHER_TABLE_CLAUSE'}",
+        '/tmp_suspended_usage',
+                "$PIN_CONF_TBLSPACE32 $PIN_CONF_STORAGE_LARGE_INS ".
+		"$PIN_CONF_PARTITION_INFO{'/tmp_suspended_usage.BASE_TABLE_CLAUSE'}",
+	'/topuprules',
+		"$PIN_CONF_TBLSPACE14 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/topuprules.BASE_TABLE_CLAUSE'}",
+	'/uniqueness',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/uniqueness.BASE_TABLE_CLAUSE'}",
+	'/uniqueness.PIN_FLD_ALIAS_LIST',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_MED ".
+		"$PIN_CONF_PARTITION_INFO{'/uniqueness.OTHER_TABLE_CLAUSE'}",
+	'/zonemap',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_SMALL ".
+		"$PIN_CONF_PARTITION_INFO{'/zonemap.BASE_TABLE_CLAUSE'}",
+	'/zonemap.PIN_FLD_ZONEMAP_DATA_RAW',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/zonemap.OTHER_TABLE_CLAUSE'}",
+	'/zonemap.PIN_FLD_ZONEMAP_DATA_DERIVED',
+		"$PIN_CONF_TBLSPACE1 $PIN_CONF_STORAGE_LARGE ".
+		"$PIN_CONF_PARTITION_INFO{'/zonemap.OTHER_TABLE_CLAUSE'}",
+);
+
+}
+
+

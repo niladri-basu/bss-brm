@@ -1,0 +1,35 @@
+010	1			1	1	1431946610	1431946610	1431946610		0	0						RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/voice			2
+020	2					2degrees	2degrees	228007080	00	228003547	Call To 2Degrees	0	17	01	TEL			00	S	+0100	0.0	0.0	2	NORM	Calls	0	0	1432918885	1432918960	75
+520	3		228007080	0
+900	4	1 /account 1164311 0	1 /service/telco/gsm/telephony 1169139 0	1 /item/usage 291537707129303823 0	0  0 0	;;;;[228007080,2,0]|;;;;[228007080,2,0]|;;;;[228007080,2,0]|;;;;[228003547,2,0]		1	@INTEGRATE#228007080#228003547#TEL#75#2#Calls#0#Call To 2Degrees##<1 /item/usage 291537707129303823 0#554#120##2#300201200#GST|>#<77#52|>#<#>
+600	5	1 /account 1164311 0	1 /balance_group 1169299 0	1 /item/usage 291537707129303823 0	554	0	ALL	258	1 /product 1153643 0	300201200	0	GST			1 /purchased_product 1167371 0	120	2	0.0	2	0.0	0	P
+605	0	1 /balance_group 1169299 0	554
+607	0	2	1431903410	0			0	0
+800	6	1 /account 1164311 0	1 /balance_group/monitor 1166103 0	554	2
+805	0	1 /balance_group/monitor 1166103 0	554
+807	1432857600	2	1432857600	1432944000	
+888	1	ac000143	$49 CARRYOVER PLAN	51	52	OriginatingCountry	OriginatingZone	DestinationCountry	Zone 1	57	58	RatingGroupCode	RatingGroupType	5	Mfile	InPackageCode	POSTPAY			FALSE	70	1416593474	72	73	CLI	74	76	77
+891	asdew	SK	IMSI	LocNum	CallId	RDPN	TN
+020	9					2degrees	Vodafone IN	228007080	00	919830966557	International calls	0	17	01	TEL			00	S	+0100	0.0	0.0	2	NORM	Calls	0	0	1432918885	1432918978	93
+520	10		228007080	0
+900	11	1 /account 1164311 0	1 /service/telco/gsm/telephony 1169139 0	1 /item/usage 291537707129303823 0	0  0 0	;;;;[228007080,2,0]|;;;;[228007080,2,0]|;;;;[228007080,2,0]|;;;;[9198309665,2,0]		1	@INTEGRATE#228007080#919830966557#TEL#93#2#Calls#0#International calls##<1 /item/usage 291537707129303823 0#554#120##35#300201210#GST|>#<302#52|>#<#>
+600	12	1 /account 1164311 0	1 /balance_group 1169299 0	1 /item/usage 291537707129303823 0	554	0	ALL	258	1 /product 1153643 0	300201210	0	GST			1 /purchased_product 1167371 0	120	35	0.0	35	0.0	0	P
+605	0	1 /balance_group 1169299 0	554
+607	0	35	1431903410	0			0	0
+800	13	1 /account 1164311 0	1 /balance_group/monitor 1166103 0	554	35
+805	0	1 /balance_group/monitor 1166103 0	554
+807	1432857600	35	1432857600	1432944000	
+888	1	ac000144	$49 CARRYOVER PLAN	51	52	International Zone 1	International Zone 1	International Zone 2	International Zone 2	57	58	RatingGroupCode	RatingGroupType	4.55	Mfile	InPackageCode	POSTPAY			FALSE	791186	1424472067	2053753	2054377				302
+891	asdew	SK	IMSI				
+020	16					Vodafone IN	2degrees	228007080	00	228003547	Roaming outgoing calls	0	17	01	TEL			00	S	+0100	0.0	0.0	2	NORM	International roaming	0	0	1432918885	1432918990	105
+520	17		228007080	0
+900	18	1 /account 1164311 0	1 /service/telco/gsm/telephony 1169139 0	1 /item/usage_niltax 291537707129303824 0	0  0 0	;;;;[228007080,2,0]|;;;;[228007080,2,0]|;;;;[228007080,2,0]|;;;;[228003547,2,0]		1	@INTEGRATE#228007080#228003547#TEL#105#2#International roaming#0#Roaming outgoing calls##<1 /item/usage_niltax 291537707129303824 0#554#120##55#400201600#NILGST|>#<77#52|>#<#>
+600	19	1 /account 1164311 0	1 /balance_group 1169299 0	1 /item/usage_niltax 291537707129303824 0	554	0	ALL	258	1 /product 1153643 0	400201600	0	NILGST			1 /purchased_product 1167371 0	120	55	0.0	55	0.0	0	P
+605	0	1 /balance_group 1169299 0	554
+607	0	55	1431903410	0			0	0
+800	20	1 /account 1164311 0	1 /balance_group/monitor 1166103 0	554	55
+805	0	1 /balance_group/monitor 1166103 0	554
+807	1432857600	55	1432857600	1432944000	
+888	1	ac000145	$49 CARRYOVER PLAN	51	52	International Zone 1	International Zone 1	International Zone 2	International Zone 2	57	58	RatingGroupCode	RatingGroupType	4.55	Mfile	InPackageCode	POSTPAY			FALSE	70	1416593474	72	73	CLI	74	76	77
+891	asdew	SK	IMSI	LocNum	CallId	RDPN	TN
+090	23			1	1	3	1432918885	+0100	1432918885	+0100	0.0	92

@@ -1,0 +1,408 @@
+##!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+# @(#)%Portal Version: pin_prompts.values:PortalBase7.2PatchInt:3:2005-Oct-14 01:01:54 %
+#=======================================================================
+#  @(#)%Portal Version: pin_prompts.values:PortalBase7.2PatchInt:3:2005-Oct-14 01:01:54 %
+# 
+# Copyright (c) 2002, 2011, Oracle and/or its affiliates. All rights reserved. 
+#
+#    This material is the confidential property of Oracle Corporation 
+#    or its licensors and may be used, reproduced, stored
+#    or transmitted only in accordance with a valid Oracle license or
+#    sublicense agreement.
+#
+# Perl script containing details on the install prompts.
+#
+#=============================================================
+
+#
+# Set values for @ArrayComponent, using @COMPONENT_LIST from pin_setup.values
+#
+@ArrayComponent = reverse ( @COMPONENT_LIST );
+$ArrayComponentString = join ' ', @ArrayComponent;
+
+#
+# Add 'db' to 'dm_oracle' or 'dm_odbc' in the component list.
+# Split the prompts for Database into two steps so as to prompt based
+# on the database Vendor
+$ArrayComponentString =~ s/(dm_oracle|dm_db2|dm_odbc)/db db1 $1/;
+
+#
+# Add 'db dm_oracle_modular' to the component list,
+# for selected components which update the database at install time.
+#
+if ( $ArrayComponentString !~ /dm_oracle|dm_db2|dm_odbc/ )
+{
+	$ArrayComponentString =~ s/(\scsrc|\scontent_manager|\sdm_teracomm|\sdm_billsoft|\sdm_taxware|\sdm_vertex|\sgprs|\smsexchange_cm|\snarus|\srel|\ssms|\stelcotaxmgr|\snetflow|\swap|\smpls|\ssim_manager|\snumber_manager|\smediation|\sssm|\sssg|\srrf|\sgsm|\sicsf|\sbroadband_mgr|\svideo_manager|\sfddebit|\spin_collections|\stcframework|\sgsm_aaa|\stcf_aaa|\svouchermanager|\sordermanager|\scmt|\ssap_rm_ca|\saraframework)/$1 db db1/;
+}
+
+#
+# Hide the prompt for Automatically Create Tablespaces, unless Portal Base is
+# being installed, since this feature is only supported for the core server.
+#
+if ( -f "../../../../Portal_Base.prod" )
+{
+	$HIDE_CREATE_TABLESPACES_PROMPT = "NO";
+}
+else
+{
+	$HIDE_CREATE_TABLESPACES_PROMPT = "YES";
+}
+
+#
+# Hide the prompt for DM_ORACLE Hostname, unless the 'rel' component is being installed,
+# since the DM_ORACLE component should be installed remotely from the RatedEventLoader product.
+#
+if ( $ArrayComponentString =~ / rel / )
+{
+	$HIDE_DM_ORACLE_HOSTNAME_PROMPT = "NO";
+	$HIDE_CREATE_PARTITIONS_PROMPT = "YES";
+}
+else
+{
+	$HIDE_DM_ORACLE_HOSTNAME_PROMPT = "YES";
+	$HIDE_CREATE_PARTITIONS_PROMPT = "NO";
+}
+
+#
+# Hide the prompt for database vendor if uname is not aix. 
+# DB2 is supported on AIX only.
+# 
+if ( $^O =~ /aix/i )
+{
+        $HIDE_VENDOR_PROMPT = "NO"; 
+}
+else
+{
+        $HIDE_VENDOR_PROMPT = "YES";
+}
+
+#
+# Add 'default_prompts' to the component list, for all components
+#
+$ArrayComponentString = "default_prompts $ArrayComponentString";
+
+#
+## Add 'cm' to the component list for sap_rm_ca 
+#
+if ( $ArrayComponentString =~ / sap_rm_ca / )
+{
+$ArrayComponentString = "cm $ArrayComponentString"; 
+}
+
+#
+# Generate the UPDATED @ArrayComponent list.
+#
+@ArrayComponent = split ' ', $ArrayComponentString;
+
+#
+# Hashed array containing tags used in pin_setup.values.
+# These will be used to look up the current values, for each prompt.
+#
+%ComponentAlias = (
+'default_prompts',	"DEFAULT_PROMPTS",
+'cm',			"MAIN_CM",
+'db',			"MAIN_DB",
+'db1',			"MAIN_DB",
+'dm_oracle',		"DM_ORACLE",
+'dm_oracle_modular',	"DM_ORACLE",
+'dm_db2',		"DM_DB2",
+'dm_fusa',		"DM_FUSA",
+'dm_taxware',		"TAX_DM",
+'dm_timos',		"DM_TIMOS",
+'dm_clearcom',		"DM_CLEARCOM",
+'dm_bertelsmann',	"BERTELSMANN",
+'mpls',			"MPLS",
+'narus',		"NARUS",
+'content_developerkit',	"CONTENT_DEVELOPERKIT",
+'dm_ifw_sync',		"DM_IFW_SYNC",
+'tcframework',		"DM_PROV_TELCO",
+'telcoOne_integrator',  "TELCO_ONE_INTEGRATOR",
+'suspense_rel',		"MAIN_DB",
+'cmt',		"CMT",
+'sap_rm_ca',		"SAP_RM_CA",
+'pin_invoice_store', "PIN_INVOICE"
+);
+
+#
+# Hashed array containing the header text displayed for each component.
+# This is displayed only once, before the prompts for the current component are displayed.
+#
+%ComponentHeader = (
+'default_prompts',	"Portal Base Location",
+'cm',			"Connection Manager",
+'db',			"Main Database",
+'dm_oracle',		"Oracle Data Manager",
+'dm_db2',		"DB2 Data Manager",
+'dm_fusa',		"Paymentech Data Manager",
+'dm_taxware',		"Taxware Manager",
+'dm_clearcom',		"Clear Commerce Data Manager",
+'dm_bertelsmann',	"Bertelsmann Data Manager",
+'mpls',			"MPLS Manager",
+'narus',		"Narus Manager",
+'content_developerkit',	"Content Developer Kit",
+'dm_ifw_sync',		"IFW Sync Data Manager",
+'tcframework',		"Provision Data Manager",
+'telcoOne_integrator',  "TelcoOne Integrator",
+'suspense_rel',		"Suspense Handling Manager",
+'cmt',			"Common Migration Tool",
+'dm_timos',		"TIMOS Data Manager",
+'sap_rm_ca',		"SAP_RM-CM Manager",
+'pin_invoice_store', "Pin Invoice store"
+);
+
+
+#
+# The following entries ( %{$Prompts{ ... }} )
+# define hashed arrays, which contain the actual prompts to be displayed,
+# for each of the components.
+#
+# There are several 'key sections' to these entries :
+#
+#    _1_ _2_ etc.  :  This is used to numerically sort the prompts, and will
+#                     determine the order they are displayed, for each component.
+#
+#    _PROMPT_      :  A 'standard' prompt, asking for any type of input.
+#                     This is stored in a hashed array in pin_setup.values,
+#                     and the array name is defined in $ComponentAlias.
+#
+#    _YESNO_       :  A prompt asking for 'YES' or 'NO' input.
+#                     This is stored as a scalar in pin_setup.values.
+#
+#    _PROMPTBASE_  :  A 'standard' prompt, but one in which the entry is stored
+#                     as a scalar in pin_setup.values, instead of in an array.
+#
+#    RANGE_        :  This OPTIONAL entry defines the type of range checking to use.
+#
+#    HIDEPROMPT_   :  This OPTIONAL entry defines when to HIDE this prompt.
+#
+
+%{$Prompts{'default_prompts'}} = (
+	"_1_PROMPTBASE_PIN_HOME",		"Enter the Portal Base Home Directory:",
+	"RANGE_PIN_HOME",			"full_pathname",
+	"_2_PROMPTBASE_PIN_LOG_DIR",		"Enter the Portal Base Log Directory:",
+	"RANGE_PIN_LOG_DIR",			"full_pathname",
+	"_3_PROMPTBASE_PIN_SHARED_DIR",		"Enter the Portal Base Shared Directory:",
+	"RANGE_PIN_SHARED_DIR",			"full_pathname",
+	"_4_PROMPTBASE_PIN_TEMP_DIR",		"Enter the Temp Directory:",
+	"RANGE_PIN_TEMP_DIR",			"full_pathname"
+	);
+
+%{$Prompts{'cm'}} = (
+	"_1_PROMPT_port",			"Connection Manager port:",
+	"RANGE_port",				"port"
+	);
+
+%{$Prompts{'db'}} = (
+	"_01_PROMPT_vendor",			"Database (db2 or oracle):",
+	"RANGE_vendor",				"db2 oracle",
+	"HIDEPROMPT_vendor",                    "HIDE_VENDOR_PROMPT YES"
+	);
+
+%{$Prompts{'db1'}} = (
+	"_01_YESNO_CREATE_DATABASE_TABLES",	"Create Portal Base Database Tablespaces ?",
+	"HIDEPROMPT_CREATE_DATABASE_TABLES",	"$HIDE_CREATE_TABLESPACES_PROMPT YES",  # Hide this prompt if the core server is not installed #
+	"_02_PROMPT_alias",			"Database alias:",
+	"_03_PROMPT_system_user",		"Database SYSTEM username:",
+	"HIDEPROMPT_system_user",		"CREATE_DATABASE_TABLES NO",  # Hide this prompt if $CREATE_DATABASE_TABLES == "NO" #
+	"_04_PROMPT_system_password",		"Database SYSTEM password:",
+	"HIDEPROMPT_system_password",		"CREATE_DATABASE_TABLES NO",  # Hide this prompt if $CREATE_DATABASE_TABLES == "NO" #
+	"_05_PROMPT_user",			"Portal Base username:",
+	"_06_PROMPT_password",			"Portal Base password:",
+	"_07_PROMPT_storage_model",		"Storage Model used for Oracle tablespaces:",
+	"RANGE_storage_model",			"Test Small Medium Large",
+	"HIDEPROMPT_storage_model",		"HIDE_STORAGE_MODEL_PROMPT YES",  # Hide this prompt for db2 #
+	"_08_PROMPT_tables_group",		"Tablespace name for Tables:",
+	"_09_PROMPT_indexes_group",		"Tablespace name for Indexes:",
+	"_10_YESNO_SETUP_INIT_DB",		"Configure the Portal Base database?",
+	"_11_YESNO_SETUP_DROP_ALL_TABLES",	"Drop the Portal Base database tables?",
+	"_12_YESNO_ENABLE_PARTITION",		"Partition event tables?",
+	"HIDEPROMPT_ENABLE_PARTITION",		"HIDE_CREATE_PARTITIONS_PROMPT YES",
+	"_13_YESNO_SETUP_CREATE_PARTITIONS",	"Add 12 fixed (monthly) partitions to all event tables?",
+	"HIDEPROMPT_SETUP_CREATE_PARTITIONS",	"ENABLE_PARTITION NO"
+	);
+
+%{$Prompts{'dm_oracle'}} = (
+	"_1_PROMPT_version",			"Oracle version (10g or 11g):",
+	"RANGE_version",			"10g 11g",
+	"_2_PROMPT_hostname",			"Oracle DM hostname:",
+	"HIDEPROMPT_hostname",			"$HIDE_DM_ORACLE_HOSTNAME_PROMPT YES",  # Hide this prompt if the core server is installed #
+	"_3_PROMPT_db_num",			"Oracle DM database number:",
+	"RANGE_db_num",				"db_num",
+	"_4_PROMPT_port",			"Oracle DM port:",
+	"RANGE_port",				"port",
+	"_5_PROMPT_sm_charset",			"Oracle DM character set:",
+	"RANGE_sm_charset",			"AL32UTF8 UTF8"
+	);
+
+%{$Prompts{'dm_db2'}} = (
+	"_1_PROMPT_hostname",			"DB2 DM hostname:",
+	"HIDEPROMPT_hostname",			"$HIDE_DM_DB2_HOSTNAME_PROMPT YES",  # Hide this prompt if the core server is installed #
+	"_2_PROMPT_db_num",			"DB2 DM database number:",
+	"RANGE_db_num",				"db_num",
+	"_3_PROMPT_port",			"DB2 DM port:",
+	"RANGE_port",				"port",
+	"_4_PROMPT_sm_charset",			"DB2 DM character set:",
+	"RANGE_sm_charset",			"UTF8"
+	);
+
+%{$Prompts{'dm_timos'}} = (
+	"_01_PROMPT_hostname",			"Timos DM hostname:",
+	"_02_PROMPT_port",			"Timos DM port:",
+	"RANGE_port",				"port",
+	"_03_PROMPT_web_server_port",		"Timos DM web server port:",
+	"RANGE_web_server_port",		"port",
+	"_04_PROMPT_db_num",			"Timos DM database number:",
+	"RANGE_db_num",				"db_num",
+	"_05_PROMPT_dm_oracle_hostname",	"DM Oracle hostname:",
+	"_06_PROMPT_dm_oracle_port",		"DM Oracle port:",
+	"RANGE_dm_oracle_port",			"port",
+	);
+
+%{$Prompts{'dm_ifw_sync'}} = (
+	"_01_PROMPT_queuing_db_alias",		"Queuing Database alias:",
+	"_02_PROMPT_queuing_db_user",		"Queuing Database username:",
+	"_03_PROMPT_queuing_db_password",	"Queuing Database password:",
+	"_04_PROMPT_queuing_tablespace",	"Tablespace for queue:",
+	"_05_PROMPT_retention_time",		"Message retention time after dequeuing, in seconds:"
+	);
+#
+# For non-core-server components which need to update the database during installation.
+#
+%{$Prompts{'dm_oracle_modular'}} = %{$Prompts{'dm_oracle'}};
+
+%{$Prompts{'dm_fusa'}} = (
+	"_1_PROMPT_db_num",			"Paymentech DM database number:",
+	"RANGE_db_num",				"db_num",
+	"_2_PROMPT_port",			"Paymentech DM port:",
+	"RANGE_port",				"port"
+	);
+
+%{$Prompts{'dm_taxware'}} = (
+	"_1_PROMPT_db_num",			"Taxware DM database number:",
+	"RANGE_db_num",				"db_num",
+	"_2_PROMPT_port",			"Taxware DM port:",
+	"RANGE_port",				"port"
+	);
+
+%{$Prompts{'dm_clearcom'}} = (
+	"_1_PROMPT_hostname",			"Clear Commerce DM hostname:",
+	"_2_PROMPT_db_num",			"Clear Commerce DM database number:",
+	"RANGE_db_num",				"db_num",
+	"_3_PROMPT_port",			"Clear Commerce DM port:",
+	"RANGE_port",				"port",
+	"_4_PROMPT_cc_srvr",			"Clear Commerce SSL Server hostname:",
+	"_5_PROMPT_cc_port",			"Clear Commerce SSL Server port:",
+	"RANGE_cc_port",			"port"
+	);
+
+%{$Prompts{'dm_bertelsmann'}} = (
+	"_1_PROMPT_hostname",			"Bertelsmann DM hostname:",
+	"_2_PROMPT_port",			"Bertelsmann DM port:",
+	"RANGE_port",				"port",
+	"_3_PROMPT_db_num",			"Bertelsmann DM database number:",
+	"RANGE_db_num",				"db_num",
+	"_4_PROMPT_oliva_hostname",		"Bertelsmann OLIVA Server hostname:",
+	"_5_PROMPT_oliva_port",			"Bertelsmann OLIVA Server port:",
+	"RANGE_oliva_port",			"port",
+	"_6_PROMPT_fias_hostname",		"Bertelsmann FIAS Server hostname:",
+	"_7_PROMPT_fias_ftp_username",		"Bertelsmann FIAS FTP username:",
+	"_8_PROMPT_fias_ftp_password",		"Bertelsmann FIAS FTP password:",
+	"_9_PROMPT_fias_ftp_directory",		"Bertelsmann FIAS FTP directory:"
+	);
+
+%{$Prompts{'mpls'}} = (
+	"_1_PROMPT_orbix_home",			"Full Pathname of Orbix Home Directory:",
+	"RANGE_orbix_home",			"full_pathname"
+	);
+
+%{$Prompts{'narus'}} = (
+	"_1_PROMPT_bms_home",			"Full Pathname of Narus BMS Log Directory:",
+	"RANGE_bms_home",			"full_pathname"
+	);
+
+%{$Prompts{'content_developerkit'}} = (
+	"_1_PROMPT_cdk_protocol",		"Content Developer Kit protocol(pcp or http):",
+	"RANGE_cdk_protocol",			"pcp http",
+	"_2_PROMPT_cdk_hostname",		"Content Developer Kit hostname:",
+	"HIDEPROMPT_cdk_hostname",		"CDK_PROTOCOL HTTP",
+	"_3_PROMPT_cdk_port",			"Content Developer Kit port number:",
+	"HIDEPROMPT_cdk_port",			"CDK_PROTOCOL HTTP",
+	"_4_PROMPT_cdk_login_name",	        "Content Developer Kit login name:",
+	"HIDEPROMPT_cdk_login_name",		"CDK_PROTOCOL HTTP",
+	"_5_PROMPT_cdk_login_pw",		"Content Developer Kit password:",
+	"HIDEPROMPT_cdk_login_pw",		"CDK_PROTOCOL HTTP",
+	"_6_PROMPT_cdk_url",			"Content Developer Kit url: 	http://",
+	"HIDEPROMPT_cdk_url",			"CDK_PROTOCOL PCP",
+        "_7_YESNO_CONFIGURE_PROXY",             "Configure proxy?",
+        "HIDEPROMPT_CONFIGURE_PROXY",           "CDK_PROTOCOL PCP",
+        "_8_PROMPT_cdk_proxy_host",             "Content Developer Kit proxy host:",
+        "HIDEPROMPT_cdk_proxy_host",            "CONFIGURE_PROXY NO",
+        "_9_PROMPT_cdk_proxy_port",             "Content Developer Kit proxy port:",
+        "HIDEPROMPT_cdk_proxy_port",            "CONFIGURE_PROXY NO"
+	);
+
+%{$Prompts{'tcframework'}} = (
+        "_1_PROMPT_port",                       "Telco Provision DM port:",
+        "RANGE_port",                           "port",
+        "_2_PROMPT_db_num",                     "Telco Provision DM database number:",
+        "_3_PROMPT_infranet_agent_port",        "Infranet agent port:"
+        );
+
+%{$Prompts{'telcoOne_integrator'}} = (
+        "_1_PROMPT_middleware_host_name",        "Enter the host machine's name where the middleware software is running on:"
+        );
+
+%{$Prompts{'suspense_rel'}} = (
+	"_1_PROMPT_alias",		"Database alias:",
+	"_2_PROMPT_user",		"Database username:",
+	"_3_PROMPT_password",		"Database password:"
+	);
+
+%{$Prompts{'cmt'}} = (
+
+	"_00_PROMPT_alias",			"\nStaged db settings :\n\nDatabase alias:",
+	"_01_PROMPT_port",			"DB Port:",
+	"RANGE_port",				"port",
+	"_02_PROMPT_userid",			"Database Username:",
+	"_03_PROMPT_passwd",			"Database Password:",
+	"_04_PROMPT_preprocess_validation",	"Preprocess Validation(true/false)?",
+	"RANGE_preprocess_validation",		"true false",
+	"_05_PROMPT_dbnumber",			"Database Number: ",
+	"_06_PROMPT_primarydbname",		"\nProduction db Settings :\n\nPrimary Database Alias:",
+	"_07_PROMPT_primarydbport",		"Primary DB Port:",
+	"RANGE_primarydbport",			"port",
+	"_08_PROMPT_primarydbuserid",		"Primary Database Username:",
+	"_09_PROMPT_primarydbpasswd",		"Primary Database Password:",
+	"_10_PROMPT_primarydbnumber",           "Primary Database Number: "
+	);
+
+%{$Prompts{'sap_rm_ca'}} = (
+
+	"_00_PROMPT_sap_adapter_server_name",	"SAP Adapter Server Name: ",
+	"_01_PROMPT_occ_server_port",		"OCC Server Port: ",
+	"RANGE_port",                       "port",
+	"_02_PROMPT_sap_lob_server_port",	"LOB   Server Port: ",
+	"RANGE_port",                       "port",
+	"_03_PROMPT_sap_bill_push_client_port",	"Bill Push client Port:",
+	"RANGE_port",                       "port",
+	"_04_PROMPT_lob_store_server_name",	"Lob Store Server Name: ",
+	"_05_PROMPT_lob_store_server_port",	"Lob Store Server Port: ",
+	"RANGE_port",                       "port",
+	"_06_PROMPT_get_list_host",		"Get List Host: ",
+	"_07_PROMPT_get_list_port",		"Get List Port: ",
+	"RANGE_port",                       "port",
+	"_08_PROMPT_create_doc_host",		"Create Doc Host: ",
+	"_09_PROMPT_create_doc_port",		"Create Doc Port: ",
+	"RANGE_port",                       "port",
+	"_10_PROMPT_reverse_doc_host",		"Reverse Doc Host: ",
+	"_11_PROMPT_reverse_doc_port",		"Reverse Doc Port: ",
+	"RANGE_port",                       "port",
+	"_12_PROMPT_pre_payment_host",		"Pre Payment client Host: ",
+	"_13_PROMPT_pre_payment_port",		"Pre Payment client Port: ",
+	"RANGE_port",                       "port"
+	);
+
+%{$Prompts{'pin_invoice_store'}} = (
+	"_01_PROMPT_image_server_port",		"Image Server Port: ",
+	"RANGE_port",                       "port"
+	);

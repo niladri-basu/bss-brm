@@ -1,0 +1,82 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+
+#===============================================================================
+#
+# Copyright (c) 1998, 2009, Oracle and/or its affiliates. All rights reserved. 
+#               This material is the confidential property of
+#       Oracle Corporation or its subsidiaries or licensors
+#    and may be used, reproduced, stored or transmitted only in accordance
+#            with a valid Oracle license or sublicense agreement.
+#
+#-------------------------------------------------------------------------------
+# Block: TLS
+#-------------------------------------------------------------------------------
+#
+# Module Description:
+#   Tool to create a simple report which Infranet service type will be used
+#   by which IntegRate rateplan.
+#
+# Open Points:
+#   none
+#
+# Review Status:
+#   <in-work>
+#
+#-------------------------------------------------------------------------------
+# Responsible: Peter Engelbrecht
+#
+# $RCSfile: serviceTypeReport.pl $
+# $Revision: /cgbubrm_7.3.2.pipeline/1 $
+# $Author: smujumda $
+# $Date: 2009/06/10 02:07:00 $
+# $Locker:  $
+#-------------------------------------------------------------------------------
+# $Log: serviceTypeReport.sh,v $
+# Revision 1.1  2001/07/27 13:49:32  pengelbr
+# PETS #37572 Initial import.
+#
+#===============================================================================
+use File::Basename;
+use Getopt::Std;
+
+$CMD=basename $0;
+
+sub usage {
+  print STDERR <<EOM;
+
+Usage: 
+   $CMD -d db -u usr [-p pwd] [-f file]
+
+Options are:
+  -d db   : Database connect string.
+  -u usr  : Database user name.
+  -p pwd  : Database password for user name.
+  -f file : Report filename.
+EOM
+
+  exit( 1 );
+}
+
+getopt('dupf');
+if (!defined($opt_d)) {
+   print "ERROR: Argument missing: '-d db' \n";
+   usage;
+}
+if (!defined($opt_u)) {
+   print "ERROR: Argument missing: '-u usr' \n";
+   usage;
+}
+
+$DB=$opt_d;
+$USER=$opt_u;
+$PASSWORD=$opt_p;
+$FILENAME=defined($opt_f) ? $opt_f : "ServiceTypeReport.txt" ;
+
+print "\n$CMD '\$Revision: 1.1 \$' starting to process.\n";
+$cmd = "sqlplus ${USER}/${PASSWORD}\@${DB} \@serviceTypeReport.sql ${FILENAME}";
+print "\nInvoking sqlplus ...\n";
+system($cmd);
+
+print "Service-type report '${FILENAME}' created successfully.\n";
+
+exit (0);

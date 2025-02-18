@@ -1,0 +1,156 @@
+<Opcode name="PCM_OP_COLLECTIONS_GET_SCENARIO_DETAIL"
+		visibility="public"
+		transaction="required"
+		component="fm_collections"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc>
+		<!--h:p>
+			<h:i>
+				Copyright &#169; 2009 Oracle. All rights reserved.
+				This material is the confidential property of Oracle
+				Corporation or its licensors and may be used, reproduced,
+				stored or transmitted only in accordance with a valid Oracle
+				license or sublicense agreement.
+			</h:i>
+		</h:p-->
+		Get Details of the collections scenario for a bill unit.
+	</Doc>
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The /collections_scenario poid</Doc>
+				<ClassRef>obj://collections_scenario</ClassRef>
+			</Poid>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The /collections_scenario poid</Doc>
+				<ClassRef>obj://collections_scenario</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+					mode="complete">
+				<Doc> The account poid</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+					mode="complete">
+				<Doc> The billinfo poid</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Timestamp name="PIN_FLD_ENTRY_T" use="required">
+				<Doc> The billinfo entry date</Doc>
+			</Timestamp>
+			<Decimal name="PIN_FLD_ENTRY_AMOUNT" use="required">
+				<Doc> The billinfo entry overdue amount</Doc>
+			</Decimal>
+			<Timestamp name="PIN_FLD_OVERDUE_T" use="required">
+				<Doc> The current overdue date for billinfo</Doc>
+			</Timestamp>
+			<Decimal name="PIN_FLD_OVERDUE_AMOUNT" use="required">
+				<Doc> The current overdue amount for billinfo</Doc>
+			</Decimal>
+			<Poid name="PIN_FLD_CONFIG_SCENARIO_OBJ" use="required"
+					mode="complete">
+				<Doc> /config/collections/scenario poid</Doc>
+				<ClassRef>obj://config.collections.scenario</ClassRef>
+			</Poid>
+			<Array name="PIN_FLD_ACTIONS" use="optional"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="0" maxElements="256"
+					minElemId="0" maxElemId="256"
+					isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+					isRecursive="true" allowedElemIds="256">
+				<Doc> The actions array</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_ACTION_OBJ" use="required"
+							mode="complete">
+						<Doc> The /collections_action poid</Doc>
+						<ClassRef>obj://collections_action</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_CONFIG_ACTION_OBJ" use="required"
+							mode="complete">
+						<Doc> The /config/collections/action poid</Doc>
+						<ClassRef>obj://config.collections.action</ClassRef>
+					</Poid>
+					<String name="PIN_FLD_ACTION_NAME" use="required"
+							maxlen="255">
+						<Doc> The action name</Doc>
+					</String>
+					<Int name="PIN_FLD_OPCODE" use="required">
+						<Doc> The opcode to be executed for the action</Doc>
+					</Int>
+					<Timestamp name="PIN_FLD_DUE_T" use="required">
+						<Doc> The due date for the action</Doc>
+					</Timestamp>
+					<Enum name="PIN_FLD_STATUS" use="required">
+						<Doc> The action status, could be one of the 
+						      following values:
+						<h:ul>
+							<h:li>0 - Action pending.</h:li>
+							<h:li>1 - Action cancelled.</h:li>
+							<h:li>2 - Action completed.</h:li>
+							<h:li>3 - Action error.</h:li>
+						</h:ul>
+						</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>ACTION PENDING.</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>ACTION CANCELLED.</Doc>
+						</Values>
+						<Values>
+							<Value>2</Value>
+							<Doc>ACTION COMPLETED.</Doc>
+						</Values>
+						<Values>
+							<Value>3</Value>
+							<Doc>ACTION ERROR.</Doc>
+						</Values>
+					</Enum>
+					<Poid name="PIN_FLD_AGENT_OBJ" use="required"
+							mode="complete">
+						<Doc> The agent object</Doc>
+						<ClassRef>obj://account</ClassRef>
+					</Poid>
+					<String name="PIN_FLD_DESCR" use="optional"
+							maxlen="1024">
+						<Doc> The last log for the action</Doc>
+					</String>
+					<Enum name="PIN_FLD_ACTION_MODE" use="required">
+						<Doc> The action mode.This value indicates whether
+						the respective action must be executed, in case if
+						billinfo enters the collections after the action.
+						<h:ul>
+							<h:li>0 - PIN_ACTION_MUST_EXECUTE.
+								This action will be executed in
+								any case.
+							</h:li>
+							<h:li>1 - PIN_ACTION_OPTIONAL_EXECUTE.
+								  This action will be executed only if
+								  execution date is not passed.
+							</h:li>
+						</h:ul>
+						</Doc>
+						<Values>
+                                                        <Value>0</Value>
+							<Doc>PIN_ACTION_MUST_EXECUTE</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>PIN_ACTION_OPTIONAL_EXECUTE</Doc>
+						</Values>
+					</Enum>
+				</Fields>
+			</Array>
+		</Fields>
+	</Output>
+</Opcode>

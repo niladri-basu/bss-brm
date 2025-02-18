@@ -1,0 +1,253 @@
+========================================================================================
+FCT_SegRateNoCust
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+========================================================================================
+Module Version : 7.4 10006
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+
+Module Version: 10005  DaVinci 05-July-2006 
+PRSF00219258: Set isValidDetail false when set an error.
+========================================================================================
+Module Version: 10004  6.7_FP2  04-June-2004
+PRSF00114606:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+========================================================================================
+
+Module Version: 10003  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+==============================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 31-Jan-2002
+----------------
+
+Notes          :
+----------------
+
+PETS #38593 DB2 Port.
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 21-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+Migration to new EDR-C v4-30 and database v4-30.
+
+========================================================================================
+
+Actual Version : v4-03-00 / Date : 07-Aug-2000
+----------------
+
+New Features   :
+----------------
+
+Implemented support for new database version check.
+
+========================================================================================
+
+Actual Version : v4-02-01 / Date : 19-Jul-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#2245# Update "DETAIL.NUMBER_ASSOCIATED_RECORDS" and 
+       "ASSOCIATED_CHARGE.NUMBER_OF_CHARGE_PACKETS".
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 17-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Implementation changed to support the IBM xlC compiler.
+
+========================================================================================
+
+Actual Version : v4-00-02 / Date : 10-May-2000
+----------------
+
+Notes          :
+----------------
+
+Fix error. setData() for multifield without segment index.
+
+========================================================================================
+
+Actual Version : v4-00-01 / Date : 31-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+- Replace the info message INF_SEGMENT_NOT_DEFINED by error message
+  ERR_SEGMENT_NOT_DEFINED
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 03-Mar-2000
+----------------
+
+New Features   :
+----------------
+
+Implemented support for new EDR-C v4.
+
+========================================================================================
+
+Actual Version : v1-22-04 / Date : 26-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Fill the 'iNumZone'-fields in the ChargePackets with 'a'- and 'bNumZone' values.
+Set EDR_ChargePacket.chargeType field to 'N'.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-03 / Date : 24-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Add an error message! If valid_from date is out of range
+integRate will be stopped and an error logged in the format-log.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-02 / Date : 23-NOV-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Entries in INT_SEGTARIFF_LNK have a valid-period.
+Tariffmodels may be linked to segments for a special period.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-22-00 / Date : 21-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+DAT_Database renamed to DBC_Database.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-00 / Date : 05-Oct-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Reload semaphore implemented.
+New isUsable() function added.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

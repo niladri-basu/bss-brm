@@ -1,0 +1,70 @@
+<Opcode name="PCM_OP_COLLECTIONS_EXEMPT_BILLINFO"
+		visibility="public"
+		transaction="required"
+		component="fm_collections"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc> Exempts a billinfo from collections </Doc>
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The account poid</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+					mode="complete">
+				<Doc> The billinfo poid to be exempted</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_SCENARIO_OBJ" use="optional"
+					mode="complete">
+				<Doc> The scenario poid</Doc>
+				<ClassRef>obj://collections_scenario</ClassRef>
+			</Poid>
+			<String name="PIN_FLD_PROGRAM_NAME" use="optional"
+					maxlen="255">
+				<Doc> The name of the program that calls this opcode</Doc>
+			</String>
+			 <Array name="PIN_FLD_EXEMPTIONS" use="optional"
+			      elemIdMode="ignored" iterationOrder="undefined"
+			      minElements="1">
+			    <Doc>This is the exemptions array. There can only be one element
+				 in this array. The element-id is not significant.
+				 If this array is not passed, default exempt_status 1
+					is considered which is to exempt a billinfo.</Doc>
+				<Fields>
+				 <Enum name="PIN_FLD_EXEMPT_STATUS" use="required">
+				      <Doc>This field represents the new status.</Doc>
+					<Values>
+						<Value>1</Value>
+						   <Doc>Indicates set billinfo exemption.
+							(PIN_COLLECTIONS_EXEMPT_BILLINFO).</Doc>
+					</Values>
+					<Values>
+						<Value>8</Value>
+						   <Doc>Indicates remove billinfo exemption.
+							(PIN_COLLECTIONS_REMOVE_BILLINFO_EXEMPTION).</Doc>
+				      </Values>
+				   </Enum>
+				 </Fields>
+			</Array>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The account poid</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+					mode="complete">
+				<Doc> The exempted billinfo poid</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+		</Fields>
+	</Output>
+</Opcode>

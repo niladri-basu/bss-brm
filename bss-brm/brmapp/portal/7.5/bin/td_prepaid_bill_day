@@ -1,0 +1,48 @@
+#!/bin/sh
+
+PINDIR=/brmapp/portal/7.5
+LOGDIR=/var/portal/pin_billd
+PATH=/usr/bin:/bin:${PINDIR}/bin
+
+
+
+#-------------------------------------------------------------------
+# Bill Generation                       (pin_bill_accts)
+#
+#       We do the bill creation as two (parrallel) batches,
+#       the active accounts and the closed/inactive accounts.
+#
+#       Run all types of accounts in one search since pin_bill_accts
+#       is a multi-thread application. You also can specify a
+#       particular type of account with one of [-active/close/inactive]
+#       options.
+#
+#       This application can optionally take two parameters passed
+#       via pin_bill_day script.
+#
+#       pin_bill_day -file PinBillRunControl.xml -split
+#
+#       These parameters are used to control bill runs.
+#
+#       The split parameter will specify audit revenue data to be collected
+#
+#       by  item type or not.
+#
+#       IMPORTANT: Must finish before next step.
+#
+#-------------------------------------------------------------------
+
+
+
+echo "Starting Prepaid Billing"
+echo "Started at `date`" >> ${LOGDIR}/td_prepaid_bill_day.log
+cd ${PINDIR}/apps/pin_billd
+pin_bill_accts  -pay_type 10000 $1 $2 $3 >> ${LOGDIR}/td_prepaid_bill_day.log
+err=$?
+if [ $err != 0 ]; then
+       exit $err;
+fi
+wait
+echo  "Completed at `date`" >> ${LOGDIR}/td_prepaid_bill_day.log
+echo "Prepaid Billing  Complete"
+

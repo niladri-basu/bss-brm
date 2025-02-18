@@ -1,0 +1,195 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:op="http://www.portal.com/schemas/BusinessOpcodes"
+            xmlns="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes"
+            elementFormDefault="qualified">
+<xsd:complexType name="billinfoExtensionType">
+	<xsd:choice minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="ACCOUNT_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="ACCT_SUPPRESSED" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ACTG_CYCLE_DOM" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ACTG_FUTURE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ACTG_LAST_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ACTG_NEXT_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ACTG_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ACTUAL_LAST_BILL_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="ACTUAL_LAST_BILL_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ADJUSTED" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="AR_BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="AR_HIERARCHY_SIZE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="ASSOC_BUS_PROFILE_OBJ_LIST" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BAL_GRP_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="BILLINFO_ID" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BILLING_SEGMENT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BILLING_STATE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BILLING_STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BILLING_STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BILL_ACTGCYCLES_LEFT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BILL_NO" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BILL_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="BILL_WHEN" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="BUSINESS_PROFILE_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="CLOSED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="COLLECTION_DATE" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CREATED_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CURRENCY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CURRENCY_OPERATOR" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CURRENCY_RATE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CURRENCY_SECONDARY" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CURRENCY_TOTAL" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="CURRENT_TOTAL" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="DISPUTED" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="DUE" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="DUE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="EFFECTIVE_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="END_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="EVENT_POID_LIST" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="EXEMPT_FROM_COLLECTIONS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="FUTURE_BILL_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="INVOICE_OBJ" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="LAST_BILL_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="LAST_BILL_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="MOD_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="NAME" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="NEXT_BILL_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="NEXT_BILL_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="NUM_SUPPRESSED_CYCLES" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="OBJECT_CACHE_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PARENT" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PARENT_BILLINFO_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PARENT_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PAYINFO_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PAYMENT_EVENT_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PAY_TYPE" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="PENDING_RECV" type="UNION_billinfo" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="POID" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="PREVIOUS_TOTAL" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="READ_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="RECVD" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="SCENARIO_OBJ" minOccurs="0" maxOccurs="1">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="([0-9]*.)+[0-9]*(\s)+((/)*([a-zA-Z_]*))*(\s)+[\-]*[0-9]+(\s)+[0-9]*"/>
+					<xsd:pattern value=""/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:element>
+		<xsd:element name="SPONSOREE_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="SPONSOR_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="STATUS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="STATUS_FLAGS" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="START_T" type="xsd:dateTime" nillable="true" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="SUBORDS_TOTAL" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="SUPPRESSION_CYCLES_LEFT" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="TOTAL_DUE" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="TRANSFERED" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="WRITEOFF" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+		<xsd:element name="WRITE_ACCESS" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		<xsd:element ref="billinfoExtension" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:choice>
+</xsd:complexType>
+<xsd:simpleType name="EMPTY_billinfo">
+	<xsd:restriction base="xsd:string">
+		<xsd:length value="0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="UNION_billinfo">
+	<xsd:union memberTypes="xsd:decimal EMPTY_billinfo"/>
+</xsd:simpleType>
+<xsd:element name="billinfoExtension" type="billinfoExtensionType"/>
+</xsd:schema>

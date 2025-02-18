@@ -1,0 +1,10 @@
+INSERT INTO IFW_ZONEMODEL ( ZONEMODEL, CODE, NAME, MODELTYPE, FRAME, STATUS, APN_GROUP,
+GEOMODEL ) VALUES ( 
+20000, 'ALL_RATE', 'Wireless Sample ZoneModel to be used for all services (TEL, SMS, GPRS, WAP)'
+, 'S', 'N', 'A', 'ALL_RATE', NULL); 
+INSERT INTO IFW_ZONEMODEL ( ZONEMODEL, CODE, NAME, MODELTYPE, FRAME, STATUS, APN_GROUP,
+GEOMODEL ) VALUES ( 
+20001, 'ALL_RATE_I', 'International ZoneModel part to be used within ALL_RATE', 'S'
+, 'N', 'A', 'ALL_RATE', NULL); 
+commit;
+ 

@@ -1,0 +1,94 @@
+========================================================================================
+OUT_GenericStream
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+
+Actual Version : 10005 / Date: 11-May-2012
+----------------
+
+bug 14051114 - P-9305229 ECR: MULTITHREADED PIPELINE-OUTPUT-CONTROLLER  
+
+================================================================================
+
+Actual Version : 10004 / Date: 16-AUG-2005
+----------------
+
+PRSF00179348: error message of parse error on corrupt input files not reliable
+================================================================================
+================================================================================
+
+Actual Version : 10003 / Date: 28-MAR-2003
+----------------
+
+PRSF00035963: Fix up the streammap feature and add it back.
+
+================================================================================
+
+================================================================================
+
+Actual Version : 10002 / Date: 05-Mar-2003
+----------------
+
+PRSF00031343: Default DeleteEmptyStream to TRUE and Assert that rejected records are not routed here since 
+OUT_Reject is used specifically for that.
+Opened a RFE CO PRSF33690 for testing the theory that this module can do reject output too, in which case, 
+revert the second change and also bypass the parser in case of processing a rejected record.
+
+================================================================================
+
+================================================================================
+
+Actual Version : 10001 / Date: 21-Feb-2003
+----------------
+
+PRSF00032419: Implement a thread trace.
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 26-Sep-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #38714 Empty output files are not deleted
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 10-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #36559 SourcePro AIX Port
+
+================================================================================
+
+Actual Version : CR-08-2001 / Date : 02-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #37618 code reviewed
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 10-Aug-2001
+----------------
+
+Notes          :
+----------------
+                 - Just new
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+

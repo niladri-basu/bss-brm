@@ -1,0 +1,370 @@
+//==============================================================================
+//
+//      Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+//      
+//      This material is the confidential property of Oracle Corporation or its
+//      licensors and may be used, reproduced, stored or transmitted only in
+//      accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: FMD
+//------------------------------------------------------------------------------
+// Module Description:
+//   Input Grammar of a Simple Sample CDR format
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible: bniederg
+//
+// $RCSfile: SIMPLESAMPLE_v1_InGrammar.dsc,v $
+// $Revision: 1.1 $
+// $Author: mf $
+// $Date: 2001/11/20 15:31:48 $
+// $Locker:  $
+//------------------------------------------------------------------------------
+// $Log: SIMPLESAMPLE_v1_InGrammar.dsc,v $
+// Revision 1.1  2001/11/20 15:31:48  mf
+// New  samples including the "Bernd N." stuff
+//
+// Revision 1.00  2001/11/14 06:54:55  bniederg
+//==============================================================================
+
+//==============================================================================
+// The initial iScript code
+//==============================================================================
+iScript
+{
+  use EXT_Converter;
+
+  Long    totalNumRecord;
+  Long    totalNumBasic;
+  Date    currentTime;
+  Date    firstCall;
+  Date    lastCall;
+  Decimal totalRetailCharge;
+  Decimal totalWholesaleCharge;
+  Long    SeqNr;
+  String  number;
+
+
+function BEGIN
+{
+  SeqNr = 0;
+}
+
+  //============================================================================
+  // Reset the statistic value
+  //============================================================================
+  function resetStatisticValues
+  {
+    firstCall            = MAX_DATE;
+    lastCall             = MIN_DATE;
+    totalNumRecord       = 1;
+    totalNumBasic        = 0;
+    currentTime          = sysdate();
+  }
+
+  //============================================================================
+  // normalize CLIs.
+  //============================================================================
+  function String normalizeNumber( String number,
+                                   String modInd,
+                                   Long typeOfNum )
+  {
+    Bool isV4;
+    Bool isV6;
+
+    isV4 = strSearch( number, "." ) >= 0;
+    isV6 = strSearch( number, ":" ) >= 0;
+
+    if ( ( isV4 == true ) and ( isV6 == false ) )
+    {
+      return convertIPv4( number );
+    }
+
+    if ( ( isV4 == true ) and ( isV6 == true ) )
+    {
+      return convertIPv4onv6( number );
+    }
+
+    if ( ( isV4 == false ) and ( isV6 == true ) )
+    {
+      return convertIPv6( number );
+    }
+
+    return convertCli( number, modInd, typeOfNum,
+                       NORM_NAC,
+                       NORM_IAC,
+                       NORM_CC,
+                       NORM_IAC_SIGN,
+                       NORM_NDC );
+  }
+}
+
+//==============================================================================
+// The definition of the grammar
+//==============================================================================
+Grammar
+{
+  //----------------------------------------------------------------------------
+  // The entire file
+  //----------------------------------------------------------------------------
+  Simple_Sample_Start:
+        {
+          resetStatisticValues();
+
+          edrNew( HEADER, CONTAINER_HEADER );
+          edrInputMap( "SIMPLESAMPLE_V1.DETAIL.HDR_MAPPING" );
+
+          SeqNr = SeqNr + 1;
+          edrLong(HEADER.SEQUENCE_NUMBER) = SeqNr;
+          edrLong(HEADER.ORIGIN_SEQUENCE_NUMBER) = SeqNr;
+          edrDate(HEADER.CREATION_TIMESTAMP) = currentTime;
+          edrDate(HEADER.TRANSMISSION_DATE) = currentTime;
+          edrDate(HEADER.TRANSFER_CUTOFF_TIMESTAMP) = currentTime;
+        }
+        details 
+        {
+          edrNew( TRAILER, CONTAINER_TRAILER );
+          edrInputMap( "SIMPLESAMPLE_V1.DETAIL.TRL_MAPPING" );
+
+          totalNumRecord = totalNumRecord + 1;
+          edrLong(TRAILER.RECORD_NUMBER) = totalNumRecord;
+          edrLong(TRAILER.SEQUENCE_NUMBER) = SeqNr;
+          edrLong(TRAILER.ORIGIN_SEQUENCE_NUMBER) = SeqNr;
+          edrLong(TRAILER.TOTAL_NUMBER_OF_RECORDS) = totalNumBasic;
+          edrDate(TRAILER.FIRST_START_TIMESTAMP) = firstCall;
+          edrDate(TRAILER.LAST_START_TIMESTAMP) = lastCall;
+        }
+    ;
+
+  //----------------------------------------------------------------------------
+  // A list of DETAIL records 
+  //----------------------------------------------------------------------------
+  details: 
+      details 
+      SIMPLESAMPLE_V1.DETAIL
+        {
+          edrNew( DETAIL, CONTAINER_DETAIL );
+          edrInputMap( "SIMPLESAMPLE_V1.DETAIL.STD_MAPPING" );
+
+          // update statistic values
+          totalNumRecord = totalNumRecord + 1;
+          totalNumBasic = totalNumBasic + 1;          
+
+          // -------------------------------------------------------------------
+          // Zero-Duration Calls
+          // -------------------------------------------------------------------
+          if ( edrDecimal( DETAIL.DURATION ) == 0.0 )
+          {
+            edrString( DETAIL.CALL_COMPLETION_INDICATOR ) = "03";
+          }
+          else
+          {
+            Date end_t = dateAdd( edrDate( DETAIL.CHARGING_START_TIMESTAMP ),0,0,0,0,0,
+                                  decimalToLong ( edrDecimal( DETAIL.DURATION ) ) );
+            edrDate( DETAIL.CHARGING_END_TIMESTAMP ) = end_t;
+            edrDate( DETAIL.NE_CHARGING_END_TIMESTAMP ) = end_t;
+          }
+
+          // -------------------------------------------------------------------
+          // A-/B-number normalization
+          // -------------------------------------------------------------------
+	 // Commented by GSM
+          //number = normalizeNumber( edrString( DETAIL.A_NUMBER ), "00", 0 );
+          number = edrString( DETAIL.A_NUMBER );
+          edrString( DETAIL.A_NUMBER ) = number;
+
+          number = normalizeNumber( edrString( DETAIL.B_NUMBER ), "00", 0 );
+          edrString( DETAIL.B_NUMBER ) = number;
+          
+          // -------------------------------------------------------------------
+          // Roaming normalization if applicable and zoning number definition.
+          // -------------------------------------------------------------------
+          switch ( edrString( DETAIL.USAGE_CLASS ) )
+          {
+          case "MOC": // Outgoing Roaming
+            {
+              edrString( DETAIL.INTERN_A_NUMBER_ZONE ) = "0000";
+              edrString( DETAIL.INTERN_B_NUMBER_ZONE ) = edrString( DETAIL.B_NUMBER );
+            }
+            break;
+
+          case "MTC": // Incomming Roaming
+            {
+              edrString( DETAIL.INTERN_A_NUMBER_ZONE ) = edrString( DETAIL.A_NUMBER );
+              edrString( DETAIL.INTERN_B_NUMBER_ZONE ) = "0000";
+            }
+            break;
+
+          default:
+            {
+              edrString( DETAIL.INTERN_A_NUMBER_ZONE ) = edrString( DETAIL.A_NUMBER );
+              edrString( DETAIL.INTERN_B_NUMBER_ZONE ) = edrString( DETAIL.B_NUMBER );
+            }
+            break;
+          }
+          
+          // -------------------------------------------------------------------
+          // GSM/WIRELINE special
+          // -------------------------------------------------------------------
+          if ( ( edrString( DETAIL.BASIC_SERVICE ) == "TEL" ) or
+	       ( edrString( DETAIL.BASIC_SERVICE ) == "SMS" ) or
+	       ( edrString( DETAIL.BASIC_SERVICE ) == "VAP" ) or
+               ( edrString( DETAIL.BASIC_SERVICE ) == "MMS" ) or
+               ( edrString( DETAIL.BASIC_SERVICE ) == "VOM" ) or
+               ( edrString( DETAIL.BASIC_SERVICE ) == "VAS" ) or
+	       ( edrString( DETAIL.BASIC_SERVICE ) == "DAT" ) )
+	      
+          {
+            edrLong( DETAIL.NUMBER_ASSOCIATED_RECORDS ) = 1;
+            edrAddDatablock( DETAIL.ASS_GSMW_EXT );
+            edrInputMap( "SIMPLESAMPLE_V1.DETAIL.GSMW_MAPPING" );
+
+
+	    //------------------------------------------------------------------          
+	    // Custom code for 2dgrees starts here ........
+	    //------------------------------------------------------------------          
+            edrAddDatablock( DETAIL.ASS_CI );
+            edrInputMap( "SIMPLESAMPLE_V1.DETAIL.ASS_CI_MAPPING" );
+
+	    logStdout(" Block Bundle Resource added "); 
+
+            String balanceTypePos = 21;
+	
+	    String balanceType = edrTokenString(balanceTypePos);
+            logStdout( "\n" +balanceType);
+	    for (i=0; balanceType != "";i++)
+	    {
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+	    edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 0, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost1");
+	    edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 0, "SIMPLESAMPLE_V1.DETAIL.BalanceType1");
+	    edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 0, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining1");
+	    edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 0) = "890";
+	    logStdout( edrString( DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE,  0, 0 ) + "\n" );
+	    logStdout( edrString( DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 0 ) + "\n" );
+	    logStdout( decimalToStr( edrDecimal(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY,  0, 0) ) + "\n" );
+	    logStdout( decimalToStr( edrDecimal(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 0) ) + "\n" );
+	    
+            logStdout(" Block Bundle Resource added Second ROW \n");
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 1, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost2");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 1, "SIMPLESAMPLE_V1.DETAIL.BalanceType2");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 1, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining2");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 1) = "890";
+            logStdout( edrString( DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE,  0, 1 ) + "\n" );
+            logStdout( edrString( DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 1 ) + "\n" );
+            logStdout( decimalToStr( edrDecimal(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY,  0, 1) ) + "\n" );
+            logStdout( decimalToStr( edrDecimal(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 1) ) + "\n" );
+
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 2, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost3");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 2, "SIMPLESAMPLE_V1.DETAIL.BalanceType3");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 2, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining3");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 2) = "890";
+
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+			
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 3, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost4");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 3, "SIMPLESAMPLE_V1.DETAIL.BalanceType4");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 3, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining4");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 3) = "890";
+
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+						
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 4, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost5");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 4, "SIMPLESAMPLE_V1.DETAIL.BalanceType5");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 4, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining5");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 4) = "890";
+
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+						
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 5, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost6");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 5, "SIMPLESAMPLE_V1.DETAIL.BalanceType6");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 5, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining6");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 5) = "890";
+
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+						
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 6, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost7");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 6, "SIMPLESAMPLE_V1.DETAIL.BalanceType7");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 6, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining7");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 6) = "890";
+
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+						
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 7, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost8");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 7, "SIMPLESAMPLE_V1.DETAIL.BalanceType8");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 7, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining8");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 7) = "890";
+
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+						
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 8, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost9");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 8, "SIMPLESAMPLE_V1.DETAIL.BalanceType9");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 8, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining9");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 8) = "890";
+
+	    edrAddDatablock( DETAIL.ASS_CI.ASS_BRI);
+									
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.CONSUMED_QUANTITY, 0, 9, "SIMPLESAMPLE_V1.DETAIL.BalanceEventCost10");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.RESOURCE_NAME,  0, 9, "SIMPLESAMPLE_V1.DETAIL.BalanceType10");
+            edrConnectToken(DETAIL.ASS_CI.ASS_BRI.BALANCE_QUANTITY,  0, 9, "SIMPLESAMPLE_V1.DETAIL.BalanceRemaining10");
+            edrString(DETAIL.ASS_CI.ASS_BRI.RECORD_TYPE, 0, 9) = "890";
+	    //------------------------------------------------------------------          
+
+            totalNumRecord = totalNumRecord + 1;
+            edrLong(DETAIL.ASS_GSMW_EXT.RECORD_NUMBER, 0 ) = totalNumRecord;
+          }
+
+          if ( ( edrString( DETAIL.BASIC_SERVICE ) == "TEL" ) or
+               ( edrString( DETAIL.BASIC_SERVICE ) == "VOM" ) )
+	  {
+		edrAddDatablock( DETAIL.ASS_CI.ASS_TEL);
+		edrInputMap( "SIMPLESAMPLE_V1.DETAIL.ASS_TEL_MAPPING" );
+	  }
+
+          if (  ( edrString( DETAIL.BASIC_SERVICE ) == "SMS" ) or
+               ( edrString( DETAIL.BASIC_SERVICE ) == "MMS" ) )
+          {
+		edrAddDatablock( DETAIL.ASS_CI.ASS_SMS);
+	 	edrInputMap( "SIMPLESAMPLE_V1.DETAIL.ASS_SMS_MAPPING" );
+          }
+          if  ( edrString( DETAIL.BASIC_SERVICE ) == "DAT" )
+          {
+		edrAddDatablock( DETAIL.ASS_CI.ASS_DAT);
+		edrInputMap( "SIMPLESAMPLE_V1.DETAIL.ASS_DAT_MAPPING" );
+          }
+          if ( ( edrString( DETAIL.BASIC_SERVICE ) == "VAP" ) or
+               ( edrString( DETAIL.BASIC_SERVICE ) == "VAS" ) )
+          {
+		edrAddDatablock( DETAIL.ASS_CI.ASS_VV);
+		edrInputMap( "SIMPLESAMPLE_V1.DETAIL.ASS_VV_MAPPING" );
+          }
+
+          
+          // -------------------------------------------------------------------
+          // GPRS special
+          // -------------------------------------------------------------------
+          if ( ( edrString( DETAIL.BASIC_SERVICE ) == "GPR" ) or
+               ( edrString( DETAIL.BASIC_SERVICE ) == "GPRT") )
+          {
+            edrLong( DETAIL.NUMBER_ASSOCIATED_RECORDS ) = 1;
+            edrAddDatablock( DETAIL.ASS_GPRS_EXT );
+            edrInputMap( "SIMPLESAMPLE_V1.DETAIL.GPRS_MAPPING" );
+            
+            totalNumRecord = totalNumRecord + 1;
+            edrLong(DETAIL.ASS_GPRS_EXT.RECORD_NUMBER, 0 ) = totalNumRecord;
+          }
+
+        }
+    | /* EMPTY */
+    ;
+}

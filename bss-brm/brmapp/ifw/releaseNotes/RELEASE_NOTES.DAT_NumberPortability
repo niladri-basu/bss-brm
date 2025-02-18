@@ -1,0 +1,261 @@
+========================================================================================
+DAT_NumberPortability
+----------------------------------------------------------------------------------------
+Module Release Notes 
+================================================================================
+
+Module Version: 10008  7.4.0 05-Mar-2009
+bug8310534    : USAGE OF STR::FILEIOTURBO::READLINE METHOD INSTEAD OF READTODELIM 
+
+================================================================================
+
+Module Version: 10007  7.4.0 15-Jan-2009
+bug7713186    : MODIFY THE DEBUG TRACE INFO
+
+================================================================================
+
+Module Version: 10006  7.4.0 24-Nov-2008
+bug7591993    : 7.4::NUMBERPORTABILITY::IFW THROWS CORE DUMP FOR DELTA LOAD PROBE
+
+================================================================================
+
+Module Version: 10005  7.3.2  27-Aug-2008
+bug7213618    : ENHANCEMENTS FOR REALTIME DAT_NUMBERPORTABILITY 
+
+================================================================================
+Module Version: 10004  6.7_FP2  14-May-2004
+PRSF00107376: NT Build Problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version : Apollo 10002
+----------------
+
+Date : 16-OCT-2003
+----------------
+
+Change Order :  PRSF00071706
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Message Numbers for Plugin 
+
+
+================================================================================
+Module Release Notes 
+
+Module Version : Apollo 10001
+----------------
+
+Date : 11-JUN-2003
+----------------
+
+Change Order :  PRSF00044607
+----------------
+
+Short Description : 
+-------------------
+         Support a configurable option to get the best valid match for a given 
+         Call Line Id Number in Number portabilty
+          
+==============================================================================
+
+Module Version : 6.5 SP2 10005
+----------------
+
+Date : 05-MAY-2003
+----------------
+
+Change Order :  PRSF00039740
+----------------
+
+Short Description : 
+-------------------
+                 Update  number portability to use namespaces
+		 
+==============================================================================
+
+Module Version : 6.5 SP2 10004
+----------------
+
+Date : 02-MAY-2003
+----------------
+
+Change Order :  PRSF00039639
+----------------
+
+Short Description : 
+-------------------
+                 Changes to number portability
+                 to both reduce runtime memory requirements, as well as fixing
+                 a memory leak on reload.
+                 Fixed Number Portabilty to  traverse the complete tree before returning the value
+		 
+================================================================================
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+========================================================================================
+Actual Version : 6.5 SP1 10001 / Date : 28-FEB-2003
+----------------
+
+Notes          : 
+----------------
+
+Solved PRs/CRs : 1. PRSF00033250 Make thread trace changes
+---------------- 
+
+========================================================================================
+
+Actual Version : v6.5.0 / Date : 06-JAN-2003
+----------------
+
+Notes          : 
+----------------
+
+New Features   : 1. Number Portability Timestamp. Portation Date of N-Port Data is stored
+----------------    in DateTime format [instead of just the Date]
+                 2. Enhancements to Number Portability Reload[or Add Delta]. Adding N-Port 
+                    records to the memory is implemented. Ascii file containing the N-Port
+                    records need not be in the sorted order.
+                 3. Added a functionality to print all the N-Port Records, 
+                    which is in the memroy, to a file.
+
+Known Problems : 1. If invalid portation date is specified, a warning message will be logged
+----------------    and the plugin will continue to load the remaining records. 
+
+Solved PRs/CRs : 1. PRSF00024288 Fixes for Number Portability Reload in Integrate
+---------------- 2. PRSF00024956 Fix for Number Portability Timestamp
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 13.08.2001
+----------------
+
+Notes          : Code review marks reworked.
+----------------
+
+New Features   : ReuseOnFailure feature.
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 11.07.2001
+----------------
+
+Notes          : PETS #36559 SourcePro Port.
+----------------
+
+======================================================================================== 
+
+Actual Version : v4-30-00 / Date : 26.06.2001
+----------------
+
+Notes          : New tag for version v4-30-00, so that the FCT_NumberPortability
+---------------- Plugin can use it.
+
+New Features   : Nothing here, but in the FCT_NumberPortability.
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   : 
+----------------
+
+========================================================================================
+Actual Version : v4-10-00 / Date : 17.04.2001
+----------------
+
+Notes          : THIS VERSION IS CURRENTLY NOT USEABLE.
+---------------- Please wait for the patch.
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   : PR 3202.
+----------------
+
+========================================================================================
+                                                                                                   
+Actual Version : v4-02-01 / Date : 28-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#2870# Makro MODULE_START not used.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-02-00 / Date : 17.06.2000
+----------------
+
+Notes          :
+----------------
+
+New Features   : Support for IBM AIX (xlC Compiler).
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 04.04.2000
+----------------
+
+Notes          : Now NPort-Data has to be sorted befor loading starts.
+----------------
+
+New Features   : UpdateRegistry implemented. Higher Performance because of presorting.
+----------------
+
+Known Problems : After reloading data of equal size some more memory is used than before (Linux).
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================

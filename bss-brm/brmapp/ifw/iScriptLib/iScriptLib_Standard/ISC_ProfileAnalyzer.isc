@@ -1,0 +1,287 @@
+//==============================================================================
+//
+//      Copyright (c) 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_ProfileAnalyzer
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module finds the unique profile labels associated with the ERA which matches the 
+//   EDR container field value specified by customer and updates the 
+//   DETAIL.PROFILE_LABEL_LIST field.The Script uses DETAIL.B_NUMBER for comparision by default. 
+//   
+// Customization: 
+//   For Customizing the Iscript for different types of services and profile names please do
+//   the following steps.
+//
+//   1. Define compareString,compProfName for the additional service in the OnDetail function.
+//      If compProfName is not redefined for the additional service the value specified in the registry will be used.
+//      (see the example comments in OnDetail section.)
+//------------------------------------------------------------------------------
+//
+// @(#)% %
+
+Bool debug;
+String ProfLabelList;        
+String compareString;
+String compProfName;
+String LabelSeparator; 
+Bool   eraFound;
+Long   eraCounter;
+Long   paCounter;
+Long   labelMap { }; 
+
+function BEGIN
+{
+  debug = false;
+
+  compProfName = regString(registryNodeName() + ".ProfileName");
+
+  //Check for all manadatory registry entries and throw a major error if it is not set properly.
+  if(strLength(compProfName)==0)
+  {
+    logPipeline("ERROR: ProfileName is not configured in the registry",3);
+    scriptUsable( false ); 
+  }
+
+  // Check for the optional registry entries.Use the default value if its not specified.  
+  LabelSeparator = ",";
+  if(strLength(reg.LabelSeparator)!=0)
+  {
+    LabelSeparator = reg.LabelSeparator;
+  }
+}
+
+//------------------------------------------------------------------------
+// This function checks whether the mString matches with mExpression.
+// Returns true --> if it matches 
+//         false --> otherwise 
+// only "*" as prefix or suffix is possible in mExpression and no other
+// type of expression is supported.
+// Example: mstring(1234567890) matches with mExpression(1234* or *7890)
+//----------------------------------------------------------------------
+function Bool isMatching(String mString,String mExpression)
+{
+  String mInternalString = strStrip(mString,STRIP_BOTH," ");
+  String mInternalExpression = strStrip(mExpression,STRIP_BOTH," ");
+  if(mInternalString == mInternalExpression)
+  {
+    return true;
+  }
+  else
+  if(strEndsWith(mInternalExpression,"*"))
+  {
+    String mSubString = strStrip(mInternalExpression,STRIP_TRAILING,"*");
+    if(strStartsWith(mInternalString,mSubString))
+    {
+      return true;
+    }
+  }
+  else
+  if(strStartsWith(mInternalExpression,"*"))
+  {
+    String mSubString = strStrip(mInternalExpression,STRIP_LEADING,"*");
+    if(strEndsWith(mInternalString,mSubString))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+//---------------------------------------------------------------------------------
+// analyzeProfile() iterates through the ERA's owned by the account as well as the 
+// ERA's shared as a member in ProfileSharingGropup for analysis.
+// profName --> specifies the ERA to be searched.
+// compString --> specifies the string to be matched against ERA values.
+// Returns true if one or more matches found, false otherwise.
+//---------------------------------------------------------------------------------
+function Bool analyzeProfile(String compString, String profName)
+{
+  //---------------------------------------------
+  // Retrive the INTERN_FOUND_PP_INDEX
+  //---------------------------------------------
+   Long pIndex = edrLong(DETAIL.CUST_A.INTERN_FOUND_PP_INDEX,0);
+	
+  //-----------------------------------------
+  //Retrieves the number of PRODUCT.ERA datablocks
+  //-------------------------------------------
+   Long eraIndex = edrNumDatablocks(DETAIL.CUST_A.PRODUCT.ERA,0,pIndex);
+   
+  //-----------------------------------------
+  // Loop through the PRODUCT.ERA blocks for analyzing profiles 
+  //-----------------------------------------
+  if(debug)
+  {
+    String errorString="INTERN_FOUND_PP_INDEX " + longToStr(pIndex) + "Total ERA's "+ longToStr(eraIndex);	
+    logFormat(errorString);
+  }
+  for( eraCounter=0;eraCounter<eraIndex;eraCounter=eraCounter+1)
+  {
+    if(edrString(DETAIL.CUST_A.PRODUCT.ERA.PROFILE,0,pIndex,eraCounter) == profName)
+    {
+      Long paIndex = edrNumDatablocks(DETAIL.CUST_A.PRODUCT.ERA.PA,0,pIndex,eraCounter);
+      if(debug)
+      {
+        logFormat("Total PA's " + longToStr(paIndex));
+      }
+      for( paCounter=0;paCounter<paIndex;paCounter=paCounter+1)
+      {
+	String tempNumber = edrString(DETAIL.CUST_A.PRODUCT.ERA.PA.VALUE,0,pIndex,eraCounter,paCounter);
+        if(debug)
+        {
+          logFormat("Comparision String " + compString +" Profile Attr Value "+tempNumber);
+        }
+        if (isMatching(compString,tempNumber))
+	{
+	  String label = edrString(DETAIL.CUST_A.PRODUCT.ERA.LABEL,0,pIndex,eraCounter);
+	  eraFound = true;
+	  if (strLength(label) != 0 and labelMap{label} != 1)
+	  {
+            labelMap{label} = 1;
+	  }
+          paCounter=paIndex;
+	}
+      }
+    }
+  }
+
+  //-----------------------------------------
+  //Retrieves the number of SHARED_PROFILE_LIST.ERA datablocks
+  //-------------------------------------------
+  eraIndex = edrNumDatablocks(DETAIL.CUST_A.SHARED_PL.ERA,0,0);
+
+  //-----------------------------------------
+  // Loop through the SHARED_PL.ERA blocks for analyzing profiles 
+  //-----------------------------------------
+  if(debug)
+  {
+    logFormat("Total Shared ERA's "+ longToStr(eraIndex));
+  }
+	
+  for( eraCounter=0;eraCounter<eraIndex;eraCounter=eraCounter+1)
+  {
+    if(edrString(DETAIL.CUST_A.SHARED_PL.ERA.PROFILE,0,0,eraCounter) == profName)
+    {
+      Long paIndex = edrNumDatablocks(DETAIL.CUST_A.SHARED_PL.ERA.PA,0,0,eraCounter);
+      if(debug)
+      {
+        logFormat("Total PA's " + longToStr(paIndex));
+      }
+      for( paCounter=0;paCounter<paIndex;paCounter=paCounter+1)
+      {
+	String tempNumber = edrString(DETAIL.CUST_A.SHARED_PL.ERA.PA.VALUE,0,0,eraCounter,paCounter);
+        if(debug)
+        {
+          logFormat("Comparision String " + compString +" Profile Attr Value "+tempNumber);
+        }
+        if (isMatching(compString,tempNumber))
+        {
+	  String label = edrString(DETAIL.CUST_A.SHARED_PL.ERA.LABEL,0,0,eraCounter);
+	  eraFound = true;
+          if (strLength(label) != 0 and labelMap{label} != 1)
+	  {
+            labelMap{label} = 1;
+	  }
+          paCounter=paIndex;
+	}
+      }
+    }
+  }
+  //-----------------------------------------
+  // return true if atleast one matching ERA is found else return false.
+  //-----------------------------------------
+  if(eraFound)
+  {
+    return true;
+  }
+  return false;
+}
+
+function onDetailEdr
+{
+  // Initialize the variables before using it.
+  eraFound = false;
+  ProfLabelList = "";
+  hashClear(labelMap);
+  compareString = "";
+  
+  // Find the type of service of the current EDR.
+  String edrServiceType = edrString(DETAIL.INTERN_SERVICE_CODE);
+
+  // Set the mandatory fields based on the service of the EDR. 
+  // Following "if block" is for default service type as specified in registry.
+  // Add one extra "else if" block as specified below for each of the different type of service.
+
+  if (edrServiceType == "TEL" or edrServiceType == "SMS")
+  {
+    compareString = edrString(DETAIL.B_NUMBER);
+  }
+  // Add an else if block after these comments if the script needs to analyze profile for other service types
+  // then the service type specified in the registry. Please see the following example. 
+  //---------------------------------------------------------------------------------------
+  //  else
+  //  if (edrServiceType == "GPRS")
+  //  {
+  //     compareString = edrString(DETAIL.ASS_GPRS_EXT.APN_ADDRESS,0);
+  //     compProfName  = "FRIENDS_FAMILY";
+  //  }
+  //----------------------------------------------------------------------------------------
+  else
+  {
+    logFormat("ProfileName: " + compProfName +" Compared String: "+ compareString + " ServiceType: " + edrServiceType); 
+    logFormat("The ProfileAnalyzer Iscript is not configured for EDR service type " + edrServiceType);  
+    return;
+  }
+
+  if(strLength(compProfName)==0 or strLength(compareString)==0)
+  {
+    logPipeline("ERROR: ServiceType / ProfileName / ComparedString is not proper",3);
+    logFormat("ProfileName: " + compProfName +" Compared String: "+ compareString + " ServiceType: " + edrServiceType); 
+    return;
+  }
+  if(debug)
+  {
+    logFormat("ProfileName: " + compProfName +" Compared String: "+ compareString + " ServiceType: " + edrServiceType); 
+  }
+
+  // Analyse all the profiles
+  if(analyzeProfile(compareString,compProfName) == true)
+  {
+    //-----------------------------------------
+    //store the unique profile label list
+    //-----------------------------------------
+    String keys[];
+    arrayClear(keys);
+    Long i ;
+    Long entries = hashKeys(labelMap,keys);
+    if( entries > 0 )
+    {
+      for ( i=0; i < entries - 1; i = i+1 )
+      {
+        ProfLabelList = ProfLabelList + keys[i] + LabelSeparator;
+      }
+      ProfLabelList = ProfLabelList + keys[i];
+    }
+    if(debug)
+    {
+      logFormat("ProfLabelList: " + ProfLabelList);
+    }
+  }
+
+  // Set the EDR container field DETAIL.PROFILE_LABEL_LIST
+  edrString(DETAIL.PROFILE_LABEL_LIST) = ProfLabelList;
+  
+  // Customized code may be written below for setting for other EDR container fields if needed.
+  // for example for Friends and Family profiles the usage_type can be set to FF.
+  if(compProfName == "FRIENDS_FAMILY" and eraFound == true)
+  {
+    edrString(DETAIL.USAGE_TYPE) = "FF"; 
+  }
+
+}
+

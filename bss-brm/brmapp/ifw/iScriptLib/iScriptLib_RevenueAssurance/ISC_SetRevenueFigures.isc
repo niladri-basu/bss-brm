@@ -1,0 +1,119 @@
+//==============================================================================
+//
+//      Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+//      
+//      This material is the confidential property of Oracle Corporation or its
+//      licensors and may be used, reproduced, stored or transmitted only in
+//      accordance with a valid Oracle license or sublicense agreement.
+//
+//-------------------------------------------------------------------------------
+// Block: ISC_SetRevenueFigures
+//-------------------------------------------------------------------------------
+// Module Description:
+//   This script calculates the total charged amount and discount figures
+//   for a specified resource id and sets those values in the corresponding
+//   fields under DETAIl.ASS_ARA_EXT block.
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible:
+//
+//------------------------------------------------------------------------------
+
+function setRevenueFigures
+{
+	Long blockIndex;
+	Long packetIndex;
+	Long packetEntries;
+
+	Decimal discountAmount = 0.0;
+	Decimal chargedAmount = 0.0;
+	Decimal oldDiscountAmount = 0.0;
+	Decimal oldChargedAmount = 0.0;
+
+	String originalEventPoid;
+	String pinProductPoid;
+
+	Long blockEntries = edrNumDatablocks( DETAIL.ASS_PIN );
+
+	for ( blockIndex = 0 ; blockIndex < blockEntries ; blockIndex = blockIndex + 1 )
+	{
+		originalEventPoid = edrString( DETAIL.ASS_PIN.ORIGINAL_EVENT_POID, blockIndex);
+		packetEntries = edrNumDatablocks( DETAIL.ASS_PIN.BP, blockIndex );
+
+		// If the originalEventPoid is already pointing to some /event
+		// then that block will give us the old rated amount
+
+		if ( strSearch(originalEventPoid, "/event") >= 0 )
+		{
+			for ( packetIndex = 0 ; packetIndex < packetEntries ; packetIndex = packetIndex + 1 )
+			{
+				if ( edrString( DETAIL.ASS_PIN.BP.PIN_RESOURCE_ID, blockIndex, packetIndex ) == reg.ResourceId)
+				{
+					pinProductPoid = edrString( DETAIL.ASS_PIN.BP.PIN_PRODUCT_POID, blockIndex, packetIndex );
+
+					// If the pinProductPoid contains a reference to /product portal object, then the 
+					// pin_amount field will give us the charged amount
+
+					if ( strSearch(pinProductPoid, "/product") >= 0 )
+						oldChargedAmount = oldChargedAmount + edrDecimal( DETAIL.ASS_PIN.BP.PIN_AMOUNT, blockIndex, packetIndex );
+
+					// If the pinProductPoid contains a reference to /discount portal object, then the 
+					// pin_amount field will give us the discount amount
+
+					else if ( strSearch(pinProductPoid, "/discount") >= 0 )
+						oldDiscountAmount = oldDiscountAmount + edrDecimal( DETAIL.ASS_PIN.BP.PIN_AMOUNT, blockIndex, packetIndex );
+				}
+			}
+		}
+
+		// else the block will give us the currently charged amount and discount
+
+		else
+		{
+			for ( packetIndex = 0 ; packetIndex < packetEntries ; packetIndex = packetIndex + 1 )
+			{
+				if ( edrString( DETAIL.ASS_PIN.BP.PIN_RESOURCE_ID, blockIndex, packetIndex ) == reg.ResourceId)
+				{
+					pinProductPoid = edrString( DETAIL.ASS_PIN.BP.PIN_PRODUCT_POID, blockIndex, packetIndex );
+
+					// If the pinProductPoid contains a reference to /product portal object, then the 
+					// pin_amount field will give us the charged amount
+
+					if ( strSearch(pinProductPoid, "/product") >= 0 )
+						chargedAmount = chargedAmount + edrDecimal( DETAIL.ASS_PIN.BP.PIN_AMOUNT, blockIndex, packetIndex );
+
+					// If the pinProductPoid contains a reference to /discount portal object, then the 
+					// pin_amount field will give us the discount amount
+
+					else if ( strSearch(pinProductPoid, "/discount") >= 0 )
+						discountAmount = discountAmount + edrDecimal( DETAIL.ASS_PIN.BP.PIN_AMOUNT, blockIndex, packetIndex );
+				}
+			}
+		}
+	}
+
+	// Adding the ARA block
+	if ( edrNumDatablocks(DETAIL.ASS_ARA_EXT) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+	
+	edrDecimal(DETAIL.ASS_ARA_EXT.DISCOUNT_AMOUNT, 0) = discountAmount;
+	edrDecimal(DETAIL.ASS_ARA_EXT.OLD_DISCOUNT_AMOUNT, 0) = oldDiscountAmount;
+	edrDecimal(DETAIL.ASS_ARA_EXT.CHARGED_AMOUNT, 0) = chargedAmount;
+	edrDecimal(DETAIL.ASS_ARA_EXT.OLD_CHARGED_AMOUNT, 0) = oldChargedAmount;
+}
+
+function onDetailEdr
+{
+	setRevenueFigures();
+}
+
+function onInvalidDetailEdr
+{
+	setRevenueFigures();
+}

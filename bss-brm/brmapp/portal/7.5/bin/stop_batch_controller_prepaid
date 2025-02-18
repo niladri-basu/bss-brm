@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# @(#) %full_filespec: stop_batch_controller.sh~6:shsrc:2 %
+#
+#      Copyright (c) 2000-2006 Oracle. All rights reserved.
+#      This material is the confidential property of Oracle Corporation
+#      or its licensors and may be used, reproduced, stored
+#      or transmitted only in accordance with a valid Oracle license
+#      or sublicense agreement.
+#
+
+PINDIR=/brmapp/portal/7.5
+PATH=/usr/bin:/bin
+
+#LOGDIR=${PINDIR}/TD/apps/batch_controller_prepaid
+LOGDIR=/var/portal/batch_controller_prepaid
+BCPID=${LOGDIR}/BatchController_prepaid.pid
+
+me=$0
+
+if [ ! -f ${BCPID} ]; then
+	echo "${me}: ERROR: ${BCPID}: No such file or directory"
+	echo "${me}: ERROR: Cannot kill \"BatchController_prepaid\""
+        exit 1
+fi       
+
+kill `cat ${BCPID}`
+rc=$?
+if [ ${rc} -ne 0 ]; then
+	echo "${me}: ERROR: BatchController_prepaid: kill `cat ${BCPID}` FAILED"
+	exit ${rc}
+else
+	echo "${me}: BatchController_prepaid: kill `cat ${BCPID}` SUCCEEDED"
+	rm ${BCPID}
+fi
+
+exit 0

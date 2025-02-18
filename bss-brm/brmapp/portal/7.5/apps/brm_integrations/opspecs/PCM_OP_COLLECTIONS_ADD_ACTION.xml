@@ -1,0 +1,113 @@
+<Opcode name="PCM_OP_COLLECTIONS_ADD_ACTION"
+		visibility="public"
+		transaction="required"
+		component="fm_collections"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc>Adds actions to a collections scenario of bill unit</Doc> 
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The dummy poid</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_SCENARIO_OBJ" use="required"
+					mode="complete">
+				<Doc> The collections scenario poid for which this action is added.</Doc>
+				<ClassRef>obj://collections_scenario</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+					mode="complete">
+				<Doc> The account poid</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_USERID" use="required"
+					mode="complete">
+				<Doc> The account poid (i.e. The login account poid)</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_BILLINFO_OBJ" use="optional"
+					mode="complete">
+				<Doc> The billinfo poid</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_AGENT_OBJ" use="optional"
+					mode="complete">
+				<Doc> The agent poid for which the action will be assigned to.</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_CONFIG_ACTION_OBJ" use="required"
+					mode="complete">
+				<Doc> The config action object to be instantiated</Doc>
+				<ClassRef>obj://config.collections.action</ClassRef>
+			</Poid>
+			<Timestamp name="PIN_FLD_DUE_T" use="required">
+				<Doc> The due date for the new action</Doc>
+			</Timestamp>
+			<Int name="PIN_FLD_DAYS" use="optional">
+				<Doc>The slipdays for the following actions.Three options PIN_FLD_DAYS=0
+                                (or nonexistant), won't touch the following actions.PIN_FLD_DAYS less than 0
+				cancel the following actions.PIN_FLD_DAYS>0,The actual number of days to
+				slip the following actions.</Doc>
+			</Int>
+			<String name="PIN_FLD_PROGRAM_NAME" use="optional"
+					maxlen="255">
+				<Doc> The name of the program that calls this opcode</Doc>
+			</String>
+			<Substruct name="PIN_FLD_PAYMENT" use="optional"
+                                        isRecursive="false">
+				<Doc> Payment details for the new action </Doc>
+                                <Fields>
+					<Decimal name="PIN_FLD_AMOUNT" use="required">
+                                		<Doc> Amount to pay </Doc>
+                        		</Decimal>
+                        		<Poid name="PIN_FLD_PAYINFO_OBJ" use="optional"
+                                       		 mode="complete">
+                                		<Doc> The payinfo poid </Doc>
+                                		<ClassRef>obj://payinfo</ClassRef>
+                        		</Poid>
+		                        <Array name="PIN_FLD_PAYINFO" use="optional"
+		                                elemIdMode="ignored" iterationOrder="undefined"
+		                                minElements="0" maxElements="1"
+		                                minElemId="0"
+		                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+		                                isRecursive="false">
+		                                <Doc> Payinfo object - information for payment </Doc>
+		                                <Fields>
+		                                        <Array name="PIN_FLD_CC_INFO" use="optional"
+		                                                elemIdMode="ignored" iterationOrder="undefined"
+		                                                minElements="0" maxElements="1"
+		                                                minElemId="0"
+		                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+		                                                isRecursive="false">
+		                                                <Doc> Credit card info </Doc>
+		                                                        <Fields> </Fields>
+		                                        </Array>
+		                                        <Array name="PIN_FLD_DD_INFO" use="optional"
+		                                                elemIdMode="ignored" iterationOrder="undefined"
+		                                                minElements="0" maxElements="1"
+		                                                minElemId="0"
+		                                                isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+		                                                isRecursive="false">
+		                                                <Doc> Direct debit info </Doc>
+		                                                        <Fields> </Fields>
+		                                        </Array>
+		                                </Fields>
+		                         </Array>
+				</Fields>
+			</Substruct>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The new action poid</Doc>
+				<ClassRef>obj://collections_action</ClassRef>
+			</Poid>
+		</Fields>
+	</Output>
+</Opcode>

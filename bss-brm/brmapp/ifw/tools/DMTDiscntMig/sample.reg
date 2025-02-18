@@ -1,0 +1,90 @@
+XSLTUtil
+{
+  LogFileName = <path/logfilename>
+
+  DataPool
+  {
+
+    Login
+    {
+      Module
+      {
+        UserName           = <DBUSERNAME>
+        PassWord           = <Encrypted DB Password>
+        DatabaseName       = <DB Service>
+        AccessLib          = <database access library eg:or952>
+      }
+    }
+  }# end of data pool
+
+  XMLTransform
+  {
+      RootNode = output
+      Transform1
+      {
+          DataModule = Login
+          Module 
+          {
+	        Name = rollover
+		Query = ./rollover.sql
+		OutputFile = ./DBData.xml
+		OpenRootNode = True
+		CloseRootNode = False
+           }
+      }
+      Transform2
+      {
+          DataModule = Login 
+          Module 
+          {
+	        Name=discount
+		Query = ./discount.sql		
+		OutputFile = ./DBData.xml
+		OpenRootNode = False
+		CloseRootNode = True
+           }
+      }
+   }
+
+   XSLTransform
+   {
+      XSLTTransform1
+      {
+	   Module 
+           {
+	      inputXmlFile = ./DBData.xml
+              inputXSLFile = ./Intermediate1.xsl
+	      outputFile = ./Intermediate1.xml
+	   }
+      }
+      XSLTTransform2
+      {
+	   Module 
+           {
+	      inputXmlFile = ./Intermediate1.xml
+              inputXSLFile = ./Intermediate2.xsl
+	      outputFile = ./Intermediate2.xml
+	   }
+      }
+      XSLTTransform3
+      {
+	   Module 
+           {
+	      inputXmlFile = ./Intermediate2.xml
+              inputXSLFile = ./LoadPriceListDiscount.xsl
+	      outputFile = ./LoadPriceListDiscount.xml
+	   }
+      }
+      XSLTTransform4
+      {
+           Module
+           {
+              inputXmlFile = ./Intermediate2.xml
+              inputXSLFile = ./SbscrpMigFile.xsl
+              outputFile = ./SbscrpMigFile.dat
+           }
+      }
+   }
+   
+}#End of Registry
+

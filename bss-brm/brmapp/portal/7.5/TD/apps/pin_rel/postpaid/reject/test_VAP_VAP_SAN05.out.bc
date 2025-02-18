@@ -1,0 +1,12 @@
+010	1			11	11	1428969045	1428969045	1428969045		0	0						RATING_PIPELINE	10000	/event/delayed/session/telco/gsm/valuepack			2
+020	2					SN	DN	1001	00	006490292992	Texts to 2degrees	0	17	01	VAP			00	S	+0100	0.0	0.0	20	NORM	Texts	0	0	1429117274	1429117275	1
+520	3		1001	0
+900	4	1 /account 112940 0	1 /service/telco/gsm 108061 0	1 /item/usage 290939572802866648 0	0  0 0	;;;;[1001,2,0]|;;;;[1001,2,0]|;;;;[1001,2,0]|;;;;[0064902929,2,0]		1	@INTEGRATE#1001#006490292992#VAP#1#20#Texts#0#Texts to 2degrees#1111445#<1 /item/usage 290939572802866648 0#554#1##50.00#320#GST|>#<77#52|>#<Carryover Minutes#60#5100|Me2U#30#0.44|>
+600	5	1 /account 112940 0	1 /balance_group 109085 0	1 /item/usage 290939572802866648 0	554	0	ALL	258	1 /product 113580 0	320	0	GST			1 /purchased_product 107293 0	1	50.00	0.0	50.00	0.0	0	P
+605	0	1 /balance_group 109085 0	554
+607	0	50.00	1428925845	0			0	0
+888	1	SAN28	$29 Plan	51	52	OriginatingCountry	OriginatingZone	DestinationCountry	DestinationZone	57	58	RatingGroupCode	RatingGroupType	4.55	Mfile	InPackageCode	Product	SharersMSISDN	SharersProduct	SHRD	70	1416593474	72	73	CLI	74	76	77
+890	Carryover Minutes	60	5100
+890	Me2U	30	0.44
+894	90	91	92	1416593474	ChargeName	1416593474	NewBalanceExpires	NewChargeState	1416593474	OldBalanceExpires	1416593474	OldChargeState	Partner	Payment	Reference	Result	TxID	VoucherType	1111445
+090	10			11	11	1	1429117274	+0100	1429117274	+0100	0.0	50.00

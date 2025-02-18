@@ -1,0 +1,159 @@
+================================================================================
+FCT_SegZoneNoCust
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+==============================================================================
+Module Version: 10009  7.4  11-Nov-2010  Chetan 
+BUG10077369  : ECR: PARALLEL LOADING IN THE PIPELINE ENGINE
+==============================================================================
+Module Version: 10008  7.4  08-Jun-2009
+BUG8548469: Implement RELOAD Semaphore for FCT_SegZoneNoCust
+==============================================================================
+Module Version: 10007  DaVinci  18-July-2006
+PRSF00219262: Da Vincii Code Clean Up: set isValidDetail false when you set error.
+==============================================================================
+Module Version: 10006  Apollo  04-Jun-2004
+PRSF00114606:  NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+==============================================================================
+
+Module Version: 10005  Apollo  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Module Version: 10004  Apollo  16-Oct-2003
+PRSF00071706:   Message Number for Plugin
+
+================================================================================
+
+Module Version: 10003  6.5_SP2  05-May-2003
+PRSF00039727:  FCT_SegZoneNoCust to 6.5_SP2 namespaces. 
+
+================================================================================
+
+Module Version: 10002  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 10001 / Date :	26-Feb-2003
+----------------
+
+Notes		:
+----------------
+
+PETS # 28863 Added Thread trace info for rating modules
+
+=================================================================================
+
+Actual Version : v4-30-03 / Date : 31-Jan-2002
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38593 DB2 Port.
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 28-Aug-2001
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PETS #38645 Added missing error messages.
+
+================================================================================
+
+Actual Version : v4-30-01 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+PETS #36559 SourcePro Port.
+
+================================================================================
+
+Actual Version : v4-30-00 / Date : 21-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+Migration to new EDR-C v4-30 and Database v4-30.
+
+================================================================================
+
+Actual Version : v4-03-00 / Date : 07-Aug-2000
+----------------
+
+New Features   :
+----------------
+
+Implemented support for new database version check.
+
+================================================================================
+
+Actual Version : v4-02-01 / Date : 19-Jul-2000
+----------------
+
+Solved PRs/CRs :
+----------------
+
+#2245# Update "DETAIL.NUMBER_ASSOCIATED_RECORDS" and
+       "ASSOCIATED_CHARGE.NUMBER_OF_ZONE_PACKETS".
+       
+================================================================================
+
+Actual Version : v4-01-00 / Date : 17-Jun-2000
+----------------
+
+New Features   :
+----------------
+
+Implemented support for the IBM xlC compiler on AIX.
+
+================================================================================
+
+Actual Version : v4-00-00 / Date : 03-Mar-2000
+----------------
+
+New Features   :
+----------------
+
+Implemented support for new EDR-C v4.
+
+================================================================================
+
+Actual Version : v1-23-00 / Date : 03-DEC-1999
+----------------
+
+New Features   :
+----------------
+
+Entries in INT_SEGZONE_LNK have a valid-period.
+Zonemodels may be linked to segments for a special period.
+
+================================================================================
+
+Actual Version : v1-21-01 / Date : 21-OCT-1999
+----------------
+
+Notes          :
+----------------
+
+21-OCT-1999  Updated isUsable() function with log-messages
+             to fit the requirements.
+
+
+New Features   :
+----------------
+
+14-OCT-1999  Implementation of isUsable() function.
+
+================================================================================

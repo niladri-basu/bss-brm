@@ -1,0 +1,124 @@
+# @(#)%Portal Version: ConfigurableValidity_config.values:UelEaiVelocityInt:1:2006-Sep-05 22:24:53 %
+#
+#       Copyright (c) 2006 Oracle. All rights reserved.
+#       This material is the confidential property of Oracle Corporation
+#       or its licensors and may be used, reproduced, stored
+#       or transmitted only in accordance with a valid Oracle license
+#       or sublicense agreement.
+#=============================================================
+#=============================================================
+#
+# Configuration file for the ConfigurableValidity Handler.
+#
+#=============================================================
+
+#
+# Debug toggle (0: don't print, 1: print debug messages)
+#
+$DEBUG = 0;
+
+#
+# File matching pattern.
+# Note that this pattern needs to end with the Batch Controller's
+# file rename extension as listed for the batch.file.rename.extension
+# key in its Infranet.properties file.
+#
+# Example: $FILETYPE = "*.txt.bc"
+#
+$REL_PREFIX = "test_TEL_";
+$REL_SUFFIX = ".out";
+$BC_EXT = ".bc";
+$FILETYPE = "*$REL_SUFFIX$BC_EXT";
+
+# The parameter below is used to strip off the sequence number from the rated CDR file name.
+# Change it to 1 if the rated CDR contains the sequence number.
+$SEQUENCE_GEN_ON = 0;
+
+#
+# Full pathname of the handler local directory.
+#
+$REL_HANDLER_DIR = "/brmapp/portal/7.5/apps/pin_rel";
+$PROD_DISC_UEL_HANDLER_DIR = "/brmapp/portal/7.5/apps/uel";
+$RESOURCES_UEL_HANDLER_DIR = "/brmapp/portal/7.5/apps/uel";
+
+#
+# Full pathname to handler log file.
+#
+$LOGFILE = "$REL_HANDLER_DIR/handler.log";
+$CV_LOGFILE = "$REL_HANDLER_DIR/configurable_validity_handler.log";
+
+#
+# Full path name to batch application directory.
+#
+$pinRELDir = "/brmapp/portal/7.5/apps/pin_rel";
+
+$pinUELDir = "/brmapp/portal/7.5/apps/uel";
+
+#
+# Full path name to batch application executable.
+#
+$pinREL = "$pinRELDir/pin_rel";
+
+$pinUEL = "pinUELDir/uel";
+
+#
+#Name of the batch application templates as stored in the database.
+#
+
+$prod_disc_template = "FirstUsageProductsDiscounts";
+$resources_template = "FirstUsageResources";
+
+#
+# Full pathname to the handler input file location.
+#
+$REL_STAGING = "$REL_HANDLER_DIR";
+$PROD_DISC_UEL_STAGING = "$PROD_DISC_UEL_HANDLER_DIR/first_usage/prod_disc";
+$RESOURCES_UEL_STAGING = "$RESOURCES_UEL_HANDLER_DIR/first_usage/resources";
+
+#
+# Full pathname to the batch application input file location.
+# The handler will move input files from the STAGING directory to the
+# PROCESSING directory; the batch application reads imput files from
+# the PROCESSING directory.
+# For the REL, this parameter should be exactly the same as specified by the
+# infranet.rel.default.interim_directory in the REL's Infranet.properties file.
+#
+$REL_PROCESSING = "$pinRELDir";
+$PROD_DISC_UEL_PROCESSING = "$pinUELDir";
+$RESOURCES_UEL_PROCESSING = "$pinUELDir";
+
+#
+# Full pathnames to the batch application output file locations.
+# The handler will move input files from the PROCESSING directory to these
+# directories based upon the exit code of the batch application.
+#
+$REL_ARCHIVE = "$REL_HANDLER_DIR/archive";
+$REL_REJECT = "$REL_HANDLER_DIR/reject";
+
+$PROD_DISC_UEL_ARCHIVE = "$PROD_DISC_UEL_HANDLER_DIR/archive";
+$PROD_DISC_UEL_REJECT = "$PROD_DISC_UEL_HANDLER_DIR/reject";
+
+$RESOURCES_UEL_ARCHIVE = "$RESOURCES_UEL_HANDLER_DIR/archive";
+$RESOURCES_UEL_REJECT = "$RESOURCES_UEL_HANDLER_DIR/reject";
+
+$PROD_DISC_FILE_PREFIX = "test_PROD_";
+$PROD_DISC_FILE_SUFFIX = ".out";
+
+$RESOURCES_FILE_PREFIX = "test_RES_";
+$RESOURCES_FILE_SUFFIX = ".out";
+
+#
+# OOD related config parameters
+$OOD_PREFIX = "test";
+$PIPELINE_NAME = "ALL_RATE";
+$OOD_SUFFIX = "xml";
+
+$OOD_HANDLER_DIR = "/brmapp/portal/7.5/apps/pin_ood_handler";
+$pinLoadRerateJobs = "/brmapp/portal/7.5/bin/pin_load_rerate_jobs";
+$pinLoadRerateJobsDir = "$OOD_HANDLER_DIR";
+$OOD_STAGING = "$OOD_HANDLER_DIR/OODHandlerInput";
+$OOD_PROCESSING = "$OOD_HANDLER_DIR";
+$OOD_ARCHIVE = "$OOD_HANDLER_DIR/archive";
+$OOD_REJECT = "$OOD_HANDLER_DIR/reject";
+
+1;

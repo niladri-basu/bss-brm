@@ -1,0 +1,1338 @@
+========================================================================================
+DAT_Discount
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+================================================================================
+Module Version: v10099 7.5 / Date : 09-JULY-2012
+bug14294682 -> P-14245451: "SENDING A SEMAPHORE TO RECONNECT PIPELINE WITH DB FAILED"
+Problem: 
+----------
+When trying to process the reconnect semaphore for Login DBC, a critical error
+was reported by DAT_Discount because an attempt was made to open a connection 
+with LoginInfranet DBC as well. This was incorrect because Login(Integrate) and 
+LoginInfranet(Infranet) might connect to different databases. 
+Solution:
+----------
+Modified the code so as to check for which DBC module the reconnect-request is 
+for, and accordingly refresh the appropriate connection with either Integrate 
+OR Infranet database.
+==============================================================================
+Module Version: v10098 / Date : 13-OCT-2011
+bug13060319: Customer had requested to change the WARNING message for discount reload failure to CRITICAL.
+Changed the WARNING to CRITICAL.
+Also, modified the message file to accomodate error for ERR_RELOAD_EVAL_SCRIPTS_FAILED.
+================================================================================
+Module Version: v10097 / Date : 15-Mar-2011
+bug11858419: "P-10141920 [VPF]:BRM 7.3: FIRST USAGE RESTRICTRESOURCEVALIDITYTOOFFER NOT WORKING"
+Fixed the code for loading data into DAT_PortalConfig Module at the start only.
+==============================================================================
+Module Version : 7.4 v10096
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+Module Version: v10095 / Date : 06-AUG-2009
+bug8765962: "7.4 BATS:FATAL ERROR 'ERR_DSC_EXCLUSION_REG_SETTING WHILE STARTING PIPELINE"
+Initialize the member variable in class constructor
+==============================================================================
+Module Version: v10094 / Date : 16-JUN-2009
+bug8566698: "IFW MEMORY CONTINUES TO GROW DURING CDR PROCESS CHECKED WITH DYNAMIC LEAK TOOL"
+Delete the newly created object 
+==============================================================================
+Module Version: v10093 / Date : 05-JUN-2009
+bug8574244: "MODIFIED THE RELOAD SEMAPHORE ENTRY"
+Change the argument of reload semaphore  
+==============================================================================
+Module Version: v10092 / Date : 01-APR-2008
+bug6362378: "REASONING R-070712-0007 MEMORY LEAK"
+bug6362379: "REASONING R-070712-0008 MEMORY LEAK"
+bug6362380: "REASONING R-070712-0009 MEMORY LEAK"
+bug6362381: "REASONING R-070712-0010 MEMORY LEAK"
+bug6362382: "REASONING R-070712-0011 MEMORY LEAK"
+bug6788690: "P-6743127 [7.3 PERF] - SLOW PIPELINE STARTUP TIME WITH DAT_DISCOUNT" 
+==============================================================================
+Module Version: v10091 / Date : 03-OCT-2007
+bug6454770: "PIPELINE_7.3.1 AIX: PIPELINE_DISCOUNT BREAKING"
+==============================================================================
+Module Version: v10090 / Date : 25-Jun-2007
+bug6147738: "PROPAGATION OF DAT_DISCOUNT 7.3_PATCH TO 7.3.1"
+==============================================================================
+Module Version: v10089 / Date : 29-Mar-2007
+bug5913489: "DAT_DISCOUNT ENHANCEMENT TO READ BUSINESS CONFIGPARAM VALUE"
+==============================================================================
+Module Version: v10088 / Date : 12-Mar-2007
+bug5904780: "INTERFACE IMPLEMENTATION FOR IN-MEMEORY DATADUMP"
+==============================================================================
+Module Version: v10087 / Date : 28-Feb-2007
+bug5875337: "IFW STARTED WITH ERROR: *** LOG NOT INITIALISED"
+==============================================================================
+Module Version: v10086 / Date : 08-Jan-2007
+PRSF00237591: "W2A-PRE-PROD** ( Robustness Testing ) -- ERR_THREAD_EXCEPTION detected during the reload"
+==============================================================================
+Module Version: v10085 / Date : 08-Sep-2006
+PRSF00232278: "Pipeline is Coredumping after passing the Discount Reload Semaphore"
+==============================================================================
+Module Version: v10084 / Date : 10-AUG-2006
+PRSF00215440: "73ea, FCT_Discount ~10% slower than 72tp3"
+==============================================================================
+Module Version: v10083 / Date : 19-JULY-2006
+PRSF00224320: "Update signatures of accountCycles() and billingCycle()"
+==============================================================================
+Module Version: v10082 / Date : 24-MAY-2006
+PRSF00214339: "Configurable validty implementation."
+==============================================================================
+Module Version: v10081 / Date : 23-FEB-2006
+PRSF00192314: "DCQ - Support EVAL discount expression"
+==============================================================================
+Module Version: v10080 / Date : 21-Nov-2005 
+PRSF00187289 : Model Selector : Pipeline Rating,Discounting and 
+	       Registry Changes(propagation to Davinci)
+	       Made changes to DAT_Discount for the model selector feature. 
+==============================================================================
+Module Version: v10079 / Date : 29-AUG-2005
+PRSF00179707 : Change atoi() and atol() to atoi64() for 64-bit Poid Compatibility.
+==============================================================================
+Module Version: v10078 / Date : 01-AUG-2005
+PRSF00178154 : Propagation of 176217: Discount model not seen by the pipeline
+==============================================================================
+Module Version: v10077 / Date : 20-JUN-2005
+PRSF00169966 "Fix warning messages in the Windows 32-bit build displays that really should be treated as errors"
+==============================================================================
+Module Version: v10076 / Date : 22-JUN-2005
+PRSF00173199  "Replace deprecated std::strstream classes with std::stringstream 
+               in Plugin components"
+
+==============================================================================
+Module Version: v10075 / Date : 20-APR-2005
+PRSF00164854 "fix build breaker"
+==============================================================================
+Module Version: v10074 / Date : 06-APR-2005
+PRSF00151548 "Semaphore for refreshing Pricing Data related to Discount"
+==============================================================================
+Module Version: v10073 / Date : 23-MAR-2005
+PRSF00157248  "CR59 : Removal of comment put for build failure (Due to the 
+               unchecking code from DAT::Account"
+
+==============================================================================
+Module Version: v10072 / Date : 15-MAR-2005
+PRSF00154437  "CR59 : Return exclusion discounts from a list of discounts and
+               plans"
+
+==============================================================================
+Module Version: v10071 / Date : 07-MAR-2005
+PRSF00157214  "Build failure fix"
+
+==============================================================================
+Module Version: v10070 / Date : 02-MAR-2005
+PRSF00156640  "Fix build breaker
+
+==============================================================================
+Module Version: v10069 / Date : 01-MAR-2005
+PRSF00156327  "core on ifw batch and realtime (DAT::Discount)"
+
+==============================================================================
+Module Version: v10068 / Date : 14-DEC-2004
+PRSF00144238  "Incorrect GLID for discount balance impact."
+
+==============================================================================
+Module Version: v10067 / Date : 04-OCT-2004
+PRSF00123572  "QF: Pipeline Discount: General performance degradation for cdr
+               rating 6.7 FP2 FD3"
+
+==============================================================================
+Module Version: v10066 / Date : 08-SEP-2004
+PRSF00127701 "For cascading type of discount, valid base expression is either 
+              STEPC or STEPQ."
+
+==============================================================================
+Module Version: v10065 / Date : 18-Aug-2004
+PRSF00125905  "DAT_Discont registry setting fix"
+
+==============================================================================
+Module Version: v10064 / Date : 30-Jul-2004
+PRSF00123606  "DRUM Expression can't take a negative constant"
+
+==============================================================================
+Module Version: v10063 / Date : 11-Jun-2004
+PRSF00115899  "enable iScript functions in discounting expression"
+
+==============================================================================
+Module Version: v10062 / Date : 07-MAY-2004
+PRSF00115144 "Discount NT Porting"
+
+==============================================================================
+Module Version: v10061 / Date : 31-MAY-2004
+PRSF00114591  "updateBalance problem for consumption case"
+
+==============================================================================
+Module Version: v10060 / Date : 09-Apr-2004
+PRSF00104067  "Regression - ifw core dump"
+
+==============================================================================
+Module Version: v10059  6.7_FP2  10-Mar-2004
+PRSF00098150  Changes for Sequential Discounting 
+
+==============================================================================
+Module Version: v10058  Apollo  01-Mar-2004
+PRSF00090489 Tier Discount: Supporting Multiple Discount Steps per Discount Rule
+
+==============================================================================
+Module Version: v10057  Apollo  25-Feb-2004
+PRSF00086189 Discount object was read in reverse order of start_t instead of mod_t
+
+==============================================================================
+Module Version: v10056 / Date 19-Feb-2004
+PRSF00093028 "Memory leak fixes in discount and balances"
+Proporagtion of PRSF00092956 from 6.7_EBF.
+
+==============================================================================
+Module Version: v10055  6.7_FP2  10-Feb-2004
+PRSF00091597 "Discount Analysis Plugin should validate based on permitted type for system discounts"
+Read the permitted type from discount objects.
+
+==============================================================================
+Module Version: v10054  6.7_FP2  02-Feb-2004
+PRSF00089378 "OMNI -Apollo discount balance impacts validity dates don"t work"
+Proporagtion of PRSF00089725 from 6.7_EBF.
+
+==============================================================================
+Module Version: v10053  Apollo  19-Jan-2004
+PRSF00077557  WE suppose to use subtype for events in discount_usage_map 
+
+==============================================================================
+Module Version: v10052  Apollo  02-Dec-2003
+PRSF00080841  Reverse code change for CO 79757 (previous CO)
+
+==============================================================================
+Module Version: v10051  Apollo  01-Dec-2003
+PRSF00079757  ifw hangs with configuration error in Discount Setting
+
+==============================================================================
+Module Version: v10050  Apollo  08-Nov-2003
+PRSF00077096 "Discount Step Threshold From value always set to 0"
+
+==============================================================================
+Module Version: v10049  22-Oct-2003
+
+Solved COs :
+------------
+PRSF00073689 -- Exessive number of warning messages for discount in 
+                process.log slowing down performance 
+==============================================================================
+Module Version: v10048  Apollo  16-Oct-2003
+PRSF00071706: 
+
+- Message Number for Plugin
+==============================================================================
+Module Version: v10047  Apollo  29-Sep-2003
+PRSF00067182: 
+
+- Add validations for discount configuration.
+- Performance improvement by reducing the number of expressions that need to 
+  be parsed and pre-compiled.
+- Add base expression to parsed list.
+- Clean up msg file
+
+==============================================================================
+Module Version: v10046  Apollo  22-Sep-2003
+PRSF00065450: Add 2 fields to Discount Packet
+
+- Add 2 fields to Discount Packet
+- Accept CHAR(2) values for condition operator
+
+================================================================================
+Actual Version : v10045 / Date : 13-Aug-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00056297  "Fixing the build breaker for DAT/Discount and INP/Pcm"
+
+----------------
+================================================================================
+Actual Version : v10044 / Date : 06-Aug-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00054815 : Adding FCT/Discount/DiscountExt to Clearcase
+
+----------------
+================================================================================
+Actual Version : v10043 / Date : 06-Aug-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00054641 : Adding Expression validation to DAT/Discount
+
+----------------
+================================================================================
+Actual Version : v10042 / Date : 02-Aug-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00050079 : Adding Infranet related DAT/Discount files to clearcase
+----------------
+================================================================================
+Actual Version : v10041 / Date : 22-MAY-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00041762 : Propagation of issues found in 6.3 EBF
+----------------
+================================================================================
+
+Actual Version : v10040 / Date : 13-MAY-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00040602 : Commenting out certain plugins in the Makefile 
+                                 so that 6.5_SP2 can build
+----------------
+================================================================================
+
+Actual Version : v10039 / Date : 12-MAY-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00040509 : fatal: libDAT::Discount::Infranet12d.so: open 
+                                 failed: No such file or directory
+---------------- 
+================================================================================
+
+Actual Version : v10038 / Date : 09-MAY-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00037655 : Assertion failed & core dump in DAT_AccountManager
+---------------- 
+================================================================================
+
+Actual Version : v10037 / Date : 07-MAY-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00037140 : THRESHOLD_TO should be assigned a MAX value if it exceeds limit of data type.
+---------------- 
+================================================================================
+
+Actual Version : v10036 / Date : 01-MAY-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00039598 : Changes due to BAS::RegisteredObject::registryUpdateinterface change 
+---------------- 
+================================================================================
+
+Actual Version : v10035 / Date : 13-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00037253 - Cross Product Discounting gives twice the 
+----------------     expected bundle in the next billing cycle.
+                  PRSF00037581 - Regression: fw hung after submit a CDR for
+                     the discount user after billing (discount owner changes)
+                     ifw.47
+================================================================================
+
+Actual Version : v10034 / Date : 10-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00036993 - MakeBill rollback when multiple bundle
+				  PRSF00037308 - Regression - New discount units are used first instead of rollover units
+---------------- 
+================================================================================
+
+Actual Version : v10033 / Date : 09-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00037199 Regression - Free seconds can become negative
+                      when having a discount owner.
+                  PRSF00037221 Regression: can't stop_ifw and start_ifw,  no 
+                      line break between events in eventbuffer.acc files
+---------------- 
+================================================================================
+
+Actual Version : v10032 / Date : 08-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00037048 Regression - ifw crashed & core dump while process CDR after billing at  vectorOrderedOps<DAT_AccountRollover>
+---------------- 
+================================================================================
+
+Actual Version : v10031 / Date : 05-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00036743 transaction rollback causes to reload
+----------------  whole DscAccountsWork.acc file and memory leak
+     
+================================================================================
+Actual Version : v10030 / Date : 05-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00036994 VF UK Startup problem with EBF1700 and 1703
+----------------  
+                  
+================================================================================
+Actual Version : v10029 / Date : 04-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00000036795 - Regression - error starting IFW in
+----------------  HP environment
+                  PRSF00036656 - Add update level in the #10 record for balance files
+================================================================================
+Actual Version : v10028 / Date : 03-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00000035972 -IFW dumps core @DAT_AccountManager,
+----------------  terminated by signal SEGV
+================================================================================
+Actual Version : v10027 / Date : 02-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00036330 - Compilation Error in 
+----------------  DAT_AccountFile.cpp on AIX
+
+================================================================================
+Actual Version : v10026 / Date : 02-APR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00036276 - [DAT_Discount] .arc and .bal files
+----------------  corrupted after crash or lack of diskspace
+                  PRSF00034153 - Change the datatype from size_t to
+		  int to handle negative values
+
+================================================================================
+================================================================================
+Actual Version : v10025 / Date : 31-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00034132 - DAT_RolloverTable RWSortedVector should be 
+        changed to save memory
+
+----------------
+================================================================================
+Actual Version : v10024 / Date : 28-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00033025 - use reference to step in 
+                    DAT_AccountRolloverHandler instead of copying information 
+                  PRSF00036134 - VF UK Urgent discount reloading
+                    problem during billing
+                  PRSF00035650 - Ifw core dump and crashed while trying to 
+                    submit multiple services CDRs after run billing
+                  PRSF00032534  - FIU (file descr in use) errors from
+                    purify - DAT_AccountManager
+                  PRSF00034303  - processWIRELESS_SAMPLE.log doesn't
+                    have the sufficient information to tell why the
+                    Infranet event failed.
+                  PRSF00031816  - cross-product discounting is broken.
+================================================================================
+Actual Version : v10023 / Date : 26-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00034578 core dump when trying to archive a billing
+		  complete event when the event is not found in EventBuffer.acc
+                  PRSF00035130: Changes to CreateBalance method
+                  PRSF00033035 Remove bundleTotalEntitlement
+		  PRSF00033726: Duplicate event-id (propagation of 33192 & Propagation of 35841)
+                  PRSF00031414: Raise error if invalid valued in rollOver record of DscAccountsWork.acc
+----------------
+========================================================================================
+
+Actual Version : v10022 / Date : 25-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF00033632 Assertion error in DAT_Discount::DAT_AccountValue if no 
+                 discount is configured.
+                 PRSF00035789 ERR_DLOPEN_FAILED when start pipeline without Infranet
+----------------
+========================================================================================
+Actual Version : v10021 / Date : 18-MAR-2003 
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  
+----------------
+* PRSF00034368: TAM_Transaction not completely thread-safe
+                (propagation of 32552)
+* PRSF00033036  remove CREDIT_UNITS, DEBIT_UNITS, LOST_UNITS and merge
+			GRANTED_CHARGE and GRANTED_UNIT to save memory consumption. 
+
+========================================================================================
+Actual Version : v10020 / Date : 17-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00033505
+		  Improve discount file load time and memory footprint
+----------------
+========================================================================================
+
+Actual Version : v10019 / Date : 15-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00034160 propagation for CO 34900: Replacing BAS_Date with 
+                  BAS_DateTime in order to access accounting cycle info.
+----------------
+========================================================================================
+
+Actual Version : v10018 / Date : 14-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00034741 Patch to CO 33164: discount in prev billing period. 
+----------------
+========================================================================================
+
+Actual Version : v10017 / Date : 13-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00034516 Could not split event reported in trace log file
+----------------
+========================================================================================
+
+Actual Version : v10016 / Date : 11-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00033026 isValid not really used in 
+		  DAT_AccountRolloverHandler (memory save)
+		  PRSF00031419 Sets the status and error message properly when 
+		  somethig is wrong with the discount files.
+                  PRSF00033164 VF UK Discount in previous billing period
+----------------
+========================================================================================
+
+Actual Version : v10015 / Date : 06-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031420 Modified the msg file to accomodate ERR_SPLIT_FAILED
+----------------  
+		  PRSF00029537 Minor code review changes
+========================================================================================
+
+Actual Version : v10014 / Date : 05-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00032189 Integrate terminates with ERR_INVALID_THREAD_STATE
+                               error when running a CycleMonthly event.
+                  PRSF00032490 Omnitel: Problem with FCT_Balance lookup.
+                  PRSF00033027 Remove tmpUnitsM and consumeableUnitsM.
+----------------
+========================================================================================
+
+Actual Version : v10013 / Date : 03-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031354 core dump on missing discount record.
+----------------
+========================================================================================
+
+Actual Version : v10013 / Date : 03-MAR-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00030511  Member variable was not initialized in DAT_AccountPeriod
+----------------  
+========================================================================================
+
+Actual Version : v10012 / Date : 28-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00032800  Changes made to implement thread trace
+----------------  PRSF00032754  Backout changes done in CO 31425
+
+========================================================================================
+----------------
+Actual Version : v10012 / Date : 28-FEB-2003
+----------------
+
+Notes          :	 
+----------------
+
+New Features   : 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00033247 : fix HP build breaker
+----------------
+========================================================================================
+
+Actual Version : v10011 / Date : 27-FEB-2003
+----------------
+
+Notes          : The container description is changed; one field SERVICE_ID is added in the DISCOUNT_PACKET to support Service Level Balances feature.  The DISCOUNT_BALANCE is also enhanced.
+----------------
+
+New Features   : Service Level Balances
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00021072 TES RFE: service level balances
+----------------
+========================================================================================
+
+Actual Version : v10010 / Date : 20-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00030336 Changes to updatePeriod method to calculate Bundle Total Remaining
+----------------
+
+========================================================================================
+
+Actual Version : v10009 / Date : 19-FEB-2003
+----------------
+
+Notes          : 1. Fix a DscAccountsWork.ac version 
+                 2. Fix a merge problem. (The pipeline exits with DAT_Discount
+                    plugin module reporting ERR_INVALID_THREAD_STATE error. 
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00021785 DscAccountsWork.acc file header contains version which 
+		               is hardcoded as 6.3.x.
+                  PRSF00031943 Integrate crashes during MakeBill event 
+----------------
+
+========================================================================================
+
+Actual Version : v10008 / Date : 13-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031425 EventLastProcessedID.acc doesn't check for redundancy
+----------------
+
+========================================================================================
+
+Actual Version : v10007 / Date : 12-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031280 Memory leaks everywhere in DAT_Discount
+----------------  PRSF00031661 Set the deadlock variables correctly
+
+========================================================================================
+
+Actual Version : v10006 / Date : 11-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031124 [DAT_Discount] Changes to accountStatus method 
+                  PRSF00031536 Wrong Constructor Call for Account Data Log
+----------------
+
+========================================================================================
+
+Actual Version : v10005 / Date : 11-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00030312 [DAT_Discount] Incorrect discount config validation on 
+condition base 
+----------------
+
+========================================================================================
+
+Actual Version : v10004 / Date : 07-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00028686 [DAT_Discount] Mixing Infranet and Integrate resources causes incorrect discount balance initialization
+----------------
+
+========================================================================================
+
+Actual Version : v10003 / Date : 12-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00031496 [DAT_Discount] VF UK NegativeDiscountCarryover=False doesn"t work
+----------------
+
+========================================================================================
+
+Actual Version : v10003 / Date : 07-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00029263 [DAT_Discount] Reset the variables used for deadlock detection
+----------------
+
+========================================================================================
+
+Actual Version : v10002 / Date : 05-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   : Support Discount Granted One-Time
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : PRSF28509 : Free Minutes Granted One-Time, good for a Certain Period of time 
+----------------
+
+========================================================================================
+
+Actual Version : v10001 / Date : 27-JAN-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   : Support Pipeline versioning 
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs : 
+----------------
+
+========================================================================================
+
+
+Actual Version : v6.3.32 / Date : 05-FEB-2003
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00028686 Fix problems with integrate where
+the co-existence of resources with id zero and non-zero would cause 
+incorrect retrival of the objects stored in the map 
+----------------
+
+========================================================================================
+
+Actual Version : v6.3.31 / Date : 19-DEC-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00027064 Fix problems with integrate where
+rollback in DAT_Discount fails and hangs the system. Also add a lot
+more debugging messages
+----------------
+
+=========================================================================================
+
+Actual Version : v6.3.30 / Date : 14-OCT-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00020341 20314 do not work without infranet
+----------------
+
+========================================================================================
+
+
+Actual Version : v6.3.27 / Date : 02-OCT-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00019406 Integrate doesn't start after discounted usage
+----------------
+
+========================================================================================
+
+Actual Version : v6.3.26 / Date : 01-OCT-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00019405 VF: Integrate hangs while processing CDR
+----------------
+
+========================================================================================
+
+Actual Version : v6.3.25 / Date : 18-SEP-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00017984 MakeBill event not processed correctly when virtual time = InfranetTime
+----------------  
+
+========================================================================================
+
+
+Actual Version : v6.3.24 / Date : 11-SEP-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00017886 ResourceAdjustment event incorrectly leads to new discounting period
+----------------  PRSF00017984 related 
+
+========================================================================================
+
+Actual Version : v6.3.23 / Date : 03-SEP-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00017233 MakeBill event not processed correctly by discounting plugin
+----------------
+
+========================================================================================
+
+Actual Version : v6.3.22 / Date : 30-AUG-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00017233 MakeBill event not processed correctly by discounting plugin
+----------------
+
+========================================================================================
+
+Actual Version : 10000 / Date : 17-JAN-2003
+----------------
+
+Notes          : New version numbering scheme introduced as per directive
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00028436 Change a couple of variables in DAT_AccountData
+                  from decimals to short's (to save runtime memory)
+----------------
+
+========================================================================================
+
+Actual Version : v6.4.05 / Date : 14-OCT-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00020430 adapt 6.3 COs to 6.5                                
+----------------
+
+========================================================================================
+
+Actual Version : v6.4.04 / Date : 02-OCT-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00019648 Integrate doesn't start after discounted usage 6.5
+----------------
+
+========================================================================================
+
+Actual Version : v6.4.03 / Date : 01-OCT-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00019498 adapt PRSF 19405 to athena
+----------------
+
+========================================================================================
+
+Actual Version : v6.4.02 / Date : 25-SEP-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00018201 pin virtual time correction for registry 'use pin virtual time'
+----------------
+
+========================================================================================
+
+Actual Version : v6.4.01 / Date : 04-SEP-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :  PRSF00017820 MakeBill event not processed correctly by discounting plugin
+----------------
+
+========================================================================================
+

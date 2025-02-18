@@ -1,0 +1,232 @@
+========================================================================================
+FCT_IRules
+----------------------------------------------------------------------------------------
+Module Release Notes 
+========================================================================================
+Module Version: 10010  7.4  04-Jul-2011
+Bug 11815646 - p-10434779 phase ii changes for pipeline parallel loading ecr
+========================================================================================
+Module Version: 10009  7.3  25-Jan-2006
+PRSF00190901: Fix TAM message logging + MLK in TAM/IRules (propagation of 156575 + 186125)
+
+========================================================================================
+Module Version: 10008  7.2  20-Apr-2005
+PRSF00146714: TAP3_VAL.xml rules are not getting triggered.
+
+========================================================================================
+Module Version: 10007  Velocity  10-Mar-2005
+PRSF00157748: Change the column name from RULE to RULE_ID 
+
+========================================================================================
+Module Version: 10006  6.7_FP2  27-May-2004
+PRSF00110949: Changed the query for SQL server, few coulmn's name are keyword in SQL server
+
+========================================================================================
+Module Version: 10005  6.7_FP2  14-May-2004
+PRSF00108152: Duplicate handling not correct for multiple Rules in a RuleSet
+
+========================================================================================
+
+Module Version: 10005  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+========================================================================================
+
+Module Version: 10004  6.7_FP2 25-Feb-2004
+PRSF00088745:   Duplicated EDR (edrDuplicate() in FCT_IRule) vanishes.
+
+========================================================================================
+
+Module Version: 10003  6.5_FP3  18-Oct-2003
+PRSF00069634:   Apollo - iScript edrDemandRollback, edrDemandCancel functions need to work from iRules.
+
+========================================================================================
+
+Module Version: 10002  6.5_SP2  18-May-2003
+PRSF00040862:   Correct name mismatch problem caused during namespace changes.
+
+==============================================================================
+
+Module Version: 10001  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : v6.3.2 / Date : 24-Jul-2002
+----------------
+
+Notes          :
+----------------
+
+PRSF00015055 inexact results on AIX
+
+========================================================================================
+
+Actual Version : v4-30-04 / Date : 26-Sep-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #36559 SourcePro AIX Port
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 06-Jul-2001
+----------------
+
+Notes          :
+----------------
+
+- PETS #36608 - Support for encrypted iRules description files added
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 13-Jun-2001
+----------------
+
+Notes          :
+----------------
+
+- First working v4-30 version with initial iScript support.
+- Iteration is not supported yet.
+
+========================================================================================
+
+Actual Version : v4-10-03 / Date : 21-Feb-2001
+----------------
+
+Notes          :
+----------------
+
+BugFix in database version check.
+
+========================================================================================
+
+Actual Version : v4-10-02 / Date : 10-Jan-2001
+----------------
+
+Notes          :
+----------------
+
+Improved the error message for FSM failures.
+
+========================================================================================
+
+Actual Version : v4-10-01 / Date : 04-Dec-2000
+----------------
+
+Notes          :
+----------------
+
+Modifications to support the new module EXT_iScript instead of IXT.
+
+========================================================================================
+
+Actual Version : v4-10-00 / Date : 01-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+Support for the new finite state machine.
+
+========================================================================================
+
+Actual Version : v4-06-04 / Date : 06-Oct-2000
+----------------
+
+Notes          :
+----------------
+
+Implementation changed to support the new internal iScript interface
+
+========================================================================================
+
+Actual Version : v4-05-00 / Date : 12-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+iRules are now executed only on valid detail records, headers and trailers.
+Invalid detail records will not be processed anymore.
+
+========================================================================================
+
+Actual Version : v4-04-01 / Date : 29-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+BugFix: Loading of rules from files corrected.
+
+========================================================================================
+
+Actual Version : v4-04-00 / Date : 17-Aug-2000
+----------------
+
+Notes          :
+----------------
+
+Database version check added.
+
+========================================================================================
+
+Actual Version : v4-03-03 / Date : 29-Jun-2000
+----------------
+
+Notes          :
+----------------
+
+Implementation changed to support the IBM xlC compiler.
+Temporary license key for month and quartal added.
+
+========================================================================================
+
+Actual Version : v4-02-01 / Date : 04-May-2000
+----------------
+
+Notes          :
+----------------
+
+Certification for descriptions added.
+
+Solved PRs/CRs :
+----------------
+
+*PR1915 / FCT_IRULES core dumped while loading ruleSet/descrFile
+
+========================================================================================
+
+Actual Version : v4-01-04 / Date : 25-Apr-2000
+----------------
+
+Notes          :
+----------------
+
+Internal registry is updated during registry updates.
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 28-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+Support for ruleset description files added.
+
+========================================================================================
+
+Actual Version : v4-00-00 / Date : 08-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+Initial version of the plugin for evaluation of IRules.
+
+========================================================================================

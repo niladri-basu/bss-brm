@@ -1,0 +1,482 @@
+===============================================================================
+DAT_AccountListener
+
+Module Release Notes
+-------------------------------------------------------------------------------
+===============================================================================
+Module Version : 7.5 10065 / Date: 03-May-2013
+----------------
+Change Order : Bug 16582894: Introduction of a new registry Parameter for a dedicated AMM acknowledge queue
+----------------
+Short Description :
+-------------------
+Introduced a new registry parameter, viz. AckQueueAMMName which specifies the queue for sending AMM related
+acknowledgement events.
+===============================================================================
+Module Version : 7.5 10064 / Date: 21-Mar-2013
+----------------
+Change Order : Bug 16477208 -> P 16100606 INCORRECT DAT_LISTENER BEHAVIOR 
+----------------
+Short Description :
+-------------------
+- Changed the code to retrieve the number of ready events by querying AQ$<queue_table> instead 
+of queue statistics view: 'gv$aq'.
+
+- Corrected the code to query AQ$<queue_table> instead of querying the table: 'IFW_SYNC' 
+(which may not necessarily be the queue table name) to get the number of ready 'RecycleRequest'
+event
+
+In addition to the above changes, the following changes are also included to address the bug16230602:
+
+- Corrected the code to address a core dump in Listener which was happening because of 
+a multi-threaded access of a class variable. 
+===============================================================================
+Module Version : 7.5 10063 / Date : 16-Jan-2013
+----------------
+Bug 16170816 -> P 16025280: DAT_LISTENER LOST CONNECTION BUT PIPELINE KEEPS RATING WITHOUT SYNC
+
+Problem:
+---------
+If the Listener's connection to the DB is lost, Pipeline continues to rate CDRs which
+could lead to incorrect rating at times when there has been a change in the account/service
+data as the pipeline continues to run. Pipeline would continue to read from the in-memory
+which is not an updated one because the Listener couldn't dequeue and eventually process the event.
+
+Solution:
+----------
+Changed the code to stop the pipeline(s) whenever ERR_DEQUEUE_EVENT is encountered
+while dequeuing the event from the queue thereby ensuring that the CDRs are not
+incorrectly rated.
+===============================================================================
+Actual Version : 7.5 10062 / Date : 07-Mar-2012
+----------------
+bug13742875 -> P 13705748 : "DisablePublishToEvtHdlr" registry parameter was introduced to
+              avoid performance bottleneck because of Listener's communication
+              to EventHandler for each and every event. Default value is
+              false(i.e connect to Event handler). Setting the parameter to True
+              will stop the listener from sending the event to EventHandler.
+===============================================================================
+Module Version : 7.4 10061
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+===============================================================================
+Actual Version : 7.4 10060 / Date : 30-Jun-2010
+----------------
+bug9750767 : Changed the Listener code to address the issue of non dequing of event 
+             by threads other then default thread when there is time zone difference
+             between the queue database and the system where pipeline runs.
+===============================================================================
+Actual Version : 7.4 10059 / Date : 09-Oct-2009
+----------------
+bug8845109 : Semaphore updates were not getting reflected in infoWireless.reg file. 
+===============================================================================
+Actual Version : 7.4 10058 / Date : 23-Jun-2009
+----------------
+bug8582905 :  Memory Leak at shutdown time.
+===============================================================================
+Actual Version : 7.4 10057 / Date : 22-May-2009
+----------------
+bug8539606:  Implemented StopListening to wait till each ListenerThread finishes 
+             and commits its open transaction.Implemented statistics for dequeue.
+===============================================================================
+Actual Version : 7.4 10056 / Date : 05-May-2009
+----------------
+bug8478427:  Pipeline dumps core while shutdown. The problem was the during thread termination 
+             the eventMessage cleanup was not done correctly.
+===============================================================================
+Actual Version : 7.4 10055 / Date : 29-Sep-2008
+----------------
+bug6913027:  Pipeline uses 100% cpu when database connection is lost completely because of
+	     incorrect exception handling.
+===============================================================================
+Actual Version : 7.3.1_Patches 10054 / Date : 04-Apr-2008
+----------------
+bug6934282:  Do not perform ack message enqueue from the listener in case of rerating 
+	     as that is changed to be done in stored procedure.
+===============================================================================
+Actual Version : 7.3_Patches 10053 / Date : 04-Dec-2006
+----------------
+PRSF00239971:  Not Disconnecting from event queue after sending Disconnect 
+               semaphore
+===============================================================================
+Actual Version : 7.3_Patches 10052 / Date : 16-Nov-2006
+----------------
+PRSF00237781:  DAT_Listener -- Dynamic attach/detach from event queue.
+===============================================================================
+Actual Version : 7.3 10051 / Date : 10-Aug-2006
+----------------
+PRSF00228207:  Added the shutdown method to DAT::Listener::PlugIn, which would
+               be invoked by framework during IFW shutdown.
+===============================================================================
+Actual Version : 7.2 10050 / Date : 15-Sep-2005
+----------------
+PRSF00182882: BeginTransaction called for each event dequeued in Batch , need to be called only once.
+PRSF00182883: Changes on the MSMQ Library to call beginTransaction only when event found in Queue.
+===============================================================================
+Actual Version : 7.2 10049 / Date : 20-July-2005
+----------------
+PRSF00176739: Change the PIN_FLD_JOB_ID to PIN_FLD_JOB_OBJ to avoid trunction due to 64 bit JOBID
+===============================================================================
+Actual Version : 7.2 10048 / Date : 16-July-2005
+----------------
+PRSF00176463:: Throw Critical error when not able to open the Queue ( MSMQ ).
+===============================================================================
+Actual Version : 7.2 10047 / Date : 20-Jun-2005
+----------------
+PRSF00169966:: Fix warning messages in the Windows 32-bit build displays that
+               really should be treated as errors
+===============================================================================
+Actual Version : Apollo 10046 / Date : 27-May-2005
+----------------
+PRSF00165812: Added new Registry Parameter for getting AckQueue ServerName.
+===============================================================================
+Actual Version : Apollo 10045 / Date : 12-May-2005
+----------------
+PRSF00167398:DAT:: Router Events (HoldCDRProcessing or ResumeCDRProcessing) are not 
+                   getting dequeued while migrating the account from one db to other.
+===============================================================================
+Actual Version : Apollo 10044 / Date : 22-Apr-2005
+----------------
+PRSF00165134:DAT::Listener waits unconditionally after processing one msg .
+===============================================================================
+Actual Version : Apollo 10043 / Date : 21-Apr-2005
+----------------
+PRSF00165109:"DAT::Listener always returns enqueu time as Zero"
+===============================================================================
+Actual Version : Apollo 10042 / Date : 01-Apr-2005
+----------------
+PRSF00161751:move tab.user_data.event_name != 'RecycleRequest' to OracleQueue.cpp
+===============================================================================
+Actual Version : Apollo 10041 / Date : 23-Mar-2005
+----------------
+PRSF00159625: put back API SyncQueue usage in DAT::Listener
+===============================================================================
+Actual Version : Apollo 10040 / Date : 08-Mar-2005
+----------------
+PRSF00157560:move back Oracle directory under DAT::Listener
+===============================================================================
+Actual Version : Apollo 10039 / Date : 17-Feb-2005
+----------------
+PRSF00154615:Incorporate the use of SyncQueue API/Oracle into DAT::Listener
+===============================================================================
+Actual Version : Apollo 10038 / Date : 05-Jan-2005
+----------------
+PRSF00148278: Don't use minNumBusEventsM in check during initialization when
+              seeing if backlog processing is completed, if interleaving is 
+              false. 
+===============================================================================
+Actual Version : Apollo 10037 / Date : 08-Dec-2004
+----------------
+PRSF00138207: ifw does not start subsequently if an 'RecycleRequest' event is generated when pipeline is inactive.
+===============================================================================
+Actual Version : Apollo 10036 / Date : 16-Nov-2004
+----------------
+PRSF00139382:  "Core while processing business event and reg update"
+                If DAT::AccountPlg sends false, Listener plugin sends a 'graceful shutdown' message,
+                but could not able to stop all of it's threads properly which is causing core dump.
+===============================================================================
+Actual Version : Apollo 10035 / Date : 15-Nov-2004
+----------------
+PRSF00140383: "JP5001(interleaving II) - update MaxCDRProcessTime with semaphore does not take effective immediately"
+===============================================================================
+Actual Version : Apollo 10034 / Date : 03-Nov-2004
+----------------
+PRSF00138902:  "JP5001(interleaving II) - use semaphore to off/on EnableInterLeaving ovewrites MaxNumEvents && MinNumEvents to 0"
+===============================================================================
+Actual Version : Apollo 10033 / Date : 03-Nov-2004
+----------------
+PRSF00138824: Propagated changes of PRSF00136401 from 6.5 FP3 Stream, fixed 
+              exception handling problem for solving the dequeueing of 
+              RecycleRequest event being not done.
+===============================================================================
+Actual Version : Apollo 10032 / Date : 18-Oct-2004
+----------------
+PRSF00135515:  processWIRELESS.log is growing big due to the un-necessary messages from listener every 30 seconds
+===============================================================================
+Actual Version : Apollo 10031 / Date : 12-Oct-2004
+----------------
+PRSF00135561:  "fix merging problem in listener plugin .."
+===============================================================================
+Actual Version : Apollo 10031 / Date : 12-Oct-2004
+----------------
+
+PRSF00133287: ifw hangs when events already exist or just published. (SOMETIMES)
+===============================================================================
+Actual Version : Apollo 10030 / Date : 30-Sept-2004
+----------------
+
+PRSF00133287: QF: Please provide the sempaphore to turn on/off the output 
+WARNING msg to process log file for interleaving feature.
+===============================================================================
+Actual Version : Apollo 10029 / Date : 14-Sept-2004
+----------------
+
+PRSF00131330: regression: ifw not started after shutdown by sending a semaphore.
+===============================================================================
+Actual Version : Apollo 10028 / Date : 12-Sept-2004
+----------------
+
+PRSF00131105: Regression: business event is causing exception in ifw
+
+===============================================================================
+Actual Version : Apollo 10027 / Date : 27-July-2004
+----------------
+
+PRSF00123339: Performance improvement through Batch Event Dequeuing
+
+===============================================================================
+Actual Version : Apollo 10026 / Date : 26-JUL-2004
+----------------
+PRSF00122884: Batch pipeline core dumps when  pin_rerate sends an notify event
+===============================================================================
+Actual Version : Apollo 10025 / Date : 12-JUL-2004
+----------------
+PRSF00121879: fix the listener core dump problem .
+PRSF00119496: fixed too many oracle varibale creations when binding  local variables
+===============================================================================
+Actual Version : Apollo 10024 / Date : 02-JUL-2004
+----------------
+PRSF00118363: fixed: ERR_REG_ENTRY_NOT_FOUND in DAT_Listener.msg
+
+===============================================================================
+Actual Version : Apollo 10023 / Date : 29-JUNE-2004
+----------------
+
+PRSF00118611: Added Events for Re-Rating
+              PrepareToRerate
+              ReratingCompleted
+===============================================================================
+Actual Version : Apollo 10022 / Date : 24-JUN-2004
+----------------
+PRSF00117721: "Regression: ifw_sync is not working"
+
+===============================================================================
+
+Actual Version : Apollo 10021 / Date : 24-JUN-2004
+----------------
+PRSF00117674: fixed merge problem 
+
+===============================================================================
+Actual Version : Apollo 10020 / Date : 23-JUN-2004
+----------------
+PRSF00117674: fixed  core dump at startup time 
+
+
+===============================================================================
+Actual Version : Apollo 10019 / Date : 22-JUN-2004
+----------------
+PRSF00117551: Regression - ifw core dump at startup time
+
+===============================================================================
+
+Actual Version : Apollo 10018 / Date : 21-JUN-2004
+----------------
+
+PRSF00117328: fixing merge problems 
+
+===============================================================================
+
+Actual Version : Apollo 10017 / Date : 17-MAY-2004
+----------------
+
+PRSF00113005: removed couts
+
+===============================================================================
+
+Actual Version : Apollo 10016 / Date : 27-APR-2004
+----------------
+
+PRSF00105697: NT build fail is fixed.
+
+===============================================================================
+
+Actual Version : Apollo 10016 / Date : 31-May-2004
+----------------
+
+PRSF00113005: improvment for time based dequeue thread synchronization
+
+===============================================================================
+Actual Version : Apollo 10016 / Date : 28-May-2004
+----------------
+
+PRSF00109338: Implementation of Interleaving feature in DAT_Listener.
+
+===============================================================================
+Actual Version : Apollo 10015 / Date : 26-Jan-2004
+----------------
+
+PRSF00076752: removed memory leaks in notify() function
+
+===============================================================================
+
+Actual Version : Apollo 10014 / Date : 31-Oct-2003
+----------------
+
+PRSF00075874: improved exception handling for numEventsReady()
+
+===============================================================================
+
+Actual Version : Apollo 10013 / Date : 25-Oct-2003
+----------------
+
+PRSF00074649: [DAT::Listener] multithreaded dequeuing and new
+       	      DAT::ListenerModuleIf::receiveEvent() signature
+
+===============================================================================
+
+Actual Version : Apollo 10012 / Date : 21-Oct-2003
+----------------
+
+PRSF00072741: [DAT::Listener] Threads Created Without Using the THREADNAME macro
+
+===============================================================================
+
+Actual Version : Apollo 10011 / Date : 21-Oct-2003
+----------------
+
+PRSF00073480: propagation of PRSF00054889 (force termination of thread in
+	      constructor)
+
+===============================================================================
+
+Actual Version : Apollo 10010 / Date : 16-Oct-2003
+----------------
+
+PRSF00071706: Message Number for Plugin
+
+===============================================================================
+
+Actual Version : Apollo 10009 / Date : 03-Aug-2003
+----------------
+
+PRSF00054231: get function for unique message id for DAT::Discount
+
+===============================================================================
+
+Actual Version : 6.5 SP2 10008 / Date : 05-May-2003
+----------------
+
+PRSF00039740: Rename ListenerPlugin to Plugin
+ 
+===============================================================================
+
+Module Version: 10007  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Actual Version : 6.5 SP2 10000 / Date : 24-APR-2003
+----------------
+
+PRSF00038704: Converted to SP2 namespaces
+ 
+===============================================================================
+
+Actual Version : 6.5 10006 / Date : 22-MAR-2003
+----------------
+
+PRSF00033190: Updated to print the Formatted FLIST 
+
+===============================================================================
+
+Actual Version : 6.5 10005 / Date : 20-MAR-2003
+----------------
+
+PRSF00032208: Introduced automated backlog processing and purging of events.
+
+===============================================================================
+
+Actual Version : 6.5 10004 / Date : 19-MAR-2003
+----------------
+
+PRSF00034306: Check (during init() if queue exists and stop pipeline process if 
+              queue does not exist.
+PRSF00035122: The payload field type for LARGE_FLIST_BUF had to be changed from 
+              BLOB to CLOB to enable automatic character set conversion. 
+
+===============================================================================
+
+Actual Version : 6.5 10003 / Date : 27-FEB-2003
+----------------
+
+PRSF00033000: Added fixes for thread tracing.
+
+===============================================================================
+
+Actual Version : 6.5 10002 / Date : 25-FEB-2003
+----------------
+
+PRSF00032730: remove setStatus() guard (introduced by CO 28026) now that 
+              BAS_RegisteredObject is thread safe
+
+===============================================================================
+
+Actual Version : 6.5 10001 / Date : 31-JAN-2003
+----------------
+
+PRSF00030214: replace synchronous communication mechanism (CORBA/TAO) with
+asynchronous mechanism (Oracle AQ). events are now dequeued from an Oracle 
+AQ queue. changes to the DAT_Listener registry entry. introduction of a 
+dequeue thread, Oracle database connection. 
+
+===============================================================================
+
+Actual Version : v6.5.0 / Date : 31-DEC-2002
+----------------
+
+PRSF00028026: Propogate PRSF00027567; add a lock to the class to
+properly sync calls to BAS::RegisteredObject since it occurs from a
+corba thread and isn't thread safe
+
+$Date: 2013/05/08 03:17:20 $ 
+===============================================================================
+
+Actual Version : v4-30-05 / Date : 21-NOV-2001
+----------------
+
+PETS #41930: removed name context conflict
+
+===============================================================================
+
+Actual Version : v4-30-04 / Date : 01-NOV-2001
+----------------
+
+PETS #41102: added reload functionality and buffer check
+
+===============================================================================
+
+Actual Version : v4-30-03 / Date : 23-AUG-2001
+----------------
+
+PETS #38526: order of POID items changed.
+
+===============================================================================
+
+Actual Version : v4-30-02 / Date : 14-AUG-2001
+----------------
+
+PETS #36559: SourcePro AIX port
+
+===============================================================================
+
+Actual Version : v4-30-01 / Date : 25-JUL-2001
+----------------
+
+PETS #37466: IONA stream operators removed.
+
+===============================================================================
+
+Actual Version : v4-30-00 / Date : 12-JUL-2001
+----------------
+
+PETS #36700: Account sync implementation:
+
+- introduced the CORBA account listener
+

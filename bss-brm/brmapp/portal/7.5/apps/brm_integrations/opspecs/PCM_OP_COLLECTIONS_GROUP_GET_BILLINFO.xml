@@ -1,0 +1,122 @@
+<Opcode name="PCM_OP_COLLECTIONS_GROUP_GET_BILLINFO"
+		visibility="public"
+		transaction="required"
+		component="fm_collections"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc> 
+	<!--h:p>
+		<h:i>
+		Copyright &#169;  2012 Oracle. All rights reserved.
+		This material is the confidential property of Oracle
+		Corporation or its licensors and may be used, reproduced,
+		stored or transmitted only in accordance with a valid Oracle
+		license or sublicense agreement.
+		</h:i>
+	</h:p-->
+		For a given billinfo provides information whether it belongs to collections group or not.
+	</Doc>
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc> The account poid</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Poid name="PIN_FLD_SCOPE_OBJ" use="required"
+					mode="complete">
+				<Doc> The account or billinfo poid</Doc>
+				<ClassRef>obj://billinfo</ClassRef>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Array name="PIN_FLD_RESULTS" use="optional"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="0" 
+					minElemId="0" 
+					isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+					isRecursive="false">
+					<Doc>For each billinfo one results array is created.
+					 If billinfo is parent then total of pending receivable, name,
+					 and the details of the members with their pending receivables are provided..</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_POID" use="required"
+						mode="complete">
+						<Doc> The collections group poid</Doc>
+						<ClassRef>obj://group</ClassRef>
+					</Poid>
+					<Int name="PIN_FLD_BOOLEAN" use="required">
+						<Doc>this field specifies whether its part of group or not
+						     Values are 0 or 1. 
+					             0 - means not part of collections group.
+					             1 - means part of collections group.</Doc>
+					</Int>
+					<String name="PIN_FLD_NAME" use="optional" maxlen="255">
+						  <Doc>Name of the collections group.
+							This will be present when billinfo is parent.
+						  </Doc>
+					</String>
+
+					<Int name="PIN_FLD_COUNT" use="optional">
+						<Doc> The total number of member billinfos 
+							This will have non zero value if billinfo is parent.
+							This will be 0 for members billinfos.
+						</Doc>
+					</Int>
+					<Decimal
+						name="PIN_FLD_AMOUNT"
+						use="optional">
+						<Doc> Total pending receivable of group.
+						    using the primary currency. Only be there for parent billinfo.</Doc>
+					</Decimal>
+					<Poid name="PIN_FLD_BILLINFO" use="optional"
+						mode="complete">
+						<Doc> The collections group members poid</Doc>
+						<ClassRef>obj://group</ClassRef>
+					</Poid>
+					<Array name="PIN_FLD_MEMBERS" use="optional"
+						elemIdMode="ignored" iterationOrder="undefined"
+						minElements="0"
+						minElemId="0"
+						isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+						isRecursive="false">
+						<Doc> The group details of billinfo. Only present for parent billinfo.</Doc>
+						<Fields>
+							<Poid name="PIN_FLD_POID" use="required"
+								mode="complete">
+								<Doc> The collections group poid</Doc>
+								<ClassRef>obj://group</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_BILLINFO_OBJ" use="optional"
+								mode="complete">
+								<Doc> The collections group member poid</Doc>
+								<ClassRef>obj://group</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_PARENT_BILLINFO_OBJ" use="optional"
+								mode="complete">
+								<Doc> The collections group owners poid</Doc>
+								<ClassRef>obj://group</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_ACCOUNT_OBJ" use="optional"
+								mode="complete">
+								<Doc> The collections group poid</Doc>
+								<ClassRef>obj://group</ClassRef>
+							</Poid>
+							<Decimal
+								name="PIN_FLD_PENDING_RECV"
+								use="optional">
+								<Doc> Pending receivable of group member.
+								    using the primary currency. </Doc>
+							</Decimal>
+						</Fields>
+					</Array>
+				</Fields>
+			</Array>
+		</Fields>
+	</Output>
+</Opcode>

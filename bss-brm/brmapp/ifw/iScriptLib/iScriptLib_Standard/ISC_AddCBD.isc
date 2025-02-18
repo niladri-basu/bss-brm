@@ -1,0 +1,244 @@
+//==============================================================================
+//
+//      Copyright (c) 1998 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_PostRating
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module calculates the charge values for the BASIC-Detail record.
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//                                                                               
+//------------------------------------------------------------------------------
+// Responsible: Peter Engelbrecht
+//
+//------------------------------------------------------------------------------
+// Log:
+// 2002/06/14 pengelbr
+// Add DISCOUNTMODEL, DISCOUNTRULE to DISCOUNT_PACKET...
+// 
+// Revision 1.2  2001/06/28 13:25:51  pengelbr
+// Remove Debug reg param.
+//
+// Revision 1.1  2001/06/28 11:57:44  pengelbr
+// Initial import of PostRating script.
+//
+//==============================================================================
+
+function onDetailEdr
+{
+  Long cbdIndex;
+  Long cpIndex;
+  Long cpEntries;
+  Long dpIndex;
+
+  String accountPoid[];
+  String accountCode;
+
+  String infoString;
+
+  Long cpTokens;
+  String cpArray[];
+  String cpFields[];
+
+  Long dpTokens;
+  String dpArray[];
+  String dpFields[];
+
+  Long mode;
+
+  //----------------------------------------------------------------------------
+  // Add Assoc. Charge Breakdown Record
+  //----------------------------------------------------------------------------
+  if ( edrAddDatablock( DETAIL.ASS_CBD ) == false ) 
+  { 
+    logFormat( "ERR: failed to add ASSOCIATED_CHARGE datablock." );
+    return;
+  }
+
+  cbdIndex = edrNumDatablocks( DETAIL.ASS_CBD ) - 1;
+
+  edrString( DETAIL.ASS_CBD.RECORD_TYPE, cbdIndex ) = "981";
+  
+  //----------------------------------------------------------------------------
+  // Loop for all Assoc. Infranet Billing Records
+  //----------------------------------------------------------------------------
+  Long blockIndex;
+  Long blockEntries = edrNumDatablocks( DETAIL.ASS_PIN );
+
+  Long packetIndex;
+  Long packetEntries;
+
+  for ( blockIndex = 0 ; blockIndex < blockEntries ; blockIndex = blockIndex + 1 )
+  {
+    packetEntries = edrNumDatablocks( DETAIL.ASS_PIN.BP, blockIndex );
+
+    strSplit( accountPoid, edrString( DETAIL.ASS_PIN.ACCOUNT_POID, blockIndex ), " " );
+    edrString( DETAIL.ASS_CBD.ACCOUNT_CODE, cbdIndex ) = "0.0.0." + accountPoid[0] + "-" + accountPoid[2];
+
+    for ( packetIndex = 0 ; packetIndex < packetEntries ; packetIndex = packetIndex + 1 )
+    {
+      infoString = edrString( DETAIL.ASS_PIN.BP.PIN_INFO_STRING, blockIndex, packetIndex );
+      
+      cpTokens = strSplit( cpArray, infoString, "|" );
+      
+      cpEntries = edrNumDatablocks( DETAIL.ASS_CBD.CP, cbdIndex );
+
+      // Add necessary Charge Packets per Billing Record
+      for ( cpIndex = 0 ; cpIndex < ( cpTokens - cpEntries ) ; cpIndex = cpIndex + 1 )
+      {
+        if ( edrAddDatablock( DETAIL.ASS_CBD.CP, cbdIndex ) == false ) 
+        { 
+          logFormat( "ERR: failed to add CHARGE_PACKET datablock to DETAIL.ASS_CBD" );
+          return;
+        }
+      }
+
+      if ( strMatch( infoString, "680.*" ) != "" )
+      {
+        mode = 680;
+      }
+      else if ( strMatch( infoString, "690.*" ) != "" )
+      {
+        mode = 690;
+      }
+      else
+      {
+        logFormat( "ERR: invalid record type in Info String." );
+        return;
+      }
+
+      for ( cpIndex = 0 ; cpIndex < cpTokens ; cpIndex = cpIndex + 1 )
+      {
+        switch ( mode )
+        {
+        case 680:
+          {
+            // Split charge packets into fields
+            strSplit( cpFields, cpArray[cpIndex], "," );
+
+            // Assign field values
+            edrString( DETAIL.ASS_CBD.CP.RATEPLAN_CODE, cbdIndex, cpIndex ) = cpFields[1];
+            edrString( DETAIL.ASS_CBD.CP.RATEPLAN_TYPE, cbdIndex, cpIndex ) = cpFields[2];
+            edrString( DETAIL.ASS_CBD.CP.ZONEMODEL_CODE, cbdIndex, cpIndex ) = cpFields[3];
+            edrString( DETAIL.ASS_CBD.CP.SERVICE_CODE_USED, cbdIndex, cpIndex ) = cpFields[4];
+            edrString( DETAIL.ASS_CBD.CP.SERVICE_CLASS_USED, cbdIndex, cpIndex ) = cpFields[5];
+            edrString( DETAIL.ASS_CBD.CP.IMPACT_CATEGORY, cbdIndex, cpIndex ) = cpFields[6];
+            edrString( DETAIL.ASS_CBD.CP.DISTANCE, cbdIndex, cpIndex ) = cpFields[7];
+            edrString( DETAIL.ASS_CBD.CP.TIMEMODEL_CODE, cbdIndex, cpIndex ) = cpFields[8];
+            edrString( DETAIL.ASS_CBD.CP.TIMEZONE_CODE, cbdIndex, cpIndex ) = cpFields[9];
+            edrString( DETAIL.ASS_CBD.CP.DAY_CODE, cbdIndex, cpIndex ) = cpFields[10];
+            edrString( DETAIL.ASS_CBD.CP.TIME_INTERVAL_CODE, cbdIndex, cpIndex ) = cpFields[11];
+            edrString( DETAIL.ASS_CBD.CP.PRICEMODEL_CODE, cbdIndex, cpIndex ) = cpFields[12];
+            edrString( DETAIL.ASS_CBD.CP.PRICEMODEL_TYPE, cbdIndex, cpIndex ) = cpFields[13];
+            edrString( DETAIL.ASS_CBD.CP.RESOURCE, cbdIndex, cpIndex ) = cpFields[14];
+            edrString( DETAIL.ASS_CBD.CP.RUMGROUP, cbdIndex, cpIndex ) = cpFields[15];
+            edrString( DETAIL.ASS_CBD.CP.RUM, cbdIndex, cpIndex ) = cpFields[16];
+            edrString( DETAIL.ASS_CBD.CP.NETWORK_OPERATOR_CODE, cbdIndex, cpIndex ) = cpFields[17];
+            edrString( DETAIL.ASS_CBD.CP.PIN_LOGIN_ALIAS, cbdIndex, cpIndex ) = cpFields[18];
+            edrString( DETAIL.ASS_CBD.CP.NETWORK_OPERATOR_BILLINGTYPE, cbdIndex, cpIndex ) = cpFields[19];
+            edrString( DETAIL.ASS_CBD.CP.CHARGE_TYPE, cbdIndex, cpIndex ) = cpFields[20];
+            edrString( DETAIL.ASS_CBD.CP.TRUNK_USED, cbdIndex, cpIndex ) = cpFields[21];
+            edrString( DETAIL.ASS_CBD.CP.POI_USED, cbdIndex, cpIndex ) = cpFields[22];
+            edrString( DETAIL.ASS_CBD.CP.PRODUCTCODE_USED, cbdIndex, cpIndex ) = cpFields[23];
+            edrDate( DETAIL.ASS_CBD.CP.CHARGING_START_TIMESTAMP, cbdIndex, cpIndex ) = strToDate(cpFields[24]);
+            edrDecimal( DETAIL.ASS_CBD.CP.CHARGEABLE_QUANTITY_VALUE, cbdIndex, cpIndex ) = strToDecimal(cpFields[25]);
+            edrDecimal( DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_VALUE, cbdIndex, cpIndex ) = strToDecimal(cpFields[26]);
+            edrString( DETAIL.ASS_CBD.CP.ROUNDED_QUANTITY_UOM, cbdIndex, cpIndex ) = cpFields[27];
+            edrDecimal( DETAIL.ASS_CBD.CP.EXCHANGE_RATE, cbdIndex, cpIndex ) = strToDecimal(cpFields[28]);
+            edrString( DETAIL.ASS_CBD.CP.EXCHANGE_CURRENCY, cbdIndex, cpIndex ) = cpFields[29];
+            edrString( DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE, cbdIndex, cpIndex ) = cpFields[30];
+            edrDecimal( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE, cbdIndex, cpIndex ) = strToDecimal(cpFields[31]);
+            edrString( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_CURRENCY, cbdIndex, cpIndex ) = cpFields[32];
+            edrString( DETAIL.ASS_CBD.CP.CHARGED_TAX_TREATMENT, cbdIndex, cpIndex ) = cpFields[33];
+            edrDecimal( DETAIL.ASS_CBD.CP.CHARGED_TAX_RATE, cbdIndex, cpIndex ) = strToDecimal(cpFields[34]);
+            edrString( DETAIL.ASS_CBD.CP.CHARGED_TAX_CODE, cbdIndex, cpIndex ) = cpFields[35];
+            edrString( DETAIL.ASS_CBD.CP.USAGE_GL_ACCOUNT_CODE, cbdIndex, cpIndex ) = cpFields[36];
+            edrString( DETAIL.ASS_CBD.CP.REVENUE_GROUP_CODE, cbdIndex, cpIndex ) = cpFields[37];
+            edrString( DETAIL.ASS_CBD.CP.DISCOUNTMODEL_CODE, cbdIndex, cpIndex ) = cpFields[38];
+            edrDecimal( DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_AMOUNT_VALUE, cbdIndex, cpIndex ) = strToDecimal(cpFields[39]);
+            edrDecimal( DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_QUANTITY_VALUE, cbdIndex, cpIndex ) = strToDecimal(cpFields[40]);
+            edrString( DETAIL.ASS_CBD.CP.GRANTED_DISCOUNT_QUANTITY_UOM, cbdIndex, cpIndex ) = cpFields[41];
+            edrString( DETAIL.DISCOUNT_KEY ) = cpFields[42];
+          }
+          break;
+
+        case 690:
+          {
+            // Split charge packets into discount packets
+            dpTokens = strSplit( dpArray, cpArray[cpIndex], ";" );
+            // append discount packet blocks to charge packet
+            for ( dpIndex = 0 ; dpIndex < dpTokens ; dpIndex = dpIndex + 1 )
+            {
+              if ( edrAddDatablock( DETAIL.ASS_CBD.CP.DP, cbdIndex, cpIndex ) == false ) 
+              { 
+                logFormat( "ERR: failed to add DISCOUNT_PACKET datablock to DETAIL.ASS_CBD.CP" );
+                return;
+              }
+
+              // split discount packet into fields
+              strSplit( dpFields, dpArray[dpIndex], "," );
+
+              // assign field values
+                edrDecimal( DETAIL.ASS_CBD.CP.DP.CREATED, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[1]);                   
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.OBJECT_ID, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[2]);                 
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.OBJECT_TYPE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[3]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.OBJECT_ACCOUNT, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[4]);            
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.OBJECT_OWNER_ID, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[5]);           
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.OBJECT_OWNER_TYPE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[6]);         
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.DISCOUNTMODEL, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[7]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.DISCOUNTRULE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[8]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.DISCOUNTSTEPID, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[9]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.DISCOUNTBALIMPACTID, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[10]);		
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.TAX_CODE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[11]);				
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.GRANTED_AMOUNT, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[12]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.GRANTED_QUANTITY, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[13]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.AMOUNT, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[14]);				
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.QUANTITY, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[15]);				
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.QUANTITY_FROM, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[16]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.QUANTITY_TO, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[17]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.VALID_FROM, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[18]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.VALID_TO, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[19]);				
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.BALANCE_GROUP_ID, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[20]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.RESOURCE_ID, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[21]);   			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.ZONEMODEL_CODE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[22]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.IMPACT_CATEGORY, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[23]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.SERVICE_CODE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[24]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.TIMEZONE_CODE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[25]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.TIMEMODEL_CODE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[26]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.SERVICE_CLASS, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[27]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.PRICEMODEL_CODE, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[28]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.RUM, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[29]);				
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.RATETAG, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[30]);				
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.RATEPLAN, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[31]);				
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.GLID, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[32]);				
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.NODE_LOCATION, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[33]);             
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.INTERN_PACKET_INDEX, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[34]);		
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.INTERN_SRC_PACKET_INDEX, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[35]);		
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.INTERN_RUM_ID, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[36]);			
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.INTERN_DISC_MATCH_FACTOR, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[37]);		
+		edrDecimal( DETAIL.ASS_CBD.CP.DP.INTERN_TOTAL_MATCH_FACTOR, cbdIndex, cpIndex, dpIndex ) = strToDecimal(dpFields[38]); 
+            }
+          }
+          break;
+        }
+      }
+
+      // reverse monetary balance impacts.
+      edrDecimal( DETAIL.ASS_PIN.BP.PIN_AMOUNT, blockIndex, packetIndex ) =
+        0.0 - edrDecimal( DETAIL.ASS_PIN.BP.PIN_AMOUNT, blockIndex, packetIndex );
+    
+      edrDecimal( DETAIL.ASS_PIN.BP.PIN_DISCOUNT, blockIndex, packetIndex ) = 
+        0.0 - edrDecimal( DETAIL.ASS_PIN.BP.PIN_DISCOUNT, blockIndex, packetIndex );
+    }
+  }
+} // end onDetailEdr + end iScript

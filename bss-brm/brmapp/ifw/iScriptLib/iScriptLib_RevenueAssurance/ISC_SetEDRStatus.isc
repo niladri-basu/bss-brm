@@ -1,0 +1,72 @@
+//==============================================================================
+//
+//      Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+//      
+//      This material is the confidential property of Oracle Corporation or its
+//      licensors and may be used, reproduced, stored or transmitted only in
+//      accordance with a valid Oracle license or sublicense agreement.
+//
+//-------------------------------------------------------------------------------
+// Block: ISC_SetEDRStatus
+//-------------------------------------------------------------------------------
+// Module Description:
+//   This script sets the EDR status.(Success / Suspense / Duplicate / Discard)
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible: 
+//
+//------------------------------------------------------------------------------
+
+function onDetailEdr
+{
+	String errorStatus;
+	// Adding the ARA block
+	if ( edrNumDatablocks(DETAIL.ASS_ARA_EXT) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+
+	if ( edrNumErrors() == 0 or edrMaxSeverity() <= 1)
+		errorStatus = "Success"; 
+
+	else if ( edrHasError("INF_EDR_DISCARDED_INFO") == true )
+		errorStatus = "Discarded"; 
+
+	else if ( edrHasError("INF_EDR_SKIPPED_INFO") == true )
+		errorStatus = "Skipped"; 
+
+	else if ( edrHasError("INF_DUPLICATE_EDR") == true )
+		errorStatus = "Duplicate"; 
+
+	else
+		errorStatus = "Suspense"; 
+
+	edrString(DETAIL.ASS_ARA_EXT.EDR_STATUS, 0) = errorStatus;
+}
+
+function onInvalidDetailEdr
+{
+	String errorStatus;
+
+	// Adding the ARA block
+	if ( edrNumDatablocks(DETAIL.ASS_ARA_EXT) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+
+	if ( edrHasError("INF_EDR_DISCARDED_INFO") == true )
+		errorStatus = "Discarded";
+	
+	else if ( edrHasError("INF_EDR_SKIPPED_INFO") == true )
+		errorStatus = "Skipped";
+
+	else if ( edrHasError("INF_DUPLICATE_EDR") == true )
+		errorStatus = "Duplicate";
+	
+	else
+		errorStatus = "Suspense";
+
+	edrString(DETAIL.ASS_ARA_EXT.EDR_STATUS, 0) = errorStatus;
+}

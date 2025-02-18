@@ -1,0 +1,111 @@
+==============================================================================
+FCT_ApplyBalance
+------------------------------------------------------------------------------
+	Module Release Notes
+------------------------------------------------------------------------------
+==============================================================================
+Module Version: v10030 / Date : 23-MAR-2011
+bug11835464: QUANTIFICATION FOR BG LOCK TO USE IGNOREEDRONLOCK
+When IgnoreEdrOnLock is set to false, a message is added to inform that EDR
+would be retried as it is waiting for the BG lock to get released.
+=============================================================================
+Module Version: v10029 / Date : 12-AUG-2010
+Bug 9902678 - ENHANCEMENT FOR ADDING FEATURE "IGNOREONLOCK" IN DISCOUNTING
+=============================================================================
+Module Version: v10028 / Date : 08-SEP-2009
+BUG8718183: P-8594046: [BRP VPU][RATING]FCT_EventOrder XML file generation naming inconsistent
+Descr:	Using the same fix as in the EventOrder plugin
+==============================================================================
+Module Version: v10027 / Date : 18-NOV-2008
+bug7012156 "P-6991701 [VPR] - FCT_APPLYBALANCE CANCELS TRANSACTION ON DEADLOCK W/IGNOREE..."
+==============================================================================
+Module Version: v10026 / Date : 30-OCT-2008
+bug7302358 "P-7045818 BAD BUCKET VALID PERIOD FOR SHARING CHARGE GROUP OWNER'S BALANCE."
+==============================================================================
+Module Version: v10025 / Date : 28-AUG-2008
+bug7361542 "CREDIT CONTROL AND NOTIFICATION - FCT APPLY BALANCE CHANGES"
+DESCR : "Added code to read additional registry entry related to Credit Control.
+	Checks if CreditControl business params is enabled. Introduced new class
+	NotificationDataElement which will be populated by DAT:Balance plugin
+	if the update to balance breahes the threshold. At the end it creates
+	notification file if any breach is found."
+==============================================================================
+Module Version: v10024 / Date : 05-OCT-2007
+bug6474785 "Fixed Compilation Failure In AIX"
+==============================================================================
+Module Version: v10023 / Date : 22-DEC-2006
+PRSF00241962 "Patch 4538: Pipleine is giving core dump after installing patch 4538"
+==============================================================================
+Module Version: v10022 / Date : 06-OCT-2006
+PRSF00234843 "Providing OLD validity info for bk-out/re-rate."
+==============================================================================
+Module Version: v10021 / Date : 24-AUG-2006
+PRSF00228176 "Removing the tracking of delayedBal."
+==============================================================================
+Module Version: v10020 / Date : 08-AUG-2006
+PRSF00226712 "hardcoded reference to pipeline name in a registry from FCT_ApplyBalance"
+==============================================================================
+Module Version: v10019 / Date : 08-Aug-2006
+PRSF00215438  "ApplyBalance ~40% slower than 72tp3" 
+==============================================================================
+Module Version: v10018 / Date : 27-JUL-2006
+PRSF00223609 "Upgrade GSM Rating Pipeline hangs" 
+==============================================================================
+Module Version: v10017 / Date : 22-JUL-2006
+PRSF00223607 "After installation of new patch for pipeline rating is not correctly applied"
+==============================================================================
+Module Version: v10016 / Date : 14-JUL-2006
+PRSF00219264 "Da Vincii Code Clean Up:--pipeline_discount Please set isValidDetail false when you set error above warning"
+==============================================================================
+Module Version: v10015 / Date : 24-MAY-2006
+PRSF00214339 "Configurable validty implementation."
+==============================================================================
+Module Version: v10014 / Date : 07-OCT-2005
+PRSF00183834 "Pipeline hangs in FCT_Discount when processing certain EDRs emitted by CallAssembling."
+==============================================================================
+Module Version: v10013 / Date : 29-AUG-2005
+PRSF00179707 "Change atoi() and atol() to atoi64() for 64-bit Poid Compatibility"
+==============================================================================
+Module Version: v10012 / Date : 20-JUN-2005
+PRSF00169966 "Fix warning messages in the Windows 32-bit build displays that really should be treated as errors"
+==============================================================================
+Module Version: v10011 / Date : 15-JUN-2005
+PRSF00171412 "SMS CDR's processed in single file does not rate successfully"
+==============================================================================
+Module Version: v10010 / Date : 30-MAY-2005
+PRSF00170256 "Reserve some Message NOs and use them in FCT_ApplyBalance"
+==============================================================================
+Module Version: v10009 / Date : 22-MAR-2005
+PRSF00158925  "libumeme coredumps when using too many threads"
+==============================================================================
+Module Version: v10008 / Date : 11-NOV-2004
+PRSF00136879 "Changes related to EDR transactions"
+==============================================================================
+Module Version: v10007 / Date : 18-AUG-2004
+PRSF00125661  "Refactor DAT_BalanceBatch code in order to remove static link
+               between DAT_BalanceBatch and FCT_Discount."
+==============================================================================
+Module Version: v10006 / Date : 23-JUL-2004
+PRSF00121862  "FCT/ApplyBalance breaking the Windows ia64_o"
+==============================================================================
+Module Version: v10005 / Date : 28-JUN-2004
+PRSF00110425  "JP1005 - Delayed CDRs and automatic rollover"
+==============================================================================
+Module Version: v10004 / Date : 08-Jun-2004
+PRSF00114530 "Regression: Record 607 missing with Record 605 on consuming 
+              nonexistence bucket"
+==============================================================================
+Module Version: v10003 / Date : 31-May-2004
+PRSF00114591 "UpdateBalance problem for consumption case"
+==============================================================================
+Module Version: v10002 / Date : 10-May-2004
+PRSF00109916 "Create sub-balance for currency resource in ApplyBalance plugin"
+==============================================================================
+Module Version: v10001 / Date : 05-May-2004
+PRSF00109117 "Fix FCT/ApplyBalance message file"
+==============================================================================
+Module Version: v10000 / Date : 26-Apr-2004
+PRSF00106654 "JP2016D: FCT/ApplyBalance plugin to impact the balances in Batch mode"
+
+==============================================================================
+

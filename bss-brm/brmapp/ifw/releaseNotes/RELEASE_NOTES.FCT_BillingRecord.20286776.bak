@@ -1,0 +1,729 @@
+================================================================================
+FCT_InfranetRecord
+--------------------------------------------------------------------------------
+Module Release Notes 
+--------------------------------------------------------------------------------
+$RCSfile: RELEASE_NOTES.FCT_BillingRecord $
+$Revision: /cgbubrm_7.5.0.pipeline/2 $
+$Author: arcmisra $
+$Date: 2013/12/20 11:59:42 $ 
+================================================================================
+Module Version : 7.5 10054
+----------------
+
+Date : 21-Nov-2013
+---------------
+
+Change Order : bug17845539
+----------------
+Short Description :
+----------------
+If the CP or DP doesn't have GL information and there is also TP,BillingRecord was assigning 
+a very large junk value to GL in BP created by it.Later on, that event was not able to read from
+Portalbase.This situation may occur when prerated events are loaded through pipeline.As a solution 
+to this issue, null pointer check has been introduced so that in case GL information is not 
+in CP or DP, BP will have default GL value 0 with warning message in stream log.
+================================================================================
+Module Version : 7.5 10053
+----------------
+
+Date : 10-Jan-2013
+---------------
+
+Change Order : bug16089031
+----------------
+Short Description :
+----------------
+Changes to support following features,
+1. Flexible item assignment per balance impact
+  Achieved through an enhancement to the existing customization of item assignment
+2. Split sponsored charges per charge sharing member along with flexible sponsor item type
+  Controlled through a new business parameter 'split_sponsor_item_by_member'
+
+================================================================================
+Module Version : 7.4 10052
+----------------
+
+Date : 21-Apr-2010
+---------------
+
+Change Order : bug9587885
+----------------
+Short Description :
+----------------
+When balance monitoring is enabled and rerating is done, event sub balances are getting 
+placed wrongly resulting in wrong rerating.
+
+================================================================================
+Module Version : 7.4 10051
+----------------
+
+Date : 02-Jul-2009
+---------------
+
+Change Order : bug8651668  
+----------------
+Short Description :
+----------------
+Added Pin_Percent Field in the Bal Impact packet
+
+================================================================================
+Module Version : 7.4 10050
+----------------
+
+Date : 10-Jun-2009
+---------------
+
+Change Order : bug8529570  
+----------------
+
+Short Description :
+----------------
+Implementation of FSM to get itemPoid when Tag is not provided and there is no pre-created item.
+================================================================================
+Module Version : 7.4 10049
+----------------
+
+Date : 02-Jun-2009
+---------------
+
+Change Order : bug8556059  
+----------------
+
+Short Description :
+----------------
+Deleted some unused variables.
+================================================================================
+Module Version : 7.4 10048
+----------------
+
+Date : 27-Feb-2009
+---------------
+
+Change Order : bug8413579 
+----------------
+
+Short Description :
+----------------
+While updating discount having multiple sub-balance, we were incorrectly assigning the
+vector index and updating the first SUB_BAL block everytime.
+================================================================================
+Module Version : 7.4 10047
+----------------
+
+Date : 28-Jan-2009
+---------------
+
+Change Order : bug8201638
+----------------
+
+Short Description :
+----------------
+While updating discount sub-balance, we were incorrectly accessing the 
+multiple ASS_PIN.SBI.SB blocks through the current vector.
+================================================================================
+Module Version: 10046  7.4  06-Aug-2008
+bug7303680:
+EAL - PROVIDE IXT_PORTALCONFIG, CHANGE BILLINGRECORD TO POPULATE CACHE TYPE
+Copy the object cache type from BP into the detail record for all cache types and not just 0
+================================================================================
+Module Version: 10045  7.3.2   28-Nov-2007
+bug6601323:
+RERATING USING EET FOR ROLLOVER GIVES INCORRECT VALUE FOR FREE SECONDS.
+While updating discount sub-balance, we were incorrectly accessing the 
+multiple ASS_PIN.SBI.SB blocks through the current vector.
+================================================================================
+Module Version: 10044  7.3.1  20-AUG-2007
+bug6350754:
+Validities of the non-currency resource of discount sub-balance will be always copied
+into sub-balance block(607 block) irrespective of rec-id.
+================================================================================
+Module Version: 10043  DaVinci  08-May-2007
+bug6012439:
+pipeline discounting needs to create discount bi with proper RUM ID in event
+================================================================================
+Module Version: 10042  DaVinci  27-Apr-2007
+bug6002785:
+NET_QUANTITY is not populated in the EDR container's DETAIL block for single RUM rated events
+================================================================================
+Module Version: 10041  DaVinci  05-Sep-2006
+PRSF00231846:
+1. 605 and 607 records are not created if discount sub-balance is not created.
+2. Balance monitor packet wouldn't be created for non-currency resources.
+================================================================================
+Module Version: 10040  DaVinci  28-Aug-2006
+PRSF00230839 1) Multiple iteration issues have been taken care of
+2) In case of non currency resource deferred amount shouldn't be populated
+================================================================================
+Module Version: 10039  DaVinci  17-Aug-2006
+PRSF00229238 In case Orig Resource id of CP is blank, it will try to find out the
+resource-id from currency module based on the CPs exchange currency
+================================================================================
+Module Version: 10038  DaVinci  08-Aug-2006
+PRSF00224728 Duplicate Charge packtes generated by FCT_EXchange Rate
+================================================================================
+Module Version: 10037  DaVinci  18-July-2006
+PRSF00219262: Da Vincii Code Clean Up: set isValidDetail false when you set error. 
+================================================================================
+Module Version : Davinci 10036
+----------------
+
+Date : 13-JUL-2006
+----------------
+
+Change Order :  PRSF00223540
+----------------
+
+Short Description :
+-------------------
+Billing_Record does not set object_cache_type in case of discount sharing.
+================================================================================
+Module Version : Davinci 10035
+----------------
+
+Date : 27-JUN-2006
+----------------
+
+Change Order :  PRSF00220121
+----------------
+
+Short Description :
+-------------------
+Provide an iScript that split the CDR to 2 different ouput streams 
+in case of convergent system
+================================================================================
+Module Version : 7.3 10034
+PRSF00202153  "Platform Prepaid/Postpaid Distincion in balance plugin"
+================================================================================
+Module Version : 7.3 10034
+----------------
+
+Date : 25-APR-2006
+----------------
+
+Change Order :  PRSF00207742
+----------------
+
+Short Description :
+-------------------
+Configurable Validity feature changes.
+Mapped the GRANTOR,VALID_FROM_DETAILS and VALID_TO_DETAILS field from 
+ASS_CBD.DP.SUB_BALANCE to ASS_PIN.SBI.SB.
+================================================================================
+Module Version : 7.3 10033
+----------------
+
+Date : 16-APR-2006
+----------------
+
+Change Order :  PRSF00204026
+----------------
+
+Short Description :
+-------------------
+BillingRecord Module supports default RATEPLAN_TYPE 'R'.One optional
+registry parameter has been added so that RATEPLAN_TYPE of CP mentioned in that
+will also be supported.This is required for roaming settlement pipeline where RATEPLAN_TYPE
+will be 'W'.For future need allow multiple RATEPLAN_TYPE in the registry with 
+a comma separated.
+AddInfranetBillingRecord
+{
+   ModuleName = FCT_BillingRecord
+   Module
+   {
+    .....
+    RatePlanType = .. //optional parameter in the registry
+   }
+}
+================================================================================
+Module Version : 7.3 10032
+----------------
+
+Date : 25-MAR-2006
+----------------
+
+Change Order :  PRSF00192602
+----------------
+
+Short Description :
+-------------------
+BillingRecord Module supports default ASS_CBD record type 981.One optional
+registry parameter has been added so that record type of ASS_CBD mentioned in that
+will also be supported.This is required for roaming settlement pipeline where ASS_CBD
+record type will be 980.For future need allow multiple record type in the registry with 
+a comma separated.
+AddInfranetBillingRecord
+{
+   ModuleName = FCT_BillingRecord
+   Module
+   {
+    .....
+    ChargeBreakDownRecordType = .. //optional parameter in the registry
+   }
+}
+================================================================================
+Module Version : 7.3 10031
+----------------
+
+Date : 28-JAN-2006
+----------------
+
+Change Order :  PRSF00187903
+----------------
+
+Short Description :
+-------------------
+Replace NodeLocation with OfferingPoid.
+
+================================================================================
+Module Version : 7.2 10030
+----------------
+
+Date : 24-AUG-2005
+----------------
+
+Change Order :  PRSF00180716
+----------------
+
+Short Description :
+-------------------
+W2-PPL-MS Pipeline populates DETAIL.ASS_PIN.SBI.SB.VALID_FROM incorrectly
+Fixed: set the VALID_FROM to current time using the UTC time zone.
+================================================================================
+Module Version : 7.2 10029
+----------------
+
+Date : 15-JUL-2005
+----------------
+
+Change Order :  PRSF00176803
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription: W2-PPL-MS Pipeline populates 
+DETAIL.ASS_PIN.SBI.SB.VALID_FROM incorrectly
+Fixed: set the zero time using the UTC time zone.
+Due to AscDateUnix() treating all negative value as 0, this bug was never surfaced.
+================================================================================
+Module Version : 7.0_EBF 10027
+----------------
+
+Date : 18-MAY-2005
+----------------
+
+Change Order :  PRSF00168776
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription: BalancePackets_Sums_2ChargePackets_InCaseofDifferentRums
+Fixed: Create the RUM Map in FCT_MainRating and create separate BP 
+       in FCT_BillingRecord for different RUMs
+       Add RUM_NAME to the ASS_PIN (900) record in case of single RUM.
+================================================================================
+Module Version : 7.2_EA 10026
+----------------
+
+Date : 04-APR-2005
+----------------
+
+Change Order :  PRSF00162170
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription: AMS--New Pipe Line problem for delayed events for Multiple mon
+itors.
+Fixed:  Call BAS::String::replace(...) instead of BAS::String::append(...) to overwirte
+the old values.  This is a propagation.
+================================================================================
+Module Version : Velocity 10025
+----------------
+
+Date : 16-MAR-2005
+----------------
+
+Change Order :  PRSF00158751
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription: passthrough rating leads to problem in REL.
+Earlier Billing record was ignoring the charge packets that have a price model
+type tagged as passthrough. Considered these packets while generating balance impacts.
+
+================================================================================
+Module Version : Velocity 10024
+----------------
+
+Date : 18-MAR-2005
+----------------
+
+Change Order :  PRSF00157950
+----------------
+
+Short Description :
+-------------------
+Change Order Desription:
+BMON:  Propagate all Balance Monitoring changes from 7.0_EBF to Velocity.
+The propagation includes the following change orders.
+----------------
+Change Order :  PRSF00156462
+----------------
+Short Description :
+-------------------
+Change Order Desription:
+BMON: For a sponsored and sponsoree account monitor is updated wrongly.
+----------------
+Change Order :  PRSF00156459
+----------------
+Short Description :
+-------------------
+Change Order Desription:
+BMON : PIN_FLD_VALID_FROM field is showing <null> instead of event time for rated CDR's.
+----------------
+Change Order :  PRSF00156461
+----------------
+Short Description :
+-------------------
+Change Order Desription:  
+BMON: In rerating pipeline, creating the MSBI block from the backout event's SBI.
+In rerating pipeline, creating the MSBI block from the backout event's SBI.
+There are 2 INFRANET billing records in rerating pipeline.
+The MSBI block should be created from the rerated billing record but not from the backout billing record.
+----------------
+Change Order :  PRSF00156456
+----------------
+Short Description :
+-------------------
+Change Order Desription:  
+BMON: No /balace_group/monitor records is found in the edr out file.
+(Invalid account and balance group poid).
+Fix: Will expect the BALANCE_GROUP_ID, MONITOR_OWNER_ACCT_ID and MONITOR_OWNER_ID
+in the form of db_id.
+Also change the monitor poid to have the type of /balance_group/monitor
+================================================================================
+Module Version : Apollo 10020
+----------------
+
+Date : 16-JAN-2005
+----------------
+
+Change Order :  PRSF00150371
+----------------
+
+Short Description :
+-------------------
+Change Order Desription:  
+Regression:In Pipeline edr out file two balance groups are impacted
+Fix: Reinitialize the FCT_BillingRecord for each Edr.
+================================================================================
+Module Version : Apollo 10019
+----------------
+
+Date : 15-JAN-2005
+----------------
+
+Change Order :  PRSF00150246
+----------------
+
+Short Description :
+-------------------
+Change Order Desription:  
+Regression:Rerating pipeline does not puts valid info at record 900
+
+================================================================================
+Module Version : Apollo 10018
+----------------
+
+Date : 13-JAN-2005
+----------------
+
+Change Order :  PRSF00149854
+----------------
+
+Short Description :
+-------------------
+Change Order Desription:  
+BMON: Fixing BillingRecord using the wrong iterator for sub balance impact.
+Have to call iter.reset(edr) to reset the iterator.  Also change the iterator
+name to make the code more readable.
+
+================================================================================
+Module Version : Apollo 10017
+----------------
+
+Date : 06-JAN-2005
+----------------
+
+Change Order :  PRSF00148644
+----------------
+
+Short Description :
+-------------------
+Change Order Desription:  BMON - Change for the BillingRecord for the BM. 
+Balance Monitoring: Modify the BillingRecord to produce the Monitor Packets
+based on the Balance Packets and the Monitor lists.
+
+================================================================================
+Module Version : Apollo 10016
+----------------
+
+Date : 26-MAY-2004
+----------------
+
+Change Order :  PRSF00112105
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:  For Least Cost Rating feature: if the charge packet 
+record type is of "Saving charge" type, the contributor field of the sub balance 
+of the balance group is set to the product poid.
+
+
+================================================================================
+Module Version : Apollo 10015
+----------------
+
+Date : 23-JUN-2004
+----------------
+
+Change Order :  PRSF00117730
+----------------
+
+Short Description : 
+-------------------
+Change Order  Description:  Handle item assignment for sponsorship cases.
+===============================================================================
+Module Version : Apollo 10014
+----------------
+
+Date : 03-JUN-2004
+----------------
+
+Change Order :  PRSF00116113
+----------------
+
+Short Description :
+-------------------
+Change Order  Description: remove idxCustAItemPoidM, accessing SERVICE_ITEM_POID 
+in EDR container, as it's not been used. 
+
+================================================================================
+Module Version : Apollo 10013
+----------------
+
+Date : 03-JUN-2004
+----------------
+
+Change Order :  PRSF00114654
+----------------
+
+Short Description :
+-------------------
+Change Order  Description: Read the SPONSOR_ITEM_TAG from EDR container and passon to
+DAT_ItemAssign to get the Item Poid.
+
+================================================================================
+Module Version : Apollo 10012
+----------------
+
+Date : 02-JUN-2004
+----------------
+
+Change Order :  PRSF00111664
+----------------
+
+Short Description :
+-------------------
+Change Order  Description:  Make changes to call DAT_ItemAssign, instead of DAT_Account
+to get the Item Poid.  
+
+================================================================================
+Module Version :  10011  6.7_FP2  3-June-2004  sprakash
+PRSF00114610: NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+
+================================================================================
+Module Version : Apollo 10010
+----------------
+
+Date : 25-MAY-2004
+----------------
+
+Change Order :  PRSF00111405
+----------------
+
+Short Description : 
+-------------------
+Change Order  Description:  Make changes to populate the new field PREEMPTED_BAL
+in SUB BAL block in SUB_BAL_IMPACT in  Associated Infranet Billing record.   
+
+================================================================================
+Module Version : Apollo 10009
+----------------
+
+Date : 24-OCT-2003
+----------------
+
+Change Order :  PRSF00074200
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Fill in pin_impact_type under balance_packet; also takes an 
+optional RatingPipeline registry to determine whether its' for rating or re-rating.
+
+================================================================================
+================================================================================
+Module Version : Apollo 10008
+----------------
+
+Date : 16-OCT-2003
+----------------
+
+Change Order :  PRSF00071706
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Message Numbers for Plugin 
+
+================================================================================
+
+Module Version : Apollo 10007
+----------------
+	      
+Date : 1-Aug-2003
+----------------
+
+New Features   : new FCT_BillingRecord for Multiple balances strucutre
+----------------
+
+Change Order :  PRSF00053541
+----------------
+
+Short Description :
+-------------------
+ Re-write and simplify the logic: pin_info_string generation removed; priceModelType filter
+	added; use DAT_currency instead of resourceMap; enhanced for Apollo multi-balances 
+	structure.
+ 
+================================================================================
+
+Module Version : 6.5 SP1 10006
+----------------
+	      
+Date : 30-Apr-2003
+----------------
+
+Change Order :  PRSF00039306
+----------------
+
+Short Description :
+-------------------
+ Update to use namespaces.
+ 
+================================================================================
+Module Version : 6.5 SP1 10005
+----------------
+	      
+Date : 10-Apr-2003
+----------------
+
+Change Order :  PRSF00037422
+----------------
+
+Short Description :
+-------------------
+ FCT_BillingRecord contains unguarded global static variable
+================================================================================
+
+Module Version : 6.5 SP1 10004
+----------------
+
+Date : 20-Mar-2003
+----------------
+
+Change Order :  PRSF00031632
+----------------
+
+Short Description :
+-------------------
+ FCT_BillingRecord contains lots of lines that do string compares to "xxxx". 
+ This is very bad for performance
+
+================================================================================
+
+Module Version : 6.5 SP1 10003
+----------------
+
+Date : 18-March-2003
+----------------
+
+Change Order :   PRSF00033036 
+----------------
+
+Short Description :
+-------------------
+This change order is to reduce the memory consumption of account discount balances 
+by removing CREDIT_UNIT, DEBIT_UNIT and LOST_UNIT,  and merging GRANTED_CHARGE and 
+GRANTED_QUANTITY. 
+
+================================================================================
+
+Module Version : 6.5 SP1 10002
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+================================================================================
+Current Version : 6.5_EBF / Date : 30-Jan-2003
+-----------------
+
+Notes          
+CO PRSF00029717: The amount in the billing record's balance packet should be 
+                 discounted amount. This amount is stored in event's balance
+                 balance impact. This value should be equal to the amount 
+                 impacted to the account. 
+
+================================================================================
+
+Current Version : v4-30-05 / Date : 13-Nov-2001
+-----------------
+
+Notes          :
+----------------
+
+PETS #41551 - Integrate fails to populate the correct account poid.
+
+================================================================================
+
+Current Version : v4-30-04 / Date : 09-Nov-2001
+-----------------
+
+Notes          :
+----------------
+
+PETS #41401 - The output EDR from Integrate doesn't have the correct
+              entry for Product Poid.
+
+================================================================================
+
+Current Version : v4-30-02 / Date : 09-Nov-2001
+-----------------
+
+Notes          :
+----------------
+
+- Initial revision
+
+================================================================================

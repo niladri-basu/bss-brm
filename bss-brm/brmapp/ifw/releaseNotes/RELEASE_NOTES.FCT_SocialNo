@@ -1,0 +1,398 @@
+========================================================================================
+FCT_SocialNo
+----------------------------------------------------------------------------------------
+Module Release Notes 
+----------------------------------------------------------------------------------------
+================================================================================
+Module Version : 7.4 10009
+----------------
+Date : 11-Nov-2010
+----------------
+Change Order :  bug10077369
+----------------
+Short Description :
+-------------------
+An ECR to initialize the Data-Plugins, Pipelines and the Function Plugins in parallel.
+================================================================================
+
+Module Version: 10008  7.4  29-Oct-2008
+bug7302252: Registry update should return true when reload is successful.
+
+================================================================================
+
+Module Version: 10007  7.4  26-Jun-2008
+bug6982571:   FCT_SocialNo module needs hours for startup.Added a registry parameter to 
+              specify the SocialNo Map size.   
+		
+================================================================================
+
+Module Version: 10006  6.7_FP2  03-May-2004
+PRSF00108146:   NT build problem: Modify build spec and LIBNAME to MAKE_STR2(LIBNAME)
+		
+================================================================================
+
+Module Version: 10005  6.7_FP2  19-Apr-2004
+PRSF00086920: [Pipeline] Code Cleanup: Remove Remains from DB Version Check
+
+================================================================================
+
+Module Version: 10004  6.5_SP2  05-May-2003
+PRSF00039853:   Fix namespace forward declarations.
+		
+================================================================================
+
+Module Version: 10003  6.5_SP2  01-May-2003
+PRSF00039598:   Changes due to BAS::RegisteredObject::registryUpdate
+                interface change
+
+==============================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 30-Apr-2003
+----------------
+
+Change Order :  PRSF00039309
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+================================================================================
+Module Version : 6.5 SP1 10001
+----------------
+
+Date : 27-Feb-2003
+----------------
+
+Change Order :  PRSF00032871
+----------------
+
+Short Description :
+-------------------
+Updated for new thread trace mechanism.
+================================================================================
+
+Actual Version : v4-30-01/ Date : 23-OCT-2001
+----------------
+
+Notes          :
+----------------
+- PETS#40656 fix: Replaced DETAIL.B_NUMBER with DETAIL.INTERN_B_NUMBER_ZONE.
+
+================================================================================
+
+Actual Version : v4-30-00/ Date : 21-JUN-2001
+----------------
+
+Notes          :
+----------------
+- Updated for version v4-30 of the Framework.
+
+================================================================================
+
+Actual Version : v4-10-00/ Date : 22-Nov-2000
+----------------
+
+Notes          :
+----------------
+-Unchanged for support of version v4-10-00.
+
+=======================================================================================
+
+Actual Version : v4-02-03/ Date : 11-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+make the last changes for defaultConnection with library name
+
+Open PRs/CRs   :
+----------------
+
+=======================================================================================
+Actual Version : v4-02-02/ Date : 04-Sep-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+Solve: PR 2412. Now the error status is printing out.
+
+Open PRs/CRs   :
+----------------
+
+=======================================================================================
+Actual Version : v4-02-01/ Date : 15-Aug-2000
+----------------
+
+Notes          :
+----------------
+Remove all code review marks.
+
+New Features   :
+----------------
+Add the DB version control system.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+=======================================================================================
+Actual Version : v4-02-00/ Date : 1R7-Jun2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+ - Support for AIX compiler.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+=======================================================================================
+
+Actual Version : v4-01-01 / Date : 15-Mar-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+Rename the init function. It was nessessary while the init function
+from the base class was overwrite.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-01-00 / Date : 29-Feb-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Reconfigure the processEdrContainer methode.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-00-01 / Date : 26-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Make all changes for the EDR-Container V2
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-00-00 / Date : 18-Jan-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+This is the version for Framework 4.x (use the new EDR-Container)
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-23-02 / Date : 11-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+remove bug in isUsable function for Null-Pointer.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-23-01 / Date : 02-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+correct the error while loading from DB.
+it returns allways false.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-23-00 / Date : 01-Nov-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+check all code review marks.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v1-22-00 / Date : 21-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+change the DB-Access from DAT_Database to DBC
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-01 / Date : 15-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+New regisitry item "Source". Can set to file or database.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+Make a better isUsable Function.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v1-21-00 / Date : 05-Okt-1999
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Insert isUsable function.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+PR 749. Build Database functionality.
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+

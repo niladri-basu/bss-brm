@@ -1,0 +1,57 @@
+// Block: ISC_ItemTag
+//------------------------------------------------------------------------------
+// Module Description:
+//   
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//                                                                               
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Responsible: Gurvinder Minhas
+//
+//==============================================================================
+// Global variables
+//==============================================================================
+
+
+
+
+//---------------------------
+// loading all key and values
+// when the pipeline starts
+//---------------------------
+function onStartEdr
+{
+
+}
+
+//===============================
+// fill reference container field
+// for each detail EDR
+//===============================
+function onDetailEdr
+{
+    
+String gst_flag;
+
+logStdout("Inside ISC_TD_ItemTag.isc.............................\n");
+gst_flag = edrString( DETAIL.ASS_CI.GST, 0 );
+
+if ( strLength(gst_flag) > 0 )
+{
+	edrString( DETAIL.ITEM_TAG ) = "usage" ;
+}
+else
+{
+        edrString( DETAIL.ITEM_TAG ) = "usage_niltax" ;
+}
+
+
+
+}
+
+

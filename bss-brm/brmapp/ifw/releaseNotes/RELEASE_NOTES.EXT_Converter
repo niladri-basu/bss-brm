@@ -1,0 +1,130 @@
+========================================================================================
+EXT_Converter
+----------------------------------------------------------------------------------------
+Module Release Notes 
+========================================================================================
+
+Module Version : 6.5 SP2 10002
+----------------
+
+Date : 05-May-2003
+----------------
+
+Change Order :  PRSF00039853
+----------------
+
+Short Description :
+-------------------
+Fix namespace forward declarations.
+
+========================================================================================
+
+Module Version : 6.5 SP2 10000
+----------------
+
+Date : 30-Apr-2003
+----------------
+
+Change Order :  PRSF00039300
+----------------
+
+Short Description :
+-------------------
+Updated to use namespaces.
+
+========================================================================================
+
+Actual Version : 10000 / Date : 21-Feb-2001
+----------------
+PRSFF00032419: Implement a thread trace
+
+========================================================================================
+
+Actual Version : v4-30-03 / Date : 18-Oct-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+PETS #40529: performance bottelnecks
+use strcmp for comparison between BAS_String and char*
++optimization of string concatenations
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-02 / Date : 01-Oct-2001
+----------------
+
+New Features   :
+----------------
+PETS #39726 : Number normalization must support multiple IAC's
+-EXT_ConvertCli2 is now renamed to EXT_ConvertCli and becomes the normalization
+method for all input plugins.
+-We use the new method method BAS_String::startsWith(xxx) for optimized prefix 
+matching.
+
+Solved PRs/CRs :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 19-Sept-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+PETS #39644: be able to normalize a TelNum using arrays for CC and IAC
+Implementation of EXT_ConvertCli2: same as EXT_ConvertCli but accepts array for
+IAC and CC, which is how it is stored in TAP3 files
+The normalisation algorithm is different than the standard convertCli algorithm.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+Actual Version : v4-00-00 / Date : 29-Nov-2000
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Implementation of [integ'rate] iScript/Plugin Extensions.
+First added some converter functions to normalize Cli's.
+- EXT_ConvertCli: normalize Mobile and Fixedline Cli's.
+- EXT_ConvertIPv4: normalize IPv4 addresses
+- EXT_ConvertIPv6: normalize IPv6 addresses
+- EXT_ConvertIPv4onv6: normalize IPv4 over IPv6 addresses.
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================

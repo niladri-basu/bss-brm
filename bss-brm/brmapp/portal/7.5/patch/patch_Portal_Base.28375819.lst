@@ -1,0 +1,32 @@
+-----------------IMPORTANT-------------------
+# The following files will be installed 
+# with this patch 
+---------------------------------------------
+$INSTALL_HOME/lib/fm_subscription.so
+$INSTALL_HOME/lib/fm_bill_utils.so
+$INSTALL_HOME/lib/fm_bill.so
+---------------------------------------------
+# The following files were packaged with 
+# this patch, However only the applicable 
+# files will be installed 
+---------------------------------------------
+$PATCH_HOME/lib/fm_subscription.so
+$PATCH_HOME/lib/fm_bill_utils.so
+$PATCH_HOME/lib/fm_bill.so
+---------------------------------------------
+# The following files will not be installed
+# because the latest version exists in the 
+# system 
+---------------------------------------------
+
+---------------------------------------------
+# The following files will not be installed
+# because the prerequisite product is not
+# installed in the system 
+---------------------------------------------
+
+---------------------------------------------
+# The following are the new files were 
+# packaged with this patch 
+---------------------------------------------
+

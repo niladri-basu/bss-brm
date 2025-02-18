@@ -1,0 +1,106 @@
+<Opcode name="PCM_OP_COLLECTIONS_ASSIGN_AGENT"
+		visibility="public"
+		transaction="required"
+		component="fm_collections"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc>
+	<!--h:p>
+		<h:i>
+			Copyright &#169; 2009 Oracle. All rights reserved.
+			This material is the confidential property of Oracle
+			Corporation or its licensors and may be used, reproduced,
+			stored or transmitted only in accordance with a valid Oracle
+			license or sublicense agreement.
+		</h:i>
+	</h:p-->
+		Used to assign  billinfos to an agent.
+	 </Doc>
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The account poid for the agent</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<String name="PIN_FLD_PROGRAM_NAME" use="optional"
+					maxlen="255">
+				<Doc> The name of the program that calls this opcode</Doc>
+			</String>
+			<Array name="PIN_FLD_BILLINFO" use="required"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="1" maxElements="256"
+					minElemId="1" maxElemId="256"
+					isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+					isRecursive="true" allowedElemIds="256">
+				<Doc> The billinfo array</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+							mode="complete">
+						<Doc> The billinfo poid to be assigned</Doc>
+						<ClassRef>obj://billinfo</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+							mode="complete">
+						<Doc> The account poid to be assigned</Doc>
+						<ClassRef>obj://account</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_SCENARIO_OBJ" use="optional"
+							mode="complete">
+						<Doc> The scenario poid for the billinfo</Doc>
+						<ClassRef>obj://collections_scenario</ClassRef>
+					</Poid>
+				</Fields>
+			</Array>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc>The account poid for the agent</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Array name="PIN_FLD_BILLINFO" use="required"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="1" maxElements="256"
+					minElemId="1" maxElemId="256"
+					isElemIdAssignAllowed="true" isElemIdAnyAllowed="true"
+					isRecursive="true" allowedElemIds="256">
+				<Doc> The billinfo array</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_BILLINFO_OBJ" use="required"
+							mode="complete">
+						<Doc> The assigned billinfo poid</Doc>
+						<ClassRef>obj://billinfo</ClassRef>
+					</Poid>
+					<Poid name="PIN_FLD_ACCOUNT_OBJ" use="required"
+							mode="complete">
+						<Doc> The account poid to be assigned</Doc>
+						<ClassRef>obj://account</ClassRef>
+					</Poid>
+					<Enum name="PIN_FLD_RESULT" use="required">
+						<Doc> The result of the assignment,
+					  	      could be one of the following values:
+
+						<h:ul>
+							<h:li>0 - PIN_RESULT_FAIL.</h:li>
+							<h:li>1 - PIN_RESULT_PASS.</h:li>
+						</h:ul>
+						</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc>PIN_RESULT_FAIL</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+                                                        <Doc>PIN_RESULT_PASS</Doc>
+						</Values>
+					</Enum>
+				</Fields>
+			</Array>
+		</Fields>
+	</Output>
+</Opcode>

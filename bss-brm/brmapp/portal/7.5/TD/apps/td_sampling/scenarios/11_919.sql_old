@@ -1,0 +1,1 @@
+select distinct TD.POID_ID0 ||',11_919' from PIN.TD_USGEVENT_DETAILS TD where GL_ID='310201300' and descr = 'Data';

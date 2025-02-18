@@ -1,0 +1,63 @@
+-------------------------------------------------------------------
+PORTAL - Pipeline Plugin Development Kit (PDK)
+-------------------------------------------------------------------
+
+Copyright (c) 1996 - 2006 Oracle. All rights reserved.
+
+This material is the confidential property of Oracle Corporation or its
+licensors and may be used, reproduced, stored or transmitted only in
+accordance with a valid Oracle license or sublicense agreement.
+
+
+First start of IntegRate
+========================
+
+
+----------------------------------------------------------------
+- Complete delivery                                            -
+----------------------------------------------------------------
+Step 1 - Bash-user: Source the source.me.sh for the shell.
+         C-Shell or tc-shell user: Source the source.me.csh for 
+         the shell.
+
+Step 2 - Build the PrefixDesc Plugin in 
+         <installation_path>/Plugins/DAT/PrefixDesc.
+
+Step 3 - In the data directory, create these directories:
+            discount
+            done
+            err
+            log
+            log/pipeline
+            log/stream
+            out
+            rej
+            seq
+            TAM
+
+Step 4 - Start IntegRate by using simple.reg:
+
+         bin/ifw -r samples/simple/simple.reg
+	
+	 The first execute is done without a database connection.
+
+	 Two sample CDR files were processed, and the output 
+         can be found in samples/simple/data/out, if no errors 
+         occurred.  If an error occurred, the output-reject-file 
+         can be found in samples/simple/data/rej and the 
+         input-file in the samples/simple/data/err directory.
+
+Step 5 - To use the database connection, modify the existing 
+         registry file or write your own. In the example you can 
+         modify the lines for the DBC module in the 'DataPool'.
+	 To run the sample DAT plugin with the data connection, 
+         change the 'Source' for ifw.DataPool.PrefixDescData to 
+         'Database' and the 'DataConnection' to 'ifw.DataPool.Login'.
+	
+Step 6 - Now you can run the same example described in step 4.
+	 Move the done files, which are in the 
+         'samples/simple/data/done' directory, to the 
+         'samples/simple/data/in' directory and change the extension
+         to *.edr'.
+
+

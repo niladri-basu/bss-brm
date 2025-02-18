@@ -1,0 +1,235 @@
+<!--
+	Copyright 2007, 2010 Oracle. All rights reserved.
+	This material is the confidential property of Oracle Corporation or
+	its licensors and may be used, reproduced, stored or transmitted
+	only in accordance with a valid Oracle license or sublicense agreement.
+-->
+<Opcode name="PCM_OP_BILL_GET_ITEM_EVENT_CHARGE_DISCOUNT"
+		visibility="public"
+		transaction="required"
+		component="fm_bill"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.portal.com/schemas/BusinessOpcodes opspec.xsd"
+		xmlns="http://www.portal.com/schemas/BusinessOpcodes">
+	<Doc>
+		This opcode is used for getting charge and discount of each event for a given item.
+	</Doc>
+	<Input>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc> Account Poid.</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Int name="PIN_FLD_THRESHOLD" use="optional">
+				<Doc> 
+					Threshold value for the number of events to be retrieved. If the number 
+					fetched is less than or equal to the threshold value, then the return flist
+					shall have the details of the events. If events count is greater then threshold 
+					value, then events count will be returned. If User gives 0 or -1, then this  
+					value is not considered.
+				</Doc>
+			</Int>
+			<Array name="PIN_FLD_ITEMS" use="optional"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="0"
+					minElemId="0"
+					isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+					isRecursive="false">
+				<Doc> Item objects array. Current functionality processes the first item only.</Doc>
+				<Fields>
+					<Poid name="PIN_FLD_ITEM_OBJ" use="required"
+							mode="complete">
+						<Doc> Item object poid of the events to be fetched.</Doc>
+						<ClassRef>obj://item</ClassRef>
+					</Poid>
+				</Fields>
+			</Array>
+			<Timestamp name="PIN_FLD_START_T" use="optional">
+				<Doc> Look for events with start_t more than or equal to this time.</Doc>
+			</Timestamp>
+			<Timestamp name="PIN_FLD_END_T" use="optional">
+				<Doc> Look for events with end_t less than or equal to this time.</Doc>
+			</Timestamp>
+			<Decimal name="PIN_FLD_MINIMUM" use="optional">
+				<Doc> Minimum amount for events to search.</Doc>
+			</Decimal>
+			<Decimal name="PIN_FLD_MAXIMUM" use="optional">
+				<Doc> Maximum amount for events to search.</Doc>
+			</Decimal>
+			<Int name="PIN_FLD_RESOURCE_ID" use="optional">
+				<Doc> Resource ID for events to be search.</Doc>
+			</Int>
+		</Fields>
+	</Input>
+	<Output>
+		<Fields>
+			<Poid name="PIN_FLD_POID" use="required"
+					mode="complete">
+				<Doc> Account Poid.</Doc>
+				<ClassRef>obj://account</ClassRef>
+			</Poid>
+			<Int name="PIN_FLD_THRESHOLD" use="optional">
+				<Doc> This is a count of the number of events found. This field is in the output      
+				only  if the count of events is greater than the threshold specified in the input.
+				</Doc>
+			</Int>
+			<Array name="PIN_FLD_RESULTS" use="required"
+					elemIdMode="ignored" iterationOrder="undefined"
+					minElements="1"
+					minElemId="1"
+					isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+					isRecursive="false">
+				<Doc> Result details of the operation.</Doc>
+				<Fields>
+					<Enum name="PIN_FLD_RESULT" use="required">
+						<Doc> Result of the operation (0 for Success and 1 for Fail).</Doc>
+						<Values>
+							<Value>0</Value>
+							<Doc> 0 for Success.</Doc>
+						</Values>
+						<Values>
+							<Value>1</Value>
+							<Doc>1 for Fail.</Doc>
+						</Values>
+					</Enum>
+					<String name="PIN_FLD_DESCR" use="required" maxlen="256">
+						<Doc> Give Description if search is Failed, otherwise "success".</Doc>
+					</String>
+					<Array name="PIN_FLD_EVENTS" use="optional"
+							elemIdMode="ignored" iterationOrder="undefined"
+							minElements="0"
+							minElemId="0"
+							isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+							isRecursive="false">
+						<Doc> Event Details for the item in the input flist.</Doc>
+						<Fields>
+							<Timestamp name="PIN_FLD_START_T" use="optional">
+								<Doc> Event Start time - Timestamp of when event started.</Doc>
+							</Timestamp>
+							<Timestamp name="PIN_FLD_END_T" use="optional">
+								<Doc> Event End time - Timestamp of when event ended.</Doc>
+							</Timestamp>
+							<String name="PIN_FLD_TIMEZONE_ID" use="required" maxlen="64">
+								<Doc> Timezone offset {+|-}HHMM returned based on event timezone and end_t. In case event does not have the timezone set, the server timezone is used. If the opcode is unable to convert the timezone to the offset format, it will populate the timezone string itself unmodified in this field to be further handled by the caller of this opcode.</Doc>
+							</String>
+							<String name="PIN_FLD_DESCR" use="optional" maxlen="256">
+								<Doc> User defined description for the event.</Doc>
+							</String>
+							<String name="PIN_FLD_CALLED_TO" use="optional" maxlen="256">
+								<Doc> Called Number (i.e Destination Number).For GSM type event This field will be will be populated with destination number</Doc>
+							</String>
+							<Int name="PIN_FLD_BYTES_IN" use="optional">
+								<Doc> 
+									Shows the total bytes downloaded. For GPRS event types this field will be populated with total bytes downloaded 
+								</Doc>
+							</Int>
+							<Int name="PIN_FLD_BYTES_OUT" use="optional">
+								<Doc> 
+								       Shows the total bytes uploaded. For GPRS event types this field will be populated with total bytes uploaded
+								</Doc>
+							</Int>
+							<Enum name="PIN_FLD_UNIT" use="optional">
+								<Doc> Unit Used for the Event.</Doc>
+								<Values>
+									<Value>0</Value>
+									<Doc>PIN_RATE_UNIT_NONE</Doc>
+								</Values>
+								<Values>
+									<Value>1</Value>
+									<Doc>PIN_RATE_UNIT_SECOND</Doc>
+								</Values>
+								<Values>
+									<Value>2</Value>
+									<Doc>PIN_RATE_UNIT_MINUTE</Doc>
+								</Values>
+								<Values>
+									<Value>3</Value>
+									<Doc>PIN_RATE_UNIT_HOUR</Doc>
+								</Values>
+								<Values>
+									<Value>4</Value>
+									<Doc>PIN_RATE_UNIT_DAY</Doc>
+								</Values>
+								<Values>
+									<Value>5</Value>
+									<Doc>PIN_RATE_UNIT_MONTH</Doc>
+								</Values>
+								<Values>
+									<Value>7</Value>
+									<Doc>PIN_RATE_UNIT_EVT_CYCLE</Doc>
+								</Values>
+								<Values>
+									<Value>8</Value>
+									<Doc>PIN_RATE_UNIT_ACT_CYCLE</Doc>
+								</Values>
+								<Values>
+									<Value>9</Value>
+									<Doc>PIN_RATE_UNIT_BILL_CYCLE</Doc>
+								</Values>
+								<Values>
+									<Value>11</Value>
+									<Doc>PIN_RATE_UNIT_BYTE</Doc>
+								</Values>
+								<Values>
+									<Value>12</Value>
+									<Doc>PIN_RATE_UNIT_KILOBYTE</Doc>
+								</Values>
+								<Values>
+									<Value>13</Value>
+									<Doc>PIN_RATE_UNIT_MEGABYTE</Doc>
+								</Values>
+								<Values>
+									<Value>14</Value>
+									<Doc>PIN_RATE_UNIT_GIGABYTE</Doc>
+								</Values>
+							</Enum>
+							<Decimal name="PIN_FLD_NET_QUANTITY" use="optional">
+								<Doc> Quantity used for  event.</Doc>
+							</Decimal>
+							<String name="PIN_FLD_RUM_NAME" use="optional" maxlen="256">
+								<Doc> RUM Name of the event for single rum. For multiple rums word &lt;Multi&gt; will be set </Doc>
+							</String>
+							<Int name="PIN_FLD_FLAGS" use="optional">
+								<Doc> Flag For Non Currency BI in the event.</Doc>
+							</Int>
+							<Poid name="PIN_FLD_SERVICE_OBJ" use="optional"
+									mode="complete">
+								<Doc>Service object</Doc>
+								<ClassRef>obj://service</ClassRef>
+							</Poid>
+							<Poid name="PIN_FLD_EVENT_OBJ" use="optional"
+									mode="complete">
+								<Doc> Poid of the event object retrieved , whose total amount of each resource and total discount of each resource is calculated.</Doc>
+								<ClassRef>obj://event</ClassRef>
+							</Poid>
+							<Timestamp name="PIN_FLD_CREATED_T" use="optional">
+								<Doc> Event created time - Timestamp of when event object was created. </Doc>
+							</Timestamp>
+							<Array name="PIN_FLD_BAL_IMPACTS" use="optional"
+									elemIdMode="ignored" iterationOrder="undefined"
+									minElements="0"
+									minElemId="0"
+									isElemIdAssignAllowed="false" isElemIdAnyAllowed="false"
+									isRecursive="false">
+								<Doc> Balance Impact Array of event.</Doc>
+								<Fields>
+									<Int name="PIN_FLD_RESOURCE_ID" use="required">
+										<Doc> Resource ID.</Doc>
+									</Int>
+									<Decimal name="PIN_FLD_AMOUNT" use="optional">
+										<Doc> Total Charge Amount.</Doc>
+									</Decimal>
+									<Decimal name="PIN_FLD_DISCOUNT" use="optional">
+										<Doc> Total Discount Amount.</Doc>
+									</Decimal>
+								</Fields>
+							</Array>
+						</Fields>
+					</Array>
+				</Fields>
+			</Array>
+		</Fields>
+	</Output>
+</Opcode>

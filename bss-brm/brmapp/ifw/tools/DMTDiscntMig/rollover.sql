@@ -1,0 +1,1 @@
+select d.CODE, c.DISCOUNTMODEL, a.DISCOUNTRULE, rollover_units, rollover_max, rollover_months, rollover_period, resource_id, c.VERSION from ifw_discountstep a, ifw_discountrule b, ifw_dscmdl_cnf c, ifw_discountmodel d where a.DISCOUNTRULE = b.DISCOUNTRULE and c.DISCOUNTRULE = b.DISCOUNTRULE and c.DISCOUNTMODEL=d.DISCOUNTMODEL and NVL(a.RESOURCE_ID, 0) > 0;

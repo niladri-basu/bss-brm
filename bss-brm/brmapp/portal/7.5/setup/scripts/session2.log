@@ -1,0 +1,238 @@
+
+SQL*Plus: Release 11.2.0.4.0 Production on Fri Apr 10 21:40:14 2015
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options
+
+SQL> SQL> SQL> SQL> Info: Add_partitions_exec
+Processing the table EVENT_ROLLOVER_CORRECTION_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_REFUND_BATCH_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_PAYMENT_BATCH_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_INV_ACTIVITIES_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_GROUP_MEMBERS_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_STATUSES_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_PHONES_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_PASSWORD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_NAMEINFO_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_LOGIN_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_LOGIN_ALIAS_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_LOCALE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CUSTOMER_ACTGINFO_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_CHARGE_PROVISION_DD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_VALID_CC_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_TAX_CYCLES_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_RVRSL_VOUCHER_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REVERSAL_POST_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REVERSAL_DD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REVERSAL_CC_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REFUND_WTRAN_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REFUND_PAYORD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REFUND_CHECK_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PROVISION_DD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_WTRAN_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_PAYORD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_DD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_CC_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_MISC_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_CYCLE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_CON_RULE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_CHARGE_INV_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_CHARGE_CC_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILL_REF_VOUCHER_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILL_BP_BEST_DEALINFO_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILL_BP_BASE_DEALINFO_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BAL_IMPACTS_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_AUDIT_SERVICES_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_AUDIT_DEVICES_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_SESSION_IPT_CALL_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_PRODUCT_FEE_CYCLE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_DEVICE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_DEVICE_REPLACE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_DEVICE_BRAND_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_DEVICE_ASCT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BROADBAND_USAGE_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BROADBAND_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_SUPPRESSION_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_REFUND_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_PAYMENT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_FEE_FAILPYMT_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILLING_CYCLE_FOLD_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_BILL_BP_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_ACTIVITY_VERIFY_T
+Boundary set
+Partitions dropped
+New partitions added
+Processing the table EVENT_T
+Boundary set
+Partitions dropped
+New partitions added
+
+PL/SQL procedure successfully completed.
+
+SQL> Disconnected from Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options

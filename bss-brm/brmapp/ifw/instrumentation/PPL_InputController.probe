@@ -1,0 +1,9 @@
+# ParentName (ModuleName or ProbeName) | ProbeId | ProbeName | ProbeDescription | ProbeMode (NotSpecified, ReadOnly, ReadWrite, or WriteOnly) | ProbeType (Table, Group, Integer, String) | ProbeUnit (optional)
+inputController | 1 | inputControllerGroup | Input Controller | NotSpecified | Group |
+inputControllerGroup | 1 | maxProcessingTime | Maximum Processing Time (ns) | ReadOnly | String | 
+inputControllerGroup | 2 | minProcessingTime | Minimum Processing Time (ns)| ReadOnly | String | 
+inputController | 2 | processingTimeTable | Last Processing Times | NotSpecified | Table |
+processingTimeTable | 1 | processingTimeEntry | Processing Time Table Entry | NotSpecified | Group |
+processingTimeEntry | 1 | processingTimeTableIndex | Index | ReadOnly | Integer |
+processingTimeEntry | 2 | processingTime | Processing Time (ns)| ReadOnly | Integer |
+processingTimeEntry | 3 | timestamp | Timestamp | ReadOnly | String |

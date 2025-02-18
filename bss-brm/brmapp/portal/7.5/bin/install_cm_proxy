@@ -1,0 +1,80 @@
+#!/bin/sh
+# continuus file information --- %full_filespec: install_qm.sh~4:shsrc:1 %
+#
+#  @(#) %full_filespec: install_qm.sh~4:shsrc:1 %
+#
+#      Copyright (c) 1994 - 2006 Oracle. All rights reserved.
+#
+#      This material is the confidential property of Oracle Corporation or its
+#      licensors and may be used, reproduced, stored or transmitted only in
+#      accordance with a valid Oracle license or sublicense agreement.
+#
+
+#
+# install the QM startup stuff into the /etc/*rc files
+# ASSUMES: QM files already loaded on machine
+# ASSUMES: running as root
+#
+# to run:
+# * sh -x ./install_cm_proxy
+# * verify no obvious errors
+# * edit pin.conf in /brmapp/portal/7.5/sys/cm_proxy
+# * start QM by /brmapp/portal/7.5/bin/start_cm_proxy
+#
+# NOTE: Must Manually fixup pin.conf file as desired
+#
+VERSION=7.5
+
+PINDIR=/brmapp/portal/7.5
+QM=cm_proxy
+QMDIR=${PINDIR}/sys/${QM}
+
+
+
+#
+# hook up to startup from init
+#
+
+os=`uname -r`
+case ${os} in
+5*)	# Solaris, add /etc/init.d/pin.${QM}
+	if [ -f /etc/init.d/pin.${QM} ]; then
+		rm -f /etc/init.d/pin.${QM}
+	fi
+	cp ${QMDIR}/init-d.pin.${QM} /etc/init.d/pin.${QM}
+	chown root /etc/init.d/pin.${QM}
+	chgrp staff /etc/init.d/pin.${QM}
+	chmod 755 /etc/init.d/pin.${QM}
+	ln /etc/init.d/pin.${QM} /etc/rc2.d/S96pin.${QM}
+	ln /etc/init.d/pin.${QM} /etc/rc2.d/K04pin.${QM}
+	echo ""
+	echo "Solaris startup script installed in /etc/init.d, /etc/rc2.d"
+	echo ""
+	;;
+4*)		# SunOS 4.1.{3,4,...}X, add to /etc/rc.local
+	# check to see if already there
+	if grep start_${QM} /etc/rc.local ; then
+		echo ""
+		echo "start_${QM} already in /etc/rc.local"
+		echo " exiting"
+		exit 0
+	fi
+
+	# add to rc.local
+	cat << "XXX" >> /etc/rc.local
+QM_DIR=${PINDIR}/bin
+if [ -x ${QM_DIR}/start_${QM} ]; then
+	${QM_DIR}/start_${QM} ; echo "${QM} "
+fi
+XXX
+	;;
+*)
+	echo "ERROR: bad uname -r ???"
+	exit 1
+	;;
+esac
+
+echo "remember to fix up the ${QMDIR}/pin.conf file and chmod 400 it"
+# chmod 400 ${QMDIR}/pin.conf
+
+exit 0

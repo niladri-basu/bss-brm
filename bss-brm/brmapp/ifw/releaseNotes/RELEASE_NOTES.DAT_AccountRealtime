@@ -1,0 +1,222 @@
+================================================================================
+DAT_AccountRealtime
+--------------------------------------------------------------------------------
+================================================================================
+Module Version : 7.5 10015
+----------------
+
+Date : 25-Sep-2014
+----------------
+
+Change Order :  bug 19669597
+----------------
+
+Problem : After reading fields from billinfo object to obtain cycle information the
+error handling in code is improper.
+Solution : Corrected the check in the code.
+================================================================================
+Module Version : 7.5 10014
+----------------
+
+Date : 17-Jan-2014
+----------------
+
+Change Order :  bug 17935812
+----------------
+
+Problem : The function for calculating account/billing Cycle fetches dates based
+on current state of BillInfo Object and gives wrong value for events occuring
+before previous Cycle.
+Solution : Introduced a parametter to enhance the functionality to return Cycle
+dates based on Event time if required.
+================================================================================
+
+Module Version : 7.4 10013
+----------------
+
+Date : 14-May-2009
+----------------
+
+Change Order :  bug8466228
+----------------
+
+Short Description :
+-------------------
+Using int32 data type for billWhen in billingCycle
+================================================================================
+Module Version : DaVinci 10012
+----------------
+
+Date : 25-May-2006
+----------------
+
+Change Order :  PRSF00214036
+----------------
+
+Short Description :
+-------------------
+New dummy interface for getOfferDetails and inclusion of billwhen parameter for
+billingCycles.
+================================================================================
+Module Version : DaVinci 10011
+----------------
+
+Date : 28-Mar-2006
+----------------
+
+Change Order :  PRSF00191243
+----------------
+
+Short Description :
+-------------------
+DAT::AccountBatch changes for Billing changes of Best Pricing.
+================================================================================
+Module Release Notes
+================================================================================
+Module Version : New_Pipeline_Velocity 10010
+----------------
+
+Date : 20-JUN-2005
+----------------
+
+Change Order :  PRSF00169966
+----------------
+
+Short Description :
+-------------------
+Fix warning messages in the Windows 32-bit build displays that really should be treated as errors
+================================================================================
+Module Version : Apollo 10009
+----------------
+Date : 18-March-2005 
+----------------
+Change Order :  PRSF00151530
+----------------
+Short Description :
+-------------------
+Add isReadPlansEnabled().
+
+================================================================================
+Module Version : Apollo 10008
+----------------
+Date : 18-Aug-2004
+----------------
+Change Order :  PRSF00127027
+----------------
+Short Description :
+-------------------
+Implementation for Realtime Pipeline to support the Filter_SetPlugIn.
+================================================================================
+
+Module Version : Apollo 10007
+----------------
+
+Date : 23-JUL-2004
+----------------
+
+Change Order :  PRSF00120407 
+----------------
+
+Short Description :
+-------------------
+FCT_Account should set the ACTG_LAST, ACTG_NEXT and ACTG_FUTURE  with the values
+in Infranet DB.
+
+================================================================================
+Module Version : Apollo 10006
+----------------
+
+Date : 20-JUL-2004
+----------------
+
+Change Order :  PRSF00118968
+----------------
+
+Short Description : Changed "if (gmtSeconds > *tmp_next.." to "if (gmtSeconds >= *tmp_next.."
+-------------------
+Change Order  Desription: Regression: Grant 1 more cycle than intended. 
+
+================================================================================
+Module Version : Apollo 10005
+----------------
+
+Date : 15-JUL-2004
+----------------
+
+Change Order :  PRSF00116847
+----------------
+
+Short Description : Changed "if (gmtSeconds >= *tmp_next.." to "if (gmtSeconds > *tmp_next.."
+-------------------
+Change Order  Desription:  Regression: actg_cycle not mapped in billing time discount
+
+================================================================================
+Module Version : Apollo 10004
+----------------
+
+Date : 26-APR-2004
+----------------
+
+Change Order :  PRSF00105697
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  NT build failure fixed for DAT_AccountRealtime
+
+================================================================================
+Module Version : Apollo 10003
+----------------
+
+Date : 27-JAN-2004
+----------------
+
+Change Order :  PRSF00086760
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Change to call PCM_OP directly instead of opExecute
+
+================================================================================================
+Module Version : Apollo 10002
+----------------
+
+Date : 12-JAN-2004
+----------------
+
+Change Order :  PRSF00085881
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Change order of include to fix ACE compile problem
+
+================================================================================================
+Module Version : Apollo 10001
+----------------
+
+Date : 16-OCT-2003
+----------------
+
+Change Order :  PRSF00071706
+----------------
+
+Short Description : 
+-------------------
+Change Order  Desription:  Message Numbers for Plugin 
+
+================================================================================================
+Module Version : Apollo 10000
+----------------
+
+Date : 18-SEP-2003
+----------------
+
+Change Order :  PRSF00064498
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription: Creating a new module for Realtime Dat Account and re-structuring batch
+================================================================================================

@@ -1,0 +1,215 @@
+//==============================================================================
+//
+//      Copyright (c) 2003 - 2007 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//-------------------------------------------------------------------------------
+// Block: ISC_SetAndValidateBatchInfo
+//-------------------------------------------------------------------------------
+//
+// Module Description:
+//   This script by default copies the Header.Batch_Id to Detail.Batch_Id for all 
+//   batches. It also checks whether Detail.Original_Batch_Id is empty, if so 
+//   copies the Header.Batch_Id to Detail.Original_Batch_Id.
+//   This script also validates the non-emptiness of DETAIL.EVENT_ID and HEADER.BATCH_ID.
+//
+//   The script also validates that DETAIL.SUSPENDED_FROM_BATCH_ID should be set if
+//   we are doing recycling, otherwise it simply copies HEADER.BATCH_ID to it.
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//
+//------------------------------------------------------------------------------
+// Responsible: 
+//
+//------------------------------------------------------------------------------
+
+String batchId;
+
+function onDetailEdr
+{
+		
+	// If the ValidateOriginalBatchId Registry Parameter is True or 
+	// recycling is happening, we expect original_batch_id and 
+	// suspended_from_batch_id to be set otherwise we set error
+
+	if ( strToUpper(reg.ValidateOriginalBatchId) == "TRUE" or
+		edrLong(DETAIL.INTERN_PROCESS_STATUS) == 1 or
+		edrLong(DETAIL.INTERN_PROCESS_STATUS) == 2 )
+	{
+		if ( edrString(DETAIL.ORIGINAL_BATCH_ID) == "" )
+		{
+			edrSetIsValidDetail (false);
+			edrString (DETAIL.ORIGINAL_BATCH_ID ) = "ERR_MISSING_FIELD_ORIGINAL_BATCH_ID";
+			edrString (DETAIL.ERROR_REJECT_TYPE ) = "ERR_MISSING_FIELD_ORIGINAL_BATCH_ID";
+			edrAddError ("ERR_MISSING_FIELD_ORIGINAL_BATCH_ID", 3);
+		}
+
+		if ( edrLong(DETAIL.INTERN_PROCESS_STATUS) == 1 or
+			edrLong(DETAIL.INTERN_PROCESS_STATUS) == 2 )
+		{
+			if ( edrNumDatablocks(DETAIL.ASS_SUSPENSE_EXT) == 0 )
+			{
+				edrSetIsValidDetail (false);
+				edrString (DETAIL.ERROR_REJECT_TYPE ) = "ERR_MISSING_SUSPENSE_BLOCK";
+				edrAddError ("ERR_MISSING_SUSPENSE_BLOCK", 3);
+
+				// We must add the suspense block, otherwise all the scenarios
+				// will fail as one of the grouping field is suspended_from_batch_id
+
+				edrAddDatablock(DETAIL.ASS_SUSPENSE_EXT);
+				edrString (DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) = "ERR_MISSING_SUSPENSE_BLOCK";
+			}
+			else
+			{
+				if ( edrString(DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) == "" )
+				{
+					edrSetIsValidDetail (false);
+					edrString (DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) = "ERR_MISSING_FIELD_SUSPENDED_FROM_BATCH_ID";
+					edrString (DETAIL.ERROR_REJECT_TYPE) = "ERR_MISSING_FIELD_SUSPENDED_FROM_BATCH_ID";
+					edrAddError ("ERR_MISSING_FIELD_SUSPENDED_FROM_BATCH_ID", 3);
+				}
+			}
+		}
+		else
+		{
+			// Adding the Suspense block
+			if ( edrNumDatablocks(DETAIL.ASS_SUSPENSE_EXT) == 0 )
+				edrAddDatablock(DETAIL.ASS_SUSPENSE_EXT);
+
+			edrString (DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) = batchId;
+		}
+
+		if ( strToUpper(reg.KeepBatchIds) == "FALSE" ) {
+			// Assigns Header level Batch Id to Detail level Batch Id
+			edrString (DETAIL.BATCH_ID) = batchId;
+		}
+	}
+	else
+	{
+		//If the Registry entry KeepBatchIds is TRUE then we do not 
+		//set the DETAIL.ORIGINAL_BATCH_ID and 
+		//DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID and DETAIL.BATCH_ID
+		
+		//The following if condition is added as per changes for PRSF00207226	
+
+		if ( strToUpper(reg.KeepBatchIds) == "FALSE" ) {
+			edrString (DETAIL.ORIGINAL_BATCH_ID) = batchId;
+
+			// Adding the Suspense block
+			if ( edrNumDatablocks(DETAIL.ASS_SUSPENSE_EXT) == 0 )
+				edrAddDatablock(DETAIL.ASS_SUSPENSE_EXT);
+
+			edrString (DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) = batchId;
+
+                        // Assigns Header level Batch Id to Detail level Batch Id
+                        edrString (DETAIL.BATCH_ID) = batchId;
+ 
+		}   
+	}
+
+	// Adding the ARA block
+	if ( edrNumDatablocks(DETAIL.ASS_ARA_EXT) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+}
+
+function onInvalidDetailEdr
+{
+
+	// If the ValidateOriginalBatchId Registry Parameter is True or 
+	// recycling is happening, we expect original_batch_id and 
+	// suspended_from_batch_id to be set otherwise we set error
+
+	if ( strToUpper(reg.ValidateOriginalBatchId) == "TRUE" or
+		edrLong(DETAIL.INTERN_PROCESS_STATUS) == 1 or
+		edrLong(DETAIL.INTERN_PROCESS_STATUS) == 2 )
+	{
+		if ( edrString(DETAIL.ORIGINAL_BATCH_ID) == "")
+		{
+			edrString (DETAIL.ORIGINAL_BATCH_ID ) = "ERR_MISSING_FIELD_ORIGINAL_BATCH_ID";
+			edrAddError ("ERR_MISSING_FIELD_ORIGINAL_BATCH_ID", 3);
+		}
+
+		if ( edrLong(DETAIL.INTERN_PROCESS_STATUS) == 1 or
+			edrLong(DETAIL.INTERN_PROCESS_STATUS) == 2 )
+		{
+			if ( edrNumDatablocks(DETAIL.ASS_SUSPENSE_EXT) == 0 )
+			{
+				edrAddError ("ERR_MISSING_SUSPENSE_BLOCK", 3);
+
+				// We must add the suspense block, otherwise all the scenarios
+				// will fail as one of the grouping field is suspended_from_batch_id
+
+				edrAddDatablock(DETAIL.ASS_SUSPENSE_EXT);
+				edrString (DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) = "ERR_MISSING_SUSPENSE_BLOCK";
+			}
+			else
+			{
+				if ( edrString(DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) == "" )
+				{
+					edrString (DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) = "ERR_MISSING_FIELD_SUSPENDED_FROM_BATCH_ID";
+					edrAddError ("ERR_MISSING_FIELD_SUSPENDED_FROM_BATCH_ID", 3);
+				}
+			}
+		}
+		else
+		{
+			// Adding the Suspense block
+			if ( edrNumDatablocks(DETAIL.ASS_SUSPENSE_EXT) == 0 )
+				edrAddDatablock(DETAIL.ASS_SUSPENSE_EXT);
+
+			edrString (DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) = batchId;
+		}
+
+		if ( strToUpper(reg.KeepBatchIds) == "FALSE" ) {
+			// Assigns Header level Batch Id to Detail level Batch Id
+			edrString (DETAIL.BATCH_ID) = batchId;
+		}
+	}
+	else
+	{
+		
+		//If the Registry entry KeepBatchIds is TRUE then we do not 
+		//set the DETAIL.ORIGINAL_BATCH_ID and 
+		//DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID and DETAIL.BATCH_ID
+
+		//The following if condition is added as per changes for PRSF00207226
+	
+		if ( strToUpper(reg.KeepBatchIds) == "FALSE" ) {
+			edrString (DETAIL.ORIGINAL_BATCH_ID) = batchId;
+
+			// Adding the Suspense block
+			if ( edrNumDatablocks(DETAIL.ASS_SUSPENSE_EXT) == 0 )
+				edrAddDatablock(DETAIL.ASS_SUSPENSE_EXT);
+
+			edrString (DETAIL.ASS_SUSPENSE_EXT.SUSPENDED_FROM_BATCH_ID, 0) = batchId;
+
+                        // Assigns Header level Batch Id to Detail level Batch Id
+			edrString (DETAIL.BATCH_ID) = batchId;
+		}
+	}
+
+	// Adding the ARA block
+	if ( edrNumDatablocks(DETAIL.ASS_ARA_EXT) == 0 )
+		edrAddDatablock(DETAIL.ASS_ARA_EXT);
+}
+
+function onHeaderEdr
+{
+	if ( edrString(HEADER.BATCH_ID) == "" )
+	{
+		edrAddError("ERR_INPUT_REQUEST_ROLLBACK", 3);
+		batchId = "";
+	}
+	else
+	{
+		batchId = edrString(HEADER.BATCH_ID);
+		// logStdout("BatchId in Header is " + edrString(HEADER.BATCH_ID) + ".\n");
+	}
+}

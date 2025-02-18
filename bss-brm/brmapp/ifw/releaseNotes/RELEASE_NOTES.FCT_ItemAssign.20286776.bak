@@ -1,0 +1,196 @@
+================================================================================
+FCT_ItemAssign
+--------------------------------------------------------------------------------
+================================================================================
+Module Version : 7.5 10013
+----------------
+
+Date : 13-Jun-2013
+---------------
+
+Change Order : bug16951268
+----------------
+
+Short Description :
+----------------
+FCT_ItemAssign plugin assigns item_poid for charge/discount/tax packets, 
+which is then assigned to respective balance packet item_poid by FCT_BillingRecord plugin.
+FCT_ItemAssign plugin code is modified to assign item_poid to charge/discount/tax packets
+irrespective of associated charge breakdown record type.
+================================================================================
+Module Version : 7.5 10012
+----------------
+
+Date : 10-Jan-2013
+---------------
+
+Change Order : bug16089031
+----------------
+
+Short Description :
+----------------
+Changes to support following features,
+1. Flexible item assignment per balance impact
+  Achieved through an enhancement to the existing customization of item assignment
+2. Split sponsored charges per charge sharing member along with flexible sponsor item type
+  Controlled through a new business parameter 'split_sponsor_item_by_member'
+================================================================================
+Module Version : 7.4 10011
+----------------
+
+Date : 20-AUG-2009
+---------------
+
+Change Order : bug8818128 
+----------------
+
+Short Description :
+----------------
+service type sent to FSM was wrong. 
+================================================================================
+Module Version : 7.4 10010
+----------------
+
+Date : 10-Jun-2009
+---------------
+
+Change Order : bug8529570
+----------------
+
+Short Description :
+----------------
+Implementation of FSM to get itemPoid when Tag is not provided and there is no pre-created item.
+=================================================================================
+Module Version : 7.4 10009
+----------------
+
+Date : 26-Nov-2008
+----------------
+
+Change Order :  bug7490975
+----------------
+
+Short Description :
+-------------------
+P-7448006 IBM BMT - DB NUMBER IN ITEM_POID_LIST HAS ONLY 1 DIGIT.
+DAT_Account uses a method to convert the Portalbase Db number
+from the format "0.0.0.x" to "x", which is being corrected 
+to handle when more than one digit dbnumber is used.
+ItemAssign trims the 1_898897 account poid format incorrectly - which
+is been fixed in this bug
+==================================================================================
+
+Module Version : 7.4 10008
+----------------
+
+Date : 27-Oct-2008
+----------------
+
+Change Order :  bug6609184
+----------------
+
+Short Description :
+-------------------
+Adding proc timer to track processing time
+=================================================================================
+Module Version: 10007  DaVinci  18-July-2006
+PRSF00219262: Da Vincii Code Clean Up: set isValidDetail false when you set error. 
+=================================================================================
+Module Version : 7.2 10006
+----------------
+
+Date : 29-AUG-2005
+----------------
+
+Change Order :  PRSF00179707
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+Change atoi() and atol() to atoi64() for 64-bit Poid Compatibility.
+--------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10005
+----------------
+
+Date : 06-JUL-2005
+----------------
+
+Change Order :  PRSF00173950
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+Read service ID from appropriate Product block based on the INTERN_FOUND_PP_INDEX.
+--------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10004
+----------------
+
+Date : 19-JUL-2004
+----------------
+
+Change Order :  PRSF00121867
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+Fix for build break issue in IA64 platform.
+--------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10003
+----------------
+
+Date : 14-JUL-2004
+----------------
+
+Change Order :  PRSF00121542
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+[Pipeline] Read Account Id from ACCOUNT_PARENT_ID field in EDR.
+--------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10002
+----------------
+
+Date : 23-JUN-2004
+----------------
+
+Change Order :  PRSF00117730
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+[Pipeline] Handle item assignment for sponsorship cases.
+--------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10001
+----------------
+
+Date : 22-JUN-2004
+----------------
+
+Change Order :  PRSF00117717
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+[Pipeline] Correct the curVector size and values to set used_Item_Poid.
+--------------------------------------------------------------------------------
+Module Version : 6.7_FP2 10000
+----------------
+
+Date : 04-JUN-2004
+----------------
+
+Change Order :  PRSF00094046
+----------------
+
+Short Description :
+-------------------
+Change Order  Desription:
+[Pipeline] Intial release of Plugin for Flexible Item Assignment.
+================================================================================

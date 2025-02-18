@@ -1,0 +1,278 @@
+//==============================================================================
+//
+//      Copyright (c) 1998 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//------------------------------------------------------------------------------
+// Block: ISC_PostRating
+//------------------------------------------------------------------------------
+// Module Description:
+//   This module calculates the charge values for the BASIC-Detail record.
+//
+// Open Points:
+//   <open points>
+//
+// Review Status:
+//   in-work
+//                                                                               
+//------------------------------------------------------------------------------
+// Responsible: Peter Engelbrecht
+//
+// $RCSfile: ISC_PostRating.isc,v $
+// $Revision: 1.2 $
+// $Author: pengelbr $
+// $Date: 2001/06/28 13:25:51 $
+// $Locker:  $
+//------------------------------------------------------------------------------
+// $Log: ISC_PostRating.isc,v $
+// Revision 1.2  2001/06/28 13:25:51  pengelbr
+// Remove Debug reg param.
+//
+// Revision 1.1  2001/06/28 11:57:44  pengelbr
+// Initial import of PostRating script.
+//
+//==============================================================================
+
+//==============================================================================
+// Registry Variables
+//==============================================================================
+// const String regRetailRecordType = reg.RetailRecordType;
+// const String regRetailResource = reg.RetailResource;
+// const String regRetailPricemodelType = reg.RetailPricemodelType;
+// const String regRetailCurrencyType = reg.WholesaleCurrencyType;
+
+// const String regWholesaleRecordType = reg.WholesaleRecordType;
+// const String regWholesaleResource = reg.WholesaleResource;
+// const String regWholesalePricemodelType = reg.WholesalePricemodelType;
+// const String regWholesaleCurrencyType = reg.WholesaleCurrencyType;
+
+Bool debug;
+
+Bool retailSet;
+String retailImpactCategory; 
+Decimal retailChargedAmountValue;
+String retailChargedAmountCurrency;
+String retailChargedTaxTreatment;
+
+Bool wholesaleSet;
+String wholesaleImpactCategory; 
+Decimal wholesaleChargedAmountValue;
+String wholesaleChargedAmountCurrency;
+String wholesaleChargedTaxTreatment;
+
+//==============================================================================
+// BEGIN Container
+//==============================================================================
+function BEGIN
+{
+  debug = false;
+}
+   
+//==============================================================================
+// Function declarations
+//==============================================================================
+
+//------------------------------------------------------------------------------
+// init()
+//------------------------------------------------------------------------------
+function init
+{
+  if ( debug )
+    logStdout("init()\n");
+
+  retailSet = false;
+  retailImpactCategory = "UNDEFINED";
+  retailChargedAmountValue = 0.0;
+  retailChargedAmountCurrency = "UNDEFINED";
+  retailChargedTaxTreatment = "UNDEFINED";
+
+  wholesaleSet = false;
+  wholesaleImpactCategory = "UNDEFINED";
+  wholesaleChargedAmountValue = 0.0;
+  wholesaleChargedAmountCurrency = "UNDEFINED";
+  wholesaleChargedTaxTreatment = "UNDEFINED";
+}
+
+//------------------------------------------------------------------------------
+// sumRetailCharge( Long )
+//------------------------------------------------------------------------------
+function sumRetailCharge( Long blockIndex )
+{
+  if ( debug )
+    logStdout("sumRetailCharge()\n");
+
+  Long packetIndex;
+  Long packetEntries = edrNumDatablocks( DETAIL.ASS_CBD.CP, blockIndex );
+
+  for ( packetIndex = 0 ; 
+        packetIndex < packetEntries ; 
+        packetIndex = packetIndex + 1 )
+  {
+    if ( debug ) {
+      logStdout( edrString( DETAIL.ASS_CBD.CP.RESOURCE, blockIndex, packetIndex ) + "\n" );
+      logStdout( edrString( DETAIL.ASS_CBD.CP.PRICEMODEL_TYPE, blockIndex, packetIndex ) + "\n" );
+      logStdout( edrString( DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE, blockIndex, packetIndex ) + "\n" );
+    }
+
+    if ( ( reg.RetailResource == edrString( DETAIL.ASS_CBD.CP.RESOURCE, 
+                                            blockIndex,
+                                            packetIndex ) ) and
+         ( reg.RetailPricemodelType == edrString( DETAIL.ASS_CBD.CP.PRICEMODEL_TYPE, 
+                                                  blockIndex,
+                                                  packetIndex ) ) and
+         ( reg.RetailCurrencyType == edrString( DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE,
+                                                blockIndex,
+                                                packetIndex ) ) )
+    {
+      if ( retailSet == false )
+      {
+        retailSet = true;
+
+        retailImpactCategory = edrString( DETAIL.ASS_CBD.CP.IMPACT_CATEGORY, 
+                                          blockIndex,
+                                          packetIndex );
+        retailChargedAmountCurrency = edrString( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_CURRENCY,
+                                          blockIndex,
+                                          packetIndex );
+        retailChargedTaxTreatment = edrString( DETAIL.ASS_CBD.CP.CHARGED_TAX_TREATMENT,
+                                               blockIndex,
+                                               packetIndex );
+      }
+
+      retailChargedAmountValue = retailChargedAmountValue
+                               + edrDecimal( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE,
+                                             blockIndex,
+                                             packetIndex );
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+// sumWholesaleCharge( Long )
+//------------------------------------------------------------------------------
+function sumWholesaleCharge( Long blockIndex )
+{
+  if ( debug )
+    logStdout("sumWholesaleCharge()\n");
+
+  Long packetIndex;
+  Long packetEntries = edrNumDatablocks( DETAIL.ASS_CBD.CP, blockIndex );
+
+  for ( packetIndex = 0 ; 
+        packetIndex < packetEntries ; 
+        packetIndex = packetIndex + 1 )
+  {
+    if ( debug )
+    {
+      logStdout( edrString( DETAIL.ASS_CBD.CP.RESOURCE, blockIndex, packetIndex ) + "\n" );
+      logStdout( edrString( DETAIL.ASS_CBD.CP.PRICEMODEL_TYPE, blockIndex, packetIndex ) + "\n" );
+      logStdout( edrString( DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE, blockIndex, packetIndex ) + "\n" );
+    }
+
+    if ( ( reg.WholesaleResource == edrString( DETAIL.ASS_CBD.CP.RESOURCE, 
+                                               blockIndex,
+                                               packetIndex ) ) and
+         ( reg.WholesalePricemodelType == edrString( DETAIL.ASS_CBD.CP.PRICEMODEL_TYPE, 
+                                                     blockIndex,
+                                                     packetIndex ) ) and
+         ( reg.WholesaleCurrencyType == edrString( DETAIL.ASS_CBD.CP.CHARGED_CURRENCY_TYPE,
+                                                   blockIndex,
+                                                   packetIndex ) ) )
+    {
+      if ( wholesaleSet == false )
+      {
+        wholesaleSet = true;
+
+        wholesaleImpactCategory = edrString( DETAIL.ASS_CBD.CP.IMPACT_CATEGORY, 
+                                             blockIndex,
+                                             packetIndex );
+        wholesaleChargedAmountCurrency = edrString( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_CURRENCY,
+                                                    blockIndex,
+                                                    packetIndex );
+        wholesaleChargedTaxTreatment = edrString( DETAIL.ASS_CBD.CP.CHARGED_TAX_TREATMENT,
+                                                  blockIndex,
+                                                  packetIndex );
+      }
+
+      wholesaleChargedAmountValue = wholesaleChargedAmountValue
+                                  + edrDecimal( DETAIL.ASS_CBD.CP.CHARGED_AMOUNT_VALUE,
+                                                blockIndex,
+                                                packetIndex );
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+// setRetailCharge()
+//------------------------------------------------------------------------------
+function setRetailCharge
+{
+  if ( debug )
+    logStdout("setRetailCharge()\n");
+
+  if ( retailSet == true )
+  {
+    edrString( DETAIL.RETAIL_IMPACT_CATEGORY ) = retailImpactCategory;
+    edrDecimal( DETAIL.RETAIL_CHARGED_AMOUNT_VALUE ) = retailChargedAmountValue;
+    edrString( DETAIL.RETAIL_CHARGED_AMOUNT_CURRENCY ) = retailChargedAmountCurrency;
+    edrString( DETAIL.RETAIL_CHARGED_TAX_TREATMENT ) = retailChargedTaxTreatment;
+  }
+}
+
+//------------------------------------------------------------------------------
+// setWholesaleCharge()
+//------------------------------------------------------------------------------
+function setWholesaleCharge
+{
+  if ( debug )
+    logStdout("setWholesaleCharge()\n");
+
+  if ( wholesaleSet == true )
+  {
+    edrString( DETAIL.WHOLESALE_IMPACT_CATEGORY ) = wholesaleImpactCategory;
+    edrDecimal( DETAIL.WHOLESALE_CHARGED_AMOUNT_VALUE ) = wholesaleChargedAmountValue;
+    edrString( DETAIL.WHOLESALE_CHARGED_AMOUNT_CURRENCY ) = wholesaleChargedAmountCurrency;
+    edrString( DETAIL.WHOLESALE_CHARGED_TAX_TREATMENT ) = wholesaleChargedTaxTreatment;
+  }
+}
+
+//==============================================================================
+// Adding Infranet Billing Record to Basic Detail Record
+//==============================================================================
+function onDetailEdr
+{
+  //----------------------------------------------------------------------------
+  // initialize global variables
+  //----------------------------------------------------------------------------
+  init();
+
+  //----------------------------------------------------------------------------
+  // Loop for all Assoc. Charge Breakdowns and check if they match the 
+  // specified record types
+  //----------------------------------------------------------------------------
+  Long blockIndex;
+  Long blockEntries = edrNumDatablocks( DETAIL.ASS_CBD );
+
+  for ( blockIndex = 0 ; blockIndex < blockEntries ; blockIndex = blockIndex + 1 )
+  {
+    if ( debug ) logStdout( edrString( DETAIL.ASS_CBD.RECORD_TYPE, blockIndex ) + "\n" );
+
+    switch ( edrString( DETAIL.ASS_CBD.RECORD_TYPE, blockIndex ) )
+    {
+    case reg.RetailRecordType:
+      sumRetailCharge( blockIndex );
+      break;
+
+    case reg.WholesaleRecordType:
+      sumWholesaleCharge( blockIndex );
+      break;
+    }
+  }
+
+  setRetailCharge();
+
+  setWholesaleCharge();
+} // end onDetailEdr + end iScript

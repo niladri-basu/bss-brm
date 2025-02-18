@@ -1,0 +1,15 @@
+select /*+ full(a) full(st) full(pp) full(s) full(s) full(p) full(r) full(rp) full(rb) full(bg) full(b) parallel(a,4) parallel(st,4) parallel(pp,4) parallel(s,4) parallel(at,4) parallel(p,4) parallel(r,4) parallel(rp,4) parallel(rb,4) parallel(bg,4) parallel(b,4) */ a.ACCOUNT_NO as ACCOUNT_NO,b.BILL_INFO_ID as BILL_INFO_ID,b.ACTG_CYCLE_DOM as BILL_CYCLE,st.NAME as MSISDN,p.NAME as PRODUCT_NAME,rb.SCALED_AMOUNT AS PRICE ,pp.CYCLE_START_T as PRD_START_DATE,pp.STATUS as PP_STATUS ,pp.CYCLE_END_T as PRODUCT_END,b.LAST_BILL_T as LAST_BILL_DATE,b.NEXT_BILL_T as NEXT_BILL_DATE,rb.GL_ID as GL_ID,a.POID_ID0 as ACCOUNT_POID,b.POID_ID0 as BILL_INFO_POID,pp.POID_ID0 as PURCHASE_PRD_POID,s.POID_ID0 as SERVICE_POID,p.POID_ID0 as PRODUCT_POID,pp.NODE_LOCATION as PRD_NODE_LOCATION
+from
+ACCOUNT_T a,SERVICE_ALIAS_LIST_T st,PURCHASED_PRODUCT_T pp,SERVICE_T s,PRODUCT_T p,RATE_T r,RATE_PLAN_T rp,RATE_BAL_IMPACTS_T rb,BAL_GRP_T bg,BILLINFO_T b
+where
+s.poid_id0=pp.service_obj_id0 
+and s.account_obj_id0=a.poid_id0
+and s.poid_id0=st.obj_id0
+and pp.product_obj_id0=p.poid_id0
+and rp.product_obj_id0=p.poid_id0
+and r.rate_plan_obj_id0=rp.poid_id0
+and r.poid_id0=rb.obj_id0
+and s.bal_grp_obj_id0=bg.poid_id0
+and bg.billinfo_obj_id0=b.poid_id0
+and pp.created_t >= td_nz_to_unix(TRUNC(SYSDATE-1)) 
+and pp.created_t < td_nz_to_unix(TRUNC(SYSDATE));

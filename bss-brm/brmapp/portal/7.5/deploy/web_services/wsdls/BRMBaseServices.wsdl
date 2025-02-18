@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:brm="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BASE" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes">
+            <include schemaLocation="PCM_OP_SEARCH.xsd"/>
+            <include schemaLocation="PCM_OP_READ_OBJ.xsd"/>
+            <include schemaLocation="PCM_OP_READ_FLDS.xsd"/>
+        </schema>
+    </types>
+    <message name="PCM_OP_SEARCH_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_SEARCH_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_SEARCH_outmsg">
+        <part name="PCM_OP_SEARCH_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_READ_OBJ_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_READ_OBJ_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_READ_OBJ_outmsg">
+        <part name="PCM_OP_READ_OBJ_response" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_READ_FLDS_inmsg">
+        <part name="flags" type="xsd:int"/>
+        <part name="PCM_OP_READ_FLDS_request" type="xsd:string"/>
+    </message>
+    <message name="PCM_OP_READ_FLDS_outmsg">
+        <part name="PCM_OP_READ_FLDS_response" type="xsd:string"/>
+    </message>
+    <portType name="BRMBASEService_ptt">
+        <operation name="PcmOpSearch">
+            <input message="brm:PCM_OP_SEARCH_inmsg" name="PCM_OP_SEARCH_inmsg"/>
+            <output message="brm:PCM_OP_SEARCH_outmsg" name="PCM_OP_SEARCH_outmsg"/>
+        </operation>
+        <operation name="PcmOpReadObj">
+            <input message="brm:PCM_OP_READ_OBJ_inmsg" name="PCM_OP_READ_OBJ_inmsg"/>
+            <output message="brm:PCM_OP_READ_OBJ_outmsg" name="PCM_OP_READ_OBJ_outmsg"/>
+        </operation>
+        <operation name="PcmOpReadFlds">
+            <input message="brm:PCM_OP_READ_FLDS_inmsg" name="PCM_OP_READ_FLDS_inmsg"/>
+            <output message="brm:PCM_OP_READ_FLDS_outmsg" name="PCM_OP_READ_FLDS_outmsg"/>
+        </operation>
+    </portType>
+    <binding name="BRMBASEService_binding" type="brm:BRMBASEService_ptt">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PcmOpSearch">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_SEARCH_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_SEARCH_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpReadObj">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_READ_OBJ_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_READ_OBJ_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="PcmOpReadFlds">
+            <soap:operation SoapAction=""/>
+            <input name="PCM_OP_READ_FLDS_inmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </input>
+            <output name="PCM_OP_READ_FLDS_outmsg">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xmlns.oracle.com/BRM/schemas/BusinessOpcodes" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="BRMBASEService">
+        <port binding="brm:BRMBASEService_binding" name="BRMBASEService_pt">
+            <soap:address location="http://localhost:8080/brm/BRMWSBASEServices"/>
+        </port>
+    </service>
+    <plt:partnerLinkType name="BRMService_plt">
+        <plt:role name="BRMService_role">
+            <plt:portType name="brm:BRMBASEService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+</definitions>

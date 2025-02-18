@@ -1,0 +1,335 @@
+//==============================================================================
+//
+//      Copyright (c) 2004 - 2006 Oracle. All rights reserved.
+//
+//      This material is the confidential property of Oracle Corporation
+//      or its licensors and may be used, reproduced, stored or transmitted
+//      only in accordance with a valid Oracle license or sublicense agreement.
+//
+//==============================================================================
+// Block: ISC_PromotionalSavingPerEDR.isc
+//-------------------------------------------------------------------------------
+// Module Description:
+//  
+// Contains functions to check the Customer Market Segment & product attributes
+// to turn the DETAIL.CUST_A.PROMOTIONAL_SAVING ON/Off.
+// Can be used to add new functions if required in future. 
+//
+//==============================================================================
+
+// @(#)% %
+
+Long baseIndex    = -1;
+Long basePriority = -1;
+Long maxIndex     = -1;
+Long maxPriority  = -1;
+String segmentList[];
+Long numSegments;
+
+// Array to contain the base & highest priority product attributes info.
+String productInfo{}[];
+
+// Get the product info base & highest priority products.
+function getIndexAndProductInfo
+{
+  // Set PROMOTIONAL_SAVING to default value 0f -1.
+  edrLong(DETAIL.CUST_A.PROMOTIONAL_SAVING,0) = 1;
+
+  String internRatingProduct = edrString(DETAIL.CUST_A.INTERN_RATING_PRODUCTS,0);
+  String indexPriorityArray[];
+
+  // Split on the bases of ";".
+  Long numProducts = strSplit( indexPriorityArray, internRatingProduct, ";" );
+
+  String index_and_priority[];
+  strSplit( index_and_priority,indexPriorityArray[0], ":");
+
+  // Get the index & priority of base product.
+  baseIndex    = strToLong(index_and_priority[0]);
+  basePriority = strToLong(index_and_priority[1]);
+  maxIndex     = baseIndex;
+  maxPriority  = basePriority;
+
+  Long i;
+  for (i=1 ; i<numProducts ; i=i+1)
+  {
+    // Split on the bases of ":" to get the priority.
+    strSplit( index_and_priority,indexPriorityArray[i], ":");
+    Long currentPriority = strToLong(index_and_priority[1]);
+
+    if( currentPriority < basePriority )
+    {
+      // Get the priority of base product.
+      basePriority = currentPriority;
+      baseIndex    = strToLong(index_and_priority[0]);
+    }
+
+    if( currentPriority > maxPriority )
+    {
+      // Get the highest priority from all the products.
+      maxPriority = currentPriority;
+      maxIndex    = strToLong(index_and_priority[0]);
+    }
+  }
+  
+  // Get the base product attributes;
+  productInfo{"PRODUCT_NAME"}[baseIndex]  = edrString(DETAIL.CUST_A.PRODUCT.PRODUCT_NAME,0,baseIndex);
+  productInfo{"USAGE_START"}[baseIndex]   = dateToStr(edrDate(DETAIL.CUST_A.PRODUCT.USAGE_START,0,baseIndex));
+
+  productInfo{"USAGE_END"}[baseIndex]     = dateToStr(edrDate(DETAIL.CUST_A.PRODUCT.USAGE_END,0,baseIndex));
+  productInfo{"RATEPLAN_NAME"}[baseIndex] = edrString(DETAIL.CUST_A.PRODUCT.RATEPLAN_NAME,0,baseIndex);
+
+  productInfo{"SERVICE_TYPE"}[baseIndex]  = edrString(DETAIL.CUST_A.PRODUCT.SERVICE_TYPE,0,baseIndex);
+  productInfo{"SERVICE_ID"}[baseIndex]    = edrString(DETAIL.CUST_A.PRODUCT.SERVICE_ID,0,baseIndex);
+
+
+  // Get the highest priority product attributes;
+  productInfo{"PRODUCT_NAME"}[maxIndex]  = edrString(DETAIL.CUST_A.PRODUCT.PRODUCT_NAME,0,maxIndex);
+  productInfo{"USAGE_START"}[maxIndex]   = dateToStr(edrDate(DETAIL.CUST_A.PRODUCT.USAGE_START,0,maxIndex));
+
+  productInfo{"USAGE_END"}[maxIndex]     = dateToStr(edrDate(DETAIL.CUST_A.PRODUCT.USAGE_END,0,maxIndex));
+  productInfo{"RATEPLAN_NAME"}[maxIndex] = edrString(DETAIL.CUST_A.PRODUCT.RATEPLAN_NAME,0,maxIndex);
+
+  productInfo{"SERVICE_TYPE"}[maxIndex]  = edrString(DETAIL.CUST_A.PRODUCT.SERVICE_TYPE,0,maxIndex);
+  productInfo{"SERVICE_ID"}[maxIndex]    = edrString(DETAIL.CUST_A.PRODUCT.SERVICE_ID,0,maxIndex);
+
+  // get the list of customer segments;
+  // Split the segment string on the "|"s
+  numSegments = strSplit( segmentList, edrString(DETAIL.CUST_A.CUST_SEG_LIST, 0), "|");
+}
+
+// This function returns true if the segment list contains the passed string
+function Bool segmentContains( String segment )
+{
+  Long i;
+
+  for( i = 0; i < numSegments; i = i + 1)
+  {
+    if ( segment == segmentList[i] )
+    {
+      // if contains, return true;
+      return( true );
+    }
+  }
+  //segment not found in list, return false.
+  return( false );
+}
+
+// Returns true if the highest or base product name matches with supplied product name.
+function Bool productName(String productName,String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex; 
+  }
+    
+  if( productName == productInfo{"PRODUCT_NAME"}[index] )
+  {
+    return ( true );
+  }
+  return ( false );
+}
+
+// Returns true if the highest or base product's RatePlan name matches with supplied RatePlan name.
+function Bool ratePlanName(String ratePlanName,String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+  
+  if( ratePlanName ==  productInfo{"RATEPLAN_NAME"}[index] )
+  {
+    return ( true );
+  }
+  return ( false );
+}
+
+// Returns priority of highest or base product depending on the indexType parameter.
+function Long priority(String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    return ( maxPriority );
+  }
+  else
+  {
+    return ( basePriority );
+  }
+}
+
+// Returns true if the highest or base product's serviceType matches with supplied serviceType.
+function Bool serviceType(String serviceType,String indexType) 
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+  if( serviceType ==  productInfo{"SERVICE_TYPE"}[index] )
+  {
+    return ( true );
+  }
+  return ( false );
+}
+
+// Returns true if the highest or base product's serviceId matches with supplied serviceId.
+function Bool serviceId(String serviceId,String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+
+  if( serviceId == productInfo{"SERVICE_ID"}[index] )
+  {
+    return ( true );
+  }
+  return ( false );
+} 
+
+// Returns true if the highest or base product's usageStartTime is equal to supplied usageStartTime.
+function Bool usageStartTimeEqualsTo(String usageStartTime, String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+
+  Date usage_start_time = strToDate(productInfo{"USAGE_START"}[index]);
+  if( dateDiff( usage_start_time, strToDate(usageStartTime)) == 0 )
+  {
+    return (true);
+  }
+  return ( false );
+}
+
+// Returns true if the highest or base product's usageStartTime is greater than supplied usageStartTime.
+function Bool usageStartTimeGreaterThan(String usageStartTime, String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+
+  Date usage_start_time = strToDate(productInfo{"USAGE_START"}[index]);
+  if( dateDiff( usage_start_time, strToDate(usageStartTime)) > 0 )
+  {
+    return (true);
+  }
+  return ( false );
+}
+
+// Returns true if the highest or base product's usageStartTime is less than supplied usageStartTime.
+function Bool usageStartTimeLessThan(String usageStartTime, String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+
+  Date usage_start_time = strToDate(productInfo{"USAGE_START"}[index]);
+  if( dateDiff( usage_start_time, strToDate(usageStartTime)) < 0 )
+  {
+    return (true);
+  }
+  return ( false );
+}
+
+// Returns true if the highest or base product's usageEndTime is equal to supplied usageEndTime.
+function Bool usageEndTimeEqualsTo(String usageEndTime, String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+
+  Date usage_end_time = strToDate(productInfo{"USAGE_END"}[index]);
+  if( dateDiff( usage_end_time, strToDate(usageEndTime)) == 0 )
+  {
+    return (true);
+  }
+  return ( false );
+}
+
+// Returns true if the highest or base product's usageEndTime is greater than supplied usageEndTime.
+function Bool usageEndTimeGreaterThan(String usageEndTime, String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+
+  Date usage_end_time = strToDate(productInfo{"USAGE_END"}[index]);
+  if( dateDiff( usage_end_time, strToDate(usageEndTime)) > 0 )
+  {
+    return (true);
+  }
+  return ( false );
+}
+
+// Returns true if the highest or base product's usageEndTime is less than supplied usageEndTime.
+function Bool usageEndTimeLessThan(String usageEndTime, String indexType)
+{
+  Long index;
+  if( indexType == "Highest" )
+  {
+    index = maxIndex;
+  }
+  else
+  {
+    index = baseIndex;
+  }
+
+  Date usage_end_time = strToDate(productInfo{"USAGE_END"}[index]);
+  if( dateDiff( usage_end_time, strToDate(usageEndTime)) < 0 )
+  {
+    return (true);
+  }
+  return ( false );
+}

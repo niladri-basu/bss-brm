@@ -1,0 +1,219 @@
+================================================================================
+EXT_AsnTree
+----------------------------------------------------------------------------------------
+Module Release Notes
+================================================================================
+
+Actual Version : 10001 / Date : 18-Feb-2004
+----------------
+
+PRSF00092596   unknown return value constants for iscript functions
+================================================================================
+
+Actual Version : 10000 / Date : 21-Feb-2003
+----------------
+
+PRSF00032419 :  Implement a thread trace.
+
+================================================================================
+
+
+Actual Version : v6.5.x / Date : 28-October-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+PRSF00021362 : Core Dumps produced by IntegRate
+               (propagation from Integrate_6.2_SP2_64bitport)
+               - IScript function asnTreeDeleteNodeByIndex(idx) fixed. Only
+                 the vector entry was deleted and not the belonging tree nodes.
+               - Memory usage of EXT_AsnTreeNode reduced.
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v6.4.x / Date : 01-October-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+PRSF00019502 : Optimize memory management for the EXT_AsnTree extension
+optimize the initial allocation for EDR_ByteBuffer objects
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-40-01 / Date : 17-June-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Add optional parameter for the flush function.
+If you want to flush the ASN tree to a file, you must set
+this parameter (e.g. asnTreeFlush("./rapOutput.rap");
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+Actual Version : v4-40-xx / Date : 12-April-2002
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+Added the EXT_AsnTreeAddBlob class and coresponding methodes to be able to add
+an already constructed ASN.1 object to the ASN.1 tree (this is needed for RAP)
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-04 / Date : 28-Sept-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+PETS #39975: optimize EXT_AsnTree
+optimize the ByteBuffer , and the ChildList management of the extension.
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-03 / Date : 03-Sept-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #38890: Errors when writing TAP3 to output
+Corrected the calculation of the Length of the AsnTagType, added debug 
+traces in the PushTag and PopTag functions, and added a
+asnTreePushIndefiniteLengthTag() function, for simple Find/ReplaceAll usage.
+
+Open PRs/CRs   :
+----------------
+
+================================================================================
+
+Actual Version : v4-30-02 / Date : 15-Aug-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+- PETS #36559 SourcePro AIX port
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-01 / Date : 10-july-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+PETS #36565 : added support for indefinite length ASN.1 object on output
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================
+
+Actual Version : v4-30-00 / Date : 26-jun-2001
+----------------
+
+Notes          :
+----------------
+
+New Features   :
+----------------
+
+Known Problems :
+----------------
+
+Solved PRs/CRs :
+----------------
+
+Open PRs/CRs   :
+----------------
+
+========================================================================================

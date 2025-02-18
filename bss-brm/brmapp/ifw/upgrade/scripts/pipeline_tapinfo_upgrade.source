@@ -1,0 +1,42 @@
+--==============================================================================
+--
+-- Copyright (c) 2012, Oracle and/or its affiliates. All rights reserved. 
+--
+-- This material is the confidential property of Oracle Corporation or its
+-- licensors and may be used, reproduced, stored or transmitted only in
+-- accordance with a valid Oracle license or sublicense agreement.
+--
+--==============================================================================
+
+
+-- Upgrade script to create the table ifw_Tapinfo used for Stop Return Rap generation
+
+DECLARE
+v_sql_stmt              VARCHAR2(4000);
+v_errmsg                VARCHAR2(200);
+v_creation_error  CONSTANT NUMBER := -20002;
+
+BEGIN
+                -- Create the IFW_TAPINFO table if the table does not exist
+        BEGIN
+                IF (pin_upg_common.table_EXISTS('NRTRDE_FILES', v_errmsg)) THEN
+                	IF NOT (pin_upg_common.table_EXISTS('ifw_tapinfo', v_errmsg)) THEN
+                    		v_sql_stmt := 'CREATE TABLE IFW_TAPINFO (
+				 SENDER                VARCHAR2(5)  NOT NULL,
+				 RECIPIENT             VARCHAR2(5)  NOT NULL,
+				 SEQ_GEN_KEY           VARCHAR2(50) NOT NULL,
+				 LASTSEQNUMBER         NUMBER(10)   NOT NULL,
+				 SPECIFICATIONVERSION  NUMBER(5)    NOT NULL,
+				 RELEASEVERSION        NUMBER(5)    NOT NULL,
+				 TAPFILEDATE           DATE         NOT NULL,
+				 LASTSTOPRAPDATE       DATE
+									) ';
+                   		 EXECUTE IMMEDIATE v_sql_stmt;
+                	END IF;
+                END IF;
+        EXCEPTION
+                WHEN OTHERS THEN
+                        RAISE_APPLICATION_ERROR(v_creation_error, 'Table creation failed for IFW_TAPINFO '||sqlerrm, TRUE);
+        END;
+END;
+/

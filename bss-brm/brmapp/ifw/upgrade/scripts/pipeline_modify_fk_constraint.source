@@ -1,0 +1,53 @@
+--------------------------------------------------------------------------------------------------
+-- Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+-- This material is the confidential property of Oracle Corporation or its
+-- licensors and may be used, reproduced, stored or transmitted only in
+-- accordance with a valid Oracle license or sublicense agreement.
+--
+--------------------------------------------------------------------------------------------------
+-- Module Description
+-- SQL script to modify the Foreign Key constraint FK_IFW_RPV_RPV in IFW_RATEPLAN_VER in 7.5 PS6.
+--------------------------------------------------------------------------------------------------
+--
+--------------------------------------------------------------------------------------------------
+-- Responsible: Ashish Ranjan
+--------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE modify_fk_constraint_PS6 AS
+  v_ddl_stmt VARCHAR2(500);
+  FOREIGN_KEY_UPDATE CONSTANT NUMBER := -20001;
+  SOME_OTHER_EXCEPTION  CONSTANT NUMBER := -20002;
+  v_errmsg VARCHAR2(200);
+  
+  BEGIN
+    IF(pin_upg_common.table_exists('IFW_RATEPLAN_VER', v_errmsg)) THEN
+        BEGIN
+          -- Drop the constraint first
+          v_ddl_stmt := 'alter table IFW_RATEPLAN_VER drop constraint FK_IFW_RPV_RPV';
+          EXECUTE IMMEDIATE v_ddl_stmt;
+          EXCEPTION
+            WHEN OTHERS THEN
+              RAISE_APPLICATION_ERROR(FOREIGN_KEY_UPDATE,'modify_fk_constraint_PS6: Foreign Key FK_IFW_RPV_RPV dropping failed with Reason:' || v_errmsg, TRUE);
+        END;
+
+        -- Recreate the constraint with 'deferable property'
+        BEGIN
+          v_ddl_stmt := 'alter table IFW_RATEPLAN_VER add constraint FK_IFW_RPV_RPV
+                         foreign key ("BASIC_RATEPLAN", "BASIC_VERSION") references "IFW_RATEPLAN_VER"
+                         ("RATEPLAN", "VERSION") INITIALLY DEFERRED DEFERRABLE ENABLE';
+          EXECUTE IMMEDIATE v_ddl_stmt;
+          EXCEPTION
+            WHEN OTHERS THEN
+              RAISE_APPLICATION_ERROR(FOREIGN_KEY_UPDATE,'modify_fk_constraint_PS6: Foreign Key FK_IFW_RPV_RPV creation failed with Reason:' || v_errmsg, TRUE);
+        END;
+    END IF;
+  EXCEPTION
+    WHEN OTHERS THEN
+      RAISE_APPLICATION_ERROR(SOME_OTHER_EXCEPTION,'SCRIPT modify_fk_constraint_PS6 FAILED with Reason:' || v_errmsg , TRUE);
+  END;
+/
+
+SET SERVEROUTPUT ON SIZE 1000000
+PROMPT Starting procedure modify_fk_constraint_PS6...
+EXEC modify_fk_constraint_PS6;
+drop procedure modify_fk_constraint_PS6;

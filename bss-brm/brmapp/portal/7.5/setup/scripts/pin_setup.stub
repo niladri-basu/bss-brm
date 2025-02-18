@@ -1,0 +1,4050 @@
+#!/brmapp/portal/ThirdParty/perl/5.18.2/bin/perl
+#
+# $Id: pin_setup_template.values /cgbubrm_main.portalbase/11 2011/08/05 19:26:46 meiyang Exp $
+#=======================================================================
+#
+# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved. 
+#
+#    This material is the confidential property of Oracle Corporation. 
+#    or its subsidiaries or licensors and may be used, reproduced, stored
+#    or transmitted only in accordance with a valid Oracle license or
+#    sublicense agreement.
+#
+#
+# This file contains all the parameters to the installation. You should
+# modify it, either by the GUI tool or otherwise, before you run
+# pin_setup.pl.
+#
+#=======================================================================
+
+
+
+#=======================================================================
+# List of components to be configured
+#=======================================================================
+
+#=======================================================================
+# List of products to be configured
+#=======================================================================
+@PRODUCT_LIST=(
+"SuspenseMgr",
+"DM_AQ_64",
+"ResourceResMgr",
+"ConversionMgr",
+"RatedEventLoader",
+"RevAssuranceMgr",
+"GSM_Mgr",
+"EAI_FrameworkMgr",
+"DM_AQ",
+"BRM_JCA_Adapter",
+"AccountSynchTool",
+"CollectionsMgr",
+"Portal_Base",
+
+);
+
+#=======================================================================
+# List of all the components to be configured
+
+@SuspenseMgr=( "cm_suspense", "dm_suspense", " "); 
+
+@DM_AQ_64=( "dm_aq_64", " ");
+
+
+@ResourceResMgr=( "rrf", " ");
+
+@ConversionMgr=( "cmt", " "); 
+
+@RatedEventLoader=( "rel_tt", "rel",  "eet", " ");
+
+@RevAssuranceMgr=( "araframework"," ");
+
+@GSM_Mgr=( "gsm", "tcframework",  "dm_prov_telco"," ");
+
+@EAI_FrameworkMgr=( "dm_eai", " ");
+
+@DM_AQ=( "dm_aq", " ");
+
+@BRM_JCA_Adapter = ( "jca_adapter"," "); 
+
+@AccountSynchTool=( "cm_eai","dm_ifw_sync", "cm_acctsync", " ");
+
+@CollectionsMgr=( "pin_collections", " "); 
+
+@Portal_Base=( "load_config","storable_class_to_xml","pin_billd","cm","ecr_pci","cmmp","cm_proxy","archiving","sample","batch_controller","dm_email","pin_export_price","config_export","infmgr","infmgr_cli","formatter","pin_inv","nmgr","dm_oracle","bip_udf","pin_subscription","pin_rerate","pin_cfg_bpdump","testnap","adu","uei","sox_unlock_service","credit_control"," "); 
+
+
+#=======================================================================
+# Portal Base directories
+#
+# Please enter the main Portal Base directories.
+#
+#   PIN_HOME        -  Portal Base Home Directory
+#   PIN_LOG_DIR     -  Portal Base Logging Directory
+#   PIN_TEMP_DIR    -  Temporary Directory for installation
+#   PIN_SHARED_DIR  -  Shared Directory for the JRE and Perl
+#=======================================================================
+if ( $ENV{'PIN_PIN_HOME'} !~ /^$/ ) { 
+	$PIN_HOME = $ENV{'PIN_PIN_HOME'};
+} else {
+	$PIN_HOME =  "/brmapp/portal/7.5";
+}
+if ( $ENV{'PIN_PIN_LOG_DIR'} !~ /^$/ ) { 
+	$PIN_LOG_DIR = $ENV{'PIN_PIN_LOG_DIR'};
+} else {
+	$PIN_LOG_DIR =  "/var/portal";
+}
+if ( $ENV{'PIN_PIN_TEMP_DIR'} !~ /^$/ ) { 
+	$PIN_TEMP_DIR = $ENV{'PIN_PIN_TEMP_DIR'};
+} else {
+	$PIN_TEMP_DIR =  "/brmapp/portal/7.5/tmp";
+}
+if ( $ENV{'PIN_PIN_SHARED_DIR'} !~ /^$/ ) { 
+	$PIN_SHARED_DIR = $ENV{'PIN_PIN_SHARED_DIR'};
+} else {
+	$PIN_SHARED_DIR =  "/brmapp/portal/7.5";
+}
+if ( $ENV{'PIN_PIN_VERSION'} !~ /^$/ ) { 
+	$PIN_VERSION = $ENV{'PIN_PIN_VERSION'};
+} else {
+	$PIN_VERSION =  "7.5";
+}
+
+#=======================================================================
+# Log location and access type
+#
+# Specifies the file path in which to log the Portal Base installation. 
+# Specifies the access type, APPEND or OVERWRITE.
+#=======================================================================
+if ( $ENV{'PIN_SETUP_LOG_FILENAME'} !~ /^$/ ) { 
+	$SETUP_LOG_FILENAME = $ENV{'PIN_SETUP_LOG_FILENAME'};
+} else {
+	$SETUP_LOG_FILENAME =  "$PIN_HOME/setup/pin_setup.log";
+}
+if ( $ENV{'PIN_SETUP_LOG_ACCESS_TYPE'} !~ /^$/ ) { 
+	$SETUP_LOG_ACCESS_TYPE = $ENV{'PIN_SETUP_LOG_ACCESS_TYPE'};
+} else {
+	$SETUP_LOG_ACCESS_TYPE =  "APPEND";
+}
+
+#=======================================================================
+# Flag to create partitions
+#
+# Specifies whether to create default 12 fixed partitions.
+# WARNING !!!
+#=======================================================================	
+if ( $ENV{'PIN_SETUP_CREATE_PARTITIONS'} !~ /^$/ ) { 
+	$SETUP_CREATE_PARTITIONS = $ENV{'PIN_SETUP_CREATE_PARTITIONS'};
+} else {
+	$SETUP_CREATE_PARTITIONS =  "Yes";
+}
+if ( $ENV{'PIN_ENABLE_PARTITION'} !~ /^$/ ) { 
+	$ENABLE_PARTITION = $ENV{'PIN_ENABLE_PARTITION'};
+} else {
+	$ENABLE_PARTITION =  "Yes";
+}
+
+#=======================================================================	
+# List of non event base classes to be partitioned and their 
+# index type(global/local) followed by colon.
+# All the sub classes of given base class also get partitioned.
+# Like, "/item:global", "/bill:local" and so on.
+# By default /journal class will be partitioned 
+# Note: 1. These classes get partitioned only when ENABLE_PARTITION = 'YES'
+#       2. Only base classes are to be listed.
+#=======================================================================	
+@CLASSES_TO_BE_PARTITIONED = ("/journal:local","/user_activity:local","/item:local","/batch:local","/monitor_queue:local");
+
+#=======================================================================
+# Flag to drop tables
+#
+# Specifies whether to drop all the database tables.
+# WARNING !!!
+#=======================================================================	
+if ( $ENV{'PIN_SETUP_DROP_ALL_TABLES'} !~ /^$/ ) { 
+	$SETUP_DROP_ALL_TABLES = $ENV{'PIN_SETUP_DROP_ALL_TABLES'};
+} else {
+	$SETUP_DROP_ALL_TABLES =  "NO";
+}
+
+#=======================================================================
+# Flag to initialize databases
+#
+# Specifies whether to initialize the databases.
+#=======================================================================	
+if ( $ENV{'PIN_SETUP_INIT_DB'} !~ /^$/ ) { 
+	$SETUP_INIT_DB = $ENV{'PIN_SETUP_INIT_DB'};
+} else {
+	$SETUP_INIT_DB =  "YES";
+}
+
+#=======================================================================
+# Flag to configure Portal Base control files
+#
+# Specifies whether to configure pin.conf, Infranet.properties, etc.
+#=======================================================================
+if ( $ENV{'PIN_SETUP_CONFIGURE'} !~ /^$/ ) { 
+	$SETUP_CONFIGURE = $ENV{'PIN_SETUP_CONFIGURE'};
+} else {
+	$SETUP_CONFIGURE =  "YES";
+}
+
+#=======================================================================
+# Flag to create the Portal Base database tablespaces
+#
+# Specifies whether to automatically create (or re-create) Portal Tablespaces.
+# Setting this variable to "YES" will remove any Portal data on the database 
+# and this option should be used with care.
+#=======================================================================	
+if ( $ENV{'PIN_CREATE_DATABASE_TABLES'} !~ /^$/ ) { 
+	$CREATE_DATABASE_TABLES = $ENV{'PIN_CREATE_DATABASE_TABLES'};
+} else {
+	$CREATE_DATABASE_TABLES =  "No";
+}
+
+#=======================================================================
+# Flag to initialize Satellite install
+#
+# Setting the variable to "YES" to indicate the Satellite install
+#=======================================================================	
+if ( $ENV{'PIN_SATELLITE_INSTALL'} !~ /^$/ ) { 
+	$SATELLITE_INSTALL = $ENV{'PIN_SATELLITE_INSTALL'};
+} else {
+	$SATELLITE_INSTALL =  "NO";
+}
+
+#=======================================================================
+# Information about the databases
+#
+# Specifies the main Portal Base database, including RDBMS type, logon
+# information, and schema information.
+#
+# Make sure you modify your alias to be correct.
+#=======================================================================
+if ( $ENV{'PIN_MAIN_DB__vendor__'} !~ /^$/ ) { 
+	$MAIN_DB{'vendor'} = $ENV{'PIN_MAIN_DB__vendor__'};
+} else {
+	$MAIN_DB{'vendor'} =  "oracle";
+}
+if ( $ENV{'PIN_MAIN_DB__alias__'} !~ /^$/ ) { 
+	$MAIN_DB{'alias'} = $ENV{'PIN_MAIN_DB__alias__'};
+} else {
+	$MAIN_DB{'alias'} =  "brmuat";
+}
+if ( $ENV{'PIN_MAIN_DB__user__'} !~ /^$/ ) { 
+	$MAIN_DB{'user'} = $ENV{'PIN_MAIN_DB__user__'};
+} else {
+	$MAIN_DB{'user'} =  "pin";
+}
+if ( $ENV{'PIN_MAIN_DB__password__'} !~ /^$/ ) { 
+	$MAIN_DB{'password'} = $ENV{'PIN_MAIN_DB__password__'};
+} else {
+	$MAIN_DB{'password'} =  "&aes|10|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC23D94E0FFD3C7A7B1152827133F1C2726";
+}
+if ( $ENV{'PIN_MAIN_DB__Database__'} !~ /^$/ ) { 
+	$MAIN_DB{'Database'} = $ENV{'PIN_MAIN_DB__Database__'};
+} else {
+	$MAIN_DB{'Database'} =  "brmuat";
+}
+if ( $ENV{'PIN_MAIN_DB__Host__'} !~ /^$/ ) { 
+	$MAIN_DB{'Host'} = $ENV{'PIN_MAIN_DB__Host__'};
+} else {
+	$MAIN_DB{'Host'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_MAIN_DB__version__'} !~ /^$/ ) { 
+	$MAIN_DB{'version'} = $ENV{'PIN_MAIN_DB__version__'};
+} else {
+	$MAIN_DB{'version'} =  "11g";
+}
+if ( $ENV{'PIN_MAIN_DB__tables_group__'} !~ /^$/ ) { 
+	$MAIN_DB{'tables_group'} = $ENV{'PIN_MAIN_DB__tables_group__'};
+} else {
+	$MAIN_DB{'tables_group'} =  "pin00";
+}
+if ( $ENV{'PIN_MAIN_DB__indexes_group__'} !~ /^$/ ) { 
+	$MAIN_DB{'indexes_group'} = $ENV{'PIN_MAIN_DB__indexes_group__'};
+} else {
+	$MAIN_DB{'indexes_group'} =  "pinx00";
+}
+if ( $ENV{'PIN_MAIN_DB__storage_model__'} !~ /^$/ ) { 
+	$MAIN_DB{'storage_model'} = $ENV{'PIN_MAIN_DB__storage_model__'};
+} else {
+	$MAIN_DB{'storage_model'} =  "Large";
+}
+if ( $ENV{'PIN_MAIN_DB__system_user__'} !~ /^$/ ) { 
+	$MAIN_DB{'system_user'} = $ENV{'PIN_MAIN_DB__system_user__'};
+} else {
+	$MAIN_DB{'system_user'} =  "system";
+}
+if ( $ENV{'PIN_MAIN_DB__system_password__'} !~ /^$/ ) { 
+	$MAIN_DB{'system_password'} = $ENV{'PIN_MAIN_DB__system_password__'};
+} else {
+	$MAIN_DB{'system_password'} =  "&aes|00|0D5E11BFDD97D2769D9B0DBFBD1BBF7E7212D39DFC91E91640DCF63ABD0BCFC66B";
+}
+
+#=======================================================================
+# Information about the CM
+#=======================================================================
+if ( $ENV{'PIN_MAIN_CM__hostname__'} !~ /^$/ ) { 
+	$MAIN_CM{'hostname'} = $ENV{'PIN_MAIN_CM__hostname__'};
+} else {
+	$MAIN_CM{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_MAIN_CM__port__'} !~ /^$/ ) { 
+	$MAIN_CM{'port'} = $ENV{'PIN_MAIN_CM__port__'};
+} else {
+	$MAIN_CM{'port'} =  "11960";
+}
+if ( $ENV{'PIN_MAIN_CM__login_audit__'} !~ /^$/ ) { 
+	$MAIN_CM{'login_audit'} = $ENV{'PIN_MAIN_CM__login_audit__'};
+} else {
+	$MAIN_CM{'login_audit'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__location__'} !~ /^$/ ) { 
+	$MAIN_CM{'location'} = $ENV{'PIN_MAIN_CM__location__'};
+} else {
+	$MAIN_CM{'location'} =  "$PIN_HOME/sys/cm";
+}
+if ( $ENV{'PIN_MAIN_CM__pin_conf_location__'} !~ /^$/ ) { 
+	$MAIN_CM{'pin_conf_location'} = $ENV{'PIN_MAIN_CM__pin_conf_location__'};
+} else {
+	$MAIN_CM{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/cm";
+}
+if ( $ENV{'PIN_MAIN_CM__remit_location__'} !~ /^$/ ) { 
+	$MAIN_CM{'remit_location'} = $ENV{'PIN_MAIN_CM__remit_location__'};
+} else {
+	$MAIN_CM{'remit_location'} =  "$PIN_HOME/apps/pin_remit";
+}
+
+if ( $ENV{'PIN_MAIN_CM__log_session__'} !~ /^$/ ) { 
+	$MAIN_CM{'log_session'} = $ENV{'PIN_MAIN_CM__log_session__'};
+} else {
+	$MAIN_CM{'log_session'} =  "1";
+}
+if ( $ENV{'PIN_MAIN_CM__max_connects__'} !~ /^$/ ) { 
+	$MAIN_CM{'max_connects'} = $ENV{'PIN_MAIN_CM__max_connects__'};
+} else {
+	$MAIN_CM{'max_connects'} =  "3";
+}
+if ( $ENV{'PIN_MAIN_CM__keep_alive__'} !~ /^$/ ) { 
+	$MAIN_CM{'keep_alive'} = $ENV{'PIN_MAIN_CM__keep_alive__'};
+} else {
+	$MAIN_CM{'keep_alive'} =  "1";
+}
+if ( $ENV{'PIN_MAIN_CM__log_level__'} !~ /^$/ ) { 
+	$MAIN_CM{'log_level'} = $ENV{'PIN_MAIN_CM__log_level__'};
+} else {
+	$MAIN_CM{'log_level'} =  "1";
+}
+if ( $ENV{'PIN_MAIN_CM__log_format__'} !~ /^$/ ) { 
+	$MAIN_CM{'log_format'} = $ENV{'PIN_MAIN_CM__log_format__'};
+} else {
+	$MAIN_CM{'log_format'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__passwd_age__'} !~ /^$/ ) { 
+	$MAIN_CM{'passwd_age'} = $ENV{'PIN_MAIN_CM__passwd_age__'};
+} else {
+	$MAIN_CM{'passwd_age'} =  "90";
+}
+if ( $ENV{'PIN_MAIN_CM__timestamp_rounding__'} !~ /^$/ ) { 
+	$MAIN_CM{'timestamp_rounding'} = $ENV{'PIN_MAIN_CM__timestamp_rounding__'};
+} else {
+	$MAIN_CM{'timestamp_rounding'} =  "1";
+}
+if ( $ENV{'PIN_MAIN_CM__config_billing_delay__'} !~ /^$/ ) { 
+	$MAIN_CM{'config_billing_delay'} = $ENV{'PIN_MAIN_CM__config_billing_delay__'};
+} else {
+	$MAIN_CM{'config_billing_delay'} =  "10";
+}
+if ( $ENV{'PIN_MAIN_CM__validate_deal_dependencies__'} !~ /^$/ ) { 
+	$MAIN_CM{'validate_deal_dependencies'} = $ENV{'PIN_MAIN_CM__validate_deal_dependencies__'};
+} else {
+	$MAIN_CM{'validate_deal_dependencies'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__cancel_tolerance__'} !~ /^$/ ) { 
+	$MAIN_CM{'cancel_tolerance'} = $ENV{'PIN_MAIN_CM__cancel_tolerance__'};
+} else {
+	$MAIN_CM{'cancel_tolerance'} =  "15";
+}
+if ( $ENV{'PIN_MAIN_CM__use_number_of_days_in_month__'} !~ /^$/ ) { 
+	$MAIN_CM{'use_number_of_days_in_month'} = $ENV{'PIN_MAIN_CM__use_number_of_days_in_month__'};
+} else {
+	$MAIN_CM{'use_number_of_days_in_month'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__calc_cycle_from_cycle_start_t__'} !~ /^$/ ) { 
+	$MAIN_CM{'calc_cycle_from_cycle_start_t'} = $ENV{'PIN_MAIN_CM__calc_cycle_from_cycle_start_t__'};
+} else {
+	$MAIN_CM{'calc_cycle_from_cycle_start_t'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__cycle_delay_use_special_days__'} !~ /^$/ ) { 
+	$MAIN_CM{'cycle_delay_use_special_days'} = $ENV{'PIN_MAIN_CM__cycle_delay_use_special_days__'};
+} else {
+	$MAIN_CM{'cycle_delay_use_special_days'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__underdue_tolerance__'} !~ /^$/ ) { 
+	$MAIN_CM{'underdue_tolerance'} = $ENV{'PIN_MAIN_CM__underdue_tolerance__'};
+} else {
+	$MAIN_CM{'underdue_tolerance'} =  "secondary";
+}
+if ( $ENV{'PIN_MAIN_CM__overdue_tolerance__'} !~ /^$/ ) { 
+	$MAIN_CM{'overdue_tolerance'} = $ENV{'PIN_MAIN_CM__overdue_tolerance__'};
+} else {
+	$MAIN_CM{'overdue_tolerance'} =  "secondary";
+}
+if ( $ENV{'PIN_MAIN_CM__creation_logging__'} !~ /^$/ ) { 
+	$MAIN_CM{'creation_logging'} = $ENV{'PIN_MAIN_CM__creation_logging__'};
+} else {
+	$MAIN_CM{'creation_logging'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__default_country__'} !~ /^$/ ) { 
+	$MAIN_CM{'default_country'} = $ENV{'PIN_MAIN_CM__default_country__'};
+} else {
+	$MAIN_CM{'default_country'} =  "New Zealand";
+}
+if ( $ENV{'PIN_MAIN_CM__currency__'} !~ /^$/ ) { 
+	$MAIN_CM{'currency'} = $ENV{'PIN_MAIN_CM__currency__'};
+} else {
+	$MAIN_CM{'currency'} =  "554";
+}
+if ( $ENV{'PIN_MAIN_CM__min_balance__'} !~ /^$/ ) { 
+	$MAIN_CM{'min_balance'} = $ENV{'PIN_MAIN_CM__min_balance__'};
+} else {
+	$MAIN_CM{'min_balance'} =  "2.00";
+}
+if ( $ENV{'PIN_MAIN_CM__acct_dom__'} !~ /^$/ ) { 
+	$MAIN_CM{'acct_dom'} = $ENV{'PIN_MAIN_CM__acct_dom__'};
+} else {
+	$MAIN_CM{'acct_dom'} =  "1";
+}
+if ( $ENV{'PIN_MAIN_CM__acct_type__'} !~ /^$/ ) { 
+	$MAIN_CM{'acct_type'} = $ENV{'PIN_MAIN_CM__acct_type__'};
+} else {
+	$MAIN_CM{'acct_type'} =  "2";
+}
+if ( $ENV{'PIN_MAIN_CM__gl_segments__'} !~ /^$/ ) { 
+	$MAIN_CM{'gl_segments'} = $ENV{'PIN_MAIN_CM__gl_segments__'};
+} else {
+	$MAIN_CM{'gl_segments'} =  ".";
+}
+if ( $ENV{'PIN_MAIN_CM__issqlserver__'} !~ /^$/ ) { 
+	$MAIN_CM{'issqlserver'} = $ENV{'PIN_MAIN_CM__issqlserver__'};
+} else {
+	$MAIN_CM{'issqlserver'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__rate_cache__'} !~ /^$/ ) { 
+	$MAIN_CM{'rate_cache'} = $ENV{'PIN_MAIN_CM__rate_cache__'};
+} else {
+	$MAIN_CM{'rate_cache'} =  "2048";
+}
+if ( $ENV{'PIN_MAIN_CM__keepalive__'} !~ /^$/ ) { 
+	$MAIN_CM{'keepalive'} = $ENV{'PIN_MAIN_CM__keepalive__'};
+} else {
+	$MAIN_CM{'keepalive'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__enforce_scoping__'} !~ /^$/ ) { 
+	$MAIN_CM{'enforce_scoping'} = $ENV{'PIN_MAIN_CM__enforce_scoping__'};
+} else {
+	$MAIN_CM{'enforce_scoping'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__dd_cache_size__'} !~ /^$/ ) { 
+	$MAIN_CM{'dd_cache_size'} = $ENV{'PIN_MAIN_CM__dd_cache_size__'};
+} else {
+	$MAIN_CM{'dd_cache_size'} =  "512000";
+}
+if ( $ENV{'PIN_MAIN_CM__dd_cache_num_entries__'} !~ /^$/ ) { 
+	$MAIN_CM{'dd_cache_num_entries'} = $ENV{'PIN_MAIN_CM__dd_cache_num_entries__'};
+} else {
+	$MAIN_CM{'dd_cache_num_entries'} =  "100";
+}
+if ( $ENV{'PIN_MAIN_CM__set_status_non_subord__'} !~ /^$/ ) { 
+	$MAIN_CM{'set_status_non_subord'} = $ENV{'PIN_MAIN_CM__set_status_non_subord__'};
+} else {
+	$MAIN_CM{'set_status_non_subord'} =  "1";
+}
+if ( $ENV{'PIN_MAIN_CM__pin_virtual_time_path__'} !~ /^$/ ) { 
+	$MAIN_CM{'pin_virtual_time_path'} = $ENV{'PIN_MAIN_CM__pin_virtual_time_path__'};
+} else {
+	$MAIN_CM{'pin_virtual_time_path'} =  "\$\{PIN_HOME\}/lib/pin_virtual_time_file";
+}
+# Set the following value to either "#" (commented out) or "" (NOT commented out)
+if ( $ENV{'PIN_MAIN_CM__pin_virtual_time_commented__'} !~ /^$/ ) { 
+	$MAIN_CM{'pin_virtual_time_commented'} = $ENV{'PIN_MAIN_CM__pin_virtual_time_commented__'};
+} else {
+	$MAIN_CM{'pin_virtual_time_commented'} =  "#";
+}
+if ( $ENV{'PIN_MAIN_CM__bill_sponsorees__'} !~ /^$/ ) { 
+	$MAIN_CM{'bill_sponsorees'} = $ENV{'PIN_MAIN_CM__bill_sponsorees__'};
+} else {
+	$MAIN_CM{'bill_sponsorees'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__stop_bill_closed_accounts__'} !~ /^$/ ) { 
+	$MAIN_CM{'stop_bill_closed_accounts'} = $ENV{'PIN_MAIN_CM__stop_bill_closed_accounts__'};
+} else {
+	$MAIN_CM{'stop_bill_closed_accounts'} =  "0";
+}
+# Set the following value to either "0" - Dont Send Welcome Message or "1" Send Welcome Message
+if ( $ENV{'PIN_MAIN_CM__send_new_account_welcome_msg__'} !~ /^$/ ) { 
+	$MAIN_CM{'send_new_account_welcome_msg'} = $ENV{'PIN_MAIN_CM__send_new_account_welcome_msg__'};
+} else {
+	$MAIN_CM{'send_new_account_welcome_msg'} =  "0";
+}
+if ( $ENV{'PIN_MAIN_CM__pcm_admin_passwd__'} !~ /^$/ ) { 
+	$MAIN_CM{'pcm_admin_passwd'} = $ENV{'PIN_MAIN_CM__pcm_admin_passwd__'};
+} else {
+	$MAIN_CM{'pcm_admin_passwd'} = "&aes|08|0D5E11BFDD97D2769D9B0DBFBD1BBF7E5D40C305EDF3D77DF111AAB8F781E92122";
+}
+#=======================================================================
+# Default values for AES Securiy Extention package
+#=======================================================================
+if ( $ENV{'PIN_AES__pin_cnf_location__'} !~ /^$/ ) { 
+	$AES{'pin_cnf_location'} = $ENV{'PIN_AES__pin_cnf_location__'};
+} else {
+	$AES{'pin_cnf_location'} =  "$PIN_HOME/apps/pin_crypt";
+}
+#ecr_pci
+if ( $ENV{'PIN_PIN_CRYPT_UPGRADE__log_level__'} !~ /^$/ ) { 
+	$PIN_CRYPT_UPGRADE{'log_level'} = $ENV{'PIN_PIN_CRYPT_UPGRADE__log_level__'};
+} else {
+	$PIN_CRYPT_UPGRADE{'log_level'} =  "1";
+}
+
+
+#=======================================================================
+# Default values for SOX Unlock service
+#=======================================================================
+if ( $ENV{'PIN_SOX_UNLOCK__pin_cnf_location__'} !~ /^$/ ) { 
+	$SOX_UNLOCK{'pin_cnf_location'}= $ENV{'PIN_SOX_UNLOCK__pin_cnf_location__'};
+} else {
+	$SOX_UNLOCK{'pin_cnf_location'}= "$PIN_HOME/apps/pin_unlock_service";
+}
+
+#=======================================================================
+# Default values for Credit Control - load notification 
+#=======================================================================
+if ( $ENV{'PIN_CREDIT_CONTROL__pin_cnf_location__'} !~ /^$/ ) { 
+	$CREDIT_CONTROL{'pin_cnf_location'}= $ENV{'PIN_CREDIT_CONTROL__pin_cnf_location__'};
+} else {
+	$CREDIT_CONTROL{'pin_cnf_location'}= "$PIN_HOME/apps/load_notification_event";
+}
+
+#=======================================================================
+# Default values for pin_cfg_bpdump
+#=======================================================================
+if ( $ENV{'PIN_BPDUMP__pin_cnf_location__'} !~ /^$/ ) { 
+	$BPDUMP{'pin_cnf_location'} = $ENV{'PIN_BPDUMP__pin_cnf_location__'};
+} else {
+	$BPDUMP{'pin_cnf_location'} =  "$PIN_HOME/diagnostics/pin_cfg_bpdump";
+}
+
+#=======================================================================
+# Default values for pin_update_poid
+#=======================================================================
+if ( $ENV{'PIN_UPDATE_POID__pin_cnf_location__'} !~ /^$/ ) { 
+	$UPDATE_POID{'pin_cnf_location'} = $ENV{'PIN_UPDATE_POID__pin_cnf_location__'};
+} else {
+	$UPDATE_POID{'pin_cnf_location'} =  "$PIN_HOME/apps/pin_update_poid_to_null";
+}
+
+#=======================================================================
+# Default values for Load Telco AAA Params
+#=======================================================================
+if ( $ENV{'PIN_LTAP__pin_cnf_location__'} !~ /^$/ ) { 
+	$LTAP{'pin_cnf_location'} = $ENV{'PIN_LTAP__pin_cnf_location__'};
+} else {
+	$LTAP{'pin_cnf_location'} =  "$PIN_HOME/sys/data/config";
+}
+#Load Telco AAA Params
+if ( $ENV{'PIN_PIN_LOAD_TELCO_AAA_PARAMS__log_level__'} !~ /^$/ ) { 
+	$PIN_LOAD_TELCO_AAA_PARAMS{'log_level'} = $ENV{'PIN_PIN_LOAD_TELCO_AAA_PARAMS__log_level__'};
+} else {
+	$PIN_LOAD_TELCO_AAA_PARAMS{'log_level'} =  "3";
+}
+
+
+#=======================================================================
+# Default values for data archiving
+#=======================================================================
+if ( $ENV{'PIN_ARCHIVING__app_location__'} !~ /^$/ ) { 
+	$ARCHIVING{'app_location'} = $ENV{'PIN_ARCHIVING__app_location__'};
+} else {
+	$ARCHIVING{'app_location'} =  "$PIN_HOME/apps/pin_pre_archive";
+}
+
+if ( $ENV{'PIN_ARCHIVING__location__'} !~ /^$/ ) { 
+	$ARCHIVING{'location'} = $ENV{'PIN_ARCHIVING__location__'};
+} else {
+	$ARCHIVING{'location'} =  "$PIN_HOME/sys/archive/$MAIN_DB{'vendor'}";
+}
+
+if ( $ENV{'PIN_ARCHIVING__export_dir__'} !~ /^$/ ) { 
+	$ARCHIVING{'export_dir'} = $ENV{'PIN_ARCHIVING__export_dir__'};
+} else {
+	$ARCHIVING{'export_dir'} =  "";
+}
+if ( $ENV{'PIN_ARCHIVING__import_dir__'} !~ /^$/ ) { 
+	$ARCHIVING{'import_dir'} = $ENV{'PIN_ARCHIVING__import_dir__'};
+} else {
+	$ARCHIVING{'import_dir'} =  "";
+}
+if ( $ENV{'PIN_ARCHIVING__logfile__'} !~ /^$/ ) { 
+	$ARCHIVING{'logfile'} = $ENV{'PIN_ARCHIVING__logfile__'};
+} else {
+	$ARCHIVING{'logfile'} =  "";
+}
+if ( $ENV{'PIN_ARCHIVING__log_level__'} !~ /^$/ ) { 
+	$ARCHIVING{'log_level'} = $ENV{'PIN_ARCHIVING__log_level__'};
+} else {
+	$ARCHIVING{'log_level'} =  "2";
+}
+if ( $ENV{'PIN_ARCHIVING__batch_size__'} !~ /^$/ ) { 
+	$ARCHIVING{'batch_size'} = $ENV{'PIN_ARCHIVING__batch_size__'};
+} else {
+	$ARCHIVING{'batch_size'} =  "10000";
+}
+if ( $ENV{'PIN_ARCHIVING__children__'} !~ /^$/ ) { 
+	$ARCHIVING{'children'} = $ENV{'PIN_ARCHIVING__children__'};
+} else {
+	$ARCHIVING{'children'} =  "5";
+}
+if ( $ENV{'PIN_ARCHIVING__per_batch__'} !~ /^$/ ) { 
+	$ARCHIVING{'per_batch'} = $ENV{'PIN_ARCHIVING__per_batch__'};
+} else {
+	$ARCHIVING{'per_batch'} =  "500";
+}
+if ( $ENV{'PIN_ARCHIVING__per_step__'} !~ /^$/ ) { 
+	$ARCHIVING{'per_step'} = $ENV{'PIN_ARCHIVING__per_step__'};
+} else {
+	$ARCHIVING{'per_step'} =  "1000";
+}
+if ( $ENV{'PIN_ARCHIVING__fetch_size__'} !~ /^$/ ) { 
+	$ARCHIVING{'fetch_size'} = $ENV{'PIN_ARCHIVING__fetch_size__'};
+} else {
+	$ARCHIVING{'fetch_size'} =  "5000";
+}
+if ( $ENV{'PIN_ARCHIVING__max_errs__'} !~ /^$/ ) { 
+	$ARCHIVING{'max_errs'} = $ENV{'PIN_ARCHIVING__max_errs__'};
+} else {
+	$ARCHIVING{'max_errs'} =  "1";
+}
+if ( $ENV{'PIN_ARCHIVING__hotlist__'} !~ /^$/ ) { 
+	$ARCHIVING{'hotlist'} = $ENV{'PIN_ARCHIVING__hotlist__'};
+} else {
+	$ARCHIVING{'hotlist'} =  "hot_list";
+}
+if ( $ENV{'PIN_ARCHIVING__monitor__'} !~ /^$/ ) { 
+	$ARCHIVING{'monitor'} = $ENV{'PIN_ARCHIVING__monitor__'};
+} else {
+	$ARCHIVING{'monitor'} =  "monitor";
+}
+if ( $ENV{'PIN_ARCHIVING__db__'} !~ /^$/ ) { 
+	$ARCHIVING{'db'} = $ENV{'PIN_ARCHIVING__db__'};
+} else {
+	$ARCHIVING{'db'} =  \%MAIN_DB;
+}
+if ( $ENV{'PIN_ARCHIVING__event_per_step__'} !~ /^$/ ) { 
+	$ARCHIVING{'event_per_step'} = $ENV{'PIN_ARCHIVING__event_per_step__'};
+} else {
+	$ARCHIVING{'event_per_step'} =  "10000";
+}
+if ( $ENV{'PIN_ARCHIVING__db_filter_events__'} !~ /^$/ ) { 
+	$ARCHIVING{'db_filter_events'} = $ENV{'PIN_ARCHIVING__db_filter_events__'};
+} else {
+	$ARCHIVING{'db_filter_events'} =  "1";
+}
+if ( $ENV{'PIN_ARCHIVING__check_bal_impacts__'} !~ /^$/ ) { 
+	$ARCHIVING{'check_bal_impacts'} = $ENV{'PIN_ARCHIVING__check_bal_impacts__'};
+} else {
+	$ARCHIVING{'check_bal_impacts'} =  "1";
+}
+
+#=======================================================================
+# Default values for config price
+#=======================================================================
+if ( $ENV{'PIN_EXPORT_PRICE__location__'} !~ /^$/ ) { 
+	$EXPORT_PRICE{'location'} = $ENV{'PIN_EXPORT_PRICE__location__'};
+} else {
+	$EXPORT_PRICE{'location'} =  "$PIN_HOME/apps/pin_export_price";
+}
+
+#=======================================================================
+# Information about the Pipeline
+#=======================================================================
+
+if ( $ENV{'PIN_PRICING_ADMIN__host_name__'} !~ /^$/ ) { 
+	$PRICING_ADMIN{'host_name'}         = $ENV{'PIN_PRICING_ADMIN__host_name__'};
+} else {
+	$PRICING_ADMIN{'host_name'}         =  $HOSTNAME;
+}
+
+if ( $ENV{'PIN_PRICING_ADMIN__oracle_admin_passwd__'} !~ /^$/ ) { 
+	$PRICING_ADMIN{'oracle_admin_passwd'} = $ENV{'PIN_PRICING_ADMIN__oracle_admin_passwd__'};
+} else {
+	$PRICING_ADMIN{'oracle_admin_passwd'} =  "&aes|07|0D5E11BFDD97D2769D9B0DBFBD1BBF7E92D79F3F3EFFF041B386055591D84459A7";
+}
+if ( $ENV{'PIN_PRICING_ADMIN__oracle_admin_name__'} !~ /^$/ ) { 
+	$PRICING_ADMIN{'oracle_admin_name'}   = $ENV{'PIN_PRICING_ADMIN__oracle_admin_name__'};
+} else {
+	$PRICING_ADMIN{'oracle_admin_name'}   =  "system";
+}
+if ( $ENV{'PIN_PRICING_ADMIN__oracle_db_type__'} !~ /^$/ ) { 
+	$PRICING_ADMIN{'oracle_db_type'}      = $ENV{'PIN_PRICING_ADMIN__oracle_db_type__'};
+} else {
+	$PRICING_ADMIN{'oracle_db_type'}      =  "oracle";
+}
+if ( $ENV{'PIN_PRICING_ADMIN__oracle_port_number__'} !~ /^$/ ) { 
+	$PRICING_ADMIN{'oracle_port_number'}  = $ENV{'PIN_PRICING_ADMIN__oracle_port_number__'};
+} else {
+	$PRICING_ADMIN{'oracle_port_number'}  =  "1521";
+}
+
+#=======================================================================
+# Information about the rating engine
+#=======================================================================
+if ( $ENV{'PIN_RATING__hostname__'} !~ /^$/ ) { 
+	$RATING{'hostname'} = $ENV{'PIN_RATING__hostname__'};
+} else {
+	$RATING{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_RATING__port__'} !~ /^$/ ) { 
+	$RATING{'port'} = $ENV{'PIN_RATING__port__'};
+} else {
+	$RATING{'port'} =  "11940";
+}
+
+#=======================================================================
+# Information about the discounting engine
+#=======================================================================
+if ( $ENV{'PIN_DISCOUNTING__hostname__'} !~ /^$/ ) { 
+	$DISCOUNTING{'hostname'} = $ENV{'PIN_DISCOUNTING__hostname__'};
+} else {
+	$DISCOUNTING{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DISCOUNTING__port__'} !~ /^$/ ) { 
+	$DISCOUNTING{'port'} = $ENV{'PIN_DISCOUNTING__port__'};
+} else {
+	$DISCOUNTING{'port'} =  "24000";
+}
+
+#=======================================================================
+# Information about the realtime rerating engine
+#=======================================================================
+if ( $ENV{'PIN_RERATING__hostname__'} !~ /^$/ ) { 
+	$RERATING{'hostname'} = $ENV{'PIN_RERATING__hostname__'};
+} else {
+	$RERATING{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_RERATING__port__'} !~ /^$/ ) { 
+	$RERATING{'port'} = $ENV{'PIN_RERATING__port__'};
+} else {
+	$RERATING{'port'} =  "24000";
+}
+if ( $ENV{'PIN_RERATING__ood_handler_pincnf_location__'} !~ /^$/ ) { 
+	$RERATING{'ood_handler_pincnf_location'} = $ENV{'PIN_RERATING__ood_handler_pincnf_location__'};
+} else {
+	$RERATING{'ood_handler_pincnf_location'} =  "\$\{PIN_HOME\}/apps/pin_ood_handler";
+}
+if ( $ENV{'PIN_RERATING__ood_handler_process_pincnf_location__'} !~ /^$/ ) { 
+	$RERATING{'ood_handler_process_pincnf_location'} = $ENV{'PIN_RERATING__ood_handler_process_pincnf_location__'};
+} else {
+	$RERATING{'ood_handler_process_pincnf_location'} =  "\$\{PIN_HOME\}/apps/pin_ood_handler/process";
+}
+if ( $ENV{'PIN_RERATING__ood_handler_location__'} !~ /^$/ ) { 
+	$RERATING{'ood_handler_location'} = $ENV{'PIN_RERATING__ood_handler_location__'};
+} else {
+	$RERATING{'ood_handler_location'} =  "$PIN_HOME/apps/pin_ood_handler";
+}
+if ( $ENV{'PIN_RERATING__ood_handler_process_location__'} !~ /^$/ ) { 
+	$RERATING{'ood_handler_process_location'} = $ENV{'PIN_RERATING__ood_handler_process_location__'};
+} else {
+	$RERATING{'ood_handler_process_location'} =  "$PIN_HOME/apps/pin_ood_handler/process";
+}
+
+#=======================================================================
+# Information about the Common Zone
+#=======================================================================
+if ( $ENV{'PIN_ZONING__hostname__'} !~ /^$/ ) { 
+	$ZONING{'hostname'} = $ENV{'PIN_ZONING__hostname__'};
+} else {
+	$ZONING{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_ZONING__port__'} !~ /^$/ ) { 
+	$ZONING{'port'} = $ENV{'PIN_ZONING__port__'};
+} else {
+	$ZONING{'port'} =  "34000";
+}
+
+#=======================================================================
+# Information about the invoice formatter
+#=======================================================================
+if ( $ENV{'PIN_FORMATTER__hostname__'} !~ /^$/ ) { 
+	$FORMATTER{'hostname'} = $ENV{'PIN_FORMATTER__hostname__'};
+} else {
+	$FORMATTER{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_FORMATTER__port__'} !~ /^$/ ) { 
+	$FORMATTER{'port'} = $ENV{'PIN_FORMATTER__port__'};
+} else {
+	$FORMATTER{'port'} =  "11920";
+}
+
+#=======================================================================
+# Information about the CMMP
+#=======================================================================
+if ( $ENV{'PIN_CMMP__location__'} !~ /^$/ ) { 
+	$CMMP{'location'} = $ENV{'PIN_CMMP__location__'};
+} else {
+	$CMMP{'location'} =  "$PIN_HOME/sys/cmmp";
+}
+if ( $ENV{'PIN_CMMP__pin_conf_location__'} !~ /^$/ ) { 
+	$CMMP{'pin_conf_location'} = $ENV{'PIN_CMMP__pin_conf_location__'};
+} else {
+	$CMMP{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/cmmp";
+}
+
+if ( $ENV{'PIN_CMMP__hostname__'} !~ /^$/ ) { 
+	$CMMP{'hostname'} = $ENV{'PIN_CMMP__hostname__'};
+} else {
+	$CMMP{'hostname'} =  "-";
+}
+if ( $ENV{'PIN_CMMP__port__'} !~ /^$/ ) { 
+	$CMMP{'port'} = $ENV{'PIN_CMMP__port__'};
+} else {
+	$CMMP{'port'} =  "11959";
+}
+if ( $ENV{'PIN_CMMP__cmmp_algorithm__'} !~ /^$/ ) { 
+	$CMMP{'cmmp_algorithm'} = $ENV{'PIN_CMMP__cmmp_algorithm__'};
+} else {
+	$CMMP{'cmmp_algorithm'} =  "0";
+}
+
+
+#========================================================================
+# Information about the QMs
+#
+# The default entries here are generic and should be overwritten.
+#========================================================================
+if ( $ENV{'PIN_QM_generic__front_ends__'} !~ /^$/ ) { 
+	$QM_generic{'front_ends'} = $ENV{'PIN_QM_generic__front_ends__'};
+} else {
+	$QM_generic{'front_ends'} =  "4";
+}
+if ( $ENV{'PIN_QM_generic__max_frontends__'} !~ /^$/ ) { 
+	$QM_generic{'max_frontends'} = $ENV{'PIN_QM_generic__max_frontends__'};
+} else {
+	$QM_generic{'max_frontends'} =  "16";
+}
+if ( $ENV{'PIN_QM_generic__back_ends__'} !~ /^$/ ) { 
+	$QM_generic{'back_ends'} = $ENV{'PIN_QM_generic__back_ends__'};
+} else {
+	$QM_generic{'back_ends'} =  "8";
+}
+if ( $ENV{'PIN_QM_generic__max_back_ends__'} !~ /^$/ ) { 
+	$QM_generic{'max_back_ends'} = $ENV{'PIN_QM_generic__max_back_ends__'};
+} else {
+	$QM_generic{'max_back_ends'} =  "4";
+}
+if ( $ENV{'PIN_QM_generic__shmsize__'} !~ /^$/ ) { 
+	$QM_generic{'shmsize'} = $ENV{'PIN_QM_generic__shmsize__'};
+} else {
+	$QM_generic{'shmsize'} =  "4M";
+}
+if ( $ENV{'PIN_QM_generic__bigsize__'} !~ /^$/ ) { 
+	$QM_generic{'bigsize'} = $ENV{'PIN_QM_generic__bigsize__'};
+} else {
+	$QM_generic{'bigsize'} =  "512k";
+}
+if ( $ENV{'PIN_QM_generic__restart_children__'} !~ /^$/ ) { 
+	$QM_generic{'restart_children'} = $ENV{'PIN_QM_generic__restart_children__'};
+} else {
+	$QM_generic{'restart_children'} =  0;
+}
+
+
+#=======================================================================
+# Information about dm_email
+#=======================================================================
+%DM_EMAIL = %QM_generic;
+if ( $ENV{'PIN_DM_EMAIL__mail_profile__'} !~ /^$/ ) { 
+	$DM_EMAIL{'mail_profile'} = $ENV{'PIN_DM_EMAIL__mail_profile__'};
+} else {
+	$DM_EMAIL{'mail_profile'} =  "MS Exchange Settings";
+}
+if ( $ENV{'PIN_DM_EMAIL__mailbox__'} !~ /^$/ ) { 
+	$DM_EMAIL{'mailbox'} = $ENV{'PIN_DM_EMAIL__mailbox__'};
+} else {
+	$DM_EMAIL{'mailbox'} =  "John Doe";
+}
+if ( $ENV{'PIN_DM_EMAIL__port__'} !~ /^$/ ) { 
+	$DM_EMAIL{'port'} = $ENV{'PIN_DM_EMAIL__port__'};
+} else {
+	$DM_EMAIL{'port'} =  "12820";
+}
+if ( $ENV{'PIN_DM_EMAIL__db_num__'} !~ /^$/ ) { 
+	$DM_EMAIL{'db_num'} = $ENV{'PIN_DM_EMAIL__db_num__'};
+} else {
+	$DM_EMAIL{'db_num'} =  "0.0.2.1";
+}
+if ( $ENV{'PIN_DM_EMAIL__location__'} !~ /^$/ ) { 
+	$DM_EMAIL{'location'} = $ENV{'PIN_DM_EMAIL__location__'};
+} else {
+	$DM_EMAIL{'location'} =  "$PIN_HOME/sys/dm_email";
+}
+if ( $ENV{'PIN_DM_EMAIL__pin_conf_location__'} !~ /^$/ ) { 
+	$DM_EMAIL{'pin_conf_location'} = $ENV{'PIN_DM_EMAIL__pin_conf_location__'};
+} else {
+	$DM_EMAIL{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_email";
+}
+
+if ( $ENV{'PIN_DM_EMAIL__sender__'} !~ /^$/ ) { 
+	$DM_EMAIL{'sender'} = $ENV{'PIN_DM_EMAIL__sender__'};
+} else {
+	$DM_EMAIL{'sender'} =  "postmaster";
+}
+if ( $ENV{'PIN_DM_EMAIL__domain__'} !~ /^$/ ) { 
+	$DM_EMAIL{'domain'} = $ENV{'PIN_DM_EMAIL__domain__'};
+} else {
+	$DM_EMAIL{'domain'} =  "portal.com";
+}
+if ( $ENV{'PIN_DM_EMAIL__printer__'} !~ /^$/ ) { 
+	$DM_EMAIL{'printer'} = $ENV{'PIN_DM_EMAIL__printer__'};
+} else {
+	$DM_EMAIL{'printer'} =  $ENV{'PRINTER'};
+}
+%EMAIL_DM = %DM_EMAIL;
+
+
+#========================================================================
+# Generic information about Data Managers (DMs)
+#
+# The default entries here are generic and should be overwritten.
+#========================================================================
+if ( $ENV{'PIN_DM_generic__front_ends__'} !~ /^$/ ) { 
+	$DM_generic{'front_ends'} = $ENV{'PIN_DM_generic__front_ends__'};
+} else {
+	$DM_generic{'front_ends'} =  "4";
+}
+if ( $ENV{'PIN_DM_generic__max_frontends__'} !~ /^$/ ) { 
+	$DM_generic{'max_frontends'} = $ENV{'PIN_DM_generic__max_frontends__'};
+} else {
+	$DM_generic{'max_frontends'} =  "16";
+}
+if ( $ENV{'PIN_DM_generic__back_ends__'} !~ /^$/ ) { 
+	$DM_generic{'back_ends'} = $ENV{'PIN_DM_generic__back_ends__'};
+} else {
+	$DM_generic{'back_ends'} =  "10";
+}
+if ( $ENV{'PIN_DM_generic__max_back_ends__'} !~ /^$/ ) { 
+	$DM_generic{'max_back_ends'} = $ENV{'PIN_DM_generic__max_back_ends__'};
+} else {
+	$DM_generic{'max_back_ends'} =  "8";
+}
+if ( $ENV{'PIN_DM_generic__shmsize__'} !~ /^$/ ) { 
+	$DM_generic{'shmsize'} = $ENV{'PIN_DM_generic__shmsize__'};
+} else {
+	$DM_generic{'shmsize'} =  "33554432";
+}
+if ( $ENV{'PIN_DM_generic__bigsize__'} !~ /^$/ ) { 
+	$DM_generic{'bigsize'} = $ENV{'PIN_DM_generic__bigsize__'};
+} else {
+	$DM_generic{'bigsize'} =  "2097152";
+}
+if ( $ENV{'PIN_DM_generic__restart_children__'} !~ /^$/ ) { 
+	$DM_generic{'restart_children'} = $ENV{'PIN_DM_generic__restart_children__'};
+} else {
+	$DM_generic{'restart_children'} =  1;
+}
+if ( $ENV{'PIN_DM_generic__library__'} !~ /^$/ ) { 
+	$DM_generic{'library'} = $ENV{'PIN_DM_generic__library__'};
+} else {
+	$DM_generic{'library'} =  "";
+}
+if ( $ENV{'PIN_DM_generic__trans_timeout__'} !~ /^$/ ) { 
+	$DM_generic{'trans_timeout'} = $ENV{'PIN_DM_generic__trans_timeout__'};
+} else {
+	$DM_generic{'trans_timeout'} =  "0";
+}
+
+
+#========================================================================
+# Information about the dm_oracle Data Manager
+#========================================================================
+%DM_ORACLE = %DM_generic; 
+if ( $ENV{'PIN_DM_ORACLE__location__'} !~ /^$/ ) { 
+	$DM_ORACLE{'location'} = $ENV{'PIN_DM_ORACLE__location__'};
+} else {
+	$DM_ORACLE{'location'} =  "$PIN_HOME/sys/dm_oracle";
+}
+if ( $ENV{'PIN_DM_ORACLE__pin_conf_location__'} !~ /^$/ ) { 
+	$DM_ORACLE{'pin_conf_location'} = $ENV{'PIN_DM_ORACLE__pin_conf_location__'};
+} else {
+	$DM_ORACLE{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_oracle";
+}
+if ( $ENV{'PIN_DM_ORACLE__version__'} !~ /^$/ ) { 
+	$DM_ORACLE{'version'} = $ENV{'PIN_DM_ORACLE__version__'};
+} else {
+	$DM_ORACLE{'version'} =  "$MAIN_DB{'version'}";
+}
+if ( $ENV{'PIN_DM_ORACLE__db_num__'} !~ /^$/ ) { 
+	$DM_ORACLE{'db_num'} = $ENV{'PIN_DM_ORACLE__db_num__'};
+} else {
+	$DM_ORACLE{'db_num'} =  "0.0.0.1";
+}
+if ( $ENV{'PIN_DM_ORACLE__hostname__'} !~ /^$/ ) { 
+	$DM_ORACLE{'hostname'}	= $ENV{'PIN_DM_ORACLE__hostname__'};
+} else {
+	$DM_ORACLE{'hostname'}	= 	$HOSTNAME;
+}
+if ( $ENV{'PIN_DM_ORACLE__port__'} !~ /^$/ ) { 
+	$DM_ORACLE{'port'} = $ENV{'PIN_DM_ORACLE__port__'};
+} else {
+	$DM_ORACLE{'port'} =  "12950";
+}
+if ( $ENV{'PIN_DM_ORACLE__uses_ddl__'} !~ /^$/ ) { 
+	$DM_ORACLE{'uses_ddl'} = $ENV{'PIN_DM_ORACLE__uses_ddl__'};
+} else {
+	$DM_ORACLE{'uses_ddl'} =  1;
+}
+if ( $ENV{'PIN_DM_ORACLE__enable_write_objects__'} !~ /^$/ ) { 
+	$DM_ORACLE{'enable_write_objects'} = $ENV{'PIN_DM_ORACLE__enable_write_objects__'};
+} else {
+	$DM_ORACLE{'enable_write_objects'} =  0;
+}
+if ( $ENV{'PIN_DM_ORACLE__enable_write_fields__'} !~ /^$/ ) { 
+	$DM_ORACLE{'enable_write_fields'} = $ENV{'PIN_DM_ORACLE__enable_write_fields__'};
+} else {
+	$DM_ORACLE{'enable_write_fields'} =  0;
+}
+if ( $ENV{'PIN_DM_ORACLE__enable_write_portal_objects__'} !~ /^$/ ) { 
+	$DM_ORACLE{'enable_write_portal_objects'} = $ENV{'PIN_DM_ORACLE__enable_write_portal_objects__'};
+} else {
+	$DM_ORACLE{'enable_write_portal_objects'} =  0;
+}
+if ( $ENV{'PIN_DM_ORACLE__library__'} !~ /^$/ ) { 
+	$DM_ORACLE{'library'} = $ENV{'PIN_DM_ORACLE__library__'};
+} else {
+	$DM_ORACLE{'library'} =  "$PIN_HOME/sys/dm_oracle/dm_oracle$DM_ORACLE{'version'}64\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_ORACLE__db__'} !~ /^$/ ) { 
+	$DM_ORACLE{'db'} = $ENV{'PIN_DM_ORACLE__db__'};
+} else {
+	$DM_ORACLE{'db'} =  \%MAIN_DB;
+}
+if ( $ENV{'PIN_DM_ORACLE__sm_charset__'} !~ /^$/ ) { 
+	$DM_ORACLE{'sm_charset'} = $ENV{'PIN_DM_ORACLE__sm_charset__'};
+} else {
+	$DM_ORACLE{'sm_charset'} =  "AL32UTF8";
+}
+if ( $ENV{'PIN_DM_ORACLE__stmt_cache_entries__'} !~ /^$/ ) { 
+	$DM_ORACLE{'stmt_cache_entries'} = $ENV{'PIN_DM_ORACLE__stmt_cache_entries__'};
+} else {
+	$DM_ORACLE{'stmt_cache_entries'} =  32;
+}
+if ( $ENV{'PIN_DM_ORACLE__in_batch_size__'} !~ /^$/ ) { 
+	$DM_ORACLE{'in_batch_size'} = $ENV{'PIN_DM_ORACLE__in_batch_size__'};
+} else {
+	$DM_ORACLE{'in_batch_size'} =  80;
+}
+if ( $ENV{'PIN_DM_ORACLE__delimiter__'} !~ /^$/ ) { 
+	$DM_ORACLE{'delimiter'} = $ENV{'PIN_DM_ORACLE__delimiter__'};
+} else {
+	$DM_ORACLE{'delimiter'} =  "";
+}
+if ( $ENV{'PIN_DM_ORACLE__sqlscript_executable__'} !~ /^$/ ) { 
+	$DM_ORACLE{'sqlscript_executable'} = $ENV{'PIN_DM_ORACLE__sqlscript_executable__'};
+} else {
+	$DM_ORACLE{'sqlscript_executable'} =  "sqlplus";
+}
+if ( $ENV{'PIN_DM_ORACLE__pin_conf_tablespace_id__'} !~ /^$/ ) { 
+	$DM_ORACLE{'pin_conf_tablespace_id'} = $ENV{'PIN_DM_ORACLE__pin_conf_tablespace_id__'};
+} else {
+	$DM_ORACLE{'pin_conf_tablespace_id'} =  "tablespace";
+}
+
+#========================================================================
+# Information about the Timos Data Manager
+#========================================================================
+%DM_TIMOS = %DM_ORACLE;
+if ( $ENV{'PIN_DM_TIMOS__location__'} !~ /^$/ ) { 
+	$DM_TIMOS{'location'} = $ENV{'PIN_DM_TIMOS__location__'};
+} else {
+	$DM_TIMOS{'location'} =  "$PIN_HOME/sys/dm_timos";
+}
+if ( $ENV{'PIN_DM_TIMOS__pin_conf_location__'} !~ /^$/ ) { 
+	$DM_TIMOS{'pin_conf_location'} = $ENV{'PIN_DM_TIMOS__pin_conf_location__'};
+} else {
+	$DM_TIMOS{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_timos";
+}
+if ( $ENV{'PIN_DM_TIMOS__hostname__'} !~ /^$/ ) { 
+	$DM_TIMOS{'hostname'}	= $ENV{'PIN_DM_TIMOS__hostname__'};
+} else {
+	$DM_TIMOS{'hostname'}	= 	"$HOSTNAME";
+}
+if ( $ENV{'PIN_DM_TIMOS__port__'} !~ /^$/ ) { 
+	$DM_TIMOS{'port'}	= $ENV{'PIN_DM_TIMOS__port__'};
+} else {
+	$DM_TIMOS{'port'}	= 	"12960";
+}
+if ( $ENV{'PIN_DM_TIMOS__db_num__'} !~ /^$/ ) { 
+	$DM_TIMOS{'db_num'}	= $ENV{'PIN_DM_TIMOS__db_num__'};
+} else {
+	$DM_TIMOS{'db_num'}	= 	"0.0.0.1";
+}
+if ( $ENV{'PIN_DM_TIMOS__web_server_port__'} !~ /^$/ ) { 
+	$DM_TIMOS{'web_server_port'} = $ENV{'PIN_DM_TIMOS__web_server_port__'};
+} else {
+	$DM_TIMOS{'web_server_port'} =  "12970";
+}
+if ( $ENV{'PIN_DM_TIMOS__dm_oracle_hostname__'} !~ /^$/ ) { 
+	$DM_TIMOS{'dm_oracle_hostname'} = $ENV{'PIN_DM_TIMOS__dm_oracle_hostname__'};
+} else {
+	$DM_TIMOS{'dm_oracle_hostname'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_DM_TIMOS__dm_oracle_port__'} !~ /^$/ ) { 
+	$DM_TIMOS{'dm_oracle_port'} = $ENV{'PIN_DM_TIMOS__dm_oracle_port__'};
+} else {
+	$DM_TIMOS{'dm_oracle_port'} =  "12950";
+}
+
+#===========================================================
+# TABLESPACE TO CREATE THE NEW PIPELINE INDEXES
+# Edit the values to fit your environment.
+#
+#===========================================================
+if ( $ENV{'PIN_PIPELINE_TBLSPACE'} !~ /^$/ ) { 
+	$PIPELINE_TBLSPACE = $ENV{'PIN_PIPELINE_TBLSPACE'};
+} else {
+	$PIPELINE_TBLSPACE =  "tablespace pin00";
+}
+
+%MAIN_DM=%DM_ORACLE;
+
+
+if ( $ENV{'PIN_INVOICE_DB__vendor__'} !~ /^$/ ) { 
+	$INVOICE_DB{'vendor'} = $ENV{'PIN_INVOICE_DB__vendor__'};
+} else {
+	$INVOICE_DB{'vendor'} =  $MAIN_DB{'vendor'};
+}
+if ( $ENV{'PIN_INVOICE_DB__version__'} !~ /^$/ ) { 
+	$INVOICE_DB{'version'} = $ENV{'PIN_INVOICE_DB__version__'};
+} else {
+	$INVOICE_DB{'version'} =  $MAIN_DB{'version'};
+}
+if ( $ENV{'PIN_INVOICE_DB__user__'} !~ /^$/ ) { 
+	$INVOICE_DB{'user'} = $ENV{'PIN_INVOICE_DB__user__'};
+} else {
+	$INVOICE_DB{'user'} =  "pin";
+}
+if ( $ENV{'PIN_INVOICE_DB__password__'} !~ /^$/ ) { 
+	$INVOICE_DB{'password'} = $ENV{'PIN_INVOICE_DB__password__'};
+} else {
+	$INVOICE_DB{'password'} =  "&aes|03|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC34E38A57801EE7CDF27D885C3EF9FFAFA";
+}
+if ( $ENV{'PIN_INVOICE_DB__alias__'} !~ /^$/ ) { 
+	$INVOICE_DB{'alias'} = $ENV{'PIN_INVOICE_DB__alias__'};
+} else {
+	$INVOICE_DB{'alias'} =  "pindbinvoice$HOSTNAME";
+}
+if ( $ENV{'PIN_INVOICE_DB__Host__'} !~ /^$/ ) { 
+	$INVOICE_DB{'Host'} = $ENV{'PIN_INVOICE_DB__Host__'};
+} else {
+	$INVOICE_DB{'Host'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_INVOICE_DB__tables_group__'} !~ /^$/ ) { 
+	$INVOICE_DB{'tables_group'} = $ENV{'PIN_INVOICE_DB__tables_group__'};
+} else {
+	$INVOICE_DB{'tables_group'} =  "pin00";
+}
+if ( $ENV{'PIN_INVOICE_DB__indexes_group__'} !~ /^$/ ) { 
+	$INVOICE_DB{'indexes_group'} = $ENV{'PIN_INVOICE_DB__indexes_group__'};
+} else {
+	$INVOICE_DB{'indexes_group'} =  "pinx00";
+}
+
+%DM_INVOICE = %MAIN_DM;
+if ( $ENV{'PIN_DM_INVOICE__port__'} !~ /^$/ ) { 
+	$DM_INVOICE{'port'} = $ENV{'PIN_DM_INVOICE__port__'};
+} else {
+	$DM_INVOICE{'port'} =  "12860";
+}
+if ( $ENV{'PIN_DM_INVOICE__db_num__'} !~ /^$/ ) { 
+	$DM_INVOICE{'db_num'} = $ENV{'PIN_DM_INVOICE__db_num__'};
+} else {
+	$DM_INVOICE{'db_num'} =  "0.0.6.1";
+}
+if ( $ENV{'PIN_DM_INVOICE__location__'} !~ /^$/ ) { 
+	$DM_INVOICE{'location'} = $ENV{'PIN_DM_INVOICE__location__'};
+} else {
+	$DM_INVOICE{'location'} =  "$PIN_HOME/sys/dm_invoice";
+}
+if ( $ENV{'PIN_DM_INVOICE__pin_conf_location__'} !~ /^$/ ) { 
+	$DM_INVOICE{'pin_conf_location'} = $ENV{'PIN_DM_INVOICE__pin_conf_location__'};
+} else {
+	$DM_INVOICE{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_invoice";
+}
+
+if ( $ENV{'PIN_DM_INVOICE__db__'} !~ /^$/ ) { 
+	$DM_INVOICE{'db'} = $ENV{'PIN_DM_INVOICE__db__'};
+} else {
+	$DM_INVOICE{'db'} =  \%INVOICE_DB;
+}
+
+#========================================================================
+# Information about the Portal Manager CLI
+#========================================================================
+if ( $ENV{'PIN_INFMGR_CLI__location__'} !~ /^$/ ) { 
+	$INFMGR_CLI{'location'} = $ENV{'PIN_INFMGR_CLI__location__'};
+} else {
+	$INFMGR_CLI{'location'} =  "$PIN_HOME/sys/infmgr_cli";
+}
+
+#========================================================================
+# Information about Portal Manager
+#========================================================================
+if ( $ENV{'PIN_INFMGR__location__'} !~ /^$/ ) { 
+	$INFMGR{'location'}     = $ENV{'PIN_INFMGR__location__'};
+} else {
+	$INFMGR{'location'}     =  "$PIN_HOME/sys/infmgr";
+}
+if ( $ENV{'PIN_INFMGR__pin_conf_location__'} !~ /^$/ ) { 
+	$INFMGR{'pin_conf_location'}     = $ENV{'PIN_INFMGR__pin_conf_location__'};
+} else {
+	$INFMGR{'pin_conf_location'}     =  "\$\{PIN_HOME\}/sys/infmgr";
+}
+
+if ( $ENV{'PIN_INFMGR__port__'} !~ /^$/ ) { 
+	$INFMGR{'port'}		= $ENV{'PIN_INFMGR__port__'};
+} else {
+	$INFMGR{'port'}		= 	"11980";
+}
+if ( $ENV{'PIN_INFMGR__hostname__'} !~ /^$/ ) { 
+	$INFMGR{'hostname'}	= $ENV{'PIN_INFMGR__hostname__'};
+} else {
+	$INFMGR{'hostname'}	= 	$HOSTNAME;
+}
+if ( $ENV{'PIN_INFMGR__sec_enabled__'} !~ /^$/ ) { 
+	$INFMGR{'sec_enabled'}  = $ENV{'PIN_INFMGR__sec_enabled__'};
+} else {
+	$INFMGR{'sec_enabled'}  =  "0";
+}
+
+#========================================================================
+# Information about Node Manager
+#========================================================================
+if ( $ENV{'PIN_NMGR__location__'} !~ /^$/ ) { 
+	$NMGR{'location'}       = $ENV{'PIN_NMGR__location__'};
+} else {
+	$NMGR{'location'}       =  "$PIN_HOME/sys/nmgr";
+}
+if ( $ENV{'PIN_NMGR__pin_conf_location__'} !~ /^$/ ) { 
+	$NMGR{'pin_conf_location'}       = $ENV{'PIN_NMGR__pin_conf_location__'};
+} else {
+	$NMGR{'pin_conf_location'}       =  "\$\{PIN_HOME\}/sys/nmgr";
+}
+
+if ( $ENV{'PIN_NMGR__port__'} !~ /^$/ ) { 
+	$NMGR{'port'}   	= $ENV{'PIN_NMGR__port__'};
+} else {
+	$NMGR{'port'}   	= 	"11990";
+}
+if ( $ENV{'PIN_NMGR__hostname__'} !~ /^$/ ) { 
+	$NMGR{'hostname'}	= $ENV{'PIN_NMGR__hostname__'};
+} else {
+	$NMGR{'hostname'}	= 	$HOSTNAME;
+}
+if ( $ENV{'PIN_NMGR__start_servers__'} !~ /^$/ ) { 
+	$NMGR{'start_servers'}  = $ENV{'PIN_NMGR__start_servers__'};
+} else {
+	$NMGR{'start_servers'}  =  "1";
+}
+if ( $ENV{'PIN_NMGR__sec_enabled__'} !~ /^$/ ) { 
+	$NMGR{'sec_enabled'}    = $ENV{'PIN_NMGR__sec_enabled__'};
+} else {
+	$NMGR{'sec_enabled'}    =  "0";
+}
+if ( $ENV{'PIN_NMGR__cm_name__'} !~ /^$/ ) { 
+	$NMGR{'cm_name'}        = $ENV{'PIN_NMGR__cm_name__'};
+} else {
+	$NMGR{'cm_name'}        =  "cm1";
+}
+if ( $ENV{'PIN_NMGR__dm_name__'} !~ /^$/ ) { 
+	$NMGR{'dm_name'}        = $ENV{'PIN_NMGR__dm_name__'};
+} else {
+	$NMGR{'dm_name'}        =  "dm1";
+}
+
+#========================================================================
+# Information about the the dm_taxware Data Manager
+#========================================================================
+%TAX_DM = %QM_generic;
+if ( $ENV{'PIN_TAX_DM__location__'} !~ /^$/ ) { 
+	$TAX_DM{'location'} = $ENV{'PIN_TAX_DM__location__'};
+} else {
+	$TAX_DM{'location'} =  "$PIN_HOME/sys/dm_taxware";
+}
+if ( $ENV{'PIN_TAX_DM__pin_conf_location__'} !~ /^$/ ) { 
+	$TAX_DM{'pin_conf_location'} = $ENV{'PIN_TAX_DM__pin_conf_location__'};
+} else {
+	$TAX_DM{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_taxware";
+}
+
+if ( $ENV{'PIN_TAX_DM__tax_interval__'} !~ /^$/ ) { 
+	$TAX_DM{'tax_interval'} = $ENV{'PIN_TAX_DM__tax_interval__'};
+} else {
+	$TAX_DM{'tax_interval'} =  "accounting";
+}
+if ( $ENV{'PIN_TAX_DM__provider_loc__'} !~ /^$/ ) { 
+	$TAX_DM{'provider_loc'} = $ENV{'PIN_TAX_DM__provider_loc__'};
+} else {
+	$TAX_DM{'provider_loc'} =  "Columbus; OH; 43017; US";
+}
+if ( $ENV{'PIN_TAX_DM__validate_zip__'} !~ /^$/ ) { 
+	$TAX_DM{'validate_zip'} = $ENV{'PIN_TAX_DM__validate_zip__'};
+} else {
+	$TAX_DM{'validate_zip'} =  "0";
+}
+if ( $ENV{'PIN_TAX_DM__db_num__'} !~ /^$/ ) { 
+	$TAX_DM{'db_num'} = $ENV{'PIN_TAX_DM__db_num__'};
+} else {
+	$TAX_DM{'db_num'} =  "0.0.3.1";
+}
+if ( $ENV{'PIN_TAX_DM__hostname__'} !~ /^$/ ) { 
+	$TAX_DM{'hostname'} = $ENV{'PIN_TAX_DM__hostname__'};
+} else {
+	$TAX_DM{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_TAX_DM__port__'} !~ /^$/ ) { 
+	$TAX_DM{'port'}	= $ENV{'PIN_TAX_DM__port__'};
+} else {
+	$TAX_DM{'port'}	=  "12830";
+}
+if ( $ENV{'PIN_TAX_DM__currency__'} !~ /^$/ ) { 
+	$TAX_DM{'currency'} = $ENV{'PIN_TAX_DM__currency__'};
+} else {
+	$TAX_DM{'currency'} =  $MAIN_CM{'currency'};
+}
+if ( $ENV{'PIN_TAX_DM__library__'} !~ /^$/ ) { 
+	$TAX_DM{'library'} = $ENV{'PIN_TAX_DM__library__'};
+} else {
+	$TAX_DM{'library'} =  "$TAX_DM{'pin_conf_location'}/dm_taxware\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_TAX_DM__tax_return_loglevel__'} !~ /^$/ ) { 
+	$TAX_DM{'tax_return_loglevel'} = $ENV{'PIN_TAX_DM__tax_return_loglevel__'};
+} else {
+	$TAX_DM{'tax_return_loglevel'} =  "2";
+}
+if ( $ENV{'PIN_TAX_DM__tax_return_juris__'} !~ /^$/ ) { 
+	$TAX_DM{'tax_return_juris'} = $ENV{'PIN_TAX_DM__tax_return_juris__'};
+} else {
+	$TAX_DM{'tax_return_juris'} =  "summarize";
+}
+if ( $ENV{'PIN_TAX_DM__taxation_switch__'} !~ /^$/ ) { 
+	$TAX_DM{'taxation_switch'} = $ENV{'PIN_TAX_DM__taxation_switch__'};
+} else {
+	$TAX_DM{'taxation_switch'} =  "3";
+}
+if ( $ENV{'PIN_TAX_DM__include_zero_tax__'} !~ /^$/ ) { 
+	$TAX_DM{'include_zero_tax'} = $ENV{'PIN_TAX_DM__include_zero_tax__'};
+} else {
+	$TAX_DM{'include_zero_tax'} =  "0";
+}
+
+
+#========================================================================
+# Information about cm_proxy
+#========================================================================
+%CM_PROXY = %QM_generic;
+if ( $ENV{'PIN_CM_PROXY__location__'} !~ /^$/ ) { 
+	$CM_PROXY{'location'} = $ENV{'PIN_CM_PROXY__location__'};
+} else {
+	$CM_PROXY{'location'} =  "$PIN_HOME/sys/cm_proxy";
+}
+
+if ( $ENV{'PIN_CM_PROXY__port__'} !~ /^$/ ) { 
+	$CM_PROXY{'port'} = $ENV{'PIN_CM_PROXY__port__'};
+} else {
+	$CM_PROXY{'port'} =  "11953";
+}
+
+
+#========================================================================
+# Information about the dm_fdc Data Manager
+#========================================================================
+%DM_FDC = %QM_generic;
+if ( $ENV{'PIN_DM_FDC__app_location__'} !~ /^$/ ) { 
+	$DM_FDC{'app_location'} = $ENV{'PIN_DM_FDC__app_location__'};
+} else {
+	$DM_FDC{'app_location'} =  "$PIN_HOME/apps/fdc_server";
+}
+
+if ( $ENV{'PIN_DM_FDC__location__'} !~ /^$/ ) { 
+	$DM_FDC{'location'} = $ENV{'PIN_DM_FDC__location__'};
+} else {
+	$DM_FDC{'location'} =  "$PIN_HOME/sys/dm_fdc";
+}
+if ( $ENV{'PIN_DM_FDC__pin_conf_location__'} !~ /^$/ ) { 
+	$DM_FDC{'pin_conf_location'} = $ENV{'PIN_DM_FDC__pin_conf_location__'};
+} else {
+	$DM_FDC{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_fdc";
+}
+if ( $ENV{'PIN_DM_FDC__port__'} !~ /^$/ ) { 
+	$DM_FDC{'port'} = $ENV{'PIN_DM_FDC__port__'};
+} else {
+	$DM_FDC{'port'} =  "12810";
+}
+if ( $ENV{'PIN_DM_FDC__db_num__'} !~ /^$/ ) { 
+	$DM_FDC{'db_num'} = $ENV{'PIN_DM_FDC__db_num__'};
+} else {
+	$DM_FDC{'db_num'} =  "0.0.1.1";
+}
+if ( $ENV{'PIN_DM_FDC__online_srvr1__'} !~ /^$/ ) { 
+	$DM_FDC{'online_srvr1'} = $ENV{'PIN_DM_FDC__online_srvr1__'};
+} else {
+	$DM_FDC{'online_srvr1'} =  "XXX.XXX.XXX.XXX";
+}
+if ( $ENV{'PIN_DM_FDC__batch_user__'} !~ /^$/ ) { 
+	$DM_FDC{'batch_user'} = $ENV{'PIN_DM_FDC__batch_user__'};
+} else {
+	$DM_FDC{'batch_user'} =  "XXXXX";
+}
+if ( $ENV{'PIN_DM_FDC__batch_password__'} !~ /^$/ ) { 
+	$DM_FDC{'batch_password'} = $ENV{'PIN_DM_FDC__batch_password__'};
+} else {
+	$DM_FDC{'batch_password'} =  "&aes|06|0D5E11BFDD97D2769D9B0DBFBD1BBF7E8056827E89DBA94DC95988AFD1E3633844";
+}
+if ( $ENV{'PIN_DM_FDC__ftp_user__'} !~ /^$/ ) { 
+	$DM_FDC{'ftp_user'} = $ENV{'PIN_DM_FDC__ftp_user__'};
+} else {
+	$DM_FDC{'ftp_user'} =  "XXXXX";
+}
+if ( $ENV{'PIN_DM_FDC__ftp_srvr__'} !~ /^$/ ) { 
+	$DM_FDC{'ftp_srvr'} = $ENV{'PIN_DM_FDC__ftp_srvr__'};
+} else {
+	$DM_FDC{'ftp_srvr'} =  "XXX.XXX.XXX.XXX";
+}
+if ( $ENV{'PIN_DM_FDC__ftp_password__'} !~ /^$/ ) { 
+	$DM_FDC{'ftp_password'} = $ENV{'PIN_DM_FDC__ftp_password__'};
+} else {
+	$DM_FDC{'ftp_password'} =  "&aes|06|0D5E11BFDD97D2769D9B0DBFBD1BBF7E8056827E89DBA94DC95988AFD1E3633844";
+}
+if ( $ENV{'PIN_DM_FDC__response_name__'} !~ /^$/ ) { 
+	$DM_FDC{'response_name'} = $ENV{'PIN_DM_FDC__response_name__'};
+} else {
+	$DM_FDC{'response_name'} =  "RESP.TEST.FILE";
+}
+if ( $ENV{'PIN_DM_FDC__auth_name__'} !~ /^$/ ) { 
+	$DM_FDC{'auth_name'} = $ENV{'PIN_DM_FDC__auth_name__'};
+} else {
+	$DM_FDC{'auth_name'} =  "AUTH.TEST.FILE";
+}
+if ( $ENV{'PIN_DM_FDC__bill_name__'} !~ /^$/ ) { 
+	$DM_FDC{'bill_name'} = $ENV{'PIN_DM_FDC__bill_name__'};
+} else {
+	$DM_FDC{'bill_name'} =  "BILL.TEST.FILE";
+}
+if ( $ENV{'PIN_DM_FDC__test__'} !~ /^$/ ) { 
+	$DM_FDC{'test'} = $ENV{'PIN_DM_FDC__test__'};
+} else {
+	$DM_FDC{'test'} =  "TEST";
+}
+if ( $ENV{'PIN_DM_FDC__merchant_name__'} !~ /^$/ ) { 
+	$DM_FDC{'merchant_name'} = $ENV{'PIN_DM_FDC__merchant_name__'};
+} else {
+	$DM_FDC{'merchant_name'} =  "test";
+}
+if ( $ENV{'PIN_DM_FDC__domestic__'} !~ /^$/ ) { 
+	$DM_FDC{'domestic'} = $ENV{'PIN_DM_FDC__domestic__'};
+} else {
+	$DM_FDC{'domestic'} =  "domestic";
+}
+if ( $ENV{'PIN_DM_FDC__connect_retrys__'} !~ /^$/ ) { 
+	$DM_FDC{'connect_retrys'} = $ENV{'PIN_DM_FDC__connect_retrys__'};
+} else {
+	$DM_FDC{'connect_retrys'} =  "10";
+}
+if ( $ENV{'PIN_DM_FDC__fdc_timeout__'} !~ /^$/ ) { 
+	$DM_FDC{'fdc_timeout'} = $ENV{'PIN_DM_FDC__fdc_timeout__'};
+} else {
+	$DM_FDC{'fdc_timeout'} =  "3600";
+}
+if ( $ENV{'PIN_DM_FDC__queue_size__'} !~ /^$/ ) { 
+	$DM_FDC{'queue_size'} = $ENV{'PIN_DM_FDC__queue_size__'};
+} else {
+	$DM_FDC{'queue_size'} =  "10";
+}
+if ( $ENV{'PIN_DM_FDC__answer_s_port__'} !~ /^$/ ) { 
+	$DM_FDC{'answer_s_port'} = $ENV{'PIN_DM_FDC__answer_s_port__'};
+} else {
+	$DM_FDC{'answer_s_port'} =  "5678";
+}
+if ( $ENV{'PIN_DM_FDC__answer_s_children__'} !~ /^$/ ) { 
+	$DM_FDC{'answer_s_children'} = $ENV{'PIN_DM_FDC__answer_s_children__'};
+} else {
+	$DM_FDC{'answer_s_children'} =  "1";
+}
+if ( $ENV{'PIN_DM_FDC__answer_s_vcode__'} !~ /^$/ ) { 
+	$DM_FDC{'answer_s_vcode'} = $ENV{'PIN_DM_FDC__answer_s_vcode__'};
+} else {
+	$DM_FDC{'answer_s_vcode'} =  "100";
+}
+if ( $ENV{'PIN_DM_FDC__re_interval__'} !~ /^$/ ) { 
+	$DM_FDC{'re_interval'} = $ENV{'PIN_DM_FDC__re_interval__'};
+} else {
+	$DM_FDC{'re_interval'} =  "3600";
+}
+
+
+#========================================================================
+# Information about the dm_fusa Data Manager
+#========================================================================
+%DM_FUSA = %QM_generic;
+if ( $ENV{'PIN_DM_FUSA__location__'} !~ /^$/ ) { 
+	$DM_FUSA{'location'} = $ENV{'PIN_DM_FUSA__location__'};
+} else {
+	$DM_FUSA{'location'} =  "$PIN_HOME/sys/dm_fusa";
+}
+if ( $ENV{'PIN_DM_FUSA__pin_conf_location__'} !~ /^$/ ) { 
+	$DM_FUSA{'pin_conf_location'} = $ENV{'PIN_DM_FUSA__pin_conf_location__'};
+} else {
+	$DM_FUSA{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_fusa";
+}
+if ( $ENV{'PIN_DM_FUSA__app_location__'} !~ /^$/ ) { 
+	$DM_FUSA{'app_location'} = $ENV{'PIN_DM_FUSA__app_location__'};
+} else {
+	$DM_FUSA{'app_location'} =  "$PIN_HOME/apps/fusa_server";
+}
+if ( $ENV{'PIN_DM_FUSA__port__'} !~ /^$/ ) { 
+	$DM_FUSA{'port'} = $ENV{'PIN_DM_FUSA__port__'};
+} else {
+	$DM_FUSA{'port'} =  "12810";
+}
+if ( $ENV{'PIN_DM_FUSA__db_num__'} !~ /^$/ ) { 
+	$DM_FUSA{'db_num'} = $ENV{'PIN_DM_FUSA__db_num__'};
+} else {
+	$DM_FUSA{'db_num'} =  "0.0.1.1";
+}
+if ( $ENV{'PIN_DM_FUSA__merchant_name__'} !~ /^$/ ) { 
+	$DM_FUSA{'merchant_name'} = $ENV{'PIN_DM_FUSA__merchant_name__'};
+} else {
+	$DM_FUSA{'merchant_name'} =  "test";
+}
+if ( $ENV{'PIN_DM_FUSA__run_checksum__'} !~ /^$/ ) { 
+	$DM_FUSA{'run_checksum'} = $ENV{'PIN_DM_FUSA__run_checksum__'};
+} else {
+	$DM_FUSA{'run_checksum'} =  "1";
+}
+if ( $ENV{'PIN_DM_FUSA__validate__'} !~ /^$/ ) { 
+	$DM_FUSA{'validate'} = $ENV{'PIN_DM_FUSA__validate__'};
+} else {
+	$DM_FUSA{'validate'} =  "1";
+}
+if ( $ENV{'PIN_DM_FUSA__re_integrate__'} !~ /^$/ ) { 
+	$DM_FUSA{'re_integrate'} = $ENV{'PIN_DM_FUSA__re_integrate__'};
+} else {
+	$DM_FUSA{'re_integrate'} =  "3600";
+}
+if ( $ENV{'PIN_DM_FUSA__collect__'} !~ /^$/ ) { 
+	$DM_FUSA{'collect'} = $ENV{'PIN_DM_FUSA__collect__'};
+} else {
+	$DM_FUSA{'collect'} =  "1";
+}
+if ( $ENV{'PIN_DM_FUSA__connect_retrys__'} !~ /^$/ ) { 
+	$DM_FUSA{'connect_retrys'} = $ENV{'PIN_DM_FUSA__connect_retrys__'};
+} else {
+	$DM_FUSA{'connect_retrys'} =  "100";
+}
+if ( $ENV{'PIN_DM_FUSA__fusa_timeout__'} !~ /^$/ ) { 
+	$DM_FUSA{'fusa_timeout'} = $ENV{'PIN_DM_FUSA__fusa_timeout__'};
+} else {
+	$DM_FUSA{'fusa_timeout'} =  "600";
+}
+if ( $ENV{'PIN_DM_FUSA__online_protocol__'} !~ /^$/ ) { 
+	$DM_FUSA{'online_protocol'} = $ENV{'PIN_DM_FUSA__online_protocol__'};
+} else {
+	$DM_FUSA{'online_protocol'} =  "socket";
+}
+if ( $ENV{'PIN_DM_FUSA__online_srvr__'} !~ /^$/ ) { 
+	$DM_FUSA{'online_srvr'} = $ENV{'PIN_DM_FUSA__online_srvr__'};
+} else {
+	$DM_FUSA{'online_srvr'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_DM_FUSA__answer_s_port__'} !~ /^$/ ) { 
+	$DM_FUSA{'answer_s_port'} = $ENV{'PIN_DM_FUSA__answer_s_port__'};
+} else {
+	$DM_FUSA{'answer_s_port'} =  "5678";
+}
+if ( $ENV{'PIN_DM_FUSA__batch_protocol__'} !~ /^$/ ) { 
+	$DM_FUSA{'batch_protocol'} = $ENV{'PIN_DM_FUSA__batch_protocol__'};
+} else {
+	$DM_FUSA{'batch_protocol'} =  "socket";
+}
+if ( $ENV{'PIN_DM_FUSA__batch_srvr__'} !~ /^$/ ) { 
+	$DM_FUSA{'batch_srvr'} = $ENV{'PIN_DM_FUSA__batch_srvr__'};
+} else {
+	$DM_FUSA{'batch_srvr'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_DM_FUSA__answer_b_port__'} !~ /^$/ ) { 
+	$DM_FUSA{'answer_b_port'} = $ENV{'PIN_DM_FUSA__answer_b_port__'};
+} else {
+	$DM_FUSA{'answer_b_port'} =  "5679";
+}
+if ( $ENV{'PIN_DM_FUSA__presenter_id__'} !~ /^$/ ) { 
+	$DM_FUSA{'presenter_id'} = $ENV{'PIN_DM_FUSA__presenter_id__'};
+} else {
+	$DM_FUSA{'presenter_id'} =  "090909";
+}
+if ( $ENV{'PIN_DM_FUSA__presenter_password__'} !~ /^$/ ) { 
+	$DM_FUSA{'presenter_password'} = $ENV{'PIN_DM_FUSA__presenter_password__'};
+} else {
+	$DM_FUSA{'presenter_password'} =  "&aes|06|0D5E11BFDD97D2769D9B0DBFBD1BBF7E8056827E89DBA94DC95988AFD1E3633844";
+}
+if ( $ENV{'PIN_DM_FUSA__submitter_id__'} !~ /^$/ ) { 
+	$DM_FUSA{'submitter_id'} = $ENV{'PIN_DM_FUSA__submitter_id__'};
+} else {
+	$DM_FUSA{'submitter_id'} =  "090909";
+}
+if ( $ENV{'PIN_DM_FUSA__submitter_password__'} !~ /^$/ ) { 
+	$DM_FUSA{'submitter_password'} = $ENV{'PIN_DM_FUSA__submitter_password__'};
+} else {
+	$DM_FUSA{'submitter_password'} =  "&aes|06|0D5E11BFDD97D2769D9B0DBFBD1BBF7E8056827E89DBA94DC95988AFD1E3633844";
+}
+if ( $ENV{'PIN_DM_FUSA__fusamux_port__'} !~ /^$/ ) { 
+	$DM_FUSA{'fusamux_port'} = $ENV{'PIN_DM_FUSA__fusamux_port__'};
+} else {
+	$DM_FUSA{'fusamux_port'} =  "5678";	
+}
+if ( $ENV{'PIN_DM_FUSA__fusamux_onlineport__'} !~ /^$/ ) { 
+	$DM_FUSA{'fusamux_onlineport'} = $ENV{'PIN_DM_FUSA__fusamux_onlineport__'};
+} else {
+	$DM_FUSA{'fusamux_onlineport'} =  "XXX";
+}
+if ( $ENV{'PIN_DM_FUSA__fusamux_onlinesrvr__'} !~ /^$/ ) { 
+	$DM_FUSA{'fusamux_onlinesrvr'} = $ENV{'PIN_DM_FUSA__fusamux_onlinesrvr__'};
+} else {
+	$DM_FUSA{'fusamux_onlinesrvr'} =  "XXX";
+}
+if ( $ENV{'PIN_DM_FUSA__answer_s_children__'} !~ /^$/ ) { 
+	$DM_FUSA{'answer_s_children'} = $ENV{'PIN_DM_FUSA__answer_s_children__'};
+} else {
+	$DM_FUSA{'answer_s_children'} =  "1";
+}
+if ( $ENV{'PIN_DM_FUSA__answer_s_vcode__'} !~ /^$/ ) { 
+	$DM_FUSA{'answer_s_vcode'} = $ENV{'PIN_DM_FUSA__answer_s_vcode__'};
+} else {
+	$DM_FUSA{'answer_s_vcode'} =  "100";
+}
+if ( $ENV{'PIN_DM_FUSA__answer_b_children__'} !~ /^$/ ) { 
+	$DM_FUSA{'answer_b_children'} = $ENV{'PIN_DM_FUSA__answer_b_children__'};
+} else {
+	$DM_FUSA{'answer_b_children'} =  "1";
+}
+if ( $ENV{'PIN_DM_FUSA__answer_b_vcode__'} !~ /^$/ ) { 
+	$DM_FUSA{'answer_b_vcode'} = $ENV{'PIN_DM_FUSA__answer_b_vcode__'};
+} else {
+	$DM_FUSA{'answer_b_vcode'} =  "100";
+}
+if ( $ENV{'PIN_DM_FUSA__bigsize__'} !~ /^$/ ) { 
+	$DM_FUSA{'bigsize'} = $ENV{'PIN_DM_FUSA__bigsize__'};
+} else {
+	$DM_FUSA{'bigsize'} =  "1M";
+}
+if ( $ENV{'PIN_DM_FUSA__back_ends__'} !~ /^$/ ) { 
+	$DM_FUSA{'back_ends'} = $ENV{'PIN_DM_FUSA__back_ends__'};
+} else {
+	$DM_FUSA{'back_ends'} =  "2";
+}
+if ( $ENV{'PIN_DM_FUSA__front_ends__'} !~ /^$/ ) { 
+	$DM_FUSA{'front_ends'} = $ENV{'PIN_DM_FUSA__front_ends__'};
+} else {
+	$DM_FUSA{'front_ends'} =  "1";
+}
+if ( $ENV{'PIN_DM_FUSA__restart_children__'} !~ /^$/ ) { 
+	$DM_FUSA{'restart_children'} = $ENV{'PIN_DM_FUSA__restart_children__'};
+} else {
+	$DM_FUSA{'restart_children'} =  1;
+}
+if ( $ENV{'PIN_DM_FUSA__shmsize__'} !~ /^$/ ) { 
+	$DM_FUSA{'shmsize'} = $ENV{'PIN_DM_FUSA__shmsize__'};
+} else {
+	$DM_FUSA{'shmsize'} =  "6M";
+}
+if ( $ENV{'PIN_DM_FUSA__simulation_level__'} !~ /^$/ ) { 
+	$DM_FUSA{'simulation_level'} = $ENV{'PIN_DM_FUSA__simulation_level__'};
+} else {
+	$DM_FUSA{'simulation_level'} =  "0";
+}
+if ( $ENV{'PIN_DM_FUSA__simulation_wait__'} !~ /^$/ ) { 
+	$DM_FUSA{'simulation_wait'} = $ENV{'PIN_DM_FUSA__simulation_wait__'};
+} else {
+	$DM_FUSA{'simulation_wait'} =  "601";
+}
+if ( $ENV{'PIN_DM_FUSA__s_code__'} !~ /^$/ ) { 
+	$DM_FUSA{'s_code'} = $ENV{'PIN_DM_FUSA__s_code__'};
+} else {
+	$DM_FUSA{'s_code'} =  "P";
+}
+if ( $ENV{'PIN_DM_FUSA__avs_response__'} !~ /^$/ ) { 
+	$DM_FUSA{'avs_response'} = $ENV{'PIN_DM_FUSA__avs_response__'};
+} else {
+	$DM_FUSA{'avs_response'} =  "I3";
+}
+if ( $ENV{'PIN_DM_FUSA__acct_no_response__'} !~ /^$/ ) { 
+	$DM_FUSA{'acct_no_response'} = $ENV{'PIN_DM_FUSA__acct_no_response__'};
+} else {
+	$DM_FUSA{'acct_no_response'} =  "4444111122223333";
+}
+if ( $ENV{'PIN_DM_FUSA__drop_line__'} !~ /^$/ ) { 
+	$DM_FUSA{'drop_line'} = $ENV{'PIN_DM_FUSA__drop_line__'};
+} else {
+	$DM_FUSA{'drop_line'} =  "4444111122223333";
+}
+if ( $ENV{'PIN_DM_FUSA__answer_b_no_response__'} !~ /^$/ ) { 
+	$DM_FUSA{'answer_b_no_response'} = $ENV{'PIN_DM_FUSA__answer_b_no_response__'};
+} else {
+	$DM_FUSA{'answer_b_no_response'} =  "0";
+}
+if ( $ENV{'PIN_DM_FUSA__answer_b_drop_line__'} !~ /^$/ ) { 
+	$DM_FUSA{'answer_b_drop_line'} = $ENV{'PIN_DM_FUSA__answer_b_drop_line__'};
+} else {
+	$DM_FUSA{'answer_b_drop_line'} =  "0";
+}
+if ( $ENV{'PIN_DM_FUSA__re_interval__'} !~ /^$/ ) { 
+	$DM_FUSA{'re_interval'} = $ENV{'PIN_DM_FUSA__re_interval__'};
+} else {
+	$DM_FUSA{'re_interval'} =  "3600";
+}
+
+#========================================================================
+# Information about the dm_clearcom (ClearCommerce) Data Manager
+#========================================================================
+%DM_CLEARCOM = %QM_generic;  # Inherit all %QM_generic values #
+
+if ( $ENV{'PIN_DM_CLEARCOM__location__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'location'} = $ENV{'PIN_DM_CLEARCOM__location__'};
+} else {
+	$DM_CLEARCOM{'location'} =  "$PIN_HOME/sys/dm_clearcom";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__pin_conf_location__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'pin_conf_location'} = $ENV{'PIN_DM_CLEARCOM__pin_conf_location__'};
+} else {
+	$DM_CLEARCOM{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_clearcom";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__hostname__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'hostname'} = $ENV{'PIN_DM_CLEARCOM__hostname__'};
+} else {
+	$DM_CLEARCOM{'hostname'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__port__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'port'} = $ENV{'PIN_DM_CLEARCOM__port__'};
+} else {
+	$DM_CLEARCOM{'port'} =  "12810";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__db_num__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'db_num'} = $ENV{'PIN_DM_CLEARCOM__db_num__'};
+} else {
+	$DM_CLEARCOM{'db_num'} =  "0.0.1.1";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__cc_srvr__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'cc_srvr'} = $ENV{'PIN_DM_CLEARCOM__cc_srvr__'};
+} else {
+	$DM_CLEARCOM{'cc_srvr'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__cc_port__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'cc_port'} = $ENV{'PIN_DM_CLEARCOM__cc_port__'};
+} else {
+	$DM_CLEARCOM{'cc_port'} =  "1139";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__keyfile__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'keyfile'} = $ENV{'PIN_DM_CLEARCOM__keyfile__'};
+} else {
+	$DM_CLEARCOM{'keyfile'} =  "testcert.pem";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__log_level__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'log_level'} = $ENV{'PIN_DM_CLEARCOM__log_level__'};
+} else {
+	$DM_CLEARCOM{'log_level'} =  "1";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__error_tolerance__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'error_tolerance'} = $ENV{'PIN_DM_CLEARCOM__error_tolerance__'};
+} else {
+	$DM_CLEARCOM{'error_tolerance'} =  "20";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__no_ans_error_tolerance__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'no_ans_error_tolerance'} = $ENV{'PIN_DM_CLEARCOM__no_ans_error_tolerance__'};
+} else {
+	$DM_CLEARCOM{'no_ans_error_tolerance'} =  "5";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__cc_protocol__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'cc_protocol'} = $ENV{'PIN_DM_CLEARCOM__cc_protocol__'};
+} else {
+	$DM_CLEARCOM{'cc_protocol'} =  "live";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__n_batch__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'n_batch'} = $ENV{'PIN_DM_CLEARCOM__n_batch__'};
+} else {
+	$DM_CLEARCOM{'n_batch'} =  "2";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__mid_test_840__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'mid_test_840'} = $ENV{'PIN_DM_CLEARCOM__mid_test_840__'};
+} else {
+	$DM_CLEARCOM{'mid_test_840'} =  "InfranetStore";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__code_file__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'code_file'} = $ENV{'PIN_DM_CLEARCOM__code_file__'};
+} else {
+	$DM_CLEARCOM{'code_file'} =  "./clearcom_codes";
+}
+if ( $ENV{'PIN_DM_CLEARCOM__avscode_file__'} !~ /^$/ ) { 
+	$DM_CLEARCOM{'avscode_file'} = $ENV{'PIN_DM_CLEARCOM__avscode_file__'};
+} else {
+	$DM_CLEARCOM{'avscode_file'} =  "./clearcom_avs_codes";
+}
+
+#========================================================================
+# Generic Information about the multithreaded application (MTA) framework
+#========================================================================
+if ( $ENV{'PIN_MTA__mta_children__'} !~ /^$/ ) { 
+	$MTA{'mta_children'} = $ENV{'PIN_MTA__mta_children__'};
+} else {
+	$MTA{'mta_children'} = 	"5";
+}
+if ( $ENV{'PIN_MTA__mta_per_batch__'} !~ /^$/ ) { 
+	$MTA{'mta_per_batch'} = $ENV{'PIN_MTA__mta_per_batch__'};
+} else {
+	$MTA{'mta_per_batch'} =  "500";
+}
+if ( $ENV{'PIN_MTA__mta_per_step__'} !~ /^$/ ) { 
+	$MTA{'mta_per_step'} = $ENV{'PIN_MTA__mta_per_step__'};
+} else {
+	$MTA{'mta_per_step'} =  "1000";
+}
+if ( $ENV{'PIN_MTA__mta_fetch_size__'} !~ /^$/ ) { 
+	$MTA{'mta_fetch_size'} = $ENV{'PIN_MTA__mta_fetch_size__'};
+} else {
+	$MTA{'mta_fetch_size'} =  "5000";
+}
+if ( $ENV{'PIN_MTA__mta_max_errs__'} !~ /^$/ ) { 
+	$MTA{'mta_max_errs'} = $ENV{'PIN_MTA__mta_max_errs__'};
+} else {
+	$MTA{'mta_max_errs'} =  "5000";
+}
+if ( $ENV{'PIN_MTA__mta_multi_db__'} !~ /^$/ ) { 
+	$MTA{'mta_multi_db'} = $ENV{'PIN_MTA__mta_multi_db__'};
+} else {
+	$MTA{'mta_multi_db'} =  "0";
+}
+if ( $ENV{'PIN_MTA__mta_hotlist__'} !~ /^$/ ) { 
+	$MTA{'mta_hotlist'} = $ENV{'PIN_MTA__mta_hotlist__'};
+} else {
+	$MTA{'mta_hotlist'} =  "hotlist";
+}
+if ( $ENV{'PIN_MTA__mta_monitor__'} !~ /^$/ ) { 
+	$MTA{'mta_monitor'} = $ENV{'PIN_MTA__mta_monitor__'};
+} else {
+	$MTA{'mta_monitor'} =  "monitor";
+}
+
+#========================================================================
+# Information about the pin_inv package
+#========================================================================
+if ( $ENV{'PIN_PIN_INV__location__'} !~ /^$/ ) { 
+	$PIN_INV{'location'} = $ENV{'PIN_PIN_INV__location__'};
+} else {
+	$PIN_INV{'location'} =  "$PIN_HOME/apps/pin_inv";
+}
+if ( $ENV{'PIN_PIN_INV__pin_conf_location__'} !~ /^$/ ) { 
+	$PIN_INV{'pin_conf_location'} = $ENV{'PIN_PIN_INV__pin_conf_location__'};
+} else {
+	$PIN_INV{'pin_conf_location'} =  "\$\{PIN_HOME\}/apps/pin_inv";
+}
+
+
+#========================================================================
+# Information about the pin_trial_bill package
+#========================================================================
+if ( $ENV{'PIN_TB__location__'} !~ /^$/ ) { 
+	$TB{'location'} = $ENV{'PIN_TB__location__'};
+} else {
+	$TB{'location'} =  "$PIN_HOME/apps/pin_trial_bill";
+}
+if ( $ENV{'PIN_TB__pin_conf_location__'} !~ /^$/ ) { 
+	$TB{'pin_conf_location'} = $ENV{'PIN_TB__pin_conf_location__'};
+} else {
+	$TB{'pin_conf_location'} =  "\$\{PIN_HOME\}/apps/pin_trial_bill";
+}
+
+#========================================================================
+# Information about the pin_billd package
+#========================================================================
+if ( $ENV{'PIN_BILLING__location__'} !~ /^$/ ) { 
+	$BILLING{'location'} = $ENV{'PIN_BILLING__location__'};
+} else {
+	$BILLING{'location'} =  "$PIN_HOME/apps/pin_billd";
+}
+if ( $ENV{'PIN_BILLING__pin_conf_location__'} !~ /^$/ ) { 
+	$BILLING{'pin_conf_location'} = $ENV{'PIN_BILLING__pin_conf_location__'};
+} else {
+	$BILLING{'pin_conf_location'} =  "\$\{PIN_HOME\}/apps/pin_billd";
+}
+
+if ( $ENV{'PIN_BILLING__ar_taxes_location__'} !~ /^$/ ) { 
+	$BILLING{'ar_taxes_location'} = $ENV{'PIN_BILLING__ar_taxes_location__'};
+} else {
+	$BILLING{'ar_taxes_location'} =  "$PIN_HOME/apps/pin_ar_taxes";
+}
+if ( $ENV{'PIN_BILLING__remit_location__'} !~ /^$/ ) { 
+	$BILLING{'remit_location'} = $ENV{'PIN_BILLING__remit_location__'};
+} else {
+	$BILLING{'remit_location'} =  "$PIN_HOME/apps/pin_remit";
+}
+if ( $ENV{'PIN_BILLING__monitor_location__'} !~ /^$/ ) { 
+	$BILLING{'monitor_location'} = $ENV{'PIN_BILLING__monitor_location__'};
+} else {
+	$BILLING{'monitor_location'} =  "$PIN_HOME/apps/pin_monitor";
+}
+if ( $ENV{'PIN_BILLING__balance_transfer_location__'} !~ /^$/ ) { 
+	$BILLING{'balance_transfer_location'} = $ENV{'PIN_BILLING__balance_transfer_location__'};
+} else {
+	$BILLING{'balance_transfer_location'} =  "$PIN_HOME/apps/pin_balance_transfer";
+}
+if ( $ENV{'PIN_BILLING__bulk_location__'} !~ /^$/ ) { 
+	$BILLING{'bulk_location'} = $ENV{'PIN_BILLING__bulk_location__'};
+} else {
+	$BILLING{'bulk_location'} =  "$PIN_HOME/apps/pin_bulk_adjust";
+}
+if ( $ENV{'PIN_BILLING__bill_handler_location__'} !~ /^$/ ) { 
+	$BILLING{'bill_handler_location'} = $ENV{'PIN_BILLING__bill_handler_location__'};
+} else {
+	$BILLING{'bill_handler_location'} =  "$PIN_HOME/apps/pin_bill_handler";
+}
+if ( $ENV{'PIN_BILLING__rate_change_location__'} !~ /^$/ ) { 
+	$BILLING{'rate_change_location'} = $ENV{'PIN_BILLING__rate_change_location__'};
+} else {
+	$BILLING{'rate_change_location'} =  "$PIN_HOME/apps/pin_rate_change";
+}
+if ( $ENV{'PIN_BILLING__when__'} !~ /^$/ ) { 
+	$BILLING{'when'} = $ENV{'PIN_BILLING__when__'};
+} else {
+	$BILLING{'when'} =  "1";
+}
+if ( $ENV{'PIN_BILLING__billing_children__'} !~ /^$/ ) { 
+	$BILLING{'billing_children'} = $ENV{'PIN_BILLING__billing_children__'};
+} else {
+	$BILLING{'billing_children'} = 	"5";
+}
+if ( $ENV{'PIN_BILLING__billing_per_batch__'} !~ /^$/ ) { 
+	$BILLING{'billing_per_batch'} = $ENV{'PIN_BILLING__billing_per_batch__'};
+} else {
+	$BILLING{'billing_per_batch'} =  "1000";
+}
+if ( $ENV{'PIN_BILLING__billing_fetch_size__'} !~ /^$/ ) { 
+	$BILLING{'billing_fetch_size'} = $ENV{'PIN_BILLING__billing_fetch_size__'};
+} else {
+	$BILLING{'billing_fetch_size'} =  "5000";
+}
+if ( $ENV{'PIN_BILLING__minimum__'} !~ /^$/ ) { 
+	$BILLING{'minimum'} = $ENV{'PIN_BILLING__minimum__'};
+} else {
+	$BILLING{'minimum'} =  "2.00";
+}
+if ( $ENV{'PIN_BILLING__invoice_children__'} !~ /^$/ ) { 
+	$BILLING{'invoice_children'} = $ENV{'PIN_BILLING__invoice_children__'};
+} else {
+	$BILLING{'invoice_children'} =  "5";
+}
+if ( $ENV{'PIN_BILLING__invoice_per_batch__'} !~ /^$/ ) { 
+	$BILLING{'invoice_per_batch'} = $ENV{'PIN_BILLING__invoice_per_batch__'};
+} else {
+	$BILLING{'invoice_per_batch'} =  "500";
+}
+if ( $ENV{'PIN_BILLING__invoice_fetch_size__'} !~ /^$/ ) { 
+	$BILLING{'invoice_fetch_size'} = $ENV{'PIN_BILLING__invoice_fetch_size__'};
+} else {
+	$BILLING{'invoice_fetch_size'} =  "500";
+}
+if ( $ENV{'PIN_BILLING__config_billing_delay__'} !~ /^$/ ) { 
+	$BILLING{'config_billing_delay'} = $ENV{'PIN_BILLING__config_billing_delay__'};
+} else {
+	$BILLING{'config_billing_delay'} =  "10";
+}
+if ( $ENV{'PIN_BILLING__enforce_billing__'} !~ /^$/ ) { 
+	$BILLING{'enforce_billing'} = $ENV{'PIN_BILLING__enforce_billing__'};
+} else {
+	$BILLING{'enforce_billing'} =  "1";
+}
+if ( $ENV{'PIN_BILLING__bus_params_file__'} !~ /^$/ ) { 
+	$BILLING{'bus_params_file'} = $ENV{'PIN_BILLING__bus_params_file__'};
+} else {
+	$BILLING{'bus_params_file'} =  "$PIN_HOME/sys/data/config/bus_params_act.xml";
+}
+if ( $ENV{'PIN_BILLING__glid_file__'} !~ /^$/ ) { 
+	$BILLING{'glid_file'} = $ENV{'PIN_BILLING__glid_file__'};
+} else {
+	$BILLING{'glid_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_glid";	
+}
+if ( $ENV{'PIN_BILLING__glchart_file__'} !~ /^$/ ) { 
+	$BILLING{'glchart_file'} = $ENV{'PIN_BILLING__glchart_file__'};
+} else {
+	$BILLING{'glchart_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_glchartaccts";	
+}
+if ( $ENV{'PIN_BILLING__rums_file__'} !~ /^$/ ) { 
+	$BILLING{'rums_file'} = $ENV{'PIN_BILLING__rums_file__'};
+} else {
+	$BILLING{'rums_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_rum";	
+}
+if ( $ENV{'PIN_BILLING__usage_file__'} !~ /^$/ ) { 
+	$BILLING{'usage_file'} = $ENV{'PIN_BILLING__usage_file__'};
+} else {
+	$BILLING{'usage_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_usage_map";
+}
+if ( $ENV{'PIN_BILLING__event_map_file__'} !~ /^$/ ) { 
+	$BILLING{'event_map_file'} = $ENV{'PIN_BILLING__event_map_file__'};
+} else {
+	$BILLING{'event_map_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_event_map";
+}
+if ( $ENV{'PIN_BILLING__beid_file__'} !~ /^$/ ) { 
+	$BILLING{'beid_file'} = $ENV{'PIN_BILLING__beid_file__'};
+} else {
+	$BILLING{'beid_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_beid";
+}
+if ( $ENV{'PIN_BILLING__spec_rates_file__'} !~ /^$/ ) { 
+	$BILLING{'spec_rates_file'} = $ENV{'PIN_BILLING__spec_rates_file__'};
+} else {
+	$BILLING{'spec_rates_file'} =  "$PIN_HOME/sys/data/config/pin_spec_rates";
+}
+if ( $ENV{'PIN_BILLING__impact_file__'} !~ /^$/ ) { 
+	$BILLING{'impact_file'} = $ENV{'PIN_BILLING__impact_file__'};
+} else {
+	$BILLING{'impact_file'} =  "$PIN_HOME/sys/data/config/pin_impact_category";
+}
+if ( $ENV{'PIN_BILLING__dropped_call_file__'} !~ /^$/ ) { 
+	$BILLING{'dropped_call_file'} = $ENV{'PIN_BILLING__dropped_call_file__'};
+} else {
+	$BILLING{'dropped_call_file'} =  "$PIN_HOME/sys/data/config/pin_credit_termcause";
+}
+if ( $ENV{'PIN_BILLING__config_business_type_file__'} !~ /^$/ ) { 
+	$BILLING{'config_business_type_file'} = $ENV{'PIN_BILLING__config_business_type_file__'};
+} else {
+	$BILLING{'config_business_type_file'} =  "$PIN_HOME/sys/data/config/pin_config_business_type";
+}
+if ( $ENV{'PIN_BILLING__price_list_file__'} !~ /^$/ ) { 
+	$BILLING{'price_list_file'} = $ENV{'PIN_BILLING__price_list_file__'};
+} else {
+	$BILLING{'price_list_file'} =  "$PIN_HOME/setup/scripts/basicISP.xml";
+}
+if ( $ENV{'PIN_BILLING__config_ach_file__'} !~ /^$/ ) { 
+	$BILLING{'config_ach_file'} = $ENV{'PIN_BILLING__config_ach_file__'};
+} else {
+	$BILLING{'config_ach_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_ach";
+}
+if ( $ENV{'PIN_BILLING__config_contributor_file__'} !~ /^$/ ) { 
+	$BILLING{'config_contributor_file'} = $ENV{'PIN_BILLING__config_contributor_file__'};
+} else {
+	$BILLING{'config_contributor_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_sub_bal_contributor";
+}
+if ( $ENV{'PIN_BILLING__transition_file__'} !~ /^$/ ) { 
+	$BILLING{'transition_file'} = $ENV{'PIN_BILLING__transition_file__'};
+} else {
+	$BILLING{'transition_file'} =  "$PIN_HOME/sys/data/pricing/example/pin_transition_type";
+}
+if ( $ENV{'PIN_BILLING__event_record_map__'} !~ /^$/ ) { 
+	$BILLING{'event_record_map'} = $ENV{'PIN_BILLING__event_record_map__'};
+} else {
+	$BILLING{'event_record_map'} =  "$PIN_HOME/sys/data/config/pin_event_record_map";
+}
+if ( $ENV{'PIN_BILLING__billing_bill_sponsorees__'} !~ /^$/ ) { 
+	$BILLING{'billing_bill_sponsorees'} = $ENV{'PIN_BILLING__billing_bill_sponsorees__'};
+} else {
+	$BILLING{'billing_bill_sponsorees'} =  "0";
+}
+
+#========================================================================
+# Information about the pin_subscription package
+#========================================================================
+if ( $ENV{'PIN_SUBSCRIPTION__location__'} !~ /^$/ ) { 
+	$SUBSCRIPTION{'location'} = $ENV{'PIN_SUBSCRIPTION__location__'};
+} else {
+	$SUBSCRIPTION{'location'} =  "$PIN_HOME/apps/pin_subscription";
+}
+
+if ( $ENV{'PIN_SUBSCRIPTION__subscription_children__'} !~ /^$/ ) { 
+	$SUBSCRIPTION{'subscription_children'} = $ENV{'PIN_SUBSCRIPTION__subscription_children__'};
+} else {
+	$SUBSCRIPTION{'subscription_children'} =  "5";
+}
+if ( $ENV{'PIN_SUBSCRIPTION__subscription_per_batch__'} !~ /^$/ ) { 
+	$SUBSCRIPTION{'subscription_per_batch'} = $ENV{'PIN_SUBSCRIPTION__subscription_per_batch__'};
+} else {
+	$SUBSCRIPTION{'subscription_per_batch'} =  "500";
+}
+if ( $ENV{'PIN_SUBSCRIPTION__subscription_per_step__'} !~ /^$/ ) { 
+	$SUBSCRIPTION{'subscription_per_step'} = $ENV{'PIN_SUBSCRIPTION__subscription_per_step__'};
+} else {
+	$SUBSCRIPTION{'subscription_per_step'} =  "1000";
+}
+if ( $ENV{'PIN_SUBSCRIPTION__subscription_fetch_size__'} !~ /^$/ ) { 
+	$SUBSCRIPTION{'subscription_fetch_size'} = $ENV{'PIN_SUBSCRIPTION__subscription_fetch_size__'};
+} else {
+	$SUBSCRIPTION{'subscription_fetch_size'} =  "5000";
+}
+if ( $ENV{'PIN_SUBSCRIPTION__subscription_max_errs__'} !~ /^$/ ) { 
+	$SUBSCRIPTION{'subscription_max_errs'} = $ENV{'PIN_SUBSCRIPTION__subscription_max_errs__'};
+} else {
+	$SUBSCRIPTION{'subscription_max_errs'} =  "1";
+}
+
+#========================================================================
+# Information about the pin_rerate package
+#========================================================================
+if ( $ENV{'PIN_RERATING__location__'} !~ /^$/ ) { 
+	$RERATING{'location'} = $ENV{'PIN_RERATING__location__'};
+} else {
+	$RERATING{'location'} =  "$PIN_HOME/apps/pin_rerate";
+}
+if ( $ENV{'PIN_RERATING__pin_conf_location__'} !~ /^$/ ) { 
+	$RERATING{'pin_conf_location'} = $ENV{'PIN_RERATING__pin_conf_location__'};
+} else {
+	$RERATING{'pin_conf_location'} =  "\$\{PIN_HOME\}/apps/pin_rerate";
+}
+
+if ( $ENV{'PIN_RERATING__rerating_children__'} !~ /^$/ ) { 
+	$RERATING{'rerating_children'} = $ENV{'PIN_RERATING__rerating_children__'};
+} else {
+	$RERATING{'rerating_children'} =  "5";
+}
+if ( $ENV{'PIN_RERATING__rerating_per_batch__'} !~ /^$/ ) { 
+	$RERATING{'rerating_per_batch'} = $ENV{'PIN_RERATING__rerating_per_batch__'};
+} else {
+	$RERATING{'rerating_per_batch'} =  "500";
+}
+if ( $ENV{'PIN_RERATING__rerating_per_step__'} !~ /^$/ ) { 
+	$RERATING{'rerating_per_step'} = $ENV{'PIN_RERATING__rerating_per_step__'};
+} else {
+	$RERATING{'rerating_per_step'} =  "1000";
+}
+if ( $ENV{'PIN_RERATING__rerating_fetch_size__'} !~ /^$/ ) { 
+	$RERATING{'rerating_fetch_size'} = $ENV{'PIN_RERATING__rerating_fetch_size__'};
+} else {
+	$RERATING{'rerating_fetch_size'} =  "5000";
+}
+if ( $ENV{'PIN_RERATING__rerating_max_errs__'} !~ /^$/ ) { 
+	$RERATING{'rerating_max_errs'} = $ENV{'PIN_RERATING__rerating_max_errs__'};
+} else {
+	$RERATING{'rerating_max_errs'} =  "1";
+}
+
+#========================================================================
+# Information about the RRF Package
+#========================================================================
+if ( $ENV{'PIN_RRF__clean_rsvns_location__'} !~ /^$/ ) { 
+	$RRF{'clean_rsvns_location'} = $ENV{'PIN_RRF__clean_rsvns_location__'};
+} else {
+	$RRF{'clean_rsvns_location'} =  "$PIN_HOME/apps/pin_clean_rsvns";
+}
+if ( $ENV{'PIN_RRF__clean_asos_location__'} !~ /^$/ ) { 
+	$RRF{'clean_asos_location'} = $ENV{'PIN_RRF__clean_asos_location__'};
+} else {
+	$RRF{'clean_asos_location'} =  "$PIN_HOME/apps/pin_clean_asos";
+}
+if ( $ENV{'PIN_RRF__thresholds_location__'} !~ /^$/ ) { 
+	$RRF{'thresholds_location'} = $ENV{'PIN_RRF__thresholds_location__'};
+} else {
+	$RRF{'thresholds_location'} =  "$PIN_HOME/apps/pin_ra_check_thresholds";
+}
+if ( $ENV{'PIN_RRF_DEFAULT_DB_NUM__db_num__'} !~ /^$/ ) { 
+	$RRF_DEFAULT_DB_NUM{'db_num'} = $ENV{'PIN_RRF_DEFAULT_DB_NUM__db_num__'};
+} else {
+	$RRF_DEFAULT_DB_NUM{'db_num'} =  "0.0.0.1";
+}
+
+#========================================================================
+# Information about the Mail Server
+#========================================================================
+if ( $ENV{'PIN_EMAILMGR__popper_location__'} !~ /^$/ ) { 
+	$EMAILMGR{'popper_location'} = $ENV{'PIN_EMAILMGR__popper_location__'};
+} else {
+	$EMAILMGR{'popper_location'} =  "$PIN_HOME/apps/popper";
+}
+if ( $ENV{'PIN_EMAILMGR__pin_mailer_location__'} !~ /^$/ ) { 
+	$EMAILMGR{'pin_mailer_location'} = $ENV{'PIN_EMAILMGR__pin_mailer_location__'};
+} else {
+	$EMAILMGR{'pin_mailer_location'} =  "$PIN_HOME/apps/pin_mailer";
+}
+
+#========================================================================
+# Information about the testnap package
+#========================================================================
+if ( $ENV{'PIN_TESTNAP__location__'} !~ /^$/ ) { 
+	$TESTNAP{'location'} = $ENV{'PIN_TESTNAP__location__'};
+} else {
+	$TESTNAP{'location'} =  "$PIN_HOME/sys/test";
+}
+
+#=======================================================================
+# Information about Dialup Manager
+#
+# Dialup Manager was formerly known as the Terminal Server Manager
+# or TSM, and may also be called Radius Manager.
+#=======================================================================
+if ( $ENV{'PIN_RADIUS__stop_only_acct__'} !~ /^$/ ) { 
+	$RADIUS{'stop_only_acct'} = $ENV{'PIN_RADIUS__stop_only_acct__'};
+} else {
+	$RADIUS{'stop_only_acct'} =  "0";
+}
+if ( $ENV{'PIN_RADIUS__trans_id_window__'} !~ /^$/ ) { 
+	$RADIUS{'trans_id_window'} = $ENV{'PIN_RADIUS__trans_id_window__'};
+} else {
+	$RADIUS{'trans_id_window'} =  "14400";
+}
+if ( $ENV{'PIN_RADIUS__location__'} !~ /^$/ ) { 
+	$RADIUS{'location'} = $ENV{'PIN_RADIUS__location__'};
+} else {
+	$RADIUS{'location'} =  "$PIN_HOME/apps/radius";
+}
+
+if ( $ENV{'PIN_RADIUS__num_connects__'} !~ /^$/ ) { 
+	$RADIUS{'num_connects'} = $ENV{'PIN_RADIUS__num_connects__'};
+} else {
+	$RADIUS{'num_connects'} =  "4";
+}
+
+#=======================================================================
+# Information about the dm_ldap (LDAP) Data Manager
+#=======================================================================
+%LDAP = %QM_generic;  # Inherit all %QM_generic values #
+
+if ( $ENV{'PIN_LDAP__location__'} !~ /^$/ ) { 
+	$LDAP{'location'}     = $ENV{'PIN_LDAP__location__'};
+} else {
+	$LDAP{'location'}     =  "$PIN_HOME/sys/dm_ldap";
+}
+
+if ( $ENV{'PIN_LDAP__app_location__'} !~ /^$/ ) { 
+	$LDAP{'app_location'} = $ENV{'PIN_LDAP__app_location__'};
+} else {
+	$LDAP{'app_location'} =  "$PIN_HOME/apps/exportapps";
+}
+if ( $ENV{'PIN_LDAP__channel_location__'} !~ /^$/ ) { 
+	$LDAP{'channel_location'} = $ENV{'PIN_LDAP__channel_location__'};
+} else {
+	$LDAP{'channel_location'} =  "$PIN_HOME/apps/load_channel_config";
+}
+if ( $ENV{'PIN_LDAP__log_location__'} !~ /^$/ ) { 
+	$LDAP{'log_location'} = $ENV{'PIN_LDAP__log_location__'};
+} else {
+	$LDAP{'log_location'} =  "$PIN_LOG_DIR/exportapps";
+}
+if ( $ENV{'PIN_LDAP__enable_push__'} !~ /^$/ ) { 
+	$LDAP{'enable_push'}  = $ENV{'PIN_LDAP__enable_push__'};
+} else {
+	$LDAP{'enable_push'}  =  "1";
+}
+if ( $ENV{'PIN_LDAP__user_scheme__'} !~ /^$/ ) { 
+	$LDAP{'user_scheme'}  = $ENV{'PIN_LDAP__user_scheme__'};
+} else {
+	$LDAP{'user_scheme'}  =  "1";
+}
+if ( $ENV{'PIN_LDAP__port__'} !~ /^$/ ) { 
+	$LDAP{'port'}         = $ENV{'PIN_LDAP__port__'};
+} else {
+	$LDAP{'port'}         =  "12850";
+}
+if ( $ENV{'PIN_LDAP__db_num__'} !~ /^$/ ) { 
+	$LDAP{'db_num'}       = $ENV{'PIN_LDAP__db_num__'};
+} else {
+	$LDAP{'db_num'}       =  "0.0.5.1";
+}
+if ( $ENV{'PIN_LDAP__hostname__'} !~ /^$/ ) { 
+	$LDAP{'hostname'}     = $ENV{'PIN_LDAP__hostname__'};
+} else {
+	$LDAP{'hostname'}     =  "$HOSTNAME";
+}
+
+
+#=======================================================================
+# Information about NETFLOW
+#=======================================================================
+if ( $ENV{'PIN_NETFLOW__peak_percentile__'} !~ /^$/ ) { 
+	$NETFLOW{'peak_percentile'} = $ENV{'PIN_NETFLOW__peak_percentile__'};
+} else {
+	$NETFLOW{'peak_percentile'} =  "95";
+}
+if ( $ENV{'PIN_NETFLOW__location__'} !~ /^$/ ) { 
+	$NETFLOW{'location'} = $ENV{'PIN_NETFLOW__location__'};
+} else {
+	$NETFLOW{'location'} =  "$PIN_HOME/apps/pin_nfcd";
+}
+
+
+#=============================================================
+# Information about VOCALTEC GAL
+#=============================================================
+if ( $ENV{'PIN_VOCALTEC__pin_conf_location__'} !~ /^$/ ) { 
+	$VOCALTEC{'pin_conf_location'} = $ENV{'PIN_VOCALTEC__pin_conf_location__'};
+} else {
+	$VOCALTEC{'pin_conf_location'} =  $WINSYSDIR;
+}
+if ( $ENV{'PIN_VOCALTEC__gatekeeper_ip__'} !~ /^$/ ) { 
+	$VOCALTEC{'gatekeeper_ip'} = $ENV{'PIN_VOCALTEC__gatekeeper_ip__'};
+} else {
+	$VOCALTEC{'gatekeeper_ip'} =  $VOCALTEC_GATEKEEPER_IP;
+}
+
+#=======================================================================
+# Information about the dm_eai (EAI Framework) Data Manager
+#=======================================================================
+%EAI = %DM_generic;
+if ( $ENV{'PIN_EAI__location__'} !~ /^$/ ) { 
+	$EAI{'location'} = $ENV{'PIN_EAI__location__'};
+} else {
+	$EAI{'location'} =  "$PIN_HOME/sys/dm_eai";
+}
+
+if ( $ENV{'PIN_EAI__eai_js_location__'} !~ /^$/ ) { 
+	$EAI{'eai_js_location'} = $ENV{'PIN_EAI__eai_js_location__'};
+} else {
+	$EAI{'eai_js_location'} =  "$PIN_HOME/sys/eai_js";
+}
+if ( $ENV{'PIN_EAI__library__'} !~ /^$/ ) { 
+	$EAI{'library'} = $ENV{'PIN_EAI__library__'};
+} else {
+	$EAI{'library'} =  "\$\{PIN_HOME\}/sys/dm_eai/${LIBRARYPREFIXVAR}dm_eai\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_EAI__enable_publish__'} !~ /^$/ ) { 
+	$EAI{'enable_publish'} = $ENV{'PIN_EAI__enable_publish__'};
+} else {
+	$EAI{'enable_publish'} =  "0";
+}
+if ( $ENV{'PIN_EAI__log_level__'} !~ /^$/ ) { 
+	$EAI{'log_level'} = $ENV{'PIN_EAI__log_level__'};
+} else {
+	$EAI{'log_level'} =  "1";
+}
+if ( $ENV{'PIN_EAI__db_num__'} !~ /^$/ ) { 
+	$EAI{'db_num'} = $ENV{'PIN_EAI__db_num__'};
+} else {
+	$EAI{'db_num'} =  "0.0.9.1";
+}
+if ( $ENV{'PIN_EAI__port__'} !~ /^$/ ) { 
+	$EAI{'port'} = $ENV{'PIN_EAI__port__'};
+} else {
+	$EAI{'port'} =  "11970";
+}
+if ( $ENV{'PIN_EAI__back_ends__'} !~ /^$/ ) { 
+	$EAI{'back_ends'} = $ENV{'PIN_EAI__back_ends__'};
+} else {
+	$EAI{'back_ends'} =  "8";
+}
+if ( $ENV{'PIN_EAI__max_back_ends__'} !~ /^$/ ) { 
+	$EAI{'max_back_ends'} = $ENV{'PIN_EAI__max_back_ends__'};
+} else {
+	$EAI{'max_back_ends'} =  "8";
+}
+if ( $ENV{'PIN_EAI__em_port__'} !~ /^$/ ) { 
+	$EAI{'em_port'} = $ENV{'PIN_EAI__em_port__'};
+} else {
+	$EAI{'em_port'} =  "11930";
+}
+if ( $ENV{'PIN_EAI__hostname__'} !~ /^$/ ) { 
+	$EAI{'hostname'} = $ENV{'PIN_EAI__hostname__'};
+} else {
+	$EAI{'hostname'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_EAI__em_hostname__'} !~ /^$/ ) { 
+	$EAI{'em_hostname'} = $ENV{'PIN_EAI__em_hostname__'};
+} else {
+	$EAI{'em_hostname'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_EAI__eai_js_already_installed__'} !~ /^$/ ) { 
+	$EAI{'eai_js_already_installed'} = $ENV{'PIN_EAI__eai_js_already_installed__'};
+} else {
+	$EAI{'eai_js_already_installed'} =  "Yes";
+}
+
+
+#========================================================================
+# Information about the dm_csrc (Cisco Subscriber Registration Center)
+# Data Manager
+#========================================================================
+%CSRC = %EAI;
+if ( $ENV{'PIN_CSRC__location__'} !~ /^$/ ) { 
+	$CSRC{'location'} = $ENV{'PIN_CSRC__location__'};
+} else {
+	$CSRC{'location'} =  "$PIN_HOME/sys/dm_csrc";
+}
+if ( $ENV{'PIN_CSRC__db_num__'} !~ /^$/ ) { 
+	$CSRC{'db_num'}   = $ENV{'PIN_CSRC__db_num__'};
+} else {
+	$CSRC{'db_num'}   =  "0.0.9.2";
+}
+if ( $ENV{'PIN_CSRC__port__'} !~ /^$/ ) { 
+	$CSRC{'port'}     = $ENV{'PIN_CSRC__port__'};
+} else {
+	$CSRC{'port'}     =  "11972";
+}
+
+
+#========================================================================
+# Information about the dm_teracomm Data Manager
+#========================================================================
+%TERACOMM = %EAI;
+if ( $ENV{'PIN_TERACOMM__location__'} !~ /^$/ ) { 
+	$TERACOMM{'location'} = $ENV{'PIN_TERACOMM__location__'};
+} else {
+	$TERACOMM{'location'} =  "$PIN_HOME/sys/dm_teracomm";
+}
+if ( $ENV{'PIN_TERACOMM__db_num__'} !~ /^$/ ) { 
+	$TERACOMM{'db_num'}   = $ENV{'PIN_TERACOMM__db_num__'};
+} else {
+	$TERACOMM{'db_num'}   =  "0.0.9.3";
+}
+if ( $ENV{'PIN_TERACOMM__port__'} !~ /^$/ ) { 
+	$TERACOMM{'port'}     = $ENV{'PIN_TERACOMM__port__'};
+} else {
+	$TERACOMM{'port'}     =  "11973";
+}
+if ( $ENV{'PIN_TERACOMM__ldap_hostname__'} !~ /^$/ ) { 
+	$TERACOMM{'ldap_hostname'} = $ENV{'PIN_TERACOMM__ldap_hostname__'};
+} else {
+	$TERACOMM{'ldap_hostname'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_TERACOMM__ldap_port__'} !~ /^$/ ) { 
+	$TERACOMM{'ldap_port'}     = $ENV{'PIN_TERACOMM__ldap_port__'};
+} else {
+	$TERACOMM{'ldap_port'}     =  "389";
+}
+if ( $ENV{'PIN_TERACOMM__ldap_base_dn__'} !~ /^$/ ) { 
+	$TERACOMM{'ldap_base_dn'}  = $ENV{'PIN_TERACOMM__ldap_base_dn__'};
+} else {
+	$TERACOMM{'ldap_base_dn'}  =  "o=company.com";
+}
+if ( $ENV{'PIN_TERACOMM__ldap_bind__'} !~ /^$/ ) { 
+	$TERACOMM{'ldap_bind'}     = $ENV{'PIN_TERACOMM__ldap_bind__'};
+} else {
+	$TERACOMM{'ldap_bind'}     =  "uid=admin, ou=Administrators, ou=TopologyManagement, o=NetscapeRoot";
+}
+if ( $ENV{'PIN_TERACOMM__ldap_password__'} !~ /^$/ ) { 
+	$TERACOMM{'ldap_password'} = $ENV{'PIN_TERACOMM__ldap_password__'};
+} else {
+	$TERACOMM{'ldap_password'} =  "&aes|08|0D5E11BFDD97D2769D9B0DBFBD1BBF7E5D40C305EDF3D77DF111AAB8F781E92122";
+}
+
+
+#========================================================================
+# Information about dm_bmsc, the Wireline Fraud Manager
+#========================================================================
+%DM_BMSC = %DM_generic;  # Inherit all standard DM_generic values #
+if ( $ENV{'PIN_DM_BMSC__location__'} !~ /^$/ ) { 
+	$DM_BMSC{'location'} = $ENV{'PIN_DM_BMSC__location__'};
+} else {
+	$DM_BMSC{'location'} =  "$PIN_HOME/sys/dm_bmsc";
+}
+if ( $ENV{'PIN_DM_BMSC__db_num__'} !~ /^$/ ) { 
+	$DM_BMSC{'db_num'}   = $ENV{'PIN_DM_BMSC__db_num__'};
+} else {
+	$DM_BMSC{'db_num'}   =  "0.0.9.4";
+}
+if ( $ENV{'PIN_DM_BMSC__hostname__'} !~ /^$/ ) { 
+	$DM_BMSC{'hostname'} = $ENV{'PIN_DM_BMSC__hostname__'};
+} else {
+	$DM_BMSC{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_BMSC__port__'} !~ /^$/ ) { 
+	$DM_BMSC{'port'}     = $ENV{'PIN_DM_BMSC__port__'};
+} else {
+	$DM_BMSC{'port'}     =  "11974";
+}
+if ( $ENV{'PIN_DM_BMSC__library__'} !~ /^$/ ) { 
+	$DM_BMSC{'library'}  = $ENV{'PIN_DM_BMSC__library__'};
+} else {
+	$DM_BMSC{'library'}  =  "$DM_BMSC{'location'}/dm_bmsc\$\{LIBRARYEXTENSION\}";
+}
+
+#========================================================================
+# Information about the IFW Sync Data Manager
+#========================================================================
+%DM_IFW_SYNC = %EAI;
+if ( $ENV{'PIN_DM_IFW_SYNC__location__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'location'} = $ENV{'PIN_DM_IFW_SYNC__location__'};
+} else {
+	$DM_IFW_SYNC{'location'} =  "\$\{PIN_HOME\}/sys/dm_ifw_sync";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__pin_cnf_location__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'pin_cnf_location'} = $ENV{'PIN_DM_IFW_SYNC__pin_cnf_location__'};
+} else {
+	$DM_IFW_SYNC{'pin_cnf_location'} =  "$PIN_HOME/sys/dm_ifw_sync";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__db_num__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'db_num'}   = $ENV{'PIN_DM_IFW_SYNC__db_num__'};
+} else {
+	$DM_IFW_SYNC{'db_num'}   =  "0.0.9.9";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__port__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'port'}     = $ENV{'PIN_DM_IFW_SYNC__port__'};
+} else {
+	$DM_IFW_SYNC{'port'}     =  "11999";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__oracle_version__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'oracle_version'} = $ENV{'PIN_DM_IFW_SYNC__oracle_version__'};
+} else {
+	$DM_IFW_SYNC{'oracle_version'} =  "11g";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__library__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'library'}  = $ENV{'PIN_DM_IFW_SYNC__library__'};
+} else {
+	$DM_IFW_SYNC{'library'}  =  "$DM_IFW_SYNC{'location'}/${LIBRARYPREFIXVAR}dm_eai\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__plugin_oracle__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'plugin_oracle'}  = $ENV{'PIN_DM_IFW_SYNC__plugin_oracle__'};
+} else {
+	$DM_IFW_SYNC{'plugin_oracle'}  =  "${LIBRARYPREFIXVAR}plugin_ifw_sync$DM_IFW_SYNC{'oracle_version'}\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__connect_retries__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'connect_retries'} = $ENV{'PIN_DM_IFW_SYNC__connect_retries__'};
+} else {
+	$DM_IFW_SYNC{'connect_retries'} =  "1";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__retry_interval__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'retry_interval'} = $ENV{'PIN_DM_IFW_SYNC__retry_interval__'};
+} else {
+	$DM_IFW_SYNC{'retry_interval'} =  "0";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__hostname__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'hostname'} = $ENV{'PIN_DM_IFW_SYNC__hostname__'};
+} else {
+	$DM_IFW_SYNC{'hostname'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__queuing_db_alias__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'queuing_db_alias'} = $ENV{'PIN_DM_IFW_SYNC__queuing_db_alias__'};
+} else {
+	$DM_IFW_SYNC{'queuing_db_alias'} =  "BRMUAT";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__queuing_db_user__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'queuing_db_user'} = $ENV{'PIN_DM_IFW_SYNC__queuing_db_user__'};
+} else {
+	$DM_IFW_SYNC{'queuing_db_user'} =  "pin";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__queuing_db_password__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'queuing_db_password'} = $ENV{'PIN_DM_IFW_SYNC__queuing_db_password__'};
+} else {
+	$DM_IFW_SYNC{'queuing_db_password'} =  "&aes|10|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC23D94E0FFD3C7A7B1152827133F1C2726";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__queuing_tablespace__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'queuing_tablespace'} = $ENV{'PIN_DM_IFW_SYNC__queuing_tablespace__'};
+} else {
+	$DM_IFW_SYNC{'queuing_tablespace'} =  "pin00";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__retention_time__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'retention_time'} = $ENV{'PIN_DM_IFW_SYNC__retention_time__'};
+} else {
+	$DM_IFW_SYNC{'retention_time'} =  "0";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__queue_map_file__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'queue_map_file'} = $ENV{'PIN_DM_IFW_SYNC__queue_map_file__'};
+} else {
+	$DM_IFW_SYNC{'queue_map_file'} =  "ifw_sync_queuenames";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__log_level__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'log_level'} = $ENV{'PIN_DM_IFW_SYNC__log_level__'};
+} else {
+	$DM_IFW_SYNC{'log_level'} =  "1";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__queue_name__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'queue_name'} = $ENV{'PIN_DM_IFW_SYNC__queue_name__'};
+} else {
+	$DM_IFW_SYNC{'queue_name'} =  "QueueName";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__queue_module__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'queue_module'} = $ENV{'PIN_DM_IFW_SYNC__queue_module__'};
+} else {
+	$DM_IFW_SYNC{'queue_module'} =  "\$\{PIN_HOME\}/lib/MSMsgQueue\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_IFW_SYNC__server_name__'} !~ /^$/ ) { 
+	$DM_IFW_SYNC{'server_name'} = $ENV{'PIN_DM_IFW_SYNC__server_name__'};
+} else {
+	$DM_IFW_SYNC{'server_name'} =  "$HOSTNAME";
+}
+
+#========================================================================
+# Information about DM AQ
+#========================================================================
+%DM_AQ = %DM_generic; 
+if ( $ENV{'PIN_DM_AQ__location__'} !~ /^$/ ) { 
+	$DM_AQ{'location'} = $ENV{'PIN_DM_AQ__location__'};
+} else {
+	$DM_AQ{'location'} =  "\$\{PIN_HOME\}/sys/dm_aq";
+}
+if ( $ENV{'PIN_DM_AQ__pin_cnf_location__'} !~ /^$/ ) { 
+	$DM_AQ{'pin_cnf_location'} = $ENV{'PIN_DM_AQ__pin_cnf_location__'};
+} else {
+	$DM_AQ{'pin_cnf_location'} =  "$PIN_HOME/sys/dm_aq";
+}
+if ( $ENV{'PIN_DM_AQ__db_num__'} !~ /^$/ ) { 
+	$DM_AQ{'db_num'}   = $ENV{'PIN_DM_AQ__db_num__'};
+} else {
+	$DM_AQ{'db_num'}   =  "0.0.9.7";
+}
+if ( $ENV{'PIN_DM_AQ__port__'} !~ /^$/ ) { 
+	$DM_AQ{'port'}     = $ENV{'PIN_DM_AQ__port__'};
+} else {
+	$DM_AQ{'port'}     =  "17513";
+}
+if ( $ENV{'PIN_DM_AQ__oracle_version__'} !~ /^$/ ) { 
+	$DM_AQ{'oracle_version'} = $ENV{'PIN_DM_AQ__oracle_version__'};
+} else {
+	$DM_AQ{'oracle_version'} =  "11g";
+}
+if ( $ENV{'PIN_DM_AQ__library__'} !~ /^$/ ) { 
+	$DM_AQ{'library'}  = $ENV{'PIN_DM_AQ__library__'};
+} else {
+	$DM_AQ{'library'}  =  "$DM_AQ{'location'}/${LIBRARYPREFIXVAR}dm_eai\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_AQ__plugin_oracle__'} !~ /^$/ ) { 
+	$DM_AQ{'plugin_oracle'}  = $ENV{'PIN_DM_AQ__plugin_oracle__'};
+} else {
+	$DM_AQ{'plugin_oracle'}  =  "${LIBRARYPREFIXVAR}plugin_aq$MAIN_DB{'version'}\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_AQ__connect_retries__'} !~ /^$/ ) { 
+	$DM_AQ{'connect_retries'} = $ENV{'PIN_DM_AQ__connect_retries__'};
+} else {
+	$DM_AQ{'connect_retries'} =  "1";
+}
+if ( $ENV{'PIN_DM_AQ__retry_interval__'} !~ /^$/ ) { 
+	$DM_AQ{'retry_interval'} = $ENV{'PIN_DM_AQ__retry_interval__'};
+} else {
+	$DM_AQ{'retry_interval'} =  "0";
+}
+if ( $ENV{'PIN_DM_AQ__hostname__'} !~ /^$/ ) { 
+	$DM_AQ{'hostname'} = $ENV{'PIN_DM_AQ__hostname__'};
+} else {
+	$DM_AQ{'hostname'} =  "$HOSTNAME";
+}
+if ( $ENV{'PIN_DM_AQ__queuing_db_alias__'} !~ /^$/ ) { 
+	$DM_AQ{'queuing_db_alias'} = $ENV{'PIN_DM_AQ__queuing_db_alias__'};
+} else {
+	$DM_AQ{'queuing_db_alias'} =  "BRMUAT";
+}
+if ( $ENV{'PIN_DM_AQ__queuing_db_user__'} !~ /^$/ ) { 
+	$DM_AQ{'queuing_db_user'} = $ENV{'PIN_DM_AQ__queuing_db_user__'};
+} else {
+	$DM_AQ{'queuing_db_user'} =  "pin";
+}
+if ( $ENV{'PIN_DM_AQ__queuing_db_password__'} !~ /^$/ ) { 
+	$DM_AQ{'queuing_db_password'} = $ENV{'PIN_DM_AQ__queuing_db_password__'};
+} else {
+	$DM_AQ{'queuing_db_password'} =  "&aes|10|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC23D94E0FFD3C7A7B1152827133F1C2726";
+}
+if ( $ENV{'PIN_DM_AQ__queuing_tablespace__'} !~ /^$/ ) { 
+	$DM_AQ{'queuing_tablespace'} = $ENV{'PIN_DM_AQ__queuing_tablespace__'};
+} else {
+	$DM_AQ{'queuing_tablespace'} =  "pin00";
+}
+if ( $ENV{'PIN_DM_AQ__retention_time__'} !~ /^$/ ) { 
+	$DM_AQ{'retention_time'} = $ENV{'PIN_DM_AQ__retention_time__'};
+} else {
+	$DM_AQ{'retention_time'} =  "0";
+}
+if ( $ENV{'PIN_DM_AQ__queue_map_file__'} !~ /^$/ ) { 
+	$DM_AQ{'queue_map_file'} = $ENV{'PIN_DM_AQ__queue_map_file__'};
+} else {
+	$DM_AQ{'queue_map_file'} =  "aq_queuenames";
+}
+if ( $ENV{'PIN_DM_AQ__log_level__'} !~ /^$/ ) { 
+	$DM_AQ{'log_level'} = $ENV{'PIN_DM_AQ__log_level__'};
+} else {
+	$DM_AQ{'log_level'} =  "1";
+}
+
+#========================================================================
+# Information about the EAI Mediation Handler
+#========================================================================
+%MEDIATION = %EAI;  # Inherit all standard %EAI values #
+if ( $ENV{'PIN_MEDIATION__location__'} !~ /^$/ ) { 
+	$MEDIATION{'location'} = $ENV{'PIN_MEDIATION__location__'};
+} else {
+	$MEDIATION{'location'} =  "$PIN_HOME/apps/mediation_handler";
+}
+
+
+#========================================================================
+# Information about the dm_billsoft Data Manager
+#========================================================================
+%DM_BILLSOFT = %QM_generic;  # Inherit all standard QM_generic values #
+if ( $ENV{'PIN_DM_BILLSOFT__location__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'location'} = $ENV{'PIN_DM_BILLSOFT__location__'};
+} else {
+	$DM_BILLSOFT{'location'} =  "$PIN_HOME/sys/dm_billsoft";
+}
+
+if ( $ENV{'PIN_DM_BILLSOFT__db_num__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'db_num'}   = $ENV{'PIN_DM_BILLSOFT__db_num__'};
+} else {
+	$DM_BILLSOFT{'db_num'}   =  "0.0.7.1";
+}
+if ( $ENV{'PIN_DM_BILLSOFT__hostname__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'hostname'} = $ENV{'PIN_DM_BILLSOFT__hostname__'};
+} else {
+	$DM_BILLSOFT{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_BILLSOFT__port__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'port'}     = $ENV{'PIN_DM_BILLSOFT__port__'};
+} else {
+	$DM_BILLSOFT{'port'}     =  "12870";
+}
+if ( $ENV{'PIN_DM_BILLSOFT__currency__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'currency'} = $ENV{'PIN_DM_BILLSOFT__currency__'};
+} else {
+	$DM_BILLSOFT{'currency'} =  $MAIN_CM{'currency'};
+}
+if ( $ENV{'PIN_DM_BILLSOFT__library__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'library'}  = $ENV{'PIN_DM_BILLSOFT__library__'};
+} else {
+	$DM_BILLSOFT{'library'}  =  "$DM_BILLSOFT{'location'}/dm_billsoft\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_BILLSOFT__filelocs__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'filelocs'} = $ENV{'PIN_DM_BILLSOFT__filelocs__'};
+} else {
+	$DM_BILLSOFT{'filelocs'} =  "$DM_BILLSOFT{'location'}/filelocs.txt";
+}
+if ( $ENV{'PIN_DM_BILLSOFT__logfile__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'logfile'}  = $ENV{'PIN_DM_BILLSOFT__logfile__'};
+} else {
+	$DM_BILLSOFT{'logfile'}  =  "$DM_BILLSOFT{'location'}/eztax_dbg.log";
+}
+if ( $ENV{'PIN_DM_BILLSOFT__taxlog__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'taxlog'}   = $ENV{'PIN_DM_BILLSOFT__taxlog__'};
+} else {
+	$DM_BILLSOFT{'taxlog'}   =  "true";
+}
+if ( $ENV{'PIN_DM_BILLSOFT__opendb__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'opendb'}   = $ENV{'PIN_DM_BILLSOFT__opendb__'};
+} else {
+	$DM_BILLSOFT{'opendb'}   =  "true";
+}
+if ( $ENV{'PIN_DM_BILLSOFT__cacheall__'} !~ /^$/ ) { 
+	$DM_BILLSOFT{'cacheall'} = $ENV{'PIN_DM_BILLSOFT__cacheall__'};
+} else {
+	$DM_BILLSOFT{'cacheall'} =  "1000000";
+}
+
+
+#========================================================================
+# Information about the dm_vertex Data Manager
+#========================================================================
+%DM_VERTEX = %QM_generic;  # Inherit all standard QM_generic values #
+if ( $ENV{'PIN_DM_VERTEX__location__'} !~ /^$/ ) { 
+	$DM_VERTEX{'location'} = $ENV{'PIN_DM_VERTEX__location__'};
+} else {
+	$DM_VERTEX{'location'} =  "$PIN_HOME/sys/dm_vertex";
+}
+if ( $ENV{'PIN_DM_VERTEX__db_num__'} !~ /^$/ ) { 
+	$DM_VERTEX{'db_num'}   = $ENV{'PIN_DM_VERTEX__db_num__'};
+} else {
+	$DM_VERTEX{'db_num'}   =  "0.0.8.1";
+}
+if ( $ENV{'PIN_DM_VERTEX__hostname__'} !~ /^$/ ) { 
+	$DM_VERTEX{'hostname'} = $ENV{'PIN_DM_VERTEX__hostname__'};
+} else {
+	$DM_VERTEX{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_VERTEX__port__'} !~ /^$/ ) { 
+	$DM_VERTEX{'port'}     = $ENV{'PIN_DM_VERTEX__port__'};
+} else {
+	$DM_VERTEX{'port'}     =  "12880";
+}
+if ( $ENV{'PIN_DM_VERTEX__currency__'} !~ /^$/ ) { 
+	$DM_VERTEX{'currency'} = $ENV{'PIN_DM_VERTEX__currency__'};
+} else {
+	$DM_VERTEX{'currency'} =  $MAIN_CM{'currency'};
+}
+if ( $ENV{'PIN_DM_VERTEX__library__'} !~ /^$/ ) { 
+	$DM_VERTEX{'library'}  = $ENV{'PIN_DM_VERTEX__library__'};
+} else {
+	$DM_VERTEX{'library'}  =  "$DM_VERTEX{'location'}/dm_vertex\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_VERTEX__logfile__'} !~ /^$/ ) { 
+	$DM_VERTEX{'logfile'}  = $ENV{'PIN_DM_VERTEX__logfile__'};
+} else {
+	$DM_VERTEX{'logfile'}  =  "$DM_VERTEX{'location'}/qsut_dbg.log";
+}
+if ( $ENV{'PIN_DM_VERTEX__db_source__'} !~ /^$/ ) { 
+	$DM_VERTEX{'db_source'} = $ENV{'PIN_DM_VERTEX__db_source__'};
+} else {
+	$DM_VERTEX{'db_source'} =  "your_source";
+}
+if ( $ENV{'PIN_DM_VERTEX__db_server__'} !~ /^$/ ) { 
+	$DM_VERTEX{'db_server'} = $ENV{'PIN_DM_VERTEX__db_server__'};
+} else {
+	$DM_VERTEX{'db_server'} =  "your_server";
+}
+if ( $ENV{'PIN_DM_VERTEX__db_user__'} !~ /^$/ ) { 
+	$DM_VERTEX{'db_user'}   = $ENV{'PIN_DM_VERTEX__db_user__'};
+} else {
+	$DM_VERTEX{'db_user'}   =  "your_user";
+}
+if ( $ENV{'PIN_DM_VERTEX__db_passwd__'} !~ /^$/ ) { 
+	$DM_VERTEX{'db_passwd'} = $ENV{'PIN_DM_VERTEX__db_passwd__'};
+} else {
+	$DM_VERTEX{'db_passwd'} =  "&aes|13|0D5E11BFDD97D2769D9B0DBFBD1BBF7ED7613C706431414A8E82C6DBE24233A4FB";
+}
+
+
+#========================================================================
+# Information about the Batch Controller
+#========================================================================
+if ( $ENV{'PIN_BATCH_CONTROLLER__location__'} !~ /^$/ ) { 
+	$BATCH_CONTROLLER{'location'} = $ENV{'PIN_BATCH_CONTROLLER__location__'};
+} else {
+	$BATCH_CONTROLLER{'location'} =  "$PIN_HOME/apps/batch_controller";
+}
+if ( $ENV{'PIN_BATCH_CONTROLLER__pin_conf_location__'} !~ /^$/ ) { 
+	$BATCH_CONTROLLER{'pin_conf_location'} = $ENV{'PIN_BATCH_CONTROLLER__pin_conf_location__'};
+} else {
+	$BATCH_CONTROLLER{'pin_conf_location'} =  "\$\{PIN_HOME\}/apps/batch_controller";
+}
+
+if ( $ENV{'PIN_BATCH_CONTROLLER__sample_handler_location__'} !~ /^$/ ) { 
+	$BATCH_CONTROLLER{'sample_handler_location'} = $ENV{'PIN_BATCH_CONTROLLER__sample_handler_location__'};
+} else {
+	$BATCH_CONTROLLER{'sample_handler_location'} =  "$PIN_HOME/apps/sample_handler";
+}
+if ( $ENV{'PIN_BATCH_CONTROLLER__library__'} !~ /^$/ ) { 
+	$BATCH_CONTROLLER{'library'}  = $ENV{'PIN_BATCH_CONTROLLER__library__'};
+} else {
+	$BATCH_CONTROLLER{'library'}  =  "$TAX_DM{'location'}/dm_vertex\$\{LIBRARYEXTENSION\}";
+}
+
+
+#========================================================================
+# Information about the Universal Event (UE) Loader
+#========================================================================
+if ( $ENV{'PIN_UEI__location__'} !~ /^$/ ) { 
+	$UEI{'location'} = $ENV{'PIN_UEI__location__'};
+} else {
+	$UEI{'location'} =  "$PIN_HOME/apps/uel";
+}
+if ( $ENV{'PIN_UEI__pin_conf_location__'} !~ /^$/ ) { 
+	$UEI{'pin_conf_location'} = $ENV{'PIN_UEI__pin_conf_location__'};
+} else {
+	$UEI{'pin_conf_location'} =  "\$\{PIN_HOME\}/apps/uel";
+}
+
+
+#========================================================================
+# Information about the sample invoice viewing utility
+#========================================================================
+if ( $ENV{'PIN_SAMPLE__location__'} !~ /^$/ ) { 
+	$SAMPLE{'location'} = $ENV{'PIN_SAMPLE__location__'};
+} else {
+	$SAMPLE{'location'} =  "$PIN_HOME/source/apps/sample";
+}
+if ( $ENV{'PIN_SAMPLE__viewer_location__'} !~ /^$/ ) { 
+	$SAMPLE{'viewer_location'} = $ENV{'PIN_SAMPLE__viewer_location__'};
+} else {
+	$SAMPLE{'viewer_location'} =  "$PIN_HOME/source/apps/sampleviewer";
+}
+if ( $ENV{'PIN_SAMPLE__mta_location__'} !~ /^$/ ) { 
+	$SAMPLE{'mta_location'} = $ENV{'PIN_SAMPLE__mta_location__'};
+} else {
+	$SAMPLE{'mta_location'} =  "$PIN_HOME/source/apps/mta_sample";
+}
+
+
+#========================================================================
+# Information about dm_bmsc, the Wireline Fraud Manager
+#========================================================================
+%DM_BMSC = %DM_generic;  # Inherit all standard DM_generic values #
+if ( $ENV{'PIN_DM_BMSC__location__'} !~ /^$/ ) { 
+	$DM_BMSC{'location'} = $ENV{'PIN_DM_BMSC__location__'};
+} else {
+	$DM_BMSC{'location'} =  "$PIN_HOME/sys/dm_bmsc";
+}
+if ( $ENV{'PIN_DM_BMSC__db_num__'} !~ /^$/ ) { 
+	$DM_BMSC{'db_num'}   = $ENV{'PIN_DM_BMSC__db_num__'};
+} else {
+	$DM_BMSC{'db_num'}   =  "0.0.9.4";
+}
+if ( $ENV{'PIN_DM_BMSC__hostname__'} !~ /^$/ ) { 
+	$DM_BMSC{'hostname'} = $ENV{'PIN_DM_BMSC__hostname__'};
+} else {
+	$DM_BMSC{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_BMSC__port__'} !~ /^$/ ) { 
+	$DM_BMSC{'port'}     = $ENV{'PIN_DM_BMSC__port__'};
+} else {
+	$DM_BMSC{'port'}     =  "11974";
+}
+if ( $ENV{'PIN_DM_BMSC__library__'} !~ /^$/ ) { 
+	$DM_BMSC{'library'}  = $ENV{'PIN_DM_BMSC__library__'};
+} else {
+	$DM_BMSC{'library'}  =  "$DM_BMSC{'location'}/dm_bmsc\$\{LIBRARYEXTENSION\}";
+}
+
+
+#=======================================================================
+# Information about the NARUS Manager
+#=======================================================================
+if ( $ENV{'PIN_NARUS__handler_dialup_location__'} !~ /^$/ ) { 
+	$NARUS{'handler_dialup_location'} = $ENV{'PIN_NARUS__handler_dialup_location__'};
+} else {
+	$NARUS{'handler_dialup_location'} =  "$PIN_HOME/apps/narus/handler_dialup";
+}
+if ( $ENV{'PIN_NARUS__handler_voip_location__'} !~ /^$/ ) { 
+	$NARUS{'handler_voip_location'}   = $ENV{'PIN_NARUS__handler_voip_location__'};
+} else {
+	$NARUS{'handler_voip_location'}   =  "$PIN_HOME/apps/narus/handler_voip";
+}
+if ( $ENV{'PIN_NARUS__handler_flow_location__'} !~ /^$/ ) { 
+	$NARUS{'handler_flow_location'}   = $ENV{'PIN_NARUS__handler_flow_location__'};
+} else {
+	$NARUS{'handler_flow_location'}   =  "$PIN_HOME/apps/narus/handler_flow";
+}
+if ( $ENV{'PIN_NARUS__handler_stream_location__'} !~ /^$/ ) { 
+	$NARUS{'handler_stream_location'} = $ENV{'PIN_NARUS__handler_stream_location__'};
+} else {
+	$NARUS{'handler_stream_location'} =  "$PIN_HOME/apps/narus/handler_stream";
+}
+if ( $ENV{'PIN_NARUS__bms_home__'} !~ /^$/ ) { 
+	$NARUS{'bms_home'} = $ENV{'PIN_NARUS__bms_home__'};
+} else {
+	$NARUS{'bms_home'} =  "$PIN_HOME/nbms/out/portal";
+}
+
+
+#========================================================================
+# Information about the MPLS VPN (Multi Protocol Label Switching
+# Virtual Private network) Manager
+#========================================================================
+if ( $ENV{'PIN_MPLS__location__'} !~ /^$/ ) { 
+	$MPLS{'location'}        = $ENV{'PIN_MPLS__location__'};
+} else {
+	$MPLS{'location'}        =  "$PIN_HOME/apps/mpls";
+}
+if ( $ENV{'PIN_MPLS__beid_file__'} !~ /^$/ ) { 
+	$MPLS{'beid_file'}       = $ENV{'PIN_MPLS__beid_file__'};
+} else {
+	$MPLS{'beid_file'}       =  "$PIN_HOME/sys/data/pricing/example/pin_beid_netflow";
+}
+if ( $ENV{'PIN_MPLS__spec_rates_file__'} !~ /^$/ ) { 
+	$MPLS{'spec_rates_file'} = $ENV{'PIN_MPLS__spec_rates_file__'};
+} else {
+	$MPLS{'spec_rates_file'} =  "$PIN_HOME/sys/data/config/pin_spec_rates_netflow";
+}
+if ( $ENV{'PIN_MPLS__impact_file__'} !~ /^$/ ) { 
+	$MPLS{'impact_file'}     = $ENV{'PIN_MPLS__impact_file__'};
+} else {
+	$MPLS{'impact_file'}     =  "$PIN_HOME/sys/data/config/pin_impact_category_netflow";
+}
+if ( $ENV{'PIN_MPLS__orbix_home__'} !~ /^$/ ) { 
+	$MPLS{'orbix_home'}      = $ENV{'PIN_MPLS__orbix_home__'};
+} else {
+	$MPLS{'orbix_home'}      =  "/opt/IONA";
+}
+
+#========================================================================
+# Information about the ICSF
+#========================================================================
+if ( $ENV{'PIN_ICSF__location__'} !~ /^$/ ) { 
+	$ICSF{'location'}        = $ENV{'PIN_ICSF__location__'};
+} else {
+	$ICSF{'location'}        =  "$PIN_HOME/apps/icsf";
+}
+
+#========================================================================
+# Information about the VIDEO MANAGER
+#========================================================================
+if ( $ENV{'PIN_VIDEO_MANAGER__location__'} !~ /^$/ ) { 
+	$VIDEO_MANAGER{'location'}  = $ENV{'PIN_VIDEO_MANAGER__location__'};
+} else {
+	$VIDEO_MANAGER{'location'}  =  "$PIN_HOME/apps/video_manager";
+}
+
+if ( $ENV{'PIN_VIDEO_MANAGER__vs_port__'} !~ /^$/ ) { 
+	$VIDEO_MANAGER{'vs_port'} = $ENV{'PIN_VIDEO_MANAGER__vs_port__'};
+} else {
+	$VIDEO_MANAGER{'vs_port'} =  "20001";
+}
+if ( $ENV{'PIN_VIDEO_MANAGER__vs_CAS__'} !~ /^$/ ) { 
+	$VIDEO_MANAGER{'vs_CAS'} = $ENV{'PIN_VIDEO_MANAGER__vs_CAS__'};
+} else {
+	$VIDEO_MANAGER{'vs_CAS'} =  'NDS';
+}
+if ( $ENV{'PIN_VIDEO_MANAGER__vs_email_sender__'} !~ /^$/ ) { 
+	$VIDEO_MANAGER{'vs_email_sender'} = $ENV{'PIN_VIDEO_MANAGER__vs_email_sender__'};
+} else {
+	$VIDEO_MANAGER{'vs_email_sender'} =  'johndoe@portal.com';
+}
+if ( $ENV{'PIN_VIDEO_MANAGER__vs_email_def_recipients__'} !~ /^$/ ) { 
+	$VIDEO_MANAGER{'vs_email_def_recipients'} = $ENV{'PIN_VIDEO_MANAGER__vs_email_def_recipients__'};
+} else {
+	$VIDEO_MANAGER{'vs_email_def_recipients'} =  'johndoe@portal.com';
+}
+if ( $ENV{'PIN_VIDEO_MANAGER__vs_email_del_recipients__'} !~ /^$/ ) { 
+	$VIDEO_MANAGER{'vs_email_del_recipients'} = $ENV{'PIN_VIDEO_MANAGER__vs_email_del_recipients__'};
+} else {
+	$VIDEO_MANAGER{'vs_email_del_recipients'} =  'johndoe@portal.com';
+}
+
+#=======================================================================
+# Information about the BERTELSMANN Data Manager
+#=======================================================================
+%BERTELSMANN = %QM_generic;  # Inherit all %QM_generic values #
+if ( $ENV{'PIN_BERTELSMANN__location__'} !~ /^$/ ) { 
+	$BERTELSMANN{'location'} = $ENV{'PIN_BERTELSMANN__location__'};
+} else {
+	$BERTELSMANN{'location'} =  "$PIN_HOME/sys/dm_bdfs";
+}
+if ( $ENV{'PIN_BERTELSMANN__pin_conf_location__'} !~ /^$/ ) { 
+	$BERTELSMANN{'pin_conf_location'} = $ENV{'PIN_BERTELSMANN__pin_conf_location__'};
+} else {
+	$BERTELSMANN{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/dm_bdfs";
+}
+if ( $ENV{'PIN_BERTELSMANN__app_location__'} !~ /^$/ ) { 
+	$BERTELSMANN{'app_location'} = $ENV{'PIN_BERTELSMANN__app_location__'};
+} else {
+	$BERTELSMANN{'app_location'} =  "$PIN_HOME/apps/pin_bdfs";
+}
+if ( $ENV{'PIN_BERTELSMANN__hostname__'} !~ /^$/ ) { 
+	$BERTELSMANN{'hostname'} = $ENV{'PIN_BERTELSMANN__hostname__'};
+} else {
+	$BERTELSMANN{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_BERTELSMANN__db_num__'} !~ /^$/ ) { 
+	$BERTELSMANN{'db_num'}   = $ENV{'PIN_BERTELSMANN__db_num__'};
+} else {
+	$BERTELSMANN{'db_num'}   =  "0.0.1.2";
+}
+if ( $ENV{'PIN_BERTELSMANN__port__'} !~ /^$/ ) { 
+	$BERTELSMANN{'port'}     = $ENV{'PIN_BERTELSMANN__port__'};
+} else {
+	$BERTELSMANN{'port'}     =  "12870";
+}
+if ( $ENV{'PIN_BERTELSMANN__oliva_hostname__'} !~ /^$/ ) { 
+	$BERTELSMANN{'oliva_hostname'} = $ENV{'PIN_BERTELSMANN__oliva_hostname__'};
+} else {
+	$BERTELSMANN{'oliva_hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_BERTELSMANN__oliva_port__'} !~ /^$/ ) { 
+	$BERTELSMANN{'oliva_port'}     = $ENV{'PIN_BERTELSMANN__oliva_port__'};
+} else {
+	$BERTELSMANN{'oliva_port'}     =  "12870";
+}
+if ( $ENV{'PIN_BERTELSMANN__fias_hostname__'} !~ /^$/ ) { 
+	$BERTELSMANN{'fias_hostname'} = $ENV{'PIN_BERTELSMANN__fias_hostname__'};
+} else {
+	$BERTELSMANN{'fias_hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_BERTELSMANN__fias_ftp_username__'} !~ /^$/ ) { 
+	$BERTELSMANN{'fias_ftp_username'} = $ENV{'PIN_BERTELSMANN__fias_ftp_username__'};
+} else {
+	$BERTELSMANN{'fias_ftp_username'} =  "pin";
+}
+if ( $ENV{'PIN_BERTELSMANN__fias_ftp_password__'} !~ /^$/ ) { 
+	$BERTELSMANN{'fias_ftp_password'} = $ENV{'PIN_BERTELSMANN__fias_ftp_password__'};
+} else {
+	$BERTELSMANN{'fias_ftp_password'} =  "&aes|03|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC34E38A57801EE7CDF27D885C3EF9FFAFA";
+}
+if ( $ENV{'PIN_BERTELSMANN__fias_ftp_directory__'} !~ /^$/ ) { 
+	$BERTELSMANN{'fias_ftp_directory'} = $ENV{'PIN_BERTELSMANN__fias_ftp_directory__'};
+} else {
+	$BERTELSMANN{'fias_ftp_directory'} =  "/export/pin";
+}
+if ( $ENV{'PIN_BERTELSMANN__cm_hostname__'} !~ /^$/ ) { 
+	$BERTELSMANN{'cm_hostname'} = $ENV{'PIN_BERTELSMANN__cm_hostname__'};
+} else {
+	$BERTELSMANN{'cm_hostname'} =  $MAIN_CM{'hostname'};
+}
+if ( $ENV{'PIN_BERTELSMANN__cm_port__'} !~ /^$/ ) { 
+	$BERTELSMANN{'cm_port'} = $ENV{'PIN_BERTELSMANN__cm_port__'};
+} else {
+	$BERTELSMANN{'cm_port'} =  $MAIN_CM{'port'};
+}
+if ( $ENV{'PIN_BERTELSMANN__simulator_location__'} !~ /^$/ ) { 
+	$BERTELSMANN{'simulator_location'} = $ENV{'PIN_BERTELSMANN__simulator_location__'};
+} else {
+	$BERTELSMANN{'simulator_location'} =  "$PIN_HOME/apps/bdfs_simulator";
+}
+if ( $ENV{'PIN_BERTELSMANN__online_sim_port__'} !~ /^$/ ) { 
+	$BERTELSMANN{'online_sim_port'} = $ENV{'PIN_BERTELSMANN__online_sim_port__'};
+} else {
+	$BERTELSMANN{'online_sim_port'} =  "5680";
+}
+if ( $ENV{'PIN_BERTELSMANN__online_sim_loglevel__'} !~ /^$/ ) { 
+	$BERTELSMANN{'online_sim_loglevel'} = $ENV{'PIN_BERTELSMANN__online_sim_loglevel__'};
+} else {
+	$BERTELSMANN{'online_sim_loglevel'} =  "1";
+}
+if ( $ENV{'PIN_BERTELSMANN__online_sim_children__'} !~ /^$/ ) { 
+	$BERTELSMANN{'online_sim_children'} = $ENV{'PIN_BERTELSMANN__online_sim_children__'};
+} else {
+	$BERTELSMANN{'online_sim_children'} =  "1";
+}
+
+#========================================================================
+# Information about the Content Developer Kit
+#========================================================================
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__infranet_properties_location__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'infranet_properties_location'}	= $ENV{'PIN_CONTENT_DEVELOPERKIT__infranet_properties_location__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'infranet_properties_location'}	=  "$PIN_HOME/apps/cdk";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__makefile_location__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'makefile_location'}  		= $ENV{'PIN_CONTENT_DEVELOPERKIT__makefile_location__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'makefile_location'}  		=  "$PIN_HOME/source/apps/cdksamples";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__appdir__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'appdir'}			        = $ENV{'PIN_CONTENT_DEVELOPERKIT__appdir__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'appdir'}			        =  "$PIN_HOME/apps/cdk";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_hostname__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_hostname'} 			= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_hostname__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_hostname'} 			=  "xxxxxx";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_port__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_port'}    			= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_port__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_port'}    			=  "xxxxxx";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_login_name__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_login_name'} 		= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_login_name__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_login_name'} 		=  "xxxxxxx";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_login_pw__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_login_pw'} 			= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_login_pw__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_login_pw'} 			=  "xxxxxxx";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_service__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_service'} 			= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_service__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_service'} 			=  "/service/pcm_client";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_protocol__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_protocol'}			= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_protocol__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_protocol'}			=  "pcp";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_url__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_url'}			= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_url__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_url'}			=  "";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_proxy_host__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_proxy_host'} 		= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_proxy_host__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_proxy_host'} 		=  "";
+}
+if ( $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_proxy_port__'} !~ /^$/ ) { 
+	$CONTENT_DEVELOPERKIT{'cdk_proxy_port'} 		= $ENV{'PIN_CONTENT_DEVELOPERKIT__cdk_proxy_port__'};
+} else {
+	$CONTENT_DEVELOPERKIT{'cdk_proxy_port'} 		=  "";
+}
+
+#========================================================================
+# Information about the Provisioning Wireless Data Manager
+#========================================================================
+%DM_PROVISIONING_WIRELESS = %DM_generic;
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__location__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'location'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__location__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'location'} =  "$PIN_HOME/sys/dm_prov_wireless";
+}
+
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__db_num__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'db_num'}   = $ENV{'PIN_DM_PROVISIONING_WIRELESS__db_num__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'db_num'}   =  "0.0.10.2";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__library__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'library'}  = $ENV{'PIN_DM_PROVISIONING_WIRELESS__library__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'library'}  =  "$DM_PROVISIONING_WIRELESS{'location'}/dm_prov_wireless\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__timeout__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'timeout'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__timeout__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'timeout'} =  "0";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__connect_retries__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'connect_retries'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__connect_retries__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'connect_retries'} =  "0";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__retry_interval__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'retry_interval'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__retry_interval__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'retry_interval'} =  "0";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__hostname__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'hostname'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__hostname__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__port__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'port'}     = $ENV{'PIN_DM_PROVISIONING_WIRELESS__port__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'port'}     =  "11990";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__back_ends__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'back_ends'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__back_ends__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'back_ends'} =  "8";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__max_back_ends__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'max_back_ends'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__max_back_ends__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'max_back_ends'} =  "8";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__infranet_agent_hostname__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'infranet_agent_hostname'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__infranet_agent_hostname__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'infranet_agent_hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__infranet_agent_port__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'infranet_agent_port'}     = $ENV{'PIN_DM_PROVISIONING_WIRELESS__infranet_agent_port__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'infranet_agent_port'}     =  "11990";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_WIRELESS__log_level__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_WIRELESS{'log_level'} = $ENV{'PIN_DM_PROVISIONING_WIRELESS__log_level__'};
+} else {
+	$DM_PROVISIONING_WIRELESS{'log_level'} =  "1";
+}
+
+#========================================================================
+# Information about the Telco Framework Server
+#========================================================================
+%DM_PROV_TELCO = %DM_generic;
+if ( $ENV{'PIN_DM_PROV_TELCO__location__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'location'} = $ENV{'PIN_DM_PROV_TELCO__location__'};
+} else {
+	$DM_PROV_TELCO{'location'} =  "$PIN_HOME/sys/dm_prov_telco";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__db_num__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'db_num'}   = $ENV{'PIN_DM_PROV_TELCO__db_num__'};
+} else {
+	$DM_PROV_TELCO{'db_num'}   =  "0.0.10.2";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__library__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'library'}  = $ENV{'PIN_DM_PROV_TELCO__library__'};
+} else {
+	$DM_PROV_TELCO{'library'}  =  "$DM_PROV_TELCO{'location'}/dm_prov_telco\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__timeout__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'timeout'} = $ENV{'PIN_DM_PROV_TELCO__timeout__'};
+} else {
+	$DM_PROV_TELCO{'timeout'} =  "0";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__connect_retries__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'connect_retries'} = $ENV{'PIN_DM_PROV_TELCO__connect_retries__'};
+} else {
+	$DM_PROV_TELCO{'connect_retries'} =  "0";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__retry_interval__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'retry_interval'} = $ENV{'PIN_DM_PROV_TELCO__retry_interval__'};
+} else {
+	$DM_PROV_TELCO{'retry_interval'} =  "0";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__hostname__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'hostname'} = $ENV{'PIN_DM_PROV_TELCO__hostname__'};
+} else {
+	$DM_PROV_TELCO{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__port__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'port'}     = $ENV{'PIN_DM_PROV_TELCO__port__'};
+} else {
+	$DM_PROV_TELCO{'port'}     =  "11990";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__back_ends__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'back_ends'} = $ENV{'PIN_DM_PROV_TELCO__back_ends__'};
+} else {
+	$DM_PROV_TELCO{'back_ends'} =  "8";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__max_back_ends__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'max_back_ends'} = $ENV{'PIN_DM_PROV_TELCO__max_back_ends__'};
+} else {
+	$DM_PROV_TELCO{'max_back_ends'} =  "8";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__infranet_agent_hostname__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'infranet_agent_hostname'} = $ENV{'PIN_DM_PROV_TELCO__infranet_agent_hostname__'};
+} else {
+	$DM_PROV_TELCO{'infranet_agent_hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__infranet_agent_port__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'infranet_agent_port'}     = $ENV{'PIN_DM_PROV_TELCO__infranet_agent_port__'};
+} else {
+	$DM_PROV_TELCO{'infranet_agent_port'}     =  "20000";
+}
+if ( $ENV{'PIN_DM_PROV_TELCO__log_level__'} !~ /^$/ ) { 
+	$DM_PROV_TELCO{'log_level'} = $ENV{'PIN_DM_PROV_TELCO__log_level__'};
+} else {
+	$DM_PROV_TELCO{'log_level'} =  "1";
+}
+if ( $ENV{'PIN_MAIN_CM_HOSTNAME'} !~ /^$/ ) { 
+	$MAIN_CM_HOSTNAME = $ENV{'PIN_MAIN_CM_HOSTNAME'};
+} else {
+	$MAIN_CM_HOSTNAME =  $MAIN_CM{'hostname'};
+}
+if ( $ENV{'PIN_MAIN_CM_PORT'} !~ /^$/ ) { 
+	$MAIN_CM_PORT = $ENV{'PIN_MAIN_CM_PORT'};
+} else {
+	$MAIN_CM_PORT =  $MAIN_CM{'port'};
+}
+
+#========================================================================
+# Information about the Portal Cable & Satellite Provisioning Data Manager
+#========================================================================
+%DM_PROVISIONING_ICS = %DM_generic;
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__location__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'location'} = $ENV{'PIN_DM_PROVISIONING_ICS__location__'};
+} else {
+	$DM_PROVISIONING_ICS{'location'} =  "$PIN_HOME/sys/dm_prov_ics";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__db_num__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'db_num'}   = $ENV{'PIN_DM_PROVISIONING_ICS__db_num__'};
+} else {
+	$DM_PROVISIONING_ICS{'db_num'}   =  "0.0.10.1";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__library__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'library'}  = $ENV{'PIN_DM_PROVISIONING_ICS__library__'};
+} else {
+	$DM_PROVISIONING_ICS{'library'}  =  "$DM_PROVISIONING_ICS{'location'}/dm_prov_ics\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__timeout__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'timeout'} = $ENV{'PIN_DM_PROVISIONING_ICS__timeout__'};
+} else {
+	$DM_PROVISIONING_ICS{'timeout'} =  "20";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__connect_retries__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'connect_retries'} = $ENV{'PIN_DM_PROVISIONING_ICS__connect_retries__'};
+} else {
+	$DM_PROVISIONING_ICS{'connect_retries'} =  "2";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__retry_interval__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'retry_interval'} = $ENV{'PIN_DM_PROVISIONING_ICS__retry_interval__'};
+} else {
+	$DM_PROVISIONING_ICS{'retry_interval'} =  "2";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__hostname__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'hostname'} = $ENV{'PIN_DM_PROVISIONING_ICS__hostname__'};
+} else {
+	$DM_PROVISIONING_ICS{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__port__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'port'}     = $ENV{'PIN_DM_PROVISIONING_ICS__port__'};
+} else {
+	$DM_PROVISIONING_ICS{'port'}     =  "10970";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__back_ends__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'back_ends'} = $ENV{'PIN_DM_PROVISIONING_ICS__back_ends__'};
+} else {
+	$DM_PROVISIONING_ICS{'back_ends'} =  "8";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__max_back_ends__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'max_back_ends'} = $ENV{'PIN_DM_PROVISIONING_ICS__max_back_ends__'};
+} else {
+	$DM_PROVISIONING_ICS{'max_back_ends'} =  "8";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__infranet_agent_hostname__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'infranet_agent_hostname'} = $ENV{'PIN_DM_PROVISIONING_ICS__infranet_agent_hostname__'};
+} else {
+	$DM_PROVISIONING_ICS{'infranet_agent_hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__infranet_agent_port__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'infranet_agent_port'}     = $ENV{'PIN_DM_PROVISIONING_ICS__infranet_agent_port__'};
+} else {
+	$DM_PROVISIONING_ICS{'infranet_agent_port'}     =  "21000";
+}
+if ( $ENV{'PIN_DM_PROVISIONING_ICS__log_level__'} !~ /^$/ ) { 
+	$DM_PROVISIONING_ICS{'log_level'} = $ENV{'PIN_DM_PROVISIONING_ICS__log_level__'};
+} else {
+	$DM_PROVISIONING_ICS{'log_level'} =  "1";
+}
+
+#========================================================================
+# Information about the GPRS Port Telco Framework 
+#========================================================================
+if ( $ENV{'PIN_DM_PROV_TELCOFRAMEWORK__location__'} !~ /^$/ ) { 
+	$DM_PROV_TELCOFRAMEWORK{'location'} = $ENV{'PIN_DM_PROV_TELCOFRAMEWORK__location__'};
+} else {
+	$DM_PROV_TELCOFRAMEWORK{'location'} =  "$PIN_HOME/apps/telco";
+}
+
+#========================================================================
+# Information about the Broadband Manager
+#========================================================================
+if ( $ENV{'PIN_BROADBAND_MANAGER__location__'} !~ /^$/ ) { 
+	$BROADBAND_MANAGER{'location'} = $ENV{'PIN_BROADBAND_MANAGER__location__'};
+} else {
+	$BROADBAND_MANAGER{'location'} =  "$PIN_HOME/apps/broadband_manager";
+}
+
+#========================================================================
+# Information about the Broadband Manager NDS location
+#========================================================================
+if ( $ENV{'PIN_BROADBAND_MANAGER_NDS__location__'} !~ /^$/ ) { 
+	$BROADBAND_MANAGER_NDS{'location'} = $ENV{'PIN_BROADBAND_MANAGER_NDS__location__'};
+} else {
+	$BROADBAND_MANAGER_NDS{'location'} =  "$BROADBAND_MANAGER{'location'}/nds";
+}
+
+#========================================================================
+# Information about the Rated Event Loader
+#========================================================================
+if ( $ENV{'PIN_RATED_EVENT_LOADER__location__'} !~ /^$/ ) { 
+	$RATED_EVENT_LOADER{'location'} = $ENV{'PIN_RATED_EVENT_LOADER__location__'};
+} else {
+	$RATED_EVENT_LOADER{'location'} =  "\$\{PIN_HOME\}/apps/pin_rel";
+}
+if ( $ENV{'PIN_RATED_EVENT_LOADER__db_num__'} !~ /^$/ ) { 
+	$RATED_EVENT_LOADER{'db_num'} = $ENV{'PIN_RATED_EVENT_LOADER__db_num__'};
+} else {
+	$RATED_EVENT_LOADER{'db_num'} =  "0.0.0.1";
+}
+if ( $ENV{'PIN_RATED_EVENT_LOADER__hostname__'} !~ /^$/ ) { 
+	$RATED_EVENT_LOADER{'hostname'} = $ENV{'PIN_RATED_EVENT_LOADER__hostname__'};
+} else {
+	$RATED_EVENT_LOADER{'hostname'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_RATED_EVENT_LOADER__port__'} !~ /^$/ ) { 
+	$RATED_EVENT_LOADER{'port'} = $ENV{'PIN_RATED_EVENT_LOADER__port__'};
+} else {
+	$RATED_EVENT_LOADER{'port'} =  "13007";
+}
+
+if ( $ENV{'PIN_RATED_EVENT_LOADER__sample_handler_location__'} !~ /^$/ ) { 
+	$RATED_EVENT_LOADER{'sample_handler_location'} = $ENV{'PIN_RATED_EVENT_LOADER__sample_handler_location__'};
+} else {
+	$RATED_EVENT_LOADER{'sample_handler_location'} =  "\$\{PIN_HOME\}/apps/sample_handler";
+}
+
+if ( $ENV{'PIN_RATED_EVENT_LOADER__pin_cnf_location__'} !~ /^$/ ) { 
+	$RATED_EVENT_LOADER{'pin_cnf_location'} = $ENV{'PIN_RATED_EVENT_LOADER__pin_cnf_location__'};
+} else {
+	$RATED_EVENT_LOADER{'pin_cnf_location'} =  "$PIN_HOME/apps/pin_rel";
+}
+if ( $ENV{'PIN_RATED_EVENT_LOADER__sample_handler_pin_cnf_location__'} !~ /^$/ ) { 
+	$RATED_EVENT_LOADER{'sample_handler_pin_cnf_location'} = $ENV{'PIN_RATED_EVENT_LOADER__sample_handler_pin_cnf_location__'};
+} else {
+	$RATED_EVENT_LOADER{'sample_handler_pin_cnf_location'} =  "$PIN_HOME/apps/sample_handler";
+}
+
+#========================================================================
+# Information about the ReRated Event Loader
+#========================================================================
+if ( $ENV{'PIN_RERATED_EVENT_LOADER__location__'} !~ /^$/ ) { 
+	$RERATED_EVENT_LOADER{'location'} = $ENV{'PIN_RERATED_EVENT_LOADER__location__'};
+} else {
+	$RERATED_EVENT_LOADER{'location'} =  "$PIN_HOME/apps/pin_rerel";
+}
+
+
+#========================================================================
+# Information about the Common Migration Tool
+#========================================================================
+if ( $ENV{'PIN_CMT__location__'} !~ /^$/ ) { 
+	$CMT{'location'} = $ENV{'PIN_CMT__location__'};
+} else {
+	$CMT{'location'} =  "$PIN_HOME/apps/cmt";
+}
+if ( $ENV{'PIN_CMT__schema__'} !~ /^$/ ) { 
+	$CMT{'schema'} = $ENV{'PIN_CMT__schema__'};
+} else {
+	$CMT{'schema'} =  "$PIN_HOME/apps/cmt/schema_files/physical";
+}
+if ( $ENV{'PIN_CMT__datfile__'} !~ /^$/ ) { 
+	$CMT{'datfile'} = $ENV{'PIN_CMT__datfile__'};
+} else {
+	$CMT{'datfile'} =  "$PIN_HOME/apps/cmt/data_files/";
+}
+if ( $ENV{'PIN_CMT__log__'} !~ /^$/ ) { 
+	$CMT{'log'} = $ENV{'PIN_CMT__log__'};
+} else {
+	$CMT{'log'} =  "$PIN_HOME/apps/cmt/log";
+}
+if ( $ENV{'PIN_CMT__ctlfile__'} !~ /^$/ ) { 
+	$CMT{'ctlfile'} = $ENV{'PIN_CMT__ctlfile__'};
+} else {
+	$CMT{'ctlfile'} =  "$PIN_HOME/apps/cmt/ctl_files/";
+}
+if ( $ENV{'PIN_CMT__lfile__'} !~ /^$/ ) { 
+	$CMT{'lfile'} = $ENV{'PIN_CMT__lfile__'};
+} else {
+	$CMT{'lfile'} =  "$PIN_HOME/apps/cmt/input_files/";
+}
+if ( $ENV{'PIN_CMT__alias__'} !~ /^$/ ) { 
+	$CMT{'alias'} = $ENV{'PIN_CMT__alias__'};
+} else {
+	$CMT{'alias'} =  "BRMUAT";
+}
+if ( $ENV{'PIN_CMT__port__'} !~ /^$/ ) { 
+	$CMT{'port'} = $ENV{'PIN_CMT__port__'};
+} else {
+	$CMT{'port'} =  "1522";
+}
+if ( $ENV{'PIN_CMT__userid__'} !~ /^$/ ) { 
+	$CMT{'userid'} = $ENV{'PIN_CMT__userid__'};
+} else {
+	$CMT{'userid'} =  "pin";
+}
+if ( $ENV{'PIN_CMT__passwd__'} !~ /^$/ ) { 
+	$CMT{'passwd'} = $ENV{'PIN_CMT__passwd__'};
+} else {
+	$CMT{'passwd'} =  "&aes|10|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC23D94E0FFD3C7A7B1152827133F1C2726";
+}
+if ( $ENV{'PIN_CMT__preprocess_validation__'} !~ /^$/ ) { 
+	$CMT{'preprocess_validation'} = $ENV{'PIN_CMT__preprocess_validation__'};
+} else {
+	$CMT{'preprocess_validation'} =  "True";
+}
+if ( $ENV{'PIN_CMT__dbnumber__'} !~ /^$/ ) { 
+	$CMT{'dbnumber'} = $ENV{'PIN_CMT__dbnumber__'};
+} else {
+	$CMT{'dbnumber'} =  "0.0.0.1";
+}
+if ( $ENV{'PIN_CMT__primarydbname__'} !~ /^$/ ) { 
+	$CMT{'primarydbname'} = $ENV{'PIN_CMT__primarydbname__'};
+} else {
+	$CMT{'primarydbname'} =  "BRMUAT";
+}
+if ( $ENV{'PIN_CMT__primarydbport__'} !~ /^$/ ) { 
+	$CMT{'primarydbport'} = $ENV{'PIN_CMT__primarydbport__'};
+} else {
+	$CMT{'primarydbport'} =  "1522";
+}
+if ( $ENV{'PIN_CMT__primarydbuserid__'} !~ /^$/ ) { 
+	$CMT{'primarydbuserid'} = $ENV{'PIN_CMT__primarydbuserid__'};
+} else {
+	$CMT{'primarydbuserid'} =  "pin";
+}
+if ( $ENV{'PIN_CMT__primarydbpasswd__'} !~ /^$/ ) { 
+	$CMT{'primarydbpasswd'} = $ENV{'PIN_CMT__primarydbpasswd__'};
+} else {
+	$CMT{'primarydbpasswd'} =  "&aes|10|0D5E11BFDD97D2769D9B0DBFBD1BBF7EC23D94E0FFD3C7A7B1152827133F1C2726";
+}
+if ( $ENV{'PIN_CMT__primarydbnumber__'} !~ /^$/ ) { 
+	$CMT{'primarydbnumber'} = $ENV{'PIN_CMT__primarydbnumber__'};
+} else {
+	$CMT{'primarydbnumber'} =  "0.0.0.1";
+}
+
+#========================================================================
+# Information about the Event Extraction Tool
+#========================================================================
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__location__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'location'} = $ENV{'PIN_EVENT_EXTRACTION_TOOL__location__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'location'} =  "$PIN_HOME/apps/pin_event_extract";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__loglevel__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'loglevel'} = $ENV{'PIN_EVENT_EXTRACTION_TOOL__loglevel__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'loglevel'} =  "1";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__filename__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'filename'} = $ENV{'PIN_EVENT_EXTRACTION_TOOL__filename__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'filename'} =  "SOL42_D00D1SOL42.DAT";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__UTC_Offset__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'UTC_Offset'} = $ENV{'PIN_EVENT_EXTRACTION_TOOL__UTC_Offset__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'UTC_Offset'} =  "+0100";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__release_version__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'release_version'} = $ENV{'PIN_EVENT_EXTRACTION_TOOL__release_version__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'release_version'} =  "04";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__specification_version__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'specification_version'} = $ENV{'PIN_EVENT_EXTRACTION_TOOL__specification_version__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'specification_version'} =  "02";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__num_threads__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'num_threads'} = $ENV{'PIN_EVENT_EXTRACTION_TOOL__num_threads__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'num_threads'} =  "10";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__step_size__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'step_size'} = $ENV{'PIN_EVENT_EXTRACTION_TOOL__step_size__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'step_size'} =  "3000";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__max_file_size__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'max_file_size'}= $ENV{'PIN_EVENT_EXTRACTION_TOOL__max_file_size__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'max_file_size'}=  "500000";
+}
+if ( $ENV{'PIN_EVENT_EXTRACTION_TOOL__max_EDR__'} !~ /^$/ ) { 
+	$EVENT_EXTRACTION_TOOL{'max_EDR'}= $ENV{'PIN_EVENT_EXTRACTION_TOOL__max_EDR__'};
+} else {
+	$EVENT_EXTRACTION_TOOL{'max_EDR'}= "100000";
+}
+
+#========================================================================
+# Information about the Siebel Data Manager
+#========================================================================
+%DM_SIEBEL = %EAI;
+if ( $ENV{'PIN_DM_SIEBEL__location__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'location'} = $ENV{'PIN_DM_SIEBEL__location__'};
+} else {
+	$DM_SIEBEL{'location'} =  "$PIN_HOME/sys/dm_siebel";
+}
+if ( $ENV{'PIN_DM_SIEBEL__db_num__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'db_num'} = $ENV{'PIN_DM_SIEBEL__db_num__'};
+} else {
+	$DM_SIEBEL{'db_num'} =  "0.0.9.8";
+}
+if ( $ENV{'PIN_DM_SIEBEL__port__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'port'} = $ENV{'PIN_DM_SIEBEL__port__'};
+} else {
+	$DM_SIEBEL{'port'} =  "11978";
+}
+if ( $ENV{'PIN_DM_SIEBEL__library__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'library'} = $ENV{'PIN_DM_SIEBEL__library__'};
+} else {
+	$DM_SIEBEL{'library'} =  "$DM_SIEBEL{'location'}/${LIBRARYPREFIXVAR}dm_eai\$\{LIBRARYEXTENSION\}";
+}
+if ( $ENV{'PIN_DM_SIEBEL__enable_publish__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'enable_publish'} = $ENV{'PIN_DM_SIEBEL__enable_publish__'};
+} else {
+	$DM_SIEBEL{'enable_publish'} =  "1";
+}
+if ( $ENV{'PIN_DM_SIEBEL__plugin_loglevel__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'plugin_loglevel'} = $ENV{'PIN_DM_SIEBEL__plugin_loglevel__'};
+} else {
+	$DM_SIEBEL{'plugin_loglevel'} =  "1";
+}
+if ( $ENV{'PIN_DM_SIEBEL__trans_timeout__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'trans_timeout'} = $ENV{'PIN_DM_SIEBEL__trans_timeout__'};
+} else {
+	$DM_SIEBEL{'trans_timeout'} =  "0";
+}
+if ( $ENV{'PIN_DM_SIEBEL__eais_client_location__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'eais_client_location'} = $ENV{'PIN_DM_SIEBEL__eais_client_location__'};
+} else {
+	$DM_SIEBEL{'eais_client_location'} =  "$PIN_HOME/apps/siebel_eais_client";
+}
+if ( $ENV{'PIN_DM_SIEBEL__eais_client_loglevel__'} !~ /^$/ ) { 
+	$DM_SIEBEL{'eais_client_loglevel'} = $ENV{'PIN_DM_SIEBEL__eais_client_loglevel__'};
+} else {
+	$DM_SIEBEL{'eais_client_loglevel'} =  "1";
+}
+
+#========================================================================
+# Information about the TelcoOne Integrator
+#========================================================================
+if ( $ENV{'PIN_TELCO_ONE_INTEGRATOR__middleware_host_name__'} !~ /^$/ ) { 
+	$TELCO_ONE_INTEGRATOR{'middleware_host_name'} = $ENV{'PIN_TELCO_ONE_INTEGRATOR__middleware_host_name__'};
+} else {
+	$TELCO_ONE_INTEGRATOR{'middleware_host_name'} =  $HOSTNAME;
+}
+if ( $ENV{'PIN_AGENT_HOSTNAME'} !~ /^$/ ) { 
+	$AGENT_HOSTNAME= $ENV{'PIN_AGENT_HOSTNAME'};
+} else {
+	$AGENT_HOSTNAME= $TELCO_ONE_INTEGRATOR{'middleware_host_name'};
+}
+
+#========================================================================
+# Information about the EAI Subscribe
+#========================================================================
+if ( $ENV{'PIN_EAIS__location__'} !~ /^$/ ) { 
+	$EAIS{'location'} = $ENV{'PIN_EAIS__location__'};
+} else {
+	$EAIS{'location'} =  "$PIN_HOME/sys/eais";
+}
+if ( $ENV{'PIN_EAIS__pin_conf_location__'} !~ /^$/ ) { 
+	$EAIS{'pin_conf_location'} = $ENV{'PIN_EAIS__pin_conf_location__'};
+} else {
+	$EAIS{'pin_conf_location'} =  "\$\{PIN_HOME\}/sys/eais";
+}
+
+#========================================================================
+# Information about Multi DB Application.
+#========================================================================
+if ( $ENV{'PIN_MULTI_DB__pin_cnf_location__'} !~ /^$/ ) { 
+	$MULTI_DB{'pin_cnf_location'} = $ENV{'PIN_MULTI_DB__pin_cnf_location__'};
+} else {
+	$MULTI_DB{'pin_cnf_location'} =  "${PIN_HOME}/apps/multi_db";
+}
+
+#========================================================================
+# Information about PERF Manager
+#========================================================================
+if ( $ENV{'PIN_PERF_SIM__pin_cnf_location__'} !~ /^$/ ) { 
+	$PERF_SIM{'pin_cnf_location'} = $ENV{'PIN_PERF_SIM__pin_cnf_location__'};
+} else {
+	$PERF_SIM{'pin_cnf_location'} =  "${PIN_HOME}/apps/perf/simtools";
+}
+if ( $ENV{'PIN_PERF_SQL__pin_cnf_location__'} !~ /^$/ ) { 
+	$PERF_SQL{'pin_cnf_location'} = $ENV{'PIN_PERF_SQL__pin_cnf_location__'};
+} else {
+	$PERF_SQL{'pin_cnf_location'} =  "${PIN_HOME}/apps/perf/sql_loader";
+}
+
+#========================================================================
+# Information about Collections
+#========================================================================
+if ( $ENV{'PIN_COLLECTIONS__location__'} !~ /^$/ ) { 
+	$COLLECTIONS{'location'} = $ENV{'PIN_COLLECTIONS__location__'};
+} else {
+	$COLLECTIONS{'location'} =  "$PIN_HOME/apps/pin_collections";
+}
+if ( $ENV{'PIN_COLLECTIONS__pin_conf_location__'} !~ /^$/ ) { 
+	$COLLECTIONS{'pin_conf_location'} = $ENV{'PIN_COLLECTIONS__pin_conf_location__'};
+} else {
+	$COLLECTIONS{'pin_conf_location'} =  "\$\{PIN_HOME\}/apps/pin_collections";
+}
+
+#=======================================================================
+# Information about Partition_utils
+#=======================================================================
+if ( $ENV{'PIN_PARTITION_UTILS__location__'} !~ /^$/ ) { 
+	$PARTITION_UTILS{'location'} = $ENV{'PIN_PARTITION_UTILS__location__'};
+} else {
+	$PARTITION_UTILS{'location'} =  "$PIN_HOME/apps/partition_utils";
+}
+
+#=======================================================================
+# Information for loading config files  
+#=======================================================================
+if ( $ENV{'PIN_AAA_LOAD_CONFIG_PATH'} !~ /^$/ ) { 
+	$AAA_LOAD_CONFIG_PATH = $ENV{'PIN_AAA_LOAD_CONFIG_PATH'};
+} else {
+	$AAA_LOAD_CONFIG_PATH =  "$PIN_HOME/sys/data/config";
+}
+
+#========================================================================
+# Information about ADU Application.
+#========================================================================
+if ( $ENV{'PIN_ADU__location__'} !~ /^$/ ) { 
+	$ADU{'location'} = $ENV{'PIN_ADU__location__'};
+} else {
+	$ADU{'location'} =  "\$\{PIN_HOME\}/sys/diagnostics/pin_adu_validate";
+}
+if ( $ENV{'PIN_ADU__pin_cnf_location__'} !~ /^$/ ) { 
+	$ADU{'pin_cnf_location'} = $ENV{'PIN_ADU__pin_cnf_location__'};
+} else {
+	$ADU{'pin_cnf_location'} =   "$PIN_HOME/sys/diagnostics/pin_adu_validate";
+}
+
+#========================================================================
+# Information about BRM JCA Adapter.
+#========================================================================
+if ( $ENV{'PIN_JCA_ADAPTER__pin_cnf_location__'} !~ /^$/ ) { 
+	$JCA_ADAPTER{'pin_cnf_location'} = $ENV{'PIN_JCA_ADAPTER__pin_cnf_location__'};
+} else {
+	$JCA_ADAPTER{'pin_cnf_location'} =  "$PIN_HOME/apps/brm_integrations";
+}
+
+#========================================================================
+# Information about BRM AMT TT.
+#========================================================================
+# $AMT_TT{'pin_cnf_location'} is inside amt_tt pin_cmp_amt_tt.pl so as to 
+# reduce dependancy  between amt optional installer and portal_base installer
+# It does not have any configuration in pin_setup.values yet.
+
+#=======================================================================
+# Information about database connections
+#
+# Specify the command-line executable that connects to each type of
+# database.
+#=======================================================================
+if ( $ENV{'PIN_SQLSCRIPT_EXECUTABLE'} !~ /^$/ ) { 
+	$SQLSCRIPT_EXECUTABLE = $ENV{'PIN_SQLSCRIPT_EXECUTABLE'};
+} else {
+	$SQLSCRIPT_EXECUTABLE =  $MAIN_DM{'sqlscript_executable'};
+}
+
+if ( $ENV{'PIN_DD__location__'} !~ /^$/ ) { 
+	$DD{'location'} = $ENV{'PIN_DD__location__'};
+} else {
+	$DD{'location'} =  "$PIN_HOME/sys/dd/data";
+}
+
+if ( $ENV{'PIN_ServiceName__answer_fusa__'} !~ /^$/ ) { 
+	$ServiceName{'answer_fusa'} = $ENV{'PIN_ServiceName__answer_fusa__'};
+} else {
+	$ServiceName{'answer_fusa'} =  "answer";
+}
+if ( $ENV{'PIN_ServiceName__answer_fdc__'} !~ /^$/ ) { 
+	$ServiceName{'answer_fdc'} = $ENV{'PIN_ServiceName__answer_fdc__'};
+} else {
+	$ServiceName{'answer_fdc'} =  "fdc_answer";
+}
+if ( $ENV{'PIN_ServiceName__dm_oracle__'} !~ /^$/ ) { 
+	$ServiceName{'dm_oracle'} = $ENV{'PIN_ServiceName__dm_oracle__'};
+} else {
+	$ServiceName{'dm_oracle'} =  "dm_oracle";
+}
+if ( $ENV{'PIN_ServiceName__dm_invoice__'} !~ /^$/ ) { 
+	$ServiceName{'dm_invoice'} = $ENV{'PIN_ServiceName__dm_invoice__'};
+} else {
+	$ServiceName{'dm_invoice'} =  "dm_invoice";
+}
+if ( $ENV{'PIN_ServiceName__cm__'} !~ /^$/ ) { 
+	$ServiceName{'cm'} = $ENV{'PIN_ServiceName__cm__'};
+} else {
+	$ServiceName{'cm'} =  "cm";
+}
+if ( $ENV{'PIN_ServiceName__dm_fusa__'} !~ /^$/ ) { 
+	$ServiceName{'dm_fusa'} = $ENV{'PIN_ServiceName__dm_fusa__'};
+} else {
+	$ServiceName{'dm_fusa'} =  "dm_fusa";
+}
+if ( $ENV{'PIN_ServiceName__cmmp__'} !~ /^$/ ) { 
+	$ServiceName{'cmmp'} = $ENV{'PIN_ServiceName__cmmp__'};
+} else {
+	$ServiceName{'cmmp'} =  "cmmp";
+}
+if ( $ENV{'PIN_ServiceName__dm_fdc__'} !~ /^$/ ) { 
+	$ServiceName{'dm_fdc'} = $ENV{'PIN_ServiceName__dm_fdc__'};
+} else {
+	$ServiceName{'dm_fdc'} =  "dm_fdc";
+}
+if ( $ENV{'PIN_ServiceName__dm_clearcom__'} !~ /^$/ ) { 
+	$ServiceName{'dm_clearcom'} = $ENV{'PIN_ServiceName__dm_clearcom__'};
+} else {
+	$ServiceName{'dm_clearcom'} =  "dm_clearcom";
+}
+if ( $ENV{'PIN_ServiceName__ldap__'} !~ /^$/ ) { 
+	$ServiceName{'ldap'} = $ENV{'PIN_ServiceName__ldap__'};
+} else {
+	$ServiceName{'ldap'} =  "dm_ldap";
+}
+if ( $ENV{'PIN_ServiceName__dm_teracomm__'} !~ /^$/ ) { 
+	$ServiceName{'dm_teracomm'} = $ENV{'PIN_ServiceName__dm_teracomm__'};
+} else {
+	$ServiceName{'dm_teracomm'} =  "dm_teracomm";
+}
+if ( $ENV{'PIN_ServiceName__formatter__'} !~ /^$/ ) { 
+	$ServiceName{'formatter'} = $ENV{'PIN_ServiceName__formatter__'};
+} else {
+	$ServiceName{'formatter'} =  "formatter";
+}
+if ( $ENV{'PIN_ServiceName__pin_channel_export__'} !~ /^$/ ) { 
+	$ServiceName{'pin_channel_export'} = $ENV{'PIN_ServiceName__pin_channel_export__'};
+} else {
+	$ServiceName{'pin_channel_export'} =  "pin_channel_export";
+}
+if ( $ENV{'PIN_ServiceName__bmsc_publish__'} !~ /^$/ ) { 
+	$ServiceName{'bmsc_publish'} = $ENV{'PIN_ServiceName__bmsc_publish__'};
+} else {
+	$ServiceName{'bmsc_publish'} =  "jsEAIserv";
+}
+if ( $ENV{'PIN_ServiceName__dm_msexchange__'} !~ /^$/ ) { 
+	$ServiceName{'dm_msexchange'} = $ENV{'PIN_ServiceName__dm_msexchange__'};
+} else {
+	$ServiceName{'dm_msexchange'} =  "dm_msexchange";
+}
+if ( $ENV{'PIN_ServiceName__eai_js_acctsync__'} !~ /^$/ ) { 
+	$ServiceName{'eai_js_acctsync'} = $ENV{'PIN_ServiceName__eai_js_acctsync__'};
+} else {
+	$ServiceName{'eai_js_acctsync'} =  "jsEAIServ";
+}
+if ( $ENV{'PIN_ServiceName__dm_provisioning__'} !~ /^$/ ) { 
+	$ServiceName{'dm_provisioning'} = $ENV{'PIN_ServiceName__dm_provisioning__'};
+} else {
+	$ServiceName{'dm_provisioning'} =  "dm_prov_wireless";
+}
+if ( $ENV{'PIN_ServiceName__dm_provisioning_ics__'} !~ /^$/ ) { 
+	$ServiceName{'dm_provisioning_ics'} = $ENV{'PIN_ServiceName__dm_provisioning_ics__'};
+} else {
+	$ServiceName{'dm_provisioning_ics'} =  "dm_prov_ics";
+}
+if ( $ENV{'PIN_ServiceName__video_scheduler__'} !~ /^$/ ) { 
+	$ServiceName{'video_scheduler'} = $ENV{'PIN_ServiceName__video_scheduler__'};
+} else {
+	$ServiceName{'video_scheduler'} =  "video_scheduler";
+}
+if ( $ENV{'PIN_ServiceName__dm_bertelsmann__'} !~ /^$/ ) { 
+	$ServiceName{'dm_bertelsmann'} = $ENV{'PIN_ServiceName__dm_bertelsmann__'};
+} else {
+	$ServiceName{'dm_bertelsmann'} =  "dm_bdfs";
+}
+if ( $ENV{'PIN_ServiceName__bdfs_answer__'} !~ /^$/ ) { 
+	$ServiceName{'bdfs_answer'} = $ENV{'PIN_ServiceName__bdfs_answer__'};
+} else {
+	$ServiceName{'bdfs_answer'} =  "bdfs_answer";
+}
+if ( $ENV{'PIN_ServiceName__dm_siebel__'} !~ /^$/ ) { 
+	$ServiceName{'dm_siebel'} = $ENV{'PIN_ServiceName__dm_siebel__'};
+} else {
+	$ServiceName{'dm_siebel'} =  "dm_siebel";
+}
+if ( $ENV{'PIN_ServiceName__dm_ifw_sync__'} !~ /^$/ ) { 
+	$ServiceName{'dm_ifw_sync'} = $ENV{'PIN_ServiceName__dm_ifw_sync__'};
+} else {
+	$ServiceName{'dm_ifw_sync'} =  "dm_ifw_sync";
+}
+if ( $ENV{'PIN_ServiceName__dm_timos__'} !~ /^$/ ) { 
+	$ServiceName{'dm_timos'} = $ENV{'PIN_ServiceName__dm_timos__'};
+} else {
+	$ServiceName{'dm_timos'} =  "dm_timos";
+}
+if ( $ENV{'PIN_ServiceName__dm_taxware__'} !~ /^$/ ) { 
+	$ServiceName{'dm_taxware'} = $ENV{'PIN_ServiceName__dm_taxware__'};
+} else {
+	$ServiceName{'dm_taxware'} =  "dm_taxware";
+}
+if ( $ENV{'PIN_ServiceName__dm_email__'} !~ /^$/ ) { 
+	$ServiceName{'dm_email'} = $ENV{'PIN_ServiceName__dm_email__'};
+} else {
+	$ServiceName{'dm_email'} =  "dm_email";
+}
+if ( $ENV{'PIN_ServiceName__cm_proxy__'} !~ /^$/ ) { 
+	$ServiceName{'cm_proxy'} = $ENV{'PIN_ServiceName__cm_proxy__'};
+} else {
+	$ServiceName{'cm_proxy'} =  "cm_proxy";
+}
+if ( $ENV{'PIN_ServiceName__infmgr__'} !~ /^$/ ) { 
+	$ServiceName{'infmgr'} = $ENV{'PIN_ServiceName__infmgr__'};
+} else {
+	$ServiceName{'infmgr'} =  "infmgr";
+}
+
+if ( $ENV{'PIN_PINCONF'} !~ /^$/ ) { 
+	$PINCONF = $ENV{'PIN_PINCONF'};
+} else {
+	$PINCONF =  "pin.conf";
+}
+if ( $ENV{'PIN_CONFIGDISTCONF'} !~ /^$/ ) { 
+	$CONFIGDISTCONF = $ENV{'PIN_CONFIGDISTCONF'};
+} else {
+	$CONFIGDISTCONF =  "config_dist.conf";
+}
+if ( $ENV{'PIN_CONFIGDISTEXT'} !~ /^$/ ) { 
+	$CONFIGDISTEXT = $ENV{'PIN_CONFIGDISTEXT'};
+} else {
+	$CONFIGDISTEXT =  "unmodified";
+}
+
+if ( $ENV{'PIN_PIN_CONF_TABLESPACE_ID'} !~ /^$/ ) { 
+	$PIN_CONF_TABLESPACE_ID = $ENV{'PIN_PIN_CONF_TABLESPACE_ID'};
+} else {
+	$PIN_CONF_TABLESPACE_ID =  $MAIN_DM{'pin_conf_tablespace_id'};
+}
+if ( $ENV{'PIN_PIN_CONF_INDEX_TABLESPACE_ID'} !~ /^$/ ) { 
+	$PIN_CONF_INDEX_TABLESPACE_ID = $ENV{'PIN_PIN_CONF_INDEX_TABLESPACE_ID'};
+} else {
+	$PIN_CONF_INDEX_TABLESPACE_ID =  $MAIN_DM{'pin_conf_index_tablespace_id'};
+}
+
+
+#######################
+## Behind the scenes ##
+#######################
+%CC_DM=%DM_FUSA;
+%DD_DM=%BERTELSMANN;
+if ( $ENV{'PIN_FM_FUNCTION_SUFFIX'} !~ /^$/ ) { 
+	$FM_FUNCTION_SUFFIX = $ENV{'PIN_FM_FUNCTION_SUFFIX'};
+} else {
+	$FM_FUNCTION_SUFFIX =  "_func";
+}
+
+
+#===================================================================================
+# Flag for unique bill_numbers
+#
+# Specify in the BILL_DB_NO flag whether to generate unique bill_numbers across
+# databases, for the multidatabase features.
+#===================================================================================
+@DB = split(/\./, $MAIN_DM{'db_num'});
+if ( $ENV{'PIN_BILL_DB_NO'} !~ /^$/ ) { 
+	$BILL_DB_NO = $ENV{'PIN_BILL_DB_NO'};
+} else {
+	$BILL_DB_NO =  $DB[$#DB];
+}
+
+if ( $ENV{'PIN_PIN_CONF_INIT_OPFLAGS'} !~ /^$/ ) { 
+	$PIN_CONF_INIT_OPFLAGS	= $ENV{'PIN_PIN_CONF_INIT_OPFLAGS'};
+} else {
+	$PIN_CONF_INIT_OPFLAGS	=  0x40;
+}
+if ( $ENV{'PIN_PIN_CONF_SYS_CURRENCY'} !~ /^$/ ) { 
+	$PIN_CONF_SYS_CURRENCY = $ENV{'PIN_PIN_CONF_SYS_CURRENCY'};
+} else {
+	$PIN_CONF_SYS_CURRENCY =  $MAIN_CM{'currency'};
+}
+if ( $ENV{'PIN_PIN_CONF_DATE_NOW'} !~ /^$/ ) { 
+	$PIN_CONF_DATE_NOW = $ENV{'PIN_PIN_CONF_DATE_NOW'};
+} else {
+	$PIN_CONF_DATE_NOW =  time();
+}
+if ( $ENV{'PIN_PIN_CONF_INFRANET_BASE'} !~ /^$/ ) { 
+	$PIN_CONF_INFRANET_BASE = $ENV{'PIN_PIN_CONF_INFRANET_BASE'};
+} else {
+	$PIN_CONF_INFRANET_BASE =  $PIN_HOME;
+}
+if ( $ENV{'PIN_PIN_CONF_SRCH_DISTINCT'} !~ /^$/ ) { 
+	$PIN_CONF_SRCH_DISTINCT		= $ENV{'PIN_PIN_CONF_SRCH_DISTINCT'};
+} else {
+	$PIN_CONF_SRCH_DISTINCT		= 	256;
+}
+if ( $ENV{'PIN_PIN_CONF_SRCH_CALC_ONLY_1'} !~ /^$/ ) { 
+	$PIN_CONF_SRCH_CALC_ONLY_1	= $ENV{'PIN_PIN_CONF_SRCH_CALC_ONLY_1'};
+} else {
+	$PIN_CONF_SRCH_CALC_ONLY_1	= 	1;
+}
+
+
+if ( $^O !~ /win/i ) {
+if ( $ENV{'PIN_FM_FUNCTION_SUFFIX'} !~ /^$/ ) { 
+	$FM_FUNCTION_SUFFIX = $ENV{'PIN_FM_FUNCTION_SUFFIX'};
+} else {
+	$FM_FUNCTION_SUFFIX =  "";
+}
+if ( $ENV{'PIN_ARCHIVING__IMP__'} !~ /^$/ ) { 
+	$ARCHIVING{'IMP'} = $ENV{'PIN_ARCHIVING__IMP__'};
+} else {
+	$ARCHIVING{'IMP'} =  "imp"; 
+}
+if ( $ENV{'PIN_ARCHIVING__EXP__'} !~ /^$/ ) { 
+	$ARCHIVING{'EXP'} = $ENV{'PIN_ARCHIVING__EXP__'};
+} else {
+	$ARCHIVING{'EXP'} =  "exp"; 
+}
+} elsif ( $MAIN_DM{'db'}->{'vendor'} =~ m/^oracle/i ) {
+if ( $ENV{'PIN_ARCHIVING__IMP__'} !~ /^$/ ) { 
+	$ARCHIVING{'IMP'} = $ENV{'PIN_ARCHIVING__IMP__'};
+} else {
+	$ARCHIVING{'IMP'} =  "imp80";
+}
+if ( $ENV{'PIN_ARCHIVING__EXP__'} !~ /^$/ ) { 
+	$ARCHIVING{'EXP'} = $ENV{'PIN_ARCHIVING__EXP__'};
+} else {
+	$ARCHIVING{'EXP'} =  "exp80";
+}
+} else {
+if ( $ENV{'PIN_ARCHIVING__IMP__'} !~ /^$/ ) { 
+	$ARCHIVING{'IMP'} = $ENV{'PIN_ARCHIVING__IMP__'};
+} else {
+	$ARCHIVING{'IMP'} =  "";
+}
+if ( $ENV{'PIN_ARCHIVING__EXP__'} !~ /^$/ ) { 
+	$ARCHIVING{'EXP'} = $ENV{'PIN_ARCHIVING__EXP__'};
+} else {
+	$ARCHIVING{'EXP'} =  "";
+}
+}
+
+if ( $ENV{'PIN_PIN_CONF_INIT_OPNAME'} !~ /^$/ ) { 
+	$PIN_CONF_INIT_OPNAME= $ENV{'PIN_PIN_CONF_INIT_OPNAME'};
+} else {
+	$PIN_CONF_INIT_OPNAME= "PCM_OP_CREATE_OBJ";
+}
+
+require "pin_tables.values";
+
+
+
+if ( $ENV{'PIN_ENABLE_ENCRYPTION'} !~ /^$/ ) { 
+	$ENABLE_ENCRYPTION = $ENV{'PIN_ENABLE_ENCRYPTION'};
+} else {
+	$ENABLE_ENCRYPTION =  "Yes";
+}
+1;
